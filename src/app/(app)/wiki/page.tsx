@@ -21,7 +21,7 @@ import {
   HUNTS,
   PLAN_GROUPS,
   PREMIER_GUIDE,
-  PREMIER_VALUE,
+  PREMIER_PERKS,
   SR_CATEGORIES,
   SR_ITEMS,
   type SrItem,
@@ -304,49 +304,25 @@ export default function WikiPage() {
               ))}
             </ul>
           </article>
-          <article className="space-y-3 rounded-[22px] bg-white p-4 shadow-sm">
-            <p className="font-extrabold">👑 قيمة المزايا والاشتراكات (Value for Money)</p>
-            <p className="text-xs leading-6 text-neutral-500">المزايا اللي العميل بياخدها مجاناً أو بخصم مع كل باقة، والإجمالي الشهري لكل باقة.</p>
-            {PREMIER_VALUE.packages.map((pkg) => (
-              <div key={pkg.name} className="rounded-2xl bg-orange-50 p-3 text-sm">
-                <p className="font-black">{pkg.name}</p>
-                <p className="text-xs text-neutral-600">{pkg.price}{pkg.priceAlt ? ` · ${pkg.priceAlt}` : ""}</p>
-                <p className="mt-1 font-extrabold text-[#ff7900]">إجمالي قيمة التوفير: {pkg.total}</p>
-                {pkg.multiple ? <p className="text-xs text-neutral-500">{pkg.multiple}</p> : null}
-              </div>
-            ))}
-            <div className="overflow-x-auto">
-              <table className="w-full min-w-[560px] text-right text-xs">
-                <thead>
-                  <tr className="border-b text-neutral-500">
-                    <th className="p-2">الخدمة</th>
-                    {PREMIER_VALUE.tiers.map((t) => (
-                      <th key={t} className="p-2">{t}</th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {PREMIER_VALUE.perks.map((perk) => (
-                    <tr key={perk.name} className="border-b align-top">
-                      <td className="p-2">
-                        <p className="font-bold">{perk.name}</p>
-                        <p className="text-[11px] text-neutral-500">{perk.detail}</p>
-                      </td>
-                      {perk.values.map((v, i) => (
-                        <td key={i} className="p-2 font-bold">{v === "—" ? "—" : `${v} ج`}</td>
-                      ))}
-                    </tr>
+          <div className="space-y-3">
+            <h2 className="pt-2 text-lg font-black">👑 مزايا كل باقة</h2>
+            {PREMIER_PERKS.map((pkg) => (
+              <article key={pkg.name} className="rounded-[22px] bg-white p-4 shadow-sm">
+                <div className="flex items-center justify-between gap-3">
+                  <p className="font-black">{pkg.name}</p>
+                  <p className="text-sm font-extrabold text-[#ff7900]">{pkg.price}</p>
+                </div>
+                <ul className="mt-3 space-y-2 text-sm leading-6 text-neutral-700">
+                  {pkg.perks.map((perk) => (
+                    <li key={perk} className="flex gap-2">
+                      <span className="text-[#ff7900]">✓</span>
+                      <span>{perk}</span>
+                    </li>
                   ))}
-                  <tr className="font-black text-[#ff7900]">
-                    <td className="p-2">الإجمالي الشهري</td>
-                    {PREMIER_VALUE.totals.map((t, i) => (
-                      <td key={i} className="p-2">{t} ج</td>
-                    ))}
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </article>
+                </ul>
+              </article>
+            ))}
+          </div>
           {premierPlans.map((group) => (
             <div key={group.category} className="space-y-2">
               <h2 className="pt-2 text-lg font-black">{group.category}</h2>
