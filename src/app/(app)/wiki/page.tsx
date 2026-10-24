@@ -312,7 +312,15 @@ export default function WikiPage() {
                   <p className="font-black">{pkg.name}</p>
                   <p className="text-sm font-extrabold text-[#ff7900]">{pkg.price}</p>
                 </div>
-                <div className="mt-3 grid grid-cols-2 gap-2">
+                <div className="mt-3 grid grid-cols-2 gap-2 text-xs">
+                  {pkg.stats.map((stat) => (
+                    <div key={stat} className="rounded-2xl bg-neutral-100 px-3 py-2 text-center font-bold text-neutral-700">
+                      {stat}
+                    </div>
+                  ))}
+                </div>
+                <p className="mt-3 text-xs font-black text-neutral-500">المزايا والاشتراكات</p>
+                <div className="mt-2 grid grid-cols-2 gap-2">
                   {pkg.perks.map((perk) => (
                     <div
                       key={perk}
