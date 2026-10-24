@@ -106,3 +106,26 @@ export const PREMIER_GUIDE = {
 };
 
 export const SR_CATEGORIES = Array.from(new Set(SR_ITEMS.map((item) => item.category)));
+
+export const PREMIER_VALUE = {
+  tiers: ["Lite", "Plus", "Select", "Ultra", "Platinum"],
+  packages: [
+    { name: "PREMIER Lite", price: "520 ج.م / شهر", priceAlt: "652 L.E / mo", total: "3,110 ج.م", multiple: "وفر 6 أضعاف اشتراكك" },
+    { name: "PREMIER Plus", price: "690 ج.م / شهر", priceAlt: "861 L.E / mo", total: "3,360 ج.م", multiple: "وفر 4.8 أضعاف اشتراكك" },
+    { name: "PREMIER Select", price: "820 ج.م / شهر", priceAlt: "1021 L.E / mo", total: "4,424 ج.م", multiple: "وفر 5.3 أضعاف اشتراكك" },
+    { name: "PREMIER Ultra", price: "1,200 ج.م / شهر", priceAlt: "1489 L.E / mo", total: "5,424 ج.م", multiple: "وفر 4.5 أضعاف اشتراكك" },
+    { name: "PREMIER Platinum", price: "1,725 ج.م / شهر", priceAlt: "2134 L.E / mo", total: "6,090 ج.م (اشتراكات مدى الحياة)", multiple: "" },
+  ],
+  perks: [
+    { name: "Amazon Prime", detail: "اشتراك 12 شهر (تسوق وترفيه مجاني)", values: ["30", "30", "30", "30", "30"] },
+    { name: "Spotify Premium", detail: "اشتراك 12 شهر (موسيقى وبودكاست بدون إعلانات)", values: ["80", "80", "80", "80", "80"] },
+    { name: "TOD", detail: "منصة البث الرياضي والأفلام والمسلسلات الحصرية", values: ["—", "—", "560 (3 شهور)", "560 (6 شهور)", "560 (مدى الحياة)"] },
+    { name: "London Cab", detail: "خصم 20% على الرحلات", values: ["300", "300", "300", "300", "300"] },
+    { name: "Sixt", detail: "خصم حتى 15% على إيجار السيارات", values: ["700", "700", "700", "700", "700"] },
+    { name: "El Gouna", detail: "خصم 15% على جميع فنادق الجونة", values: ["2,000", "2,000", "2,000", "2,000", "2,000"] },
+    { name: "Gourmet", detail: "خصم 30% بحد أقصى + قسائم شراء شهرية", values: ["250", "250", "250", "1,000 (500 خصم + 500 قسيمة)", "1,500 (500 خصم + 1,000 قسيمة)"] },
+    { name: "YouTube Premium", detail: "اشتراك 12 شهر (بدون إعلانات)", values: ["—", "—", "88", "88", "88"] },
+    { name: "EgyptAir", detail: "أميال شهرية لتذاكر السفر أو ترقية Business", values: ["—", "—", "416", "666", "832"] },
+  ],
+  totals: ["3,110", "3,360", "4,424", "5,424", "6,090"],
+};

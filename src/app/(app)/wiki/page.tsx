@@ -21,6 +21,7 @@ import {
   HUNTS,
   PLAN_GROUPS,
   PREMIER_GUIDE,
+  PREMIER_VALUE,
   SR_CATEGORIES,
   SR_ITEMS,
   type SrItem,
@@ -302,6 +303,49 @@ export default function WikiPage() {
                 <li key={item}>• {item}</li>
               ))}
             </ul>
+          </article>
+          <article className="space-y-3 rounded-[22px] bg-white p-4 shadow-sm">
+            <p className="font-extrabold">👑 قيمة المزايا والاشتراكات (Value for Money)</p>
+            <p className="text-xs leading-6 text-neutral-500">المزايا اللي العميل بياخدها مجاناً أو بخصم مع كل باقة، والإجمالي الشهري لكل باقة.</p>
+            {PREMIER_VALUE.packages.map((pkg) => (
+              <div key={pkg.name} className="rounded-2xl bg-orange-50 p-3 text-sm">
+                <p className="font-black">{pkg.name}</p>
+                <p className="text-xs text-neutral-600">{pkg.price}{pkg.priceAlt ? ` · ${pkg.priceAlt}` : ""}</p>
+                <p className="mt-1 font-extrabold text-[#ff7900]">إجمالي قيمة التوفير: {pkg.total}</p>
+                {pkg.multiple ? <p className="text-xs text-neutral-500">{pkg.multiple}</p> : null}
+              </div>
+            ))}
+            <div className="overflow-x-auto">
+              <table className="w-full min-w-[560px] text-right text-xs">
+                <thead>
+                  <tr className="border-b text-neutral-500">
+                    <th className="p-2">الخدمة</th>
+                    {PREMIER_VALUE.tiers.map((t) => (
+                      <th key={t} className="p-2">{t}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {PREMIER_VALUE.perks.map((perk) => (
+                    <tr key={perk.name} className="border-b align-top">
+                      <td className="p-2">
+                        <p className="font-bold">{perk.name}</p>
+                        <p className="text-[11px] text-neutral-500">{perk.detail}</p>
+                      </td>
+                      {perk.values.map((v, i) => (
+                        <td key={i} className="p-2 font-bold">{v === "—" ? "—" : `${v} ج`}</td>
+                      ))}
+                    </tr>
+                  ))}
+                  <tr className="font-black text-[#ff7900]">
+                    <td className="p-2">الإجمالي الشهري</td>
+                    {PREMIER_VALUE.totals.map((t, i) => (
+                      <td key={i} className="p-2">{t} ج</td>
+                    ))}
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </article>
           {premierPlans.map((group) => (
             <div key={group.category} className="space-y-2">
