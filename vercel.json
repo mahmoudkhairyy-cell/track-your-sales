@@ -1,0 +1,9 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "nextjs",
+  "installCommand": "npm ci",
+  "buildCommand": "npm exec tsx -- scripts/verify-deployment.ts && npm run build",
+  "env": {
+    "PUBLIC_DEPLOYMENT": "true"
+  }
+}

@@ -1,0 +1,187 @@
+[
+  {
+    "name": "Call Center 110",
+    "email": "ccenterfax.eg@orange.com",
+    "description": "Egypt Call Center Fax"
+  },
+  {
+    "name": "Postpaid Supervisors",
+    "email": "cs110postpaidsupervisors-eg@orange.com",
+    "description": "Egypt CC 110 Postpaid Supervisors"
+  },
+  {
+    "name": "Prepaid Supervisors",
+    "email": "cs110prepaidspvs-eg@orange.com",
+    "description": "Egypt CC 110 Prepaid Supervisors"
+  },
+  {
+    "name": "Team Leaders Postpaid",
+    "email": "cs110postpaidteamleaders-eg@orange.com",
+    "description": "Egypt CC 110 Postpaid Team Leaders"
+  },
+  {
+    "name": "Team Leaders Prepaid",
+    "email": "cs110prepaidteamleaders-eg@orange.com",
+    "description": "Egypt CC 110 Prepaid Team Leaders"
+  },
+  {
+    "name": "Postpaid Assist Team",
+    "email": "cs110postpaidsupport-eg@orange.com",
+    "description": "Egypt CC 110 Postpaid Support"
+  },
+  {
+    "name": "Star Control Assist",
+    "email": "cs110starcontrolsupport-eg@orange.com",
+    "description": "Egypt CC 110 Star Control Support"
+  },
+  {
+    "name": "Prepaid Assist Team",
+    "email": "cs110presupportteam-eg@orange.com",
+    "description": "Egypt CC 110 Prepaid Support Team"
+  },
+  {
+    "name": "First Class Assist",
+    "email": "csfcassistteam-eg@orange.com",
+    "description": "Egypt CC FC Assist Team"
+  },
+  {
+    "name": "First class back office",
+    "email": "csfcbackoffice-eg@orange.com",
+    "description": "Egypt CC FC Back Office"
+  },
+  {
+    "name": "FC outbound Team",
+    "email": "csfcoutbound-eg@orange.com",
+    "description": "Egypt CC FC Outbound"
+  },
+  {
+    "name": "Prepaid FC Team",
+    "email": "csprepaidfcteam-eg@orange.com",
+    "description": "Egypt CC Prepaid FC Team"
+  },
+  {
+    "name": "Complaint Handling Postpaid",
+    "email": "postpaidcomplainthandling-eg@orange.com",
+    "description": "Egypt Postpaid Complaint Handling"
+  },
+  {
+    "name": "Complaint Handling Prepaid",
+    "email": "prepaidcomplainthandling-eg@orange.com",
+    "description": "Egypt Prepaid Complaint Handling"
+  },
+  {
+    "name": "Personal Activation & Customer Information",
+    "email": "pactmanagement-eg@orange.com",
+    "description": "Egypt PAct Management"
+  },
+  {
+    "name": "Postpaid Save and Retention MNP",
+    "email": "postpaidsaveteam.eg@orange.com",
+    "description": "Egypt CC Postpaid Retention MNP"
+  },
+  {
+    "name": "Prepaid MNP / Prepaid Loyalty",
+    "email": "csprepaidmnp-eg@orange.com",
+    "description": "Egypt CC Prepaid MNP"
+  },
+  {
+    "name": "Data Team",
+    "email": "csdatacomplaints-eg@orange.com",
+    "description": "Egypt CC Data Complaints"
+  },
+  {
+    "name": "Postpaid loyalty",
+    "email": "cspostpaidloyaltyteam-eg@orange.com",
+    "description": "Egypt CC Enterprise Loyalty"
+  },
+  {
+    "name": "Fraud",
+    "email": "telcofraud-eg@orange.com",
+    "description": "Egypt Telco Fraud"
+  },
+  {
+    "name": "CRM Admin",
+    "email": "crmadministration-eg@orange.com",
+    "description": "Egypt CRM Administration"
+  },
+  {
+    "name": "Data gathering assist",
+    "email": "nladgsegmentteam-eg@orange.com",
+    "description": "Egypt NLA-DG Segment Team"
+  },
+  {
+    "name": "DG & NLA Team Leader",
+    "email": "csdg-nlateamleader-eg@orange.com",
+    "description": "Egypt CC DG-NLA Team Leader"
+  },
+  {
+    "name": "WFM Adherence",
+    "email": "wfmadherenceteam.eg@orange.com",
+    "description": "Egypt WFM Adherence Team"
+  },
+  {
+    "name": "WFM Forecast",
+    "email": "wfmforecastschteam.eg@orange.com",
+    "description": "Egypt WFM Forecast & Schedule Team"
+  },
+  {
+    "name": "WFM RTM Team",
+    "email": "wfmrtmteam.eg@orange.com",
+    "description": "Egypt WFM RTM Team"
+  },
+  {
+    "name": "6060 Team Leaders",
+    "email": "cs6060teamleaders-eg@orange.com",
+    "description": "Egypt CC 6060 Team Leaders"
+  },
+  {
+    "name": "6060 Team Leaders (Core Roaming)",
+    "email": "coreroaming-eg@orange.com",
+    "description": "Egypt Core Roaming"
+  },
+  {
+    "name": "Prepaid Sim Swap",
+    "email": "csprepaidsimswap-eg@orange.com",
+    "description": "Egypt CC Prepaid Sim Swap"
+  },
+  {
+    "name": "250 Team Leaders",
+    "email": "cs250teamleaders-eg@orange.com",
+    "description": "Egypt CC 250 Team Leaders"
+  },
+  {
+    "name": "250 Support Team",
+    "email": "cs250supportteam-eg@orange.com",
+    "description": "Egypt CC 250 Support Team"
+  },
+  {
+    "name": "Corp Faxination (Hunt: 2577)",
+    "email": "faxinationusers-eg@orange.com",
+    "description": "Egypt Faxination Users"
+  },
+  {
+    "name": "Corp. Complain handling (250 tech)",
+    "email": "cscorporatecustomersupport-eg@orange.com",
+    "description": "Egypt CCCorporate Customer Support"
+  },
+  {
+    "name": "Enterprise First Class",
+    "email": "entfirstclass-eg@orange.com",
+    "description": "Egypt Ent First Class"
+  },
+  {
+    "name": "Enterprise First Class Back Office",
+    "email": "entfcbo-eg@orange.com",
+    "description": "Egypt Ent First Class Back Office"
+  },
+  {
+    "name": "DSL Assist Team",
+    "email": "fbb-dsl-assist-eg@orange.com",
+    "description": "Egypt FBB-DSL Assist Team"
+  },
+  {
+    "name": "Team RSS",
+    "email": "newrssteam-eg@orange.com",
+    "description": "Egypt New RSS Team"
+  }
+]

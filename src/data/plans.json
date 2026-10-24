@@ -1,0 +1,249 @@
+[
+  {
+    "category": "Orange Premier",
+    "plans": [
+      {
+        "name": "PREMIER Lite",
+        "minutes": "2500",
+        "data": "15 GB",
+        "familyLines": "1",
+        "adslDiscount": "190",
+        "hwDiscount": "190",
+        "dataRoaming": "1 GB Weekly (2 times a year)",
+        "intlMinutes": "-",
+        "installment": "Up to 30000 L.E",
+        "subscriptions": [
+          "Spotify",
+          "Amazon Prime"
+        ],
+        "fees": "652 L.E"
+      },
+      {
+        "name": "PREMIER Plus",
+        "minutes": "3500",
+        "data": "20 GB",
+        "familyLines": "2",
+        "adslDiscount": "210",
+        "hwDiscount": "250",
+        "dataRoaming": "1.5 GB Weekly (2 times a year)",
+        "intlMinutes": "15 MIN",
+        "installment": "Up to 45000 L.E",
+        "subscriptions": [
+          "Spotify",
+          "Amazon Prime"
+        ],
+        "fees": "861 L.E"
+      },
+      {
+        "name": "PREMIER Select",
+        "minutes": "5000",
+        "data": "25 GB",
+        "familyLines": "3",
+        "adslDiscount": "210",
+        "hwDiscount": "250",
+        "dataRoaming": "10 GB Weekly (1 time a year)",
+        "intlMinutes": "30 MIN",
+        "installment": "Up to 50000 L.E",
+        "subscriptions": [
+          "Spotify",
+          "Amazon Prime",
+          "Gourmet food",
+          "TOD (3 months)"
+        ],
+        "fees": "1070 L.E"
+      },
+      {
+        "name": "PREMIER Ultra",
+        "minutes": "7000",
+        "data": "40 GB",
+        "familyLines": "4",
+        "adslDiscount": "290",
+        "hwDiscount": "350",
+        "dataRoaming": "10 GB Weekly (2 times a year)",
+        "intlMinutes": "45 MIN",
+        "installment": "Up to 60000 L.E",
+        "subscriptions": [
+          "Spotify",
+          "Amazon Prime",
+          "Gourmet food",
+          "TOD (6 months)"
+        ],
+        "fees": "1489 L.E"
+      },
+      {
+        "name": "PREMIER Platinum",
+        "minutes": "10000",
+        "data": "70 GB",
+        "familyLines": "5",
+        "adslDiscount": "420",
+        "hwDiscount": "350",
+        "dataRoaming": "10 GB Weekly (3 times a year)",
+        "intlMinutes": "60 MIN",
+        "installment": "Up to 100000 L.E",
+        "subscriptions": [
+          "Spotify",
+          "Amazon Prime",
+          "Gourmet food",
+          "TOD (Life)"
+        ],
+        "fees": "2134 L.E"
+      }
+    ]
+  },
+  {
+    "category": "Super Max",
+    "plans": [
+      {
+        "name": "Super Max 290",
+        "units": "14500",
+        "internet": "Included",
+        "afterFinish": "0.25 L.E / MIN | 20 L.E / 500 MB",
+        "installment": "Up to 6000 L.E",
+        "subscriptions": [
+          "SPECIAL Points"
+        ],
+        "fees": "371 L.E"
+      }
+    ]
+  },
+  {
+    "category": "Go Monthly",
+    "plans": [
+      {
+        "name": "Go 23",
+        "data": "750 MB",
+        "fees": "32.86 L.E"
+      },
+      {
+        "name": "Go 37",
+        "data": "1400 MB",
+        "fees": "52.87 L.E"
+      },
+      {
+        "name": "Go 58",
+        "data": "2500 MB",
+        "fees": "82.86 L.E"
+      },
+      {
+        "name": "Go 92",
+        "data": "4250 MB",
+        "fees": "131.44 L.E"
+      },
+      {
+        "name": "Go 120",
+        "data": "6000 MB",
+        "fees": "171.43 L.E"
+      },
+      {
+        "name": "Go 180",
+        "data": "10000 MB",
+        "fees": "257.15 L.E"
+      },
+      {
+        "name": "Go 300",
+        "data": "18000 MB",
+        "fees": "428.58 L.E"
+      },
+      {
+        "name": "Go 450",
+        "data": "29000 MB",
+        "fees": "642.86 L.E"
+      },
+      {
+        "name": "Go 600",
+        "data": "45000 MB",
+        "fees": "857.15 L.E"
+      }
+    ]
+  },
+  {
+    "category": "Go Extra",
+    "plans": [
+      {
+        "name": "Go Video Daily",
+        "data": "200 MB",
+        "fees": "2.5 L.E"
+      },
+      {
+        "name": "Go Video Monthly",
+        "data": "450 MB",
+        "fees": "6.5 L.E"
+      },
+      {
+        "name": "Go Video Max",
+        "data": "4500 MB",
+        "fees": "45 L.E"
+      },
+      {
+        "name": "Go Social",
+        "data": "100 MB",
+        "fees": "1.25 L.E"
+      },
+      {
+        "name": "Go @ Home التعليمية",
+        "data": "1000 MB",
+        "fees": "13 L.E"
+      },
+      {
+        "name": "Go @ Home Max",
+        "data": "4500 MB",
+        "fees": "45 L.E"
+      },
+      {
+        "name": "Go Amazon Monthly",
+        "data": "450 MB",
+        "fees": "6.5 L.E"
+      },
+      {
+        "name": "Go Amazon Plus",
+        "data": "4500 MB",
+        "fees": "45 L.E"
+      },
+      {
+        "name": "Go Tiktok",
+        "data": "450 MB",
+        "fees": "6.5 L.E"
+      }
+    ]
+  },
+  {
+    "category": "Home Wireless",
+    "plans": [
+      {
+        "name": "Home Wireless 40 GB",
+        "data": "40 GB",
+        "fees": "415 EGP"
+      },
+      {
+        "name": "Home Wireless 70 GB",
+        "data": "70 GB",
+        "fees": "536 EGP"
+      },
+      {
+        "name": "Home Wireless 140 GB",
+        "data": "140 GB",
+        "fees": "744 EGP"
+      },
+      {
+        "name": "Home Wireless 240 GB",
+        "data": "240 GB",
+        "fees": "1144 EGP"
+      },
+      {
+        "name": "Home Wireless 350 GB",
+        "data": "350 GB",
+        "fees": "1645 EGP"
+      },
+      {
+        "name": "Home Wireless 400 GB",
+        "data": "400 GB",
+        "fees": "1816 EGP"
+      },
+      {
+        "name": "Home Wireless 1000 GB",
+        "data": "1000 GB",
+        "fees": "6578 EGP"
+      }
+    ]
+  }
+]

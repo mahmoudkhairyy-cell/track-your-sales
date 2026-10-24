@@ -1,0 +1,14 @@
+node_modules/
+.next/
+out/
+build/
+.env
+.env.*
+!.env.example
+.vercel/
+*.zip
+*.sql.gz
+backups/
+*.tsbuildinfo
+next-env.d.ts
+drizzle/meta/_journal.json.bak

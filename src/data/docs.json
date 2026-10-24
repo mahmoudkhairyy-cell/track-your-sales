@@ -1,0 +1,72 @@
+[
+  {
+    "title": "Postpaid Calculator",
+    "description": "الأداة اللي بتساعدك عشان تحسب عدد أيام الفاتورة للعميل، وبتساعدك في عملية التحويل من نظام فاتورة إلى كارت (MIGRATION)",
+    "url": "https://www.dropbox.com/scl/fi/yl1a24arob6j1lt8ydt4n/Postpaid-calculator.xls?rlkey=5mmixnoseyfjujczklojcmzsn&raw=1",
+    "icon": "download-cloud",
+    "color": "#FF7900"
+  },
+  {
+    "title": "تحديث البيانات (Data Gathering)",
+    "description": "استمارة تجميع البيانات المطلوبة (Data Gathering) لتحديث بيانات خطوط العملاء للمصريين والأجانب",
+    "url": "https://www.dropbox.com/scl/fi/vckpnnzob0f1s9m0vktdh/SR-10692.pdf?rlkey=vw04aq5wjw844y2hwpstb7pa3&raw=1",
+    "icon": "file-text",
+    "color": "#0ea5e9"
+  },
+  {
+    "title": "إقرار تحويل أموال (Money Transfer)",
+    "description": "نموذج طلب إقرار خاص بعمليات تحويل الأموال للمشتركين لطباعته وتوقيعه",
+    "url": "https://www.dropbox.com/scl/fi/op2gg7pxk0qnoi0ie3ha8/Money-Transfer.docx?rlkey=bb4lap4breiabhdmleso9d2wg&raw=1",
+    "icon": "file-text",
+    "color": "#10b981"
+  },
+  {
+    "title": "استمارة عدم حيازة (421010)",
+    "description": "نموذج إقرار عدم الحيازة (421010) لطباعته وتوقيعه من قِبل العميل",
+    "url": "https://www.dropbox.com/scl/fi/snqnga6fkzr2px8hqu14i/17-2026-Updated.docx?rlkey=t3f6rh7vcyivi0445w8qw2gbn&st=fbk5z09j&dl=1",
+    "icon": "file-minus",
+    "color": "#ef4444"
+  },
+  {
+    "title": "Tariff Lock (6 Months)",
+    "description": "نموذج إقرار الموافقة على قفل خطة الأسعار لمدة 6 أشهر للعملاء لطباعته وتوقيعه",
+    "url": "https://www.dropbox.com/scl/fi/gfw2c9fe7m97n1op4n0ec/Tariff-lock-6-month-template-updated.pdf?rlkey=s4f240npbclprufkfr8r61noh&raw=1",
+    "icon": "lock",
+    "color": "#8b5cf6"
+  },
+  {
+    "title": "Tariff Lock (12 Months)",
+    "description": "نموذج إقرار الموافقة على قفل خطة الأسعار لمدة 12 شهر للعملاء لطباعته وتوقيعه",
+    "url": "https://www.dropbox.com/scl/fi/rirabnyrpwwiyetz0oi76/Tariff-lock-12-month-template-updated.pdf?rlkey=tht05zngq2s9mpb39hunjs77a&raw=1",
+    "icon": "lock",
+    "color": "#a855f7"
+  },
+  {
+    "title": "استرداد أموال (Refund)",
+    "description": "نموذج الإقرار الخاص بطلبات استرداد المبالغ المالية للعملاء لطباعته وتوقيعه",
+    "url": "https://www.dropbox.com/scl/fi/mvm6go8uxxydic3lliwg8/Refund-Form.doc?rlkey=zufgmmvzozq6icu7dq1i5k1gu&raw=1",
+    "icon": "file-text",
+    "color": "#f59e0b"
+  },
+  {
+    "title": "CNAM FEATURE CONTRACT",
+    "description": "العقد الخاص بتقديم الخدمات الترويجية وفيتشر إظهار اسم المتصل (CNAM) للعملاء",
+    "url": "https://www.dropbox.com/scl/fi/qstgaivyksttx6egfcz25/CNAM.pdf?rlkey=1o4nk4ubql477oomzih3pokv1&raw=1",
+    "icon": "file-check",
+    "color": "#6366f1"
+  },
+  {
+    "title": "Orangawy iPhone",
+    "description": "رابط تحميل تطبيق أورانجاوي الخاص بموظفي الفروع لأجهزة الآيفون (TestFlight)",
+    "url": "https://testflight.apple.com/join/PoL0sdwf",
+    "icon": "apple",
+    "color": "#ffffff"
+  },
+  {
+    "title": "Orangawy Android",
+    "description": "رابط تحميل تطبيق أورانجاوي الخاص بموظفي الفروع لأجهزة الأندرويد (Direct APK)",
+    "url": "https://drive.google.com/file/d/12RNvCF8LfK0tBgJMsg1LfsbuSUurmT65/view",
+    "icon": "smartphone",
+    "color": "#3ddc84"
+  }
+]

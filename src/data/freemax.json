@@ -1,0 +1,164 @@
+{
+  "tagline": "وحدات فري ماكس زادت أكتر من 30% — إنترنت ودقايق تكفي طول الشهر!",
+  "highlights": [
+    "20% هدايا ميجابايتس عند تجديد الباقة قبل ميعادها",
+    "50% وحدات زيادة عند التجديد عن طريق اورنچ كاش",
+    "اشتراكات Spotify و Amazon Prime ببلاش",
+    "Facebook و WhatsApp بلس مكملين معاك طول الشهر"
+  ],
+  "globalPerks": [
+    {
+      "icon": "shopping-cart",
+      "label": "خصومات كازيون",
+      "detail": "خصومات لحد 100 جنيه على كل منتجات كازيون ماركت.",
+      "color": "#FF7900"
+    },
+    {
+      "icon": "music",
+      "label": "Spotify Premium",
+      "detail": "اشتراكات لحد 3 شهور ببلاش لعملاء فري ماكس.",
+      "color": "#1DB954"
+    },
+    {
+      "icon": "package",
+      "label": "Amazon Prime",
+      "detail": "3 شهور ببلاش (توصيل مجاني + Prime Video).",
+      "color": "#FF9900"
+    },
+    {
+      "icon": "wallet",
+      "label": "اورنچ كاش",
+      "detail": "50% وحدات زيادة هدية لما تجدد من اورنچ كاش.",
+      "color": "#FF7900"
+    }
+  ],
+  "simPrice": 84,
+  "plans": [
+    {
+      "name": "FREEmax 52",
+      "nameAr": "فري ماكس 52",
+      "price": 52,
+      "units": "1,800",
+      "customerPrice": 140.3,
+      "activationWithTax": 56.29,
+      "activationNoTax": 39.4,
+      "renewalPrice": 74.29,
+      "facebook": "50 MB",
+      "whatsapp": "50 MB",
+      "hasPerks": false,
+      "perks": [],
+      "color": "#FF7900"
+    },
+    {
+      "name": "FREEmax 80",
+      "nameAr": "فري ماكس 80",
+      "price": 80,
+      "units": "3,000",
+      "customerPrice": 180.3,
+      "activationWithTax": 96.29,
+      "activationNoTax": 67.4,
+      "renewalPrice": 114.29,
+      "facebook": "50 MB",
+      "whatsapp": "50 MB",
+      "hasPerks": true,
+      "perks": [
+        "خصم 50ج كازيون",
+        "3 شهور Spotify"
+      ],
+      "color": "#FF7900"
+    },
+    {
+      "name": "FREEmax 115",
+      "nameAr": "فري ماكس 115",
+      "price": 115,
+      "units": "5,000",
+      "customerPrice": 230.3,
+      "activationWithTax": 146.29,
+      "activationNoTax": 102.4,
+      "renewalPrice": 164.29,
+      "facebook": "50 MB",
+      "whatsapp": "50 MB",
+      "hasPerks": true,
+      "perks": [
+        "خصم 50ج كازيون",
+        "3 شهور Spotify"
+      ],
+      "color": "#f59e0b"
+    },
+    {
+      "name": "FREEmax 175",
+      "nameAr": "فري ماكس 175",
+      "price": 175,
+      "units": "9,000",
+      "customerPrice": 316,
+      "activationWithTax": 232,
+      "activationNoTax": 162.4,
+      "renewalPrice": 250,
+      "facebook": "50 MB",
+      "whatsapp": "50 MB",
+      "hasPerks": true,
+      "perks": [
+        "خصم 100ج كازيون",
+        "3 شهور Spotify",
+        "3 شهور Amazon"
+      ],
+      "color": "#f59e0b"
+    },
+    {
+      "name": "FREEmax 230",
+      "nameAr": "فري ماكس 230",
+      "price": 230,
+      "units": "12,000",
+      "customerPrice": 394.6,
+      "activationWithTax": 310.57,
+      "activationNoTax": 217.4,
+      "renewalPrice": 328.57,
+      "facebook": "50 MB",
+      "whatsapp": "50 MB",
+      "hasPerks": true,
+      "perks": [
+        "خصم 100ج كازيون",
+        "3 شهور Spotify",
+        "3 شهور Amazon"
+      ],
+      "color": "#ef4444"
+    },
+    {
+      "name": "FREEmax 345",
+      "nameAr": "فري ماكس 345",
+      "price": 345,
+      "units": "20,000",
+      "customerPrice": 558.9,
+      "activationWithTax": 474.86,
+      "activationNoTax": 332.4,
+      "renewalPrice": 492.86,
+      "facebook": "50 MB",
+      "whatsapp": "50 MB",
+      "hasPerks": true,
+      "perks": [
+        "خصم 100ج كازيون",
+        "3 شهور Spotify",
+        "3 شهور Amazon"
+      ],
+      "color": "#ef4444"
+    }
+  ],
+  "weekly": {
+    "name": "FREEmax Weekly",
+    "nameAr": "فري ماكس الأسبوع",
+    "units": "1,800",
+    "renewalPrice": 50,
+    "tagline": "أكبر باقة أسبوعية",
+    "channels": [
+      "Siebel",
+      "My Orange",
+      "OPay",
+      "MagicPay",
+      "الأمان ممكن",
+      "ضامن",
+      "أمان",
+      "Fawry"
+    ],
+    "hasPerks": false
+  }
+}

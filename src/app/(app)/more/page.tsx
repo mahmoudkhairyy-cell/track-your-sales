@@ -1,0 +1,514 @@
+"use client";
+
+import { FormEvent, useCallback, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { Banner, EmptyState, Field, Modal, PrimaryButton, SecondaryButton, Spinner, inputClass, useToast } from "@/components/ui";
+import { ApiError, api, downloadJson } from "@/lib/client";
+import { cairoISODate, formatDateAr, formatTimeCairo, monthLabelAr } from "@/lib/dates";
+import { formatQty } from "@/lib/calculations";
+import { parseBackup, type BackupFile } from "@/lib/backup";
+import { KPI_CATALOG, kpiEmoji, type KpiKey } from "@/lib/constants";
+import { useMonth } from "@/components/AppShell";
+import { quantityHint, quantityMax, quantityMin, quantityStep, validateQuantity } from "@/lib/quantity";
+
+type EntryRow = {
+  id: string;
+  kpiKey: KpiKey;
+  quantity: number;
+  entryDate: string;
+  note: string | null;
+  createdAt: string;
+  nameEn: string;
+  nameAr: string;
+  unitAr: string;
+};
+
+type TodayItem = {
+  kpiKey: string;
+  nameEn: string;
+  nameAr: string;
+  unitAr: string;
+  quantity: number;
+  count: number;
+};
+
+export default function MorePage() {
+  const toast = useToast();
+  const router = useRouter();
+  const month = useMonth();
+
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [entries, setEntries] = useState<EntryRow[]>([]);
+  const [todaySummary, setTodaySummary] = useState<TodayItem[]>([]);
+  const [profile, setProfile] = useState({ name: "", branch: "", role: "user" });
+  const [name, setName] = useState("");
+  const [branch, setBranch] = useState("");
+  const [pending, setPending] = useState(false);
+  const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [editing, setEditing] = useState<EntryRow | null>(null);
+  const [editKpi, setEditKpi] = useState<KpiKey>("new_lines");
+  const [editQuantity, setEditQuantity] = useState("");
+  const [editDate, setEditDate] = useState("");
+  const [editNote, setEditNote] = useState("");
+  const [editError, setEditError] = useState("");
+  const [clearOpen, setClearOpen] = useState(false);
+  const [clearConfirm, setClearConfirm] = useState("");
+  const [restoreSummary, setRestoreSummary] = useState<string>("");
+  const [restoreBackup, setRestoreBackup] = useState<BackupFile | null>(null);
+  const [restoreMode, setRestoreMode] = useState<"merge" | "replace" | "">("");
+  const [restoreOpen, setRestoreOpen] = useState(false);
+  const [replaceReady, setReplaceReady] = useState(false);
+
+  const load = useCallback(async () => {
+    setLoading(true);
+    setError("");
+    try {
+      const [entryData, dash] = await Promise.all([
+        api<{ entries: EntryRow[] }>(`/api/entries?month=${month}`),
+        api<{
+          profile: { name: string; branch: string; role: string };
+          todaySummary: TodayItem[];
+        }>(`/api/dashboard?month=${month}`),
+      ]);
+      setEntries(entryData.entries);
+      setTodaySummary(dash.todaySummary);
+      setProfile({ name: dash.profile.name, branch: dash.profile.branch, role: dash.profile.role });
+      setName(dash.profile.name);
+      setBranch(dash.profile.branch);
+    } catch (err) {
+      setError(err instanceof ApiError || err instanceof Error ? err.message : "تعذر تحميل صفحة المزيد");
+    } finally {
+      setLoading(false);
+    }
+  }, [month]);
+
+  useEffect(() => {
+    void load();
+  }, [load]);
+
+  async function saveProfile(event: FormEvent) {
+    event.preventDefault();
+    setPending(true);
+    try {
+      const result = await api<{ message: string; user: { name: string; branch: string } }>("/api/profile", {
+        method: "PATCH",
+        body: JSON.stringify({ name, branch }),
+      });
+      toast.push("success", result.message);
+      setProfile((current) => ({ ...current, name: result.user.name, branch: result.user.branch }));
+      router.refresh();
+    } catch (err) {
+      toast.push("error", err instanceof Error ? err.message : "فشل تحديث الملف");
+    } finally {
+      setPending(false);
+    }
+  }
+
+  function openEdit(entry: EntryRow) {
+    setEditing(entry);
+    setEditKpi(entry.kpiKey);
+    setEditQuantity(String(entry.quantity));
+    setEditDate(entry.entryDate);
+    setEditNote(entry.note ?? "");
+    setEditError("");
+  }
+
+  async function saveEdit(event: FormEvent) {
+    event.preventDefault();
+    if (!editing) return;
+    setEditError("");
+    const check = validateQuantity(editKpi, editQuantity);
+    if (!check.ok) {
+      setEditError(check.message);
+      return;
+    }
+    if (!editDate) {
+      setEditError("اختار تاريخ الإنجاز");
+      return;
+    }
+    setPending(true);
+    try {
+      const result = await api<{ message: string }>(`/api/entries/${editing.id}`, {
+        method: "PATCH",
+        body: JSON.stringify({ kpiKey: editKpi, quantity: check.value, entryDate: editDate, note: editNote }),
+      });
+      toast.push("success", result.message);
+      setEditing(null);
+      await load();
+    } catch (err) {
+      const message = err instanceof ApiError || err instanceof Error ? err.message : "مقدرناش نعدّل السجل";
+      setEditError(message);
+      toast.push("error", message);
+    } finally {
+      setPending(false);
+    }
+  }
+
+  async function deleteEntry() {
+    if (!deleteId) return;
+    setPending(true);
+    try {
+      const result = await api<{ message: string }>(`/api/entries/${deleteId}`, { method: "DELETE" });
+      toast.push("success", result.message);
+      setDeleteId(null);
+      await load();
+    } catch (err) {
+      toast.push("error", err instanceof Error ? err.message : "فشل حذف السجل");
+    } finally {
+      setPending(false);
+    }
+  }
+
+  async function clearMonth() {
+    if (clearConfirm !== month) return;
+    setPending(true);
+    try {
+      const result = await api<{ message: string }>(`/api/months/${month}/clear`, {
+        method: "POST",
+        body: JSON.stringify({ confirmMonth: month }),
+      });
+      toast.push("success", result.message);
+      setClearOpen(false);
+      setClearConfirm("");
+      await load();
+    } catch (err) {
+      toast.push("error", err instanceof Error ? err.message : "فشل مسح الشهر");
+    } finally {
+      setPending(false);
+    }
+  }
+
+  async function exportBackup() {
+    setPending(true);
+    try {
+      const result = await api<{ backup: BackupFile; summary: { entries: number; months: number; articles: number; isEmpty: boolean }; message: string }>(
+        "/api/backup/export",
+      );
+      if (!result.backup || !Array.isArray(result.backup.entries) || !Array.isArray(result.backup.months) || !result.backup.profile) {
+        throw new Error("التصدير ناقص، الملف متنزلش");
+      }
+      downloadJson(`targetx-backup-${cairoISODate()}.json`, result.backup);
+      toast.push("info", result.message);
+    } catch (err) {
+      toast.push("error", err instanceof Error ? err.message : "فشل التصدير");
+    } finally {
+      setPending(false);
+    }
+  }
+
+  async function onPickRestore(file: File | null) {
+    if (!file) return;
+    setPending(true);
+    try {
+      const text = await file.text();
+      const raw = JSON.parse(text) as unknown;
+      const parsed = parseBackup(raw);
+      const validated = await api<{ summary: { months: number; entries: number; articles: number; isEmpty: boolean; profile: { name: string; branch: string } } }>(
+        "/api/backup/restore",
+        {
+          method: "POST",
+          body: JSON.stringify({ dryRun: true, backup: parsed }),
+        },
+      );
+      setRestoreBackup(parsed);
+      setRestoreSummary(
+        `الملف لـ ${validated.summary.profile.name} / ${validated.summary.profile.branch} — شهور: ${validated.summary.months} — سجلات: ${validated.summary.entries} — مقالات: ${validated.summary.articles}${validated.summary.isEmpty ? " — الملف فاضي من السجلات." : ""}`,
+      );
+      setRestoreMode("");
+      setReplaceReady(false);
+      setRestoreOpen(true);
+    } catch (err) {
+      toast.push("error", err instanceof Error ? err.message : "الملف غير صالح");
+      setRestoreBackup(null);
+    } finally {
+      setPending(false);
+    }
+  }
+
+  async function prepareReplace() {
+    setPending(true);
+    try {
+      const result = await api<{ backup: BackupFile }>("/api/backup/export");
+      if (!result.backup || !Array.isArray(result.backup.entries)) {
+        throw new Error("النسخة الاحتياطية الحالية ناقصة، الاستبدال متوقف");
+      }
+      downloadJson(`targetx-before-replace-${cairoISODate()}.json`, result.backup);
+      setReplaceReady(true);
+      toast.push("info", "اتنزّلت نسخة احتياطية من بياناتك الحالية. تقدر تكمل الاستبدال.");
+    } catch (err) {
+      toast.push("error", err instanceof Error ? err.message : "فشل تجهيز نسخة قبل الاستبدال");
+    } finally {
+      setPending(false);
+    }
+  }
+
+  async function applyRestore() {
+    if (!restoreBackup || !restoreMode) return;
+    if (restoreMode === "replace" && !replaceReady) {
+      toast.push("error", "حمّل النسخة الاحتياطية الحالية قبل الاستبدال");
+      return;
+    }
+    setPending(true);
+    try {
+      const result = await api<{ message: string }>("/api/backup/restore", {
+        method: "POST",
+        body: JSON.stringify({
+          dryRun: false,
+          mode: restoreMode,
+          backup: restoreBackup,
+          confirmReplace: restoreMode === "replace",
+        }),
+      });
+      toast.push("success", result.message);
+      setRestoreOpen(false);
+      setRestoreBackup(null);
+      await load();
+      router.refresh();
+    } catch (err) {
+      toast.push("error", err instanceof Error ? err.message : "فشلت الاستعادة");
+    } finally {
+      setPending(false);
+    }
+  }
+
+  if (loading) return <Spinner label="ثواني… بنحمّل الصفحة" />;
+  if (error) return <Banner tone="error">{error}</Banner>;
+
+  const todayItems = todaySummary.filter((item) => item.quantity > 0 || item.count > 0);
+
+  return (
+    <div className="space-y-5">
+      <section>
+        <h1 className="text-2xl font-black">المزيد ⚙️</h1>
+        <p className="mt-1 text-sm text-neutral-500">ملخص النهارده، سجل الشهر، النسخة الاحتياطية، والمساعد.</p>
+      </section>
+
+      <section className="rounded-[28px] bg-white p-5 shadow-[0_8px_24px_rgba(255,121,0,0.06)]">
+        <h2 className="text-lg font-black">📊 اللي عملته النهارده</h2>
+        {todayItems.length === 0 ? (
+          <p className="mt-3 text-sm text-neutral-400">لسه مسجلتش حاجة النهارده. يلا نبدأ! 💪</p>
+        ) : (
+          <ul className="mt-3 space-y-2">
+            {todayItems.map((item) => (
+              <li key={item.kpiKey} className="flex items-center justify-between rounded-2xl bg-orange-50 px-3 py-2 text-sm">
+                <span className="flex items-center gap-2">
+                  <span className="text-xl">{kpiEmoji(item.kpiKey)}</span>
+                  <span>
+                    <span dir="ltr" className="font-extrabold">{item.nameEn}</span>
+                    <span className="block text-xs text-neutral-500">{item.count} عملية</span>
+                  </span>
+                </span>
+                <strong>
+                  {formatQty(item.quantity)} {item.unitAr}
+                </strong>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
+
+      <section className="rounded-[28px] bg-white p-5 shadow-[0_8px_24px_rgba(255,121,0,0.06)]">
+        <div className="flex items-center justify-between gap-3">
+          <h2 className="text-lg font-black">🗂️ سجل عمليات {monthLabelAr(month)}</h2>
+          <span className="text-sm text-neutral-400">{entries.length} سجل</span>
+        </div>
+        {entries.length === 0 ? (
+          <div className="mt-4">
+            <EmptyState title="السجل فاضي" text="مفيش عمليات محفوظة في الشهر ده." />
+          </div>
+        ) : (
+          <ul className="mt-4 space-y-2">
+            {entries.map((entry) => (
+              <li key={entry.id} className="rounded-2xl border border-orange-100 p-3">
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <p className="font-extrabold">
+                      <span className="ml-1">{kpiEmoji(entry.kpiKey)}</span>
+                      <span dir="ltr">{entry.nameEn}</span>
+                    </p>
+                    <p className="text-xs text-neutral-500">
+                      {formatDateAr(entry.entryDate)} · {formatQty(entry.quantity)} {entry.unitAr}
+                    </p>
+                    {entry.note ? <p className="mt-1 text-sm text-neutral-700">{entry.note}</p> : null}
+                    <p className="mt-1 text-[11px] text-neutral-400">اتسجل {formatTimeCairo(entry.createdAt)}</p>
+                  </div>
+                  <div className="flex shrink-0 items-center gap-3">
+                    <button type="button" className="min-h-10 font-extrabold text-[#ff7900]" onClick={() => openEdit(entry)}>
+                      ✏️ عدّل
+                    </button>
+                    <button type="button" className="min-h-10 font-extrabold text-red-600" onClick={() => setDeleteId(entry.id)}>
+                      🗑️ شيل
+                    </button>
+                  </div>
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
+        <button
+          type="button"
+          className="mt-4 min-h-12 w-full rounded-full border border-red-200 bg-red-50 font-extrabold text-red-700"
+          onClick={() => setClearOpen(true)}
+        >
+          🚨 امسح كل سجلات الشهر (مش بيترجع)
+        </button>
+      </section>
+
+      <section className="rounded-[28px] bg-white p-5 shadow-[0_8px_24px_rgba(255,121,0,0.06)]">
+        <h2 className="text-lg font-black">👤 بياناتك</h2>
+        <form className="mt-4 space-y-3" onSubmit={saveProfile}>
+          <Field label="اسم الموظف">
+            <input className={inputClass} value={name} onChange={(e) => setName(e.target.value)} required />
+          </Field>
+          <Field label="الفرع">
+            <input className={inputClass} value={branch} onChange={(e) => setBranch(e.target.value)} required />
+          </Field>
+          <PrimaryButton type="submit" disabled={pending}>
+            {pending ? "⏳ بنحفظ..." : "💾 احفظ الاسم والفرع"}
+          </PrimaryButton>
+        </form>
+        <p className="mt-3 text-xs leading-6 text-neutral-400">تقدر تغيّر اسمك والفرع في أي وقت من هنا.</p>
+      </section>
+
+      <section className="rounded-[28px] bg-white p-5 shadow-[0_8px_24px_rgba(255,121,0,0.06)]">
+        <h2 className="text-lg font-black">💾 نسخة احتياطية واستعادة</h2>
+        <p className="mt-2 text-sm leading-7 text-neutral-500">التصدير بينزّل ملف JSON فيه بياناتك وإعدادات الشهور والسجلات والملاحظات. من غير أي مفاتيح أو أسرار.</p>
+        <div className="mt-4 grid gap-3 sm:grid-cols-2">
+          <PrimaryButton type="button" disabled={pending} onClick={() => void exportBackup()}>
+            ⬇️ نزّل نسخة JSON
+          </PrimaryButton>
+          <label className="inline-flex min-h-12 cursor-pointer items-center justify-center rounded-full border border-neutral-200 bg-white px-4 font-bold">
+            ⬆️ اختار ملف للاستعادة
+            <input
+              type="file"
+              accept="application/json,.json"
+              className="hidden"
+              onChange={(event) => {
+                const file = event.target.files?.[0] ?? null;
+                event.target.value = "";
+                void onPickRestore(file);
+              }}
+            />
+          </label>
+        </div>
+      </section>
+
+      <Modal open={Boolean(editing)} title="✏️ تعديل السجل" onClose={() => setEditing(null)}>
+        <form className="space-y-4" onSubmit={saveEdit}>
+          {editError ? <Banner tone="error">❌ {editError}</Banner> : null}
+          <div>
+            <p className="mb-2 block text-sm font-bold text-neutral-800">الإيتم</p>
+            <div className="grid grid-cols-2 gap-2">
+              {KPI_CATALOG.map((kpi) => {
+                const active = kpi.key === editKpi;
+                return (
+                  <button
+                    key={kpi.key}
+                    type="button"
+                    onClick={() => setEditKpi(kpi.key)}
+                    className={`flex min-h-12 items-center gap-2 rounded-2xl border px-3 text-right text-xs font-extrabold transition ${
+                      active ? "border-[#ff7900] bg-orange-50 text-[#c45e00]" : "border-neutral-200 bg-white text-neutral-700"
+                    }`}
+                  >
+                    <span className="text-lg">{kpi.emoji}</span>
+                    <span dir="ltr" className="leading-4">
+                      {kpi.nameEn}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+          <Field label={`${kpiEmoji(editKpi)} الكمية`} hint={quantityHint(editKpi)}>
+            <input
+              className={`${inputClass} text-xl font-black`}
+              type="number"
+              inputMode={editKpi === "quality" ? "decimal" : "numeric"}
+              step={quantityStep(editKpi)}
+              min={quantityMin(editKpi)}
+              max={quantityMax(editKpi)}
+              value={editQuantity}
+              onChange={(e) => setEditQuantity(e.target.value)}
+              required
+            />
+          </Field>
+          <Field label="📅 تاريخ الإنجاز">
+            <input className={inputClass} type="date" value={editDate} onChange={(e) => setEditDate(e.target.value)} required />
+          </Field>
+          <Field label="📝 ملاحظة">
+            <textarea className={`${inputClass} min-h-20 py-3`} value={editNote} onChange={(e) => setEditNote(e.target.value)} maxLength={500} />
+          </Field>
+          <div className="flex gap-2">
+            <SecondaryButton type="button" onClick={() => setEditing(null)}>
+              إلغاء
+            </SecondaryButton>
+            <PrimaryButton type="submit" disabled={pending}>
+              {pending ? "⏳ بنحفظ..." : "💾 احفظ التعديل"}
+            </PrimaryButton>
+          </div>
+        </form>
+      </Modal>
+
+      <Modal open={Boolean(deleteId)} title="🗑️ تشيل السجل ده؟" onClose={() => setDeleteId(null)}>
+        <p className="text-sm leading-7 text-neutral-600">السجل هيتشال من قاعدة البيانات بعد ما السيرفر يأكد بس.</p>
+        <div className="mt-4 flex gap-2">
+          <SecondaryButton type="button" onClick={() => setDeleteId(null)}>
+            لأ، خليه
+          </SecondaryButton>
+          <button type="button" disabled={pending} onClick={() => void deleteEntry()} className="min-h-12 rounded-full bg-red-600 px-4 font-extrabold text-white">
+            أيوه، شيله
+          </button>
+        </div>
+      </Modal>
+
+      <Modal open={clearOpen} title="🚨 تمسح الشهر كله؟" onClose={() => setClearOpen(false)}>
+        <p className="text-sm leading-7 text-neutral-700">
+          هتمسح كل سجلات <strong>{monthLabelAr(month)}</strong> وعددها <strong>{entries.length}</strong>. الإعدادات مش هتتمسح. ده مش بيترجع بعد ما السيرفر ينفذ.
+        </p>
+        <Field label={`اكتب ${month} للتأكيد`}>
+          <input className={inputClass} value={clearConfirm} onChange={(e) => setClearConfirm(e.target.value)} />
+        </Field>
+        <button
+          type="button"
+          disabled={pending || clearConfirm !== month}
+          onClick={() => void clearMonth()}
+          className="mt-4 min-h-12 w-full rounded-full bg-red-600 font-extrabold text-white disabled:opacity-50"
+        >
+          🚨 أيوه، امسح الشهر
+        </button>
+      </Modal>
+
+      <Modal open={restoreOpen} title="⬆️ استعادة نسخة" onClose={() => setRestoreOpen(false)}>
+        <p className="text-sm leading-7 text-neutral-700">{restoreSummary}</p>
+        <div className="mt-4 grid gap-2">
+          <label className="flex min-h-12 items-center gap-2 rounded-2xl bg-neutral-50 px-3 text-sm font-bold">
+            <input type="radio" name="restore-mode" checked={restoreMode === "merge"} onChange={() => setRestoreMode("merge")} />
+            🔀 ادمج مع البيانات الحالية
+          </label>
+          <label className="flex min-h-12 items-center gap-2 rounded-2xl bg-red-50 px-3 text-sm font-semibold">
+            <input type="radio" name="restore-mode" checked={restoreMode === "replace"} onChange={() => setRestoreMode("replace")} />
+            ♻️ استبدل البيانات الحالية
+          </label>
+        </div>
+        {restoreMode === "replace" ? (
+          <div className="mt-3 space-y-3">
+            <Banner tone="warn">⚠️ الاستبدال هيمسح السجلات والإعدادات الحالية بعد ما تنزّل نسخة احتياطية منها.</Banner>
+            <SecondaryButton type="button" className="w-full" disabled={pending} onClick={() => void prepareReplace()}>
+              ⬇️ نزّل نسخة احتياطية الأول
+            </SecondaryButton>
+          </div>
+        ) : null}
+        <PrimaryButton
+          type="button"
+          className="mt-4"
+          disabled={pending || !restoreMode || (restoreMode === "replace" && !replaceReady)}
+          onClick={() => void applyRestore()}
+        >
+          ✅ نفّذ الاستعادة
+        </PrimaryButton>
+      </Modal>
+
+    </div>
+  );
+}

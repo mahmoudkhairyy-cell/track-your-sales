@@ -1,0 +1,167 @@
+[
+  {
+    "name": "Activation Team",
+    "number": "01223202818",
+    "type": "Orange"
+  },
+  {
+    "name": "Prepaid Team",
+    "number": "01223204321",
+    "type": "Orange"
+  },
+  {
+    "name": "Activation Data Line",
+    "number": "01223200252",
+    "type": "Orange"
+  },
+  {
+    "name": "Complain Pre",
+    "number": "01223204604",
+    "type": "Orange"
+  },
+  {
+    "name": "Save Team",
+    "number": "01223204602",
+    "type": "Orange"
+  },
+  {
+    "name": "Complain Post",
+    "number": "01223204603",
+    "type": "Orange"
+  },
+  {
+    "name": "Data Team",
+    "number": "01223202062",
+    "type": "Orange"
+  },
+  {
+    "name": "Points",
+    "number": "01223204786",
+    "type": "Orange"
+  },
+  {
+    "name": "110 Team",
+    "number": "01223202870",
+    "type": "Orange"
+  },
+  {
+    "name": "Data Gathering",
+    "number": "01223202995",
+    "type": "Orange"
+  },
+  {
+    "name": "Activation Corp.",
+    "number": "01223204260",
+    "type": "Orange"
+  },
+  {
+    "name": "POS",
+    "number": "01223202828",
+    "type": "Orange"
+  },
+  {
+    "name": "Credit Corp.",
+    "number": "01223202849",
+    "type": "Orange"
+  },
+  {
+    "name": "First Class",
+    "number": "01223202976",
+    "type": "Orange"
+  },
+  {
+    "name": "Fraud Team",
+    "number": "01223206299",
+    "type": "Orange"
+  },
+  {
+    "name": "STK",
+    "number": "01223204323",
+    "type": "Orange"
+  },
+  {
+    "name": "SPOC",
+    "number": "01223202102",
+    "type": "Orange"
+  },
+  {
+    "name": "Credit",
+    "number": "01223202113",
+    "type": "Orange"
+  },
+  {
+    "name": "Save Team Corp.",
+    "number": "01223204959",
+    "type": "Orange"
+  },
+  {
+    "name": "MNP Team",
+    "number": "01223204554",
+    "type": "Orange"
+  },
+  {
+    "name": "MNP Prepaid",
+    "number": "01223200006",
+    "type": "Orange"
+  },
+  {
+    "name": "MNP Postpaid",
+    "number": "01223204602",
+    "type": "Orange"
+  },
+  {
+    "name": "MNP Corporate",
+    "number": "01223204140",
+    "type": "Orange"
+  },
+  {
+    "name": "Prepaid Activation",
+    "number": "01223202995",
+    "type": "Orange"
+  },
+  {
+    "name": "RSS TEAM",
+    "number": "01223204209",
+    "type": "Orange"
+  },
+  {
+    "name": "Activation & TE Portal",
+    "number": "01223200737",
+    "type": "ADSL"
+  },
+  {
+    "name": "Finance",
+    "number": "01223200383",
+    "type": "ADSL"
+  },
+  {
+    "name": "Tariff Migration",
+    "number": "01223200717",
+    "type": "ADSL"
+  },
+  {
+    "name": "Retention Team (1)",
+    "number": "01223200711",
+    "type": "ADSL"
+  },
+  {
+    "name": "Retention Team (2)",
+    "number": "01223200712",
+    "type": "ADSL"
+  },
+  {
+    "name": "Technical Support (1)",
+    "number": "01223200359",
+    "type": "ADSL"
+  },
+  {
+    "name": "Technical Support (2)",
+    "number": "01223208100",
+    "type": "ADSL"
+  },
+  {
+    "name": "Fixed Activation",
+    "number": "01223209021",
+    "type": "ADSL"
+  }
+]

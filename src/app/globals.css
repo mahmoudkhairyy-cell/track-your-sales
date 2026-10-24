@@ -1,0 +1,33 @@
+@import "tailwindcss";
+
+html {
+  direction: rtl;
+  --font-cairo: "Cairo Variable";
+}
+
+body {
+  margin: 0;
+  background: #fff7f0;
+  color: #171717;
+  font-family: var(--font-cairo), Tahoma, "Segoe UI", Arial, sans-serif;
+  text-rendering: optimizeLegibility;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+input,
+select,
+textarea,
+button {
+  font-family: inherit;
+}
+
+textarea {
+  resize: vertical;
+}
+
+::selection {
+  background: #ffd7b8;
+}

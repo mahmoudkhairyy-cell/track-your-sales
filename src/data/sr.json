@@ -1,0 +1,2922 @@
+[
+  {
+    "id": "4195",
+    "title": "Orange Cash - Electricity Recharge",
+    "titleAr": "شحن كروت الكهرباء عن طريق أورانج كاش",
+    "description": "SR خاص بشحن كروت الكهرباء من خلال محفظة أورانج كاش.",
+    "category": "Orange Cash",
+    "steps": "SR خاص بشحن كروت الكهرباء من خلال محفظة أورانج كاش."
+  },
+  {
+    "id": "11102 / 11309",
+    "title": "CNAM FEATURE",
+    "titleAr": "إظهار اسم المتصل",
+    "description": "إضافة خدمة إظهار اسم المتصل (CNAM) لكل من الأفراد والشركات.",
+    "category": "VAS",
+    "steps": "• بالنسبة للأفراد:\nيتم عمل SR رقم 11102 أو 11309 (حسب حالة الخط bared أم لا).\nالمرفقات: (صورة بطاقة العميل + عقد المكالمات الترويجية بعد ملئه وتوقيعه) في ملف PDF واحد.\n\n• بالنسبة للشركات:\nيتم عمل SR رقم 11102.\nالمرفقات: (بطاقة العميل + عقد تقديم الخدمات الترويجية) في ملف PDF واحد.\nإجراء إضافي: يجب إرسال إيميل إلى sarah.m.mamdouh.ext@orange.com لطلب إضافة الخدمة للخط، وإرفاق ملف الـ PDF وملف Excel ببيانات الحساب."
+  },
+  {
+    "id": "50113 / 50807",
+    "title": "termination Line",
+    "titleAr": "إنهاء التعاقد / إلغاء الخط",
+    "description": "هندفع billed+unbilled وتحصيل كافة المستحقات قبل إنهاء التعاقد.",
+    "category": "Termination",
+    "steps": "• خطوات التنفيذ:\n1. يتم حساب كافة المبالغ المستحقة على العميل (Billed + Unbilled) باستخدام الـ Postpaid Calculator.\n2. التأكد من تحصيل المبالغ بالكامل قبل البدء في الإجراء.\n3. يتم عمل SR Termination برقم 50113 أو 50807.\n\n• المرفقات المطلوبة:\n- صورة بطاقة العميل.\n- إقرار إنهاء التعاقد موقع من العميل."
+  },
+  {
+    "id": "1001",
+    "title": "DSL Outbound Campaign - Activation Call",
+    "titleAr": "DSL Outbound Campaign - Activation Call",
+    "description": "DSL Outbound Campaign - Activation Call.",
+    "category": "DSL",
+    "steps": "DSL Outbound Campaign - Activation Call."
+  },
+  {
+    "id": "423001",
+    "title": "DSL G Info - VAS Request For Information",
+    "titleAr": "DSL G Info - VAS Request For Information",
+    "description": "DSL G Info For VAS - Request For Information.",
+    "category": "DSL",
+    "steps": "DSL G Info For VAS - Request For Information."
+  },
+  {
+    "id": "422001",
+    "title": "DSL G Info - Termination Request",
+    "titleAr": "DSL G Info - Termination Request",
+    "description": "DSL G Info For Termination - Terminate Service.",
+    "category": "DSL",
+    "steps": "DSL G Info For Termination - Terminate Service."
+  },
+  {
+    "id": "421011",
+    "title": "Complaint Handling - Acc Mod For Sales Team",
+    "titleAr": "Complaint Handling - Acc Mod For Sales Team",
+    "description": "Acc mod for sales team.",
+    "category": "Complaint Handling",
+    "steps": "Acc mod for sales team."
+  },
+  {
+    "id": "421010",
+    "title": "Termination - 10 Lines",
+    "titleAr": "إنهاء تعاقد 10 خطوط",
+    "description": "When a customer wants to cancel multiple lines, they write in the declaration the numbers they wish to keep and request to cancel the rest.",
+    "category": "Termination",
+    "steps": "When a customer wants to cancel multiple lines, they write in the declaration the numbers they wish to keep and request to cancel the rest."
+  },
+  {
+    "id": "421009",
+    "title": "Orange Cash - Violation",
+    "titleAr": "Orange Cash - Violation",
+    "description": "If there is any violation related to Orange Cash, for example, and we need to amend it and re-upload the contracts.",
+    "category": "Orange Cash",
+    "steps": "If there is any violation related to Orange Cash, for example, and we need to amend it and re-upload the contracts."
+  },
+  {
+    "id": "421002",
+    "title": "MNP - Tariff",
+    "titleAr": "تغيير نظام MNP",
+    "description": "When we submit the MNP request, we do it in order to select the plan, upload the attachments, and fill in the notes afterward.",
+    "category": "MNP",
+    "steps": "When we submit the MNP request, we do it in order to select the plan, upload the attachments, and fill in the notes afterward."
+  },
+  {
+    "id": "421001",
+    "title": "DSL G Info - Sales Teams Address & Working Hours",
+    "titleAr": "DSL G Info - Sales Teams Address & Working Hours",
+    "description": "DSL G Info For Sales Teams - Address And Working Hours.",
+    "category": "DSL",
+    "steps": "DSL G Info For Sales Teams - Address And Working Hours."
+  },
+  {
+    "id": "419001",
+    "title": "DSL G Info - Resellers Contacts",
+    "titleAr": "DSL G Info - Resellers Contacts",
+    "description": "DSL G Info For Resellers - Contacts.",
+    "category": "DSL",
+    "steps": "DSL G Info For Resellers - Contacts."
+  },
+  {
+    "id": "418015",
+    "title": "DSL G Info - Configuration Username & Password",
+    "titleAr": "DSL G Info - Configuration Username & Password",
+    "description": "DSL G Info For Products - Configuration Username & Password.",
+    "category": "DSL",
+    "steps": "DSL G Info For Products - Configuration Username & Password."
+  },
+  {
+    "id": "418013",
+    "title": "DSL G Info - Session Status",
+    "titleAr": "DSL G Info - Session Status",
+    "description": "DSL G Info For Products - Session Status.",
+    "category": "DSL",
+    "steps": "DSL G Info For Products - Session Status."
+  },
+  {
+    "id": "418012",
+    "title": "DSL G Info - Package Availability",
+    "titleAr": "DSL G Info - Package Availability",
+    "description": "DSL G Info For Products - Package Availability.",
+    "category": "DSL",
+    "steps": "DSL G Info For Products - Package Availability."
+  },
+  {
+    "id": "418011",
+    "title": "DSL G Info - Card Pin Code",
+    "titleAr": "DSL G Info - Card Pin Code",
+    "description": "DSL G Info For Products - Card Pin Code.",
+    "category": "DSL",
+    "steps": "DSL G Info For Products - Card Pin Code."
+  },
+  {
+    "id": "418010",
+    "title": "DSL G Info - Usage Inquiry",
+    "titleAr": "DSL G Info - Usage Inquiry",
+    "description": "DSL G Info For Products - Usage Inquiry.",
+    "category": "DSL",
+    "steps": "DSL G Info For Products - Usage Inquiry."
+  },
+  {
+    "id": "418009",
+    "title": "DSL G Info - Non Orange Issue",
+    "titleAr": "DSL G Info - Non Orange Issue",
+    "description": "DSL G Info For Products - Non Orange Issue.",
+    "category": "DSL",
+    "steps": "DSL G Info For Products - Non Orange Issue."
+  },
+  {
+    "id": "418008",
+    "title": "DSL G Info - Prices",
+    "titleAr": "DSL G Info - Prices",
+    "description": "DSL G Info For Products - Prices.",
+    "category": "DSL",
+    "steps": "DSL G Info For Products - Prices."
+  },
+  {
+    "id": "418007",
+    "title": "DSL G Info - Consumption Info",
+    "titleAr": "DSL G Info - Consumption Info",
+    "description": "DSL G Info For Products - Consumption Info.",
+    "category": "DSL",
+    "steps": "DSL G Info For Products - Consumption Info."
+  },
+  {
+    "id": "418006",
+    "title": "DSL G Info - Fair Usage Policy",
+    "titleAr": "DSL G Info - Fair Usage Policy",
+    "description": "DSL G Info For Products - Fair Usage Policy.",
+    "category": "DSL",
+    "steps": "DSL G Info For Products - Fair Usage Policy."
+  },
+  {
+    "id": "418005",
+    "title": "DSL G Info - New Packages",
+    "titleAr": "DSL G Info - New Packages",
+    "description": "DSL G Info For Products - New Packages.",
+    "category": "DSL",
+    "steps": "DSL G Info For Products - New Packages."
+  },
+  {
+    "id": "418004",
+    "title": "DSL G Info - Recharging Methods",
+    "titleAr": "DSL G Info - Recharging Methods",
+    "description": "DSL G Info For Products - Recharging Methods.",
+    "category": "DSL",
+    "steps": "DSL G Info For Products - Recharging Methods."
+  },
+  {
+    "id": "418003",
+    "title": "DSL G Info - Configuration",
+    "titleAr": "DSL G Info - Configuration",
+    "description": "DSL G Info For Products - Configuration.",
+    "category": "DSL",
+    "steps": "DSL G Info For Products - Configuration."
+  },
+  {
+    "id": "418002",
+    "title": "DSL G Info - Re-Pricing",
+    "titleAr": "DSL G Info - Re-Pricing",
+    "description": "DSL G Info For Products - Re-Pricing.",
+    "category": "DSL",
+    "steps": "DSL G Info For Products - Re-Pricing."
+  },
+  {
+    "id": "418001",
+    "title": "DSL G Info - Request For Information",
+    "titleAr": "DSL G Info - Request For Information",
+    "description": "DSL G Info For Products - Request For Information.",
+    "category": "DSL",
+    "steps": "DSL G Info For Products - Request For Information."
+  },
+  {
+    "id": "417002",
+    "title": "DSL G Info MNP - ID Copy Request",
+    "titleAr": "DSL G Info MNP - ID Copy Request",
+    "description": "DSL G Info For MNP - ID Copy Request.",
+    "category": "DSL",
+    "steps": "DSL G Info For MNP - ID Copy Request."
+  },
+  {
+    "id": "417001",
+    "title": "DSL G Info MNP - Cancellation Number",
+    "titleAr": "DSL G Info MNP - Cancellation Number",
+    "description": "DSL G Info For MNP - Cancellation Number.",
+    "category": "DSL",
+    "steps": "DSL G Info For MNP - Cancellation Number."
+  },
+  {
+    "id": "416001",
+    "title": "DSL G Info - IP & DNS",
+    "titleAr": "DSL G Info - IP & DNS",
+    "description": "DSL G Info For PC Settings - IP & DNS.",
+    "category": "DSL",
+    "steps": "DSL G Info For PC Settings - IP & DNS."
+  },
+  {
+    "id": "415001",
+    "title": "DSL G Info - Offers Request For Information",
+    "titleAr": "DSL G Info - Offers Request For Information",
+    "description": "DSL G Info For Offers - Request For Information.",
+    "category": "DSL",
+    "steps": "DSL G Info For Offers - Request For Information."
+  },
+  {
+    "id": "414001",
+    "title": "DSL G Info - Due Date Reminder",
+    "titleAr": "DSL G Info - Due Date Reminder",
+    "description": "DSL G Info For Notification - Due Date Reminder.",
+    "category": "DSL",
+    "steps": "DSL G Info For Notification - Due Date Reminder."
+  },
+  {
+    "id": "413003",
+    "title": "DSL G Info Migration - From Reseller To Orange",
+    "titleAr": "DSL G Info Migration - From Reseller To Orange",
+    "description": "DSL G Info For Migration - From Reseller To Orange.",
+    "category": "DSL",
+    "steps": "DSL G Info For Migration - From Reseller To Orange."
+  },
+  {
+    "id": "412002",
+    "title": "DSL G Info Line Status - Activation Step",
+    "titleAr": "DSL G Info Line Status - Activation Step",
+    "description": "DSL G Info For Line Status - Activation Step.",
+    "category": "DSL",
+    "steps": "DSL G Info For Line Status - Activation Step."
+  },
+  {
+    "id": "412001",
+    "title": "DSL G Info Line Status - Claims Paid",
+    "titleAr": "DSL G Info Line Status - Claims Paid",
+    "description": "DSL G Info For Line Status - Claims Paid.",
+    "category": "DSL",
+    "steps": "DSL G Info For Line Status - Claims Paid."
+  },
+  {
+    "id": "411003",
+    "title": "DSL G Info - Customer Harassment",
+    "titleAr": "DSL G Info - Customer Harassment",
+    "description": "DSL G Info For Customer Care - Customer Harassment.",
+    "category": "DSL",
+    "steps": "DSL G Info For Customer Care - Customer Harassment."
+  },
+  {
+    "id": "410002",
+    "title": "DSL G Info Contract - Modifications Info",
+    "titleAr": "DSL G Info Contract - Modifications Info",
+    "description": "DSL G Info For Contract Data - Modifications Info.",
+    "category": "DSL",
+    "steps": "DSL G Info For Contract Data - Modifications Info."
+  },
+  {
+    "id": "400001",
+    "title": "DSL G Info Billing - Bill Amount",
+    "titleAr": "DSL G Info Billing - Bill Amount",
+    "description": "DSL G Info For Billing - Bill Amount.",
+    "category": "DSL",
+    "steps": "DSL G Info For Billing - Bill Amount."
+  },
+  {
+    "id": "82801",
+    "title": "DSL Termination Resellers - Signed Document",
+    "titleAr": "DSL Termination Resellers - Signed Document",
+    "description": "DSL Termination For Resellers - Signed Termination Document.",
+    "category": "DSL Termination",
+    "steps": "DSL Termination For Resellers - Signed Termination Document."
+  },
+  {
+    "id": "82701",
+    "title": "DSL Termination Physical - Signed Document",
+    "titleAr": "DSL Termination Physical - Signed Document",
+    "description": "DSL Termination For Physical - Signed Termination Document.",
+    "category": "DSL Termination",
+    "steps": "DSL Termination For Physical - Signed Termination Document."
+  },
+  {
+    "id": "82601",
+    "title": "DSL Termination Per Reason - Signed Document",
+    "titleAr": "DSL Termination Per Reason - Signed Document",
+    "description": "DSL Termination For Per Reason - Signed Termination Document.",
+    "category": "DSL Termination",
+    "steps": "DSL Termination For Per Reason - Signed Termination Document."
+  },
+  {
+    "id": "82501",
+    "title": "DSL Termination Offers - Signed Document",
+    "titleAr": "DSL Termination Offers - Signed Document",
+    "description": "DSL Termination For Offers - Signed Termination Document.",
+    "category": "DSL Termination",
+    "steps": "DSL Termination For Offers - Signed Termination Document."
+  },
+  {
+    "id": "82401",
+    "title": "DSL Termination Inv. Susp. - Billing Issue",
+    "titleAr": "DSL Termination Inv. Susp. - Billing Issue",
+    "description": "DSL Termination For Inv. Susp. - Billing Issue.",
+    "category": "DSL Termination",
+    "steps": "DSL Termination For Inv. Susp. - Billing Issue."
+  },
+  {
+    "id": "82301",
+    "title": "DSL Termination Cust. Serv - Signed Document",
+    "titleAr": "DSL Termination Cust. Serv - Signed Document",
+    "description": "DSL Termination For Cust. Serv - Signed Termination Document.",
+    "category": "DSL Termination",
+    "steps": "DSL Termination For Cust. Serv - Signed Termination Document."
+  },
+  {
+    "id": "82102",
+    "title": "DSL Termination Comp Offer - Threat To Disconnect",
+    "titleAr": "DSL Termination Comp Offer - Threat To Disconnect",
+    "description": "DSL Termination For Comp Offer - Threat To Disconnect.",
+    "category": "DSL Termination",
+    "steps": "DSL Termination For Comp Offer - Threat To Disconnect."
+  },
+  {
+    "id": "82101",
+    "title": "DSL Termination Comp Offer - Signed Document",
+    "titleAr": "DSL Termination Comp Offer - Signed Document",
+    "description": "DSL Termination For Comp Offer - Signed Termination Document.",
+    "category": "DSL Termination",
+    "steps": "DSL Termination For Comp Offer - Signed Termination Document."
+  },
+  {
+    "id": "82001",
+    "title": "DSL Termination Billing - Signed Document",
+    "titleAr": "DSL Termination Billing - Signed Document",
+    "description": "DSL Termination For Billing - Signed Termination Document.",
+    "category": "DSL Termination",
+    "steps": "DSL Termination For Billing - Signed Termination Document."
+  },
+  {
+    "id": "71005",
+    "title": "POS Acc Mod - Activate Applications",
+    "titleAr": "POS Acc Mod - Activate Applications",
+    "description": "POS Acc Mod for Applications - Activate.",
+    "category": "POS",
+    "steps": "POS Acc Mod for Applications - Activate."
+  },
+  {
+    "id": "50810",
+    "title": "Termination - Personal Reasons Less 3M",
+    "titleAr": "Termination - Personal Reasons Less 3M",
+    "description": "Termination For Pers Reasons - Less Than 3M Signed Term. Doc.",
+    "category": "Termination",
+    "steps": "Termination For Pers Reasons - Less Than 3M Signed Term. Doc."
+  },
+  {
+    "id": "50113",
+    "title": "Termination - Billing / Signed Document",
+    "titleAr": "Termination - Billing / Signed Document",
+    "description": "When customer terminates his Home 4G and gets his insurance back. Signed Termination Documents.",
+    "category": "Termination",
+    "steps": "When customer terminates his Home 4G and gets his insurance back. Signed Termination Documents."
+  },
+  {
+    "id": "41943",
+    "title": "DSL G Info - New Sales Lead",
+    "titleAr": "DSL G Info - New Sales Lead",
+    "description": "DSL G Info For Products - New sales lead.",
+    "category": "DSL",
+    "steps": "DSL G Info For Products - New sales lead."
+  },
+  {
+    "id": "40021",
+    "title": "DSL Fault Connectivity - Username Taken",
+    "titleAr": "DSL Fault Connectivity - Username Taken",
+    "description": "DSL Fault For Connectivity - Username Taken.",
+    "category": "DSL Fault",
+    "steps": "DSL Fault For Connectivity - Username Taken."
+  },
+  {
+    "id": "40019",
+    "title": "DSL Fault Connectivity - Access Point Unstable",
+    "titleAr": "DSL Fault Connectivity - Access Point Unstable",
+    "description": "DSL Fault For Connectivity - Access Point Unstable.",
+    "category": "DSL Fault",
+    "steps": "DSL Fault For Connectivity - Access Point Unstable."
+  },
+  {
+    "id": "40018",
+    "title": "DSL Fault Connectivity - Access Point Down",
+    "titleAr": "DSL Fault Connectivity - Access Point Down",
+    "description": "DSL Fault For Connectivity - Access Point Down.",
+    "category": "DSL Fault",
+    "steps": "DSL Fault For Connectivity - Access Point Down."
+  },
+  {
+    "id": "40017",
+    "title": "DSL Fault Connectivity - Coverage Issue",
+    "titleAr": "DSL Fault Connectivity - Coverage Issue",
+    "description": "DSL Fault For Connectivity - Coverage Issue.",
+    "category": "DSL Fault",
+    "steps": "DSL Fault For Connectivity - Coverage Issue."
+  },
+  {
+    "id": "40016",
+    "title": "DSL Fault Connectivity - TE-Redirection",
+    "titleAr": "DSL Fault Connectivity - TE-Redirection",
+    "description": "DSL Fault For Connectivity - TE-Redirection.",
+    "category": "DSL Fault",
+    "steps": "DSL Fault For Connectivity - TE-Redirection."
+  },
+  {
+    "id": "40015",
+    "title": "DSL Fault Connectivity - Slow Upload",
+    "titleAr": "DSL Fault Connectivity - Slow Upload",
+    "description": "DSL Fault For Connectivity - Slow Upload.",
+    "category": "DSL Fault",
+    "steps": "DSL Fault For Connectivity - Slow Upload."
+  },
+  {
+    "id": "40014",
+    "title": "DSL Fault Connectivity - Slow Download",
+    "titleAr": "DSL Fault Connectivity - Slow Download",
+    "description": "Customer complaining that he has slow connection on his home internet.",
+    "category": "DSL Fault",
+    "steps": "Customer complaining that he has slow connection on his home internet."
+  },
+  {
+    "id": "40013",
+    "title": "DSL Fault Connectivity - No Browsing",
+    "titleAr": "DSL Fault Connectivity - No Browsing",
+    "description": "Customer complaining that he cannot browse through his home internet.",
+    "category": "DSL Fault",
+    "steps": "Customer complaining that he cannot browse through his home internet."
+  },
+  {
+    "id": "40012",
+    "title": "DSL Fault Connectivity - Connection Unstable",
+    "titleAr": "DSL Fault Connectivity - Connection Unstable",
+    "description": "DSL Fault For Connectivity - Connection Unstable.",
+    "category": "DSL Fault",
+    "steps": "DSL Fault For Connectivity - Connection Unstable."
+  },
+  {
+    "id": "40011",
+    "title": "DSL Fault Connectivity - Quality Of Service",
+    "titleAr": "DSL Fault Connectivity - Quality Of Service",
+    "description": "DSL Fault For Connectivity - Quality Of Service.",
+    "category": "DSL Fault",
+    "steps": "DSL Fault For Connectivity - Quality Of Service."
+  },
+  {
+    "id": "40010",
+    "title": "DSL Fault Connectivity - Bit Rate Mismatch",
+    "titleAr": "DSL Fault Connectivity - Bit Rate Mismatch",
+    "description": "DSL Fault For Connectivity - Bit Rate Mismatch.",
+    "category": "DSL Fault",
+    "steps": "DSL Fault For Connectivity - Bit Rate Mismatch."
+  },
+  {
+    "id": "40001",
+    "title": "DSL Fault Connectivity - Redirection Unknown",
+    "titleAr": "DSL Fault Connectivity - Redirection Unknown",
+    "description": "DSL Fault For Connectivity - Redirection-Unknown.",
+    "category": "DSL Fault",
+    "steps": "DSL Fault For Connectivity - Redirection-Unknown."
+  },
+  {
+    "id": "39015",
+    "title": "DSL Fault Physical - Wire Problem",
+    "titleAr": "DSL Fault Physical - Wire Problem",
+    "description": "DSL Fault For Physical - Wire Problem.",
+    "category": "DSL Fault",
+    "steps": "DSL Fault For Physical - Wire Problem."
+  },
+  {
+    "id": "39014",
+    "title": "DSL Fault Physical - Wrong Port",
+    "titleAr": "DSL Fault Physical - Wrong Port",
+    "description": "DSL Fault For Physical - Wrong Port.",
+    "category": "DSL Fault",
+    "steps": "DSL Fault For Physical - Wrong Port."
+  },
+  {
+    "id": "39013",
+    "title": "DSL Fault Physical - Bad Line",
+    "titleAr": "DSL Fault Physical - Bad Line",
+    "description": "DSL Fault For Physical - Bad Line.",
+    "category": "DSL Fault",
+    "steps": "DSL Fault For Physical - Bad Line."
+  },
+  {
+    "id": "39012",
+    "title": "DSL Fault Physical - Line Unstable",
+    "titleAr": "DSL Fault Physical - Line Unstable",
+    "description": "DSL Fault For Physical - Line Unstable.",
+    "category": "DSL Fault",
+    "steps": "DSL Fault For Physical - Line Unstable."
+  },
+  {
+    "id": "39011",
+    "title": "DSL Fault Physical - Voice Line Problem",
+    "titleAr": "DSL Fault Physical - Voice Line Problem",
+    "description": "DSL Fault For Physical - Voice Line Problem.",
+    "category": "DSL Fault",
+    "steps": "DSL Fault For Physical - Voice Line Problem."
+  },
+  {
+    "id": "39010",
+    "title": "DSL Fault Physical - Splitter Problem",
+    "titleAr": "DSL Fault Physical - Splitter Problem",
+    "description": "DSL Fault For Physical - Splitter Problem.",
+    "category": "DSL Fault",
+    "steps": "DSL Fault For Physical - Splitter Problem."
+  },
+  {
+    "id": "39001",
+    "title": "DSL Fault Physical - Port Number Not Exists",
+    "titleAr": "DSL Fault Physical - Port Number Not Exists",
+    "description": "DSL Fault For Physical - Port Number Not Exists.",
+    "category": "DSL Fault",
+    "steps": "DSL Fault For Physical - Port Number Not Exists."
+  },
+  {
+    "id": "38001",
+    "title": "DSL Fault Portal - Cant View Invoices",
+    "titleAr": "DSL Fault Portal - Cant View Invoices",
+    "description": "DSL Fault For Portal - Cant View Invoices.",
+    "category": "DSL Fault",
+    "steps": "DSL Fault For Portal - Cant View Invoices."
+  },
+  {
+    "id": "37021",
+    "title": "DSL Fault VAS - Extra Quota Dispute",
+    "titleAr": "DSL Fault VAS - Extra Quota Dispute",
+    "description": "DSL Fault For VAS - Extra Quota Dispute.",
+    "category": "DSL Fault",
+    "steps": "DSL Fault For VAS - Extra Quota Dispute."
+  },
+  {
+    "id": "37019",
+    "title": "DSL Fault VAS - Extra Key Purchasing",
+    "titleAr": "DSL Fault VAS - Extra Key Purchasing",
+    "description": "DSL Fault For VAS - Extra Key Purchasing.",
+    "category": "DSL Fault",
+    "steps": "DSL Fault For VAS - Extra Key Purchasing."
+  },
+  {
+    "id": "37018",
+    "title": "DSL Fault VAS - Suspended Key",
+    "titleAr": "DSL Fault VAS - Suspended Key",
+    "description": "DSL Fault For VAS - Suspended Key.",
+    "category": "DSL Fault",
+    "steps": "DSL Fault For VAS - Suspended Key."
+  },
+  {
+    "id": "37017",
+    "title": "DSL Fault VAS - Not Eligible",
+    "titleAr": "DSL Fault VAS - Not Eligible",
+    "description": "DSL Fault For VAS - Not Eligible.",
+    "category": "DSL Fault",
+    "steps": "DSL Fault For VAS - Not Eligible."
+  },
+  {
+    "id": "37016",
+    "title": "DSL Fault VAS - Quota Redirection Page",
+    "titleAr": "DSL Fault VAS - Quota Redirection Page",
+    "description": "DSL Fault For VAS - Quota Redirection Page.",
+    "category": "DSL Fault",
+    "steps": "DSL Fault For VAS - Quota Redirection Page."
+  },
+  {
+    "id": "37014",
+    "title": "DSL Fault VAS - Quota Renewal Problem",
+    "titleAr": "DSL Fault VAS - Quota Renewal Problem",
+    "description": "DSL Fault For VAS - Quota Renewal Problem.",
+    "category": "DSL Fault",
+    "steps": "DSL Fault For VAS - Quota Renewal Problem."
+  },
+  {
+    "id": "37013",
+    "title": "DSL Fault VAS - Quality Of Service",
+    "titleAr": "DSL Fault VAS - Quality Of Service",
+    "description": "DSL Fault For VAS - Quality Of Service.",
+    "category": "DSL Fault",
+    "steps": "DSL Fault For VAS - Quality Of Service."
+  },
+  {
+    "id": "37011",
+    "title": "DSL Fault VAS - Service Added Without Request",
+    "titleAr": "DSL Fault VAS - Service Added Without Request",
+    "description": "DSL Fault For VAS - Service Added Without Request.",
+    "category": "DSL Fault",
+    "steps": "DSL Fault For VAS - Service Added Without Request."
+  },
+  {
+    "id": "37001",
+    "title": "DSL Fault VAS - Status Not Updated",
+    "titleAr": "DSL Fault VAS - Status Not Updated",
+    "description": "DSL Fault For VAS - Status Not Updated N/A.",
+    "category": "DSL Fault",
+    "steps": "DSL Fault For VAS - Status Not Updated N/A."
+  },
+  {
+    "id": "34011",
+    "title": "Fault DSL - Corp Technical Problem",
+    "titleAr": "Fault DSL - Corp Technical Problem",
+    "description": "Customer complaints from technical issue on his home internet service (Corp).",
+    "category": "Fault",
+    "steps": "Customer complaints from technical issue on his home internet service (Corp)."
+  },
+  {
+    "id": "34010",
+    "title": "Fault DSL - Personal Technical Problem",
+    "titleAr": "Fault DSL - Personal Technical Problem",
+    "description": "Customer complaints from technical issue on his home internet service (IND).",
+    "category": "Fault",
+    "steps": "Customer complaints from technical issue on his home internet service (IND)."
+  },
+  {
+    "id": "33501",
+    "title": "DSL Fault Activation - Redirection Page Error",
+    "titleAr": "DSL Fault Activation - Redirection Page Error",
+    "description": "DSL Fault For Activation - Redirection Page Error.",
+    "category": "DSL Fault",
+    "steps": "DSL Fault For Activation - Redirection Page Error."
+  },
+  {
+    "id": "33310",
+    "title": "DSL Fault Line Changes - MSAN Call",
+    "titleAr": "DSL Fault Line Changes - MSAN Call",
+    "description": "DSL Fault For Line Changes - MSAN Call.",
+    "category": "DSL Fault",
+    "steps": "DSL Fault For Line Changes - MSAN Call."
+  },
+  {
+    "id": "33301",
+    "title": "DSL Fault Line Changes - Wrong Activation Date",
+    "titleAr": "DSL Fault Line Changes - Wrong Activation Date",
+    "description": "DSL Fault For Line Changes - Wrong Activation Date.",
+    "category": "DSL Fault",
+    "steps": "DSL Fault For Line Changes - Wrong Activation Date."
+  },
+  {
+    "id": "33201",
+    "title": "DSL Fault Offers - Offer Duration",
+    "titleAr": "DSL Fault Offers - Offer Duration",
+    "description": "DSL Fault For Offers - Offer Duration.",
+    "category": "DSL Fault",
+    "steps": "DSL Fault For Offers - Offer Duration."
+  },
+  {
+    "id": "33130",
+    "title": "DSL Fault Billing - Orange Cash Payment Dispute",
+    "titleAr": "DSL Fault Billing - Orange Cash Payment Dispute",
+    "description": "Customer complaining that he paid through orange money and payment not reflected.",
+    "category": "DSL Fault",
+    "steps": "Customer complaining that he paid through orange money and payment not reflected."
+  },
+  {
+    "id": "33121",
+    "title": "DSL Fault Billing - MSAN Adjustment Cancelled",
+    "titleAr": "DSL Fault Billing - MSAN Adjustment Cancelled",
+    "description": "DSL Fault For Billing - MSAN Adjustment Cancelled.",
+    "category": "DSL Fault",
+    "steps": "DSL Fault For Billing - MSAN Adjustment Cancelled."
+  },
+  {
+    "id": "33120",
+    "title": "DSL Fault Billing - Discount Not Added",
+    "titleAr": "DSL Fault Billing - Discount Not Added",
+    "description": "Customer complaining that discount is not added.",
+    "category": "DSL Fault",
+    "steps": "Customer complaining that discount is not added."
+  },
+  {
+    "id": "33119",
+    "title": "DSL Fault Billing - Refund",
+    "titleAr": "DSL Fault Billing - Refund",
+    "description": "DSL Fault For Billing - Refund.",
+    "category": "DSL Fault",
+    "steps": "DSL Fault For Billing - Refund."
+  },
+  {
+    "id": "33118",
+    "title": "DSL Fault Billing - Down Payment Dispute",
+    "titleAr": "DSL Fault Billing - Down Payment Dispute",
+    "description": "DSL Fault For Billing - Down Payment Dispute.",
+    "category": "DSL Fault",
+    "steps": "DSL Fault For Billing - Down Payment Dispute."
+  },
+  {
+    "id": "33117",
+    "title": "DSL Fault Billing - MSAN Financial Adjustment",
+    "titleAr": "DSL Fault Billing - MSAN Financial Adjustment",
+    "description": "DSL Fault For Billing - MSAN Financial Adjustment.",
+    "category": "DSL Fault",
+    "steps": "DSL Fault For Billing - MSAN Financial Adjustment."
+  },
+  {
+    "id": "33116",
+    "title": "DSL Fault Billing - Wrong Payment",
+    "titleAr": "DSL Fault Billing - Wrong Payment",
+    "description": "DSL Fault For Billing - Wrong Payment.",
+    "category": "DSL Fault",
+    "steps": "DSL Fault For Billing - Wrong Payment."
+  },
+  {
+    "id": "33115",
+    "title": "DSL Fault Billing - Unapplied Item",
+    "titleAr": "DSL Fault Billing - Unapplied Item",
+    "description": "DSL Fault For Billing - Unapplied Item.",
+    "category": "DSL Fault",
+    "steps": "DSL Fault For Billing - Unapplied Item."
+  },
+  {
+    "id": "33114",
+    "title": "DSL Fault Billing - Wrong Amount For Cancellation",
+    "titleAr": "DSL Fault Billing - Wrong Amount For Cancellation",
+    "description": "DSL Fault For Billing - Wrong Amount For Cancellation.",
+    "category": "DSL Fault",
+    "steps": "DSL Fault For Billing - Wrong Amount For Cancellation."
+  },
+  {
+    "id": "33112",
+    "title": "DSL Fault Billing - Offer Not Reflected On CX",
+    "titleAr": "DSL Fault Billing - Offer Not Reflected On CX",
+    "description": "DSL Fault For Billing - Offer Not Reflected On CX.",
+    "category": "DSL Fault",
+    "steps": "DSL Fault For Billing - Offer Not Reflected On CX."
+  },
+  {
+    "id": "33111",
+    "title": "DSL Fault Billing - Wrong Package Amount On CX",
+    "titleAr": "DSL Fault Billing - Wrong Package Amount On CX",
+    "description": "DSL Fault For Billing - Wrong Package Amount On CX.",
+    "category": "DSL Fault",
+    "steps": "DSL Fault For Billing - Wrong Package Amount On CX."
+  },
+  {
+    "id": "33109",
+    "title": "DSL Fault Billing - Invoice Issued While Suspended",
+    "titleAr": "DSL Fault Billing - Invoice Issued While Suspended",
+    "description": "DSL Fault For Billing - Invoice Issued While Suspended.",
+    "category": "DSL Fault",
+    "steps": "DSL Fault For Billing - Invoice Issued While Suspended."
+  },
+  {
+    "id": "33108",
+    "title": "DSL Fault Billing - Wrong Bill Amount",
+    "titleAr": "DSL Fault Billing - Wrong Bill Amount",
+    "description": "DSL Fault For Billing - Wrong Bill Amount.",
+    "category": "DSL Fault",
+    "steps": "DSL Fault For Billing - Wrong Bill Amount."
+  },
+  {
+    "id": "33107",
+    "title": "DSL Fault Billing - Payment Dispute",
+    "titleAr": "DSL Fault Billing - Payment Dispute",
+    "description": "Customer complaining from payment dispute.",
+    "category": "DSL Fault",
+    "steps": "Customer complaining from payment dispute."
+  },
+  {
+    "id": "33105",
+    "title": "DSL Fault Billing - Offer Discount Dispute",
+    "titleAr": "DSL Fault Billing - Offer Discount Dispute",
+    "description": "DSL Fault For Billing - Offer Discount Dispute.",
+    "category": "DSL Fault",
+    "steps": "DSL Fault For Billing - Offer Discount Dispute."
+  },
+  {
+    "id": "33104",
+    "title": "DSL Fault Billing - Online Payment Dispute",
+    "titleAr": "DSL Fault Billing - Online Payment Dispute",
+    "description": "DSL Fault For Billing - Online Payment Dispute.",
+    "category": "DSL Fault",
+    "steps": "DSL Fault For Billing - Online Payment Dispute."
+  },
+  {
+    "id": "33103",
+    "title": "DSL Fault Billing - Wrong VAT",
+    "titleAr": "DSL Fault Billing - Wrong VAT",
+    "description": "DSL Fault For Billing - Wrong VAT.",
+    "category": "DSL Fault",
+    "steps": "DSL Fault For Billing - Wrong VAT."
+  },
+  {
+    "id": "33102",
+    "title": "DSL Fault Billing - Duration Compensation Dispute",
+    "titleAr": "DSL Fault Billing - Duration Compensation Dispute",
+    "description": "DSL Fault For Billing - Duration Compensation Dispute.",
+    "category": "DSL Fault",
+    "steps": "DSL Fault For Billing - Duration Compensation Dispute."
+  },
+  {
+    "id": "33101",
+    "title": "DSL Fault Billing - Invoice Not Issued",
+    "titleAr": "DSL Fault Billing - Invoice Not Issued",
+    "description": "DSL Fault For Billing - Invoice Not Issued.",
+    "category": "DSL Fault",
+    "steps": "DSL Fault For Billing - Invoice Not Issued."
+  },
+  {
+    "id": "32216",
+    "title": "DSL Acc Mod Products - Duration Compensation",
+    "titleAr": "DSL Acc Mod Products - Duration Compensation",
+    "description": "DSL Acc Mod For Products - Duration Compensation.",
+    "category": "DSL Acc Mod",
+    "steps": "DSL Acc Mod For Products - Duration Compensation."
+  },
+  {
+    "id": "32215",
+    "title": "DSL Acc Mod Products - NOC Technical Visit",
+    "titleAr": "DSL Acc Mod Products - NOC Technical Visit",
+    "description": "DSL Acc Mod For Products - NOC Technical Visit.",
+    "category": "DSL Acc Mod",
+    "steps": "DSL Acc Mod For Products - NOC Technical Visit."
+  },
+  {
+    "id": "32214",
+    "title": "DSL Acc Mod Products - Bad Device",
+    "titleAr": "DSL Acc Mod Products - Bad Device",
+    "description": "DSL Acc Mod For Products - Bad Device.",
+    "category": "DSL Acc Mod",
+    "steps": "DSL Acc Mod For Products - Bad Device."
+  },
+  {
+    "id": "32213",
+    "title": "DSL Acc Mod Products - Router Not Delivered Reseller",
+    "titleAr": "DSL Acc Mod Products - Router Not Delivered Reseller",
+    "description": "DSL Acc Mod For Products - Router Not Delivered-Reseller.",
+    "category": "DSL Acc Mod",
+    "steps": "DSL Acc Mod For Products - Router Not Delivered-Reseller."
+  },
+  {
+    "id": "32212",
+    "title": "DSL Acc Mod Products - Router Not Delivered Direct",
+    "titleAr": "DSL Acc Mod Products - Router Not Delivered Direct",
+    "description": "DSL Acc Mod For Products - Router Not Delivered-Direct.",
+    "category": "DSL Acc Mod",
+    "steps": "DSL Acc Mod For Products - Router Not Delivered-Direct."
+  },
+  {
+    "id": "32211",
+    "title": "DSL Acc Mod Products - Cards Issues",
+    "titleAr": "DSL Acc Mod Products - Cards Issues",
+    "description": "DSL Acc Mod For Products - Cards Issues.",
+    "category": "DSL Acc Mod",
+    "steps": "DSL Acc Mod For Products - Cards Issues."
+  },
+  {
+    "id": "32210",
+    "title": "DSL Acc Mod Products - Cant Subscribe",
+    "titleAr": "DSL Acc Mod Products - Cant Subscribe",
+    "description": "DSL Acc Mod For Products - Cant Subscribe.",
+    "category": "DSL Acc Mod",
+    "steps": "DSL Acc Mod For Products - Cant Subscribe."
+  },
+  {
+    "id": "32101",
+    "title": "Fault VAS - Orange Cash Merchant Complaint",
+    "titleAr": "Fault VAS - Orange Cash Merchant Complaint",
+    "description": "In case CS is complaining from merchant service.",
+    "category": "Fault",
+    "steps": "In case CS is complaining from merchant service."
+  },
+  {
+    "id": "32019",
+    "title": "Fault VAS - URL Not Received",
+    "titleAr": "Fault VAS - URL Not Received",
+    "description": "In case CS is complaining that he didn't receive URL for Virtual IVR.",
+    "category": "Fault",
+    "steps": "In case CS is complaining that he didn't receive URL for Virtual IVR."
+  },
+  {
+    "id": "32018",
+    "title": "Fault VAS - UPG Reset Password",
+    "titleAr": "Fault VAS - UPG Reset Password",
+    "description": "In case POS is complaining that he can't reset UPG password.",
+    "category": "Fault",
+    "steps": "In case POS is complaining that he can't reset UPG password."
+  },
+  {
+    "id": "32017",
+    "title": "Fault VAS - Delivery Issue",
+    "titleAr": "Fault VAS - Delivery Issue",
+    "description": "In case CS is complaining from delivery issue for merchant service.",
+    "category": "Fault",
+    "steps": "In case CS is complaining from delivery issue for merchant service."
+  },
+  {
+    "id": "32016",
+    "title": "Fault VAS - Refund Problem",
+    "titleAr": "Fault VAS - Refund Problem",
+    "description": "In case CS is complaining that he had refund issue through merchant service.",
+    "category": "Fault",
+    "steps": "In case CS is complaining that he had refund issue through merchant service."
+  },
+  {
+    "id": "32010",
+    "title": "Fault VAS - USSD Purchasing Problem",
+    "titleAr": "Fault VAS - USSD Purchasing Problem",
+    "description": "In case CS can't purchase through USSD.",
+    "category": "Fault",
+    "steps": "In case CS can't purchase through USSD."
+  },
+  {
+    "id": "32004",
+    "title": "DSL Fault Customer Care - Wrong Info",
+    "titleAr": "DSL Fault Customer Care - Wrong Info",
+    "description": "Customer complaining from wrong info said by 16333.",
+    "category": "DSL Fault",
+    "steps": "Customer complaining from wrong info said by 16333."
+  },
+  {
+    "id": "32003",
+    "title": "DSL Fault Customer Care - Wrong Action",
+    "titleAr": "DSL Fault Customer Care - Wrong Action",
+    "description": "Customer complaining from call center 16333 wrong action.",
+    "category": "DSL Fault",
+    "steps": "Customer complaining from call center 16333 wrong action."
+  },
+  {
+    "id": "32002",
+    "title": "DSL Fault Customer Care - Attitude Problems",
+    "titleAr": "DSL Fault Customer Care - Attitude Problems",
+    "description": "Customer complaining from Call center 16333 agent attitude.",
+    "category": "DSL Fault",
+    "steps": "Customer complaining from Call center 16333 agent attitude."
+  },
+  {
+    "id": "31915",
+    "title": "Fault Orange App - Cannot Reset Password",
+    "titleAr": "Fault Orange App - Cannot Reset Password",
+    "description": "Customer complaints that he cannot reset my orange app password.",
+    "category": "Fault",
+    "steps": "Customer complaints that he cannot reset my orange app password."
+  },
+  {
+    "id": "31914",
+    "title": "Fault Orange App - Cant Pay",
+    "titleAr": "Fault Orange App - Cant Pay",
+    "description": "Customer complaints that he cannot pay through my orange app.",
+    "category": "Fault",
+    "steps": "Customer complaints that he cannot pay through my orange app."
+  },
+  {
+    "id": "31906",
+    "title": "Fault Orange App - Cannot Install",
+    "titleAr": "Fault Orange App - Cannot Install",
+    "description": "Customer complaints that he cannot install my orange app.",
+    "category": "Fault",
+    "steps": "Customer complaints that he cannot install my orange app."
+  },
+  {
+    "id": "31904",
+    "title": "Fault Orange App - Application Problem",
+    "titleAr": "Fault Orange App - Application Problem",
+    "description": "Customer complaints that there is any problem related to my orange app.",
+    "category": "Fault",
+    "steps": "Customer complaints that there is any problem related to my orange app."
+  },
+  {
+    "id": "31902",
+    "title": "Fault Orange App - Cannot Access",
+    "titleAr": "Fault Orange App - Cannot Access",
+    "description": "Customer complaints that he cannot access My orange app.",
+    "category": "Fault",
+    "steps": "Customer complaints that he cannot access My orange app."
+  },
+  {
+    "id": "31708",
+    "title": "Fault MNP - Offer Dispute",
+    "titleAr": "Fault MNP - Offer Dispute",
+    "description": "Customer complaints that MNP offer not added.",
+    "category": "MNP",
+    "steps": "Customer complaints that MNP offer not added."
+  },
+  {
+    "id": "31707",
+    "title": "Fault MNP - Cannot Make Or Receive Call",
+    "titleAr": "Fault MNP - Cannot Make Or Receive Call",
+    "description": "When dial ported in but cannot make or receive calls.",
+    "category": "MNP",
+    "steps": "When dial ported in but cannot make or receive calls."
+  },
+  {
+    "id": "31702",
+    "title": "Fault MNP - Failed No Request",
+    "titleAr": "Fault MNP - Failed No Request",
+    "description": "When ported in dial is active on Siebel and Pending on CX.",
+    "category": "MNP",
+    "steps": "When ported in dial is active on Siebel and Pending on CX."
+  },
+  {
+    "id": "31701",
+    "title": "Fault MNP - Line Activation Problem",
+    "titleAr": "Fault MNP - Line Activation Problem",
+    "description": "Customer complaints that his dial is not active and ported in.",
+    "category": "MNP",
+    "steps": "Customer complaints that his dial is not active and ported in."
+  },
+  {
+    "id": "31660",
+    "title": "Fault E-Shop - Late Delivery",
+    "titleAr": "Fault E-Shop - Late Delivery",
+    "description": "Customer complaining from late delivery through E-shop.",
+    "category": "Fault",
+    "steps": "Customer complaining from late delivery through E-shop."
+  },
+  {
+    "id": "31635",
+    "title": "Fault Products - Renewal Through Aggregators",
+    "titleAr": "Fault Products - Renewal Through Aggregators",
+    "description": "In case CS is complaining that he can't renew his bucket through aggregators.",
+    "category": "Fault",
+    "steps": "In case CS is complaining that he can't renew his bucket through aggregators."
+  },
+  {
+    "id": "31634",
+    "title": "Fault Products - Sharing Units Members",
+    "titleAr": "Fault Products - Sharing Units Members",
+    "description": "Customer complaining that he cannot share units to members.",
+    "category": "Fault",
+    "steps": "Customer complaining that he cannot share units to members."
+  },
+  {
+    "id": "31633",
+    "title": "Fault Products - Sharing Units",
+    "titleAr": "Fault Products - Sharing Units",
+    "description": "In case CS is complaining that he can't share his units.",
+    "category": "Fault",
+    "steps": "In case CS is complaining that he can't share his units."
+  },
+  {
+    "id": "31631",
+    "title": "Fault Products - WhatsApp Wrong Charges",
+    "titleAr": "Fault Products - WhatsApp Wrong Charges",
+    "description": "In case CS is complaining from whatsapp wrong charges.",
+    "category": "Fault",
+    "steps": "In case CS is complaining from whatsapp wrong charges."
+  },
+  {
+    "id": "31627",
+    "title": "Fault Products - Plus Minutes Not Added",
+    "titleAr": "Fault Products - Plus Minutes Not Added",
+    "description": "Customer complaints that Plus minutes is not added.",
+    "category": "Fault",
+    "steps": "Customer complaints that Plus minutes is not added."
+  },
+  {
+    "id": "31623",
+    "title": "Fault Products - Region Bonus Wrong Charges",
+    "titleAr": "Fault Products - Region Bonus Wrong Charges",
+    "description": "In case CS is complaining from wrong charges for region bonus.",
+    "category": "Fault",
+    "steps": "In case CS is complaining from wrong charges for region bonus."
+  },
+  {
+    "id": "31607",
+    "title": "Fault Products - FC Membership Not Added",
+    "titleAr": "Fault Products - FC Membership Not Added",
+    "description": "In case CS is complaining that FC membership not added.",
+    "category": "Fault",
+    "steps": "In case CS is complaining that FC membership not added."
+  },
+  {
+    "id": "31606",
+    "title": "Fault Products - Voucher Not Added",
+    "titleAr": "Fault Products - Voucher Not Added",
+    "description": "In case CS is complaining that his voucher not added.",
+    "category": "Fault",
+    "steps": "In case CS is complaining that his voucher not added."
+  },
+  {
+    "id": "31604",
+    "title": "Fault Products - Installment Problem",
+    "titleAr": "Fault Products - Installment Problem",
+    "description": "In case CS is complaining from issues related to his installment.",
+    "category": "Fault",
+    "steps": "In case CS is complaining from issues related to his installment."
+  },
+  {
+    "id": "31601",
+    "title": "Fault Products - Features Problem",
+    "titleAr": "Fault Products - Features Problem",
+    "description": "In case CS is complaining from his tariff features problems.",
+    "category": "Fault",
+    "steps": "In case CS is complaining from his tariff features problems."
+  },
+  {
+    "id": "31583",
+    "title": "Fault VAS - Open Integration with Fawry",
+    "titleAr": "Fault VAS - Open Integration with Fawry",
+    "description": "In case CS is complaining that he can't open integration with fawry.",
+    "category": "Fault",
+    "steps": "In case CS is complaining that he can't open integration with fawry."
+  },
+  {
+    "id": "31581",
+    "title": "Fault VAS - Lifetime Validity",
+    "titleAr": "Fault VAS - Lifetime Validity",
+    "description": "In case CS is complaining that he can't buy validity for his line.",
+    "category": "Fault",
+    "steps": "In case CS is complaining that he can't buy validity for his line."
+  },
+  {
+    "id": "31575",
+    "title": "Fault VAS - Bank Wallet Problem",
+    "titleAr": "Fault VAS - Bank Wallet Problem",
+    "description": "In case CS had issue with bank wallet.",
+    "category": "Fault",
+    "steps": "In case CS had issue with bank wallet."
+  },
+  {
+    "id": "31566",
+    "title": "Fault VAS - Wallet Status",
+    "titleAr": "Fault VAS - Wallet Status",
+    "description": "In case CS is complaining from his wallet status.",
+    "category": "Fault",
+    "steps": "In case CS is complaining from his wallet status."
+  },
+  {
+    "id": "31564",
+    "title": "Fault Special Program - Accrue To Problem",
+    "titleAr": "Fault Special Program - Accrue To Problem",
+    "description": "In case CS is complaining from accruing problem.",
+    "category": "Fault",
+    "steps": "In case CS is complaining from accruing problem."
+  },
+  {
+    "id": "31551",
+    "title": "Fault VAS - USSD #114# Problem",
+    "titleAr": "Fault VAS - USSD #114# Problem",
+    "description": "In case CS is complaining from #114#.",
+    "category": "Fault",
+    "steps": "In case CS is complaining from #114#."
+  },
+  {
+    "id": "31545",
+    "title": "Fault Special Program - Points Transfer Problem",
+    "titleAr": "Fault Special Program - Points Transfer Problem",
+    "description": "In case CS is complaining that he can't transfer his points.",
+    "category": "Fault",
+    "steps": "In case CS is complaining that he can't transfer his points."
+  },
+  {
+    "id": "31544",
+    "title": "Fault E-Shop - Website Complaint",
+    "titleAr": "Fault E-Shop - Website Complaint",
+    "description": "Customer complaining from E-shop through orange website.",
+    "category": "Fault",
+    "steps": "Customer complaining from E-shop through orange website."
+  },
+  {
+    "id": "31541",
+    "title": "Fault VAS - Donation Payment",
+    "titleAr": "Fault VAS - Donation Payment",
+    "description": "In case CS had problem with donation payment through orange cash.",
+    "category": "Fault",
+    "steps": "In case CS had problem with donation payment through orange cash."
+  },
+  {
+    "id": "31536",
+    "title": "Fault VAS - Add-Ons Renewal",
+    "titleAr": "Fault VAS - Add-Ons Renewal",
+    "description": "In case CS is complaining that his Add-Ons not renewed.",
+    "category": "Fault",
+    "steps": "In case CS is complaining that his Add-Ons not renewed."
+  },
+  {
+    "id": "31531",
+    "title": "Fault Special Program - Enrolment Delay",
+    "titleAr": "Fault Special Program - Enrolment Delay",
+    "description": "In case CS is complaining from enrollment delay.",
+    "category": "Fault",
+    "steps": "In case CS is complaining from enrollment delay."
+  },
+  {
+    "id": "31529",
+    "title": "Fault Special Program - Points Not Added",
+    "titleAr": "Fault Special Program - Points Not Added",
+    "description": "In case CS is complaining that his points not added.",
+    "category": "Fault",
+    "steps": "In case CS is complaining that his points not added."
+  },
+  {
+    "id": "31524",
+    "title": "Fault Special Program - External Partners",
+    "titleAr": "Fault Special Program - External Partners",
+    "description": "In case CS is complaining from external partners attitude.",
+    "category": "Fault",
+    "steps": "In case CS is complaining from external partners attitude."
+  },
+  {
+    "id": "31523",
+    "title": "Fault Special Program - EA Loyalty Problem",
+    "titleAr": "Fault Special Program - EA Loyalty Problem",
+    "description": "In case CS is complaining from points issue related to Egypt Air.",
+    "category": "Fault",
+    "steps": "In case CS is complaining from points issue related to Egypt Air."
+  },
+  {
+    "id": "31520",
+    "title": "Fault Special Program - OrangeDSL Points Not Added",
+    "titleAr": "Fault Special Program - OrangeDSL Points Not Added",
+    "description": "When customer complaints that orange dsl points are not added to his main dial (Same user).",
+    "category": "Fault",
+    "steps": "When customer complaints that orange dsl points are not added to his main dial (Same user)."
+  },
+  {
+    "id": "31515",
+    "title": "Fault Special Program - Redemption Problem",
+    "titleAr": "Fault Special Program - Redemption Problem",
+    "description": "In case CS is complaining from redemption issues for points.",
+    "category": "Fault",
+    "steps": "In case CS is complaining from redemption issues for points."
+  },
+  {
+    "id": "31512",
+    "title": "Fault Special Program - SMS Not Delivered",
+    "titleAr": "Fault Special Program - SMS Not Delivered",
+    "description": "In case CS is complaining that he didn't receive SMS related to expired points, voucher, etc.",
+    "category": "Fault",
+    "steps": "In case CS is complaining that he didn't receive SMS related to expired points, voucher, etc."
+  },
+  {
+    "id": "31510",
+    "title": "Fault Special Program - Points Dispute",
+    "titleAr": "Fault Special Program - Points Dispute",
+    "description": "In case CS is complaining from points that added to him.",
+    "category": "Fault",
+    "steps": "In case CS is complaining from points that added to him."
+  },
+  {
+    "id": "31509",
+    "title": "Fault VAS - Tango Tool Problem",
+    "titleAr": "Fault VAS - Tango Tool Problem",
+    "description": "In case POS is complaining that he had issue with tango tool.",
+    "category": "Fault",
+    "steps": "In case POS is complaining that he had issue with tango tool."
+  },
+  {
+    "id": "31508",
+    "title": "Fault Special Program - IVR Problem",
+    "titleAr": "Fault Special Program - IVR Problem",
+    "description": "In case CS is complaining from Special IVR.",
+    "category": "Fault",
+    "steps": "In case CS is complaining from Special IVR."
+  },
+  {
+    "id": "31506",
+    "title": "Fault VAS - USB Problems",
+    "titleAr": "Fault VAS - USB Problems",
+    "description": "In case CS is complaining from USB problems for Bulk SMS SIM Based.",
+    "category": "Fault",
+    "steps": "In case CS is complaining from USB problems for Bulk SMS SIM Based."
+  },
+  {
+    "id": "31505",
+    "title": "Fault Special Program - Expired Points",
+    "titleAr": "Fault Special Program - Expired Points",
+    "description": "In case CS is complaining that his points are expired.",
+    "category": "Fault",
+    "steps": "In case CS is complaining that his points are expired."
+  },
+  {
+    "id": "31504",
+    "title": "Fault Special Program - Different Tier",
+    "titleAr": "Fault Special Program - Different Tier",
+    "description": "In case CS is complaining from his tier.",
+    "category": "Fault",
+    "steps": "In case CS is complaining from his tier."
+  },
+  {
+    "id": "31503",
+    "title": "Fault VAS - Settings Problem",
+    "titleAr": "Fault VAS - Settings Problem",
+    "description": "In case CS is complaining from Bulk SMS setting problem.",
+    "category": "Fault",
+    "steps": "In case CS is complaining from Bulk SMS setting problem."
+  },
+  {
+    "id": "31502",
+    "title": "Fault VAS - Features Problem (Corp Call Tone)",
+    "titleAr": "Fault VAS - Features Problem (Corp Call Tone)",
+    "description": "In case CS is complaining that he can't use corporate call tone features.",
+    "category": "Fault",
+    "steps": "In case CS is complaining that he can't use corporate call tone features."
+  },
+  {
+    "id": "31494",
+    "title": "Fault VAS - Orange Cash Complaints",
+    "titleAr": "Fault VAS - Orange Cash Complaints",
+    "description": "In case CS is complaining from orange cash issues.",
+    "category": "Fault",
+    "steps": "In case CS is complaining from orange cash issues."
+  },
+  {
+    "id": "31492",
+    "title": "Fault VAS - Payment Problem",
+    "titleAr": "Fault VAS - Payment Problem",
+    "description": "In case CS is complaining that he can't pay through merchant service.",
+    "category": "Fault",
+    "steps": "In case CS is complaining that he can't pay through merchant service."
+  },
+  {
+    "id": "31490",
+    "title": "Fault VAS - Deleted On Tool & Still Active",
+    "titleAr": "Fault VAS - Deleted On Tool & Still Active",
+    "description": "When customer complaints that service is deactive on tool and still working on his dial as call tone - alerting.",
+    "category": "Fault",
+    "steps": "When customer complaints that service is deactive on tool and still working on his dial as call tone - alerting."
+  },
+  {
+    "id": "31487",
+    "title": "Fault VAS - Credit Not Added (Salefny)",
+    "titleAr": "Fault VAS - Credit Not Added (Salefny)",
+    "description": "In case CS is complaining that Salefny credit not added.",
+    "category": "Fault",
+    "steps": "In case CS is complaining that Salefny credit not added."
+  },
+  {
+    "id": "31479",
+    "title": "Fault VAS - Cannot Delete",
+    "titleAr": "Fault VAS - Cannot Delete",
+    "description": "When customer complaints that he cannot delete service such as T-pay, Gaming, Gameloft, call tone.",
+    "category": "Fault",
+    "steps": "When customer complaints that he cannot delete service such as T-pay, Gaming, Gameloft, call tone."
+  },
+  {
+    "id": "31475",
+    "title": "Fault VAS - Cannot Unsubscribe",
+    "titleAr": "Fault VAS - Cannot Unsubscribe",
+    "description": "In case CS is complaining that he can't unsubscribe from any services.",
+    "category": "Fault",
+    "steps": "In case CS is complaining that he can't unsubscribe from any services."
+  },
+  {
+    "id": "31473",
+    "title": "Fault VAS - Cant Subscribe",
+    "titleAr": "Fault VAS - Cant Subscribe",
+    "description": "In case CS is complaining that he can't subscribe in any services.",
+    "category": "Fault",
+    "steps": "In case CS is complaining that he can't subscribe in any services."
+  },
+  {
+    "id": "31463",
+    "title": "Fault VAS - Balance Not Updated USSD",
+    "titleAr": "Fault VAS - Balance Not Updated USSD",
+    "description": "In case CS is complaining that his balance not updated on USSD.",
+    "category": "Fault",
+    "steps": "In case CS is complaining that his balance not updated on USSD."
+  },
+  {
+    "id": "31462",
+    "title": "Fault VAS - Daily Failed Report",
+    "titleAr": "Fault VAS - Daily Failed Report",
+    "description": "To be used to check daily failed actions.",
+    "category": "Fault",
+    "steps": "To be used to check daily failed actions."
+  },
+  {
+    "id": "31442",
+    "title": "Fault VAS - Action Not Done U-Control",
+    "titleAr": "Fault VAS - Action Not Done U-Control",
+    "description": "In case CS is complaining that actions not done through U-Control.",
+    "category": "Fault",
+    "steps": "In case CS is complaining that actions not done through U-Control."
+  },
+  {
+    "id": "31441",
+    "title": "Fault VAS - Failed Or Pending Request",
+    "titleAr": "Fault VAS - Failed Or Pending Request",
+    "description": "For Failed and pending request.",
+    "category": "Fault",
+    "steps": "For Failed and pending request."
+  },
+  {
+    "id": "31440",
+    "title": "Fault VAS - Cannot Send And Receive SMS",
+    "titleAr": "Fault VAS - Cannot Send And Receive SMS",
+    "description": "In case CS is complaining that he can't send/receive SMS.",
+    "category": "Fault",
+    "steps": "In case CS is complaining that he can't send/receive SMS."
+  },
+  {
+    "id": "31428",
+    "title": "Fault VAS - Budget Master Complaints",
+    "titleAr": "Fault VAS - Budget Master Complaints",
+    "description": "In case CS is complaining from budget master service.",
+    "category": "Fault",
+    "steps": "In case CS is complaining from budget master service."
+  },
+  {
+    "id": "31427",
+    "title": "Fault VAS - Not Working Commands",
+    "titleAr": "Fault VAS - Not Working Commands",
+    "description": "In case CS is complaining that codes related to default services not working like call waiting, call forward.",
+    "category": "Fault",
+    "steps": "In case CS is complaining that codes related to default services not working like call waiting, call forward."
+  },
+  {
+    "id": "31418",
+    "title": "Fault VAS - Credit Transfer",
+    "titleAr": "Fault VAS - Credit Transfer",
+    "description": "In case CS is complaining that he can't transfer credit.",
+    "category": "Fault",
+    "steps": "In case CS is complaining that he can't transfer credit."
+  },
+  {
+    "id": "31415",
+    "title": "Fault VAS - Cannot Send And Receive SMS",
+    "titleAr": "Fault VAS - Cannot Send And Receive SMS",
+    "description": "When customer complaining that he cannot send and receive SMS.",
+    "category": "Fault",
+    "steps": "When customer complaining that he cannot send and receive SMS."
+  },
+  {
+    "id": "31409",
+    "title": "Fault VAS - Cannot Make And Receive Call (Roaming)",
+    "titleAr": "Fault VAS - Cannot Make And Receive Call (Roaming)",
+    "description": "In case CS is complaining that he can't make/receive international or roaming calls.",
+    "category": "Fault",
+    "steps": "In case CS is complaining that he can't make/receive international or roaming calls."
+  },
+  {
+    "id": "31406",
+    "title": "Fault VAS - Cannot Access Network (Roaming)",
+    "titleAr": "Fault VAS - Cannot Access Network (Roaming)",
+    "description": "In case CS is complaining that he can't access network while roaming.",
+    "category": "Fault",
+    "steps": "In case CS is complaining that he can't access network while roaming."
+  },
+  {
+    "id": "31405",
+    "title": "Fault VAS - Cannot Access USSD",
+    "titleAr": "Fault VAS - Cannot Access USSD",
+    "description": "In case CS is complaining that he can't access USSD.",
+    "category": "Fault",
+    "steps": "In case CS is complaining that he can't access USSD."
+  },
+  {
+    "id": "31402",
+    "title": "Fault VAS - E-Bill Problem",
+    "titleAr": "Fault VAS - E-Bill Problem",
+    "description": "In case CS is complaining from E-Bill.",
+    "category": "Fault",
+    "steps": "In case CS is complaining from E-Bill."
+  },
+  {
+    "id": "31400",
+    "title": "Fault Products - Carry Over Problem",
+    "titleAr": "Fault Products - Carry Over Problem",
+    "description": "In case CS is complaining that his units not carried over.",
+    "category": "Fault",
+    "steps": "In case CS is complaining that his units not carried over."
+  },
+  {
+    "id": "31399",
+    "title": "Fault Products - Cant Add Voice Extension",
+    "titleAr": "Fault Products - Cant Add Voice Extension",
+    "description": "In case CS is complaining that he can't add voice extension.",
+    "category": "Fault",
+    "steps": "In case CS is complaining that he can't add voice extension."
+  },
+  {
+    "id": "31397",
+    "title": "Fault Products - Cant Add Favorite Number",
+    "titleAr": "Fault Products - Cant Add Favorite Number",
+    "description": "In case CS is complaining that he can't add favorite number.",
+    "category": "Fault",
+    "steps": "In case CS is complaining that he can't add favorite number."
+  },
+  {
+    "id": "31396",
+    "title": "Fault Products - Limit Not Added",
+    "titleAr": "Fault Products - Limit Not Added",
+    "description": "In case CS is complaining that his limit not added.",
+    "category": "Fault",
+    "steps": "In case CS is complaining that his limit not added."
+  },
+  {
+    "id": "31393",
+    "title": "Fault Products - Wrong Swap/Lost Credit",
+    "titleAr": "Fault Products - Wrong Swap/Lost Credit",
+    "description": "Customer complaining from wrong sim swap and credit lost.",
+    "category": "Fault",
+    "steps": "Customer complaining from wrong sim swap and credit lost."
+  },
+  {
+    "id": "31392",
+    "title": "Fault Products - Wrong Swap",
+    "titleAr": "Fault Products - Wrong Swap",
+    "description": "Customer complaining from wrong sim swap.",
+    "category": "Fault",
+    "steps": "Customer complaining from wrong sim swap."
+  },
+  {
+    "id": "31382",
+    "title": "Fault Products - Inclusive Bucket Not Added",
+    "titleAr": "Fault Products - Inclusive Bucket Not Added",
+    "description": "In case CS is complaining that his inclusive bucket not added (MINs, SMS, bonus credit, etc).",
+    "category": "Fault",
+    "steps": "In case CS is complaining that his inclusive bucket not added (MINs, SMS, bonus credit, etc)."
+  },
+  {
+    "id": "31375",
+    "title": "Fault Products - Life Cycle Problem",
+    "titleAr": "Fault Products - Life Cycle Problem",
+    "description": "In case CS is complaining that his line didn't pass life cycle & deactivated.",
+    "category": "Fault",
+    "steps": "In case CS is complaining that his line didn't pass life cycle & deactivated."
+  },
+  {
+    "id": "31371",
+    "title": "Fault Products - Data Bucket Not Added",
+    "titleAr": "Fault Products - Data Bucket Not Added",
+    "description": "Customer complaining that Data bucket is not added.",
+    "category": "Fault",
+    "steps": "Customer complaining that Data bucket is not added."
+  },
+  {
+    "id": "31370",
+    "title": "Fault Products - Voice Bucket Not Added",
+    "titleAr": "Fault Products - Voice Bucket Not Added",
+    "description": "Customer complaining that Voice bucket is not added.",
+    "category": "Fault",
+    "steps": "Customer complaining that Voice bucket is not added."
+  },
+  {
+    "id": "31365",
+    "title": "Fault Products - Scratch Card Problem",
+    "titleAr": "Fault Products - Scratch Card Problem",
+    "description": "In case CS is complaining from Scratch card problem (expired, damaged, locked, etc).",
+    "category": "Fault",
+    "steps": "In case CS is complaining from Scratch card problem (expired, damaged, locked, etc)."
+  },
+  {
+    "id": "31364",
+    "title": "Fault Products - Add-Ons Not Added",
+    "titleAr": "Fault Products - Add-Ons Not Added",
+    "description": "In case CS is complaining that Add-Ons not added.",
+    "category": "Fault",
+    "steps": "In case CS is complaining that Add-Ons not added."
+  },
+  {
+    "id": "31363",
+    "title": "Fault Products - FB Quota Not Added",
+    "titleAr": "Fault Products - FB Quota Not Added",
+    "description": "In case CS is complaining that FB quota not added to him.",
+    "category": "Fault",
+    "steps": "In case CS is complaining that FB quota not added to him."
+  },
+  {
+    "id": "31360",
+    "title": "Fault Products - Validity Not Added",
+    "titleAr": "Fault Products - Validity Not Added",
+    "description": "Customer complaints that Validity is not added.",
+    "category": "Fault",
+    "steps": "Customer complaints that Validity is not added."
+  },
+  {
+    "id": "31344",
+    "title": "Fault Products - Damaged SIM",
+    "titleAr": "Fault Products - Damaged SIM",
+    "description": "Customer complaining that sim card is not working and damaged.",
+    "category": "Fault",
+    "steps": "Customer complaining that sim card is not working and damaged."
+  },
+  {
+    "id": "31335",
+    "title": "Fault Products - Cannot Make/Receive Call",
+    "titleAr": "Fault Products - Cannot Make/Receive Call",
+    "description": "In case CS is complaining that he can't make / receive calls every where.",
+    "category": "Fault",
+    "steps": "In case CS is complaining that he can't make / receive calls every where."
+  },
+  {
+    "id": "31334",
+    "title": "Fault Products - No Signal Everywhere",
+    "titleAr": "Fault Products - No Signal Everywhere",
+    "description": "In case CS is complaining from no signal every where.",
+    "category": "Fault",
+    "steps": "In case CS is complaining from no signal every where."
+  },
+  {
+    "id": "31331",
+    "title": "Fault Products - Free Minutes Not Added",
+    "titleAr": "Fault Products - Free Minutes Not Added",
+    "description": "Customer complaining that free tariff minutes is not added.",
+    "category": "Fault",
+    "steps": "Customer complaining that free tariff minutes is not added."
+  },
+  {
+    "id": "31330",
+    "title": "Fault Products - Bonus Not Added",
+    "titleAr": "Fault Products - Bonus Not Added",
+    "description": "Customer complaining that tariff bonus is not added.",
+    "category": "Fault",
+    "steps": "Customer complaining that tariff bonus is not added."
+  },
+  {
+    "id": "31328",
+    "title": "Fault Products - Bucket Not Found On Siebel",
+    "titleAr": "Fault Products - Bucket Not Found On Siebel",
+    "description": "In case CS is complaining that his bucket not found on Siebel - Charging Details.",
+    "category": "Fault",
+    "steps": "In case CS is complaining that his bucket not found on Siebel - Charging Details."
+  },
+  {
+    "id": "31319",
+    "title": "Fault Products - Renewal Problem",
+    "titleAr": "Fault Products - Renewal Problem",
+    "description": "In case CS is complaining that he can't renew his bucket.",
+    "category": "Fault",
+    "steps": "In case CS is complaining that he can't renew his bucket."
+  },
+  {
+    "id": "31316",
+    "title": "Fault Products - Recharging Problem",
+    "titleAr": "Fault Products - Recharging Problem",
+    "description": "In case CS is complaining that he can't recharge through Orange channels (fawry, website, etc).",
+    "category": "Fault",
+    "steps": "In case CS is complaining that he can't recharge through Orange channels (fawry, website, etc)."
+  },
+  {
+    "id": "31309",
+    "title": "Fault Products - Dial Not Found Charging Details",
+    "titleAr": "Fault Products - Dial Not Found Charging Details",
+    "description": "In case CS is complaining that his dial is not found on Siebel - Charging details.",
+    "category": "Fault",
+    "steps": "In case CS is complaining that his dial is not found on Siebel - Charging details."
+  },
+  {
+    "id": "31307",
+    "title": "Fault Products - Damaged Card",
+    "titleAr": "Fault Products - Damaged Card",
+    "description": "Fault For Products - Damaged Card.",
+    "category": "Fault",
+    "steps": "Fault For Products - Damaged Card."
+  },
+  {
+    "id": "31301",
+    "title": "Fault Products - Cannot Make Call",
+    "titleAr": "Fault Products - Cannot Make Call",
+    "description": "Customer complaining that he cannot make calls.",
+    "category": "Fault",
+    "steps": "Customer complaining that he cannot make calls."
+  },
+  {
+    "id": "31273",
+    "title": "Fault Offers - Cannot Redeem",
+    "titleAr": "Fault Offers - Cannot Redeem",
+    "description": "In case CS is complaining that he can't redeem his voucher/points through Offers.",
+    "category": "Fault",
+    "steps": "In case CS is complaining that he can't redeem his voucher/points through Offers."
+  },
+  {
+    "id": "31249",
+    "title": "Fault Offers - Notifications Problem",
+    "titleAr": "Fault Offers - Notifications Problem",
+    "description": "In case CS is complaining from any notification problems related to offers (can't receive, wrong notification, etc).",
+    "category": "Fault",
+    "steps": "In case CS is complaining from any notification problems related to offers (can't receive, wrong notification, etc)."
+  },
+  {
+    "id": "31241",
+    "title": "Fault Offers - Offer Not Added",
+    "titleAr": "Fault Offers - Offer Not Added",
+    "description": "In case CS is complaining that offer not added although he already is subscribed.",
+    "category": "Fault",
+    "steps": "In case CS is complaining that offer not added although he already is subscribed."
+  },
+  {
+    "id": "31219",
+    "title": "Fault Offers - Installment Problem",
+    "titleAr": "Fault Offers - Installment Problem",
+    "description": "Customer complaints that he cannot use installment on his dial.",
+    "category": "Fault",
+    "steps": "Customer complaints that he cannot use installment on his dial."
+  },
+  {
+    "id": "31218",
+    "title": "Fault Offers - Offer Dispute",
+    "titleAr": "Fault Offers - Offer Dispute",
+    "description": "In case CS is complaining that he was charged for offer wrongfully or from his consumption for this offer.",
+    "category": "Fault",
+    "steps": "In case CS is complaining that he was charged for offer wrongfully or from his consumption for this offer."
+  },
+  {
+    "id": "31211",
+    "title": "Fault Offers - Cant Unsubscribe",
+    "titleAr": "Fault Offers - Cant Unsubscribe",
+    "description": "In case CS is complaining that he can't unsubscribe from any offers.",
+    "category": "Fault",
+    "steps": "In case CS is complaining that he can't unsubscribe from any offers."
+  },
+  {
+    "id": "31208",
+    "title": "Fault Offers - Cant Subscribe",
+    "titleAr": "Fault Offers - Cant Subscribe",
+    "description": "In case CS is complaining that he can't subscribe in any offers.",
+    "category": "Fault",
+    "steps": "In case CS is complaining that he can't subscribe in any offers."
+  },
+  {
+    "id": "31201",
+    "title": "Fault Offers - Bonus Not Added",
+    "titleAr": "Fault Offers - Bonus Not Added",
+    "description": "Customer complaints that Bonus not added.",
+    "category": "Fault",
+    "steps": "Customer complaints that Bonus not added."
+  },
+  {
+    "id": "31016",
+    "title": "Fault Network - Prospect And Candidates",
+    "titleAr": "Fault Network - Prospect And Candidates",
+    "description": "When customer suggests to create a new signal coverage tower.",
+    "category": "Fault",
+    "steps": "When customer suggests to create a new signal coverage tower."
+  },
+  {
+    "id": "31014",
+    "title": "Fault Network - No Signal",
+    "titleAr": "Fault Network - No Signal",
+    "description": "Customer complaining from no signal.",
+    "category": "Fault",
+    "steps": "Customer complaining from no signal."
+  },
+  {
+    "id": "31005",
+    "title": "Fault Network - Cannot Make And Receive Call",
+    "titleAr": "Fault Network - Cannot Make And Receive Call",
+    "description": "Customer complaining that he cannot make or receive calls.",
+    "category": "Fault",
+    "steps": "Customer complaining that he cannot make or receive calls."
+  },
+  {
+    "id": "30901",
+    "title": "Fault Billing - Data Charges",
+    "titleAr": "Fault Billing - Data Charges",
+    "description": "In case CS is complaining from any data charges like bucket added without request, high charges, etc.",
+    "category": "Fault",
+    "steps": "In case CS is complaining from any data charges like bucket added without request, high charges, etc."
+  },
+  {
+    "id": "30851",
+    "title": "Fault Billing - Payment Within SLA",
+    "titleAr": "Fault Billing - Payment Within SLA",
+    "description": "In case amount not reflected while payment not exceeded the registration SLA, this SR should be created to be automated to credit team to add the dial on hold.",
+    "category": "Fault",
+    "steps": "In case amount not reflected while payment not exceeded the registration SLA, this SR should be created to be automated to credit team to add the dial on hold."
+  },
+  {
+    "id": "30816",
+    "title": "Fault Line Modification - Dial Deact By Mistake",
+    "titleAr": "Fault Line Modification - Dial Deact By Mistake",
+    "description": "To be used in case agent is deactivating dial by mistake.",
+    "category": "Fault",
+    "steps": "To be used in case agent is deactivating dial by mistake."
+  },
+  {
+    "id": "30815",
+    "title": "Fault Line Modification - Data Registration Problem",
+    "titleAr": "Fault Line Modification - Data Registration Problem",
+    "description": "Customer complaining that he cannot register his dial through orange website.",
+    "category": "Fault",
+    "steps": "Customer complaining that he cannot register his dial through orange website."
+  },
+  {
+    "id": "30517",
+    "title": "Fault Data Services - Cannot Delete Self Channels",
+    "titleAr": "Fault Data Services - Cannot Delete Self Channels",
+    "description": "In case CS cannot delete the data bucket through self channels.",
+    "category": "Fault",
+    "steps": "In case CS cannot delete the data bucket through self channels."
+  },
+  {
+    "id": "30516",
+    "title": "Fault Data Services - Features Problem",
+    "titleAr": "Fault Data Services - Features Problem",
+    "description": "In case CS is complaining from features problem related to his data bucket.",
+    "category": "Fault",
+    "steps": "In case CS is complaining from features problem related to his data bucket."
+  },
+  {
+    "id": "30515",
+    "title": "Fault Data Services - Cannot Reset Wi-Fi Password",
+    "titleAr": "Fault Data Services - Cannot Reset Wi-Fi Password",
+    "description": "In case CS is complaining that he can't reset Wi-Fi password.",
+    "category": "Fault",
+    "steps": "In case CS is complaining that he can't reset Wi-Fi password."
+  },
+  {
+    "id": "30512",
+    "title": "Fault Data Services - Forced Migration",
+    "titleAr": "Fault Data Services - Forced Migration",
+    "description": "In case CS is complaining from forced migration to another data bucket.",
+    "category": "Fault",
+    "steps": "In case CS is complaining from forced migration to another data bucket."
+  },
+  {
+    "id": "30441",
+    "title": "Fault Data Services - Cannot Migrate",
+    "titleAr": "Fault Data Services - Cannot Migrate",
+    "description": "In case CS is complaining that he can't migrate to another data bucket.",
+    "category": "Fault",
+    "steps": "In case CS is complaining that he can't migrate to another data bucket."
+  },
+  {
+    "id": "30419",
+    "title": "Fault Data Services - Cannot Connect",
+    "titleAr": "Fault Data Services - Cannot Connect",
+    "description": "In case CS is complaining from data connection issue.",
+    "category": "Fault",
+    "steps": "In case CS is complaining from data connection issue."
+  },
+  {
+    "id": "30413",
+    "title": "Fault Data Services - Cannot Send And Receive MMS",
+    "titleAr": "Fault Data Services - Cannot Send And Receive MMS",
+    "description": "In case CS is complaining that he can't send/receive MMS.",
+    "category": "Fault",
+    "steps": "In case CS is complaining that he can't send/receive MMS."
+  },
+  {
+    "id": "30401",
+    "title": "Fault Data Services - CWS",
+    "titleAr": "Fault Data Services - CWS",
+    "description": "In case CS has problem with CWS service.",
+    "category": "Fault",
+    "steps": "In case CS has problem with CWS service."
+  },
+  {
+    "id": "30329",
+    "title": "Fault Sales Teams - New Selling Process",
+    "titleAr": "Fault Sales Teams - New Selling Process",
+    "description": "When customer wants to delete 10 dials from his name.",
+    "category": "Fault",
+    "steps": "When customer wants to delete 10 dials from his name."
+  },
+  {
+    "id": "30322",
+    "title": "Fault Customer Care - Wrong Info",
+    "titleAr": "Fault Customer Care - Wrong Info",
+    "description": "Customer Complaining from Wrong Info from 110/250.",
+    "category": "Fault",
+    "steps": "Customer Complaining from Wrong Info from 110/250."
+  },
+  {
+    "id": "30321",
+    "title": "Fault Customer Care - Human Mistakes",
+    "titleAr": "Fault Customer Care - Human Mistakes",
+    "description": "To be used in case CS is complaining that he received wrong info / action from CC.",
+    "category": "Fault",
+    "steps": "To be used in case CS is complaining that he received wrong info / action from CC."
+  },
+  {
+    "id": "30310",
+    "title": "Fault Customer Care - Dropped/Silent Calls",
+    "titleAr": "Fault Customer Care - Dropped/Silent Calls",
+    "description": "To be used in case CS is complaining from dropped / Silent calls while he is calling CC.",
+    "category": "Fault",
+    "steps": "To be used in case CS is complaining from dropped / Silent calls while he is calling CC."
+  },
+  {
+    "id": "30301",
+    "title": "Fault Customer Care - Attitude Problems",
+    "titleAr": "Fault Customer Care - Attitude Problems",
+    "description": "To be used in case CS is complaining from agent attitude.",
+    "category": "Fault",
+    "steps": "To be used in case CS is complaining from agent attitude."
+  },
+  {
+    "id": "30251",
+    "title": "Fault Billing - Bill Payment Problems",
+    "titleAr": "Fault Billing - Bill Payment Problems",
+    "description": "In case CS is complaining that he can't pay his bills through Fawry, Massar, Bee, etc.",
+    "category": "Fault",
+    "steps": "In case CS is complaining that he can't pay his bills through Fawry, Massar, Bee, etc."
+  },
+  {
+    "id": "30218",
+    "title": "Fault Billing - Claims Paid",
+    "titleAr": "Fault Billing - Claims Paid",
+    "description": "In case CS is complaining that he paid his bill & that not reflected on system.",
+    "category": "Fault",
+    "steps": "In case CS is complaining that he paid his bill & that not reflected on system."
+  },
+  {
+    "id": "30216",
+    "title": "Fault Billing - Direct Debit Deduction",
+    "titleAr": "Fault Billing - Direct Debit Deduction",
+    "description": "In case CS is complaining that his bills not deducted from direct debit.",
+    "category": "Fault",
+    "steps": "In case CS is complaining that his bills not deducted from direct debit."
+  },
+  {
+    "id": "30210",
+    "title": "Fault Billing - Local Charges Dispute",
+    "titleAr": "Fault Billing - Local Charges Dispute",
+    "description": "Customer Complaining From Local Calls Dispute.",
+    "category": "Fault",
+    "steps": "Customer Complaining From Local Calls Dispute."
+  },
+  {
+    "id": "19001",
+    "title": "DSL Acc Mod Sales - New Lead",
+    "titleAr": "DSL Acc Mod Sales - New Lead",
+    "description": "DSL Acc Mod For Sales - New Lead.",
+    "category": "DSL Acc Mod",
+    "steps": "DSL Acc Mod For Sales - New Lead."
+  },
+  {
+    "id": "18005",
+    "title": "DSL Acc Mod VAS - Release",
+    "titleAr": "DSL Acc Mod VAS - Release",
+    "description": "DSL Acc Mod For VAS - Release.",
+    "category": "DSL Acc Mod",
+    "steps": "DSL Acc Mod For VAS - Release."
+  },
+  {
+    "id": "18004",
+    "title": "DSL Acc Mod VAS - Suspend",
+    "titleAr": "DSL Acc Mod VAS - Suspend",
+    "description": "DSL Acc Mod For VAS - Suspend.",
+    "category": "DSL Acc Mod",
+    "steps": "DSL Acc Mod For VAS - Suspend."
+  },
+  {
+    "id": "18003",
+    "title": "DSL Acc Mod VAS - Remove IPs",
+    "titleAr": "DSL Acc Mod VAS - Remove IPs",
+    "description": "DSL Acc Mod For VAS - Remove Ips.",
+    "category": "DSL Acc Mod",
+    "steps": "DSL Acc Mod For VAS - Remove Ips."
+  },
+  {
+    "id": "18002",
+    "title": "DSL Acc Mod VAS - Add Extra IPs",
+    "titleAr": "DSL Acc Mod VAS - Add Extra IPs",
+    "description": "DSL Acc Mod For VAS - Add Extra Ips.",
+    "category": "DSL Acc Mod",
+    "steps": "DSL Acc Mod For VAS - Add Extra Ips."
+  },
+  {
+    "id": "17201",
+    "title": "DSL Acc Mod Offers - Delete",
+    "titleAr": "DSL Acc Mod Offers - Delete",
+    "description": "DSL Acc Mod For Offers - Delete.",
+    "category": "DSL Acc Mod",
+    "steps": "DSL Acc Mod For Offers - Delete."
+  },
+  {
+    "id": "16807",
+    "title": "DSL Acc Mod MNP - Port In",
+    "titleAr": "DSL Acc Mod MNP - Port In",
+    "description": "DSL Acc Mod For MNP - Port In.",
+    "category": "DSL Acc Mod",
+    "steps": "DSL Acc Mod For MNP - Port In."
+  },
+  {
+    "id": "16806",
+    "title": "DSL Acc Mod Line Mod - Change Account Manager",
+    "titleAr": "DSL Acc Mod Line Mod - Change Account Manager",
+    "description": "DSL Acc Mod For Line Mod - Change Account Manager.",
+    "category": "DSL Acc Mod",
+    "steps": "DSL Acc Mod For Line Mod - Change Account Manager."
+  },
+  {
+    "id": "16805",
+    "title": "DSL Acc Mod Line Mod - Override Change Speed",
+    "titleAr": "DSL Acc Mod Line Mod - Override Change Speed",
+    "description": "DSL Acc Mod For Line Mod - Override Change Speed.",
+    "category": "DSL Acc Mod",
+    "steps": "DSL Acc Mod For Line Mod - Override Change Speed."
+  },
+  {
+    "id": "16804",
+    "title": "DSL Acc Mod Line Mod - Deactivation",
+    "titleAr": "DSL Acc Mod Line Mod - Deactivation",
+    "description": "DSL Acc Mod For Line Mod - Deactivation.",
+    "category": "DSL Acc Mod",
+    "steps": "DSL Acc Mod For Line Mod - Deactivation."
+  },
+  {
+    "id": "16803",
+    "title": "DSL Acc Mod Line Mod - Temp Reactivation",
+    "titleAr": "DSL Acc Mod Line Mod - Temp Reactivation",
+    "description": "DSL Acc Mod For Line Mod - Temp. Reactivation.",
+    "category": "DSL Acc Mod",
+    "steps": "DSL Acc Mod For Line Mod - Temp. Reactivation."
+  },
+  {
+    "id": "16802",
+    "title": "DSL Acc Mod Line Mod - Activate",
+    "titleAr": "DSL Acc Mod Line Mod - Activate",
+    "description": "DSL Acc Mod For Line Mod - Activate.",
+    "category": "DSL Acc Mod",
+    "steps": "DSL Acc Mod For Line Mod - Activate."
+  },
+  {
+    "id": "16801",
+    "title": "DSL Acc Mod Line Mod - Suspend",
+    "titleAr": "DSL Acc Mod Line Mod - Suspend",
+    "description": "DSL Acc Mod For Line Mod - Suspend.",
+    "category": "DSL Acc Mod",
+    "steps": "DSL Acc Mod For Line Mod - Suspend."
+  },
+  {
+    "id": "16604",
+    "title": "DSL Acc Mod Line Changes - Change Organization",
+    "titleAr": "DSL Acc Mod Line Changes - Change Organization",
+    "description": "DSL Acc Mod For Line Changes - Change Organization.",
+    "category": "DSL Acc Mod",
+    "steps": "DSL Acc Mod For Line Changes - Change Organization."
+  },
+  {
+    "id": "16603",
+    "title": "DSL Acc Mod Line Changes - Username",
+    "titleAr": "DSL Acc Mod Line Changes - Username",
+    "description": "DSL Acc Mod For Line Changes - Username.",
+    "category": "DSL Acc Mod",
+    "steps": "DSL Acc Mod For Line Changes - Username."
+  },
+  {
+    "id": "16602",
+    "title": "DSL Acc Mod Line Changes - Upgrade Speed",
+    "titleAr": "DSL Acc Mod Line Changes - Upgrade Speed",
+    "description": "DSL Acc Mod For Line Changes - Upgrade Speed.",
+    "category": "DSL Acc Mod",
+    "steps": "DSL Acc Mod For Line Changes - Upgrade Speed."
+  },
+  {
+    "id": "16601",
+    "title": "DSL Acc Mod Line Changes - Downgrade Speed",
+    "titleAr": "DSL Acc Mod Line Changes - Downgrade Speed",
+    "description": "DSL Acc Mod For Line Changes - Downgrade Speed.",
+    "category": "DSL Acc Mod",
+    "steps": "DSL Acc Mod For Line Changes - Downgrade Speed."
+  },
+  {
+    "id": "16405",
+    "title": "DSL Acc Mod Hardware - Item Received",
+    "titleAr": "DSL Acc Mod Hardware - Item Received",
+    "description": "DSL Acc Mod For Hardware - Item Received.",
+    "category": "DSL Acc Mod",
+    "steps": "DSL Acc Mod For Hardware - Item Received."
+  },
+  {
+    "id": "16403",
+    "title": "DSL Acc Mod Hardware - Replace",
+    "titleAr": "DSL Acc Mod Hardware - Replace",
+    "description": "DSL Acc Mod For Hardware - Replace.",
+    "category": "DSL Acc Mod",
+    "steps": "DSL Acc Mod For Hardware - Replace."
+  },
+  {
+    "id": "16402",
+    "title": "DSL Acc Mod Hardware - Remove",
+    "titleAr": "DSL Acc Mod Hardware - Remove",
+    "description": "DSL Acc Mod For Hardware - Remove.",
+    "category": "DSL Acc Mod",
+    "steps": "DSL Acc Mod For Hardware - Remove."
+  },
+  {
+    "id": "16401",
+    "title": "DSL Acc Mod Hardware - Add",
+    "titleAr": "DSL Acc Mod Hardware - Add",
+    "description": "DSL Acc Mod For Hardware - Add.",
+    "category": "DSL Acc Mod",
+    "steps": "DSL Acc Mod For Hardware - Add."
+  },
+  {
+    "id": "16210",
+    "title": "DSL - Customer Info Update (Candidate)",
+    "titleAr": "DSL - Customer Info Update (Candidate)",
+    "description": "Customer info update for candidate customer.",
+    "category": "DSL",
+    "steps": "Customer info update for candidate customer."
+  },
+  {
+    "id": "16202",
+    "title": "DSL Acc Mod Contract Data - Modify",
+    "titleAr": "DSL Acc Mod Contract Data - Modify",
+    "description": "DSL Acc Mod For Contract Data - Modify.",
+    "category": "DSL Acc Mod",
+    "steps": "DSL Acc Mod For Contract Data - Modify."
+  },
+  {
+    "id": "16201",
+    "title": "DSL Acc Mod Contract Data - Change",
+    "titleAr": "DSL Acc Mod Contract Data - Change",
+    "description": "DSL Acc Mod For Contract Data - Change.",
+    "category": "DSL Acc Mod",
+    "steps": "DSL Acc Mod For Contract Data - Change."
+  },
+  {
+    "id": "16058",
+    "title": "DSL - Knowing Cost Before Cancellation",
+    "titleAr": "DSL - Knowing Cost Before Cancellation",
+    "description": "Knowing the remaining cost for the customer before cancellation.",
+    "category": "DSL",
+    "steps": "Knowing the remaining cost for the customer before cancellation."
+  },
+  {
+    "id": "16020",
+    "title": "DSL Acc Mod Billing - Billing Adjustment Username",
+    "titleAr": "DSL Acc Mod Billing - Billing Adjustment Username",
+    "description": "DSL Acc Mod For Billing - Billing Adjustment-Username.",
+    "category": "DSL Acc Mod",
+    "steps": "DSL Acc Mod For Billing - Billing Adjustment-Username."
+  },
+  {
+    "id": "16019",
+    "title": "DSL Acc Mod Billing - Check Balance For TE Data",
+    "titleAr": "DSL Acc Mod Billing - Check Balance For TE Data",
+    "description": "DSL Acc Mod For Billing - Check Balance For TE Data.",
+    "category": "DSL Acc Mod",
+    "steps": "DSL Acc Mod For Billing - Check Balance For TE Data."
+  },
+  {
+    "id": "16018",
+    "title": "DSL Acc Mod Billing - Add Visit Fees",
+    "titleAr": "DSL Acc Mod Billing - Add Visit Fees",
+    "description": "DSL Acc Mod For Billing - Add Visit Fees.",
+    "category": "DSL Acc Mod",
+    "steps": "DSL Acc Mod For Billing - Add Visit Fees."
+  },
+  {
+    "id": "16017",
+    "title": "DSL Acc Mod Billing - Resume Dunning",
+    "titleAr": "DSL Acc Mod Billing - Resume Dunning",
+    "description": "DSL Acc Mod For Billing - Resume Dunning.",
+    "category": "DSL Acc Mod",
+    "steps": "DSL Acc Mod For Billing - Resume Dunning."
+  },
+  {
+    "id": "16016",
+    "title": "DSL Acc Mod Billing - Charge Penalty Fees",
+    "titleAr": "DSL Acc Mod Billing - Charge Penalty Fees",
+    "description": "DSL Acc Mod For Billing - Charge Penalty Fees.",
+    "category": "DSL Acc Mod",
+    "steps": "DSL Acc Mod For Billing - Charge Penalty Fees."
+  },
+  {
+    "id": "16015",
+    "title": "DSL Acc Mod Billing - Waive Penalty Fees",
+    "titleAr": "DSL Acc Mod Billing - Waive Penalty Fees",
+    "description": "DSL Acc Mod For Billing - Waive Penalty Fees.",
+    "category": "DSL Acc Mod",
+    "steps": "DSL Acc Mod For Billing - Waive Penalty Fees."
+  },
+  {
+    "id": "16014",
+    "title": "DSL Acc Mod Billing - Drop Amount",
+    "titleAr": "DSL Acc Mod Billing - Drop Amount",
+    "description": "DSL Acc Mod For Billing - Drop Amount.",
+    "category": "DSL Acc Mod",
+    "steps": "DSL Acc Mod For Billing - Drop Amount."
+  },
+  {
+    "id": "16013",
+    "title": "DSL Acc Mod Billing - Waive Switching Fees",
+    "titleAr": "DSL Acc Mod Billing - Waive Switching Fees",
+    "description": "DSL Acc Mod For Billing - Waive Switching Fees.",
+    "category": "DSL Acc Mod",
+    "steps": "DSL Acc Mod For Billing - Waive Switching Fees."
+  },
+  {
+    "id": "16012",
+    "title": "DSL Acc Mod Billing - Refund Payment",
+    "titleAr": "DSL Acc Mod Billing - Refund Payment",
+    "description": "DSL Acc Mod For Billing - Refund Payment.",
+    "category": "DSL Acc Mod",
+    "steps": "DSL Acc Mod For Billing - Refund Payment."
+  },
+  {
+    "id": "16011",
+    "title": "DSL Acc Mod Billing - Hold Dunning",
+    "titleAr": "DSL Acc Mod Billing - Hold Dunning",
+    "description": "DSL Acc Mod For Billing - Hold Dunning.",
+    "category": "DSL Acc Mod",
+    "steps": "DSL Acc Mod For Billing - Hold Dunning."
+  },
+  {
+    "id": "16010",
+    "title": "DSL Acc Mod Billing - Release Line",
+    "titleAr": "DSL Acc Mod Billing - Release Line",
+    "description": "DSL Acc Mod For Billing - Release Line.",
+    "category": "DSL Acc Mod",
+    "steps": "DSL Acc Mod For Billing - Release Line."
+  },
+  {
+    "id": "16009",
+    "title": "DSL Acc Mod Billing - Direct Debit",
+    "titleAr": "DSL Acc Mod Billing - Direct Debit",
+    "description": "DSL Acc Mod For Billing - Direct Debit.",
+    "category": "DSL Acc Mod",
+    "steps": "DSL Acc Mod For Billing - Direct Debit."
+  },
+  {
+    "id": "16008",
+    "title": "DSL Acc Mod Billing - Money Transfer",
+    "titleAr": "DSL Acc Mod Billing - Money Transfer",
+    "description": "DSL Acc Mod For Billing - Money Transfer.",
+    "category": "DSL Acc Mod",
+    "steps": "DSL Acc Mod For Billing - Money Transfer."
+  },
+  {
+    "id": "16007",
+    "title": "DSL Acc Mod Billing - Send Payment Request",
+    "titleAr": "DSL Acc Mod Billing - Send Payment Request",
+    "description": "DSL Acc Mod For Billing - Send Payment Request.",
+    "category": "DSL Acc Mod",
+    "steps": "DSL Acc Mod For Billing - Send Payment Request."
+  },
+  {
+    "id": "16006",
+    "title": "DSL Acc Mod Billing - Send Tax Card",
+    "titleAr": "DSL Acc Mod Billing - Send Tax Card",
+    "description": "DSL Acc Mod For Billing - Send Tax Card.",
+    "category": "DSL Acc Mod",
+    "steps": "DSL Acc Mod For Billing - Send Tax Card."
+  },
+  {
+    "id": "16005",
+    "title": "DSL Acc Mod Billing - Send Itemized Bill",
+    "titleAr": "DSL Acc Mod Billing - Send Itemized Bill",
+    "description": "DSL Acc Mod For Billing - Send Itemized Bill.",
+    "category": "DSL Acc Mod",
+    "steps": "DSL Acc Mod For Billing - Send Itemized Bill."
+  },
+  {
+    "id": "16004",
+    "title": "DSL Acc Mod Billing - Credit Card Issues",
+    "titleAr": "DSL Acc Mod Billing - Credit Card Issues",
+    "description": "DSL Acc Mod For Billing - Credit Card Issues.",
+    "category": "DSL Acc Mod",
+    "steps": "DSL Acc Mod For Billing - Credit Card Issues."
+  },
+  {
+    "id": "16003",
+    "title": "DSL Acc Mod Billing - Collect Bill",
+    "titleAr": "DSL Acc Mod Billing - Collect Bill",
+    "description": "DSL Acc Mod For Billing - Collect Bill.",
+    "category": "DSL Acc Mod",
+    "steps": "DSL Acc Mod For Billing - Collect Bill."
+  },
+  {
+    "id": "16002",
+    "title": "DSL Acc Mod Billing - Collect Down Payment",
+    "titleAr": "DSL Acc Mod Billing - Collect Down Payment",
+    "description": "DSL Acc Mod For Billing - Collect Down Payment.",
+    "category": "DSL Acc Mod",
+    "steps": "DSL Acc Mod For Billing - Collect Down Payment."
+  },
+  {
+    "id": "16001",
+    "title": "DSL Acc Mod Billing - Review Balance Cancelation",
+    "titleAr": "DSL Acc Mod Billing - Review Balance Cancelation",
+    "description": "DSL Acc Mod For Billing - Review Balance- Cancelation.",
+    "category": "DSL Acc Mod",
+    "steps": "DSL Acc Mod For Billing - Review Balance- Cancelation."
+  },
+  {
+    "id": "14004",
+    "title": "DSL Acc Mod New Line - Activate Static 16 IPs",
+    "titleAr": "DSL Acc Mod New Line - Activate Static 16 IPs",
+    "description": "DSL Acc Mod For New Line - Activate Static 16 IPs.",
+    "category": "DSL Acc Mod",
+    "steps": "DSL Acc Mod For New Line - Activate Static 16 IPs."
+  },
+  {
+    "id": "14003",
+    "title": "DSL Acc Mod New Line - Activate Static 8 IPs",
+    "titleAr": "DSL Acc Mod New Line - Activate Static 8 IPs",
+    "description": "DSL Acc Mod For New Line - Activate Static 8 IPs.",
+    "category": "DSL Acc Mod",
+    "steps": "DSL Acc Mod For New Line - Activate Static 8 IPs."
+  },
+  {
+    "id": "14002",
+    "title": "DSL Acc Mod New Line - Manual Activation",
+    "titleAr": "DSL Acc Mod New Line - Manual Activation",
+    "description": "DSL Acc Mod For New Line - Manual Activation.",
+    "category": "DSL Acc Mod",
+    "steps": "DSL Acc Mod For New Line - Manual Activation."
+  },
+  {
+    "id": "12304",
+    "title": "Acc Mod Products",
+    "titleAr": "Acc Mod Products",
+    "description": "Acc Mod For Products.",
+    "category": "Acc Mod",
+    "steps": "Acc Mod For Products."
+  },
+  {
+    "id": "12246",
+    "title": "Acc Mod Special Program - Corporate Pts Transfer",
+    "titleAr": "Acc Mod Special Program - Corporate Pts Transfer",
+    "description": "For Points transfer Corp use.",
+    "category": "Acc Mod",
+    "steps": "For Points transfer Corp use."
+  },
+  {
+    "id": "12201",
+    "title": "Acc Mod Special Program - CS Pts Transfer Same Owner",
+    "titleAr": "Acc Mod Special Program - CS Pts Transfer Same Owner",
+    "description": "For transfer points same owner Personal.",
+    "category": "Acc Mod",
+    "steps": "For transfer points same owner Personal."
+  },
+  {
+    "id": "12123",
+    "title": "Acc Mod MNP - Upselling Port In",
+    "titleAr": "Acc Mod MNP - Upselling Port In",
+    "description": "Prospect use for MNP port in request with an offer.",
+    "category": "Acc Mod",
+    "steps": "Prospect use for MNP port in request with an offer."
+  },
+  {
+    "id": "12106",
+    "title": "Acc Mod MNP - Port In",
+    "titleAr": "Acc Mod MNP - Port In",
+    "description": "Prospect use for MNP port in request.",
+    "category": "Acc Mod",
+    "steps": "Prospect use for MNP port in request."
+  },
+  {
+    "id": "11527",
+    "title": "Activation - Integrated Services Card Discount (تفعيل - خصم بطاقة الخدمات المتكاملة)",
+    "titleAr": "Activation - Integrated Services Card Discount (تفعيل - خصم بطاقة الخدمات المتكاملة)",
+    "description": "Discount with the Integrated Services Card.",
+    "category": "Activation",
+    "steps": "Discount with the Integrated Services Card."
+  },
+  {
+    "id": "11517",
+    "title": "Complaint Handling - Fault for Credit",
+    "titleAr": "Complaint Handling - Fault for Credit",
+    "description": "Fault for credit.",
+    "category": "Complaint Handling",
+    "steps": "Fault for credit."
+  },
+  {
+    "id": "11221",
+    "title": "Orange Cash - Fund Transfer",
+    "titleAr": "Orange Cash - Fund Transfer",
+    "description": "Transferring funds from one wallet to another.",
+    "category": "Orange Cash",
+    "steps": "Transferring funds from one wallet to another."
+  },
+  {
+    "id": "11189",
+    "title": "Orange Cash - Update Account",
+    "titleAr": "Orange Cash - Update Account",
+    "description": "Orange Cash account update when the customer's wallet is suspended.",
+    "category": "Orange Cash",
+    "steps": "Orange Cash account update when the customer's wallet is suspended."
+  },
+  {
+    "id": "11132",
+    "title": "Acc Mod VAS - Suspend",
+    "titleAr": "Acc Mod VAS - Suspend",
+    "description": "Acc Mod For VAS - Suspend.",
+    "category": "Acc Mod",
+    "steps": "Acc Mod For VAS - Suspend."
+  },
+  {
+    "id": "11129",
+    "title": "Acc Mod VAS - Release",
+    "titleAr": "Acc Mod VAS - Release",
+    "description": "Acc Mod For VAS - Release.",
+    "category": "Acc Mod",
+    "steps": "Acc Mod For VAS - Release."
+  },
+  {
+    "id": "11128",
+    "title": "Acc Mod VAS - Modify",
+    "titleAr": "Acc Mod VAS - Modify",
+    "description": "Acc Mod For VAS - Modify.",
+    "category": "Acc Mod",
+    "steps": "Acc Mod For VAS - Modify."
+  },
+  {
+    "id": "11119",
+    "title": "Acc Mod VAS - Delete Services",
+    "titleAr": "Acc Mod VAS - Delete Services",
+    "description": "For deleting services as Roaming, international, Direct debit.",
+    "category": "Acc Mod",
+    "steps": "For deleting services as Roaming, international, Direct debit."
+  },
+  {
+    "id": "11102",
+    "title": "Acc Mod VAS - Add Services",
+    "titleAr": "Acc Mod VAS - Add Services",
+    "description": "For adding services as Roaming, international, Direct Debit.",
+    "category": "Acc Mod",
+    "steps": "For adding services as Roaming, international, Direct Debit."
+  },
+  {
+    "id": "10901",
+    "title": "Acc Mod Offers - Add",
+    "titleAr": "Acc Mod Offers - Add",
+    "description": "Acc Mod For Offers - Add.",
+    "category": "Acc Mod",
+    "steps": "Acc Mod For Offers - Add."
+  },
+  {
+    "id": "10841",
+    "title": "Reallocation",
+    "titleAr": "Reallocation",
+    "description": "If a reallocation request is approved, we create an SR and upload all the documents.",
+    "category": "Acc Mod",
+    "steps": "If a reallocation request is approved, we create an SR and upload all the documents."
+  },
+  {
+    "id": "10831",
+    "title": "Hybrid Violation - Amend Contracts",
+    "titleAr": "Hybrid Violation - Amend Contracts",
+    "description": "Amend line contracts and documents.",
+    "category": "Acc Mod",
+    "steps": "Amend line contracts and documents."
+  },
+  {
+    "id": "10811",
+    "title": "Activation Foreigner - New Line",
+    "titleAr": "Activation Foreigner - New Line",
+    "description": "New line activation SR for Foreigners.",
+    "category": "Activation",
+    "steps": "New line activation SR for Foreigners."
+  },
+  {
+    "id": "10801",
+    "title": "Activation Egyptian - New Line",
+    "titleAr": "Activation Egyptian - New Line",
+    "description": "New Line activation SR For Egyptians.",
+    "category": "Activation",
+    "steps": "New Line activation SR For Egyptians."
+  },
+  {
+    "id": "10765",
+    "title": "Migration - Pre/Hybrid To Premier New ADSL",
+    "titleAr": "Migration - Pre/Hybrid To Premier New ADSL",
+    "description": "When Migrating from pre or hybrid to premier with new ADSL.",
+    "category": "MIG",
+    "steps": "When Migrating from pre or hybrid to premier with new ADSL."
+  },
+  {
+    "id": "10764",
+    "title": "Migration - From Premier To Pre/Post",
+    "titleAr": "Migration - From Premier To Pre/Post",
+    "description": "When migrating from premier to Pre or post.",
+    "category": "MIG",
+    "steps": "When migrating from premier to Pre or post."
+  },
+  {
+    "id": "10763",
+    "title": "Migration - To Premier Exist ADSL",
+    "titleAr": "Migration - To Premier Exist ADSL",
+    "description": "For migration to Premier with Existing ADSL.",
+    "category": "MIG",
+    "steps": "For migration to Premier with Existing ADSL."
+  },
+  {
+    "id": "10762",
+    "title": "Migration - To Premier New ADSL",
+    "titleAr": "Migration - To Premier New ADSL",
+    "description": "For migration to premier with NEW ADSL.",
+    "category": "MIG",
+    "steps": "For migration to premier with NEW ADSL."
+  },
+  {
+    "id": "10761",
+    "title": "Migration - From Pre/Hybrid Exist ADSL",
+    "titleAr": "Migration - From Pre/Hybrid Exist ADSL",
+    "description": "For migration from pre or Hybrid to Premier with Existing ADSL.",
+    "category": "MIG",
+    "steps": "For migration from pre or Hybrid to Premier with Existing ADSL."
+  },
+  {
+    "id": "10760",
+    "title": "Migration - From Control Share Portfolio",
+    "titleAr": "Migration - From Control Share Portfolio",
+    "description": "When Migrating from control share to postpaid.",
+    "category": "MIG",
+    "steps": "When Migrating from control share to postpaid."
+  },
+  {
+    "id": "10756",
+    "title": "Migration - From Eagle 100",
+    "titleAr": "Migration - From Eagle 100",
+    "description": "When Migrating from eagle to Pre or Postpaid.",
+    "category": "MIG",
+    "steps": "When Migrating from eagle to Pre or Postpaid."
+  },
+  {
+    "id": "10751",
+    "title": "Migration - From Star Limit",
+    "titleAr": "Migration - From Star Limit",
+    "description": "When migrating from star limit to pre or postpaid.",
+    "category": "MIG",
+    "steps": "When migrating from star limit to pre or postpaid."
+  },
+  {
+    "id": "10744",
+    "title": "Migration - To Premier With Home 4G",
+    "titleAr": "Migration - To Premier With Home 4G",
+    "description": "For migration to Premier with Home 4G.",
+    "category": "MIG",
+    "steps": "For migration to Premier with Home 4G."
+  },
+  {
+    "id": "10740",
+    "title": "Migration - From Corp With Credit Approval",
+    "titleAr": "Migration - From Corp With Credit Approval",
+    "description": "When migrating from corp to Personal with credit approval (SR on main account).",
+    "category": "MIG",
+    "steps": "When migrating from corp to Personal with credit approval (SR on main account)."
+  },
+  {
+    "id": "10731",
+    "title": "Migration - From Control Free",
+    "titleAr": "Migration - From Control Free",
+    "description": "When migration from control free to Postpaid.",
+    "category": "MIG",
+    "steps": "When migration from control free to Postpaid."
+  },
+  {
+    "id": "10726",
+    "title": "Migration - From Control To Postpaid",
+    "titleAr": "Migration - From Control To Postpaid",
+    "description": "When migrating From control to Postpaid.",
+    "category": "MIG",
+    "steps": "When migrating From control to Postpaid."
+  },
+  {
+    "id": "10722",
+    "title": "Migration - From Star Control",
+    "titleAr": "Migration - From Star Control",
+    "description": "When migrating from star control to pre or postpaid.",
+    "category": "MIG",
+    "steps": "When migrating from star control to pre or postpaid."
+  },
+  {
+    "id": "10713",
+    "title": "Migration - From Postpaid Data",
+    "titleAr": "Migration - From Postpaid Data",
+    "description": "Acc Mod For Migration - From Postpaid Data To.",
+    "category": "MIG",
+    "steps": "Acc Mod For Migration - From Postpaid Data To."
+  },
+  {
+    "id": "10709",
+    "title": "Migration - From Corp Call And Control",
+    "titleAr": "Migration - From Corp Call And Control",
+    "description": "When migrating from corp call and control to Post or Pre (SR on main account).",
+    "category": "MIG",
+    "steps": "When migrating from corp call and control to Post or Pre (SR on main account)."
+  },
+  {
+    "id": "10708",
+    "title": "Migration - From Corp Standard",
+    "titleAr": "Migration - From Corp Standard",
+    "description": "When migrating from Corp postpaid to Pre or Postpaid (SR on main account).",
+    "category": "MIG",
+    "steps": "When migrating from Corp postpaid to Pre or Postpaid (SR on main account)."
+  },
+  {
+    "id": "10707",
+    "title": "Migration - From Call And Control",
+    "titleAr": "Migration - From Call And Control",
+    "description": "When Migrating from Call and control to Premier.",
+    "category": "MIG",
+    "steps": "When Migrating from Call and control to Premier."
+  },
+  {
+    "id": "10706",
+    "title": "Migration - From Star",
+    "titleAr": "Migration - From Star",
+    "description": "When migrating from Star to premier.",
+    "category": "MIG",
+    "steps": "When migrating from Star to premier."
+  },
+  {
+    "id": "10705",
+    "title": "Migration - From Primo",
+    "titleAr": "Migration - From Primo",
+    "description": "When migrating from Primo to Premier.",
+    "category": "MIG",
+    "steps": "When migrating from Primo to Premier."
+  },
+  {
+    "id": "10704",
+    "title": "Migration - From Al Kart (Pre to Post)",
+    "titleAr": "Migration - From Al Kart (Pre to Post)",
+    "description": "When customer wants to migrate his pre to postpaid tariff.",
+    "category": "MIG",
+    "steps": "When customer wants to migrate his pre to postpaid tariff."
+  },
+  {
+    "id": "10693",
+    "title": "Activation - Update Line Info For Foreigners",
+    "titleAr": "Activation - Update Line Info For Foreigners",
+    "description": "Updating line information for foreigners.",
+    "category": "Activation",
+    "steps": "Updating line information for foreigners."
+  },
+  {
+    "id": "10692",
+    "title": "Data Update - Egyptians And Foreigners",
+    "titleAr": "Data Update - Egyptians And Foreigners",
+    "description": "Data Update for Egyptians and Foreigners.",
+    "category": "Activation",
+    "steps": "Data Update for Egyptians and Foreigners."
+  },
+  {
+    "id": "10675",
+    "title": "Acc Mod Line Modification - DG National ID",
+    "titleAr": "Acc Mod Line Modification - DG National ID",
+    "description": "Data gathering for Egyptians with national ID.",
+    "category": "Acc Mod",
+    "steps": "Data gathering for Egyptians with national ID."
+  },
+  {
+    "id": "10674",
+    "title": "Acc Mod Line Modification - DG Foreigner Passport",
+    "titleAr": "Acc Mod Line Modification - DG Foreigner Passport",
+    "description": "For data gathering Foreigners with passport.",
+    "category": "Acc Mod",
+    "steps": "For data gathering Foreigners with passport."
+  },
+  {
+    "id": "10662",
+    "title": "Acc Mod Line Modification - Blocking SMS ADs",
+    "titleAr": "Acc Mod Line Modification - Blocking SMS ADs",
+    "description": "For Blocking SMS ads for customer when complaining from sms ads.",
+    "category": "Acc Mod",
+    "steps": "For Blocking SMS ads for customer when complaining from sms ads."
+  },
+  {
+    "id": "10650",
+    "title": "Acc Mod Line Modification - Ownership Data Registration",
+    "titleAr": "Acc Mod Line Modification - Ownership Data Registration",
+    "description": "For ownership data Registration.",
+    "category": "Acc Mod",
+    "steps": "For ownership data Registration."
+  },
+  {
+    "id": "10621",
+    "title": "Acc Mod Line Modification - Line Suspend",
+    "titleAr": "Acc Mod Line Modification - Line Suspend",
+    "description": "Acc Mod For Line Modification - Line suspend.",
+    "category": "Acc Mod",
+    "steps": "Acc Mod For Line Modification - Line suspend."
+  },
+  {
+    "id": "10607",
+    "title": "Acc Mod Line Modification - Change Of Ownership",
+    "titleAr": "Acc Mod Line Modification - Change Of Ownership",
+    "description": "For change of ownership.",
+    "category": "Acc Mod",
+    "steps": "For change of ownership."
+  },
+  {
+    "id": "10604",
+    "title": "Acc Mod Line Modification - Change",
+    "titleAr": "Acc Mod Line Modification - Change",
+    "description": "Acc Mod For Line Modification - Change.",
+    "category": "Acc Mod",
+    "steps": "Acc Mod For Line Modification - Change."
+  },
+  {
+    "id": "10512",
+    "title": "Acc Mod Group Share - Activate & Change Initiator",
+    "titleAr": "Acc Mod Group Share - Activate & Change Initiator",
+    "description": "When adding Home 4g to group share and to add premier discount.",
+    "category": "Acc Mod",
+    "steps": "When adding Home 4g to group share and to add premier discount."
+  },
+  {
+    "id": "10511",
+    "title": "Acc Mod Group Share - Individualize Same Customer",
+    "titleAr": "Acc Mod Group Share - Individualize Same Customer",
+    "description": "When customer wants to individualize dial same owner.",
+    "category": "Acc Mod",
+    "steps": "When customer wants to individualize dial same owner."
+  },
+  {
+    "id": "10504",
+    "title": "Acc Mod Group Share - Individual Diff Customer",
+    "titleAr": "Acc Mod Group Share - Individual Diff Customer",
+    "description": "When customer wants to individualize dial different owner.",
+    "category": "Acc Mod",
+    "steps": "When customer wants to individualize dial different owner."
+  },
+  {
+    "id": "10502",
+    "title": "Acc Mod Group Share - Grouping",
+    "titleAr": "Acc Mod Group Share - Grouping",
+    "description": "When customer wants to make grouping to dial with same owner.",
+    "category": "Acc Mod",
+    "steps": "When customer wants to make grouping to dial with same owner."
+  },
+  {
+    "id": "10501",
+    "title": "Acc Mod Group Share - Activate",
+    "titleAr": "Acc Mod Group Share - Activate",
+    "description": "When customer wants to activate new dial as a group share to his account.",
+    "category": "Acc Mod",
+    "steps": "When customer wants to activate new dial as a group share to his account."
+  },
+  {
+    "id": "10302",
+    "title": "Acc Mod Data Services - Delete",
+    "titleAr": "Acc Mod Data Services - Delete",
+    "description": "Acc Mod For Data Services - Delete.",
+    "category": "Acc Mod",
+    "steps": "Acc Mod For Data Services - Delete."
+  },
+  {
+    "id": "10301",
+    "title": "Acc Mod Data Services - Add",
+    "titleAr": "Acc Mod Data Services - Add",
+    "description": "Acc Mod For Data Services - Add.",
+    "category": "Acc Mod",
+    "steps": "Acc Mod For Data Services - Add."
+  },
+  {
+    "id": "10224",
+    "title": "Acc Mod Changing Tariff - From Star Control",
+    "titleAr": "Acc Mod Changing Tariff - From Star Control",
+    "description": "When customer wants to change tariff from star control to any postpaid tariff.",
+    "category": "Acc Mod",
+    "steps": "When customer wants to change tariff from star control to any postpaid tariff."
+  },
+  {
+    "id": "10216",
+    "title": "Acc Mod Changing Tariff - From Star Etkalem",
+    "titleAr": "Acc Mod Changing Tariff - From Star Etkalem",
+    "description": "When customer wants to change from star etklm to any postpaid tariff.",
+    "category": "Acc Mod",
+    "steps": "When customer wants to change from star etklm to any postpaid tariff."
+  },
+  {
+    "id": "10213",
+    "title": "Acc Mod Changing Tariff - Change Tariff (Post to Post)",
+    "titleAr": "Acc Mod Changing Tariff - Change Tariff (Post to Post)",
+    "description": "When customer wants to change tariff from postpaid to postpaid tariff.",
+    "category": "Acc Mod",
+    "steps": "When customer wants to change tariff from postpaid to postpaid tariff."
+  },
+  {
+    "id": "10203",
+    "title": "Acc Mod Changing Tariff - From Smart Phone",
+    "titleAr": "Acc Mod Changing Tariff - From Smart Phone",
+    "description": "When customer wants to change tariff from star smart phone to any post paid tariff.",
+    "category": "Acc Mod",
+    "steps": "When customer wants to change tariff from star smart phone to any post paid tariff."
+  },
+  {
+    "id": "10201",
+    "title": "Acc Mod Changing Tariff - Change To",
+    "titleAr": "Acc Mod Changing Tariff - Change To",
+    "description": "Acc Mod For Changing Tariff - Change To.",
+    "category": "Acc Mod",
+    "steps": "Acc Mod For Changing Tariff - Change To."
+  },
+  {
+    "id": "10183",
+    "title": "Acc Mod Billing - Reallocate Easy Line",
+    "titleAr": "Acc Mod Billing - Reallocate Easy Line",
+    "description": "When reallocating easy dial.",
+    "category": "Acc Mod",
+    "steps": "When reallocating easy dial."
+  },
+  {
+    "id": "10145",
+    "title": "Acc Mod Billing - Print Itemized Bill",
+    "titleAr": "Acc Mod Billing - Print Itemized Bill",
+    "description": "Acc Mod For Billing - Print Itemized Bill.",
+    "category": "Acc Mod",
+    "steps": "Acc Mod For Billing - Print Itemized Bill."
+  },
+  {
+    "id": "10139",
+    "title": "Acc Mod Billing - Release Soft Disconnection",
+    "titleAr": "Acc Mod Billing - Release Soft Disconnection",
+    "description": "Acc Mod For Billing - Release Soft Disconnection.",
+    "category": "Acc Mod",
+    "steps": "Acc Mod For Billing - Release Soft Disconnection."
+  },
+  {
+    "id": "10124",
+    "title": "Acc Mod Billing - Reinstate Line",
+    "titleAr": "Acc Mod Billing - Reinstate Line",
+    "description": "When we Reinstate dial for the customer on his deactive dial on Siebel.",
+    "category": "Acc Mod",
+    "steps": "When we Reinstate dial for the customer on his deactive dial on Siebel."
+  },
+  {
+    "id": "10113",
+    "title": "Acc Mod Billing - Payment Plan Agreement",
+    "titleAr": "Acc Mod Billing - Payment Plan Agreement",
+    "description": "When customer wants promise from credit team.",
+    "category": "Acc Mod",
+    "steps": "When customer wants promise from credit team."
+  },
+  {
+    "id": "5011",
+    "title": "DSL - Activation and Contract (New Subscription)",
+    "titleAr": "DSL - Activation and Contract (New Subscription)",
+    "description": "Activation and Contract for activating the new subscription.",
+    "category": "DSL",
+    "steps": "Activation and Contract for activating the new subscription."
+  },
+  {
+    "id": "5010",
+    "title": "DSL - Activation and Contract (New Subscription)",
+    "titleAr": "DSL - Activation and Contract (New Subscription)",
+    "description": "Activation and Contract for activating the new subscription.",
+    "category": "DSL",
+    "steps": "Activation and Contract for activating the new subscription."
+  },
+  {
+    "id": "4108",
+    "title": "Fault VAS - Orange Cash IVR 7115 Issue",
+    "titleAr": "Fault VAS - Orange Cash IVR 7115 Issue",
+    "description": "Customer is complaining s/he couldn't be able to access IVR 7115 due to technical issue. Call center/retail agent to make sure that the customer is already subscribed and have an active wallet.",
+    "category": "Fault",
+    "steps": "Customer is complaining s/he couldn't be able to access IVR 7115 due to technical issue. Call center/retail agent to make sure that the customer is already subscribed and have an active wallet."
+  },
+  {
+    "id": "4107",
+    "title": "Fault Orange App - Orange Cash Service Problem",
+    "titleAr": "Fault Orange App - Orange Cash Service Problem",
+    "description": "Customer is complaining that s/he couldn't use one of service options. Call center/retail agent to make sure that the customer is already using the latest version and using Orange 4G network.",
+    "category": "Fault",
+    "steps": "Customer is complaining that s/he couldn't use one of service options. Call center/retail agent to make sure that the customer is already using the latest version and using Orange 4G network."
+  },
+  {
+    "id": "1114",
+    "title": "Blacklist - Check Blacklist",
+    "titleAr": "Blacklist - Check Blacklist",
+    "description": "Check Blacklist.",
+    "category": "Acc Mod",
+    "steps": "Check Blacklist."
+  },
+  {
+    "id": "1112",
+    "title": "Request For Information - Orange Applications",
+    "titleAr": "Request For Information - Orange Applications",
+    "description": "For upselling My orange app.",
+    "category": "Request For Information",
+    "steps": "For upselling My orange app."
+  },
+  {
+    "id": "1106",
+    "title": "Request For Information - Line Status Reallocation",
+    "titleAr": "Request For Information - Line Status Reallocation",
+    "description": "For sending Reallocation request for non-Easy dials.",
+    "category": "Request For Information",
+    "steps": "For sending Reallocation request for non-Easy dials."
+  },
+  {
+    "id": "1030",
+    "title": "Reallocation Request",
+    "titleAr": "Reallocation Request",
+    "description": "We submit the reallocation request, then contact the activation team to check whether the line will be returned to the customer.",
+    "category": "Acc Mod",
+    "steps": "We submit the reallocation request, then contact the activation team to check whether the line will be returned to the customer."
+  },
+  {
+    "id": "15",
+    "title": "Application Issue - Wincash Stamping",
+    "titleAr": "Application Issue - Wincash Stamping",
+    "description": "In case of Wincash stamping issue.",
+    "category": "Fault",
+    "steps": "In case of Wincash stamping issue."
+  },
+  {
+    "id": "1",
+    "title": "Fault VAS - Orange Money Cash In",
+    "titleAr": "Fault VAS - Orange Money Cash In",
+    "description": "Fault For VAS - Orange Money Cash In.",
+    "category": "Fault",
+    "steps": "Fault For VAS - Orange Money Cash In."
+  }
+]

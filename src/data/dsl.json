@@ -1,0 +1,151 @@
+{
+  "plans": [
+    {
+      "name": "Home DSL 150",
+      "speed": 30,
+      "quota": 50,
+      "price": 171,
+      "oldPlan": "باقة جديدة"
+    },
+    {
+      "name": "Home DSL 260",
+      "speed": 30,
+      "quota": 150,
+      "price": 296.4,
+      "oldPlan": "Home DSL 210"
+    },
+    {
+      "name": "Home DSL 330",
+      "speed": 30,
+      "quota": 200,
+      "price": 376.2,
+      "oldPlan": "Home DSL 290"
+    },
+    {
+      "name": "Home DSL 395",
+      "speed": 30,
+      "quota": 250,
+      "price": 450.3,
+      "oldPlan": "Home DSL 360"
+    },
+    {
+      "name": "Home DSL 460",
+      "speed": 30,
+      "quota": 300,
+      "price": 524.4,
+      "oldPlan": "Home DSL 420"
+    },
+    {
+      "name": "Home DSL 660",
+      "speed": 30,
+      "quota": 500,
+      "price": 752.4,
+      "oldPlan": "Home DSL 680"
+    },
+    {
+      "name": "Home DSL 925",
+      "speed": 30,
+      "quota": 750,
+      "price": 1054.5,
+      "oldPlan": "Home DSL 1040"
+    },
+    {
+      "name": "Home DSL 590",
+      "speed": 70,
+      "quota": 250,
+      "price": 672.6,
+      "oldPlan": "Home DSL 520"
+    },
+    {
+      "name": "Home DSL 1175",
+      "speed": 70,
+      "quota": 750,
+      "price": 1339.5,
+      "oldPlan": "Home DSL 1040"
+    },
+    {
+      "name": "Home DSL 2000",
+      "speed": 70,
+      "quota": 1500,
+      "price": 2280,
+      "oldPlan": "Home DSL 1560"
+    },
+    {
+      "name": "Home DSL 880",
+      "speed": 100,
+      "quota": 300,
+      "price": 1003.2,
+      "oldPlan": "Home DSL 700"
+    },
+    {
+      "name": "Home DSL 1000",
+      "speed": 100,
+      "quota": 400,
+      "price": 1140,
+      "oldPlan": "Home DSL 880"
+    },
+    {
+      "name": "Home DSL 1425",
+      "speed": 100,
+      "quota": 750,
+      "price": 1624.5,
+      "oldPlan": "Home DSL 1230"
+    },
+    {
+      "name": "Home DSL 2350",
+      "speed": 200,
+      "quota": 1500,
+      "price": 2679,
+      "oldPlan": "Home DSL 1760"
+    },
+    {
+      "name": "Home DSL 2670",
+      "speed": 500,
+      "quota": 1500,
+      "price": 3043.8,
+      "oldPlan": "باقة جديدة"
+    }
+  ],
+  "addons": [
+    {
+      "quota": "20 GB",
+      "price": 68.4
+    },
+    {
+      "quota": "60 GB",
+      "price": 159.6
+    },
+    {
+      "quota": "100 GB",
+      "price": 216.6
+    },
+    {
+      "quota": "150 GB",
+      "price": 319.2
+    },
+    {
+      "quota": "400 GB",
+      "price": 570
+    }
+  ],
+  "routers": [
+    {
+      "name": "راوتر VDSL (Standard)",
+      "tag": "الخيار الاقتصادي",
+      "desc": "يدعم سرعات حتى 100 ميجا / تغطية WiFi قياسية",
+      "cash": 920,
+      "promoCash": 460,
+      "installment": 57,
+      "months": 12
+    },
+    {
+      "name": "راوتر VDSL (High End)",
+      "tag": "الأعلى أداءً",
+      "desc": "يدعم السرعات العالية جداً / يدعم الفايبر FTTH / WiFi ثنائي النطاق / تغطية ممتازة",
+      "cash": 1710,
+      "promoCash": 855,
+      "installment": 57,
+      "months": 30
+    }
+  ]
+}
