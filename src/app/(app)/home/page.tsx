@@ -135,7 +135,6 @@ export default function HomePage() {
   });
   const moodStyle = MOOD_STYLES[mood.tone];
 
-  const behindKpis = data.kpis.filter((kpi) => kpi.weight > 0 && kpi.percent < 100 && kpi.remaining > 0);
 
   return (
     <div className="space-y-5">
@@ -203,28 +202,6 @@ export default function HomePage() {
       {data.weightWarning ? (
         <Banner tone="warn">⚠️ مجموع الأوزان {formatPercent(data.weightSum)}% مش 100%. راجع صفحة التارجت.</Banner>
       ) : null}
-
-      <section className="rounded-[24px] bg-orange-50 p-4 text-sm leading-7 text-[#c45e00]">
-        <p className="font-extrabold">⚡ المطلوب منك النهارده عشان تفضل ON TRACK:</p>
-        {behindKpis.length === 0 ? (
-          <p className="mt-1 font-bold">كل المؤشرات تمام. مفيش حاجة ضاغطة النهارده 👌</p>
-        ) : data.work.remaining <= 0 ? (
-          <p className="mt-1 font-bold">أيام الشغل خلصت. اللي فاضل: {behindKpis.map((k) => `${kpiEmoji(k.kpiKey)} ${k.nameEn} ${formatQty(k.remaining)}`).join(" · ")}</p>
-        ) : (
-          <ul className="mt-2 space-y-1">
-            {behindKpis.map((kpi) => (
-              <li key={kpi.kpiKey} className="flex items-center justify-between gap-2">
-                <span className="font-bold">
-                  {kpiEmoji(kpi.kpiKey)} {kpi.nameEn}
-                </span>
-                <span className="font-black">
-                  {formatQty(Math.ceil(kpi.remaining / data.work.remaining))} {kpi.unitAr} — فاضل {formatQty(kpi.remaining)}
-                </span>
-              </li>
-            ))}
-          </ul>
-        )}
-      </section>
 
       {data.empty ? (
         <EmptyState

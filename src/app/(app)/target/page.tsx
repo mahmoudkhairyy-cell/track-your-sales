@@ -1,8 +1,8 @@
 "use client";
 
 import { FormEvent, useEffect, useState } from "react";
-import { KPI_CATALOG, WEEK_DAYS } from "@/lib/constants";
-import { sumWeights } from "@/lib/calculations";
+import { KPI_CATALOG, WEEK_DAYS, kpiEmoji } from "@/lib/constants";
+import { formatQty, sumWeights } from "@/lib/calculations";
 import { Banner, Field, PrimaryButton, SecondaryButton, Spinner, inputClass, useToast } from "@/components/ui";
 import { ApiError, api } from "@/lib/client";
 import type { WorkingDays } from "@/lib/types";
@@ -18,6 +18,9 @@ type KpiForm = {
 };
 
 type Holiday = { date: string; note: string | null };
+
+type DailyRow = { kpiKey: string; nameEn: string; unitAr: string; weight: number; percent: number; remaining: number };
+type DailyData = { kpis: DailyRow[]; work: { remaining: number } };
 
 export default function TargetPage() {
   const toast = useToast();
@@ -42,6 +45,23 @@ export default function TargetPage() {
   const [holidayDate, setHolidayDate] = useState(`${month}-01`);
   const [holidayNote, setHolidayNote] = useState("");
   const [saved, setSaved] = useState(false);
+  const [daily, setDaily] = useState<DailyData | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    api<DailyData>(`/api/dashboard?month=${month}`)
+      .then((result) => {
+        if (!cancelled) setDaily(result);
+      })
+      .catch(() => {
+        if (!cancelled) setDaily(null);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [month]);
+
+  const behindKpis = daily ? daily.kpis.filter((kpi) => kpi.weight > 0 && kpi.percent < 100 && kpi.remaining > 0) : [];
 
   useEffect(() => {
     let cancelled = false;
@@ -129,6 +149,30 @@ export default function TargetPage() {
       ) : (
         <Banner tone="success">👌 مجموع الأوزان 100% تمام.</Banner>
       )}
+
+      {daily ? (
+        <section className="rounded-[24px] bg-orange-50 p-4 text-sm leading-7 text-[#c45e00]">
+          <p className="font-extrabold">⚡ المطلوب منك النهارده عشان تفضل ON TRACK:</p>
+          {behindKpis.length === 0 ? (
+            <p className="mt-1 font-bold">كل المؤشرات تمام. مفيش حاجة ضاغطة النهارده 👌</p>
+          ) : daily.work.remaining <= 0 ? (
+            <p className="mt-1 font-bold">أيام الشغل خلصت. اللي فاضل: {behindKpis.map((k) => `${kpiEmoji(k.kpiKey)} ${k.nameEn} ${formatQty(k.remaining)}`).join(" · ")}</p>
+          ) : (
+            <ul className="mt-2 space-y-1">
+              {behindKpis.map((kpi) => (
+                <li key={kpi.kpiKey} className="flex items-center justify-between gap-2">
+                  <span className="font-bold">
+                    {kpiEmoji(kpi.kpiKey)} {kpi.nameEn}
+                  </span>
+                  <span className="font-black">
+                    {formatQty(Math.ceil(kpi.remaining / daily.work.remaining))} {kpi.unitAr} — فاضل {formatQty(kpi.remaining)}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
+      ) : null}
 
       <section className="rounded-[28px] bg-white p-5 shadow-[0_8px_24px_rgba(255,121,0,0.06)]">
         <Field label="💰 الكوميشن الكامل (جنيه)">
