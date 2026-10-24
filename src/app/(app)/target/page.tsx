@@ -5,7 +5,7 @@ import { KPI_CATALOG, WEEK_DAYS } from "@/lib/constants";
 import { sumWeights } from "@/lib/calculations";
 import { Banner, Field, PrimaryButton, SecondaryButton, Spinner, inputClass, useToast } from "@/components/ui";
 import { ApiError, api } from "@/lib/client";
-import type { WorkingDays } from "@/db/schema";
+import type { WorkingDays } from "@/lib/types";
 import type { KpiKey } from "@/lib/constants";
 import { useMonth } from "@/components/AppShell";
 

@@ -2,12 +2,12 @@
 
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { createContext, useContext, type ReactNode } from "react";
+import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import { readProfile } from "@/lib/local-api";
 import { APP_DISCLAIMER, APP_NAME, BRAND_BY } from "@/lib/constants";
 import { cairoYearMonth, isValidYearMonth, monthLabelAr, shiftYearMonth } from "@/lib/dates";
 import { BookIcon, ChevronIcon, HomeIcon, LogoMark, MoreIcon, PlusIcon, TargetIcon } from "@/components/icons";
 import { ToastProvider } from "@/components/ui";
-import type { SafeUser } from "@/lib/auth";
 
 const MonthContext = createContext(cairoYearMonth());
 
@@ -82,8 +82,12 @@ function NavLinks({ pathname, month }: { pathname: string; month: string }) {
   );
 }
 
-export function AppShell({ user, children }: { user: SafeUser; children: ReactNode }) {
+export function AppShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
+  const [user, setUser] = useState({ name: "", branch: "" });
+  useEffect(() => {
+    setUser(readProfile());
+  }, [pathname]);
   const params = useSearchParams();
   const raw = params.get("month");
   const month = raw && isValidYearMonth(raw) ? raw : cairoYearMonth();
