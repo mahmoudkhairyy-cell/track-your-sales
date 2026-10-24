@@ -312,14 +312,16 @@ export default function WikiPage() {
                   <p className="font-black">{pkg.name}</p>
                   <p className="text-sm font-extrabold text-[#ff7900]">{pkg.price}</p>
                 </div>
-                <ul className="mt-3 space-y-2 text-sm leading-6 text-neutral-700">
+                <div className="mt-3 grid grid-cols-2 gap-2">
                   {pkg.perks.map((perk) => (
-                    <li key={perk} className="flex gap-2">
-                      <span className="text-[#ff7900]">✓</span>
-                      <span>{perk}</span>
-                    </li>
+                    <div
+                      key={perk}
+                      className="flex min-h-12 items-center justify-center rounded-2xl border border-orange-200 bg-orange-50 px-3 py-2 text-center text-xs font-extrabold leading-5 text-[#c45e00]"
+                    >
+                      {perk}
+                    </div>
                   ))}
-                </ul>
+                </div>
               </article>
             ))}
           </div>
