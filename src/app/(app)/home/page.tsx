@@ -1,8 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
-import { Banner, EmptyState, Spinner } from "@/components/ui";
+import { Banner, Spinner } from "@/components/ui";
 import { ApiError, api } from "@/lib/client";
 import { formatMoney, formatPercent, formatQty } from "@/lib/calculations";
 import { useMonth } from "@/components/AppShell";
@@ -187,36 +186,25 @@ export default function HomePage() {
         <p className="mt-2 text-xs text-neutral-500">المتوقع لحد النهارده: {formatPercent(expectedPercent)}%</p>
       </section>
 
-      <div className="grid grid-cols-2 gap-3">
-        <article className="rounded-[24px] bg-white p-4 shadow-[0_10px_30px_rgba(255,121,0,0.08)] ring-1 ring-orange-100/70">
-          <p className="text-sm font-bold text-neutral-500">📱 الخطوط اللي عملتها</p>
-          <p className="mt-2 text-3xl font-black">{formatQty(newLines?.achieved ?? 0)}</p>
-          <p className="text-xs text-neutral-400">من {formatQty(newLines?.target ?? 0)}</p>
-        </article>
-        <article className="rounded-[24px] bg-white p-4 shadow-[0_10px_30px_rgba(255,121,0,0.08)] ring-1 ring-orange-100/70">
-          <p className="text-sm font-bold text-neutral-500">🎯 الفاضل في الخطوط</p>
-          <p className="mt-2 text-3xl font-black">{formatQty(newLines?.remaining ?? 0)}</p>
-          <p className="text-xs text-neutral-400">خط</p>
-        </article>
-      </div>
+      <article className="rounded-[28px] border border-orange-100/70 bg-white p-5 shadow-[0_10px_30px_rgba(255,121,0,0.08)]">
+        <div className="grid grid-cols-2 gap-4 text-center">
+          <div>
+            <p className="text-sm font-bold text-neutral-500">📱 الخطوط المحققة</p>
+            <p className="mt-2 text-3xl font-black">{formatQty(newLines?.achieved ?? 0)}</p>
+            <p className="text-xs text-neutral-400">من {formatQty(newLines?.target ?? 0)}</p>
+          </div>
+          <div>
+            <p className="text-sm font-bold text-neutral-500">🎯 المتبقي للخطوط</p>
+            <p className="mt-2 text-3xl font-black">{formatQty(newLines?.remaining ?? 0)}</p>
+            <p className="text-xs text-neutral-400">خط</p>
+          </div>
+        </div>
+      </article>
 
       {data.weightWarning ? (
         <Banner tone="warn">⚠️ مجموع الأوزان {formatPercent(data.weightSum)}% مش 100%. راجع صفحة التارجت.</Banner>
       ) : null}
 
-      {data.empty ? (
-        <EmptyState
-          title="ابدأ الشهر بقوة 🚀"
-          text="لسه مفيش سجلات الشهر ده. الأرقام اللي تحت من إعدادات التارجت بس، والمحقق صفر عشان مفيش عمليات محفوظة."
-          action={
-            <Link href={`/log?month=${month}`} className="inline-flex min-h-12 items-center rounded-full bg-[#ff7900] px-5 font-extrabold text-white">
-              ➕ سجّل أول إنجاز
-            </Link>
-          }
-        />
-      ) : (
-        <p className="text-sm text-neutral-500">عدد العمليات المحفوظة الشهر ده: {data.entriesCount}</p>
-      )}
 
       <h2 className="text-xl font-black">مؤشرات الأداء</h2>
       <div className="space-y-3">
