@@ -92,7 +92,7 @@ export function newLinesDailyNeed(
 
 export function formatQty(value: number): string {
   if (Number.isInteger(value)) return String(value);
-  return value.toLocaleString("ar-EG", { maximumFractionDigits: 2 });
+  return value.toLocaleString("ar-EG", { maximumFractionDigits: 0 });
 }
 
 export function formatPercent(value: number): string {
@@ -100,7 +100,7 @@ export function formatPercent(value: number): string {
 }
 
 export function formatMoney(value: number): string {
-  return value.toLocaleString("ar-EG", { maximumFractionDigits: 2 });
+  return value.toLocaleString("ar-EG", { maximumFractionDigits: 0 });
 }
 
 export function catalogByKey(key: string) {
