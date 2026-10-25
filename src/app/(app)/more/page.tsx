@@ -33,6 +33,7 @@ type TodayItem = {
 };
 
 export default function MorePage() {
+  const [view, setView] = useState<"menu" | "today" | "history" | "profile" | "backup" | "about">("menu");
   const toast = useToast();
   const router = useRouter();
   const month = useMonth();
@@ -285,6 +286,45 @@ export default function MorePage() {
         <p className="mt-3 text-xs text-white/80">ملخص النهارده، سجل الشهر، النسخة الاحتياطية، والمساعد.</p>
       </section>
 
+      {view === "menu" ? (
+        <div className="space-y-3">
+          {[
+            { key: "today", icon: "📊", title: "اللي عملته النهارده", desc: "ملخص إنجازات اليوم" },
+            { key: "history", icon: "🗂️", title: "سجل العمليات", desc: "كل الإنجازات الشهر ده" },
+            { key: "profile", icon: "👤", title: "بياناتك", desc: "الاسم والفرع" },
+            { key: "backup", icon: "💾", title: "نسخة احتياطية واستعادة", desc: "احفظ بياناتك أو استرجعها" },
+            { key: "about", icon: "ℹ️", title: "حول التطبيق", desc: "معلومات عن الأداة" },
+          ].map((item) => (
+            <button
+              key={item.key}
+              type="button"
+              onClick={() => setView(item.key as typeof view)}
+              className="flex w-full items-center gap-4 rounded-[28px] border border-orange-100/70 bg-white p-4 text-right shadow-[0_10px_30px_rgba(255,121,0,0.08)]"
+            >
+              <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-orange-50 text-2xl">{item.icon}</span>
+              <span className="flex-1">
+                <span className="block font-black text-neutral-900">{item.title}</span>
+                <span className="block text-xs text-neutral-500">{item.desc}</span>
+              </span>
+              <span className="text-neutral-300">‹</span>
+            </button>
+          ))}
+        </div>
+      ) : null}
+
+      {view === "about" ? (
+        <div className="space-y-4">
+          <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[#ff7900]">← رجوع للقائمة</button>
+          <section className="rounded-[32px] border border-orange-100/70 bg-white p-5 shadow-[0_10px_30px_rgba(255,121,0,0.08)]">
+            <p className="font-black">🍊 Target Tracker</p>
+            <p className="mt-2 text-sm leading-7 text-neutral-600">أداة مساعدة مستقلة وغير رسمية، وليست تطبيقًا رسميًا تابعًا لشركة Orange.</p>
+          </section>
+        </div>
+      ) : null}
+
+      {view === "today" ? (
+        <div className="space-y-4">
+          <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[#ff7900]">← رجوع للقائمة</button>
       <section className="rounded-[32px] border border-orange-100/70 bg-white p-5 shadow-[0_10px_30px_rgba(255,121,0,0.08)]">
         <h2 className="text-lg font-black">📊 اللي عملته النهارده</h2>
         {todayItems.length === 0 ? (
@@ -308,7 +348,11 @@ export default function MorePage() {
           </ul>
         )}
       </section>
-
+        </div>
+      ) : null}
+      {view === "history" ? (
+        <div className="space-y-4">
+          <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[#ff7900]">← رجوع للقائمة</button>
       <section className="rounded-[32px] border border-orange-100/70 bg-white p-5 shadow-[0_10px_30px_rgba(255,121,0,0.08)]">
         <div className="flex items-center justify-between gap-3">
           <h2 className="text-lg font-black">🗂️ سجل عمليات {monthLabelAr(month)}</h2>
@@ -355,7 +399,11 @@ export default function MorePage() {
           🚨 امسح كل سجلات الشهر (مش بيترجع)
         </button>
       </section>
-
+        </div>
+      ) : null}
+      {view === "profile" ? (
+        <div className="space-y-4">
+          <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[#ff7900]">← رجوع للقائمة</button>
       <section className="rounded-[32px] border border-orange-100/70 bg-white p-5 shadow-[0_10px_30px_rgba(255,121,0,0.08)]">
         <h2 className="text-lg font-black">👤 بياناتك</h2>
         <form className="mt-4 space-y-3" onSubmit={saveProfile}>
@@ -371,7 +419,11 @@ export default function MorePage() {
         </form>
         <p className="mt-3 text-xs leading-6 text-neutral-400">تقدر تغيّر اسمك والفرع في أي وقت من هنا.</p>
       </section>
-
+        </div>
+      ) : null}
+      {view === "backup" ? (
+        <div className="space-y-4">
+          <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[#ff7900]">← رجوع للقائمة</button>
       <section className="rounded-[32px] border border-orange-100/70 bg-white p-5 shadow-[0_10px_30px_rgba(255,121,0,0.08)]">
         <h2 className="text-lg font-black">💾 نسخة احتياطية واستعادة</h2>
         <p className="mt-2 text-sm leading-7 text-neutral-500">التصدير بينزّل ملف JSON فيه بياناتك وإعدادات الشهور والسجلات والملاحظات. من غير أي مفاتيح أو أسرار.</p>
@@ -394,6 +446,12 @@ export default function MorePage() {
           </label>
         </div>
       </section>
+        </div>
+      ) : null}
+
+
+
+
 
       <Modal open={Boolean(editing)} title="✏️ تعديل السجل" onClose={() => setEditing(null)}>
         <form className="space-y-4" onSubmit={saveEdit}>
