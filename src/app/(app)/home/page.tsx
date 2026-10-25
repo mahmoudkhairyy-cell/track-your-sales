@@ -69,6 +69,13 @@ function ScoreRing({ value }: { value: number }) {
   );
 }
 
+function greeting() {
+  const hour = Number(new Intl.DateTimeFormat("en-GB", { hour: "2-digit", hour12: false, timeZone: "Africa/Cairo" }).format(new Date()));
+  if (hour >= 5 && hour < 12) return "صباح الخير يا";
+  if (hour >= 12 && hour < 18) return "نهارك سعيد يا";
+  return "مساء الخير يا";
+}
+
 export default function HomePage() {
   const month = useMonth();
   // بنخزّن الشهر مع البيانات عشان نعرف إن اللي معروض يخص الشهر الحالي من غير setState متزامن جوه الـ effect.
@@ -122,7 +129,10 @@ export default function HomePage() {
   return (
     <div className="space-y-5">
       <section className="text-right">
-        <p className="text-sm font-extrabold text-neutral-700">{data.profile.name.split(" ")[0]} 👋</p>
+        <p className="text-sm font-extrabold text-neutral-700">
+          {greeting()} {data.profile.name.split(" ")[0]} 👋
+        </p>
+        <p className="text-[11px] text-neutral-400">📍 {data.profile.branch}</p>
       </section>
 
       <section className="relative overflow-hidden rounded-[32px] bg-gradient-to-br from-[#ff9a3c] via-[#ff7900] to-[#e85d00] p-6 text-white shadow-[0_20px_50px_rgba(255,121,0,0.35)] ring-1 ring-white/30">
