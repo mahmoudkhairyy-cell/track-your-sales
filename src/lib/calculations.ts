@@ -44,7 +44,7 @@ export function estimatedCommission(
 ): number {
   const ratio = overallPercent / 100;
   const used = allowOver100 ? ratio : Math.min(Math.max(ratio, 0), 1);
-  return fullCommission * used;
+  return Math.round(fullCommission * used);
 }
 
 export function expectedToDate(target: number, elapsed: number, total: number): number {
