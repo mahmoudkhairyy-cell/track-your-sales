@@ -205,10 +205,10 @@ export default function HomePage() {
           const moodColor =
             m.tone === "good" ? "text-emerald-700" : m.tone === "warn" ? "text-yellow-700" : m.tone === "bad" ? "text-red-600" : "text-neutral-400";
           return (
-            <article key={kpi.kpiKey} className="rounded-[24px] bg-white p-4 shadow-[0_10px_30px_rgba(255,121,0,0.08)] ring-1 ring-orange-100/70">
+            <article key={kpi.kpiKey} className="rounded-[20px] bg-white p-3.5 shadow-[0_6px_20px_rgba(255,121,0,0.07)] ring-1 ring-orange-100/70">
               <div className="flex items-start justify-between gap-3">
                 <div className="flex items-center gap-3">
-                  <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-orange-50 text-2xl">{kpiEmoji(kpi.kpiKey)}</span>
+                  <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-orange-50 text-lg">{kpiEmoji(kpi.kpiKey)}</span>
                   <div>
                     <h3 className="font-extrabold text-neutral-900" dir="ltr">
                       {kpi.nameEn}
@@ -225,7 +225,7 @@ export default function HomePage() {
                 <span className="font-bold">المحقق: {formatQty(kpi.achieved)}</span>
               </div>
               <div className="mt-3 h-2 overflow-hidden rounded-full bg-neutral-100">
-                <div className="h-full rounded-full bg-[#ff7900]" style={{ width: `${visual}%` }} />
+                <div className="h-full rounded-full bg-gradient-to-r from-[#ff9a3c] to-[#e85d00] transition-all" style={{ width: `${visual}%` }} />
               </div>
               <div className="mt-3 flex items-center justify-between text-xs font-bold">
                 <span className="text-[#ff7900]">مساهمة: {formatPercent(kpi.contribution)}%</span>
