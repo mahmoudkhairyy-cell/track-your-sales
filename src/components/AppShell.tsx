@@ -160,7 +160,7 @@ export function AppShell({ children }: { children: ReactNode }) {
                   >
                     <span
                       className={`flex h-10 w-16 items-center justify-center rounded-full transition ${
-                        item.emphasize ? "h-11 w-11 bg-gradient-to-br from-[#ff9a3c] to-[#e85d00] text-white shadow-[0_10px_24px_rgba(255,121,0,0.35)]" : active ? "bg-gradient-to-br from-[#ff9a3c] to-[#ff7900] text-white shadow-[0_8px_20px_rgba(255,121,0,0.3)]" : ""
+                        item.emphasize ? (active ? "h-11 w-11 bg-gradient-to-br from-[#ff9a3c] to-[#e85d00] text-white shadow-[0_10px_24px_rgba(255,121,0,0.35)]" : "h-11 w-11 bg-orange-50 text-[#ff7900]") : active ? "bg-gradient-to-br from-[#ff9a3c] to-[#ff7900] text-white shadow-[0_8px_20px_rgba(255,121,0,0.3)]" : ""
                       }`}
                     >
                       <Icon />
