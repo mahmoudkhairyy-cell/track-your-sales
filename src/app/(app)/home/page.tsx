@@ -165,9 +165,11 @@ export default function HomePage() {
       </section>
 
       <section className={`rounded-[24px] border p-4 ${moodStyle.box}`}>
-        <p className={`text-base font-black ${moodStyle.title}`}>
-          {mood.emoji} {mood.headline}
-        </p>
+        {mood.tone !== "empty" ? (
+          <p className={`text-base font-black ${moodStyle.title}`}>
+            {mood.emoji} {mood.headline}
+          </p>
+        ) : null}
         <p className={`mt-1 text-sm leading-7 ${moodStyle.text}`}>{mood.detail}</p>
         <div className="mt-3 grid grid-cols-3 gap-2 text-center">
           <div className="rounded-2xl bg-white/70 p-2">
