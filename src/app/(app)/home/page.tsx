@@ -164,30 +164,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className={`rounded-[24px] border p-4 ${moodStyle.box}`}>
-        {mood.tone !== "empty" ? (
-          <p className={`text-base font-black ${moodStyle.title}`}>
-            {mood.emoji} {mood.headline}
-          </p>
-        ) : null}
-        <p className={`mt-1 text-sm leading-7 ${moodStyle.text}`}>{mood.detail}</p>
-        <div className="mt-3 grid grid-cols-3 gap-2 text-center">
-          <div className="rounded-2xl bg-white/70 p-2">
-            <p className="text-lg font-black text-neutral-900">{data.work.total}</p>
-            <p className="text-[11px] text-neutral-500">أيام الشغل</p>
-          </div>
-          <div className="rounded-2xl bg-white/70 p-2">
-            <p className="text-lg font-black text-neutral-900">{data.work.elapsed}</p>
-            <p className="text-[11px] text-neutral-500">عدّت</p>
-          </div>
-          <div className="rounded-2xl bg-white/70 p-2">
-            <p className="text-lg font-black text-neutral-900">{data.work.remaining}</p>
-            <p className="text-[11px] text-neutral-500">فاضلة</p>
-          </div>
-        </div>
-        <p className="mt-2 text-xs text-neutral-500">المتوقع لحد النهارده: {formatPercent(expectedPercent)}%</p>
-      </section>
-
       <article className="grid grid-cols-2 gap-2 rounded-[24px] border border-orange-100/70 bg-white p-2.5 shadow-[0_8px_20px_rgba(255,121,0,0.06)]">
         <div className="rounded-2xl bg-orange-50/50 p-3">
           <div className="flex items-center justify-between">
