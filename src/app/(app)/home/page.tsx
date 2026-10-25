@@ -30,6 +30,7 @@ type Dashboard = {
   kpis: KpiRow[];
   overall: number;
   estimatedCommission: number;
+  rules: { belowKpis: string[]; clawBacks: string[]; belowOverall: boolean };
   fullCommission: number;
   weightSum: number;
   weightWarning: boolean;
@@ -197,6 +198,20 @@ export default function HomePage() {
       </div>
 
       {data.pace.message ? <p className="px-1 text-xs leading-6 text-neutral-500">{data.pace.message}</p> : null}
+
+      {data.rules.belowOverall ? (
+        <Banner tone="warn">⚠️ التوتال أقل من 80%. مفيش حافز الشهر ده.</Banner>
+      ) : null}
+      {data.rules.belowKpis.length > 0 ? (
+        <Banner tone="warn">
+          ⚠️ مؤشرات أقل من 90% (بتتشال من التوتال): {data.rules.belowKpis.map((key) => data.kpis.find((k) => k.kpiKey === key)?.nameEn ?? key).join(" · ")}
+        </Banner>
+      ) : null}
+      {data.rules.clawBacks.length > 0 ? (
+        <Banner tone="warn">
+          ⚠️ خصم 5 نقاط بسبب عدم تحقيق 100%: {data.rules.clawBacks.map((key) => data.kpis.find((k) => k.kpiKey === key)?.nameEn ?? key).join(" · ")}
+        </Banner>
+      ) : null}
 
       {data.weightWarning ? (
         <Banner tone="warn">⚠️ مجموع الأوزان {formatPercent(data.weightSum)}% مش 100%. راجع صفحة التارجت.</Banner>

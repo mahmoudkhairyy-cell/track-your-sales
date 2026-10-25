@@ -14,13 +14,12 @@ import {
 } from "@/lib/constants";
 import {
   achievementPercent,
+  applyCompanyRules,
   buildWorkdayStats,
   catalogByKey,
-  computeOverall,
   estimatedCommission,
   expectedToDate,
   formatPercent,
-  kpiContribution,
   newLinesDailyNeed,
   sumWeights,
 } from "@/lib/calculations";
@@ -458,8 +457,13 @@ function getDashboard(state: State, params: URLSearchParams) {
 
   const holidayDates = bundle.holidays.map((item) => item.date);
   const work = buildWorkdayStats(yearMonth, bundle.workingDays, holidayDates, today);
-  const overall = computeOverall(bundle.kpis, achievedTyped);
-  const commission = estimatedCommission(bundle.fullCommission, overall, bundle.allowCommissionOver100);
+  const rules = applyCompanyRules(
+    bundle.kpis.map((kpi) => ({ ...kpi, achieved: achievedTyped[kpi.kpiKey] ?? 0 })),
+  );
+  const overall = rules.total;
+  const commission = rules.belowOverall
+    ? 0
+    : estimatedCommission(bundle.fullCommission, overall, bundle.allowCommissionOver100);
   const weightSum = sumWeights(bundle.kpis);
   const newLines = bundle.kpis.find((kpi) => kpi.kpiKey === "new_lines");
   const pace = newLinesDailyNeed(newLines?.target ?? 175, achieved.new_lines ?? 0, work.remaining);
@@ -486,7 +490,9 @@ function getDashboard(state: State, params: URLSearchParams) {
       nameAr: catalog.nameAr,
       achieved: value,
       percent: achievementPercent(value, kpi.target),
-      contribution: kpiContribution(value, kpi.target, kpi.weight),
+      contribution: rules.counted.find((row) => row.kpiKey === kpi.kpiKey)?.contribution ?? 0,
+      gated: rules.belowKpis.includes(kpi.kpiKey),
+      clawBack: rules.clawBacks.includes(kpi.kpiKey),
       expectedToDate: expectedToDate(kpi.target, work.elapsed, work.total),
       remaining: Math.max(0, kpi.target - value),
       overTarget: value > kpi.target,
@@ -508,6 +514,7 @@ function getDashboard(state: State, params: URLSearchParams) {
     overall,
     overallLabel: formatPercent(overall),
     estimatedCommission: commission,
+    rules: { belowKpis: rules.belowKpis, clawBacks: rules.clawBacks, belowOverall: rules.belowOverall },
     weightSum,
     weightWarning: Math.abs(weightSum - 100) > 0.01,
     pace,
