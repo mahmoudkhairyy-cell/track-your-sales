@@ -186,18 +186,22 @@ export default function HomePage() {
         <p className="mt-2 text-xs text-neutral-500">المتوقع لحد النهارده: {formatPercent(expectedPercent)}%</p>
       </section>
 
-      <article className="rounded-[28px] border border-orange-100/70 bg-white p-5 shadow-[0_10px_30px_rgba(255,121,0,0.08)]">
-        <div className="grid grid-cols-2 gap-4 text-center">
-          <div>
-            <p className="text-sm font-bold text-neutral-500">📱 الخطوط المحققة</p>
-            <p className="mt-2 text-3xl font-black">{formatQty(newLines?.achieved ?? 0)}</p>
-            <p className="text-xs text-neutral-400">من {formatQty(newLines?.target ?? 0)}</p>
+      <article className="grid grid-cols-2 gap-2 rounded-[24px] border border-orange-100/70 bg-white p-2.5 shadow-[0_8px_20px_rgba(255,121,0,0.06)]">
+        <div className="rounded-2xl bg-orange-50/50 p-3">
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] font-bold text-neutral-500">الخطوط المحققة</span>
+            <span className="text-sm">📱</span>
           </div>
-          <div>
-            <p className="text-sm font-bold text-neutral-500">🎯 المتبقي للخطوط</p>
-            <p className="mt-2 text-3xl font-black">{formatQty(newLines?.remaining ?? 0)}</p>
-            <p className="text-xs text-neutral-400">خط</p>
+          <p className="mt-1 text-xl font-black">{formatQty(newLines?.achieved ?? 0)}</p>
+          <p className="text-[10px] text-neutral-400">من {formatQty(newLines?.target ?? 0)}</p>
+        </div>
+        <div className="rounded-2xl bg-orange-50/50 p-3">
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] font-bold text-neutral-500">المتبقي للخطوط</span>
+            <span className="text-sm">🎯</span>
           </div>
+          <p className="mt-1 text-xl font-black">{formatQty(newLines?.remaining ?? 0)}</p>
+          <p className="text-[10px] text-neutral-400">خط</p>
         </div>
       </article>
 
