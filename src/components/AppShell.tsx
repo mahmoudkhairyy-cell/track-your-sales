@@ -119,14 +119,14 @@ export function AppShell({ children }: { children: ReactNode }) {
             <div className="flex min-w-0 flex-1 flex-col">
               <header className="sticky top-0 z-30 border-b border-orange-100 bg-white/95 px-4 py-3 backdrop-blur">
                 <div className="flex items-center justify-between gap-3">
+                  <MonthSwitcher />
                   <div className="flex items-center gap-2">
-                    <LogoMark />
-                    <div>
-                      <p className="text-sm font-black leading-none text-neutral-900" dir="ltr">{APP_NAME}</p>
+                    <div className="text-left">
+                      <p className="text-sm font-black leading-none text-neutral-900" dir="ltr">🍊 {APP_NAME}</p>
                       <p className="mt-1 text-[11px] text-neutral-400" dir="ltr">{BRAND_BY}</p>
                     </div>
+                    <LogoMark />
                   </div>
-                  <MonthSwitcher />
                 </div>
               </header>
               <main className="flex-1 px-4 py-5 pb-28 lg:px-8 lg:pb-10">{children}</main>
@@ -148,8 +148,8 @@ export function AppShell({ children }: { children: ReactNode }) {
                     }`}
                   >
                     <span
-                      className={`flex h-9 w-9 items-center justify-center rounded-2xl ${
-                        item.emphasize ? "bg-[#ff7900] text-white" : active ? "bg-orange-50" : ""
+                      className={`flex h-10 w-16 items-center justify-center rounded-full transition ${
+                        item.emphasize ? "h-11 w-11 bg-gradient-to-br from-[#ff9a3c] to-[#e85d00] text-white shadow-[0_10px_24px_rgba(255,121,0,0.35)]" : active ? "bg-gradient-to-br from-[#ff9a3c] to-[#ff7900] text-white shadow-[0_8px_20px_rgba(255,121,0,0.3)]" : ""
                       }`}
                     >
                       <Icon />
