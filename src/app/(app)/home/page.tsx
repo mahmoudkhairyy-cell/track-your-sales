@@ -118,6 +118,8 @@ export default function HomePage() {
   const statusTextEgy =
     data.overall >= 100
       ? "قفلت التارجت يا وحش 🏆 كمّل بنفس الروح"
+      : data.overall >= 80
+        ? "إنت على آخر خطوة! يلا يا بطل"
       : data.overall >= expectedPercent + 5
         ? "ماشي تمام جدًا، كمّل كده 💪"
         : data.overall >= expectedPercent - 5
