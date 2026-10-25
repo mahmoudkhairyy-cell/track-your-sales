@@ -53,6 +53,14 @@ export async function GET(request: Request) {
 
     const holidays = bundle.holidays.map((item) => item.date);
     const work = buildWorkdayStats(yearMonth, bundle.workingDays, holidays, today);
+    // Pace should not count today as elapsed until something is logged for it,
+    // otherwise the expected value looks ahead of the real progress all day.
+    const todayHasEntries = monthEntries.some((entry) => entry.entryDate === today);
+    const [todayYear, todayMonth, todayDay] = today.split("-").map(Number);
+    const yesterday = new Date(Date.UTC(todayYear, todayMonth - 1, todayDay - 1)).toISOString().slice(0, 10);
+    const paceWork = todayHasEntries
+      ? work
+      : buildWorkdayStats(yearMonth, bundle.workingDays, holidays, yesterday);
     const overall = computeOverall(bundle.kpis, achieved);
     const commission = estimatedCommission(
       bundle.fullCommission,
@@ -84,7 +92,7 @@ export async function GET(request: Request) {
       const value = achieved[kpi.kpiKey] ?? 0;
       const pct = achievementPercent(value, kpi.target);
       const contribution = kpiContribution(value, kpi.target, kpi.weight);
-      const expected = expectedToDate(kpi.target, work.elapsed, work.total);
+      const expected = expectedToDate(kpi.target, paceWork.elapsed, paceWork.total);
       return {
         ...kpi,
         nameEn: catalog.nameEn,
