@@ -142,8 +142,7 @@ export default function TargetPage() {
     <form className="space-y-5" onSubmit={onSave}>
       <section>
         <h1 className="text-3xl font-black">التارجت 🎯</h1>
-        <p className="mt-1 text-sm text-neutral-500">كل شهر محفوظ لوحده. لما تغيّر الشهر مش هيتكتب فوق شهر تاني.</p>
-        <p className="mt-1 text-xs text-neutral-400">{saved ? "✅ الإعدادات دي محفوظة في قاعدة البيانات." : "⚠️ لسه مش محفوظة. الأرقام اللي شايفها افتراضية لحد ما تدوس حفظ."}</p>
+        <p className="mt-1 text-xs text-neutral-400">{saved ? "✅ محفوظة لهذا الشهر" : "⚠️ لسه مش محفوظة، اضغط حفظ"}</p>
       </section>
 
       {error ? <Banner tone="error">❌ {error}</Banner> : null}
