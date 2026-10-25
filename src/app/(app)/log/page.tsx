@@ -17,7 +17,7 @@ const CHEERS = [
   "🎯 تمام التمام، اتحفظت",
 ];
 
-type DashKpi = { kpiKey: KpiKey; target: number; weight: number; remaining: number; unitAr: string };
+type DashKpi = { kpiKey: KpiKey; target: number; weight: number; remaining: number; unitAr: string; contribution: number; gated: boolean };
 type DashData = { kpis: DashKpi[]; fullCommission: number; work: { remaining: number } };
 
 export default function LogPage() {
@@ -123,7 +123,8 @@ export default function LogPage() {
 
       {KPI_CATALOG.map((item) => {
         const d = dashByKey.get(item.key);
-        const commission = d ? (d.weight / 100) * (dash?.fullCommission ?? 0) : 0;
+        const commission = d ? Math.round((d.contribution / 100) * (dash?.fullCommission ?? 0)) : 0;
+        const excluded = !!d && d.weight > 0 && d.gated;
         const needToday = d && workLeft > 0 ? Math.ceil(Math.max(0, d.remaining) / workLeft) : 0;
         return (
           <article key={item.key} className="rounded-[24px] border border-orange-100/70 bg-white p-4 shadow-[0_8px_20px_rgba(255,121,0,0.06)]">
@@ -138,7 +139,7 @@ export default function LogPage() {
                 </div>
               </div>
               <p className="text-[11px] font-bold text-[#c45e00]">
-                {commission > 0 ? `كوميشن ${Math.round(commission)} ج` : ""}
+                {excluded ? "متتحسبش" : commission > 0 ? `كوميشن ${commission} ج` : ""}
               </p>
             </div>
             <div className="mt-3 flex items-center gap-2">

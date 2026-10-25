@@ -99,6 +99,12 @@ export default function TargetPage() {
   async function onSave(event: FormEvent) {
     event.preventDefault();
     setError("");
+    if (Math.abs(sumWeights(kpis) - 100) > 0.01) {
+      const message = `مجموع الأوزان لازم يبقى 100%. دلوقتي ${sumWeights(kpis)}%`;
+      setError(message);
+      toast.push("error", message);
+      return;
+    }
     setSaving(true);
     try {
       await api<{ message: string; settings: { saved: boolean } }>(`/api/months/${month}`, {

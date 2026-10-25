@@ -523,7 +523,7 @@ function getDashboard(state: State, params: URLSearchParams) {
     overall,
     overallLabel: formatPercent(overall),
     estimatedCommission: commission,
-    rules: { belowKpis: rules.belowKpis, clawBacks: rules.clawBacks, belowOverall: rules.belowOverall },
+    rules: { belowKpis: rules.belowKpis, clawBacks: rules.clawBacks, belowOverall: rules.belowOverall, walletDone: rules.walletDone },
     weightSum,
     weightWarning: Math.abs(weightSum - 100) > 0.01,
     pace,

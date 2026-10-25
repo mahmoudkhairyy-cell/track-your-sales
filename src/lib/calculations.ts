@@ -141,7 +141,7 @@ export type RulesKpi = KpiSettingInput & { achieved: number };
 export function applyCompanyRules(kpis: RulesKpi[]) {
   // الـ Postpaid والـ DSL: لو ما وصلوش 100% بيتشال وزنهم كله (مساهمتهم صفر) + 5 نقاط زيادة على الخصم.
   const clawBacks = kpis
-    .filter((kpi) => (CLAW_BACK_KEYS as readonly string[]).includes(kpi.kpiKey) && kpi.target > 0)
+    .filter((kpi) => (CLAW_BACK_KEYS as readonly string[]).includes(kpi.kpiKey) && kpi.target > 0 && kpi.weight > 0)
     .filter((kpi) => achievementPercent(kpi.achieved, kpi.target) < 100)
     .map((kpi) => kpi.kpiKey);
 

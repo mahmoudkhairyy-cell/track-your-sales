@@ -30,7 +30,7 @@ type Dashboard = {
   kpis: KpiRow[];
   overall: number;
   estimatedCommission: number;
-  rules: { belowKpis: string[]; clawBacks: string[]; belowOverall: boolean };
+  rules: { belowKpis: string[]; clawBacks: string[]; belowOverall: boolean; walletDone: boolean };
   fullCommission: number;
   weightSum: number;
   weightWarning: boolean;
@@ -206,6 +206,9 @@ export default function HomePage() {
         <Banner tone="warn">
           ⚠️ مؤشرات أقل من 90% (بتتشال من التوتال): {data.rules.belowKpis.map((key) => data.kpis.find((k) => k.kpiKey === key)?.nameEn ?? key).join(" · ")}
         </Banner>
+      ) : null}
+      {!data.rules.walletDone && data.rules.belowKpis.includes("new_lines") ? (
+        <Banner tone="warn">⚠️ New Lines مش هتتحسب لحد ما New Orange Cash Wallets توصل 100% من تارجتها.</Banner>
       ) : null}
       {data.rules.clawBacks.length > 0 ? (
         <Banner tone="warn">
