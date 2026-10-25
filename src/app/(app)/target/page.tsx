@@ -112,6 +112,7 @@ export default function TargetPage() {
         }),
       });
       setSaved(true);
+      window.dispatchEvent(new Event("tys-settings-saved"));
       toast.push("success", "✅ تمام! إعدادات الشهر اتحفظت");
     } catch (err) {
       const message = err instanceof ApiError || err instanceof Error ? err.message : "مقدرناش نحفظ الإعدادات";
