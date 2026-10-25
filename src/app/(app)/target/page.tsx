@@ -244,26 +244,6 @@ export default function TargetPage() {
         })}
       </section>
 
-      <section className="rounded-[32px] border border-orange-100/70 bg-white p-5 shadow-[0_10px_30px_rgba(255,121,0,0.08)]">
-        <h2 className="text-lg font-black">📅 أيام الشغل</h2>
-        <p className="mt-1 text-xs text-neutral-400">الحسابات بتعتمد على أيام الشغل الفعلية، مش الأيام التقويمية.</p>
-        <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
-          {WEEK_DAYS.map((day) => (
-            <button
-              key={day.key}
-              type="button"
-              onClick={() => setWorkingDays((current) => ({ ...current, [day.key]: !current[day.key] }))}
-              className={`min-h-12 rounded-2xl border text-sm font-extrabold ${
-                workingDays[day.key] ? "border-[#ff7900] bg-orange-50 text-[#c45e00]" : "border-neutral-200 bg-neutral-50 text-neutral-400"
-              }`}
-            >
-              {workingDays[day.key] ? "✅ " : ""}
-              {day.label}
-            </button>
-          ))}
-        </div>
-      </section>
-
             <section className="overflow-hidden rounded-[32px] bg-gradient-to-br from-[#ff9a3c] via-[#ff7900] to-[#e85d00] p-5 text-white shadow-[0_20px_50px_rgba(255,121,0,0.35)]">
         <div className="grid grid-cols-3 gap-2 text-center">
           <div><p className="text-2xl font-black">{monthDays.length}</p><p className="text-[11px] text-white/85">أيام الشهر</p></div>
