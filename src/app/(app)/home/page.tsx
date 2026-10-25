@@ -30,6 +30,8 @@ type Dashboard = {
   kpis: KpiRow[];
   overall: number;
   estimatedCommission: number;
+  commissionBlocked: boolean;
+  belowThreshold: string[];
   fullCommission: number;
   weightSum: number;
   weightWarning: boolean;
@@ -197,6 +199,12 @@ export default function HomePage() {
       </div>
 
       {data.pace.message ? <p className="px-1 text-xs leading-6 text-neutral-500">{data.pace.message}</p> : null}
+
+      {data.commissionBlocked ? (
+        <Banner tone="warn">
+          ⚠️ الكوميشن صفر لحد ما كل المؤشرات توصل 90%. ناقص: {data.belowThreshold.map((key) => data.kpis.find((k) => k.kpiKey === key)?.nameEn ?? key).join(" · ")}
+        </Banner>
+      ) : null}
 
       {data.weightWarning ? (
         <Banner tone="warn">⚠️ مجموع الأوزان {formatPercent(data.weightSum)}% مش 100%. راجع صفحة التارجت.</Banner>
