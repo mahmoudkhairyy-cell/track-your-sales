@@ -76,9 +76,13 @@ function greeting() {
   return "مساء الخير يا";
 }
 
+const SHORT_KPI_NAMES: Record<string, string> = {
+  "New Orange Cash Wallets": "New",
+  "Existing Wallets": "Existing",
+};
+
 function shortKpiName(name: string) {
-  const words = name.split(" ").filter((w) => !["New", "Existing"].includes(w));
-  return words.length > 2 ? words.slice(0, 2).join(" ") : words.join(" ");
+  return SHORT_KPI_NAMES[name] ?? name;
 }
 
 export default function HomePage() {
