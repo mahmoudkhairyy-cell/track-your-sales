@@ -61,7 +61,7 @@ export function PrimaryButton({
   return (
     <button
       {...props}
-      className={`inline-flex min-h-12 w-full items-center justify-center rounded-full bg-[#ff7900] px-4 text-base font-extrabold text-white shadow-[0_8px_20px_rgba(255,121,0,0.28)] transition enabled:active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60 ${className}`}
+      className={`inline-flex min-h-12 w-full items-center justify-center rounded-full bg-gradient-to-br from-[#ff9a3c] via-[#ff7900] to-[#e85d00] px-4 text-base font-extrabold text-white shadow-[0_12px_28px_rgba(255,121,0,0.35)] transition enabled:active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60 ${className}`}
     >
       {children}
     </button>
@@ -117,7 +117,7 @@ export function Field({
 }
 
 export const inputClass =
-  "min-h-12 w-full rounded-2xl border border-neutral-200 bg-[#fafafa] px-3 text-base text-neutral-900 outline-none ring-[#ff7900] focus:bg-white focus:ring-2";
+  "min-h-12 w-full rounded-2xl border border-orange-100 bg-white px-4 text-base text-neutral-900 shadow-[inset_0_1px_2px_rgba(0,0,0,0.03)] outline-none ring-[#ff7900] focus:border-orange-300 focus:ring-2";
 
 type Toast = { id: number; type: "success" | "error" | "info"; text: string };
 

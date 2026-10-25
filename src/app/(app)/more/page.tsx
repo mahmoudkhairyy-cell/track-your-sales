@@ -279,9 +279,10 @@ export default function MorePage() {
 
   return (
     <div className="space-y-5">
-      <section>
-        <h1 className="text-2xl font-black">المزيد ⚙️</h1>
-        <p className="mt-1 text-sm text-neutral-500">ملخص النهارده، سجل الشهر، النسخة الاحتياطية، والمساعد.</p>
+      <section className="relative overflow-hidden rounded-[28px] bg-gradient-to-br from-[#ff9a3c] via-[#ff7900] to-[#e85d00] p-5 text-white shadow-[0_20px_50px_rgba(255,121,0,0.35)]">
+        <p className="text-lg font-black">🍊 Target Tracker</p>
+        <p className="mt-1 text-xs text-white/85">أداة مساعدة مستقلة وغير رسمية، وليست تطبيقًا رسميًا تابعًا لشركة Orange.</p>
+        <p className="mt-3 text-xs text-white/80">ملخص النهارده، سجل الشهر، النسخة الاحتياطية، والمساعد.</p>
       </section>
 
       <section className="rounded-[28px] bg-white p-5 shadow-[0_8px_24px_rgba(255,121,0,0.06)]">
