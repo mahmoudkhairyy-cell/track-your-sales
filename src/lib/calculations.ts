@@ -130,10 +130,10 @@ export function buildWorkdayStats(
 // - كل مؤشر (ليه تارجت ووزن) لازم يوصل 90% عشان يتحسب في التوتال، والزيادة فوق 100% بتتحسب عادي.
 // - المؤشر اللي تحت 90% بيتشال من التوتال.
 // - لو التوتال النهائي أقل من 80% مفيش حافز.
-// - Postpaid أو ADSL لو ما وصلوش 100% بيتخصم 5 نقاط من التوتال النهائي لكل واحد.
+// - Postpaid أو ADSL لو ما وصلوش 100% بيتخصم 5% من توتال الـ KPI والكوميشن لكل واحد.
 export const KPI_MIN_PERCENT = 90;
 export const OVERALL_MIN_PERCENT = 80;
-export const CLAW_BACK_POINTS = 5;
+export const CLAW_BACK_PERCENT = 5;
 export const CLAW_BACK_KEYS = ["postpaid_lines", "dsl"] as const;
 
 export type RulesKpi = KpiSettingInput & { achieved: number };
@@ -151,8 +151,11 @@ export function applyCompanyRules(kpis: RulesKpi[]) {
     .filter((kpi) => (CLAW_BACK_KEYS as readonly string[]).includes(kpi.kpiKey) && kpi.target > 0)
     .filter((kpi) => achievementPercent(kpi.achieved, kpi.target) < 100)
     .map((kpi) => kpi.kpiKey);
-  const total = Math.max(0, rawTotal - clawBacks.length * CLAW_BACK_POINTS);
+  // الخصم 5% نسبي: يتطبق على توتال الـ KPI وعلى الكوميشن نفسه.
+  const clawFactor = Math.pow(1 - CLAW_BACK_PERCENT / 100, clawBacks.length);
+  const total = Math.max(0, rawTotal * clawFactor);
+  const commissionFactor = clawFactor;
   const belowKpis = counted.filter((row) => row.gated).map((row) => row.kpiKey);
   const belowOverall = total < OVERALL_MIN_PERCENT;
-  return { counted, total, belowKpis, clawBacks, belowOverall };
+  return { counted, total, rawTotal, commissionFactor, belowKpis, clawBacks, belowOverall };
 }

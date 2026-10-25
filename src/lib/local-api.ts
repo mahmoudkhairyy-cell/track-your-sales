@@ -463,7 +463,7 @@ function getDashboard(state: State, params: URLSearchParams) {
   const overall = rules.total;
   const commission = rules.belowOverall
     ? 0
-    : estimatedCommission(bundle.fullCommission, overall, bundle.allowCommissionOver100);
+    : estimatedCommission(bundle.fullCommission, rules.rawTotal, bundle.allowCommissionOver100) * rules.commissionFactor;
   const weightSum = sumWeights(bundle.kpis);
   const newLines = bundle.kpis.find((kpi) => kpi.kpiKey === "new_lines");
   const pace = newLinesDailyNeed(newLines?.target ?? 175, achieved.new_lines ?? 0, work.remaining);
