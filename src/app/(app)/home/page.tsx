@@ -6,7 +6,7 @@ import { ApiError, api } from "@/lib/client";
 import { formatMoney, formatPercent, formatQty } from "@/lib/calculations";
 import { useMonth } from "@/components/AppShell";
 import { kpiEmoji } from "@/lib/constants";
-import { MOOD_STYLES, kpiMood, overallMood } from "@/lib/motivation";
+import { kpiMood } from "@/lib/motivation";
 
 type KpiRow = {
   kpiKey: string;
@@ -69,24 +69,6 @@ function ScoreRing({ value }: { value: number }) {
   );
 }
 
-const STATUS_BADGE: Record<ReturnType<typeof overallMood>["tone"], string> = {
-  celebrate: "قفلت التارجت",
-  ahead: "متقدم",
-  ontrack: "على الخطة",
-  behind: "متأخر شوية",
-  danger: "متأخر جامد",
-  empty: "شهر جديد",
-};
-
-function greeting() {
-  const hour = Number(
-    new Intl.DateTimeFormat("en-US", { hour: "numeric", hour12: false, timeZone: "Africa/Cairo" }).format(new Date()),
-  );
-  if (hour >= 5 && hour < 12) return "صباح الخير يا";
-  if (hour >= 12 && hour < 18) return "نهارك سعيد يا";
-  return "مساء الخير يا";
-}
-
 export default function HomePage() {
   const month = useMonth();
   // بنخزّن الشهر مع البيانات عشان نعرف إن اللي معروض يخص الشهر الحالي من غير setState متزامن جوه الـ effect.
@@ -126,13 +108,6 @@ export default function HomePage() {
   const newLines = data.kpis.find((kpi) => kpi.kpiKey === "new_lines");
   const gap = Math.max(0, 100 - data.overall);
   const expectedPercent = data.work.total > 0 ? (data.work.elapsed / data.work.total) * 100 : 0;
-  const mood = overallMood({
-    overall: data.overall,
-    expectedPercent,
-    empty: data.empty,
-    remainingDays: data.work.remaining,
-  });
-  const moodStyle = MOOD_STYLES[mood.tone];
   const statusTextEgy =
     data.overall >= 100
       ? "قفلت التارجت يا وحش 🏆 كمّل بنفس الروح"
@@ -146,16 +121,8 @@ export default function HomePage() {
 
   return (
     <div className="space-y-5">
-      <section className="text-center">
-        <span className={`inline-flex items-center gap-1 rounded-full border px-3 py-1 text-xs font-extrabold ${moodStyle.box} ${moodStyle.title}`}>
-          {mood.emoji} {STATUS_BADGE[mood.tone]}
-        </span>
-        <h1 className="mt-2 text-[1.65rem] font-black leading-10 text-neutral-900">
-          {greeting()} {data.profile.name.split(" ")[0]} 👋
-        </h1>
-        <p className="mt-1 text-sm text-neutral-400">
-          📍 {data.profile.branch} · {data.monthLabel}
-        </p>
+      <section className="text-right">
+        <p className="text-sm font-extrabold text-neutral-700">{data.profile.name.split(" ")[0]} 👋</p>
       </section>
 
       <section className="relative overflow-hidden rounded-[32px] bg-gradient-to-br from-[#ff9a3c] via-[#ff7900] to-[#e85d00] p-6 text-white shadow-[0_20px_50px_rgba(255,121,0,0.35)] ring-1 ring-white/30">
