@@ -442,8 +442,6 @@ function updateProfile(state: State, data: Record<string, unknown>) {
   return { user: { id: "local", name, branch, role: state.profile.role }, message: "✅ بياناتك اتحدثت" };
 }
 
-const COMMISSION_GATE_PERCENT = 90;
-
 function getDashboard(state: State, params: URLSearchParams) {
   const raw = params.get("month");
   const yearMonth = raw ? requireYearMonth(raw) : cairoYearMonth();
@@ -461,15 +459,7 @@ function getDashboard(state: State, params: URLSearchParams) {
   const holidayDates = bundle.holidays.map((item) => item.date);
   const work = buildWorkdayStats(yearMonth, bundle.workingDays, holidayDates, today);
   const overall = computeOverall(bundle.kpis, achievedTyped);
-  // قاعدة الشركة: لازم كل مؤشر (ليه تارجت ووزن) يوصل 90% عشان الكوميشن يتحسب. أي مؤشر أقل = الكوميشن صفر.
-  const belowThreshold = bundle.kpis
-    .filter((kpi) => kpi.weight > 0 && kpi.target > 0)
-    .filter((kpi) => achievementPercent(achievedTyped[kpi.kpiKey] ?? 0, kpi.target) < COMMISSION_GATE_PERCENT)
-    .map((kpi) => kpi.kpiKey);
-  const commissionBlocked = belowThreshold.length > 0;
-  const commission = commissionBlocked
-    ? 0
-    : estimatedCommission(bundle.fullCommission, overall, bundle.allowCommissionOver100);
+  const commission = estimatedCommission(bundle.fullCommission, overall, bundle.allowCommissionOver100);
   const weightSum = sumWeights(bundle.kpis);
   const newLines = bundle.kpis.find((kpi) => kpi.kpiKey === "new_lines");
   const pace = newLinesDailyNeed(newLines?.target ?? 175, achieved.new_lines ?? 0, work.remaining);
@@ -518,8 +508,6 @@ function getDashboard(state: State, params: URLSearchParams) {
     overall,
     overallLabel: formatPercent(overall),
     estimatedCommission: commission,
-    commissionBlocked,
-    belowThreshold,
     weightSum,
     weightWarning: Math.abs(weightSum - 100) > 0.01,
     pace,
