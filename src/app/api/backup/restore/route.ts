@@ -38,6 +38,16 @@ export async function POST(request: Request) {
       throw new HttpError(400, "الاستبدال محتاج تأكيد صريح بعد تحميل نسخة احتياطية");
     }
 
+    // Same uniqueness check as PATCH /api/profile, so a clash returns 409 instead of a 500.
+    const nameClash = await db
+      .select({ id: users.id })
+      .from(users)
+      .where(eq(users.name, backup.profile.name))
+      .limit(1);
+    if (nameClash[0] && nameClash[0].id !== user.id) {
+      throw new HttpError(409, "اسم الموظف في النسخة دي مستخدم لحساب تاني");
+    }
+
     let entriesInserted = 0;
     let entriesSkipped = 0;
 
