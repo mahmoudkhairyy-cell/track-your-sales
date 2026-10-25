@@ -148,37 +148,6 @@ export default function TargetPage() {
 
       {error ? <Banner tone="error">❌ {error}</Banner> : null}
 
-      {daily && daily.kpis.length > 0 ? (
-        <section className="space-y-3">
-          <h2 className="text-lg font-black">📈 تقدم المؤشرات</h2>
-          {daily.kpis.map((kpi) => {
-            const pct = Math.min(100, Math.max(0, kpi.percent));
-            return (
-              <article key={kpi.kpiKey} className="rounded-[28px] border border-orange-100/70 bg-white p-4 shadow-[0_10px_30px_rgba(255,121,0,0.08)]">
-                <div className="flex items-center justify-between gap-3">
-                  <div className="flex items-center gap-3">
-                    <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-orange-50 text-2xl">{kpiEmoji(kpi.kpiKey)}</span>
-                    <p className="font-black" dir="ltr">{kpi.nameEn}</p>
-                  </div>
-                  <p className="text-lg font-black text-[#ff7900]">{Math.round(kpi.percent)}%</p>
-                </div>
-                <div className="mt-3 flex justify-between text-xs text-neutral-500">
-                  <span>المحقق: <b className="text-neutral-900">{formatQty(kpi.achieved)}</b></span>
-                  <span>المستهدف: <b className="text-neutral-900">{formatQty(kpi.target)}</b></span>
-                </div>
-                <div className="mt-2 h-3 overflow-hidden rounded-full bg-neutral-100">
-                  <div className="h-full rounded-full bg-gradient-to-r from-[#ff9a3c] to-[#e85d00]" style={{ width: `${pct}%` }} />
-                </div>
-                <div className="mt-2 flex justify-between text-[11px] text-neutral-400">
-                  <span>الوزن: {kpi.weight}%</span>
-                  <span>فاضل: {formatQty(kpi.remaining)} {kpi.unitAr}</span>
-                </div>
-              </article>
-            );
-          })}
-        </section>
-      ) : null}
-
 
       {Math.abs(weightSum - 100) > 0.01 ? (
         <Banner tone="warn">⚠️ مجموع الأوزان {weightSum}% مش 100%. تقدر تحفظ عادي، بس النتيجة هتتحسب على الأوزان دي.</Banner>
