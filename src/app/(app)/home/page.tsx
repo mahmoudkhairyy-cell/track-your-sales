@@ -150,7 +150,8 @@ export default function HomePage() {
         </p>
       </section>
 
-      <section className="rounded-[32px] bg-[#ff7900] p-5 text-white shadow-[0_16px_40px_rgba(255,121,0,0.28)]">
+      <section className="relative overflow-hidden rounded-[32px] bg-gradient-to-br from-[#ff9a3c] via-[#ff7900] to-[#e85d00] p-6 text-white shadow-[0_20px_50px_rgba(255,121,0,0.35)] ring-1 ring-white/30">
+        <div className="pointer-events-none absolute -top-16 -left-16 h-48 w-48 rounded-full bg-white/15 blur-2xl" />
         <div className="flex items-center gap-4">
           <ScoreRing value={data.overall} />
           <div className="flex-1">
@@ -187,12 +188,12 @@ export default function HomePage() {
       </section>
 
       <div className="grid grid-cols-2 gap-3">
-        <article className="rounded-[24px] bg-white p-4 shadow-[0_8px_24px_rgba(255,121,0,0.06)]">
+        <article className="rounded-[24px] bg-white p-4 shadow-[0_10px_30px_rgba(255,121,0,0.08)] ring-1 ring-orange-100/70">
           <p className="text-sm font-bold text-neutral-500">📱 الخطوط اللي عملتها</p>
           <p className="mt-2 text-3xl font-black">{formatQty(newLines?.achieved ?? 0)}</p>
           <p className="text-xs text-neutral-400">من {formatQty(newLines?.target ?? 0)}</p>
         </article>
-        <article className="rounded-[24px] bg-white p-4 shadow-[0_8px_24px_rgba(255,121,0,0.06)]">
+        <article className="rounded-[24px] bg-white p-4 shadow-[0_10px_30px_rgba(255,121,0,0.08)] ring-1 ring-orange-100/70">
           <p className="text-sm font-bold text-neutral-500">🎯 الفاضل في الخطوط</p>
           <p className="mt-2 text-3xl font-black">{formatQty(newLines?.remaining ?? 0)}</p>
           <p className="text-xs text-neutral-400">خط</p>
@@ -226,7 +227,7 @@ export default function HomePage() {
           const moodColor =
             m.tone === "good" ? "text-emerald-700" : m.tone === "warn" ? "text-yellow-700" : m.tone === "bad" ? "text-red-600" : "text-neutral-400";
           return (
-            <article key={kpi.kpiKey} className="rounded-[24px] bg-white p-4 shadow-[0_8px_24px_rgba(255,121,0,0.06)]">
+            <article key={kpi.kpiKey} className="rounded-[24px] bg-white p-4 shadow-[0_10px_30px_rgba(255,121,0,0.08)] ring-1 ring-orange-100/70">
               <div className="flex items-start justify-between gap-3">
                 <div className="flex items-center gap-3">
                   <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-orange-50 text-2xl">{kpiEmoji(kpi.kpiKey)}</span>
