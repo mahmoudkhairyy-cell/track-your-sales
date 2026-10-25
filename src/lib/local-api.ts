@@ -122,7 +122,10 @@ function saveState(state: State) {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
   } catch {
-    // لو المتصفح منعنا من الحفظ، الصفحة بتفضل شغالة بس البيانات مش هتتحفظ.
+    // لو المتصفح منعنا من الحفظ، نبلغ المستخدم عشان ما يفتكرش إن الإنجاز اتحفظ.
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new CustomEvent("tys-storage-error"));
+    }
   }
 }
 

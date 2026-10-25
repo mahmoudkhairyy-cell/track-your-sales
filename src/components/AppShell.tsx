@@ -7,9 +7,19 @@ import { readProfile } from "@/lib/local-api";
 import { APP_DISCLAIMER, APP_NAME, BRAND_BY } from "@/lib/constants";
 import { cairoYearMonth, isValidYearMonth, monthLabelAr, shiftYearMonth } from "@/lib/dates";
 import { BookIcon, ChevronIcon, HomeIcon, LogoMark, MoreIcon, PlusIcon, TargetIcon } from "@/components/icons";
-import { ToastProvider } from "@/components/ui";
+import { ToastProvider, useToast } from "@/components/ui";
 
 const MonthContext = createContext(cairoYearMonth());
+
+function StorageErrorListener() {
+  const toast = useToast();
+  useEffect(() => {
+    const onError = () => toast.push("error", "المتصفح مانعش الحفظ. البيانات دي ممكن متتحفظش، جرّب تفضّي مساحة أو تطلع نسخة احتياطية.");
+    window.addEventListener("tys-storage-error", onError);
+    return () => window.removeEventListener("tys-storage-error", onError);
+  }, [toast]);
+  return null;
+}
 
 export function useMonth() {
   return useContext(MonthContext);
@@ -94,6 +104,7 @@ export function AppShell({ children }: { children: ReactNode }) {
 
   return (
     <ToastProvider>
+      <StorageErrorListener />
       <MonthContext.Provider value={month}>
         <div className="min-h-screen bg-[#fff7f0] text-neutral-900">
           <div className="h-1.5 bg-[#ff7900]" />
