@@ -133,6 +133,15 @@ export default function HomePage() {
     remainingDays: data.work.remaining,
   });
   const moodStyle = MOOD_STYLES[mood.tone];
+  const statusTextEgy =
+    data.overall >= 100
+      ? "قفلت التارجت يا وحش 🏆 كمّل بنفس الروح"
+      : data.overall >= expectedPercent + 5
+        ? "ماشي تمام جدًا، كمّل كده 💪"
+        : data.overall >= expectedPercent - 5
+          ? "إنت ماشي على الخط، شد حيلك 👊"
+          : "لازم نزوّد شوية النهارده 🔥 ابدأ بالأهم";
+
 
 
   return (
@@ -157,6 +166,7 @@ export default function HomePage() {
             <p className="text-sm font-bold text-white/90">إجمالي التارجت الشهري</p>
             <p className="mt-1 text-4xl font-black">{formatPercent(data.overall)}%</p>
             <p className="text-sm text-white/80">{gap > 0 ? `فاضل ${formatPercent(gap)}%` : "مفيش فاضل، قفلت الشهر"}</p>
+            <p className="mt-2 text-sm font-extrabold text-white">{statusTextEgy}</p>
             <div className="mt-2 inline-flex rounded-full bg-white px-3 py-1.5 text-xs font-extrabold text-[#ff7900]">
               💰 كوميشنك: {formatMoney(data.estimatedCommission)} من {formatMoney(data.fullCommission)} جنيه
             </div>
