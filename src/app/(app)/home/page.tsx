@@ -172,6 +172,23 @@ export default function HomePage() {
         </div>
       </article>
 
+      <div className="grid grid-cols-3 gap-2">
+        <div className="rounded-[20px] border border-orange-100/70 bg-white p-3 text-center shadow-[0_6px_18px_rgba(255,121,0,0.06)]">
+          <p className="text-[10px] font-bold text-neutral-500">المطلوب يوميًا</p>
+          <p className="mt-1 text-lg font-black text-[#c45e00]">{data.pace.perDay === null ? "—" : formatQty(Math.ceil(data.pace.perDay))}</p>
+        </div>
+        <div className="rounded-[20px] border border-orange-100/70 bg-white p-3 text-center shadow-[0_6px_18px_rgba(255,121,0,0.06)]">
+          <p className="text-[10px] font-bold text-neutral-500">أيام شغل فاضلة</p>
+          <p className="mt-1 text-lg font-black text-neutral-900">{data.work.remaining}</p>
+        </div>
+        <div className="rounded-[20px] border border-orange-100/70 bg-white p-3 text-center shadow-[0_6px_18px_rgba(255,121,0,0.06)]">
+          <p className="text-[10px] font-bold text-neutral-500">المتوقع للنهارده</p>
+          <p className="mt-1 text-lg font-black text-neutral-900">{formatPercent(expectedPercent)}%</p>
+        </div>
+      </div>
+
+      {data.pace.message ? <p className="px-1 text-xs leading-6 text-neutral-500">{data.pace.message}</p> : null}
+
       {data.weightWarning ? (
         <Banner tone="warn">⚠️ مجموع الأوزان {formatPercent(data.weightSum)}% مش 100%. راجع صفحة التارجت.</Banner>
       ) : null}
