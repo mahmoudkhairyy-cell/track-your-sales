@@ -145,6 +145,49 @@ export default function TargetPage() {
         <p className="mt-1 text-xs text-neutral-400">{saved ? "✅ محفوظة لهذا الشهر" : "⚠️ لسه مش محفوظة، اضغط حفظ"}</p>
       </section>
 
+      <section className="overflow-hidden rounded-[32px] bg-gradient-to-br from-[#ff9a3c] via-[#ff7900] to-[#e85d00] p-5 text-white shadow-[0_20px_50px_rgba(255,121,0,0.35)]">
+        <div className="grid grid-cols-3 gap-2 text-center">
+          <div><p className="text-2xl font-black">{monthDays.length}</p><p className="text-[11px] text-white/85">أيام الشهر</p></div>
+          <div><p className="text-2xl font-black">{holidays.length}</p><p className="text-[11px] text-white/85">إجازات</p></div>
+          <div><p className="text-2xl font-black">{monthDays.length - holidays.length}</p><p className="text-[11px] text-white/85">أيام شغل</p></div>
+        </div>
+      </section>
+
+      <section className="rounded-[32px] border border-orange-100/70 bg-white p-4 shadow-[0_10px_30px_rgba(255,121,0,0.08)]">
+        <div className="grid grid-cols-7 gap-1 text-center text-[11px] font-bold text-neutral-400">
+          {["سبت", "أحد", "اتنين", "تلات", "أربع", "خميس", "جمعة"].map((d) => (
+            <span key={d} className="py-1">{d}</span>
+          ))}
+        </div>
+        <div className="mt-1 grid grid-cols-7 gap-1">
+          {Array.from({ length: firstWeekdayOffset }).map((_, i) => (
+            <span key={`pad-${i}`} />
+          ))}
+          {monthDays.map((date) => {
+            const isHoliday = holidays.some((item) => item.date === date);
+            return (
+              <button
+                key={date}
+                type="button"
+                onClick={() =>
+                  setHolidays((current) =>
+                    current.some((item) => item.date === date)
+                      ? current.filter((row) => row.date !== date)
+                      : [...current, { date, note: null }].sort((a, b) => a.date.localeCompare(b.date)),
+                  )
+                }
+                className={`flex aspect-square items-center justify-center rounded-2xl text-sm font-extrabold transition ${
+                  isHoliday ? "bg-gradient-to-br from-[#ff9a3c] to-[#e85d00] text-white shadow-[0_6px_16px_rgba(255,121,0,0.3)]" : "bg-neutral-50 text-neutral-700"
+                }`}
+              >
+                {Number(date.slice(8, 10))}
+              </button>
+            );
+          })}
+        </div>
+        <p className="mt-3 text-center text-xs text-neutral-400">اضغط أي يوم لإضافته أو إلغائه كإجازة</p>
+      </section>
+
       {error ? <Banner tone="error">❌ {error}</Banner> : null}
 
 
@@ -243,15 +286,7 @@ export default function TargetPage() {
         })}
       </section>
 
-            <section className="overflow-hidden rounded-[32px] bg-gradient-to-br from-[#ff9a3c] via-[#ff7900] to-[#e85d00] p-5 text-white shadow-[0_20px_50px_rgba(255,121,0,0.35)]">
-        <div className="grid grid-cols-3 gap-2 text-center">
-          <div><p className="text-2xl font-black">{monthDays.length}</p><p className="text-[11px] text-white/85">أيام الشهر</p></div>
-          <div><p className="text-2xl font-black">{holidays.length}</p><p className="text-[11px] text-white/85">إجازات</p></div>
-          <div><p className="text-2xl font-black">{monthDays.length - holidays.length}</p><p className="text-[11px] text-white/85">أيام شغل</p></div>
-        </div>
-      </section>
-
-      <PrimaryButton type="submit" disabled={saving}>
+            <PrimaryButton type="submit" disabled={saving}>
         {saving ? "⏳ بنحفظ على السيرفر..." : "💾 احفظ إعدادات الشهر"}
       </PrimaryButton>
     </form>
