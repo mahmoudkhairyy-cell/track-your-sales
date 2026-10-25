@@ -2,14 +2,25 @@
 
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { createContext, useContext, type ReactNode } from "react";
+import { createContext, useContext, useEffect, useState, type FormEvent, type ReactNode } from "react";
+import { readProfile } from "@/lib/local-api";
+import { api } from "@/lib/client";
 import { APP_DISCLAIMER, APP_NAME, BRAND_BY } from "@/lib/constants";
 import { cairoYearMonth, isValidYearMonth, monthLabelAr, shiftYearMonth } from "@/lib/dates";
 import { BookIcon, ChevronIcon, HomeIcon, LogoMark, MoreIcon, PlusIcon, TargetIcon } from "@/components/icons";
-import { ToastProvider } from "@/components/ui";
-import type { SafeUser } from "@/lib/auth";
+import { ToastProvider, useToast } from "@/components/ui";
 
 const MonthContext = createContext(cairoYearMonth());
+
+function StorageErrorListener() {
+  const toast = useToast();
+  useEffect(() => {
+    const onError = () => toast.push("error", "المتصفح مانعش الحفظ. البيانات دي ممكن متتحفظش، جرّب تفضّي مساحة أو تطلع نسخة احتياطية.");
+    window.addEventListener("tys-storage-error", onError);
+    return () => window.removeEventListener("tys-storage-error", onError);
+  }, [toast]);
+  return null;
+}
 
 export function useMonth() {
   return useContext(MonthContext);
@@ -82,14 +93,131 @@ function NavLinks({ pathname, month }: { pathname: string; month: string }) {
   );
 }
 
-export function AppShell({ user, children }: { user: SafeUser; children: ReactNode }) {
+type GateStatus = "checking" | "profile" | "target" | "ready";
+
+function FirstRunProfile({ onDone }: { onDone: () => void }) {
+  const [name, setName] = useState("");
+  const [branch, setBranch] = useState("");
+  const [error, setError] = useState("");
+  const [pending, setPending] = useState(false);
+
+  async function submit(event: FormEvent) {
+    event.preventDefault();
+    if (name.trim().length < 2 || branch.trim().length < 2) {
+      setError("اكتب اسمك واسم الفرع (حرفين على الأقل)");
+      return;
+    }
+    setPending(true);
+    try {
+      await api("/api/profile", { method: "PATCH", body: JSON.stringify({ name: name.trim(), branch: branch.trim() }) });
+      onDone();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "تعذر الحفظ");
+    } finally {
+      setPending(false);
+    }
+  }
+
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-[#fff7f0] p-4 text-neutral-900">
+      <form onSubmit={submit} className="w-full max-w-sm rounded-3xl bg-white p-6 shadow-[0_20px_50px_rgba(255,121,0,0.15)]" dir="rtl">
+        <div className="mb-5 text-center">
+          <div className="text-4xl">🍊</div>
+          <h1 className="mt-2 text-xl font-black">أهلاً بيك في {APP_NAME}</h1>
+          <p className="mt-1 text-sm text-neutral-500">عشان نبدأ، اكتب اسمك واسم الفرع</p>
+        </div>
+        <label className="mb-3 block text-sm font-bold text-neutral-700">
+          الاسم
+          <input value={name} onChange={(e) => setName(e.target.value)} className="mt-1 w-full rounded-2xl border border-orange-100 px-4 py-3 outline-none focus:border-[#ff7900]" maxLength={80} />
+        </label>
+        <label className="mb-4 block text-sm font-bold text-neutral-700">
+          اسم الفرع
+          <input value={branch} onChange={(e) => setBranch(e.target.value)} className="mt-1 w-full rounded-2xl border border-orange-100 px-4 py-3 outline-none focus:border-[#ff7900]" maxLength={80} />
+        </label>
+        {error ? <p className="mb-3 text-sm font-bold text-red-600">{error}</p> : null}
+        <button type="submit" disabled={pending} className="w-full rounded-2xl bg-gradient-to-br from-[#ff9a3c] to-[#ff7900] py-3 font-extrabold text-white shadow-[0_10px_24px_rgba(255,121,0,0.3)] disabled:opacity-60">
+          كمّل
+        </button>
+      </form>
+    </div>
+  );
+}
+
+function TargetGate({ month }: { month: string }) {
+  return (
+    <div className="mx-auto mt-6 max-w-md rounded-3xl bg-white p-6 text-center shadow-[0_12px_30px_rgba(255,121,0,0.12)]" dir="rtl">
+      <div className="text-4xl">🎯</div>
+      <h2 className="mt-2 text-lg font-black">لازم تدخل تارجت الشهر الأول</h2>
+      <p className="mt-1 text-sm text-neutral-500">ادخل التارجت والأوزان واحفظها، وبعدها التطبيق هيفتح عادي.</p>
+      <Link href={`/target?month=${month}`} className="mt-5 inline-block rounded-2xl bg-gradient-to-br from-[#ff9a3c] to-[#ff7900] px-6 py-3 font-extrabold text-white shadow-[0_10px_24px_rgba(255,121,0,0.3)]">
+        ادخل التارجت
+      </Link>
+    </div>
+  );
+}
+
+export function AppShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const params = useSearchParams();
   const raw = params.get("month");
   const month = raw && isValidYearMonth(raw) ? raw : cairoYearMonth();
+  const [status, setStatus] = useState<GateStatus>("checking");
+  const [rev, setRev] = useState(0);
+
+  useEffect(() => {
+    const bump = () => setRev((n) => n + 1);
+    window.addEventListener("tys-settings-saved", bump);
+    return () => window.removeEventListener("tys-settings-saved", bump);
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+    const profile = readProfile();
+    if (!profile.name.trim() || !profile.branch.trim()) {
+      setStatus("profile");
+      return;
+    }
+    api<{ settings: { saved: boolean } }>(`/api/months/${month}`)
+      .then((result) => {
+        if (!cancelled) setStatus(result.settings.saved ? "ready" : "target");
+      })
+      .catch(() => {
+        if (!cancelled) setStatus("ready");
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [month, rev]);
+
+  if (status === "checking") {
+    return <div className="flex min-h-screen items-center justify-center bg-[#fff7f0] text-3xl">🍊</div>;
+  }
+  if (status === "profile") {
+    return (
+      <ToastProvider>
+        <FirstRunProfile onDone={() => setRev((n) => n + 1)} />
+      </ToastProvider>
+    );
+  }
+
+  const gateBlocked = status === "target" && !pathname.startsWith("/target");
+  return (
+    <AppFrame blocked={gateBlocked} month={month}>
+      {children}
+    </AppFrame>
+  );
+}
+
+function AppFrame({ children, blocked, month }: { children: ReactNode; blocked: boolean; month: string }) {
+  const pathname = usePathname();
+  const [user, setUser] = useState({ name: "", branch: "" });
+  useEffect(() => {
+    setUser(readProfile());
+  }, [pathname]);
 
   return (
     <ToastProvider>
+      <StorageErrorListener />
       <MonthContext.Provider value={month}>
         <div className="min-h-screen bg-[#fff7f0] text-neutral-900">
           <div className="h-1.5 bg-[#ff7900]" />
@@ -115,17 +243,19 @@ export function AppShell({ user, children }: { user: SafeUser; children: ReactNo
             <div className="flex min-w-0 flex-1 flex-col">
               <header className="sticky top-0 z-30 border-b border-orange-100 bg-white/95 px-4 py-3 backdrop-blur">
                 <div className="flex items-center justify-between gap-3">
+                  <MonthSwitcher />
                   <div className="flex items-center gap-2">
-                    <LogoMark />
-                    <div>
-                      <p className="text-sm font-black leading-none text-neutral-900" dir="ltr">{APP_NAME}</p>
+                    <div className="text-left">
+                      <p className="text-sm font-black leading-none text-neutral-900" dir="ltr">🍊 {APP_NAME}</p>
                       <p className="mt-1 text-[11px] text-neutral-400" dir="ltr">{BRAND_BY}</p>
                     </div>
+                    <LogoMark />
                   </div>
-                  <MonthSwitcher />
                 </div>
               </header>
-              <main className="flex-1 px-4 py-5 pb-28 lg:px-8 lg:pb-10">{children}</main>
+              <main className="flex-1 px-4 py-5 pb-28 lg:px-8 lg:pb-10">
+                {blocked ? <TargetGate month={month} /> : children}
+              </main>
               <footer className="hidden px-8 pb-6 text-xs leading-6 text-neutral-400 lg:block">{APP_DISCLAIMER}</footer>
             </div>
           </div>
@@ -144,8 +274,8 @@ export function AppShell({ user, children }: { user: SafeUser; children: ReactNo
                     }`}
                   >
                     <span
-                      className={`flex h-9 w-9 items-center justify-center rounded-2xl ${
-                        item.emphasize ? "bg-[#ff7900] text-white" : active ? "bg-orange-50" : ""
+                      className={`flex h-10 w-16 items-center justify-center rounded-full transition ${
+                        item.emphasize ? (active ? "h-11 w-11 bg-gradient-to-br from-[#ff9a3c] to-[#e85d00] text-white shadow-[0_10px_24px_rgba(255,121,0,0.35)]" : "h-11 w-11 bg-orange-50 text-[#ff7900]") : active ? "bg-gradient-to-br from-[#ff9a3c] to-[#ff7900] text-white shadow-[0_8px_20px_rgba(255,121,0,0.3)]" : ""
                       }`}
                     >
                       <Icon />

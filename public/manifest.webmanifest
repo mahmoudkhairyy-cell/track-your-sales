@@ -1,0 +1,16 @@
+{
+  "name": "Track Your Sales",
+  "short_name": "Track Sales",
+  "description": "تطبيق متابعة المبيعات والتارجت",
+  "start_url": "/track-your-sales/home/",
+  "scope": "/track-your-sales/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#fff7f0",
+  "theme_color": "#ff7900",
+  "lang": "ar",
+  "dir": "rtl",
+  "icons": [
+    { "src": "/track-your-sales/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}

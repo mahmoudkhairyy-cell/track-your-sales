@@ -4,7 +4,7 @@ import {
   remainingWorkingDates,
   workingDatesInMonth,
 } from "@/lib/dates";
-import type { WorkingDays } from "@/db/schema";
+import type { WorkingDays } from "@/lib/types";
 
 export type KpiSettingInput = {
   kpiKey: KpiKey;
@@ -44,7 +44,7 @@ export function estimatedCommission(
 ): number {
   const ratio = overallPercent / 100;
   const used = allowOver100 ? ratio : Math.min(Math.max(ratio, 0), 1);
-  return fullCommission * used;
+  return Math.round(fullCommission * used);
 }
 
 export function expectedToDate(target: number, elapsed: number, total: number): number {
@@ -92,7 +92,7 @@ export function newLinesDailyNeed(
 
 export function formatQty(value: number): string {
   if (Number.isInteger(value)) return String(value);
-  return value.toLocaleString("ar-EG", { maximumFractionDigits: 2 });
+  return value.toLocaleString("ar-EG", { maximumFractionDigits: 0 });
 }
 
 export function formatPercent(value: number): string {
@@ -100,7 +100,7 @@ export function formatPercent(value: number): string {
 }
 
 export function formatMoney(value: number): string {
-  return value.toLocaleString("ar-EG", { maximumFractionDigits: 2 });
+  return value.toLocaleString("ar-EG", { maximumFractionDigits: 0 });
 }
 
 export function catalogByKey(key: string) {
@@ -124,4 +124,50 @@ export function buildWorkdayStats(
     elapsedDates,
     remainingDates,
   };
+}
+
+// قواعد حساب الكوميشن من نظام الشركة (موظف الفرع):
+// - كل مؤشر (ليه تارجت ووزن) لازم يوصل 90% عشان يتحسب في التوتال، والزيادة فوق 100% بتتحسب عادي.
+// - المؤشر اللي تحت 90% بيتشال من التوتال.
+// - لو التوتال النهائي أقل من 80% مفيش حافز.
+// - Postpaid أو DSL لو ما وصلوش 100%: وزنهم (10%) بيتشال + خصم 5 نقاط زيادة، يعني 15 نقطة.
+export const KPI_MIN_PERCENT = 90;
+export const OVERALL_MIN_PERCENT = 80;
+export const CLAW_BACK_POINTS = 5;
+export const CLAW_BACK_KEYS = ["postpaid_lines", "dsl"] as const;
+
+export type RulesKpi = KpiSettingInput & { achieved: number };
+
+export function applyCompanyRules(kpis: RulesKpi[]) {
+  // الـ Postpaid والـ DSL: لو ما وصلوش 100% بيتشال وزنهم كله (مساهمتهم صفر) + 5 نقاط زيادة على الخصم.
+  const clawBacks = kpis
+    .filter((kpi) => (CLAW_BACK_KEYS as readonly string[]).includes(kpi.kpiKey) && kpi.target > 0 && kpi.weight > 0)
+    .filter((kpi) => achievementPercent(kpi.achieved, kpi.target) < 100)
+    .map((kpi) => kpi.kpiKey);
+
+  const counted: { kpiKey: KpiKey; contribution: number; percent: number; gated: boolean }[] = kpis.map((kpi) => {
+    const percent = achievementPercent(kpi.achieved, kpi.target);
+    const eligible = kpi.weight > 0 && kpi.target > 0;
+    const clawed = clawBacks.includes(kpi.kpiKey);
+    const gated = eligible && percent < KPI_MIN_PERCENT;
+    const contribution = eligible && !gated && !clawed ? kpiContribution(kpi.achieved, kpi.target, kpi.weight) : 0;
+    return { kpiKey: kpi.kpiKey, contribution, percent, gated: gated || clawed };
+  });
+
+  // New Lines ما بتتحسبش إلا لو New Orange Cash Wallets اتحققت (100% من تارجتها).
+  const wallet = kpis.find((kpi) => kpi.kpiKey === "new_orange_cash");
+  const walletDone = !wallet || wallet.target <= 0 || achievementPercent(wallet.achieved, wallet.target) >= 100;
+  if (!walletDone) {
+    const row = counted.find((r) => r.kpiKey === "new_lines");
+    if (row) {
+      row.contribution = 0;
+      row.gated = true;
+    }
+  }
+
+  const rawTotal = counted.reduce((sum, row) => sum + row.contribution, 0);
+  const total = Math.max(0, rawTotal - clawBacks.length * CLAW_BACK_POINTS);
+  const belowKpis = counted.filter((row) => row.gated).map((row) => row.kpiKey);
+  const belowOverall = total < OVERALL_MIN_PERCENT;
+  return { counted, total, rawTotal, belowKpis, clawBacks, belowOverall, walletDone };
 }

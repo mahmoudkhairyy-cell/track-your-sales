@@ -1,13 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
-import { Banner, EmptyState, Spinner } from "@/components/ui";
+import { Banner, Spinner } from "@/components/ui";
 import { ApiError, api } from "@/lib/client";
 import { formatMoney, formatPercent, formatQty } from "@/lib/calculations";
 import { useMonth } from "@/components/AppShell";
 import { kpiEmoji } from "@/lib/constants";
-import { MOOD_STYLES, kpiMood, overallMood } from "@/lib/motivation";
+import { kpiMood } from "@/lib/motivation";
 
 type KpiRow = {
   kpiKey: string;
@@ -31,6 +30,7 @@ type Dashboard = {
   kpis: KpiRow[];
   overall: number;
   estimatedCommission: number;
+  rules: { belowKpis: string[]; clawBacks: string[]; belowOverall: boolean; walletDone: boolean };
   fullCommission: number;
   weightSum: number;
   weightWarning: boolean;
@@ -70,22 +70,20 @@ function ScoreRing({ value }: { value: number }) {
   );
 }
 
-const STATUS_BADGE: Record<ReturnType<typeof overallMood>["tone"], string> = {
-  celebrate: "قفلت التارجت",
-  ahead: "متقدم",
-  ontrack: "على الخطة",
-  behind: "متأخر شوية",
-  danger: "متأخر جامد",
-  empty: "شهر جديد",
-};
-
 function greeting() {
-  const hour = Number(
-    new Intl.DateTimeFormat("en-US", { hour: "numeric", hour12: false, timeZone: "Africa/Cairo" }).format(new Date()),
-  );
+  const hour = Number(new Intl.DateTimeFormat("en-GB", { hour: "2-digit", hour12: false, timeZone: "Africa/Cairo" }).format(new Date()));
   if (hour >= 5 && hour < 12) return "صباح الخير يا";
   if (hour >= 12 && hour < 18) return "نهارك سعيد يا";
   return "مساء الخير يا";
+}
+
+const SHORT_KPI_NAMES: Record<string, string> = {
+  "New Orange Cash Wallets": "New",
+  "Existing Wallets": "Existing",
+};
+
+function shortKpiName(name: string) {
+  return SHORT_KPI_NAMES[name] ?? name;
 }
 
 export default function HomePage() {
@@ -127,37 +125,37 @@ export default function HomePage() {
   const newLines = data.kpis.find((kpi) => kpi.kpiKey === "new_lines");
   const gap = Math.max(0, 100 - data.overall);
   const expectedPercent = data.work.total > 0 ? (data.work.elapsed / data.work.total) * 100 : 0;
-  const mood = overallMood({
-    overall: data.overall,
-    expectedPercent,
-    empty: data.empty,
-    remainingDays: data.work.remaining,
-  });
-  const moodStyle = MOOD_STYLES[mood.tone];
+  const statusTextEgy =
+    data.overall >= 100
+      ? "قفلت التارجت يا وحش 🏆 كمّل بنفس الروح"
+      : data.overall >= 80
+        ? "إنت على آخر خطوة! يلا يا بطل"
+      : data.overall >= expectedPercent + 5
+        ? "ماشي تمام جدًا، كمّل كده 💪"
+        : data.overall >= expectedPercent - 5
+          ? "إنت ماشي على الخط، شد حيلك 👊"
+          : "لازم نزوّد شوية النهارده 🔥 ابدأ بالأهم";
 
-  const behindKpis = data.kpis.filter((kpi) => kpi.weight > 0 && kpi.percent < 100 && kpi.remaining > 0);
+
 
   return (
     <div className="space-y-5">
-      <section className="text-center">
-        <span className={`inline-flex items-center gap-1 rounded-full border px-3 py-1 text-xs font-extrabold ${moodStyle.box} ${moodStyle.title}`}>
-          {mood.emoji} {STATUS_BADGE[mood.tone]}
-        </span>
-        <h1 className="mt-2 text-[1.65rem] font-black leading-10 text-neutral-900">
+      <section className="text-right">
+        <p className="text-sm font-extrabold text-neutral-700">
           {greeting()} {data.profile.name.split(" ")[0]} 👋
-        </h1>
-        <p className="mt-1 text-sm text-neutral-400">
-          📍 {data.profile.branch} · {data.monthLabel}
         </p>
+        <p className="text-[11px] text-neutral-400">📍 {data.profile.branch}</p>
       </section>
 
-      <section className="rounded-[32px] bg-[#ff7900] p-5 text-white shadow-[0_16px_40px_rgba(255,121,0,0.28)]">
+      <section className="relative overflow-hidden rounded-[32px] bg-gradient-to-br from-[#ff9a3c] via-[#ff7900] to-[#e85d00] p-6 text-white shadow-[0_20px_50px_rgba(255,121,0,0.35)] ring-1 ring-white/30">
+        <div className="pointer-events-none absolute -top-16 -left-16 h-48 w-48 rounded-full bg-white/15 blur-2xl" />
         <div className="flex items-center gap-4">
           <ScoreRing value={data.overall} />
           <div className="flex-1">
             <p className="text-sm font-bold text-white/90">إجمالي التارجت الشهري</p>
             <p className="mt-1 text-4xl font-black">{formatPercent(data.overall)}%</p>
             <p className="text-sm text-white/80">{gap > 0 ? `فاضل ${formatPercent(gap)}%` : "مفيش فاضل، قفلت الشهر"}</p>
+            <p className="mt-2 text-sm font-extrabold text-white">{statusTextEgy}</p>
             <div className="mt-2 inline-flex rounded-full bg-white px-3 py-1.5 text-xs font-extrabold text-[#ff7900]">
               💰 كوميشنك: {formatMoney(data.estimatedCommission)} من {formatMoney(data.fullCommission)} جنيه
             </div>
@@ -165,80 +163,82 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className={`rounded-[24px] border p-4 ${moodStyle.box}`}>
-        <p className={`text-base font-black ${moodStyle.title}`}>
-          {mood.emoji} {mood.headline}
-        </p>
-        <p className={`mt-1 text-sm leading-7 ${moodStyle.text}`}>{mood.detail}</p>
-        <div className="mt-3 grid grid-cols-3 gap-2 text-center">
-          <div className="rounded-2xl bg-white/70 p-2">
-            <p className="text-lg font-black text-neutral-900">{data.work.total}</p>
-            <p className="text-[11px] text-neutral-500">أيام الشغل</p>
+      <article className="grid grid-cols-2 gap-2 rounded-[24px] border border-orange-100/70 bg-white p-2.5 shadow-[0_8px_20px_rgba(255,121,0,0.06)]">
+        <div className="rounded-2xl bg-orange-50/50 p-3">
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] font-bold text-neutral-500">الخطوط المحققة</span>
+            <span className="text-sm">📱</span>
           </div>
-          <div className="rounded-2xl bg-white/70 p-2">
-            <p className="text-lg font-black text-neutral-900">{data.work.elapsed}</p>
-            <p className="text-[11px] text-neutral-500">عدّت</p>
-          </div>
-          <div className="rounded-2xl bg-white/70 p-2">
-            <p className="text-lg font-black text-neutral-900">{data.work.remaining}</p>
-            <p className="text-[11px] text-neutral-500">فاضلة</p>
-          </div>
+          <p className="mt-1 text-xl font-black">{formatQty(newLines?.achieved ?? 0)}</p>
+          <p className="text-[10px] text-neutral-400">من {formatQty(newLines?.target ?? 0)}</p>
         </div>
-        <p className="mt-2 text-xs text-neutral-500">المتوقع لحد النهارده: {formatPercent(expectedPercent)}%</p>
-      </section>
+        <div className="rounded-2xl bg-orange-50/50 p-3">
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] font-bold text-neutral-500">المتبقي للخطوط</span>
+            <span className="text-sm">🎯</span>
+          </div>
+          <p className="mt-1 text-xl font-black">{formatQty(newLines?.remaining ?? 0)}</p>
+          <p className="text-[10px] text-neutral-400">خط</p>
+        </div>
+      </article>
 
-      <div className="grid grid-cols-2 gap-3">
-        <article className="rounded-[24px] bg-white p-4 shadow-[0_8px_24px_rgba(255,121,0,0.06)]">
-          <p className="text-sm font-bold text-neutral-500">📱 الخطوط اللي عملتها</p>
-          <p className="mt-2 text-3xl font-black">{formatQty(newLines?.achieved ?? 0)}</p>
-          <p className="text-xs text-neutral-400">من {formatQty(newLines?.target ?? 0)}</p>
-        </article>
-        <article className="rounded-[24px] bg-white p-4 shadow-[0_8px_24px_rgba(255,121,0,0.06)]">
-          <p className="text-sm font-bold text-neutral-500">🎯 الفاضل في الخطوط</p>
-          <p className="mt-2 text-3xl font-black">{formatQty(newLines?.remaining ?? 0)}</p>
-          <p className="text-xs text-neutral-400">خط</p>
-        </article>
+      <div className="grid grid-cols-3 gap-2">
+        <div className="rounded-[20px] border border-orange-100/70 bg-white p-3 text-center shadow-[0_6px_18px_rgba(255,121,0,0.06)]">
+          <p className="text-[10px] font-bold text-neutral-500">المطلوب يوميًا</p>
+          <p className="mt-1 text-lg font-black text-[#c45e00]">{data.pace.perDay === null ? "—" : formatQty(Math.ceil(data.pace.perDay))}</p>
+        </div>
+        <div className="rounded-[20px] border border-orange-100/70 bg-white p-3 text-center shadow-[0_6px_18px_rgba(255,121,0,0.06)]">
+          <p className="text-[10px] font-bold text-neutral-500">أيام شغل فاضلة</p>
+          <p className="mt-1 text-lg font-black text-neutral-900">{data.work.remaining}</p>
+        </div>
+        <div className="rounded-[20px] border border-orange-100/70 bg-white p-3 text-center shadow-[0_6px_18px_rgba(255,121,0,0.06)]">
+          <p className="text-[10px] font-bold text-neutral-500">المتوقع للنهارده</p>
+          <p className="mt-1 text-lg font-black text-neutral-900">{formatPercent(expectedPercent)}%</p>
+        </div>
       </div>
+
+      {data.pace.message ? <p className="px-1 text-xs leading-6 text-neutral-500">{data.pace.message}</p> : null}
+
+      {data.rules.belowOverall ? (
+        <Banner tone="warn">⚠️ التوتال أقل من 80%. مفيش حافز الشهر ده.</Banner>
+      ) : null}
+      {data.rules.belowKpis.length > 0 ? (
+        <Banner tone="warn">
+          ⚠️ مؤشرات أقل من 90% (بتتشال من التوتال): {data.rules.belowKpis.map((key) => data.kpis.find((k) => k.kpiKey === key)?.nameEn ?? key).join(" · ")}
+        </Banner>
+      ) : null}
+      {!data.rules.walletDone && data.rules.belowKpis.includes("new_lines") ? (
+        <Banner tone="warn">⚠️ New Lines مش هتتحسب لحد ما New Orange Cash Wallets توصل 100% من تارجتها.</Banner>
+      ) : null}
+      {data.rules.clawBacks.length > 0 ? (
+        <Banner tone="warn">
+          ⚠️ خصم 5 نقاط بسبب عدم تحقيق 100%: {data.rules.clawBacks.map((key) => data.kpis.find((k) => k.kpiKey === key)?.nameEn ?? key).join(" · ")}
+        </Banner>
+      ) : null}
 
       {data.weightWarning ? (
         <Banner tone="warn">⚠️ مجموع الأوزان {formatPercent(data.weightSum)}% مش 100%. راجع صفحة التارجت.</Banner>
       ) : null}
 
-      <section className="rounded-[24px] bg-orange-50 p-4 text-sm leading-7 text-[#c45e00]">
-        <p className="font-extrabold">⚡ المطلوب منك النهارده عشان تفضل ON TRACK:</p>
-        {behindKpis.length === 0 ? (
-          <p className="mt-1 font-bold">كل المؤشرات تمام. مفيش حاجة ضاغطة النهارده 👌</p>
-        ) : data.work.remaining <= 0 ? (
-          <p className="mt-1 font-bold">أيام الشغل خلصت. اللي فاضل: {behindKpis.map((k) => `${kpiEmoji(k.kpiKey)} ${k.nameEn} ${formatQty(k.remaining)}`).join(" · ")}</p>
-        ) : (
-          <ul className="mt-2 space-y-1">
-            {behindKpis.map((kpi) => (
-              <li key={kpi.kpiKey} className="flex items-center justify-between gap-2">
-                <span className="font-bold">
-                  {kpiEmoji(kpi.kpiKey)} {kpi.nameEn}
-                </span>
-                <span className="font-black">
-                  {formatQty(Math.ceil(kpi.remaining / data.work.remaining))} {kpi.unitAr} — فاضل {formatQty(kpi.remaining)}
-                </span>
-              </li>
-            ))}
-          </ul>
-        )}
-      </section>
 
-      {data.empty ? (
-        <EmptyState
-          title="ابدأ الشهر بقوة 🚀"
-          text="لسه مفيش سجلات الشهر ده. الأرقام اللي تحت من إعدادات التارجت بس، والمحقق صفر عشان مفيش عمليات محفوظة."
-          action={
-            <Link href={`/log?month=${month}`} className="inline-flex min-h-12 items-center rounded-full bg-[#ff7900] px-5 font-extrabold text-white">
-              ➕ سجّل أول إنجاز
-            </Link>
-          }
-        />
-      ) : (
-        <p className="text-sm text-neutral-500">عدد العمليات المحفوظة الشهر ده: {data.entriesCount}</p>
-      )}
+      <section className="rounded-[28px] border border-orange-100/70 bg-white p-5 shadow-[0_10px_30px_rgba(255,121,0,0.08)]">
+        <div className="flex items-end justify-between">
+          <p className="text-sm font-black text-neutral-800">نسبة الإنجاز</p>
+          <p className="text-xs text-neutral-400">{data.kpis.length} مؤشر</p>
+        </div>
+        <div className="mt-4 flex h-36 items-end justify-around gap-2">
+          {data.kpis.map((kpi) => {
+            const h = Math.min(100, Math.max(4, kpi.percent));
+            return (
+              <div key={kpi.kpiKey} className="flex h-full flex-1 flex-col items-center justify-end gap-1">
+                <span className="text-[10px] font-extrabold text-[#c45e00]">{Math.round(kpi.percent)}%</span>
+                <div className="w-full max-w-[28px] rounded-t-xl bg-gradient-to-t from-[#e85d00] to-[#ff9a3c] transition-all" style={{ height: `${h}%` }} />
+                <span className="w-full truncate text-center text-[9px] text-neutral-500" dir="ltr">{shortKpiName(kpi.nameEn)}</span>
+              </div>
+            );
+          })}
+        </div>
+      </section>
 
       <h2 className="text-xl font-black">مؤشرات الأداء</h2>
       <div className="space-y-3">
@@ -249,10 +249,10 @@ export default function HomePage() {
           const moodColor =
             m.tone === "good" ? "text-emerald-700" : m.tone === "warn" ? "text-yellow-700" : m.tone === "bad" ? "text-red-600" : "text-neutral-400";
           return (
-            <article key={kpi.kpiKey} className="rounded-[24px] bg-white p-4 shadow-[0_8px_24px_rgba(255,121,0,0.06)]">
+            <article key={kpi.kpiKey} className="rounded-[20px] bg-white p-3.5 shadow-[0_6px_20px_rgba(255,121,0,0.07)] ring-1 ring-orange-100/70">
               <div className="flex items-start justify-between gap-3">
                 <div className="flex items-center gap-3">
-                  <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-orange-50 text-2xl">{kpiEmoji(kpi.kpiKey)}</span>
+                  <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-orange-50 text-lg">{kpiEmoji(kpi.kpiKey)}</span>
                   <div>
                     <h3 className="font-extrabold text-neutral-900" dir="ltr">
                       {kpi.nameEn}
@@ -269,7 +269,7 @@ export default function HomePage() {
                 <span className="font-bold">المحقق: {formatQty(kpi.achieved)}</span>
               </div>
               <div className="mt-3 h-2 overflow-hidden rounded-full bg-neutral-100">
-                <div className="h-full rounded-full bg-[#ff7900]" style={{ width: `${visual}%` }} />
+                <div className="h-full rounded-full bg-gradient-to-r from-[#ff9a3c] to-[#e85d00] transition-all" style={{ width: `${visual}%` }} />
               </div>
               <div className="mt-3 flex items-center justify-between text-xs font-bold">
                 <span className="text-[#ff7900]">مساهمة: {formatPercent(kpi.contribution)}%</span>

@@ -21,6 +21,7 @@ import {
   HUNTS,
   PLAN_GROUPS,
   PREMIER_GUIDE,
+  PREMIER_PERKS,
   SR_CATEGORIES,
   SR_ITEMS,
   type SrItem,
@@ -159,7 +160,7 @@ export default function WikiPage() {
     }
   }
 
-  const premierPlans = PLAN_GROUPS.filter((g) => g.category === "Orange Premier" || g.category === "Super Max");
+  const premierPlans = PLAN_GROUPS.filter((g) => g.category === "Super Max");
   const goPlans = PLAN_GROUPS.filter((g) => g.category.startsWith("Go"));
   const homePlans = PLAN_GROUPS.find((g) => g.category === "Home Wireless");
 
@@ -303,6 +304,35 @@ export default function WikiPage() {
               ))}
             </ul>
           </article>
+          <div className="space-y-3">
+            <h2 className="pt-2 text-lg font-black">👑 مزايا كل باقة</h2>
+            {PREMIER_PERKS.map((pkg) => (
+              <article key={pkg.name} className="rounded-[22px] bg-white p-4 shadow-sm">
+                <div className="flex items-center justify-between gap-3">
+                  <p className="font-black">{pkg.name}</p>
+                  <p className="text-sm font-extrabold text-[#ff7900]">{pkg.price}</p>
+                </div>
+                <div className="mt-3 grid grid-cols-2 gap-2 text-xs">
+                  {pkg.stats.map((stat) => (
+                    <div key={stat} className="rounded-2xl bg-neutral-100 px-3 py-2 text-center font-bold text-neutral-700">
+                      {stat}
+                    </div>
+                  ))}
+                </div>
+                <p className="mt-3 text-xs font-black text-neutral-500">المزايا والاشتراكات</p>
+                <div className="mt-2 grid grid-cols-2 gap-2">
+                  {pkg.perks.map((perk) => (
+                    <div
+                      key={perk}
+                      className="flex min-h-12 items-center justify-center rounded-2xl border border-orange-200 bg-orange-50 px-3 py-2 text-center text-xs font-extrabold leading-5 text-[#c45e00]"
+                    >
+                      {perk}
+                    </div>
+                  ))}
+                </div>
+              </article>
+            ))}
+          </div>
           {premierPlans.map((group) => (
             <div key={group.category} className="space-y-2">
               <h2 className="pt-2 text-lg font-black">{group.category}</h2>

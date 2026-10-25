@@ -98,5 +98,5 @@ export const MOOD_STYLES: Record<MoodTone, { box: string; title: string; text: s
   ontrack: { box: "bg-orange-50 border-orange-200", title: "text-[#c45e00]", text: "text-[#c45e00]" },
   behind: { box: "bg-yellow-50 border-yellow-300", title: "text-yellow-900", text: "text-yellow-800" },
   danger: { box: "bg-red-50 border-red-300", title: "text-red-800", text: "text-red-700" },
-  empty: { box: "bg-neutral-50 border-neutral-200", title: "text-neutral-900", text: "text-neutral-600" },
+  empty: { box: "bg-yellow-50 border-yellow-300", title: "text-yellow-900", text: "text-yellow-800" },
 };
