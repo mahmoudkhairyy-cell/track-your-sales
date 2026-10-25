@@ -154,9 +154,20 @@ export function applyCompanyRules(kpis: RulesKpi[]) {
     return { kpiKey: kpi.kpiKey, contribution, percent, gated: gated || clawed };
   });
 
+  // New Lines ما بتتحسبش إلا لو New Orange Cash Wallets اتحققت (100% من تارجتها).
+  const wallet = kpis.find((kpi) => kpi.kpiKey === "new_orange_cash");
+  const walletDone = !wallet || wallet.target <= 0 || achievementPercent(wallet.achieved, wallet.target) >= 100;
+  if (!walletDone) {
+    const row = counted.find((r) => r.kpiKey === "new_lines");
+    if (row) {
+      row.contribution = 0;
+      row.gated = true;
+    }
+  }
+
   const rawTotal = counted.reduce((sum, row) => sum + row.contribution, 0);
   const total = Math.max(0, rawTotal - clawBacks.length * CLAW_BACK_POINTS);
   const belowKpis = counted.filter((row) => row.gated).map((row) => row.kpiKey);
   const belowOverall = total < OVERALL_MIN_PERCENT;
-  return { counted, total, rawTotal, belowKpis, clawBacks, belowOverall };
+  return { counted, total, rawTotal, belowKpis, clawBacks, belowOverall, walletDone };
 }
