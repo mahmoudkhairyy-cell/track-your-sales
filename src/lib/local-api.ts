@@ -221,7 +221,7 @@ function defaultBundle(yearMonth: string): Bundle {
       kpiKey: kpi.key,
       target:
         kpi.key === "new_orange_cash"
-          ? Math.round(KPI_CATALOG.find((k) => k.key === "new_lines")!.defaultTarget * 0.9)
+          ? Math.ceil(KPI_CATALOG.find((k) => k.key === "new_lines")!.defaultTarget * 0.9)
           : kpi.defaultTarget,
       weight: kpi.defaultWeight,
       unitAr: kpi.unitAr,
@@ -243,7 +243,7 @@ function loadBundle(state: State, yearMonth: string): Bundle {
     // تارجت المحافظ الجديدة = 90% من تارجت الـ New Lines تلقائيًا.
     const target =
       kpi.key === "new_orange_cash"
-        ? Math.round(newLinesTarget * 0.9)
+        ? Math.ceil(newLinesTarget * 0.9)
         : saved?.target ?? kpi.defaultTarget;
     return {
       kpiKey: kpi.key,
