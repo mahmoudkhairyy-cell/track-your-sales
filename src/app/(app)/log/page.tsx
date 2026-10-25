@@ -23,9 +23,6 @@ export default function LogPage() {
   const [kpiKey, setKpiKey] = useState<KpiKey>(KPI_CATALOG[0].key);
   const [quantity, setQuantity] = useState("");
   const [entryDate, setEntryDate] = useState(cairoISODate());
-  const [yy, mm] = month.split("-").map(Number);
-  const calDays = Array.from({ length: new Date(Date.UTC(yy, mm, 0)).getUTCDate() }, (_, i) => `${month}-${String(i + 1).padStart(2, "0")}`);
-  const calOffset = (new Date(Date.UTC(yy, mm - 1, 1)).getUTCDay() + 1) % 7;
   const [note, setNote] = useState("");
   const [error, setError] = useState("");
   const [pending, setPending] = useState(false);
@@ -79,36 +76,6 @@ export default function LogPage() {
       </section>
 
       {error ? <Banner tone="error">❌ {error}</Banner> : null}
-
-      <section className="rounded-[32px] border border-orange-100/70 bg-white p-4 shadow-[0_10px_30px_rgba(255,121,0,0.08)]">
-        <p className="mb-3 text-sm font-bold text-neutral-800">اختار يوم الإنجاز من الخريطة</p>
-        <div className="grid grid-cols-7 gap-1 text-center text-[11px] font-bold text-neutral-400">
-          {["سبت", "أحد", "اتنين", "تلات", "أربع", "خميس", "جمعة"].map((d) => (
-            <span key={d} className="py-1">{d}</span>
-          ))}
-        </div>
-        <div className="mt-1 grid grid-cols-7 gap-1">
-          {Array.from({ length: calOffset }).map((_, i) => (
-            <span key={`pad-${i}`} />
-          ))}
-          {calDays.map((date) => {
-            const active = date === entryDate;
-            return (
-              <button
-                key={date}
-                type="button"
-                onClick={() => setEntryDate(date)}
-                className={`flex aspect-square items-center justify-center rounded-2xl text-sm font-extrabold transition ${
-                  active ? "bg-gradient-to-br from-[#ff9a3c] to-[#e85d00] text-white shadow-[0_6px_16px_rgba(255,121,0,0.3)]" : "bg-neutral-50 text-neutral-700"
-                }`}
-              >
-                {Number(date.slice(8, 10))}
-              </button>
-            );
-          })}
-        </div>
-        <p className="mt-3 text-center text-xs text-neutral-400">التاريخ المختار: {entryDate}</p>
-      </section>
 
       <section className="space-y-4 rounded-[32px] border border-orange-100/70 bg-white p-5 shadow-[0_10px_30px_rgba(255,121,0,0.08)]">
         <div>
