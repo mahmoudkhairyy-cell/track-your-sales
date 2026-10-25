@@ -138,7 +138,7 @@ export default function TargetPage() {
   return (
     <form className="space-y-5" onSubmit={onSave}>
       <section>
-        <h1 className="text-2xl font-black">التارجت 🎯</h1>
+        <h1 className="text-3xl font-black">التارجت 🎯</h1>
         <p className="mt-1 text-sm text-neutral-500">كل شهر محفوظ لوحده. لما تغيّر الشهر مش هيتكتب فوق شهر تاني.</p>
         <p className="mt-1 text-xs text-neutral-400">{saved ? "✅ الإعدادات دي محفوظة في قاعدة البيانات." : "⚠️ لسه مش محفوظة. الأرقام اللي شايفها افتراضية لحد ما تدوس حفظ."}</p>
       </section>
@@ -174,7 +174,7 @@ export default function TargetPage() {
         </section>
       ) : null}
 
-      <section className="rounded-[28px] bg-white p-5 shadow-[0_8px_24px_rgba(255,121,0,0.06)]">
+      <section className="rounded-[32px] border border-orange-100/70 bg-white p-5 shadow-[0_10px_30px_rgba(255,121,0,0.08)]">
         <Field label="💰 الكوميشن الكامل (جنيه)">
           <input
             className={`${inputClass} text-xl font-black`}
@@ -196,7 +196,7 @@ export default function TargetPage() {
         {kpis.map((kpi, index) => {
           const catalog = KPI_CATALOG.find((item) => item.key === kpi.kpiKey);
           return (
-            <div key={kpi.kpiKey} className="rounded-[24px] bg-white p-4 shadow-[0_8px_24px_rgba(255,121,0,0.06)]">
+            <div key={kpi.kpiKey} className="rounded-[28px] border border-orange-100/70 bg-white p-4 shadow-[0_10px_30px_rgba(255,121,0,0.08)]">
               <div className="flex items-center gap-3">
                 <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-orange-50 text-2xl">{catalog?.emoji ?? "🎯"}</span>
                 <div>
@@ -239,7 +239,7 @@ export default function TargetPage() {
         })}
       </section>
 
-      <section className="rounded-[28px] bg-white p-5 shadow-[0_8px_24px_rgba(255,121,0,0.06)]">
+      <section className="rounded-[32px] border border-orange-100/70 bg-white p-5 shadow-[0_10px_30px_rgba(255,121,0,0.08)]">
         <h2 className="text-lg font-black">📅 أيام الشغل</h2>
         <p className="mt-1 text-xs text-neutral-400">الحسابات بتعتمد على أيام الشغل الفعلية، مش الأيام التقويمية.</p>
         <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
@@ -259,7 +259,7 @@ export default function TargetPage() {
         </div>
       </section>
 
-      <section className="rounded-[28px] bg-white p-5 shadow-[0_8px_24px_rgba(255,121,0,0.06)]">
+      <section className="rounded-[32px] border border-orange-100/70 bg-white p-5 shadow-[0_10px_30px_rgba(255,121,0,0.08)]">
         <h2 className="text-lg font-black">🏖️ إجازات الشهر</h2>
         <div className="mt-3 grid gap-3 sm:grid-cols-[1fr_1fr_auto]">
           <input className={inputClass} type="date" value={holidayDate} onChange={(e) => setHolidayDate(e.target.value)} />

@@ -285,7 +285,7 @@ export default function MorePage() {
         <p className="mt-3 text-xs text-white/80">ملخص النهارده، سجل الشهر، النسخة الاحتياطية، والمساعد.</p>
       </section>
 
-      <section className="rounded-[28px] bg-white p-5 shadow-[0_8px_24px_rgba(255,121,0,0.06)]">
+      <section className="rounded-[32px] border border-orange-100/70 bg-white p-5 shadow-[0_10px_30px_rgba(255,121,0,0.08)]">
         <h2 className="text-lg font-black">📊 اللي عملته النهارده</h2>
         {todayItems.length === 0 ? (
           <p className="mt-3 text-sm text-neutral-400">لسه مسجلتش حاجة النهارده. يلا نبدأ! 💪</p>
@@ -309,7 +309,7 @@ export default function MorePage() {
         )}
       </section>
 
-      <section className="rounded-[28px] bg-white p-5 shadow-[0_8px_24px_rgba(255,121,0,0.06)]">
+      <section className="rounded-[32px] border border-orange-100/70 bg-white p-5 shadow-[0_10px_30px_rgba(255,121,0,0.08)]">
         <div className="flex items-center justify-between gap-3">
           <h2 className="text-lg font-black">🗂️ سجل عمليات {monthLabelAr(month)}</h2>
           <span className="text-sm text-neutral-400">{entries.length} سجل</span>
@@ -356,7 +356,7 @@ export default function MorePage() {
         </button>
       </section>
 
-      <section className="rounded-[28px] bg-white p-5 shadow-[0_8px_24px_rgba(255,121,0,0.06)]">
+      <section className="rounded-[32px] border border-orange-100/70 bg-white p-5 shadow-[0_10px_30px_rgba(255,121,0,0.08)]">
         <h2 className="text-lg font-black">👤 بياناتك</h2>
         <form className="mt-4 space-y-3" onSubmit={saveProfile}>
           <Field label="اسم الموظف">
@@ -372,7 +372,7 @@ export default function MorePage() {
         <p className="mt-3 text-xs leading-6 text-neutral-400">تقدر تغيّر اسمك والفرع في أي وقت من هنا.</p>
       </section>
 
-      <section className="rounded-[28px] bg-white p-5 shadow-[0_8px_24px_rgba(255,121,0,0.06)]">
+      <section className="rounded-[32px] border border-orange-100/70 bg-white p-5 shadow-[0_10px_30px_rgba(255,121,0,0.08)]">
         <h2 className="text-lg font-black">💾 نسخة احتياطية واستعادة</h2>
         <p className="mt-2 text-sm leading-7 text-neutral-500">التصدير بينزّل ملف JSON فيه بياناتك وإعدادات الشهور والسجلات والملاحظات. من غير أي مفاتيح أو أسرار.</p>
         <div className="mt-4 grid gap-3 sm:grid-cols-2">
