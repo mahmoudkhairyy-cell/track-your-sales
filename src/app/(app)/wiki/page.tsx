@@ -160,7 +160,7 @@ export default function WikiPage() {
     }
   }
 
-  const premierPlans = PLAN_GROUPS.filter((g) => g.category === "Orange Premier" || g.category === "Super Max");
+  const premierPlans = PLAN_GROUPS.filter((g) => g.category === "Super Max");
   const goPlans = PLAN_GROUPS.filter((g) => g.category.startsWith("Go"));
   const homePlans = PLAN_GROUPS.find((g) => g.category === "Home Wireless");
 
