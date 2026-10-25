@@ -177,6 +177,25 @@ export default function HomePage() {
       ) : null}
 
 
+      <section className="rounded-[28px] border border-orange-100/70 bg-white p-5 shadow-[0_10px_30px_rgba(255,121,0,0.08)]">
+        <div className="flex items-end justify-between">
+          <p className="text-sm font-black text-neutral-800">نسبة الإنجاز لكل مؤشر</p>
+          <p className="text-xs text-neutral-400">{data.kpis.length} مؤشر</p>
+        </div>
+        <div className="mt-4 flex h-36 items-end justify-around gap-2">
+          {data.kpis.map((kpi) => {
+            const h = Math.min(100, Math.max(4, kpi.percent));
+            return (
+              <div key={kpi.kpiKey} className="flex h-full flex-1 flex-col items-center justify-end gap-1">
+                <span className="text-[10px] font-extrabold text-[#c45e00]">{Math.round(kpi.percent)}%</span>
+                <div className="w-full max-w-[28px] rounded-t-xl bg-gradient-to-t from-[#e85d00] to-[#ff9a3c] transition-all" style={{ height: `${h}%` }} />
+                <span className="w-full truncate text-center text-[9px] text-neutral-500" dir="ltr">{kpi.nameEn}</span>
+              </div>
+            );
+          })}
+        </div>
+      </section>
+
       <h2 className="text-xl font-black">مؤشرات الأداء</h2>
       <div className="space-y-3">
         {data.kpis.map((kpi) => {
