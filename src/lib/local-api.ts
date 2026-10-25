@@ -219,7 +219,10 @@ function defaultBundle(yearMonth: string): Bundle {
     workingDays: { ...DEFAULT_WORKING_DAYS },
     kpis: KPI_CATALOG.map((kpi, index) => ({
       kpiKey: kpi.key,
-      target: kpi.defaultTarget,
+      target:
+        kpi.key === "new_orange_cash"
+          ? Math.round(KPI_CATALOG.find((k) => k.key === "new_lines")!.defaultTarget * 0.9)
+          : kpi.defaultTarget,
       weight: kpi.defaultWeight,
       unitAr: kpi.unitAr,
       sortOrder: index,
@@ -234,11 +237,17 @@ function loadBundle(state: State, yearMonth: string): Bundle {
   if (!row) return defaultBundle(yearMonth);
 
   const savedMap = new Map(row.kpis.map((item) => [item.kpiKey, item]));
+  const newLinesTarget = savedMap.get("new_lines")?.target ?? KPI_CATALOG.find((k) => k.key === "new_lines")!.defaultTarget;
   const kpis = KPI_CATALOG.map((kpi, index) => {
     const saved = savedMap.get(kpi.key);
+    // تارجت المحافظ الجديدة = 90% من تارجت الـ New Lines تلقائيًا.
+    const target =
+      kpi.key === "new_orange_cash"
+        ? Math.round(newLinesTarget * 0.9)
+        : saved?.target ?? kpi.defaultTarget;
     return {
       kpiKey: kpi.key,
-      target: saved?.target ?? kpi.defaultTarget,
+      target,
       weight: saved?.weight ?? kpi.defaultWeight,
       unitAr: saved?.unitAr ?? kpi.unitAr,
       sortOrder: saved?.sortOrder ?? index,
