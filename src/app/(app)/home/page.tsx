@@ -151,17 +151,15 @@ export default function HomePage() {
         </p>
       </section>
 
-      <section className="rounded-[32px] bg-[#ff7900] p-5 text-white shadow-[0_16px_40px_rgba(255,121,0,0.28)]">
-        <div className="flex items-center gap-4">
-          <ScoreRing value={data.overall} />
-          <div className="flex-1">
-            <p className="text-sm font-bold text-white/90">إجمالي التارجت الشهري</p>
-            <p className="mt-1 text-4xl font-black">{formatPercent(data.overall)}%</p>
-            <p className="text-sm text-white/80">{gap > 0 ? `فاضل ${formatPercent(gap)}%` : "مفيش فاضل، قفلت الشهر"}</p>
-            <div className="mt-2 inline-flex rounded-full bg-white px-3 py-1.5 text-xs font-extrabold text-[#ff7900]">
-              💰 كوميشنك: {formatMoney(data.estimatedCommission)} من {formatMoney(data.fullCommission)} جنيه
-            </div>
-          </div>
+      <section className="flex items-center gap-4 rounded-[18px] bg-white p-4 shadow-[0_8px_24px_rgba(255,121,0,0.06)]">
+        <ScoreRing value={data.overall} />
+        <div className="flex-1">
+          <p className="text-sm font-bold text-neutral-500">إجمالي التارجت الشهري</p>
+          <p className="mt-1 text-3xl font-black text-neutral-900">{formatPercent(data.overall)}%</p>
+          <p className="text-sm text-neutral-500">{gap > 0 ? `فاضل ${formatPercent(gap)}%` : "مفيش فاضل، قفلت الشهر"}</p>
+          <p className="mt-2 text-xs font-bold text-[#ff7900]">
+            💰 كوميشنك: {formatMoney(data.estimatedCommission)} من {formatMoney(data.fullCommission)} جنيه
+          </p>
         </div>
       </section>
 
@@ -241,7 +239,7 @@ export default function HomePage() {
       )}
 
       <h2 className="text-xl font-black">مؤشرات الأداء</h2>
-      <div className="space-y-3">
+      <div className="grid grid-cols-2 gap-3">
         {data.kpis.map((kpi) => {
           const visual = Math.min(100, Math.max(0, kpi.percent));
           const kpiExpected = kpi.target > 0 ? (kpi.expectedToDate / kpi.target) * 100 : 0;
@@ -249,36 +247,25 @@ export default function HomePage() {
           const moodColor =
             m.tone === "good" ? "text-emerald-700" : m.tone === "warn" ? "text-yellow-700" : m.tone === "bad" ? "text-red-600" : "text-neutral-400";
           return (
-            <article key={kpi.kpiKey} className="rounded-[24px] bg-white p-4 shadow-[0_8px_24px_rgba(255,121,0,0.06)]">
-              <div className="flex items-start justify-between gap-3">
-                <div className="flex items-center gap-3">
-                  <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-orange-50 text-2xl">{kpiEmoji(kpi.kpiKey)}</span>
-                  <div>
-                    <h3 className="font-extrabold text-neutral-900" dir="ltr">
-                      {kpi.nameEn}
-                    </h3>
-                    <p className={`text-xs font-bold ${moodColor}`}>
-                      {m.emoji} {m.text}
-                    </p>
-                  </div>
-                </div>
-                <p className="text-lg font-black text-[#ff7900]">{formatPercent(kpi.percent)}%</p>
+            <article key={kpi.kpiKey} className="rounded-[18px] bg-white p-3 shadow-[0_8px_24px_rgba(255,121,0,0.06)]">
+              <div className="flex items-center justify-between">
+                <span className="text-xl">{kpiEmoji(kpi.kpiKey)}</span>
+                <p className="text-sm font-black text-[#ff7900]">{formatPercent(kpi.percent)}%</p>
               </div>
-              <div className="mt-3 flex items-center justify-between text-sm">
-                <span className="text-neutral-500">المستهدف: {formatQty(kpi.target)}</span>
-                <span className="font-bold">المحقق: {formatQty(kpi.achieved)}</span>
-              </div>
-              <div className="mt-3 h-2 overflow-hidden rounded-full bg-neutral-100">
+              <h3 className="mt-2 text-sm font-extrabold text-neutral-900" dir="ltr">
+                {kpi.nameEn}
+              </h3>
+              <p className="mt-1 text-lg font-black text-neutral-900">
+                {formatQty(kpi.achieved)}
+                <span className="text-xs font-normal text-neutral-400"> / {formatQty(kpi.target)}</span>
+              </p>
+              <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-neutral-100">
                 <div className="h-full rounded-full bg-[#ff7900]" style={{ width: `${visual}%` }} />
               </div>
-              <div className="mt-3 flex items-center justify-between text-xs font-bold">
-                <span className="text-[#ff7900]">مساهمة: {formatPercent(kpi.contribution)}%</span>
-                <span className="text-neutral-400">الوزن: {kpi.weight}%</span>
-              </div>
-              <p className="mt-1 text-[11px] text-neutral-400">
-                المفروض تكون عند {formatQty(kpi.expectedToDate)} {kpi.unitAr} دلوقتي · فاضل {formatQty(kpi.remaining)}
+              <p className={`mt-2 text-[11px] font-bold ${moodColor}`}>
+                {m.emoji} {m.text}
               </p>
-              {kpi.overTarget ? <p className="mt-2 text-xs font-bold text-[#ff7900]">🎉 عدّيت التارجت! الشريط واقف عند 100% بس الرقم الحقيقي ظاهر فوق.</p> : null}
+              <p className="text-[11px] text-neutral-400">فاضل {formatQty(kpi.remaining)} {kpi.unitAr}</p>
             </article>
           );
         })}
