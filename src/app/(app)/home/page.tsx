@@ -96,7 +96,6 @@ export default function HomePage() {
   if (error) return <Banner tone="error">{error}</Banner>;
   if (!data) return <Banner tone="error">مفيش بيانات نعرضها</Banner>;
 
-  const newLines = data.kpis.find((kpi) => kpi.kpiKey === "new_lines");
   const gap = Math.max(0, 100 - data.overall);
   const expectedPercent = data.work.total > 0 ? (data.work.elapsed / data.work.total) * 100 : 0;
   const statusTextEgy =
@@ -181,19 +180,6 @@ export default function HomePage() {
             })}
         </div>
         <p className="mt-2 text-[11px] text-neutral-400">محسوبة على {data.work.remaining} يوم شغل فاضلين.</p>
-      </section>
-
-      <section className="rounded-[24px] border border-orange-200/70 bg-white p-4 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
-        <p className="text-[11px] font-bold text-neutral-500">المطلوب النهارده</p>
-        <p className="mt-1 text-2xl font-black text-[#8f4300]">
-          {data.pace.perDay === null ? "—" : formatQty(Math.ceil(data.pace.perDay))}
-          <span className="mr-2 text-sm font-bold text-neutral-500">خط New Lines</span>
-        </p>
-        <div className="mt-3 flex items-center justify-between border-t border-orange-200/70 pt-3 text-xs text-neutral-500">
-          <span>تم {formatQty(newLines?.achieved ?? 0)} من {formatQty(newLines?.target ?? 0)}</span>
-          <span>فاضل {data.work.remaining} يوم شغل</span>
-          <span>المتوقع {formatPercent(expectedPercent)}%</span>
-        </div>
       </section>
 
       {data.pace.message ? <p className="px-1 text-xs leading-6 text-neutral-500">{data.pace.message}</p> : null}
