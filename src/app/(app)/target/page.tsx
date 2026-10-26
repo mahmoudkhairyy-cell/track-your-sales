@@ -212,7 +212,7 @@ export default function TargetPage() {
       {error ? <Banner tone="error">❌ {error}</Banner> : null}
 
       <p className={`px-1 text-xs font-bold ${Math.abs(weightSum - 100) > 0.01 ? "text-amber-700" : "text-emerald-700"}`}>
-        {Math.abs(weightSum - 100) > 0.01 ? `⚠️ الأوزان ${weightSum}% (لازم 100% عشان تتحفظ)` : "✓ الأوزان 100%"}
+        {Math.abs(weightSum - 100) > 0.01 ? `⚠️ الأوزان ${weightSum}%: ${weightSum < 100 ? `ناقص ${Math.round((100 - weightSum) * 100) / 100}%` : `زيادة ${Math.round((weightSum - 100) * 100) / 100}%`} (لازم 100% عشان تتحفظ)` : "✓ الأوزان 100%"}
       </p>
 
       {daily ? (
