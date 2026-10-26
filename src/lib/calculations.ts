@@ -140,35 +140,18 @@ export const CLAW_BACK_KEYS = ["postpaid_lines", "dsl"] as const;
 export type RulesKpi = KpiSettingInput & { achieved: number };
 
 export function applyCompanyRules(kpis: RulesKpi[]) {
-  // الـ Postpaid والـ DSL: لو ما وصلوش 100% بيتشال وزنهم كله (مساهمتهم صفر) + 5 نقاط زيادة على الخصم.
-  const clawBacks = kpis
-    .filter((kpi) => (CLAW_BACK_KEYS as readonly string[]).includes(kpi.kpiKey) && kpi.target > 0 && kpi.weight > 0)
-    .filter((kpi) => achievementPercent(kpi.achieved, kpi.target) < 100)
-    .map((kpi) => kpi.kpiKey);
-
+  // كل مؤشر لازم يوصل 90% عشان يتحسب، ومفيش خصم للـ Postpaid أو DSL، ومفيش ربط للـ New Lines بالمحافظ.
   const counted: { kpiKey: KpiKey; contribution: number; percent: number; gated: boolean }[] = kpis.map((kpi) => {
     const percent = achievementPercent(kpi.achieved, kpi.target);
     const eligible = kpi.weight > 0 && kpi.target > 0;
-    const clawed = clawBacks.includes(kpi.kpiKey);
     const gated = eligible && percent < KPI_MIN_PERCENT;
-    const contribution = eligible && !gated && !clawed ? kpiContribution(kpi.achieved, kpi.target, kpi.weight) : 0;
-    return { kpiKey: kpi.kpiKey, contribution, percent, gated: gated || clawed };
+    const contribution = eligible && !gated ? kpiContribution(kpi.achieved, kpi.target, kpi.weight) : 0;
+    return { kpiKey: kpi.kpiKey, contribution, percent, gated };
   });
 
-  // New Lines ما بتتحسبش إلا لو New Orange Cash Wallets اتحققت (100% من تارجتها).
-  const wallet = kpis.find((kpi) => kpi.kpiKey === "new_orange_cash");
-  const walletDone = !wallet || wallet.target <= 0 || achievementPercent(wallet.achieved, wallet.target) >= 100;
-  if (!walletDone) {
-    const row = counted.find((r) => r.kpiKey === "new_lines");
-    if (row) {
-      row.contribution = 0;
-      row.gated = true;
-    }
-  }
-
   const rawTotal = counted.reduce((sum, row) => sum + row.contribution, 0);
-  const total = Math.max(0, rawTotal - clawBacks.length * CLAW_BACK_POINTS);
+  const total = Math.max(0, rawTotal);
   const belowKpis = counted.filter((row) => row.gated).map((row) => row.kpiKey);
   const belowOverall = total < OVERALL_MIN_PERCENT;
-  return { counted, total, rawTotal, belowKpis, clawBacks, belowOverall, walletDone };
+  return { counted, total, rawTotal, belowKpis, clawBacks: [] as string[], belowOverall, walletDone: true };
 }

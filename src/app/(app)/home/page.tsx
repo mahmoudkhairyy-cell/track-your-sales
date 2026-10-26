@@ -152,7 +152,6 @@ export default function HomePage() {
         const notes: string[] = [];
         if (data.rules.belowOverall) notes.push("التوتال أقل من 80%: مفيش حافز");
         if (data.rules.belowKpis.length > 0) notes.push(`أقل من 90% (متتحسبش): ${names(data.rules.belowKpis)}`);
-        if (!data.rules.walletDone && data.rules.belowKpis.includes("new_lines")) notes.push("New Lines متتحسبش: المحافظ أقل من 100%");
         if (data.rules.clawBacks.length > 0) notes.push(`خصم 5 نقاط: ${names(data.rules.clawBacks)}`);
         if (data.weightWarning) notes.push(`الأوزان ${formatPercent(data.weightSum)}% (لازم 100%)`);
         if (notes.length === 0) return null;
