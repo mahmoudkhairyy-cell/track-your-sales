@@ -257,6 +257,9 @@ export default function TargetPage() {
                     {catalog?.nameEn}
                   </p>
                   <p className="text-xs text-neutral-400">الوحدة: {kpi.unitAr}</p>
+                  {kpi.kpiKey === "new_orange_cash" ? (
+                    <p className="mt-1 text-xs font-bold text-[#c45e00]">= 90% من تارجت New Lines (مقربة لأعلى)</p>
+                  ) : null}
                 </div>
               </div>
               <div className="mt-3 grid grid-cols-2 gap-3">
