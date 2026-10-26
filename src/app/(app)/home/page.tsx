@@ -40,35 +40,6 @@ type Dashboard = {
   pace: { remaining: number; remainingDays: number; perDay: number | null; message: string };
 };
 
-function ScoreRing({ value }: { value: number }) {
-  const visual = Math.min(100, Math.max(0, value));
-  const radius = 48;
-  const circ = 2 * Math.PI * radius;
-  const offset = circ - (visual / 100) * circ;
-  return (
-    <svg viewBox="0 0 130 130" className="h-32 w-32 shrink-0">
-      <circle cx="65" cy="65" r={radius} fill="none" stroke="rgba(255,255,255,0.28)" strokeWidth="12" />
-      <circle
-        cx="65"
-        cy="65"
-        r={radius}
-        fill="none"
-        stroke="#fff"
-        strokeWidth="12"
-        strokeDasharray={circ}
-        strokeDashoffset={offset}
-        strokeLinecap="round"
-        transform="rotate(-90 65 65)"
-      />
-      <text x="65" y="62" textAnchor="middle" fill="#fff" fontSize="22" fontWeight="800">
-        {Math.round(visual)}%
-      </text>
-      <text x="65" y="80" textAnchor="middle" fill="rgba(255,255,255,0.8)" fontSize="10">
-        الإنجاز
-      </text>
-    </svg>
-  );
-}
 
 function greeting() {
   const hour = Number(new Intl.DateTimeFormat("en-GB", { hour: "2-digit", hour12: false, timeZone: "Africa/Cairo" }).format(new Date()));
@@ -149,17 +120,15 @@ export default function HomePage() {
 
       <section className="relative overflow-hidden rounded-[32px] bg-gradient-to-br from-[#ff9a3c] via-[#ff7900] to-[#e85d00] p-6 text-white shadow-[0_20px_50px_rgba(255,121,0,0.35)] ring-1 ring-white/30">
         <div className="pointer-events-none absolute -top-16 -left-16 h-48 w-48 rounded-full bg-white/15 blur-2xl" />
-        <div className="flex items-center gap-4">
-          <ScoreRing value={data.overall} />
-          <div className="flex-1">
-            <p className="text-sm font-bold text-white/90">إجمالي التارجت الشهري</p>
-            <p className="mt-1 text-4xl font-black">{formatPercent(data.overall)}%</p>
-            <p className="text-sm text-white/80">{gap > 0 ? `فاضل ${formatPercent(gap)}%` : "مفيش فاضل، قفلت الشهر"}</p>
-            <p className="mt-2 text-sm font-extrabold text-white">{statusTextEgy}</p>
-            <div className="mt-2 inline-flex rounded-full bg-white px-3 py-1.5 text-xs font-extrabold text-[#ff7900]">
-              💰 كوميشنك: {formatMoney(data.estimatedCommission)} من {formatMoney(data.fullCommission)} جنيه
-            </div>
-          </div>
+        <p className="text-sm font-bold text-white/90">إجمالي التارجت الشهري</p>
+        <p className="mt-1 text-5xl font-black">{formatPercent(data.overall)}%</p>
+        <p className="mt-1 text-sm font-extrabold text-white">{statusTextEgy}</p>
+        <div className="mt-5 flex h-4 overflow-hidden rounded-full bg-white/25">
+          <div className="h-full rounded-full bg-white transition-all" style={{ width: `${Math.min(100, Math.max(0, data.overall))}%` }} />
+        </div>
+        <div className="mt-2 flex items-center justify-between text-xs text-white/85">
+          <span>{gap > 0 ? `فاضل ${formatPercent(gap)}%` : "مفيش فاضل، قفلت الشهر"}</span>
+          <span className="font-extrabold">💰 {formatMoney(data.estimatedCommission)} من {formatMoney(data.fullCommission)} جنيه</span>
         </div>
       </section>
 
