@@ -6,6 +6,7 @@ import { cairoISODate } from "@/lib/dates";
 import { Banner, PrimaryButton, inputClass, useToast } from "@/components/ui";
 import { ApiError, api } from "@/lib/client";
 import { useMonth } from "@/components/AppShell";
+import { KpiIcon } from "@/components/KpiIcon";
 import { formatQty } from "@/lib/calculations";
 import { quantityHint, quantityMax, quantityMin, quantityStep, validateQuantity } from "@/lib/quantity";
 
@@ -130,7 +131,7 @@ export default function LogPage() {
           <article key={item.key} className="rounded-[24px] border border-orange-100/70 bg-white p-4 shadow-[0_8px_20px_rgba(255,121,0,0.06)]">
             <div className="flex items-center justify-between gap-3">
               <div className="flex items-center gap-3">
-                <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-orange-50 text-lg">{item.emoji}</span>
+                <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-orange-50 text-[#ff7900]"><KpiIcon kpiKey={item.key} className="h-5 w-5" /></span>
                 <div>
                   <p className="font-extrabold" dir="ltr">{item.nameEn}</p>
                   <p className="text-[11px] text-neutral-400">

@@ -1,6 +1,5 @@
-import type { KpiKey } from "@/lib/constants";
 
-const PATHS: Record<KpiKey, string> = {
+const PATHS: Record<string, string> = {
   // هاتف
   new_lines: "M7 2h10a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1zm5 17h.01",
   // محفظة
@@ -17,10 +16,10 @@ const PATHS: Record<KpiKey, string> = {
   quality: "M9 12l2 2 4-4M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18z",
 };
 
-export function KpiIcon({ kpiKey, className = "h-5 w-5" }: { kpiKey: KpiKey; className?: string }) {
+export function KpiIcon({ kpiKey, className = "h-5 w-5" }: { kpiKey: string; className?: string }) {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden="true">
-      <path d={PATHS[kpiKey]} />
+      <path d={PATHS[kpiKey] ?? "M12 12h.01"} />
     </svg>
   );
 }

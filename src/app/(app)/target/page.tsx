@@ -8,6 +8,7 @@ import { ApiError, api } from "@/lib/client";
 import type { WorkingDays } from "@/lib/types";
 import type { KpiKey } from "@/lib/constants";
 import { useMonth } from "@/components/AppShell";
+import { KpiIcon } from "@/components/KpiIcon";
 
 type KpiForm = {
   kpiKey: KpiKey;
@@ -252,7 +253,7 @@ export default function TargetPage() {
           return (
             <div key={kpi.kpiKey} className="rounded-[28px] border border-orange-100/70 bg-white p-4 shadow-[0_10px_30px_rgba(255,121,0,0.08)]">
               <div className="flex items-center gap-3">
-                <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-orange-50 text-2xl">{catalog?.emoji ?? "🎯"}</span>
+                <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-orange-50 text-[#ff7900]"><KpiIcon kpiKey={kpi.kpiKey} className="h-6 w-6" /></span>
                 <div>
                   <p className="font-extrabold" dir="ltr">
                     {catalog?.nameEn}

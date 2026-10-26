@@ -9,6 +9,7 @@ import { formatQty } from "@/lib/calculations";
 import { parseBackup, type BackupFile } from "@/lib/backup";
 import { KPI_CATALOG, kpiEmoji, type KpiKey } from "@/lib/constants";
 import { useMonth } from "@/components/AppShell";
+import { KpiIcon } from "@/components/KpiIcon";
 import { quantityHint, quantityMax, quantityMin, quantityStep, validateQuantity } from "@/lib/quantity";
 
 type EntryRow = {
@@ -334,7 +335,7 @@ export default function MorePage() {
             {todayItems.map((item) => (
               <li key={item.kpiKey} className="flex items-center justify-between rounded-2xl bg-orange-50 px-3 py-2 text-sm">
                 <span className="flex items-center gap-2">
-                  <span className="text-xl">{kpiEmoji(item.kpiKey)}</span>
+                  <span className="flex h-7 w-7 items-center justify-center text-[#ff7900]"><KpiIcon kpiKey={item.kpiKey} className="h-5 w-5" /></span>
                   <span>
                     <span dir="ltr" className="font-extrabold">{item.nameEn}</span>
                     <span className="block text-xs text-neutral-500">{item.count} عملية</span>
@@ -369,7 +370,7 @@ export default function MorePage() {
                 <div className="flex items-start justify-between gap-3">
                   <div>
                     <p className="font-extrabold">
-                      <span className="ml-1">{kpiEmoji(entry.kpiKey)}</span>
+                      <span className="ml-1 inline-flex align-middle text-[#ff7900]"><KpiIcon kpiKey={entry.kpiKey} className="h-4 w-4" /></span>
                       <span dir="ltr">{entry.nameEn}</span>
                     </p>
                     <p className="text-xs text-neutral-500">
@@ -470,7 +471,7 @@ export default function MorePage() {
                       active ? "border-[#ff7900] bg-orange-50 text-[#c45e00]" : "border-neutral-200 bg-white text-neutral-700"
                     }`}
                   >
-                    <span className="text-lg">{kpi.emoji}</span>
+                    <span className="text-[#ff7900]"><KpiIcon kpiKey={kpi.key} className="h-5 w-5" /></span>
                     <span dir="ltr" className="leading-4">
                       {kpi.nameEn}
                     </span>
