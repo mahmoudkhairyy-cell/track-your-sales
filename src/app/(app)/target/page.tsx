@@ -19,8 +19,9 @@ type KpiForm = {
 };
 
 type Holiday = { date: string; note: string | null };
-type Quality = { kyc: number; visits: number; training: number; pos: number; csat: number; checks?: Partial<Record<"kyc" | "visits" | "training" | "pos" | "csat", boolean>> };
-const QUALITY_ITEMS: { key: keyof Quality; label: string; weight: number }[] = [
+type QualityKey = "kyc" | "visits" | "training" | "pos" | "csat";
+type Quality = { kyc: number; visits: number; training: number; pos: number; csat: number; checks?: Partial<Record<QualityKey, boolean>> };
+const QUALITY_ITEMS: { key: QualityKey; label: string; weight: number }[] = [
   { key: "kyc", label: "KYC & Compliance", weight: 5 },
   { key: "visits", label: "Quality Visits", weight: 5 },
   { key: "training", label: "Training & Quiz", weight: 2 },
