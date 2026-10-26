@@ -272,12 +272,7 @@ export default function TargetPage() {
               <div className="flex min-w-0 items-center gap-2">
                 <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-orange-50 text-[#ff7900]"><KpiIcon kpiKey={kpi.kpiKey} className="h-4 w-4" /></span>
                 <div className="min-w-0">
-                  <p className="flex items-center gap-1 truncate text-sm font-extrabold" dir="ltr">
-                    {catalog?.nameEn}
-                    {(daily?.kpis.find((row) => row.kpiKey === kpi.kpiKey)?.percent ?? 0) >= 100 ? (
-                      <span className="text-emerald-600" aria-label="متحقق">✓</span>
-                    ) : null}
-                  </p>
+                  <p className="truncate text-sm font-extrabold" dir="ltr">{catalog?.nameEn}</p>
                   {kpi.kpiKey === "new_orange_cash" ? (
                     <p className="text-[10px] font-bold text-[#c45e00]">= 90% من New Lines (لأعلى)</p>
                   ) : (
@@ -326,10 +321,7 @@ export default function TargetPage() {
         </div>
         {QUALITY_ITEMS.map((item) => (
           <div key={item.key} className="grid grid-cols-[1fr_74px_74px] items-center gap-2 border-b border-dashed border-orange-200 py-2.5 last:border-0">
-            <p className="flex items-center gap-1 truncate text-sm font-extrabold" dir="ltr">
-              {item.label}
-              {quality[item.key] >= 100 ? <span className="text-emerald-600" aria-label="متحقق">✓</span> : null}
-            </p>
+            <p className="truncate text-sm font-extrabold" dir="ltr">{item.label}</p>
             <input
               aria-label={`نسبة ${item.label}`}
               className={`${inputClass} px-2 py-2 text-center text-sm font-black`}
