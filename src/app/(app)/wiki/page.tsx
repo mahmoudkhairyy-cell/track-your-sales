@@ -226,30 +226,34 @@ export default function WikiPage() {
             </div>
           ) : (
             <>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-2">
                 {HUB.map((card) => (
-                  <button key={card.id} type="button" onClick={() => { setSection(card.id); setQuery(""); }} className="rounded-[24px] bg-white p-4 text-right shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
-                    <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-orange-100">{card.icon}</span>
-                    <p className="mt-3 font-black">{card.title}</p>
-                    <p className="mt-1 text-xs leading-5 text-neutral-400">{card.desc}</p>
-                    <p className="mt-2 text-[11px] font-bold text-[#e06600]">{card.count}</p>
+                  <button key={card.id} type="button" onClick={() => { setSection(card.id); setQuery(""); }} className="flex w-full items-center gap-3 rounded-[24px] bg-white p-3.5 text-right shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
+                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-orange-100">{card.icon}</span>
+                    <span className="min-w-0 flex-1">
+                      <span className="block font-black">{card.title}</span>
+                      <span className="block truncate text-xs text-neutral-400">{card.desc}</span>
+                    </span>
+                    <span className="shrink-0 text-[11px] font-bold text-[#e06600]">{card.count}</span>
                   </button>
                 ))}
-              </div>
-              <div className="grid grid-cols-2 gap-3">
-                <button type="button" onClick={() => setSection("dsl")} className="rounded-[24px] bg-white p-4 text-right shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
-                  <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-orange-100">
+                <button type="button" onClick={() => setSection("dsl")} className="flex w-full items-center gap-3 rounded-[24px] bg-white p-3.5 text-right shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-orange-100">
                     <WifiIcon className="text-[#e06600]" />
                   </span>
-                  <p className="mt-3 font-black">Home Internet</p>
-                  <p className="mt-1 text-xs text-neutral-400">باقات DSL والراوتر</p>
+                  <span className="min-w-0 flex-1">
+                    <span className="block font-black">Home Internet</span>
+                    <span className="block text-xs text-neutral-400">باقات DSL والراوتر</span>
+                  </span>
                 </button>
-                <button type="button" onClick={() => setSection("notes")} className="rounded-[24px] bg-white p-4 text-right shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
-                  <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-orange-100">
+                <button type="button" onClick={() => setSection("notes")} className="flex w-full items-center gap-3 rounded-[24px] bg-white p-3.5 text-right shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-orange-100">
                     <CheckIcon className="text-[#e06600]" />
                   </span>
-                  <p className="mt-3 font-black">ملاحظاتي</p>
-                  <p className="mt-1 text-xs text-neutral-400">مرجع شخصي بتضيفه بنفسك</p>
+                  <span className="min-w-0 flex-1">
+                    <span className="block font-black">ملاحظاتي</span>
+                    <span className="block text-xs text-neutral-400">مرجع شخصي بتضيفه بنفسك</span>
+                  </span>
                 </button>
               </div>
               <p className="text-center text-[11px] leading-6 text-neutral-400">مرجع شغل داخلي للموظف. مش منتج رسمي أو معتمد من Orange.</p>
