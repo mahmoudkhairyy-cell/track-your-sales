@@ -300,7 +300,7 @@ export default function MorePage() {
               key={item.key}
               type="button"
               onClick={() => setView(item.key as typeof view)}
-              className="flex w-full items-center gap-4 rounded-[28px] border border-orange-200/70 bg-white p-4 text-right shadow-[0_10px_30px_rgba(190,90,0,0.08)]"
+              className="flex w-full items-center gap-4 rounded-[28px] border border-orange-200/70 bg-white p-4 text-right shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]"
             >
               <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-orange-100 text-2xl">{item.icon}</span>
               <span className="flex-1">
@@ -316,7 +316,7 @@ export default function MorePage() {
       {view === "about" ? (
         <div className="space-y-4">
           <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[#e06600]">← رجوع للقائمة</button>
-          <section className="rounded-[32px] border border-orange-200/70 bg-white p-5 shadow-[0_10px_30px_rgba(190,90,0,0.08)]">
+          <section className="rounded-[32px] border border-orange-200/70 bg-white p-5 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
             <p className="font-black">🍊 Target Tracker</p>
             <p className="mt-2 text-sm leading-7 text-neutral-600">أداة مساعدة مستقلة وغير رسمية، وليست تطبيقًا رسميًا تابعًا لشركة Orange.</p>
           </section>
@@ -326,7 +326,7 @@ export default function MorePage() {
       {view === "today" ? (
         <div className="space-y-4">
           <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[#e06600]">← رجوع للقائمة</button>
-      <section className="rounded-[32px] border border-orange-200/70 bg-white p-5 shadow-[0_10px_30px_rgba(190,90,0,0.08)]">
+      <section className="rounded-[32px] border border-orange-200/70 bg-white p-5 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
         <h2 className="text-lg font-black">📊 اللي عملته النهارده</h2>
         {todayItems.length === 0 ? (
           <p className="mt-3 text-sm text-neutral-400">لسه مسجلتش حاجة النهارده. يلا نبدأ! 💪</p>
@@ -354,7 +354,7 @@ export default function MorePage() {
       {view === "history" ? (
         <div className="space-y-4">
           <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[#e06600]">← رجوع للقائمة</button>
-      <section className="rounded-[32px] border border-orange-200/70 bg-white p-5 shadow-[0_10px_30px_rgba(190,90,0,0.08)]">
+      <section className="rounded-[32px] border border-orange-200/70 bg-white p-5 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
         <div className="flex items-center justify-between gap-3">
           <h2 className="text-lg font-black">🗂️ سجل عمليات {monthLabelAr(month)}</h2>
           <span className="text-sm text-neutral-400">{entries.length} سجل</span>
@@ -405,7 +405,7 @@ export default function MorePage() {
       {view === "profile" ? (
         <div className="space-y-4">
           <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[#e06600]">← رجوع للقائمة</button>
-      <section className="rounded-[32px] border border-orange-200/70 bg-white p-5 shadow-[0_10px_30px_rgba(190,90,0,0.08)]">
+      <section className="rounded-[32px] border border-orange-200/70 bg-white p-5 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
         <h2 className="text-lg font-black">👤 بياناتك</h2>
         <form className="mt-4 space-y-3" onSubmit={saveProfile}>
           <Field label="اسم الموظف">
@@ -425,7 +425,7 @@ export default function MorePage() {
       {view === "backup" ? (
         <div className="space-y-4">
           <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[#e06600]">← رجوع للقائمة</button>
-      <section className="rounded-[32px] border border-orange-200/70 bg-white p-5 shadow-[0_10px_30px_rgba(190,90,0,0.08)]">
+      <section className="rounded-[32px] border border-orange-200/70 bg-white p-5 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
         <h2 className="text-lg font-black">💾 نسخة احتياطية واستعادة</h2>
         <p className="mt-2 text-sm leading-7 text-neutral-500">التصدير بينزّل ملف JSON فيه بياناتك وإعدادات الشهور والسجلات والملاحظات. من غير أي مفاتيح أو أسرار.</p>
         <div className="mt-4 grid gap-3 sm:grid-cols-2">

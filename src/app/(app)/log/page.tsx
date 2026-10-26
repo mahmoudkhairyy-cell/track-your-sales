@@ -117,7 +117,7 @@ export default function LogPage() {
         </section>
       ) : null}
 
-      <section className="rounded-[24px] border border-orange-200/70 bg-white p-4 shadow-[0_8px_20px_rgba(190,90,0,0.06)]">
+      <section className="rounded-[24px] border border-orange-200/70 bg-white p-4 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
         <label className="block text-xs font-bold text-neutral-500">📅 تاريخ الإنجاز</label>
         <input className={`${inputClass} mt-2`} type="date" value={entryDate} onChange={(e) => setEntryDate(e.target.value)} required />
       </section>
@@ -128,7 +128,7 @@ export default function LogPage() {
         const excluded = !!d && d.weight > 0 && d.gated;
         const needToday = d && workLeft > 0 ? Math.ceil(Math.max(0, d.remaining) / workLeft) : 0;
         return (
-          <article key={item.key} className="rounded-[24px] border border-orange-200/70 bg-white p-4 shadow-[0_8px_20px_rgba(190,90,0,0.06)]">
+          <article key={item.key} className="rounded-[24px] border border-orange-200/70 bg-white p-4 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
             <div className="flex items-center justify-between gap-3">
               <div className="flex items-center gap-3">
                 <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-orange-100 text-[#e06600]"><KpiIcon kpiKey={item.key} className="h-5 w-5" /></span>

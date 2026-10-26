@@ -121,7 +121,7 @@ export default function HomePage() {
       <section className="relative overflow-hidden rounded-[32px] bg-gradient-to-br from-[#f0802a] via-[#e06600] to-[#b84700] p-6 text-white shadow-[0_20px_50px_rgba(190,90,0,0.35)] ring-1 ring-white/30">
         <div className="pointer-events-none absolute -top-16 -left-16 h-48 w-48 rounded-full bg-white/15 blur-2xl" />
         <p className="text-sm font-bold text-white/90">إجمالي التارجت الشهري</p>
-        <p className="mt-1 text-5xl font-black">{formatPercent(data.overall)}%</p>
+        <p className="mt-1 text-5xl font-black tabular-nums tracking-tight">{formatPercent(data.overall)}%</p>
         <p className="mt-1 text-sm font-extrabold text-white">{statusTextEgy}</p>
         <div className="mt-5 flex h-4 overflow-hidden rounded-full bg-white/25">
           <div className="h-full rounded-full bg-white transition-all" style={{ width: `${Math.min(100, Math.max(0, data.overall))}%` }} />
@@ -132,7 +132,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="rounded-[24px] border border-orange-200/70 bg-white p-4 shadow-[0_8px_20px_rgba(190,90,0,0.06)]">
+      <section className="rounded-[24px] border border-orange-200/70 bg-white p-4 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
         <p className="text-[11px] font-bold text-neutral-500">المطلوب النهارده</p>
         <p className="mt-1 text-2xl font-black text-[#8f4300]">
           {data.pace.perDay === null ? "—" : formatQty(Math.ceil(data.pace.perDay))}
@@ -164,7 +164,7 @@ export default function HomePage() {
         );
       })()}
 
-      <section className="rounded-[28px] border border-orange-200/70 bg-white p-5 shadow-[0_10px_30px_rgba(190,90,0,0.08)]">
+      <section className="rounded-[28px] border border-orange-200/70 bg-white p-5 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
         <div className="flex items-end justify-between">
           <p className="text-sm font-black text-neutral-800">نسبة الإنجاز</p>
           <p className="text-xs text-neutral-400">{data.kpis.length} مؤشر</p>
@@ -192,7 +192,7 @@ export default function HomePage() {
           const moodColor =
             m.tone === "good" ? "text-emerald-700" : m.tone === "warn" ? "text-yellow-700" : m.tone === "bad" ? "text-red-600" : "text-neutral-400";
           return (
-            <article key={kpi.kpiKey} className="rounded-[20px] bg-white p-3.5 shadow-[0_6px_20px_rgba(190,90,0,0.07)] ring-1 ring-orange-200/70">
+            <article key={kpi.kpiKey} className="rounded-[20px] bg-white p-3.5 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)] ring-1 ring-orange-200/70">
               <div className="flex items-start justify-between gap-3">
                 <div className="flex items-center gap-3">
                   <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-orange-100 text-[#e06600]"><KpiIcon kpiKey={kpi.kpiKey} className="h-5 w-5" /></span>

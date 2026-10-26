@@ -174,7 +174,7 @@ export default function TargetPage() {
         </div>
       </section>
 
-      <section className="rounded-[32px] border border-orange-200/70 bg-white p-4 shadow-[0_10px_30px_rgba(190,90,0,0.08)]">
+      <section className="rounded-[32px] border border-orange-200/70 bg-white p-4 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
         <div className="grid grid-cols-7 gap-1 text-center text-[11px] font-bold text-neutral-400">
           {["سبت", "أحد", "اتنين", "تلات", "أربع", "خميس", "جمعة"].map((d) => (
             <span key={d} className="py-1">{d}</span>
@@ -239,7 +239,7 @@ export default function TargetPage() {
         </section>
       ) : null}
 
-      <section className="rounded-[32px] border border-orange-200/70 bg-white p-5 shadow-[0_10px_30px_rgba(190,90,0,0.08)]">
+      <section className="rounded-[32px] border border-orange-200/70 bg-white p-5 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
         <Field label="💰 الكوميشن الكامل (جنيه)">
           <input
             className={`${inputClass} text-xl font-black`}
@@ -252,7 +252,7 @@ export default function TargetPage() {
         </Field>
       </section>
 
-      <section className="rounded-[28px] border border-orange-200/70 bg-white p-4 shadow-[0_10px_30px_rgba(190,90,0,0.08)]">
+      <section className="rounded-[28px] border border-orange-200/70 bg-white p-4 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
         <div className="mb-1 flex items-center justify-between">
           <h2 className="text-lg font-black">الإيتمز والأوزان</h2>
           <p className="text-[11px] font-bold text-neutral-400">بتتدخل مرة واحدة في الشهر</p>
@@ -306,7 +306,7 @@ export default function TargetPage() {
         })}
       </section>
 
-            <section className="rounded-[28px] border border-orange-200/70 bg-white p-4 shadow-[0_10px_30px_rgba(190,90,0,0.08)]">
+            <section className="rounded-[28px] border border-orange-200/70 bg-white p-4 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
         <div className="mb-1 flex items-center justify-between">
           <h2 className="text-lg font-black">الكواليتي (15%)</h2>
           <p className="text-[11px] font-bold text-neutral-400">علّم البند لو اتحقق بالكامل</p>

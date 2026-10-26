@@ -228,7 +228,7 @@ export default function WikiPage() {
             <>
               <div className="grid grid-cols-2 gap-3">
                 {HUB.map((card) => (
-                  <button key={card.id} type="button" onClick={() => { setSection(card.id); setQuery(""); }} className="rounded-[24px] bg-white p-4 text-right shadow-[0_8px_24px_rgba(190,90,0,0.06)]">
+                  <button key={card.id} type="button" onClick={() => { setSection(card.id); setQuery(""); }} className="rounded-[24px] bg-white p-4 text-right shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
                     <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-orange-100">{card.icon}</span>
                     <p className="mt-3 font-black">{card.title}</p>
                     <p className="mt-1 text-xs leading-5 text-neutral-400">{card.desc}</p>
@@ -237,14 +237,14 @@ export default function WikiPage() {
                 ))}
               </div>
               <div className="grid grid-cols-2 gap-3">
-                <button type="button" onClick={() => setSection("dsl")} className="rounded-[24px] bg-white p-4 text-right shadow-[0_8px_24px_rgba(190,90,0,0.06)]">
+                <button type="button" onClick={() => setSection("dsl")} className="rounded-[24px] bg-white p-4 text-right shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
                   <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-orange-100">
                     <WifiIcon className="text-[#e06600]" />
                   </span>
                   <p className="mt-3 font-black">Home Internet</p>
                   <p className="mt-1 text-xs text-neutral-400">باقات DSL والراوتر</p>
                 </button>
-                <button type="button" onClick={() => setSection("notes")} className="rounded-[24px] bg-white p-4 text-right shadow-[0_8px_24px_rgba(190,90,0,0.06)]">
+                <button type="button" onClick={() => setSection("notes")} className="rounded-[24px] bg-white p-4 text-right shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
                   <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-orange-100">
                     <CheckIcon className="text-[#e06600]" />
                   </span>
