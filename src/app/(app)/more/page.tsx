@@ -281,7 +281,7 @@ export default function MorePage() {
 
   return (
     <div className="space-y-5">
-      <section className="relative overflow-hidden rounded-[28px] bg-gradient-to-br from-[#ff9a3c] via-[#ff7900] to-[#e85d00] p-5 text-white shadow-[0_20px_50px_rgba(255,121,0,0.35)]">
+      <section className="relative overflow-hidden rounded-[28px] bg-gradient-to-br from-[#f0802a] via-[#e06600] to-[#b84700] p-5 text-white shadow-[0_20px_50px_rgba(190,90,0,0.35)]">
         <p className="text-lg font-black">🍊 Target Tracker</p>
         <p className="mt-1 text-xs text-white/85">أداة مساعدة مستقلة وغير رسمية، وليست تطبيقًا رسميًا تابعًا لشركة Orange.</p>
         <p className="mt-3 text-xs text-white/80">ملخص النهارده، سجل الشهر، النسخة الاحتياطية، والمساعد.</p>
@@ -300,9 +300,9 @@ export default function MorePage() {
               key={item.key}
               type="button"
               onClick={() => setView(item.key as typeof view)}
-              className="flex w-full items-center gap-4 rounded-[28px] border border-orange-100/70 bg-white p-4 text-right shadow-[0_10px_30px_rgba(255,121,0,0.08)]"
+              className="flex w-full items-center gap-4 rounded-[28px] border border-orange-200/70 bg-white p-4 text-right shadow-[0_10px_30px_rgba(190,90,0,0.08)]"
             >
-              <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-orange-50 text-2xl">{item.icon}</span>
+              <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-orange-100 text-2xl">{item.icon}</span>
               <span className="flex-1">
                 <span className="block font-black text-neutral-900">{item.title}</span>
                 <span className="block text-xs text-neutral-500">{item.desc}</span>
@@ -315,8 +315,8 @@ export default function MorePage() {
 
       {view === "about" ? (
         <div className="space-y-4">
-          <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[#ff7900]">← رجوع للقائمة</button>
-          <section className="rounded-[32px] border border-orange-100/70 bg-white p-5 shadow-[0_10px_30px_rgba(255,121,0,0.08)]">
+          <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[#e06600]">← رجوع للقائمة</button>
+          <section className="rounded-[32px] border border-orange-200/70 bg-white p-5 shadow-[0_10px_30px_rgba(190,90,0,0.08)]">
             <p className="font-black">🍊 Target Tracker</p>
             <p className="mt-2 text-sm leading-7 text-neutral-600">أداة مساعدة مستقلة وغير رسمية، وليست تطبيقًا رسميًا تابعًا لشركة Orange.</p>
           </section>
@@ -325,17 +325,17 @@ export default function MorePage() {
 
       {view === "today" ? (
         <div className="space-y-4">
-          <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[#ff7900]">← رجوع للقائمة</button>
-      <section className="rounded-[32px] border border-orange-100/70 bg-white p-5 shadow-[0_10px_30px_rgba(255,121,0,0.08)]">
+          <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[#e06600]">← رجوع للقائمة</button>
+      <section className="rounded-[32px] border border-orange-200/70 bg-white p-5 shadow-[0_10px_30px_rgba(190,90,0,0.08)]">
         <h2 className="text-lg font-black">📊 اللي عملته النهارده</h2>
         {todayItems.length === 0 ? (
           <p className="mt-3 text-sm text-neutral-400">لسه مسجلتش حاجة النهارده. يلا نبدأ! 💪</p>
         ) : (
           <ul className="mt-3 space-y-2">
             {todayItems.map((item) => (
-              <li key={item.kpiKey} className="flex items-center justify-between rounded-2xl bg-orange-50 px-3 py-2 text-sm">
+              <li key={item.kpiKey} className="flex items-center justify-between rounded-2xl bg-orange-100 px-3 py-2 text-sm">
                 <span className="flex items-center gap-2">
-                  <span className="flex h-7 w-7 items-center justify-center text-[#ff7900]"><KpiIcon kpiKey={item.kpiKey} className="h-5 w-5" /></span>
+                  <span className="flex h-7 w-7 items-center justify-center text-[#e06600]"><KpiIcon kpiKey={item.kpiKey} className="h-5 w-5" /></span>
                   <span>
                     <span dir="ltr" className="font-extrabold">{item.nameEn}</span>
                     <span className="block text-xs text-neutral-500">{item.count} عملية</span>
@@ -353,8 +353,8 @@ export default function MorePage() {
       ) : null}
       {view === "history" ? (
         <div className="space-y-4">
-          <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[#ff7900]">← رجوع للقائمة</button>
-      <section className="rounded-[32px] border border-orange-100/70 bg-white p-5 shadow-[0_10px_30px_rgba(255,121,0,0.08)]">
+          <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[#e06600]">← رجوع للقائمة</button>
+      <section className="rounded-[32px] border border-orange-200/70 bg-white p-5 shadow-[0_10px_30px_rgba(190,90,0,0.08)]">
         <div className="flex items-center justify-between gap-3">
           <h2 className="text-lg font-black">🗂️ سجل عمليات {monthLabelAr(month)}</h2>
           <span className="text-sm text-neutral-400">{entries.length} سجل</span>
@@ -366,11 +366,11 @@ export default function MorePage() {
         ) : (
           <ul className="mt-4 space-y-2">
             {entries.map((entry) => (
-              <li key={entry.id} className="rounded-2xl border border-orange-100 p-3">
+              <li key={entry.id} className="rounded-2xl border border-orange-200 p-3">
                 <div className="flex items-start justify-between gap-3">
                   <div>
                     <p className="font-extrabold">
-                      <span className="ml-1 inline-flex align-middle text-[#ff7900]"><KpiIcon kpiKey={entry.kpiKey} className="h-4 w-4" /></span>
+                      <span className="ml-1 inline-flex align-middle text-[#e06600]"><KpiIcon kpiKey={entry.kpiKey} className="h-4 w-4" /></span>
                       <span dir="ltr">{entry.nameEn}</span>
                     </p>
                     <p className="text-xs text-neutral-500">
@@ -380,7 +380,7 @@ export default function MorePage() {
                     <p className="mt-1 text-[11px] text-neutral-400">اتسجل {formatTimeCairo(entry.createdAt)}</p>
                   </div>
                   <div className="flex shrink-0 items-center gap-3">
-                    <button type="button" className="min-h-10 font-extrabold text-[#ff7900]" onClick={() => openEdit(entry)}>
+                    <button type="button" className="min-h-10 font-extrabold text-[#e06600]" onClick={() => openEdit(entry)}>
                       ✏️ عدّل
                     </button>
                     <button type="button" className="min-h-10 font-extrabold text-red-600" onClick={() => setDeleteId(entry.id)}>
@@ -404,8 +404,8 @@ export default function MorePage() {
       ) : null}
       {view === "profile" ? (
         <div className="space-y-4">
-          <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[#ff7900]">← رجوع للقائمة</button>
-      <section className="rounded-[32px] border border-orange-100/70 bg-white p-5 shadow-[0_10px_30px_rgba(255,121,0,0.08)]">
+          <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[#e06600]">← رجوع للقائمة</button>
+      <section className="rounded-[32px] border border-orange-200/70 bg-white p-5 shadow-[0_10px_30px_rgba(190,90,0,0.08)]">
         <h2 className="text-lg font-black">👤 بياناتك</h2>
         <form className="mt-4 space-y-3" onSubmit={saveProfile}>
           <Field label="اسم الموظف">
@@ -424,8 +424,8 @@ export default function MorePage() {
       ) : null}
       {view === "backup" ? (
         <div className="space-y-4">
-          <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[#ff7900]">← رجوع للقائمة</button>
-      <section className="rounded-[32px] border border-orange-100/70 bg-white p-5 shadow-[0_10px_30px_rgba(255,121,0,0.08)]">
+          <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[#e06600]">← رجوع للقائمة</button>
+      <section className="rounded-[32px] border border-orange-200/70 bg-white p-5 shadow-[0_10px_30px_rgba(190,90,0,0.08)]">
         <h2 className="text-lg font-black">💾 نسخة احتياطية واستعادة</h2>
         <p className="mt-2 text-sm leading-7 text-neutral-500">التصدير بينزّل ملف JSON فيه بياناتك وإعدادات الشهور والسجلات والملاحظات. من غير أي مفاتيح أو أسرار.</p>
         <div className="mt-4 grid gap-3 sm:grid-cols-2">
@@ -468,10 +468,10 @@ export default function MorePage() {
                     type="button"
                     onClick={() => setEditKpi(kpi.key)}
                     className={`flex min-h-12 items-center gap-2 rounded-2xl border px-3 text-right text-xs font-extrabold transition ${
-                      active ? "border-[#ff7900] bg-orange-50 text-[#c45e00]" : "border-neutral-200 bg-white text-neutral-700"
+                      active ? "border-[#e06600] bg-orange-100 text-[#8f4300]" : "border-neutral-200 bg-white text-neutral-700"
                     }`}
                   >
-                    <span className="text-[#ff7900]"><KpiIcon kpiKey={kpi.key} className="h-5 w-5" /></span>
+                    <span className="text-[#e06600]"><KpiIcon kpiKey={kpi.key} className="h-5 w-5" /></span>
                     <span dir="ltr" className="leading-4">
                       {kpi.nameEn}
                     </span>

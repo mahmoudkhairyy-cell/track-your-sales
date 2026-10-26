@@ -81,7 +81,7 @@ function NavLinks({ pathname, month }: { pathname: string; month: string }) {
             key={item.href}
             href={`${item.href}?month=${month}`}
             className={`flex min-h-12 items-center gap-3 rounded-2xl px-3 text-sm font-bold transition ${
-              active ? "bg-orange-50 text-[#ff7900]" : "text-neutral-500 hover:bg-neutral-50"
+              active ? "bg-orange-100 text-[#e06600]" : "text-neutral-500 hover:bg-neutral-50"
             }`}
           >
             <Icon />
@@ -119,8 +119,8 @@ function FirstRunProfile({ onDone }: { onDone: () => void }) {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#fff7f0] p-4 text-neutral-900">
-      <form onSubmit={submit} className="w-full max-w-sm rounded-3xl bg-white p-6 shadow-[0_20px_50px_rgba(255,121,0,0.15)]" dir="rtl">
+    <div className="flex min-h-screen items-center justify-center bg-[#fbe9da] p-4 text-neutral-900">
+      <form onSubmit={submit} className="w-full max-w-sm rounded-3xl bg-white p-6 shadow-[0_20px_50px_rgba(190,90,0,0.15)]" dir="rtl">
         <div className="mb-5 text-center">
           <div className="text-4xl">🍊</div>
           <h1 className="mt-2 text-xl font-black">أهلاً بيك في {APP_NAME}</h1>
@@ -128,14 +128,14 @@ function FirstRunProfile({ onDone }: { onDone: () => void }) {
         </div>
         <label className="mb-3 block text-sm font-bold text-neutral-700">
           الاسم
-          <input value={name} onChange={(e) => setName(e.target.value)} className="mt-1 w-full rounded-2xl border border-orange-100 px-4 py-3 outline-none focus:border-[#ff7900]" maxLength={80} />
+          <input value={name} onChange={(e) => setName(e.target.value)} className="mt-1 w-full rounded-2xl border border-orange-200 px-4 py-3 outline-none focus:border-[#e06600]" maxLength={80} />
         </label>
         <label className="mb-4 block text-sm font-bold text-neutral-700">
           اسم الفرع
-          <input value={branch} onChange={(e) => setBranch(e.target.value)} className="mt-1 w-full rounded-2xl border border-orange-100 px-4 py-3 outline-none focus:border-[#ff7900]" maxLength={80} />
+          <input value={branch} onChange={(e) => setBranch(e.target.value)} className="mt-1 w-full rounded-2xl border border-orange-200 px-4 py-3 outline-none focus:border-[#e06600]" maxLength={80} />
         </label>
         {error ? <p className="mb-3 text-sm font-bold text-red-600">{error}</p> : null}
-        <button type="submit" disabled={pending} className="w-full rounded-2xl bg-gradient-to-br from-[#ff9a3c] to-[#ff7900] py-3 font-extrabold text-white shadow-[0_10px_24px_rgba(255,121,0,0.3)] disabled:opacity-60">
+        <button type="submit" disabled={pending} className="w-full rounded-2xl bg-gradient-to-br from-[#f0802a] to-[#e06600] py-3 font-extrabold text-white shadow-[0_10px_24px_rgba(190,90,0,0.3)] disabled:opacity-60">
           كمّل
         </button>
       </form>
@@ -145,11 +145,11 @@ function FirstRunProfile({ onDone }: { onDone: () => void }) {
 
 function TargetGate({ month }: { month: string }) {
   return (
-    <div className="mx-auto mt-6 max-w-md rounded-3xl bg-white p-6 text-center shadow-[0_12px_30px_rgba(255,121,0,0.12)]" dir="rtl">
+    <div className="mx-auto mt-6 max-w-md rounded-3xl bg-white p-6 text-center shadow-[0_12px_30px_rgba(190,90,0,0.12)]" dir="rtl">
       <div className="text-4xl">🎯</div>
       <h2 className="mt-2 text-lg font-black">لازم تدخل تارجت الشهر الأول</h2>
       <p className="mt-1 text-sm text-neutral-500">ادخل التارجت والأوزان واحفظها، وبعدها التطبيق هيفتح عادي.</p>
-      <Link href={`/target?month=${month}`} className="mt-5 inline-block rounded-2xl bg-gradient-to-br from-[#ff9a3c] to-[#ff7900] px-6 py-3 font-extrabold text-white shadow-[0_10px_24px_rgba(255,121,0,0.3)]">
+      <Link href={`/target?month=${month}`} className="mt-5 inline-block rounded-2xl bg-gradient-to-br from-[#f0802a] to-[#e06600] px-6 py-3 font-extrabold text-white shadow-[0_10px_24px_rgba(190,90,0,0.3)]">
         ادخل التارجت
       </Link>
     </div>
@@ -190,7 +190,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   }, [month, rev]);
 
   if (status === "checking") {
-    return <div className="flex min-h-screen items-center justify-center bg-[#fff7f0] text-3xl">🍊</div>;
+    return <div className="flex min-h-screen items-center justify-center bg-[#fbe9da] text-3xl">🍊</div>;
   }
   if (status === "profile") {
     return (
@@ -219,10 +219,10 @@ function AppFrame({ children, blocked, month }: { children: ReactNode; blocked: 
     <ToastProvider>
       <StorageErrorListener />
       <MonthContext.Provider value={month}>
-        <div className="min-h-screen bg-[#fff7f0] text-neutral-900">
-          <div className="h-1.5 bg-[#ff7900]" />
+        <div className="min-h-screen bg-[#fbe9da] text-neutral-900">
+          <div className="h-1.5 bg-[#e06600]" />
           <div className="mx-auto flex min-h-screen max-w-7xl">
-            <aside className="hidden w-72 shrink-0 flex-col border-l border-orange-100 bg-white p-5 lg:flex">
+            <aside className="hidden w-72 shrink-0 flex-col border-l border-orange-200 bg-white p-5 lg:flex">
               <div className="flex items-center gap-3">
                 <LogoMark />
                 <div>
@@ -230,7 +230,7 @@ function AppFrame({ children, blocked, month }: { children: ReactNode; blocked: 
                   <p className="text-xs text-neutral-400" dir="ltr">{BRAND_BY}</p>
                 </div>
               </div>
-              <div className="mt-6 rounded-3xl bg-[#ff7900] p-4 text-white">
+              <div className="mt-6 rounded-3xl bg-[#e06600] p-4 text-white">
                 <p className="text-sm font-extrabold">{user.name}</p>
                 <p className="text-xs text-white/80">📍 {user.branch}</p>
               </div>
@@ -241,7 +241,7 @@ function AppFrame({ children, blocked, month }: { children: ReactNode; blocked: 
             </aside>
 
             <div className="flex min-w-0 flex-1 flex-col">
-              <header className="sticky top-0 z-30 border-b border-orange-100 bg-white/95 px-4 py-3 backdrop-blur">
+              <header className="sticky top-0 z-30 border-b border-orange-200 bg-white/95 px-4 py-3 backdrop-blur">
                 <div className="flex items-center justify-between gap-3">
                   <MonthSwitcher />
                   <div className="flex items-center gap-2">
@@ -260,7 +260,7 @@ function AppFrame({ children, blocked, month }: { children: ReactNode; blocked: 
             </div>
           </div>
 
-          <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-orange-100 bg-white/95 pb-[env(safe-area-inset-bottom)] backdrop-blur lg:hidden">
+          <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-orange-200 bg-white/95 pb-[env(safe-area-inset-bottom)] backdrop-blur lg:hidden">
             <div className="grid grid-cols-5">
               {NAV.map((item) => {
                 const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
@@ -270,12 +270,12 @@ function AppFrame({ children, blocked, month }: { children: ReactNode; blocked: 
                     key={item.href}
                     href={`${item.href}?month=${month}`}
                     className={`flex min-h-16 flex-col items-center justify-center gap-1 text-[11px] font-extrabold ${
-                      active ? "text-[#ff7900]" : "text-neutral-400"
+                      active ? "text-[#e06600]" : "text-neutral-400"
                     }`}
                   >
                     <span
                       className={`flex h-10 w-16 items-center justify-center rounded-full transition ${
-                        item.emphasize ? (active ? "h-11 w-11 bg-gradient-to-br from-[#ff9a3c] to-[#e85d00] text-white shadow-[0_10px_24px_rgba(255,121,0,0.35)]" : "h-11 w-11 bg-orange-50 text-[#ff7900]") : active ? "bg-gradient-to-br from-[#ff9a3c] to-[#ff7900] text-white shadow-[0_8px_20px_rgba(255,121,0,0.3)]" : ""
+                        item.emphasize ? (active ? "h-11 w-11 bg-gradient-to-br from-[#f0802a] to-[#b84700] text-white shadow-[0_10px_24px_rgba(190,90,0,0.35)]" : "h-11 w-11 bg-orange-100 text-[#e06600]") : active ? "bg-gradient-to-br from-[#f0802a] to-[#e06600] text-white shadow-[0_8px_20px_rgba(190,90,0,0.3)]" : ""
                       }`}
                     >
                       <Icon />

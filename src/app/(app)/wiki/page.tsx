@@ -32,14 +32,14 @@ type Article = { id: string; title: string; content: string; updatedAt: string }
 type SectionId = "hub" | "sr" | "premier" | "freemax" | "go" | "hunts" | "home" | "dsl" | "docs" | "emails" | "notes";
 
 const HUB: { id: SectionId; title: string; desc: string; count: string; icon: ReactNode }[] = [
-  { id: "freemax", title: "FREEmax", desc: "باقات فري ماكس والأسعار", count: `${FREEMAX.plans.length} باقة`, icon: <StarIcon className="text-[#ff7900]" /> },
-  { id: "sr", title: "موسوعة الـ SR", desc: "أكواد Service Request", count: `${SR_ITEMS.length} كود`, icon: <BookIcon className="text-[#ff7900]" /> },
-  { id: "go", title: "Go", desc: "باقات Go Monthly و Extra", count: "باقات شهرية", icon: <PhoneIcon className="text-[#ff7900]" /> },
-  { id: "premier", title: "Premier", desc: "Premier و Super Max", count: "باقات بوست بايد", icon: <StarIcon className="text-[#ff7900]" /> },
-  { id: "hunts", title: "أرقام Hunts", desc: "جهات للتواصل السريع", count: `${HUNTS.length} جهة`, icon: <CallIcon className="text-[#ff7900]" /> },
-  { id: "home", title: "Home Wireless", desc: "باقات الإنترنت اللاسلكي", count: "7 باقات", icon: <WifiIcon className="text-[#ff7900]" /> },
-  { id: "docs", title: "أهم المستندات", desc: "نماذج ومستندات", count: `${DOCS.length} ملف`, icon: <CardIcon className="text-[#ff7900]" /> },
-  { id: "emails", title: "E-Mails", desc: "إيميلات للتواصل", count: `${EMAILS.length} إيميل`, icon: <WalletIcon className="text-[#ff7900]" /> },
+  { id: "freemax", title: "FREEmax", desc: "باقات فري ماكس والأسعار", count: `${FREEMAX.plans.length} باقة`, icon: <StarIcon className="text-[#e06600]" /> },
+  { id: "sr", title: "موسوعة الـ SR", desc: "أكواد Service Request", count: `${SR_ITEMS.length} كود`, icon: <BookIcon className="text-[#e06600]" /> },
+  { id: "go", title: "Go", desc: "باقات Go Monthly و Extra", count: "باقات شهرية", icon: <PhoneIcon className="text-[#e06600]" /> },
+  { id: "premier", title: "Premier", desc: "Premier و Super Max", count: "باقات بوست بايد", icon: <StarIcon className="text-[#e06600]" /> },
+  { id: "hunts", title: "أرقام Hunts", desc: "جهات للتواصل السريع", count: `${HUNTS.length} جهة`, icon: <CallIcon className="text-[#e06600]" /> },
+  { id: "home", title: "Home Wireless", desc: "باقات الإنترنت اللاسلكي", count: "7 باقات", icon: <WifiIcon className="text-[#e06600]" /> },
+  { id: "docs", title: "أهم المستندات", desc: "نماذج ومستندات", count: `${DOCS.length} ملف`, icon: <CardIcon className="text-[#e06600]" /> },
+  { id: "emails", title: "E-Mails", desc: "إيميلات للتواصل", count: `${EMAILS.length} إيميل`, icon: <WalletIcon className="text-[#e06600]" /> },
 ];
 
 function copyText(value: string, toast: { push: (t: "success" | "error" | "info", m: string) => void }, ok: string) {
@@ -64,7 +64,7 @@ function SearchBox({ value, onChange, placeholder }: { value: string; onChange: 
 
 function Back({ onClick, title }: { onClick: () => void; title: string }) {
   return (
-    <button type="button" onClick={onClick} className="mb-4 flex min-h-11 items-center gap-2 text-sm font-extrabold text-[#ff7900]">
+    <button type="button" onClick={onClick} className="mb-4 flex min-h-11 items-center gap-2 text-sm font-extrabold text-[#e06600]">
       ‹ رجوع
       <span className="text-neutral-900">{title}</span>
     </button>
@@ -179,20 +179,20 @@ export default function WikiPage() {
               <p className="text-sm font-bold text-neutral-500">نتائج البحث</p>
               {globalHits.sr.map((item) => (
                 <button key={item.id + item.title} type="button" onClick={() => setOpenSr(item)} className="w-full rounded-[22px] bg-white p-4 text-right shadow-sm">
-                  <p className="text-xs font-extrabold text-[#ff7900]">{item.id}</p>
+                  <p className="text-xs font-extrabold text-[#e06600]">{item.id}</p>
                   <p className="font-extrabold">{item.titleAr || item.title}</p>
                 </button>
               ))}
               {globalHits.hunts.map((item) => (
                 <a key={item.number + item.name} href={`tel:${item.number}`} className="block rounded-[22px] bg-white p-4 shadow-sm">
                   <p className="font-extrabold">{item.name}</p>
-                  <p className="text-[#ff7900]">{item.number}</p>
+                  <p className="text-[#e06600]">{item.number}</p>
                 </a>
               ))}
               {globalHits.emails.map((item) => (
                 <button key={item.email} type="button" onClick={() => copyText(item.email, toast, "📋 الإيميل اتنسخ")} className="w-full rounded-[22px] bg-white p-4 text-right shadow-sm">
                   <p className="font-extrabold">{item.name}</p>
-                  <p className="text-sm text-[#ff7900]">{item.email}</p>
+                  <p className="text-sm text-[#e06600]">{item.email}</p>
                 </button>
               ))}
               {globalHits.fm.map((item) => (
@@ -203,7 +203,7 @@ export default function WikiPage() {
               ))}
               {globalHits.plans.map((item) => (
                 <article key={item.group + item.name} className="rounded-[22px] bg-white p-4 shadow-sm">
-                  <p className="text-xs text-[#ff7900]">{item.group}</p>
+                  <p className="text-xs text-[#e06600]">{item.group}</p>
                   <p className="font-extrabold">{item.name}</p>
                   <p className="text-sm text-neutral-500">{item.fees || item.data}</p>
                 </article>
@@ -228,25 +228,25 @@ export default function WikiPage() {
             <>
               <div className="grid grid-cols-2 gap-3">
                 {HUB.map((card) => (
-                  <button key={card.id} type="button" onClick={() => { setSection(card.id); setQuery(""); }} className="rounded-[24px] bg-white p-4 text-right shadow-[0_8px_24px_rgba(255,121,0,0.06)]">
-                    <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-orange-50">{card.icon}</span>
+                  <button key={card.id} type="button" onClick={() => { setSection(card.id); setQuery(""); }} className="rounded-[24px] bg-white p-4 text-right shadow-[0_8px_24px_rgba(190,90,0,0.06)]">
+                    <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-orange-100">{card.icon}</span>
                     <p className="mt-3 font-black">{card.title}</p>
                     <p className="mt-1 text-xs leading-5 text-neutral-400">{card.desc}</p>
-                    <p className="mt-2 text-[11px] font-bold text-[#ff7900]">{card.count}</p>
+                    <p className="mt-2 text-[11px] font-bold text-[#e06600]">{card.count}</p>
                   </button>
                 ))}
               </div>
               <div className="grid grid-cols-2 gap-3">
-                <button type="button" onClick={() => setSection("dsl")} className="rounded-[24px] bg-white p-4 text-right shadow-[0_8px_24px_rgba(255,121,0,0.06)]">
-                  <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-orange-50">
-                    <WifiIcon className="text-[#ff7900]" />
+                <button type="button" onClick={() => setSection("dsl")} className="rounded-[24px] bg-white p-4 text-right shadow-[0_8px_24px_rgba(190,90,0,0.06)]">
+                  <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-orange-100">
+                    <WifiIcon className="text-[#e06600]" />
                   </span>
                   <p className="mt-3 font-black">Home Internet</p>
                   <p className="mt-1 text-xs text-neutral-400">باقات DSL والراوتر</p>
                 </button>
-                <button type="button" onClick={() => setSection("notes")} className="rounded-[24px] bg-white p-4 text-right shadow-[0_8px_24px_rgba(255,121,0,0.06)]">
-                  <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-orange-50">
-                    <CheckIcon className="text-[#ff7900]" />
+                <button type="button" onClick={() => setSection("notes")} className="rounded-[24px] bg-white p-4 text-right shadow-[0_8px_24px_rgba(190,90,0,0.06)]">
+                  <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-orange-100">
+                    <CheckIcon className="text-[#e06600]" />
                   </span>
                   <p className="mt-3 font-black">ملاحظاتي</p>
                   <p className="mt-1 text-xs text-neutral-400">مرجع شخصي بتضيفه بنفسك</p>
@@ -268,7 +268,7 @@ export default function WikiPage() {
                 key={cat}
                 type="button"
                 onClick={() => setSrCategory(cat)}
-                className={`shrink-0 rounded-full px-3 py-2 text-xs font-extrabold ${srCategory === cat ? "bg-[#ff7900] text-white" : "bg-white text-neutral-500"}`}
+                className={`shrink-0 rounded-full px-3 py-2 text-xs font-extrabold ${srCategory === cat ? "bg-[#e06600] text-white" : "bg-white text-neutral-500"}`}
               >
                 {cat}
               </button>
@@ -278,7 +278,7 @@ export default function WikiPage() {
           <div className="mt-3 space-y-2">
             {filteredSr.map((item) => (
               <button key={`${item.id}-${item.title}`} type="button" onClick={() => setOpenSr(item)} className="w-full rounded-[22px] bg-white p-4 text-right shadow-sm">
-                <p className="text-xs font-extrabold text-[#ff7900]">{item.id}</p>
+                <p className="text-xs font-extrabold text-[#e06600]">{item.id}</p>
                 <p className="font-extrabold">{item.titleAr || item.title}</p>
                 <p className="mt-1 line-clamp-2 text-xs leading-6 text-neutral-500">{item.description}</p>
               </button>
@@ -292,11 +292,11 @@ export default function WikiPage() {
           <Back onClick={() => setSection("hub")} title="Premier" />
           {PREMIER_GUIDE.steps.map((step) => (
             <article key={step.title} className="rounded-[22px] bg-white p-4 shadow-sm">
-              <p className="font-extrabold text-[#ff7900]">{step.title}</p>
+              <p className="font-extrabold text-[#e06600]">{step.title}</p>
               <p className="mt-2 text-sm leading-7 text-neutral-600">{step.text}</p>
             </article>
           ))}
-          <article className="rounded-[22px] bg-orange-50 p-4">
+          <article className="rounded-[22px] bg-orange-100 p-4">
             <p className="font-extrabold">مستندات القدرة على الدفع (Second ID)</p>
             <ul className="mt-2 grid gap-1 text-sm leading-7 text-neutral-700">
               {PREMIER_GUIDE.secondIds.map((item) => (
@@ -310,7 +310,7 @@ export default function WikiPage() {
               <article key={pkg.name} className="rounded-[22px] bg-white p-4 shadow-sm">
                 <div className="flex items-center justify-between gap-3">
                   <p className="font-black">{pkg.name}</p>
-                  <p className="text-sm font-extrabold text-[#ff7900]">{pkg.price}</p>
+                  <p className="text-sm font-extrabold text-[#e06600]">{pkg.price}</p>
                 </div>
                 <div className="mt-3 grid grid-cols-2 gap-2 text-xs">
                   {pkg.stats.map((stat) => (
@@ -324,7 +324,7 @@ export default function WikiPage() {
                   {pkg.perks.map((perk) => (
                     <div
                       key={perk}
-                      className="flex min-h-12 items-center justify-center rounded-2xl border border-orange-200 bg-orange-50 px-3 py-2 text-center text-xs font-extrabold leading-5 text-[#c45e00]"
+                      className="flex min-h-12 items-center justify-center rounded-2xl border border-orange-300 bg-orange-100 px-3 py-2 text-center text-xs font-extrabold leading-5 text-[#8f4300]"
                     >
                       {perk}
                     </div>
@@ -340,7 +340,7 @@ export default function WikiPage() {
                 <article key={plan.name} className="rounded-[22px] bg-white p-4 shadow-sm">
                   <div className="flex items-start justify-between gap-3">
                     <p className="font-black">{plan.name}</p>
-                    <p className="font-extrabold text-[#ff7900]">{String(plan.fees ?? "")}</p>
+                    <p className="font-extrabold text-[#e06600]">{String(plan.fees ?? "")}</p>
                   </div>
                   <div className="mt-3 grid grid-cols-2 gap-2 text-xs leading-6 text-neutral-600">
                     {plan.minutes ? <p>دقائق: {String(plan.minutes)}</p> : null}
@@ -366,7 +366,7 @@ export default function WikiPage() {
           <p className="text-sm leading-7 text-neutral-500">{FREEMAX.tagline}</p>
           <div className="grid gap-2">
             {FREEMAX.highlights.map((item) => (
-              <p key={item} className="rounded-2xl bg-orange-50 px-3 py-2 text-sm font-bold text-[#c45e00]">
+              <p key={item} className="rounded-2xl bg-orange-100 px-3 py-2 text-sm font-bold text-[#8f4300]">
                 {item}
               </p>
             ))}
@@ -378,7 +378,7 @@ export default function WikiPage() {
                   <p className="font-black">{plan.nameAr}</p>
                   <p className="text-xs text-neutral-400">{plan.units} وحدة</p>
                 </div>
-                <p className="text-lg font-black text-[#ff7900]">{money(plan.renewalPrice)} ج</p>
+                <p className="text-lg font-black text-[#e06600]">{money(plan.renewalPrice)} ج</p>
               </div>
               <div className="mt-3 grid grid-cols-2 gap-2 text-xs leading-6 text-neutral-600">
                 <p>سعر العميل: {money(plan.customerPrice)}</p>
@@ -386,7 +386,7 @@ export default function WikiPage() {
                 <p>تفعيل من غير ضريبة: {money(plan.activationNoTax)}</p>
                 <p>Facebook / WhatsApp: {plan.facebook}</p>
               </div>
-              {plan.perks.length ? <p className="mt-2 text-xs font-bold text-[#ff7900]">{plan.perks.join(" · ")}</p> : null}
+              {plan.perks.length ? <p className="mt-2 text-xs font-bold text-[#e06600]">{plan.perks.join(" · ")}</p> : null}
             </article>
           ))}
           <article className="rounded-[22px] bg-white p-4 shadow-sm">
@@ -394,7 +394,7 @@ export default function WikiPage() {
             <p className="text-sm text-neutral-500">{FREEMAX.weekly.units} وحدة · تجديد {FREEMAX.weekly.renewalPrice} ج</p>
             <p className="mt-2 text-xs leading-6 text-neutral-500">{FREEMAX.weekly.channels.join(" · ")}</p>
           </article>
-          <article className="rounded-[22px] bg-orange-50 p-4 text-sm leading-7">
+          <article className="rounded-[22px] bg-orange-100 p-4 text-sm leading-7">
             الرصيد بعد الشحن = قيمة الشحن × 0.70 (خصم 30% ضريبة ومصاريف). سعر الشريحة {FREEMAX.simPrice} ج.
           </article>
         </div>
@@ -412,7 +412,7 @@ export default function WikiPage() {
                     <p className="font-black">{plan.name}</p>
                     <p className="text-xs text-neutral-400">{String(plan.data ?? "")}</p>
                   </div>
-                  <p className="font-extrabold text-[#ff7900]">{String(plan.fees ?? "")}</p>
+                  <p className="font-extrabold text-[#e06600]">{String(plan.fees ?? "")}</p>
                 </article>
               ))}
             </div>
@@ -429,7 +429,7 @@ export default function WikiPage() {
                 <p className="font-black">{plan.name}</p>
                 <p className="text-xs text-neutral-400">{String(plan.data ?? "")}</p>
               </div>
-              <p className="font-extrabold text-[#ff7900]">{String(plan.fees ?? "")}</p>
+              <p className="font-extrabold text-[#e06600]">{String(plan.fees ?? "")}</p>
             </article>
           ))}
         </div>
@@ -442,7 +442,7 @@ export default function WikiPage() {
             <article key={plan.name} className="rounded-[22px] bg-white p-4 shadow-sm">
               <div className="flex items-start justify-between">
                 <p className="font-black">{plan.name}</p>
-                <p className="font-extrabold text-[#ff7900]">{money(plan.price)} ج</p>
+                <p className="font-extrabold text-[#e06600]">{money(plan.price)} ج</p>
               </div>
               <p className="mt-1 text-sm text-neutral-500">
                 {plan.speed} Mbps · {plan.quota} GB · كان: {plan.oldPlan}
@@ -453,13 +453,13 @@ export default function WikiPage() {
           {DSL.addons.map((item) => (
             <article key={item.quota} className="flex items-center justify-between rounded-[22px] bg-white p-4 shadow-sm">
               <p className="font-bold">{item.quota}</p>
-              <p className="font-extrabold text-[#ff7900]">{money(item.price)} ج</p>
+              <p className="font-extrabold text-[#e06600]">{money(item.price)} ج</p>
             </article>
           ))}
           <h2 className="pt-2 text-lg font-black">الراوتر</h2>
           {DSL.routers.map((item) => (
             <article key={item.name} className="rounded-[22px] bg-white p-4 shadow-sm">
-              <p className="text-xs font-extrabold text-[#ff7900]">{item.tag}</p>
+              <p className="text-xs font-extrabold text-[#e06600]">{item.tag}</p>
               <p className="font-black">{item.name}</p>
               <p className="mt-1 text-sm text-neutral-500">{item.desc}</p>
               <p className="mt-2 text-sm">كاش {money(item.cash)} ج · عرض {money(item.promoCash)} ج · تقسيط {item.installment} ج × {item.months} شهر</p>
@@ -482,10 +482,10 @@ export default function WikiPage() {
                   <article key={item.name + item.number} className="mb-2 flex items-center justify-between rounded-[22px] bg-white p-4 shadow-sm">
                     <div>
                       <p className="font-black">{item.name}</p>
-                      <p className="text-sm text-[#ff7900]">{item.number}</p>
+                      <p className="text-sm text-[#e06600]">{item.number}</p>
                     </div>
                     <div className="flex gap-2">
-                      <a href={`tel:${item.number}`} className="rounded-full bg-orange-50 px-3 py-2 text-xs font-extrabold text-[#ff7900]">
+                      <a href={`tel:${item.number}`} className="rounded-full bg-orange-100 px-3 py-2 text-xs font-extrabold text-[#e06600]">
                         اتصال
                       </a>
                       <button type="button" className="rounded-full bg-neutral-100 px-3 py-2 text-xs font-extrabold" onClick={() => copyText(item.number, toast, "📋 الرقم اتنسخ")}>
@@ -508,9 +508,9 @@ export default function WikiPage() {
             <article key={item.email} className="rounded-[22px] bg-white p-4 shadow-sm">
               <p className="font-black">{item.name}</p>
               <p className="text-xs text-neutral-400">{item.description}</p>
-              <p className="mt-1 break-all text-sm text-[#ff7900]">{item.email}</p>
+              <p className="mt-1 break-all text-sm text-[#e06600]">{item.email}</p>
               <div className="mt-3 flex gap-2">
-                <a href={`mailto:${item.email}`} className="rounded-full bg-orange-50 px-3 py-2 text-xs font-extrabold text-[#ff7900]">
+                <a href={`mailto:${item.email}`} className="rounded-full bg-orange-100 px-3 py-2 text-xs font-extrabold text-[#e06600]">
                   إيميل
                 </a>
                 <button type="button" className="rounded-full bg-neutral-100 px-3 py-2 text-xs font-extrabold" onClick={() => copyText(item.email, toast, "📋 الإيميل اتنسخ")}>
@@ -529,7 +529,7 @@ export default function WikiPage() {
             <a key={item.title} href={item.url} target="_blank" rel="noreferrer" className="block rounded-[22px] bg-white p-4 shadow-sm">
               <p className="font-black">{item.title}</p>
               <p className="mt-1 text-sm leading-7 text-neutral-500">{item.description}</p>
-              <p className="mt-2 text-xs font-extrabold text-[#ff7900]">فتح الملف</p>
+              <p className="mt-2 text-xs font-extrabold text-[#e06600]">فتح الملف</p>
             </a>
           ))}
         </div>
@@ -580,7 +580,7 @@ export default function WikiPage() {
       <Modal open={Boolean(openSr)} title={openSr?.titleAr || openSr?.title || "تفاصيل SR"} onClose={() => setOpenSr(null)}>
         {openSr ? (
           <div className="space-y-3 text-sm leading-7">
-            <p className="font-extrabold text-[#ff7900]">{openSr.id}</p>
+            <p className="font-extrabold text-[#e06600]">{openSr.id}</p>
             <p className="text-neutral-500">{openSr.category}</p>
             <p>{openSr.description}</p>
             <p className="whitespace-pre-wrap text-neutral-700">{openSr.steps}</p>

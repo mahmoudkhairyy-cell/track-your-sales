@@ -166,7 +166,7 @@ export default function TargetPage() {
         <p className="mt-1 text-xs text-neutral-400">{saved ? "✅ محفوظة لهذا الشهر" : "⚠️ لسه مش محفوظة، اضغط حفظ"}</p>
       </section>
 
-      <section className="overflow-hidden rounded-[32px] bg-gradient-to-br from-[#ff9a3c] via-[#ff7900] to-[#e85d00] p-5 text-white shadow-[0_20px_50px_rgba(255,121,0,0.35)]">
+      <section className="overflow-hidden rounded-[32px] bg-gradient-to-br from-[#f0802a] via-[#e06600] to-[#b84700] p-5 text-white shadow-[0_20px_50px_rgba(190,90,0,0.35)]">
         <div className="grid grid-cols-3 gap-2 text-center">
           <div><p className="text-2xl font-black">{monthDays.length}</p><p className="text-[11px] text-white/85">أيام الشهر</p></div>
           <div><p className="text-2xl font-black">{holidays.length}</p><p className="text-[11px] text-white/85">إجازات</p></div>
@@ -174,7 +174,7 @@ export default function TargetPage() {
         </div>
       </section>
 
-      <section className="rounded-[32px] border border-orange-100/70 bg-white p-4 shadow-[0_10px_30px_rgba(255,121,0,0.08)]">
+      <section className="rounded-[32px] border border-orange-200/70 bg-white p-4 shadow-[0_10px_30px_rgba(190,90,0,0.08)]">
         <div className="grid grid-cols-7 gap-1 text-center text-[11px] font-bold text-neutral-400">
           {["سبت", "أحد", "اتنين", "تلات", "أربع", "خميس", "جمعة"].map((d) => (
             <span key={d} className="py-1">{d}</span>
@@ -198,7 +198,7 @@ export default function TargetPage() {
                   )
                 }
                 className={`flex aspect-square items-center justify-center rounded-2xl text-sm font-extrabold transition ${
-                  isHoliday ? "bg-gradient-to-br from-[#ff9a3c] to-[#e85d00] text-white shadow-[0_6px_16px_rgba(255,121,0,0.3)]" : "bg-neutral-50 text-neutral-700"
+                  isHoliday ? "bg-gradient-to-br from-[#f0802a] to-[#b84700] text-white shadow-[0_6px_16px_rgba(190,90,0,0.3)]" : "bg-neutral-50 text-neutral-700"
                 }`}
               >
                 {Number(date.slice(8, 10))}
@@ -216,7 +216,7 @@ export default function TargetPage() {
       </p>
 
       {daily ? (
-        <section className="rounded-[24px] bg-orange-50 p-4 text-sm leading-7 text-[#c45e00]">
+        <section className="rounded-[24px] bg-orange-100 p-4 text-sm leading-7 text-[#8f4300]">
           <p className="font-extrabold">⚡ المطلوب منك النهارده عشان تفضل ON TRACK:</p>
           {behindKpis.length === 0 ? (
             <p className="mt-1 font-bold">كل المؤشرات تمام. مفيش حاجة ضاغطة النهارده 👌</p>
@@ -239,7 +239,7 @@ export default function TargetPage() {
         </section>
       ) : null}
 
-      <section className="rounded-[32px] border border-orange-100/70 bg-white p-5 shadow-[0_10px_30px_rgba(255,121,0,0.08)]">
+      <section className="rounded-[32px] border border-orange-200/70 bg-white p-5 shadow-[0_10px_30px_rgba(190,90,0,0.08)]">
         <Field label="💰 الكوميشن الكامل (جنيه)">
           <input
             className={`${inputClass} text-xl font-black`}
@@ -252,12 +252,12 @@ export default function TargetPage() {
         </Field>
       </section>
 
-      <section className="rounded-[28px] border border-orange-100/70 bg-white p-4 shadow-[0_10px_30px_rgba(255,121,0,0.08)]">
+      <section className="rounded-[28px] border border-orange-200/70 bg-white p-4 shadow-[0_10px_30px_rgba(190,90,0,0.08)]">
         <div className="mb-1 flex items-center justify-between">
           <h2 className="text-lg font-black">الإيتمز والأوزان</h2>
           <p className="text-[11px] font-bold text-neutral-400">بتتدخل مرة واحدة في الشهر</p>
         </div>
-        <div className="grid grid-cols-[1fr_74px_74px] gap-2 border-b border-dashed border-orange-200 pb-2 text-[11px] font-bold text-neutral-400">
+        <div className="grid grid-cols-[1fr_74px_74px] gap-2 border-b border-dashed border-orange-300 pb-2 text-[11px] font-bold text-neutral-400">
           <span>الإيتم</span>
           <span className="text-center">التارجت</span>
           <span className="text-center">الوزن %</span>
@@ -265,13 +265,13 @@ export default function TargetPage() {
         {kpis.map((kpi, index) => {
           const catalog = KPI_CATALOG.find((item) => item.key === kpi.kpiKey);
           return (
-            <div key={kpi.kpiKey} className="grid grid-cols-[1fr_74px_74px] items-center gap-2 border-b border-dashed border-orange-200 py-2.5 last:border-0">
+            <div key={kpi.kpiKey} className="grid grid-cols-[1fr_74px_74px] items-center gap-2 border-b border-dashed border-orange-300 py-2.5 last:border-0">
               <div className="flex min-w-0 items-center gap-2">
-                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-orange-50 text-[#ff7900]"><KpiIcon kpiKey={kpi.kpiKey} className="h-4 w-4" /></span>
+                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-orange-100 text-[#e06600]"><KpiIcon kpiKey={kpi.kpiKey} className="h-4 w-4" /></span>
                 <div className="min-w-0">
                   <p className="truncate text-sm font-extrabold" dir="ltr">{catalog?.nameEn}</p>
                   {kpi.kpiKey === "new_orange_cash" ? (
-                    <p className="text-[10px] font-bold text-[#c45e00]">= 90% من New Lines</p>
+                    <p className="text-[10px] font-bold text-[#8f4300]">= 90% من New Lines</p>
                   ) : (
                     <p className="text-[10px] text-neutral-400">{kpi.unitAr}</p>
                   )}
@@ -306,17 +306,17 @@ export default function TargetPage() {
         })}
       </section>
 
-            <section className="rounded-[28px] border border-orange-100/70 bg-white p-4 shadow-[0_10px_30px_rgba(255,121,0,0.08)]">
+            <section className="rounded-[28px] border border-orange-200/70 bg-white p-4 shadow-[0_10px_30px_rgba(190,90,0,0.08)]">
         <div className="mb-1 flex items-center justify-between">
           <h2 className="text-lg font-black">الكواليتي (15%)</h2>
           <p className="text-[11px] font-bold text-neutral-400">علّم البند لو اتحقق بالكامل</p>
         </div>
-        <div className="grid grid-cols-[1fr_74px] gap-2 border-b border-dashed border-orange-200 pb-2 text-[11px] font-bold text-neutral-400">
+        <div className="grid grid-cols-[1fr_74px] gap-2 border-b border-dashed border-orange-300 pb-2 text-[11px] font-bold text-neutral-400">
           <span>البند</span>
           <span className="text-center">الوزن</span>
         </div>
         {QUALITY_ITEMS.map((item) => (
-          <div key={item.key} className="grid grid-cols-[1fr_74px] items-center gap-2 border-b border-dashed border-orange-200 py-2.5 last:border-0">
+          <div key={item.key} className="grid grid-cols-[1fr_74px] items-center gap-2 border-b border-dashed border-orange-300 py-2.5 last:border-0">
             <div className="flex min-w-0 items-center gap-2">
               <button
                 type="button"
@@ -325,7 +325,7 @@ export default function TargetPage() {
                 aria-label={`تحقق ${item.label}`}
                 onClick={() => setQuality((current) => ({ ...current, checks: { ...current.checks, [item.key]: !current.checks?.[item.key] } }))}
                 className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-md border-2 text-sm font-black ${
-                  quality.checks?.[item.key] ? "border-emerald-500 bg-emerald-500 text-white" : "border-orange-200 bg-white text-transparent"
+                  quality.checks?.[item.key] ? "border-emerald-500 bg-emerald-500 text-white" : "border-orange-300 bg-white text-transparent"
                 }`}
               >
                 ✓

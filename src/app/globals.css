@@ -7,7 +7,7 @@ html {
 
 body {
   margin: 0;
-  background: #fff7f0;
+  background: #fbe9da;
   color: #171717;
   font-family: var(--font-cairo), Tahoma, "Segoe UI", Arial, sans-serif;
   text-rendering: optimizeLegibility;
@@ -29,5 +29,5 @@ textarea {
 }
 
 ::selection {
-  background: #ffd7b8;
+  background: #f5b98a;
 }

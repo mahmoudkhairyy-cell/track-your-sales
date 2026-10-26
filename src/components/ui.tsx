@@ -13,7 +13,7 @@ import {
 export function Spinner({ label = "بيحمّل..." }: { label?: string }) {
   return (
     <div className="flex items-center justify-center gap-3 py-10 text-neutral-500">
-      <span className="h-5 w-5 animate-spin rounded-full border-2 border-[#ff7900] border-t-transparent" />
+      <span className="h-5 w-5 animate-spin rounded-full border-2 border-[#e06600] border-t-transparent" />
       <span>{label}</span>
     </div>
   );
@@ -29,7 +29,7 @@ export function EmptyState({
   action?: ReactNode;
 }) {
   return (
-    <div className="rounded-[28px] border border-dashed border-orange-200 bg-white px-5 py-10 text-center">
+    <div className="rounded-[28px] border border-dashed border-orange-300 bg-white px-5 py-10 text-center">
       <p className="text-lg font-extrabold text-neutral-900">{title}</p>
       <p className="mx-auto mt-2 max-w-md text-sm leading-7 text-neutral-500">{text}</p>
       {action ? <div className="mt-5">{action}</div> : null}
@@ -45,7 +45,7 @@ export function Banner({
   children: ReactNode;
 }) {
   const tones = {
-    info: "bg-orange-50 text-orange-950 border-orange-100",
+    info: "bg-orange-100 text-orange-950 border-orange-200",
     error: "bg-red-50 text-red-900 border-red-200",
     success: "bg-emerald-50 text-emerald-950 border-emerald-200",
     warn: "bg-amber-50 text-amber-950 border-amber-200",
@@ -61,7 +61,7 @@ export function PrimaryButton({
   return (
     <button
       {...props}
-      className={`inline-flex min-h-12 w-full items-center justify-center rounded-full bg-gradient-to-br from-[#ff9a3c] via-[#ff7900] to-[#e85d00] px-4 text-base font-extrabold text-white shadow-[0_12px_28px_rgba(255,121,0,0.35)] transition enabled:active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60 ${className}`}
+      className={`inline-flex min-h-12 w-full items-center justify-center rounded-full bg-gradient-to-br from-[#f0802a] via-[#e06600] to-[#b84700] px-4 text-base font-extrabold text-white shadow-[0_12px_28px_rgba(190,90,0,0.35)] transition enabled:active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60 ${className}`}
     >
       {children}
     </button>
@@ -117,7 +117,7 @@ export function Field({
 }
 
 export const inputClass =
-  "min-h-12 w-full rounded-2xl border border-orange-100 bg-white px-4 text-base text-neutral-900 shadow-[inset_0_1px_2px_rgba(0,0,0,0.03)] outline-none ring-[#ff7900] focus:border-orange-300 focus:ring-2";
+  "min-h-12 w-full rounded-2xl border border-orange-200 bg-white px-4 text-base text-neutral-900 shadow-[inset_0_1px_2px_rgba(0,0,0,0.03)] outline-none ring-[#e06600] focus:border-orange-400 focus:ring-2";
 
 type Toast = { id: number; type: "success" | "error" | "info"; text: string };
 
@@ -145,7 +145,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
             key={toast.id}
             className={`rounded-2xl px-4 py-3 text-sm font-bold shadow-lg ${
               toast.type === "success"
-                ? "bg-[#ff7900] text-white"
+                ? "bg-[#e06600] text-white"
                 : toast.type === "error"
                   ? "bg-red-600 text-white"
                   : "bg-neutral-900 text-white"

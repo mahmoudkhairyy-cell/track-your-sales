@@ -95,7 +95,7 @@ export function kpiMood(args: { percent: number; expectedPercent: number; weight
 export const MOOD_STYLES: Record<MoodTone, { box: string; title: string; text: string }> = {
   celebrate: { box: "bg-amber-50 border-amber-200", title: "text-amber-900", text: "text-amber-800" },
   ahead: { box: "bg-emerald-50 border-emerald-200", title: "text-emerald-900", text: "text-emerald-800" },
-  ontrack: { box: "bg-orange-50 border-orange-200", title: "text-[#c45e00]", text: "text-[#c45e00]" },
+  ontrack: { box: "bg-orange-100 border-orange-300", title: "text-[#8f4300]", text: "text-[#8f4300]" },
   behind: { box: "bg-yellow-50 border-yellow-300", title: "text-yellow-900", text: "text-yellow-800" },
   danger: { box: "bg-red-50 border-red-300", title: "text-red-800", text: "text-red-700" },
   empty: { box: "bg-yellow-50 border-yellow-300", title: "text-yellow-900", text: "text-yellow-800" },

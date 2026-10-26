@@ -71,7 +71,7 @@ export function ChevronIcon(props: IconProps) {
 export function LogoMark(props: IconProps) {
   return (
     <svg viewBox="0 0 36 36" width="36" height="36" aria-hidden {...props}>
-      <circle cx="18" cy="18" r="18" fill="#ff7900" />
+      <circle cx="18" cy="18" r="18" fill="#e06600" />
       <path d="M11 22.5 15.4 15.2l3.2 4.4L25 12" fill="none" stroke="#fff" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
       <path d="M22 12h3.2v3.2" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" />
     </svg>

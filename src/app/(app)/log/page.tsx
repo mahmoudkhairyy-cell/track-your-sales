@@ -105,11 +105,11 @@ export default function LogPage() {
       {error ? <Banner tone="error">❌ {error}</Banner> : null}
 
       {onTrack.length > 0 ? (
-        <section className="rounded-[24px] bg-orange-50 p-4 text-[#c45e00]">
+        <section className="rounded-[24px] bg-orange-100 p-4 text-[#8f4300]">
           <p className="text-sm font-extrabold">⚡ المطلوب منك النهارده عشان تفضل ON TRACK</p>
           <div className="mt-2 flex flex-wrap gap-2">
             {onTrack.map((k) => (
-              <span key={k.kpiKey} className="rounded-full bg-white px-3 py-1 text-xs font-extrabold text-[#c45e00] shadow-sm">
+              <span key={k.kpiKey} className="rounded-full bg-white px-3 py-1 text-xs font-extrabold text-[#8f4300] shadow-sm">
                 {kpiEmoji(k.kpiKey)} {formatQty(workLeft > 0 ? Math.ceil(k.remaining / workLeft) : k.remaining)} · {KPI_CATALOG.find((i) => i.key === k.kpiKey)?.nameEn}
               </span>
             ))}
@@ -117,7 +117,7 @@ export default function LogPage() {
         </section>
       ) : null}
 
-      <section className="rounded-[24px] border border-orange-100/70 bg-white p-4 shadow-[0_8px_20px_rgba(255,121,0,0.06)]">
+      <section className="rounded-[24px] border border-orange-200/70 bg-white p-4 shadow-[0_8px_20px_rgba(190,90,0,0.06)]">
         <label className="block text-xs font-bold text-neutral-500">📅 تاريخ الإنجاز</label>
         <input className={`${inputClass} mt-2`} type="date" value={entryDate} onChange={(e) => setEntryDate(e.target.value)} required />
       </section>
@@ -128,10 +128,10 @@ export default function LogPage() {
         const excluded = !!d && d.weight > 0 && d.gated;
         const needToday = d && workLeft > 0 ? Math.ceil(Math.max(0, d.remaining) / workLeft) : 0;
         return (
-          <article key={item.key} className="rounded-[24px] border border-orange-100/70 bg-white p-4 shadow-[0_8px_20px_rgba(255,121,0,0.06)]">
+          <article key={item.key} className="rounded-[24px] border border-orange-200/70 bg-white p-4 shadow-[0_8px_20px_rgba(190,90,0,0.06)]">
             <div className="flex items-center justify-between gap-3">
               <div className="flex items-center gap-3">
-                <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-orange-50 text-[#ff7900]"><KpiIcon kpiKey={item.key} className="h-5 w-5" /></span>
+                <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-orange-100 text-[#e06600]"><KpiIcon kpiKey={item.key} className="h-5 w-5" /></span>
                 <div>
                   <p className="font-extrabold" dir="ltr">{item.nameEn}</p>
                   <p className="text-[11px] text-neutral-400">
@@ -139,7 +139,7 @@ export default function LogPage() {
                   </p>
                 </div>
               </div>
-              <p className="text-[11px] font-bold text-[#c45e00]">
+              <p className="text-[11px] font-bold text-[#8f4300]">
                 {excluded ? "متتحسبش" : commission > 0 ? `كوميشن ${commission} ج` : ""}
               </p>
             </div>
@@ -165,7 +165,7 @@ export default function LogPage() {
         );
       })}
 
-      <section className="rounded-[24px] border border-orange-100/70 bg-white p-4">
+      <section className="rounded-[24px] border border-orange-200/70 bg-white p-4">
         <label className="block text-xs font-bold text-neutral-500">📝 ملاحظة (لو حابب)</label>
         <textarea
           className={`${inputClass} mt-2 min-h-20 py-3`}
