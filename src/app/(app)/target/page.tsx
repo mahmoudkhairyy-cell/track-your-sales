@@ -81,7 +81,7 @@ export default function TargetPage() {
     let cancelled = false;
     setLoading(true);
     setError("");
-    api<{ settings: { saved: boolean; fullCommission: number; allowCommissionOver100: boolean; workingDays: WorkingDays; kpis: KpiForm[]; holidays: Holiday[] } }>(
+    api<{ settings: { saved: boolean; fullCommission: number; allowCommissionOver100: boolean; workingDays: WorkingDays; kpis: KpiForm[]; holidays: Holiday[]; quality: Quality } }>(
       `/api/months/${month}`,
     )
       .then((result) => {
