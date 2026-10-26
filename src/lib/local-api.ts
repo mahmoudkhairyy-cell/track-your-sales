@@ -57,12 +57,38 @@ type KpiRow = {
 
 type Holiday = { date: string; note: string | null };
 
+type QualityScores = { kyc: number; visits: number; training: number; pos: number; csat: number };
+
+const QUALITY_WEIGHTS: Record<keyof QualityScores, number> = { kyc: 5, visits: 5, training: 2, pos: 1, csat: 2 };
+const ZERO_QUALITY: QualityScores = { kyc: 0, visits: 0, training: 0, pos: 0, csat: 0 };
+
+// نسبة تحقيق الكواليتي (0-100) = مجموع (نسبة كل بند × وزنه) ÷ مجموع الأوزان (15)
+function qualityPercent(q: QualityScores): number {
+  const total = (Object.keys(QUALITY_WEIGHTS) as (keyof QualityScores)[]).reduce(
+    (sum, key) => sum + (q[key] * QUALITY_WEIGHTS[key]) / 100,
+    0,
+  );
+  return (total / 15) * 100;
+}
+
+function requireQuality(value: unknown): QualityScores {
+  const row = (value && typeof value === "object" ? value : {}) as Record<string, unknown>;
+  const out = { ...ZERO_QUALITY };
+  for (const key of Object.keys(QUALITY_WEIGHTS) as (keyof QualityScores)[]) {
+    const n = Number(row[key] ?? 0);
+    if (!Number.isFinite(n) || n < 0 || n > 100) fail(400, "نسب الكواليتي لازم تكون من 0 لـ 100");
+    out[key] = n;
+  }
+  return out;
+}
+
 type MonthRow = {
   fullCommission: number;
   allowCommissionOver100: boolean;
   workingDays: WorkingDays;
   kpis: KpiRow[];
   holidays: Holiday[];
+  quality?: QualityScores;
 };
 
 type Profile = { name: string; branch: string; role: string };
@@ -82,6 +108,7 @@ type Bundle = {
   workingDays: WorkingDays;
   kpis: KpiRow[];
   holidays: Holiday[];
+  quality: QualityScores;
   monthSettingsId: null;
 };
 
@@ -228,6 +255,7 @@ function defaultBundle(yearMonth: string): Bundle {
       sortOrder: index,
     })),
     holidays: [],
+    quality: { ...ZERO_QUALITY },
     monthSettingsId: null,
   };
 }
@@ -262,6 +290,7 @@ function loadBundle(state: State, yearMonth: string): Bundle {
     workingDays: row.workingDays,
     kpis,
     holidays: [...row.holidays].sort((a, b) => a.date.localeCompare(b.date)),
+    quality: row.quality ? { ...row.quality } : { ...ZERO_QUALITY },
     monthSettingsId: null,
   };
 }
@@ -388,7 +417,8 @@ function putMonth(state: State, yearMonth: string, data: Record<string, unknown>
     fail(400, "فيه تاريخ إجازة متكرر");
   }
 
-  state.months[yearMonth] = { fullCommission, allowCommissionOver100, workingDays, kpis, holidays };
+  const quality = requireQuality(data.quality);
+  state.months[yearMonth] = { fullCommission, allowCommissionOver100, workingDays, kpis, holidays, quality };
   const bundle = loadBundle(state, yearMonth);
   return {
     message: "✅ إعدادات الشهر اتحفظت",
@@ -462,6 +492,7 @@ function getDashboard(state: State, params: URLSearchParams) {
   for (const entry of monthEntries) {
     achieved[entry.kpiKey] = (achieved[entry.kpiKey] ?? 0) + entry.quantity;
   }
+  achieved.quality = qualityPercent(bundle.quality);
   const achievedTyped = achieved as Record<KpiKey, number>;
 
   const holidayDates = bundle.holidays.map((item) => item.date);
@@ -518,6 +549,7 @@ function getDashboard(state: State, params: URLSearchParams) {
     allowCommissionOver100: bundle.allowCommissionOver100,
     workingDays: bundle.workingDays,
     holidays: bundle.holidays,
+    quality: bundle.quality,
     work,
     kpis,
     overall,

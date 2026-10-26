@@ -19,6 +19,15 @@ type KpiForm = {
 };
 
 type Holiday = { date: string; note: string | null };
+type Quality = { kyc: number; visits: number; training: number; pos: number; csat: number };
+const QUALITY_ITEMS: { key: keyof Quality; label: string; weight: number }[] = [
+  { key: "kyc", label: "KYC & Compliance", weight: 5 },
+  { key: "visits", label: "Quality Visits", weight: 5 },
+  { key: "training", label: "Training & Quiz", weight: 2 },
+  { key: "pos", label: "POS machines", weight: 1 },
+  { key: "csat", label: "CSAT / Complaints", weight: 2 },
+];
+const ZERO_QUALITY_FORM: Quality = { kyc: 0, visits: 0, training: 0, pos: 0, csat: 0 };
 
 type DailyRow = { kpiKey: string; nameEn: string; unitAr: string; weight: number; percent: number; remaining: number; achieved: number; target: number };
 type DailyData = { kpis: DailyRow[]; work: { remaining: number } };
@@ -43,6 +52,7 @@ export default function TargetPage() {
   });
   const [kpis, setKpis] = useState<KpiForm[]>([]);
   const [holidays, setHolidays] = useState<Holiday[]>([]);
+  const [quality, setQuality] = useState<Quality>(ZERO_QUALITY_FORM);
   const [holidayDate, setHolidayDate] = useState(`${month}-01`);
   const [holidayNote, setHolidayNote] = useState("");
   const [yy, mm] = month.split("-").map(Number);
@@ -82,6 +92,7 @@ export default function TargetPage() {
         setWorkingDays(result.settings.workingDays);
         setKpis(result.settings.kpis);
         setHolidays(result.settings.holidays);
+        setQuality(result.settings.quality ?? ZERO_QUALITY_FORM);
         setHolidayDate(`${month}-01`);
       })
       .catch((err) => {
@@ -116,6 +127,7 @@ export default function TargetPage() {
           workingDays,
           kpis,
           holidays,
+          quality,
         }),
       });
       setSaved(true);
@@ -242,6 +254,37 @@ export default function TargetPage() {
           <input type="checkbox" checked={allowOver} onChange={(e) => setAllowOver(e.target.checked)} className="h-5 w-5 accent-[#ff7900]" />
           اسمح إن الكوميشن التقديري يعدّي 100%
         </label>
+      </section>
+
+      <section className="rounded-[28px] border border-orange-100/70 bg-white p-4 shadow-[0_10px_30px_rgba(255,121,0,0.08)]">
+        <div className="mb-1 flex items-center justify-between">
+          <h2 className="text-lg font-black">الكواليتي (15%)</h2>
+          <p className="text-[11px] font-bold text-neutral-400">نسبة تحقيق كل بند من 0 لـ 100</p>
+        </div>
+        <div className="grid grid-cols-[1fr_74px_74px] gap-2 border-b border-dashed border-orange-200 pb-2 text-[11px] font-bold text-neutral-400">
+          <span>البند</span>
+          <span className="text-center">التحقيق %</span>
+          <span className="text-center">الوزن</span>
+        </div>
+        {QUALITY_ITEMS.map((item) => (
+          <div key={item.key} className="grid grid-cols-[1fr_74px_74px] items-center gap-2 border-b border-dashed border-orange-200 py-2.5 last:border-0">
+            <p className="truncate text-sm font-extrabold" dir="ltr">{item.label}</p>
+            <input
+              aria-label={`نسبة ${item.label}`}
+              className={`${inputClass} px-2 py-2 text-center text-sm font-black`}
+              type="number"
+              min={0}
+              max={100}
+              step="0.01"
+              value={quality[item.key]}
+              onChange={(e) => {
+                const value = Number(e.target.value);
+                setQuality((current) => ({ ...current, [item.key]: value }));
+              }}
+            />
+            <p className="text-center text-sm font-black text-neutral-500">{item.weight}%</p>
+          </div>
+        ))}
       </section>
 
       <section className="rounded-[28px] border border-orange-100/70 bg-white p-4 shadow-[0_10px_30px_rgba(255,121,0,0.08)]">
