@@ -45,11 +45,20 @@ export async function GET(request: Request) {
 
     const achieved = {} as Record<KpiKey, number>;
     for (const kpi of KPI_CATALOG) achieved[kpi.key] = 0;
+    // Quality is a percentage: sum would overstate it, so average its entries instead.
+    const qualityValues: number[] = [];
     for (const entry of monthEntries) {
       const key = entry.kpiKey as KpiKey;
+      if (key === "quality") {
+        qualityValues.push(entry.quantity);
+        continue;
+      }
       if (achieved[key] === undefined) achieved[key] = 0;
       achieved[key] += entry.quantity;
     }
+    achieved.quality = qualityValues.length
+      ? qualityValues.reduce((sum, value) => sum + value, 0) / qualityValues.length
+      : 0;
 
     const holidays = bundle.holidays.map((item) => item.date);
     const work = buildWorkdayStats(yearMonth, bundle.workingDays, holidays, today);
