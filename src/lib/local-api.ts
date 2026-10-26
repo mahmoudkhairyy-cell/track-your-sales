@@ -65,8 +65,9 @@ const ZERO_QUALITY: QualityScores = { kyc: 0, visits: 0, training: 0, pos: 0, cs
 
 // نسبة تحقيق الكواليتي (0-100) = مجموع (نسبة كل بند × وزنه) ÷ مجموع الأوزان (15)
 function qualityPercent(q: QualityScores): number {
+  // كل بند متعلّم عليه ✓ بيتحسب بوزنه كامل، والبند اللي مش متعلّم بيتحسب صفر.
   const total = (Object.keys(QUALITY_WEIGHTS) as QualityNumKey[]).reduce(
-    (sum, key) => sum + (q[key] * QUALITY_WEIGHTS[key]) / 100,
+    (sum, key) => sum + (q.checks?.[key] ? QUALITY_WEIGHTS[key] : 0),
     0,
   );
   return (total / 15) * 100;

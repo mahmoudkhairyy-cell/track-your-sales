@@ -313,15 +313,14 @@ export default function TargetPage() {
             <section className="rounded-[28px] border border-orange-100/70 bg-white p-4 shadow-[0_10px_30px_rgba(255,121,0,0.08)]">
         <div className="mb-1 flex items-center justify-between">
           <h2 className="text-lg font-black">الكواليتي (15%)</h2>
-          <p className="text-[11px] font-bold text-neutral-400">نسبة تحقيق كل بند من 0 لـ 100</p>
+          <p className="text-[11px] font-bold text-neutral-400">علّم البند لو اتحقق بالكامل</p>
         </div>
-        <div className="grid grid-cols-[1fr_74px_74px] gap-2 border-b border-dashed border-orange-200 pb-2 text-[11px] font-bold text-neutral-400">
+        <div className="grid grid-cols-[1fr_74px] gap-2 border-b border-dashed border-orange-200 pb-2 text-[11px] font-bold text-neutral-400">
           <span>البند</span>
-          <span className="text-center">التحقيق %</span>
           <span className="text-center">الوزن</span>
         </div>
         {QUALITY_ITEMS.map((item) => (
-          <div key={item.key} className="grid grid-cols-[1fr_74px_74px] items-center gap-2 border-b border-dashed border-orange-200 py-2.5 last:border-0">
+          <div key={item.key} className="grid grid-cols-[1fr_74px] items-center gap-2 border-b border-dashed border-orange-200 py-2.5 last:border-0">
             <div className="flex min-w-0 items-center gap-2">
               <button
                 type="button"
@@ -337,19 +336,6 @@ export default function TargetPage() {
               </button>
               <p className="truncate text-sm font-extrabold" dir="ltr">{item.label}</p>
             </div>
-            <input
-              aria-label={`نسبة ${item.label}`}
-              className={`${inputClass} px-2 py-2 text-center text-sm font-black`}
-              type="number"
-              min={0}
-              max={100}
-              step="0.01"
-              value={quality[item.key]}
-              onChange={(e) => {
-                const value = Number(e.target.value);
-                setQuality((current) => ({ ...current, [item.key]: value }));
-              }}
-            />
             <p className="text-center text-sm font-black text-neutral-500">{item.weight}%</p>
           </div>
         ))}
