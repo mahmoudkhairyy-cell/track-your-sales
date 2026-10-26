@@ -241,7 +241,7 @@ function AppFrame({ children, blocked, month }: { children: ReactNode; blocked: 
             </aside>
 
             <div className="flex min-w-0 flex-1 flex-col">
-              <header className="sticky top-0 z-30 border-b border-orange-200 bg-white/95 px-4 py-3 backdrop-blur">
+              <header className="sticky top-0 z-30 border-b border-orange-200 bg-white px-4 py-3">
                 <div className="flex items-center justify-between gap-3">
                   <MonthSwitcher />
                   <div className="flex items-center gap-2">
@@ -260,7 +260,7 @@ function AppFrame({ children, blocked, month }: { children: ReactNode; blocked: 
             </div>
           </div>
 
-          <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-orange-200 bg-white/95 pb-[env(safe-area-inset-bottom)] backdrop-blur lg:hidden">
+          <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-orange-200 bg-white pb-[env(safe-area-inset-bottom)] lg:hidden">
             <div className="grid grid-cols-5">
               {NAV.map((item) => {
                 const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
