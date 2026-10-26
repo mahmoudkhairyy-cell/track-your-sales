@@ -5,7 +5,7 @@ import { Banner, Spinner } from "@/components/ui";
 import { ApiError, api } from "@/lib/client";
 import { formatMoney, formatPercent, formatQty } from "@/lib/calculations";
 import { useMonth } from "@/components/AppShell";
-import { kpiEmoji } from "@/lib/constants";
+import { KpiIcon } from "@/components/KpiIcon";
 import { kpiMood } from "@/lib/motivation";
 
 type KpiRow = {
@@ -200,7 +200,7 @@ export default function HomePage() {
             <article key={kpi.kpiKey} className="rounded-[20px] bg-white p-3.5 shadow-[0_6px_20px_rgba(255,121,0,0.07)] ring-1 ring-orange-100/70">
               <div className="flex items-start justify-between gap-3">
                 <div className="flex items-center gap-3">
-                  <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-orange-50 text-lg">{kpiEmoji(kpi.kpiKey)}</span>
+                  <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-orange-50 text-[#ff7900]"><KpiIcon kpiKey={kpi.kpiKey} className="h-5 w-5" /></span>
                   <div>
                     <h3 className="font-extrabold text-neutral-900" dir="ltr">
                       {kpi.nameEn}
