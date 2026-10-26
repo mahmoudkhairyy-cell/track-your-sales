@@ -6,6 +6,7 @@ import { ApiError, api } from "@/lib/client";
 import { formatMoney, formatPercent, formatQty } from "@/lib/calculations";
 import { useMonth } from "@/components/AppShell";
 import { KpiIcon } from "@/components/KpiIcon";
+import { kpiMood } from "@/lib/motivation";
 
 type KpiRow = {
   kpiKey: string;
@@ -166,38 +167,48 @@ export default function HomePage() {
 
 
       <h2 className="text-xl font-black">مؤشرات الأداء</h2>
-      {[
-        { title: "متأخرة", tone: "text-red-600", items: data.kpis.filter((k) => k.percent < 90) },
-        { title: "قريبة", tone: "text-amber-600", items: data.kpis.filter((k) => k.percent >= 90 && k.percent < 100) },
-        { title: "محققة", tone: "text-emerald-700", items: data.kpis.filter((k) => k.percent >= 100) },
-      ].map((group) =>
-        group.items.length === 0 ? null : (
-          <section key={group.title} className="rounded-[24px] border border-orange-100/70 bg-white p-2 shadow-[0_8px_20px_rgba(255,121,0,0.06)]">
-            <p className={`px-2 pb-1 pt-2 text-xs font-extrabold ${group.tone}`}>
-              {group.title} · {group.items.length}
-            </p>
-            {group.items.map((kpi) => (
-              <div key={kpi.kpiKey} className="flex items-center gap-3 rounded-2xl px-2 py-2.5">
-                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-orange-50 text-[#ff7900]">
-                  <KpiIcon kpiKey={kpi.kpiKey} className="h-4 w-4" />
-                </span>
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center justify-between gap-2">
-                    <p className="truncate text-sm font-extrabold" dir="ltr">{kpi.nameEn}</p>
-                    <p className="text-sm font-black text-[#ff7900]">{formatPercent(kpi.percent)}%</p>
+      <div className="space-y-3">
+        {data.kpis.map((kpi) => {
+          const visual = Math.min(100, Math.max(0, kpi.percent));
+          const kpiExpected = kpi.target > 0 ? (kpi.expectedToDate / kpi.target) * 100 : 0;
+          const m = kpiMood({ percent: kpi.percent, expectedPercent: kpiExpected, weight: kpi.weight });
+          const moodColor =
+            m.tone === "good" ? "text-emerald-700" : m.tone === "warn" ? "text-yellow-700" : m.tone === "bad" ? "text-red-600" : "text-neutral-400";
+          return (
+            <article key={kpi.kpiKey} className="rounded-[20px] bg-white p-3.5 shadow-[0_6px_20px_rgba(255,121,0,0.07)] ring-1 ring-orange-100/70">
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex items-center gap-3">
+                  <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-orange-50 text-[#ff7900]"><KpiIcon kpiKey={kpi.kpiKey} className="h-5 w-5" /></span>
+                  <div>
+                    <h3 className="font-extrabold text-neutral-900" dir="ltr">
+                      {kpi.nameEn}
+                    </h3>
+                    <p className={`text-xs font-bold ${moodColor}`}>
+                      {m.emoji} {m.text}
+                    </p>
                   </div>
-                  <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-neutral-100">
-                    <div className="h-full rounded-full bg-[#ff7900]" style={{ width: `${Math.min(100, Math.max(0, kpi.percent))}%` }} />
-                  </div>
-                  <p className="mt-1 text-[11px] text-neutral-400">
-                    فاضل {formatQty(kpi.remaining)} {kpi.unitAr}
-                  </p>
                 </div>
+                <p className="text-lg font-black text-[#ff7900]">{formatPercent(kpi.percent)}%</p>
               </div>
-            ))}
-          </section>
-        ),
-      )}
+              <div className="mt-3 flex items-center justify-between text-sm">
+                <span className="text-neutral-500">المستهدف: {formatQty(kpi.target)}</span>
+                <span className="font-bold">المحقق: {formatQty(kpi.achieved)}</span>
+              </div>
+              <div className="mt-3 h-2 overflow-hidden rounded-full bg-neutral-100">
+                <div className="h-full rounded-full bg-gradient-to-r from-[#ff9a3c] to-[#e85d00] transition-all" style={{ width: `${visual}%` }} />
+              </div>
+              <div className="mt-3 flex items-center justify-between text-xs font-bold">
+                <span className="text-[#ff7900]">مساهمة: {formatPercent(kpi.contribution)}%</span>
+                <span className="text-neutral-400">الوزن: {kpi.weight}%</span>
+              </div>
+              <p className="mt-1 text-[11px] text-neutral-400">
+                المفروض تكون عند {formatQty(kpi.expectedToDate)} {kpi.unitAr} دلوقتي · فاضل {formatQty(kpi.remaining)}
+              </p>
+              {kpi.overTarget ? <p className="mt-2 text-xs font-bold text-[#ff7900]">🎉 عدّيت التارجت! الشريط واقف عند 100% بس الرقم الحقيقي ظاهر فوق.</p> : null}
+            </article>
+          );
+        })}
+      </div>
     </div>
   );
 }
