@@ -305,7 +305,7 @@ export default function WikiPage() {
             </ul>
           </article>
           <div className="space-y-3">
-            <h2 className="pt-2 text-lg font-black">👑 مزايا كل باقة</h2>
+            <h2 className="pt-2 text-lg font-black tracking-tight">👑 مزايا كل باقة</h2>
             {PREMIER_PERKS.map((pkg) => (
               <article key={pkg.name} className="rounded-[22px] bg-white p-4 shadow-sm">
                 <div className="flex items-center justify-between gap-3">
@@ -335,7 +335,7 @@ export default function WikiPage() {
           </div>
           {premierPlans.map((group) => (
             <div key={group.category} className="space-y-2">
-              <h2 className="pt-2 text-lg font-black">{group.category}</h2>
+              <h2 className="pt-2 text-lg font-black tracking-tight">{group.category}</h2>
               {group.plans.map((plan) => (
                 <article key={plan.name} className="rounded-[22px] bg-white p-4 shadow-sm">
                   <div className="flex items-start justify-between gap-3">
@@ -405,7 +405,7 @@ export default function WikiPage() {
           <Back onClick={() => setSection("hub")} title="Go" />
           {goPlans.map((group) => (
             <div key={group.category}>
-              <h2 className="mb-2 text-lg font-black">{group.category}</h2>
+              <h2 className="mb-2 text-lg font-black tracking-tight">{group.category}</h2>
               {group.plans.map((plan) => (
                 <article key={plan.name} className="mb-2 flex items-center justify-between rounded-[22px] bg-white p-4 shadow-sm">
                   <div>
@@ -449,14 +449,14 @@ export default function WikiPage() {
               </p>
             </article>
           ))}
-          <h2 className="pt-2 text-lg font-black">إضافات الكوتا</h2>
+          <h2 className="pt-2 text-lg font-black tracking-tight">إضافات الكوتا</h2>
           {DSL.addons.map((item) => (
             <article key={item.quota} className="flex items-center justify-between rounded-[22px] bg-white p-4 shadow-sm">
               <p className="font-bold">{item.quota}</p>
               <p className="font-extrabold text-[#e06600]">{money(item.price)} ج</p>
             </article>
           ))}
-          <h2 className="pt-2 text-lg font-black">الراوتر</h2>
+          <h2 className="pt-2 text-lg font-black tracking-tight">الراوتر</h2>
           {DSL.routers.map((item) => (
             <article key={item.name} className="rounded-[22px] bg-white p-4 shadow-sm">
               <p className="text-xs font-extrabold text-[#e06600]">{item.tag}</p>
@@ -477,7 +477,7 @@ export default function WikiPage() {
             if (!rows.length) return null;
             return (
               <div key={type}>
-                <h2 className="mb-2 text-lg font-black">{type === "ADSL" ? "ADSL / Fixed" : "موبايل"}</h2>
+                <h2 className="mb-2 text-lg font-black tracking-tight">{type === "ADSL" ? "ADSL / Fixed" : "موبايل"}</h2>
                 {rows.map((item) => (
                   <article key={item.name + item.number} className="mb-2 flex items-center justify-between rounded-[22px] bg-white p-4 shadow-sm">
                     <div>
@@ -554,7 +554,7 @@ export default function WikiPage() {
           {!loadingNotes && articles.length === 0 ? <EmptyState title="مفيش ملاحظات" text="ضيف مرجع أو ملاحظة شغل من عندك." /> : null}
           {articles.map((article) => (
             <article key={article.id} className="rounded-[22px] bg-white p-4 shadow-sm">
-              <h2 className="font-black">{article.title}</h2>
+              <h2 className="text-base font-black">{article.title}</h2>
               <p className="mt-2 whitespace-pre-wrap text-sm leading-7 text-neutral-600">{article.content}</p>
               <div className="mt-3 flex gap-2">
                 <SecondaryButton
