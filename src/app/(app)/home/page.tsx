@@ -132,39 +132,18 @@ export default function HomePage() {
         </div>
       </section>
 
-      <article className="grid grid-cols-2 gap-2 rounded-[24px] border border-orange-100/70 bg-white p-2.5 shadow-[0_8px_20px_rgba(255,121,0,0.06)]">
-        <div className="rounded-2xl bg-orange-50/50 p-3">
-          <div className="flex items-center justify-between">
-            <span className="text-[11px] font-bold text-neutral-500">الخطوط المحققة</span>
-            <span className="text-sm">📱</span>
-          </div>
-          <p className="mt-1 text-xl font-black">{formatQty(newLines?.achieved ?? 0)}</p>
-          <p className="text-[10px] text-neutral-400">من {formatQty(newLines?.target ?? 0)}</p>
+      <section className="rounded-[24px] border border-orange-100/70 bg-white p-4 shadow-[0_8px_20px_rgba(255,121,0,0.06)]">
+        <p className="text-[11px] font-bold text-neutral-500">المطلوب النهارده</p>
+        <p className="mt-1 text-2xl font-black text-[#c45e00]">
+          {data.pace.perDay === null ? "—" : formatQty(Math.ceil(data.pace.perDay))}
+          <span className="mr-2 text-sm font-bold text-neutral-500">خط New Lines</span>
+        </p>
+        <div className="mt-3 flex items-center justify-between border-t border-orange-100/70 pt-3 text-xs text-neutral-500">
+          <span>تم {formatQty(newLines?.achieved ?? 0)} من {formatQty(newLines?.target ?? 0)}</span>
+          <span>فاضل {data.work.remaining} يوم شغل</span>
+          <span>المتوقع {formatPercent(expectedPercent)}%</span>
         </div>
-        <div className="rounded-2xl bg-orange-50/50 p-3">
-          <div className="flex items-center justify-between">
-            <span className="text-[11px] font-bold text-neutral-500">المتبقي للخطوط</span>
-            <span className="text-sm">🎯</span>
-          </div>
-          <p className="mt-1 text-xl font-black">{formatQty(newLines?.remaining ?? 0)}</p>
-          <p className="text-[10px] text-neutral-400">خط</p>
-        </div>
-      </article>
-
-      <div className="grid grid-cols-3 gap-2">
-        <div className="rounded-[20px] border border-orange-100/70 bg-white p-3 text-center shadow-[0_6px_18px_rgba(255,121,0,0.06)]">
-          <p className="text-[10px] font-bold text-neutral-500">المطلوب يوميًا</p>
-          <p className="mt-1 text-lg font-black text-[#c45e00]">{data.pace.perDay === null ? "—" : formatQty(Math.ceil(data.pace.perDay))}</p>
-        </div>
-        <div className="rounded-[20px] border border-orange-100/70 bg-white p-3 text-center shadow-[0_6px_18px_rgba(255,121,0,0.06)]">
-          <p className="text-[10px] font-bold text-neutral-500">أيام شغل فاضلة</p>
-          <p className="mt-1 text-lg font-black text-neutral-900">{data.work.remaining}</p>
-        </div>
-        <div className="rounded-[20px] border border-orange-100/70 bg-white p-3 text-center shadow-[0_6px_18px_rgba(255,121,0,0.06)]">
-          <p className="text-[10px] font-bold text-neutral-500">المتوقع للنهارده</p>
-          <p className="mt-1 text-lg font-black text-neutral-900">{formatPercent(expectedPercent)}%</p>
-        </div>
-      </div>
+      </section>
 
       {data.pace.message ? <p className="px-1 text-xs leading-6 text-neutral-500">{data.pace.message}</p> : null}
 
