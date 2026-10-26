@@ -250,10 +250,6 @@ export default function TargetPage() {
             onChange={(e) => setFullCommission(Number(e.target.value))}
           />
         </Field>
-        <label className="mt-4 flex min-h-12 items-center gap-3 text-sm font-bold">
-          <input type="checkbox" checked={allowOver} onChange={(e) => setAllowOver(e.target.checked)} className="h-5 w-5 accent-[#ff7900]" />
-          اسمح إن الكوميشن التقديري يعدّي 100%
-        </label>
       </section>
 
       <section className="rounded-[28px] border border-orange-100/70 bg-white p-4 shadow-[0_10px_30px_rgba(255,121,0,0.08)]">

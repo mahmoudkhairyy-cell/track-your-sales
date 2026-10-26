@@ -42,8 +42,9 @@ export function estimatedCommission(
   overallPercent: number,
   allowOver100: boolean,
 ): number {
+  // الكوميشن بيزيد مع الإنجاز لحد 200% بس، من غير ما يحتاج اختيار.
   const ratio = overallPercent / 100;
-  const used = allowOver100 ? ratio : Math.min(Math.max(ratio, 0), 1);
+  const used = Math.min(Math.max(ratio, 0), 2);
   return Math.round(fullCommission * used);
 }
 
