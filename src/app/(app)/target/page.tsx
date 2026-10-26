@@ -19,7 +19,7 @@ type KpiForm = {
 };
 
 type Holiday = { date: string; note: string | null };
-type Quality = { kyc: number; visits: number; training: number; pos: number; csat: number };
+type Quality = { kyc: number; visits: number; training: number; pos: number; csat: number; checks?: Partial<Record<"kyc" | "visits" | "training" | "pos" | "csat", boolean>> };
 const QUALITY_ITEMS: { key: keyof Quality; label: string; weight: number }[] = [
   { key: "kyc", label: "KYC & Compliance", weight: 5 },
   { key: "visits", label: "Quality Visits", weight: 5 },
@@ -27,7 +27,7 @@ const QUALITY_ITEMS: { key: keyof Quality; label: string; weight: number }[] = [
   { key: "pos", label: "POS machines", weight: 1 },
   { key: "csat", label: "CSAT / Complaints", weight: 2 },
 ];
-const ZERO_QUALITY_FORM: Quality = { kyc: 0, visits: 0, training: 0, pos: 0, csat: 0 };
+const ZERO_QUALITY_FORM: Quality = { kyc: 0, visits: 0, training: 0, pos: 0, csat: 0, checks: {} };
 
 type DailyRow = { kpiKey: string; nameEn: string; unitAr: string; weight: number; percent: number; remaining: number; achieved: number; target: number };
 type DailyData = { kpis: DailyRow[]; work: { remaining: number } };
@@ -321,7 +321,21 @@ export default function TargetPage() {
         </div>
         {QUALITY_ITEMS.map((item) => (
           <div key={item.key} className="grid grid-cols-[1fr_74px_74px] items-center gap-2 border-b border-dashed border-orange-200 py-2.5 last:border-0">
-            <p className="truncate text-sm font-extrabold" dir="ltr">{item.label}</p>
+            <div className="flex min-w-0 items-center gap-2">
+              <button
+                type="button"
+                role="checkbox"
+                aria-checked={!!quality.checks?.[item.key]}
+                aria-label={`تحقق ${item.label}`}
+                onClick={() => setQuality((current) => ({ ...current, checks: { ...current.checks, [item.key]: !current.checks?.[item.key] } }))}
+                className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-md border-2 text-sm font-black ${
+                  quality.checks?.[item.key] ? "border-emerald-500 bg-emerald-500 text-white" : "border-orange-200 bg-white text-transparent"
+                }`}
+              >
+                ✓
+              </button>
+              <p className="truncate text-sm font-extrabold" dir="ltr">{item.label}</p>
+            </div>
             <input
               aria-label={`نسبة ${item.label}`}
               className={`${inputClass} px-2 py-2 text-center text-sm font-black`}
