@@ -82,6 +82,7 @@ export default function LogPage() {
         });
         saved += 1;
       }
+      if (typeof navigator !== "undefined" && "vibrate" in navigator) navigator.vibrate?.(30);
       toast.push("success", `${CHEERS[Math.floor(Math.random() * CHEERS.length)]} (${saved})`);
       setQuantities({});
       setNote("");

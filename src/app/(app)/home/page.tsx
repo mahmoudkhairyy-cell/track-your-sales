@@ -58,6 +58,7 @@ function shortKpiName(name: string) {
 }
 
 export default function HomePage() {
+  const [copied, setCopied] = useState(false);
   const month = useMonth();
   // بنخزّن الشهر مع البيانات عشان نعرف إن اللي معروض يخص الشهر الحالي من غير setState متزامن جوه الـ effect.
   const [state, setState] = useState<{ month: string; data: Dashboard | null; error: string }>({
@@ -131,6 +132,29 @@ export default function HomePage() {
           <span className="font-extrabold">💰 {formatMoney(data.estimatedCommission)} من {formatMoney(data.fullCommission)} جنيه</span>
         </div>
       </section>
+
+      <button
+        type="button"
+        onClick={async () => {
+          const lines = [
+            `📊 ملخص ${data.monthLabel}`,
+            `التوتال: ${formatPercent(data.overall)}%`,
+            `الكوميشن: ${formatMoney(data.estimatedCommission)} من ${formatMoney(data.fullCommission)} جنيه`,
+            ...data.kpis.map((kpi) => `• ${kpi.nameEn}: ${formatQty(kpi.achieved)} / ${formatQty(kpi.target)} (${formatPercent(kpi.percent)}%)`),
+          ];
+          const text = lines.join("\n");
+          try {
+            await navigator.clipboard.writeText(text);
+            setCopied(true);
+            setTimeout(() => setCopied(false), 2000);
+          } catch {
+            setCopied(false);
+          }
+        }}
+        className="flex w-full items-center justify-center gap-2 rounded-2xl border border-orange-200/70 bg-white py-3 text-sm font-extrabold text-[#8f4300] shadow-[0_1px_2px_rgba(40,20,0,0.04)] active:scale-[0.99]"
+      >
+        {copied ? "✅ اتنسخ الملخص" : "📋 انسخ ملخص الشهر"}
+      </button>
 
       <section className="rounded-[24px] border border-orange-200/70 bg-white p-4 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
         <p className="text-[11px] font-bold text-neutral-500">المطلوب النهارده</p>
