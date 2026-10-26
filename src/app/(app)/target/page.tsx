@@ -257,7 +257,7 @@ export default function TargetPage() {
           <h2 className="text-lg font-black">الإيتمز والأوزان</h2>
           <p className="text-[11px] font-bold text-neutral-400">بتتدخل مرة واحدة في الشهر</p>
         </div>
-        <div className="grid grid-cols-[1fr_74px_74px] gap-2 border-b border-dashed border-orange-300 pb-2 text-[11px] font-bold text-neutral-400">
+        <div className="grid grid-cols-[1fr_74px_74px] gap-2 border-b border-dashed border-orange-200/70 pb-2 text-[11px] font-bold text-neutral-400">
           <span>الإيتم</span>
           <span className="text-center">التارجت</span>
           <span className="text-center">الوزن %</span>
@@ -265,7 +265,7 @@ export default function TargetPage() {
         {kpis.map((kpi, index) => {
           const catalog = KPI_CATALOG.find((item) => item.key === kpi.kpiKey);
           return (
-            <div key={kpi.kpiKey} className="grid grid-cols-[1fr_74px_74px] items-center gap-2 border-b border-dashed border-orange-300 py-2.5 last:border-0">
+            <div key={kpi.kpiKey} className="grid grid-cols-[1fr_74px_74px] items-center gap-2 border-b border-dashed border-orange-200/70 py-2.5 last:border-0">
               <div className="flex min-w-0 items-center gap-2">
                 <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-orange-100 text-[#e06600]"><KpiIcon kpiKey={kpi.kpiKey} className="h-4 w-4" /></span>
                 <div className="min-w-0">
@@ -311,12 +311,12 @@ export default function TargetPage() {
           <h2 className="text-lg font-black">الكواليتي (15%)</h2>
           <p className="text-[11px] font-bold text-neutral-400">علّم البند لو اتحقق بالكامل</p>
         </div>
-        <div className="grid grid-cols-[1fr_74px] gap-2 border-b border-dashed border-orange-300 pb-2 text-[11px] font-bold text-neutral-400">
+        <div className="grid grid-cols-[1fr_74px] gap-2 border-b border-dashed border-orange-200/70 pb-2 text-[11px] font-bold text-neutral-400">
           <span>البند</span>
           <span className="text-center">الوزن</span>
         </div>
         {QUALITY_ITEMS.map((item) => (
-          <div key={item.key} className="grid grid-cols-[1fr_74px] items-center gap-2 border-b border-dashed border-orange-300 py-2.5 last:border-0">
+          <div key={item.key} className="grid grid-cols-[1fr_74px] items-center gap-2 border-b border-dashed border-orange-200/70 py-2.5 last:border-0">
             <div className="flex min-w-0 items-center gap-2">
               <button
                 type="button"
@@ -325,7 +325,7 @@ export default function TargetPage() {
                 aria-label={`تحقق ${item.label}`}
                 onClick={() => setQuality((current) => ({ ...current, checks: { ...current.checks, [item.key]: !current.checks?.[item.key] } }))}
                 className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-md border-2 text-sm font-black ${
-                  quality.checks?.[item.key] ? "border-emerald-500 bg-emerald-500 text-white" : "border-orange-300 bg-white text-transparent"
+                  quality.checks?.[item.key] ? "border-emerald-500 bg-emerald-500 text-white" : "border-orange-200/70 bg-white text-transparent"
                 }`}
               >
                 ✓

@@ -366,7 +366,7 @@ export default function MorePage() {
         ) : (
           <ul className="mt-4 space-y-2">
             {entries.map((entry) => (
-              <li key={entry.id} className="rounded-2xl border border-orange-200 p-3">
+              <li key={entry.id} className="rounded-2xl border border-orange-200/70 p-3">
                 <div className="flex items-start justify-between gap-3">
                   <div>
                     <p className="font-extrabold">

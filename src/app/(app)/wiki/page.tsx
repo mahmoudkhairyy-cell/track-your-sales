@@ -324,7 +324,7 @@ export default function WikiPage() {
                   {pkg.perks.map((perk) => (
                     <div
                       key={perk}
-                      className="flex min-h-12 items-center justify-center rounded-2xl border border-orange-300 bg-orange-100 px-3 py-2 text-center text-xs font-extrabold leading-5 text-[#8f4300]"
+                      className="flex min-h-12 items-center justify-center rounded-2xl border border-orange-200/70 bg-orange-100 px-3 py-2 text-center text-xs font-extrabold leading-5 text-[#8f4300]"
                     >
                       {perk}
                     </div>
