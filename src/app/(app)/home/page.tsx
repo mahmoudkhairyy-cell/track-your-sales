@@ -60,7 +60,7 @@ function shortKpiName(name: string) {
 
 export default function HomePage() {
   const [copied, setCopied] = useState(false);
-  const [goalPct, setGoalPct] = useState<80 | 90 | 100>(100);
+  const goalPct = 90;
   const month = useMonth();
   // بنخزّن الشهر مع البيانات عشان نعرف إن اللي معروض يخص الشهر الحالي من غير setState متزامن جوه الـ effect.
   const [state, setState] = useState<{ month: string; data: Dashboard | null; error: string }>({
@@ -165,20 +165,8 @@ export default function HomePage() {
       ) : null}
 
       <section className="rounded-[24px] border border-orange-200/70 bg-white p-4 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
-        <p className="text-[11px] font-bold text-neutral-500">احسب المطلوب النهارده عشان توصل لـ</p>
-        <div className="mt-2 flex gap-2">
-          {([80, 90, 100] as const).map((pct) => (
-            <button
-              key={pct}
-              type="button"
-              onClick={() => setGoalPct(pct)}
-              className={`flex-1 rounded-xl py-2 text-sm font-extrabold ${goalPct === pct ? "bg-[#e06600] text-white" : "bg-orange-100 text-[#8f4300]"}`}
-            >
-              {pct}%
-            </button>
-          ))}
-        </div>
-        <div className="mt-3 space-y-2">
+        <p className="text-[11px] font-bold text-neutral-500">احسب المطلوب النهارده عشان توصل لـ 90%</p>
+                <div className="mt-3 space-y-2">
           {data.kpis
             .filter((kpi) => kpi.weight > 0 && kpi.target > 0)
             .map((kpi) => {
