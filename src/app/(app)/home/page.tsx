@@ -147,27 +147,23 @@ export default function HomePage() {
 
       {data.pace.message ? <p className="px-1 text-xs leading-6 text-neutral-500">{data.pace.message}</p> : null}
 
-      {data.rules.belowOverall ? (
-        <Banner tone="warn">⚠️ التوتال أقل من 80%. مفيش حافز الشهر ده.</Banner>
-      ) : null}
-      {data.rules.belowKpis.length > 0 ? (
-        <Banner tone="warn">
-          ⚠️ مؤشرات أقل من 90% (بتتشال من التوتال): {data.rules.belowKpis.map((key) => data.kpis.find((k) => k.kpiKey === key)?.nameEn ?? key).join(" · ")}
-        </Banner>
-      ) : null}
-      {!data.rules.walletDone && data.rules.belowKpis.includes("new_lines") ? (
-        <Banner tone="warn">⚠️ New Lines مش هتتحسب لحد ما New Orange Cash Wallets توصل 100% من تارجتها.</Banner>
-      ) : null}
-      {data.rules.clawBacks.length > 0 ? (
-        <Banner tone="warn">
-          ⚠️ خصم 5 نقاط بسبب عدم تحقيق 100%: {data.rules.clawBacks.map((key) => data.kpis.find((k) => k.kpiKey === key)?.nameEn ?? key).join(" · ")}
-        </Banner>
-      ) : null}
-
-      {data.weightWarning ? (
-        <Banner tone="warn">⚠️ مجموع الأوزان {formatPercent(data.weightSum)}% مش 100%. راجع صفحة التارجت.</Banner>
-      ) : null}
-
+      {(() => {
+        const names = (keys: string[]) => keys.map((key) => data.kpis.find((k) => k.kpiKey === key)?.nameEn ?? key).join(" · ");
+        const notes: string[] = [];
+        if (data.rules.belowOverall) notes.push("التوتال أقل من 80%: مفيش حافز");
+        if (data.rules.belowKpis.length > 0) notes.push(`أقل من 90% (متتحسبش): ${names(data.rules.belowKpis)}`);
+        if (!data.rules.walletDone && data.rules.belowKpis.includes("new_lines")) notes.push("New Lines متتحسبش: المحافظ أقل من 100%");
+        if (data.rules.clawBacks.length > 0) notes.push(`خصم 5 نقاط: ${names(data.rules.clawBacks)}`);
+        if (data.weightWarning) notes.push(`الأوزان ${formatPercent(data.weightSum)}% (لازم 100%)`);
+        if (notes.length === 0) return null;
+        return (
+          <div className="rounded-xl border border-amber-200 bg-amber-50 px-3 py-2 text-[11px] leading-5 text-amber-950">
+            {notes.map((note) => (
+              <p key={note}>⚠️ {note}</p>
+            ))}
+          </div>
+        );
+      })()}
 
       <section className="rounded-[28px] border border-orange-100/70 bg-white p-5 shadow-[0_10px_30px_rgba(255,121,0,0.08)]">
         <div className="flex items-end justify-between">
