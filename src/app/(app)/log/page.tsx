@@ -148,7 +148,7 @@ export default function LogPage() {
               <input
                 className={`${inputClass} text-lg font-black`}
                 type="number"
-                inputMode={item.key === "quality" ? "decimal" : "numeric"}
+                inputMode="numeric"
                 step={quantityStep(item.key)}
                 min={quantityMin(item.key)}
                 max={quantityMax(item.key)}
