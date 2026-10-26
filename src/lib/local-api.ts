@@ -59,12 +59,13 @@ type Holiday = { date: string; note: string | null };
 
 type QualityScores = { kyc: number; visits: number; training: number; pos: number; csat: number; checks?: Record<string, boolean> };
 
-const QUALITY_WEIGHTS: Record<keyof QualityScores, number> = { kyc: 5, visits: 5, training: 2, pos: 1, csat: 2 };
+type QualityNumKey = "kyc" | "visits" | "training" | "pos" | "csat";
+const QUALITY_WEIGHTS: Record<QualityNumKey, number> = { kyc: 5, visits: 5, training: 2, pos: 1, csat: 2 };
 const ZERO_QUALITY: QualityScores = { kyc: 0, visits: 0, training: 0, pos: 0, csat: 0 };
 
 // نسبة تحقيق الكواليتي (0-100) = مجموع (نسبة كل بند × وزنه) ÷ مجموع الأوزان (15)
 function qualityPercent(q: QualityScores): number {
-  const total = (Object.keys(QUALITY_WEIGHTS) as (keyof QualityScores)[]).reduce(
+  const total = (Object.keys(QUALITY_WEIGHTS) as QualityNumKey[]).reduce(
     (sum, key) => sum + (q[key] * QUALITY_WEIGHTS[key]) / 100,
     0,
   );
@@ -74,7 +75,7 @@ function qualityPercent(q: QualityScores): number {
 function requireQuality(value: unknown): QualityScores {
   const row = (value && typeof value === "object" ? value : {}) as Record<string, unknown>;
   const out: QualityScores = { ...ZERO_QUALITY };
-  for (const key of Object.keys(QUALITY_WEIGHTS) as (keyof typeof QUALITY_WEIGHTS)[]) {
+  for (const key of Object.keys(QUALITY_WEIGHTS) as QualityNumKey[]) {
     const n = Number(row[key] ?? 0);
     if (!Number.isFinite(n) || n < 0 || n > 100) fail(400, "نسب الكواليتي لازم تكون من 0 لـ 100");
     out[key] = n;
