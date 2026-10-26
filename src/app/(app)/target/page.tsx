@@ -244,52 +244,55 @@ export default function TargetPage() {
         </label>
       </section>
 
-      <section className="space-y-3">
-        <h2 className="text-lg font-black">الإيتمز والأوزان</h2>
+      <section className="rounded-[28px] border border-orange-100/70 bg-white p-4 shadow-[0_10px_30px_rgba(255,121,0,0.08)]">
+        <div className="mb-1 flex items-center justify-between">
+          <h2 className="text-lg font-black">الإيتمز والأوزان</h2>
+          <p className="text-[11px] font-bold text-neutral-400">بتتدخل مرة واحدة في الشهر</p>
+        </div>
+        <div className="grid grid-cols-[1fr_74px_74px] gap-2 border-b border-dashed border-orange-200 pb-2 text-[11px] font-bold text-neutral-400">
+          <span>الإيتم</span>
+          <span className="text-center">التارجت</span>
+          <span className="text-center">الوزن %</span>
+        </div>
         {kpis.map((kpi, index) => {
           const catalog = KPI_CATALOG.find((item) => item.key === kpi.kpiKey);
           return (
-            <div key={kpi.kpiKey} className="rounded-[28px] border border-orange-100/70 bg-white p-4 shadow-[0_10px_30px_rgba(255,121,0,0.08)]">
-              <div className="flex items-center gap-3">
-                <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-orange-50 text-[#ff7900]"><KpiIcon kpiKey={kpi.kpiKey} className="h-6 w-6" /></span>
-                <div>
-                  <p className="font-extrabold" dir="ltr">
-                    {catalog?.nameEn}
-                  </p>
-                  <p className="text-xs text-neutral-400">الوحدة: {kpi.unitAr}</p>
+            <div key={kpi.kpiKey} className="grid grid-cols-[1fr_74px_74px] items-center gap-2 border-b border-dashed border-orange-200 py-2.5 last:border-0">
+              <div className="flex min-w-0 items-center gap-2">
+                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-orange-50 text-[#ff7900]"><KpiIcon kpiKey={kpi.kpiKey} className="h-4 w-4" /></span>
+                <div className="min-w-0">
+                  <p className="truncate text-sm font-extrabold" dir="ltr">{catalog?.nameEn}</p>
                   {kpi.kpiKey === "new_orange_cash" ? (
-                    <p className="mt-1 text-xs font-bold text-[#c45e00]">= 90% من تارجت New Lines (مقربة لأعلى)</p>
-                  ) : null}
+                    <p className="text-[10px] font-bold text-[#c45e00]">= 90% من New Lines (لأعلى)</p>
+                  ) : (
+                    <p className="text-[10px] text-neutral-400">{kpi.unitAr}</p>
+                  )}
                 </div>
               </div>
-              <div className="mt-3 grid grid-cols-2 gap-3">
-                <Field label="التارجت">
-                  <input
-                    className={`${inputClass} text-lg font-black`}
-                    type="number"
-                    min={0}
-                    step="0.01"
-                    value={kpi.target}
-                    onChange={(e) => {
-                      const target = Number(e.target.value);
-                      setKpis((current) => current.map((row, rowIndex) => (rowIndex === index ? { ...row, target } : row)));
-                    }}
-                  />
-                </Field>
-                <Field label="الوزن %">
-                  <input
-                    className={`${inputClass} text-lg font-black`}
-                    type="number"
-                    min={0}
-                    step="0.01"
-                    value={kpi.weight}
-                    onChange={(e) => {
-                      const weight = Number(e.target.value);
-                      setKpis((current) => current.map((row, rowIndex) => (rowIndex === index ? { ...row, weight } : row)));
-                    }}
-                  />
-                </Field>
-              </div>
+              <input
+                aria-label={`تارجت ${catalog?.nameEn}`}
+                className={`${inputClass} px-2 py-2 text-center text-sm font-black`}
+                type="number"
+                min={0}
+                step="0.01"
+                value={kpi.target}
+                onChange={(e) => {
+                  const target = Number(e.target.value);
+                  setKpis((current) => current.map((row, rowIndex) => (rowIndex === index ? { ...row, target } : row)));
+                }}
+              />
+              <input
+                aria-label={`وزن ${catalog?.nameEn}`}
+                className={`${inputClass} px-2 py-2 text-center text-sm font-black`}
+                type="number"
+                min={0}
+                step="0.01"
+                value={kpi.weight}
+                onChange={(e) => {
+                  const weight = Number(e.target.value);
+                  setKpis((current) => current.map((row, rowIndex) => (rowIndex === index ? { ...row, weight } : row)));
+                }}
+              />
             </div>
           );
         })}
