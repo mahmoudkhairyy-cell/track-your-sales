@@ -311,19 +311,19 @@ export default function WikiPage() {
           <div className="space-y-3">
             <h2 className="pt-2 text-lg font-black tracking-tight">👑 مزايا كل باقة</h2>
             {PREMIER_PERKS.map((pkg) => (
-              <article key={pkg.name} className="rounded-[22px] bg-white p-4 shadow-sm">
+              <article key={pkg.name} className="rounded-[24px] border border-orange-200/70 bg-white p-4 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
                 <div className="flex items-center justify-between gap-3">
                   <p className="font-black">{pkg.name}</p>
-                  <p className="text-sm font-extrabold text-[#e06600]">{pkg.price}</p>
+                  <p className="rounded-full bg-gradient-to-br from-[#ff9a3c] to-[#e06600] px-3 py-1 text-xs font-extrabold text-white">{pkg.price}</p>
                 </div>
                 <div className="mt-3 grid grid-cols-2 gap-2 text-xs">
                   {pkg.stats.map((stat) => (
-                    <div key={stat} className="rounded-2xl bg-neutral-100 px-3 py-2 text-center font-bold text-neutral-700">
+                    <div key={stat} className="rounded-2xl border border-orange-200/70 bg-[#fff7f0] px-3 py-2.5 text-center font-bold text-neutral-700">
                       {stat}
                     </div>
                   ))}
                 </div>
-                <p className="mt-3 text-xs font-black text-neutral-500">المزايا والاشتراكات</p>
+                <p className="mt-4 text-xs font-black text-neutral-500">المزايا والاشتراكات</p>
                 <div className="mt-2 grid grid-cols-2 gap-2">
                   {pkg.perks.map((perk) => (
                     <div
