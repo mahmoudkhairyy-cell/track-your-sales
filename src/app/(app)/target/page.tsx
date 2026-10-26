@@ -199,11 +199,9 @@ export default function TargetPage() {
       {error ? <Banner tone="error">❌ {error}</Banner> : null}
 
 
-      {Math.abs(weightSum - 100) > 0.01 ? (
-        <Banner tone="warn">⚠️ مجموع الأوزان {weightSum}% مش 100%. تقدر تحفظ عادي، بس النتيجة هتتحسب على الأوزان دي.</Banner>
-      ) : (
-        <Banner tone="success">👌 مجموع الأوزان 100% تمام.</Banner>
-      )}
+      <p className={`px-1 text-xs font-bold ${Math.abs(weightSum - 100) > 0.01 ? "text-amber-700" : "text-emerald-700"}`}>
+        {Math.abs(weightSum - 100) > 0.01 ? `⚠️ الأوزان ${weightSum}% (لازم 100% عشان تتحفظ)` : "✓ الأوزان 100%"}
+      </p>
 
       {daily ? (
         <section className="rounded-[24px] bg-orange-50 p-4 text-sm leading-7 text-[#c45e00]">
