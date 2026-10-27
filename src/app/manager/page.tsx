@@ -24,7 +24,7 @@ type ReportRow = {
 /** On track = النسبة المحققة أكبر من أو تساوي المطلوب لحد النهارده (بهامش 5%). */
 function TrackBadge({ percent, expected }: { percent?: number; expected?: number }) {
   if (typeof percent !== "number" || typeof expected !== "number") return null;
-  const onTrack = percent >= expected - 5;
+  const onTrack = percent >= expected - 10;
   return (
     <span className={`rounded-full px-2 py-0.5 text-[10px] font-black ${onTrack ? "bg-emerald-100 text-emerald-800" : "bg-red-100 text-red-700"}`}>
       {onTrack ? "🟢 On track" : "🔴 متأخر"}
@@ -141,7 +141,7 @@ export default function ManagerPage() {
               {(row.payload.kpis ?? []).map((kpi) => (
                 <div key={kpi.name} className="flex items-center justify-between text-xs">
                   <span className="flex items-center gap-1.5 font-bold" dir="ltr">
-                    <span className={`inline-block h-2 w-2 rounded-full ${kpi.weight === 0 ? "bg-neutral-300" : kpi.percent >= (kpi.expectedPercent ?? 0) - 5 ? "bg-emerald-500" : "bg-red-500"}`} />
+                    <span className={`inline-block h-2 w-2 rounded-full ${kpi.weight === 0 ? "bg-neutral-300" : kpi.percent >= (kpi.expectedPercent ?? 0) - 10 ? "bg-emerald-500" : "bg-red-500"}`} />
                     {kpi.name}
                   </span>
                   <span className="tabular-nums text-neutral-600">
