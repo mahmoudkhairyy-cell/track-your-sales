@@ -137,18 +137,34 @@ export default function ManagerPage() {
             <p className="mt-1 text-[10px] text-neutral-400" dir="ltr">
               {new Date(row.updated_at).toLocaleString("en-US", { timeZone: "Africa/Cairo", hour12: false })}
             </p>
-            <div className="mt-3 space-y-2">
-              {(row.payload.kpis ?? []).map((kpi) => (
-                <div key={kpi.name} className="flex items-center justify-between text-xs">
-                  <span className="flex items-center gap-1.5 font-bold" dir="ltr">
-                    <span className={`inline-block h-2 w-2 rounded-full ${kpi.weight === 0 ? "bg-neutral-300" : kpi.percent >= (kpi.expectedPercent ?? 0) - 10 ? "bg-emerald-500" : "bg-red-500"}`} />
-                    {kpi.name}
-                  </span>
-                  <span className="tabular-nums text-neutral-600">
-                    {kpi.achieved} / {kpi.target} ({Math.round(kpi.percent)}%)
-                  </span>
-                </div>
-              ))}
+            <div className="mt-3 grid grid-cols-2 gap-2">
+              {(row.payload.kpis ?? []).map((kpi) => {
+                const ok = kpi.percent >= (kpi.expectedPercent ?? 0) - 10;
+                const neutral = kpi.weight === 0;
+                const tone = neutral
+                  ? { text: "text-neutral-500", bar: "from-neutral-300 to-neutral-400", ring: "ring-neutral-200" }
+                  : ok
+                    ? { text: "text-emerald-700", bar: "from-emerald-400 to-emerald-600", ring: "ring-emerald-200" }
+                    : { text: "text-red-600", bar: "from-red-400 to-red-600", ring: "ring-red-200" };
+                const width = Math.min(100, Math.max(0, kpi.percent));
+                return (
+                  <div
+                    key={kpi.name}
+                    className={`relative overflow-hidden rounded-2xl bg-gradient-to-br from-white to-orange-50/60 p-3 shadow-[0_6px_18px_rgba(40,20,0,0.06)] ring-1 ${tone.ring}`}
+                  >
+                    <p className="truncate text-[10px] font-extrabold text-neutral-500" dir="ltr">{kpi.name}</p>
+                    <p className={`mt-1 text-2xl font-black tabular-nums tracking-tight ${tone.text}`}>
+                      {Math.round(kpi.percent)}<span className="text-sm">%</span>
+                    </p>
+                    <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-white/80">
+                      <div className={`h-full rounded-full bg-gradient-to-r ${tone.bar}`} style={{ width: `${width}%` }} />
+                    </div>
+                    <p className="mt-1.5 text-[10px] tabular-nums text-neutral-500" dir="ltr">
+                      {kpi.achieved} / {kpi.target}
+                    </p>
+                  </div>
+                );
+              })}
             </div>
             <button
               type="button"
