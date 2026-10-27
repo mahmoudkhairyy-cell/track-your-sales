@@ -185,7 +185,7 @@ export default function WikiPage() {
                 </button>
               ))}
               {globalHits.hunts.map((item) => (
-                <a key={item.number + item.name} href={`tel:${item.number}`} className="block rounded-[22px] bg-white p-4 shadow-sm">
+                <a key={item.number + item.name} href={`tel:${item.number}`} className="block rounded-[24px] bg-white p-4 border border-orange-200/70 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
                   <p className="font-extrabold">{item.name}</p>
                   <p className="text-[#e06600]">{item.number}</p>
                 </a>
@@ -197,26 +197,26 @@ export default function WikiPage() {
                 </button>
               ))}
               {globalHits.fm.map((item) => (
-                <article key={item.name} className="rounded-[22px] bg-white p-4 shadow-sm">
+                <article key={item.name} className="rounded-[24px] bg-white p-4 border border-orange-200/70 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
                   <p className="font-extrabold">{item.nameAr}</p>
                   <p className="text-sm text-neutral-500">{item.units} وحدة · تجديد {money(item.renewalPrice)} ج</p>
                 </article>
               ))}
               {globalHits.plans.map((item) => (
-                <article key={item.group + item.name} className="rounded-[22px] bg-white p-4 shadow-sm">
+                <article key={item.group + item.name} className="rounded-[24px] bg-white p-4 border border-orange-200/70 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
                   <p className="text-xs text-[#e06600]">{item.group}</p>
                   <p className="font-extrabold">{item.name}</p>
                   <p className="text-sm text-neutral-500">{item.fees || item.data}</p>
                 </article>
               ))}
               {globalHits.dsl.map((item) => (
-                <article key={item.name} className="rounded-[22px] bg-white p-4 shadow-sm">
+                <article key={item.name} className="rounded-[24px] bg-white p-4 border border-orange-200/70 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
                   <p className="font-extrabold">{item.name}</p>
                   <p className="text-sm text-neutral-500">{item.speed} Mbps · {item.quota} GB · {money(item.price)} ج</p>
                 </article>
               ))}
               {globalHits.docs.map((item) => (
-                <a key={item.title} href={item.url} target="_blank" rel="noreferrer" className="block rounded-[22px] bg-white p-4 shadow-sm">
+                <a key={item.title} href={item.url} target="_blank" rel="noreferrer" className="block rounded-[24px] bg-white p-4 border border-orange-200/70 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
                   <p className="font-extrabold">{item.title}</p>
                   <p className="text-sm text-neutral-500">{item.description}</p>
                 </a>
@@ -296,12 +296,12 @@ export default function WikiPage() {
         <div className="space-y-3">
           <Back onClick={() => setSection("hub")} title="Premier" />
           {PREMIER_GUIDE.steps.map((step) => (
-            <article key={step.title} className="rounded-[22px] bg-white p-4 shadow-sm">
+            <article key={step.title} className="rounded-[24px] bg-white p-4 border border-orange-200/70 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
               <p className="font-extrabold text-[#e06600]">{step.title}</p>
               <p className="mt-2 text-sm leading-7 text-neutral-600">{step.text}</p>
             </article>
           ))}
-          <article className="rounded-[22px] bg-orange-100 p-4">
+          <article className="rounded-[24px] bg-orange-100 p-4">
             <p className="font-extrabold">مستندات القدرة على الدفع (Second ID)</p>
             <ul className="mt-2 grid gap-1 text-sm leading-7 text-neutral-700">
               {PREMIER_GUIDE.secondIds.map((item) => (
@@ -342,7 +342,7 @@ export default function WikiPage() {
             <div key={group.category} className="space-y-2">
               <h2 className="pt-2 text-lg font-black tracking-tight">{group.category}</h2>
               {group.plans.map((plan) => (
-                <article key={plan.name} className="rounded-[22px] bg-white p-4 shadow-sm">
+                <article key={plan.name} className="rounded-[24px] bg-white p-4 border border-orange-200/70 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
                   <div className="flex items-start justify-between gap-3">
                     <p className="font-black">{plan.name}</p>
                     <p className="font-extrabold text-[#e06600]">{String(plan.fees ?? "")}</p>
@@ -377,7 +377,7 @@ export default function WikiPage() {
             ))}
           </div>
           {FREEMAX.plans.map((plan) => (
-            <article key={plan.name} className="rounded-[22px] bg-white p-4 shadow-sm">
+            <article key={plan.name} className="rounded-[24px] bg-white p-4 border border-orange-200/70 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
               <div className="flex items-start justify-between">
                 <div>
                   <p className="font-black">{plan.nameAr}</p>
@@ -394,12 +394,12 @@ export default function WikiPage() {
               {plan.perks.length ? <p className="mt-2 text-xs font-bold text-[#e06600]">{plan.perks.join(" · ")}</p> : null}
             </article>
           ))}
-          <article className="rounded-[22px] bg-white p-4 shadow-sm">
+          <article className="rounded-[24px] bg-white p-4 border border-orange-200/70 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
             <p className="font-black">{FREEMAX.weekly.nameAr}</p>
             <p className="text-sm text-neutral-500">{FREEMAX.weekly.units} وحدة · تجديد {FREEMAX.weekly.renewalPrice} ج</p>
             <p className="mt-2 text-xs leading-6 text-neutral-500">{FREEMAX.weekly.channels.join(" · ")}</p>
           </article>
-          <article className="rounded-[22px] bg-orange-100 p-4 text-sm leading-7">
+          <article className="rounded-[24px] bg-orange-100 p-4 text-sm leading-7">
             الرصيد بعد الشحن = قيمة الشحن × 0.70 (خصم 30% ضريبة ومصاريف). سعر الشريحة {FREEMAX.simPrice} ج.
           </article>
         </div>
@@ -412,7 +412,7 @@ export default function WikiPage() {
             <div key={group.category}>
               <h2 className="mb-2 text-lg font-black tracking-tight">{group.category}</h2>
               {group.plans.map((plan) => (
-                <article key={plan.name} className="mb-2 flex items-center justify-between rounded-[22px] bg-white p-4 shadow-sm">
+                <article key={plan.name} className="mb-2 flex items-center justify-between rounded-[24px] bg-white p-4 border border-orange-200/70 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
                   <div>
                     <p className="font-black">{plan.name}</p>
                     <p className="text-xs text-neutral-400">{String(plan.data ?? "")}</p>
@@ -429,7 +429,7 @@ export default function WikiPage() {
         <div className="space-y-3">
           <Back onClick={() => setSection("hub")} title="Home Wireless" />
           {homePlans?.plans.map((plan) => (
-            <article key={plan.name} className="flex items-center justify-between rounded-[22px] bg-white p-4 shadow-sm">
+            <article key={plan.name} className="flex items-center justify-between rounded-[24px] bg-white p-4 border border-orange-200/70 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
               <div>
                 <p className="font-black">{plan.name}</p>
                 <p className="text-xs text-neutral-400">{String(plan.data ?? "")}</p>
@@ -444,7 +444,7 @@ export default function WikiPage() {
         <div className="space-y-3">
           <Back onClick={() => setSection("hub")} title="Home Internet DSL" />
           {DSL.plans.map((plan) => (
-            <article key={plan.name} className="rounded-[22px] bg-white p-4 shadow-sm">
+            <article key={plan.name} className="rounded-[24px] bg-white p-4 border border-orange-200/70 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
               <div className="flex items-start justify-between">
                 <p className="font-black">{plan.name}</p>
                 <p className="font-extrabold text-[#e06600]">{money(plan.price)} ج</p>
@@ -456,14 +456,14 @@ export default function WikiPage() {
           ))}
           <h2 className="pt-2 text-lg font-black tracking-tight">إضافات الكوتا</h2>
           {DSL.addons.map((item) => (
-            <article key={item.quota} className="flex items-center justify-between rounded-[22px] bg-white p-4 shadow-sm">
+            <article key={item.quota} className="flex items-center justify-between rounded-[24px] bg-white p-4 border border-orange-200/70 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
               <p className="font-bold">{item.quota}</p>
               <p className="font-extrabold text-[#e06600]">{money(item.price)} ج</p>
             </article>
           ))}
           <h2 className="pt-2 text-lg font-black tracking-tight">الراوتر</h2>
           {DSL.routers.map((item) => (
-            <article key={item.name} className="rounded-[22px] bg-white p-4 shadow-sm">
+            <article key={item.name} className="rounded-[24px] bg-white p-4 border border-orange-200/70 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
               <p className="text-xs font-extrabold text-[#e06600]">{item.tag}</p>
               <p className="font-black">{item.name}</p>
               <p className="mt-1 text-sm text-neutral-500">{item.desc}</p>
@@ -484,7 +484,7 @@ export default function WikiPage() {
               <div key={type}>
                 <h2 className="mb-2 text-lg font-black tracking-tight">{type === "ADSL" ? "ADSL / Fixed" : "موبايل"}</h2>
                 {rows.map((item) => (
-                  <article key={item.name + item.number} className="mb-2 flex items-center justify-between rounded-[22px] bg-white p-4 shadow-sm">
+                  <article key={item.name + item.number} className="mb-2 flex items-center justify-between rounded-[24px] bg-white p-4 border border-orange-200/70 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
                     <div>
                       <p className="font-black">{item.name}</p>
                       <p className="text-sm text-[#e06600]">{item.number}</p>
@@ -510,7 +510,7 @@ export default function WikiPage() {
           <Back onClick={() => setSection("hub")} title="E-Mails" />
           <SearchBox value={query} onChange={setQuery} placeholder="ابحث باسم الفريق أو الإيميل..." />
           {EMAILS.filter((item) => !q || `${item.name} ${item.email} ${item.description}`.toLowerCase().includes(q)).map((item) => (
-            <article key={item.email} className="rounded-[22px] bg-white p-4 shadow-sm">
+            <article key={item.email} className="rounded-[24px] bg-white p-4 border border-orange-200/70 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
               <p className="font-black">{item.name}</p>
               <p className="text-xs text-neutral-400">{item.description}</p>
               <p className="mt-1 break-all text-sm text-[#e06600]">{item.email}</p>
@@ -531,7 +531,7 @@ export default function WikiPage() {
         <div className="space-y-2">
           <Back onClick={() => setSection("hub")} title="أهم المستندات" />
           {DOCS.map((item) => (
-            <a key={item.title} href={item.url} target="_blank" rel="noreferrer" className="block rounded-[22px] bg-white p-4 shadow-sm">
+            <a key={item.title} href={item.url} target="_blank" rel="noreferrer" className="block rounded-[24px] bg-white p-4 border border-orange-200/70 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
               <p className="font-black">{item.title}</p>
               <p className="mt-1 text-sm leading-7 text-neutral-500">{item.description}</p>
               <p className="mt-2 text-xs font-extrabold text-[#e06600]">فتح الملف</p>
@@ -558,7 +558,7 @@ export default function WikiPage() {
           {loadingNotes ? <Spinner label="بيحمّل ملاحظاتك..." /> : null}
           {!loadingNotes && articles.length === 0 ? <EmptyState title="مفيش ملاحظات" text="ضيف مرجع أو ملاحظة شغل من عندك." /> : null}
           {articles.map((article) => (
-            <article key={article.id} className="rounded-[22px] bg-white p-4 shadow-sm">
+            <article key={article.id} className="rounded-[24px] bg-white p-4 border border-orange-200/70 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
               <h2 className="text-base font-black">{article.title}</h2>
               <p className="mt-2 whitespace-pre-wrap text-sm leading-7 text-neutral-600">{article.content}</p>
               <div className="mt-3 flex gap-2">
