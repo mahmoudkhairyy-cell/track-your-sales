@@ -9,6 +9,7 @@ import type { WorkingDays } from "@/lib/types";
 import type { KpiKey } from "@/lib/constants";
 import { useMonth } from "@/components/AppShell";
 import { KpiIcon } from "@/components/KpiIcon";
+import { workingDatesInMonth } from "@/lib/dates";
 
 type KpiForm = {
   kpiKey: KpiKey;
@@ -170,7 +171,7 @@ export default function TargetPage() {
         <div className="grid grid-cols-3 gap-2 text-center">
           <div><p className="text-2xl font-black">{monthDays.length}</p><p className="text-[11px] text-white/85">أيام الشهر</p></div>
           <div><p className="text-2xl font-black">{holidays.length}</p><p className="text-[11px] text-white/85">إجازات</p></div>
-          <div><p className="text-2xl font-black">{monthDays.length - holidays.length}</p><p className="text-[11px] text-white/85">أيام شغل</p></div>
+          <div><p className="text-2xl font-black">{workingDatesInMonth(month, workingDays, holidays.map((item) => item.date)).length}</p><p className="text-[11px] text-white/85">أيام شغل</p></div>
         </div>
       </section>
 
