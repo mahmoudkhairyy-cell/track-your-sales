@@ -173,11 +173,21 @@ export function AppShell({ children }: { children: ReactNode }) {
   const month = raw && isValidYearMonth(raw) ? raw : cairoYearMonth();
   const [status, setStatus] = useState<GateStatus>("checking");
   const [rev, setRev] = useState(0);
-  const [splash, setSplash] = useState(true);
+  const [splash, setSplash] = useState(false);
   const [who, setWho] = useState({ name: "", branch: "" });
 
   useEffect(() => {
     setWho(readProfile());
+    // بيظهر بس أول ما التطبيق يتفتح في الجلسة، والريفريش مايعيدهوش.
+    let alreadyShown = false;
+    try {
+      alreadyShown = sessionStorage.getItem("tys-splash-shown") === "1";
+      sessionStorage.setItem("tys-splash-shown", "1");
+    } catch {
+      alreadyShown = true;
+    }
+    if (alreadyShown) return;
+    setSplash(true);
     const timer = setTimeout(() => setSplash(false), 2000);
     return () => clearTimeout(timer);
   }, []);
