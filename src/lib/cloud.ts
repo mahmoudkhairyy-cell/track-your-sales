@@ -6,8 +6,8 @@ export async function cloudRpc<T>(name: string, body: Record<string, unknown>): 
   const response = await fetch(`${CLOUD_URL}/rest/v1/rpc/${name}`, {
     method: "POST",
     headers: {
+      // المفاتيح الجديدة (sb_publishable_) بتتبعت في apikey بس، مش في Authorization.
       apikey: CLOUD_KEY,
-      Authorization: `Bearer ${CLOUD_KEY}`,
       "Content-Type": "application/json",
     },
     body: JSON.stringify(body),

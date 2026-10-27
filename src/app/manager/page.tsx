@@ -32,7 +32,8 @@ export default function ManagerPage() {
       setRows(data ?? []);
     } catch (err) {
       setRows(null);
-      setError(err instanceof Error && err.message.includes("wrong password") ? "كلمة السر غلط" : "مقدرناش نجيب البيانات، جرّب تاني");
+      const raw = err instanceof Error ? err.message : "";
+      setError(raw.includes("wrong password") ? "كلمة السر غلط" : `مقدرناش نجيب البيانات، جرّب تاني. (${raw.slice(0, 160)})`);
     } finally {
       setPending(false);
     }
