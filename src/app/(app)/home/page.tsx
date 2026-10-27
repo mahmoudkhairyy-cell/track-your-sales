@@ -7,6 +7,7 @@ import { formatMoney, formatPercent, formatQty } from "@/lib/calculations";
 import { useMonth } from "@/components/AppShell";
 import { KpiIcon } from "@/components/KpiIcon";
 import { kpiMood } from "@/lib/motivation";
+import { readSyncStatus, type SyncStatus } from "@/lib/sync";
 
 type KpiRow = {
   kpiKey: string;
@@ -60,6 +61,13 @@ function shortKpiName(name: string) {
 
 export default function HomePage() {
   const [copied, setCopied] = useState(false);
+  const [sync, setSync] = useState<SyncStatus | null>(null);
+  useEffect(() => {
+    const refresh = () => setSync(readSyncStatus());
+    refresh();
+    window.addEventListener("tys-sync-status", refresh);
+    return () => window.removeEventListener("tys-sync-status", refresh);
+  }, []);
   const month = useMonth();
   // بنخزّن الشهر مع البيانات عشان نعرف إن اللي معروض يخص الشهر الحالي من غير setState متزامن جوه الـ effect.
   const [state, setState] = useState<{ month: string; data: Dashboard | null; error: string }>({
@@ -112,6 +120,13 @@ export default function HomePage() {
 
   return (
     <div className="space-y-5">
+      {sync ? (
+        <p className={`px-1 text-[11px] font-bold ${sync.ok ? "text-emerald-700" : "text-red-600"}`} dir="rtl">
+          {sync.ok
+            ? `☁️ اتبعت للمدير ${new Date(sync.at).toLocaleTimeString("en-US", { timeZone: "Africa/Cairo", hour: "2-digit", minute: "2-digit", hour12: false })}`
+            : `⚠️ ماتبعتش للمدير: ${sync.error ?? ""}`}
+        </p>
+      ) : null}
       <section className="text-right">
         <p className="text-sm font-extrabold text-neutral-700">
           {greeting()} {data.profile.name.split(" ")[0]} 👋

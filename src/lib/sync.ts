@@ -51,9 +51,33 @@ function branchId(): string {
 
 let running = false;
 
+export type SyncStatus = { ok: boolean; at: string; error?: string };
+export const SYNC_STATUS_KEY = "tys.lastSync";
+
+function saveStatus(status: SyncStatus) {
+  try {
+    localStorage.setItem(SYNC_STATUS_KEY, JSON.stringify(status));
+    window.dispatchEvent(new Event("tys-sync-status"));
+  } catch {
+    // التخزين مش متاح، مفيش أكتر من كده.
+  }
+}
+
+export function readSyncStatus(): SyncStatus | null {
+  try {
+    const raw = localStorage.getItem(SYNC_STATUS_KEY);
+    return raw ? (JSON.parse(raw) as SyncStatus) : null;
+  } catch {
+    return null;
+  }
+}
+
 /** بيبعت ملخص الشهر الحالي للسيرفر. بيرجّع false لو ماتبعتش (مفيش نت أو خطأ). */
 export async function pushReport(): Promise<boolean> {
-  if (typeof navigator !== "undefined" && !navigator.onLine) return false;
+  if (typeof navigator !== "undefined" && !navigator.onLine) {
+    saveStatus({ ok: false, at: new Date().toISOString(), error: "مفيش نت" });
+    return false;
+  }
   const id = branchId();
   const profile = readProfile();
   if (!id || !profile.name.trim() || running) return false;
@@ -94,8 +118,10 @@ export async function pushReport(): Promise<boolean> {
         syncedAt: new Date().toISOString(),
       },
     });
+    saveStatus({ ok: true, at: new Date().toISOString() });
     return true;
-  } catch {
+  } catch (err) {
+    saveStatus({ ok: false, at: new Date().toISOString(), error: err instanceof Error ? err.message.slice(0, 160) : "خطأ" });
     return false;
   } finally {
     running = false;
