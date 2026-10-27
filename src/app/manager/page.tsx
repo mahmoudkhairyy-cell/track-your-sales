@@ -108,16 +108,6 @@ export default function ManagerPage() {
     }
   }
 
-  async function removeRow(row: ReportRow) {
-    if (!window.confirm(`تمسح ${row.employee_name} من اللوحة؟ ده مش هيتعدّل على جهازه.`)) return;
-    try {
-      await cloudRpc("delete_report", { p_password: password, p_branch_id: row.branch_id });
-      await load();
-    } catch (err) {
-      setError(`مقدرناش نمسح السجل. (${err instanceof Error ? err.message.slice(0, 160) : ""})`);
-    }
-  }
-
   function renderRow(row: ReportRow) {
     const open = openId === row.branch_id;
     const days = daysSince(row.updated_at);
@@ -154,13 +144,6 @@ export default function ManagerPage() {
             </div>
           ))}
         </div>
-        <button
-          type="button"
-          onClick={() => removeRow(row)}
-          className="mt-2 w-full rounded-2xl border border-red-200 bg-white py-2 text-xs font-extrabold text-red-600"
-        >
-          🗑️ امسح السجل
-        </button>
         <button
           type="button"
           onClick={() => setOpenId(open ? null : row.branch_id)}
