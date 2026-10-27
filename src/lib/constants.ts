@@ -89,6 +89,16 @@ export const KPI_CATALOG = [
     defaultWeight: 10,
   },
   {
+    // المدير بس: إنتاجية الفرع (تارجت الـ GAs والـ OC). للموظف وزنها صفر ومش بتظهر.
+    key: "productivity",
+    nameEn: "Productivity (GA & OC)",
+    nameAr: "الإنتاجية",
+    emoji: "📈",
+    unitAr: "عملية",
+    defaultTarget: 0,
+    defaultWeight: 0,
+  },
+  {
     key: "quality",
     nameEn: "Quality",
     nameAr: "Quality",
@@ -108,6 +118,25 @@ export function kpiEmoji(key: string): string {
 }
 
 export type KpiKey = (typeof KPI_CATALOG)[number]["key"];
+
+export type Role = "agent" | "manager";
+
+// أوزان المدير من شيت الـ KPIs (Agent & Store Manager). المدير مش بيتحسب عليه الـ Existing ولا الـ New Orange Cash كبنود مستقلة بوزن مختلف.
+const MANAGER_WEIGHTS: Partial<Record<KpiKey, number>> = {
+  new_lines: 30,
+  existing_wallets: 15,
+  points: 5,
+  postpaid_lines: 10,
+  dsl: 10,
+  productivity: 15,
+  quality: 15,
+};
+
+/** الوزن الثابت للمؤشر حسب الدور. الأوزان مش بتتعدل من التطبيق، بتتغير من الكود بس. */
+export function kpiWeight(key: KpiKey, role: Role): number {
+  if (role === "manager") return MANAGER_WEIGHTS[key] ?? 0;
+  return KPI_CATALOG.find((item) => item.key === key)?.defaultWeight ?? 0;
+}
 
 export const KPI_KEYS = KPI_CATALOG.map((item) => item.key);
 

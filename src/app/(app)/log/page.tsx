@@ -142,7 +142,7 @@ export default function LogPage() {
         <input className={`${inputClass} mt-2`} type="date" value={entryDate} onChange={(e) => setEntryDate(e.target.value)} required />
       </section>
 
-      {KPI_CATALOG.filter((item) => item.key !== "quality").map((item) => {
+      {KPI_CATALOG.filter((item) => item.key !== "quality" && !(item.key === "productivity" && (dashByKey.get("productivity")?.weight ?? 0) === 0)).map((item) => {
         const d = dashByKey.get(item.key);
         const commission = d ? Math.round((d.contribution / 100) * (dash?.fullCommission ?? 0)) : 0;
         const excluded = !!d && d.weight > 0 && d.gated;

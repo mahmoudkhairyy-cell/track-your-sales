@@ -3,14 +3,15 @@
  * الصفحات بتكلم "/api/..." زي ما كانت، وهنا بنرد عليها محلياً بنفس الشكل.
  */
 import {
-  DEFAULT_COMMISSION,
   DEFAULT_WORKING_DAYS,
   ISO_DATE_RE,
   KPI_CATALOG,
   KPI_KEYS,
   SCHEMA_VERSION,
   YEAR_MONTH_RE,
+  kpiWeight,
   type KpiKey,
+  type Role,
 } from "@/lib/constants";
 import {
   achievementPercent,
@@ -130,7 +131,7 @@ function fail(status: number, message: string): never {
 
 function emptyState(): State {
   return {
-    profile: { name: "", branch: "", role: "user" },
+    profile: { name: "", branch: "", role: "" },
     entries: [],
     months: {},
     articles: [],
@@ -168,9 +169,9 @@ function newId(): string {
 
 /* ---------- قراءة الملف الشخصي (بيستخدمه الشريط الجانبي) ---------- */
 
-export function readProfile(): { name: string; branch: string } {
+export function readProfile(): { name: string; branch: string; role: Role | "" } {
   const state = loadState();
-  return { name: state.profile.name, branch: state.profile.branch };
+  return { name: state.profile.name, branch: state.profile.branch, role: state.profile.role === "manager" || state.profile.role === "agent" ? state.profile.role : "" };
 }
 
 /* ---------- تحقق من المدخلات ---------- */
@@ -241,7 +242,11 @@ function requireWorkingDays(value: unknown): WorkingDays {
 
 /* ---------- بناء الشهر والسجلات ---------- */
 
-function defaultBundle(yearMonth: string): Bundle {
+function roleOf(state: State): Role {
+  return state.profile.role === "manager" ? "manager" : "agent";
+}
+
+function defaultBundle(yearMonth: string, role: Role): Bundle {
   return {
     saved: false,
     yearMonth,
@@ -251,7 +256,7 @@ function defaultBundle(yearMonth: string): Bundle {
     kpis: KPI_CATALOG.map((kpi, index) => ({
       kpiKey: kpi.key,
       target: 0,
-      weight: kpi.defaultWeight,
+      weight: kpiWeight(kpi.key, role),
       unitAr: kpi.unitAr,
       sortOrder: index,
     })),
@@ -263,7 +268,8 @@ function defaultBundle(yearMonth: string): Bundle {
 
 function loadBundle(state: State, yearMonth: string): Bundle {
   const row = state.months[yearMonth];
-  if (!row) return defaultBundle(yearMonth);
+  const role = roleOf(state);
+  if (!row) return defaultBundle(yearMonth, role);
 
   const savedMap = new Map(row.kpis.map((item) => [item.kpiKey, item]));
   const newLinesTarget = savedMap.get("new_lines")?.target ?? 0;
@@ -278,7 +284,7 @@ function loadBundle(state: State, yearMonth: string): Bundle {
       kpiKey: kpi.key,
       target,
       // الأوزان ثابتة من الكود بس، مش بتتغير من التطبيق.
-      weight: kpi.defaultWeight,
+      weight: kpiWeight(kpi.key, role),
       unitAr: saved?.unitAr ?? kpi.unitAr,
       sortOrder: saved?.sortOrder ?? index,
     };
@@ -395,12 +401,13 @@ function putMonth(state: State, yearMonth: string, data: Record<string, unknown>
     const target = Number(row.target);
     if (!Number.isFinite(target) || target < 0) fail(400, `تارجت ${kpiKey} غير صالح`);
     const catalog = KPI_CATALOG.find((kpi) => kpi.key === kpiKey)!;
-    if (catalog.defaultWeight > 0 && target <= 0) fail(400, `لازم تدخل تارجت ${catalog.nameEn}`);
+    const weight = kpiWeight(kpiKey as KpiKey, roleOf(state));
+    if (weight > 0 && target <= 0) fail(400, `لازم تدخل تارجت ${catalog.nameEn}`);
     return {
       kpiKey: kpiKey as KpiKey,
       target,
-      // الوزن ثابت من الكود، أي قيمة جاية من الواجهة بتتجاهل.
-      weight: catalog.defaultWeight,
+      // الوزن ثابت من الكود حسب الدور، أي قيمة جاية من الواجهة بتتجاهل.
+      weight,
       unitAr: typeof row.unitAr === "string" && row.unitAr.trim() ? row.unitAr.trim() : catalog.unitAr,
       sortOrder: index,
     };
@@ -478,8 +485,9 @@ function deleteArticle(state: State, id: string) {
 function updateProfile(state: State, data: Record<string, unknown>) {
   const name = trimText(data.name, "اسم الموظف", 2, 80);
   const branch = typeof data.branch === "string" ? data.branch.trim().slice(0, 80) : "";
-  state.profile = { ...state.profile, name, branch };
-  return { user: { id: "local", name, branch, role: state.profile.role }, message: "✅ بياناتك اتحدثت" };
+  const role = data.role === "manager" || data.role === "agent" ? data.role : state.profile.role;
+  state.profile = { ...state.profile, name, branch, role };
+  return { user: { id: "local", name, branch, role }, message: "✅ بياناتك اتحدثت" };
 }
 
 function getDashboard(state: State, params: URLSearchParams) {
@@ -523,7 +531,9 @@ function getDashboard(state: State, params: URLSearchParams) {
     };
   });
 
-  const kpis = bundle.kpis.map((kpi) => {
+  const kpis = bundle.kpis
+    .filter((kpi) => !(kpi.kpiKey === "productivity" && kpi.weight === 0))
+    .map((kpi) => {
     const catalog = KPI_CATALOG.find((item) => item.key === kpi.kpiKey)!;
     const value = achieved[kpi.kpiKey] ?? 0;
     return {

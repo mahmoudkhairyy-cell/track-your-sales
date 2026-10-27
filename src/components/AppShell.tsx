@@ -100,6 +100,7 @@ function FirstRunProfile({ onDone }: { onDone: () => void }) {
   const [branch, setBranch] = useState("");
   const [error, setError] = useState("");
   const [pending, setPending] = useState(false);
+  const [role, setRole] = useState<"agent" | "manager" | "">("");
 
   async function submit(event: FormEvent) {
     event.preventDefault();
@@ -107,9 +108,13 @@ function FirstRunProfile({ onDone }: { onDone: () => void }) {
       setError("اكتب اسمك (حرفين على الأقل)");
       return;
     }
+    if (!role) {
+      setError("اختار إنت موظف ولا مدير");
+      return;
+    }
     setPending(true);
     try {
-      await api("/api/profile", { method: "PATCH", body: JSON.stringify({ name: name.trim(), branch: branch.trim() }) });
+      await api("/api/profile", { method: "PATCH", body: JSON.stringify({ name: name.trim(), branch: branch.trim(), role }) });
       onDone();
     } catch (err) {
       setError(err instanceof Error ? err.message : "تعذر الحفظ");
@@ -130,6 +135,24 @@ function FirstRunProfile({ onDone }: { onDone: () => void }) {
           الاسم
           <input value={name} onChange={(e) => setName(e.target.value)} className="mt-1 w-full rounded-2xl border border-orange-200 px-4 py-3 outline-none focus:border-[#e06600]" maxLength={80} />
         </label>
+        <div className="mb-4">
+          <p className="mb-2 text-sm font-bold text-neutral-700">إنت إيه؟</p>
+          <div className="grid grid-cols-2 gap-2">
+            {([
+              { key: "agent", label: "👤 موظف" },
+              { key: "manager", label: "🧑‍💼 مدير" },
+            ] as const).map((option) => (
+              <button
+                key={option.key}
+                type="button"
+                onClick={() => setRole(option.key)}
+                className={`rounded-2xl border px-3 py-3 text-sm font-extrabold ${role === option.key ? "border-[#e06600] bg-orange-100 text-[#8f4300]" : "border-orange-200 bg-white text-neutral-600"}`}
+              >
+                {option.label}
+              </button>
+            ))}
+          </div>
+        </div>
         <label className="mb-4 block text-sm font-bold text-neutral-700">
           اسم الفرع (اختياري)
           <input value={branch} onChange={(e) => setBranch(e.target.value)} className="mt-1 w-full rounded-2xl border border-orange-200 px-4 py-3 outline-none focus:border-[#e06600]" maxLength={80} />
@@ -201,7 +224,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   useEffect(() => {
     let cancelled = false;
     const profile = readProfile();
-    if (!profile.name.trim()) {
+    if (!profile.name.trim() || (profile.role !== "agent" && profile.role !== "manager")) {
       setStatus("profile");
       return;
     }

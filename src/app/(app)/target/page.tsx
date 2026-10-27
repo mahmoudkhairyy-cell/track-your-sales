@@ -266,6 +266,8 @@ export default function TargetPage() {
         {kpis.map((kpi, index) => {
           // الكواليتي بتتدخل في قسم الكواليتي تحت بس، ووزنها بيفضل محسوب في المجموع.
           if (kpi.kpiKey === "quality") return null;
+          // الإنتاجية للمدير بس (وزنها صفر للموظف).
+          if (kpi.kpiKey === "productivity" && kpi.weight === 0) return null;
           const catalog = KPI_CATALOG.find((item) => item.key === kpi.kpiKey);
           return (
             <div key={kpi.kpiKey} className="grid grid-cols-[1fr_74px_74px] items-center gap-2 border-b border-dashed border-orange-200/70 py-2.5 last:border-0">
