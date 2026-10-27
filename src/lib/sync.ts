@@ -5,6 +5,24 @@ import { readProfile } from "@/lib/local-api";
 
 const BRANCH_KEY = "tys.branchId";
 
+type EntrySnapshot = {
+  id: string;
+  kpiKey: string;
+  quantity: number;
+  entryDate: string;
+  note: string | null;
+  nameEn: string;
+  unitAr: string;
+};
+
+type SettingsSnapshot = {
+  saved: boolean;
+  fullCommission: number;
+  kpis: { kpiKey: string; target: number; weight: number; unitAr: string }[];
+  holidays: { date: string; note?: string | null }[];
+  workingDays: Record<string, boolean>;
+};
+
 type DashboardSnapshot = {
   monthLabel: string;
   overall: number;
@@ -42,7 +60,12 @@ export async function pushReport(): Promise<boolean> {
 
   running = true;
   try {
-    const data = await api<DashboardSnapshot>(`/api/dashboard?month=${cairoYearMonth()}`);
+    const month = cairoYearMonth();
+    const [data, settings, entriesResult] = await Promise.all([
+      api<DashboardSnapshot>(`/api/dashboard?month=${month}`),
+      api<{ settings: SettingsSnapshot }>(`/api/months/${month}`),
+      api<{ entries: EntrySnapshot[] }>(`/api/entries?month=${month}`),
+    ]);
     await cloudRpc("submit_report", {
       p_branch_id: id,
       p_employee: profile.name,
@@ -54,6 +77,20 @@ export async function pushReport(): Promise<boolean> {
         fullCommission: data.fullCommission,
         kpis: data.kpis.map((k) => ({ name: k.nameEn, achieved: k.achieved, target: k.target, percent: k.percent, weight: k.weight })),
         todaySummary: data.todaySummary.map((t) => ({ kpi: t.kpiKey, quantity: t.quantity, count: t.count })),
+        settings: {
+          fullCommission: settings.settings.fullCommission,
+          kpis: settings.settings.kpis,
+          holidays: settings.settings.holidays,
+          workingDays: settings.settings.workingDays,
+        },
+        entries: entriesResult.entries.map((e) => ({
+          date: e.entryDate,
+          kpi: e.nameEn,
+          quantity: e.quantity,
+          unit: e.unitAr,
+          note: e.note ?? "",
+          at: e.id,
+        })),
         syncedAt: new Date().toISOString(),
       },
     });

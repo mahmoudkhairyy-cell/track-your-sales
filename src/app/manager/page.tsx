@@ -14,11 +14,14 @@ type ReportRow = {
     estimatedCommission?: number;
     fullCommission?: number;
     kpis?: { name: string; achieved: number; target: number; percent: number; weight: number }[];
+    settings?: { fullCommission: number; kpis: { kpiKey: string; target: number; weight: number; unitAr: string }[]; holidays: { date: string }[] };
+    entries?: { date: string; kpi: string; quantity: number; unit: string; note: string }[];
   };
 };
 
 export default function ManagerPage() {
   const [password, setPassword] = useState("");
+  const [openId, setOpenId] = useState<string | null>(null);
   const [rows, setRows] = useState<ReportRow[] | null>(null);
   const [error, setError] = useState("");
   const [pending, setPending] = useState(false);
@@ -95,6 +98,38 @@ export default function ManagerPage() {
                     </div>
                   ))}
                 </div>
+                <button
+                  type="button"
+                  onClick={() => setOpenId(openId === row.branch_id ? null : row.branch_id)}
+                  className="mt-3 w-full rounded-2xl bg-orange-50 py-2 text-xs font-extrabold text-[#8f4300]"
+                >
+                  {openId === row.branch_id ? "إخفاء التفاصيل" : `عرض كل التفاصيل (${row.payload.entries?.length ?? 0} إنجاز)`}
+                </button>
+                {openId === row.branch_id ? (
+                  <div className="mt-3 space-y-3 text-xs">
+                    <div>
+                      <p className="mb-1 font-black">التارجت والأوزان</p>
+                      <p className="mb-1 text-neutral-500">الكوميشن الكامل: {row.payload.settings?.fullCommission ?? 0} جنيه</p>
+                      {(row.payload.settings?.kpis ?? []).map((k) => (
+                        <div key={k.kpiKey} className="flex justify-between">
+                          <span dir="ltr">{k.kpiKey}</span>
+                          <span className="tabular-nums">تارجت {k.target} · وزن {k.weight}%</span>
+                        </div>
+                      ))}
+                    </div>
+                    <div>
+                      <p className="mb-1 font-black">كل الإنجازات</p>
+                      {(row.payload.entries ?? []).length === 0 ? <p className="text-neutral-500">لا يوجد</p> : null}
+                      {(row.payload.entries ?? []).map((e, i) => (
+                        <div key={`${e.date}-${i}`} className="flex justify-between border-b border-dashed border-orange-200/70 py-1">
+                          <span dir="ltr">{e.date}</span>
+                          <span dir="ltr">{e.kpi}</span>
+                          <span className="tabular-nums">{e.quantity} {e.unit}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ) : null}
               </article>
             ))}
           </>
