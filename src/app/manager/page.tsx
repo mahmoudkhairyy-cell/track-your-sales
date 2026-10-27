@@ -32,6 +32,37 @@ function TrackBadge({ percent, expected }: { percent?: number; expected?: number
   );
 }
 
+function daysSince(iso: string): number {
+  return (Date.now() - new Date(iso).getTime()) / (24 * 60 * 60 * 1000);
+}
+
+function downloadBranchCsv(branchName: string, group: ReportRow[]) {
+  const kpiNames = Array.from(new Set(group.flatMap((r) => (r.payload.kpis ?? []).map((k) => k.name))));
+  const header = ["الموظف", "التوتال %", "آخر تحديث", ...kpiNames.flatMap((n) => [`${n} محقق`, `${n} تارجت`, `${n} %`])];
+  const lines = group.map((row) => {
+    const byName = new Map((row.payload.kpis ?? []).map((k) => [k.name, k]));
+    return [
+      row.employee_name,
+      Math.round(row.payload.overall ?? 0),
+      new Date(row.updated_at).toLocaleString("en-US", { timeZone: "Africa/Cairo", hour12: false }),
+      ...kpiNames.flatMap((n) => {
+        const k = byName.get(n);
+        return [k?.achieved ?? "", k?.target ?? "", k ? Math.round(k.percent) : ""];
+      }),
+    ];
+  });
+  const csv = [header, ...lines]
+    .map((cols) => cols.map((c) => `"${String(c).replace(/"/g, '""')}"`).join(","))
+    .join("\r\n");
+  const blob = new Blob(["\ufeff" + csv], { type: "text/csv;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `${branchName}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
 function groupAverage(group: ReportRow[]): number {
   const withData = group.filter((r) => typeof r.payload.overall === "number");
   return withData.length ? withData.reduce((sum, r) => sum + (r.payload.overall ?? 0), 0) / withData.length : 0;
@@ -77,13 +108,30 @@ export default function ManagerPage() {
     }
   }
 
+  async function removeRow(row: ReportRow) {
+    if (!window.confirm(`تمسح ${row.employee_name} من اللوحة؟ ده مش هيتعدّل على جهازه.`)) return;
+    try {
+      await cloudRpc("delete_report", { p_password: password, p_branch_id: row.branch_id });
+      await load();
+    } catch (err) {
+      setError(`مقدرناش نمسح السجل. (${err instanceof Error ? err.message.slice(0, 160) : ""})`);
+    }
+  }
+
   function renderRow(row: ReportRow) {
     const open = openId === row.branch_id;
+    const days = daysSince(row.updated_at);
+    const staleClass = days >= 3 ? "bg-red-100 text-red-700" : days >= 1 ? "bg-amber-100 text-amber-800" : "";
     return (
       <article key={row.branch_id} className="rounded-[24px] bg-white p-4 shadow-[0_12px_32px_rgba(40,20,0,0.07)] ring-1 ring-orange-200/70">
         <div className="flex items-start justify-between gap-3">
           <div>
             <h3 className="font-black">{row.employee_name}</h3>
+            {staleClass ? (
+              <span className={`mr-1 rounded-full px-2 py-0.5 text-[10px] font-black ${staleClass}`}>
+                آخر تحديث من {Math.floor(days)} يوم
+              </span>
+            ) : null}
             <div className="mt-1"><TrackBadge percent={row.payload.overall} expected={row.payload.expectedPercent} /></div>
             <p className="text-[10px] text-neutral-400" dir="ltr">
               {new Date(row.updated_at).toLocaleString("en-US", { timeZone: "Africa/Cairo", hour12: false })}
@@ -106,6 +154,13 @@ export default function ManagerPage() {
             </div>
           ))}
         </div>
+        <button
+          type="button"
+          onClick={() => removeRow(row)}
+          className="mt-2 w-full rounded-2xl border border-red-200 bg-white py-2 text-xs font-extrabold text-red-600"
+        >
+          🗑️ امسح السجل
+        </button>
         <button
           type="button"
           onClick={() => setOpenId(open ? null : row.branch_id)}
@@ -203,6 +258,13 @@ export default function ManagerPage() {
                 <div className="rounded-[24px] bg-[#e06600] p-4 text-white">
                   <p className="text-xs text-white/80">الفرع</p>
                   <h2 className="font-black" dir="ltr">{branch}</h2>
+                  <button
+                    type="button"
+                    onClick={() => downloadBranchCsv(branch, rows.filter((r) => (r.branch_name || "بدون فرع") === branch))}
+                    className="mt-3 rounded-full bg-white px-3 py-1.5 text-xs font-extrabold text-[#8f4300]"
+                  >
+                    📥 تحميل الفرع (Excel)
+                  </button>
                   <div className="mt-2">
                     <TrackBadge
                       percent={groupAverage(rows.filter((r) => (r.branch_name || "بدون فرع") === branch))}
