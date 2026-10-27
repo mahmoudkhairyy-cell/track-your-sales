@@ -31,6 +31,7 @@ function groupByBranch(rows: ReportRow[]): [string, ReportRow[]][] {
 export default function ManagerPage() {
   const [password, setPassword] = useState("");
   const [openId, setOpenId] = useState<string | null>(null);
+  const [branch, setBranch] = useState<string | null>(null);
   const [rows, setRows] = useState<ReportRow[] | null>(null);
   const [error, setError] = useState("");
   const [pending, setPending] = useState(false);
@@ -64,7 +65,6 @@ export default function ManagerPage() {
           </div>
           <div className="text-left">
             <p className="text-xl font-black text-[#e06600] tabular-nums">{Math.round(row.payload.overall ?? 0)}%</p>
-            <p className="text-[11px] text-neutral-500 tabular-nums">كوميشن {Math.round(row.payload.estimatedCommission ?? 0)} ج</p>
           </div>
         </div>
         <div className="mt-3 space-y-2">
@@ -88,7 +88,6 @@ export default function ManagerPage() {
           <div className="mt-3 space-y-3 text-xs">
             <div>
               <p className="mb-1 font-black">التارجت والأوزان</p>
-              <p className="mb-1 text-neutral-500">الكوميشن الكامل: {row.payload.settings?.fullCommission ?? 0} جنيه</p>
               {(row.payload.settings?.kpis ?? []).map((k) => (
                 <div key={k.kpiKey} className="flex justify-between">
                   <span dir="ltr">{k.kpiKey}</span>
@@ -145,27 +144,50 @@ export default function ManagerPage() {
             {rows.length === 0 ? (
               <p className="rounded-2xl bg-white p-4 text-sm font-bold text-neutral-500">مفيش فروع بعتت بيانات لحد دلوقتي.</p>
             ) : null}
-            {groupByBranch(rows).map(([branchName, group]) => {
-              const withData = group.filter((r) => typeof r.payload.overall === "number");
-              const avg = withData.length ? withData.reduce((sum, r) => sum + (r.payload.overall ?? 0), 0) / withData.length : 0;
-              const commission = group.reduce((sum, r) => sum + (r.payload.estimatedCommission ?? 0), 0);
-              return (
-                <section key={branchName} className="space-y-3">
-                  <div className="flex items-center justify-between rounded-[24px] bg-[#e06600] p-4 text-white">
-                    <div>
-                      <p className="text-xs text-white/80">الفرع</p>
-                      <h2 className="font-black" dir="ltr">{branchName}</h2>
-                      <p className="text-xs text-white/85">{group.length} موظف</p>
-                    </div>
-                    <div className="text-left">
-                      <p className="text-2xl font-black tabular-nums">{Math.round(avg)}%</p>
-                      <p className="text-[11px] text-white/85 tabular-nums">كوميشن {Math.round(commission)} ج</p>
-                    </div>
-                  </div>
-                  {group.map((row) => renderRow(row))}
-                </section>
-              );
-            })}
+            {branch === null ? (
+              <div className="space-y-3">
+                {groupByBranch(rows).map(([branchName, group]) => {
+                  const withData = group.filter((r) => typeof r.payload.overall === "number");
+                  const avg = withData.length ? withData.reduce((sum, r) => sum + (r.payload.overall ?? 0), 0) / withData.length : 0;
+                  return (
+                    <button
+                      key={branchName}
+                      type="button"
+                      onClick={() => setBranch(branchName)}
+                      className="flex w-full items-center justify-between rounded-[24px] bg-white p-4 text-right shadow-[0_12px_32px_rgba(40,20,0,0.07)] ring-1 ring-orange-200/70"
+                    >
+                      <div>
+                        <p className="font-black" dir="ltr">{branchName}</p>
+                        <p className="text-xs text-neutral-500">{group.length} موظف</p>
+                      </div>
+                      <p className="text-xl font-black text-[#e06600] tabular-nums">{Math.round(avg)}%</p>
+                    </button>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="space-y-3">
+                <button type="button" onClick={() => { setBranch(null); setOpenId(null); }} className="text-sm font-extrabold text-[#e06600]">← كل الفروع</button>
+                <div className="rounded-[24px] bg-[#e06600] p-4 text-white">
+                  <p className="text-xs text-white/80">الفرع</p>
+                  <h2 className="font-black" dir="ltr">{branch}</h2>
+                </div>
+                {groupByBranch(rows)
+                  .filter(([name]) => name === branch)
+                  .flatMap(([, group]) =>
+                    [...group]
+                      .sort((a, b) => (b.payload.overall ?? 0) - (a.payload.overall ?? 0))
+                      .map((row, index) => (
+                        <div key={row.branch_id} className="relative">
+                          <span className="absolute -top-2 right-4 z-10 rounded-full bg-[#8f4300] px-2.5 py-0.5 text-[11px] font-black text-white">
+                            المركز {index + 1}
+                          </span>
+                          {renderRow(row)}
+                        </div>
+                      )),
+                  )}
+              </div>
+            )}
           </>
         )}
       </div>
