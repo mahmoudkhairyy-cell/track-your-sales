@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useState } from "react";
+import { useHistoryView } from "@/lib/use-history-view";
 import { cloudRpc } from "@/lib/cloud";
 
 type ReportRow = {
@@ -53,7 +54,9 @@ function groupByBranch(rows: ReportRow[]): [string, ReportRow[]][] {
 export default function ManagerPage() {
   const [password, setPassword] = useState("");
   const [openId, setOpenId] = useState<string | null>(null);
-  const [branch, setBranch] = useState<string | null>(null);
+  // "list" = قايمة الفروع، و"branch:<اسم>" = صفحة فرع. الرجوع بيتسجل في تاريخ المتصفح.
+  const [view, setView] = useHistoryView<string>("list");
+  const branch = view.startsWith("branch:") ? view.slice("branch:".length) : null;
   const [rows, setRows] = useState<ReportRow[] | null>(null);
   const [error, setError] = useState("");
   const [pending, setPending] = useState(false);
@@ -179,7 +182,7 @@ export default function ManagerPage() {
                     <button
                       key={branchName}
                       type="button"
-                      onClick={() => setBranch(branchName)}
+                      onClick={() => setView(`branch:${branchName}`)}
                       className="flex w-full items-center justify-between rounded-[24px] bg-white p-4 text-right shadow-[0_12px_32px_rgba(40,20,0,0.07)] ring-1 ring-orange-200/70"
                     >
                       <div>
@@ -194,7 +197,7 @@ export default function ManagerPage() {
               </div>
             ) : (
               <div className="space-y-3">
-                <button type="button" onClick={() => { setBranch(null); setOpenId(null); }} className="text-sm font-extrabold text-[#e06600]">← كل الفروع</button>
+                <button type="button" onClick={() => { setView("list"); setOpenId(null); }} className="text-sm font-extrabold text-[#e06600]">← كل الفروع</button>
                 <div className="rounded-[24px] bg-[#e06600] p-4 text-white">
                   <p className="text-xs text-white/80">الفرع</p>
                   <h2 className="font-black" dir="ltr">{branch}</h2>
