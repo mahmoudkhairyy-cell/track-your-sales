@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { createContext, useContext, useEffect, useState, type FormEvent, type ReactNode } from "react";
 import { readProfile } from "@/lib/local-api";
+import { pushReport } from "@/lib/sync";
 import { api } from "@/lib/client";
 import { APP_DISCLAIMER, APP_NAME, BRAND_BY } from "@/lib/constants";
 import { cairoYearMonth, isValidYearMonth, monthLabelAr, shiftYearMonth } from "@/lib/dates";
@@ -219,6 +220,20 @@ export function AppShell({ children }: { children: ReactNode }) {
     const bump = () => setRev((n) => n + 1);
     window.addEventListener("tys-settings-saved", bump);
     return () => window.removeEventListener("tys-settings-saved", bump);
+  }, []);
+
+  // بيبعت الملخص للسيرفر عند فتح التطبيق، وبعد أي تسجيل أو تعديل تارجت، ولما النت يرجع.
+  useEffect(() => {
+    const push = () => void pushReport();
+    window.addEventListener("online", push);
+    window.addEventListener("tys-data-changed", push);
+    window.addEventListener("tys-settings-saved", push);
+    push();
+    return () => {
+      window.removeEventListener("online", push);
+      window.removeEventListener("tys-data-changed", push);
+      window.removeEventListener("tys-settings-saved", push);
+    };
   }, []);
 
   useEffect(() => {

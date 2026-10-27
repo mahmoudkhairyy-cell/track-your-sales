@@ -84,6 +84,7 @@ export default function LogPage() {
       }
       if (typeof navigator !== "undefined" && "vibrate" in navigator) navigator.vibrate?.(30);
       toast.push("success", `${CHEERS[Math.floor(Math.random() * CHEERS.length)]} (${saved})`);
+      window.dispatchEvent(new Event("tys-data-changed"));
       setQuantities({});
       setNote("");
       setEntryDate(cairoISODate());
