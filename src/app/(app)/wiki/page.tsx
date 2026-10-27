@@ -28,6 +28,7 @@ import {
   type SrItem,
 } from "@/data";
 import { BookIcon, CallIcon, CardIcon, CheckIcon, PhoneIcon, StarIcon, WalletIcon, WifiIcon } from "@/components/icons";
+import { matchesQuery } from "@/lib/search";
 
 type Article = { id: string; title: string; content: string; updatedAt: string };
 type SectionId = "hub" | "sr" | "premier" | "freemax" | "go" | "hunts" | "home" | "dsl" | "docs" | "emails" | "notes";
@@ -103,26 +104,26 @@ export default function WikiPage() {
     if (section === "notes") void loadNotes();
   }, [section]);
 
-  const q = query.trim().toLowerCase();
+  const q = query.trim();
 
   const filteredSr = useMemo(() => {
     return SR_ITEMS.filter((item) => {
       const catOk = srCategory === "الكل" || item.category === srCategory;
       if (!catOk) return false;
       if (!q) return true;
-      return [item.id, item.title, item.titleAr, item.description, item.steps, item.category].join(" ").toLowerCase().includes(q);
+      return matchesQuery([item.id, item.title, item.titleAr, item.description, item.steps, item.category].join(" "), q);
     });
   }, [q, srCategory]);
 
   const globalHits = useMemo(() => {
     if (!q) return null;
-    const sr = SR_ITEMS.filter((item) => [item.id, item.title, item.titleAr, item.description].join(" ").toLowerCase().includes(q)).slice(0, 12);
-    const hunts = HUNTS.filter((item) => `${item.name} ${item.number}`.toLowerCase().includes(q));
-    const emails = EMAILS.filter((item) => `${item.name} ${item.email} ${item.description}`.toLowerCase().includes(q));
-    const docs = DOCS.filter((item) => `${item.title} ${item.description}`.toLowerCase().includes(q));
-    const plans = PLAN_GROUPS.flatMap((g) => g.plans.filter((p) => String(p.name).toLowerCase().includes(q)).map((p) => ({ ...p, group: g.category })));
-    const fm = FREEMAX.plans.filter((p) => `${p.name} ${p.nameAr}`.toLowerCase().includes(q));
-    const dsl = DSL.plans.filter((p) => p.name.toLowerCase().includes(q));
+    const sr = SR_ITEMS.filter((item) => matchesQuery([item.id, item.title, item.titleAr, item.description, item.category, item.steps].join(" "), q)).slice(0, 12);
+    const hunts = HUNTS.filter((item) => matchesQuery(`${item.name} ${item.number}`, q));
+    const emails = EMAILS.filter((item) => matchesQuery(`${item.name} ${item.email} ${item.description}`, q));
+    const docs = DOCS.filter((item) => matchesQuery(`${item.title} ${item.description}`, q));
+    const plans = PLAN_GROUPS.flatMap((g) => g.plans.filter((p) => matchesQuery(`${g.category} ${String(p.name)}`, q)).map((p) => ({ ...p, group: g.category })));
+    const fm = FREEMAX.plans.filter((p) => matchesQuery(`${p.name} ${p.nameAr}`, q));
+    const dsl = DSL.plans.filter((p) => matchesQuery(p.name, q));
     return { sr, hunts, emails, docs, plans, fm, dsl };
   }, [q]);
 
