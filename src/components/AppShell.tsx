@@ -156,6 +156,16 @@ function TargetGate({ month }: { month: string }) {
   );
 }
 
+function SplashScreen({ name }: { name: string }) {
+  return (
+    <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-[#fbe9da] px-6 text-center" dir="rtl">
+      <img src="/track-your-sales/logo-full.png" alt={APP_NAME} className="w-56 max-w-full object-contain" />
+      {name.trim() ? <p className="text-lg font-black text-neutral-900">أهلاً يا {name.trim().split(" ")[0]} 👋</p> : null}
+      <p className="text-xs font-bold text-neutral-500" dir="ltr">{BRAND_BY}</p>
+    </div>
+  );
+}
+
 export function AppShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const params = useSearchParams();
@@ -163,6 +173,14 @@ export function AppShell({ children }: { children: ReactNode }) {
   const month = raw && isValidYearMonth(raw) ? raw : cairoYearMonth();
   const [status, setStatus] = useState<GateStatus>("checking");
   const [rev, setRev] = useState(0);
+  const [splash, setSplash] = useState(true);
+  const [who, setWho] = useState({ name: "", branch: "" });
+
+  useEffect(() => {
+    setWho(readProfile());
+    const timer = setTimeout(() => setSplash(false), 2000);
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     const bump = () => setRev((n) => n + 1);
@@ -189,6 +207,9 @@ export function AppShell({ children }: { children: ReactNode }) {
     };
   }, [month, rev]);
 
+  if (splash) {
+    return <SplashScreen name={who.name} />;
+  }
   if (status === "checking") {
     return <div className="flex min-h-screen items-center justify-center bg-[#fbe9da] text-3xl"><img src="/track-your-sales/logo-mark.png" alt="" className="h-16 w-16 object-contain" /></div>;
   }
