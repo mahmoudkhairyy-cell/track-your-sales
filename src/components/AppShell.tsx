@@ -122,7 +122,7 @@ function FirstRunProfile({ onDone }: { onDone: () => void }) {
     <div className="flex min-h-screen items-center justify-center bg-[#fbe9da] p-4 text-neutral-900">
       <form onSubmit={submit} className="w-full max-w-sm rounded-3xl bg-white p-6 shadow-[0_20px_50px_rgba(190,90,0,0.15)]" dir="rtl">
         <div className="mb-5 text-center">
-          <div className="text-4xl">🍊</div>
+          <img src="/track-your-sales/logo-mark.png" alt="" className="mx-auto h-16 w-16 object-contain" />
           <h1 className="mt-2 text-xl font-black">أهلاً بيك في {APP_NAME}</h1>
           <p className="mt-1 text-sm text-neutral-500">عشان نبدأ، اكتب اسمك واسم الفرع</p>
         </div>
@@ -190,7 +190,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   }, [month, rev]);
 
   if (status === "checking") {
-    return <div className="flex min-h-screen items-center justify-center bg-[#fbe9da] text-3xl">🍊</div>;
+    return <div className="flex min-h-screen items-center justify-center bg-[#fbe9da] text-3xl"><img src="/track-your-sales/logo-mark.png" alt="" className="h-16 w-16 object-contain" /></div>;
   }
   if (status === "profile") {
     return (
@@ -246,7 +246,7 @@ function AppFrame({ children, blocked, month }: { children: ReactNode; blocked: 
                   <MonthSwitcher />
                   <div className="flex items-center gap-2">
                     <div className="text-left">
-                      <p className="text-sm font-black leading-none text-neutral-900" dir="ltr">🍊 {APP_NAME}</p>
+                      <p className="text-sm font-black leading-none text-neutral-900" dir="ltr">{APP_NAME}</p>
                       <p className="mt-1 text-[11px] text-neutral-400" dir="ltr">{BRAND_BY}</p>
                     </div>
                     <LogoMark />

@@ -375,7 +375,7 @@ export default function MorePage() {
         <div className="space-y-4">
           <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[#e06600]">← رجوع للقائمة</button>
           <section className="rounded-[24px] border border-orange-200/70 bg-white p-5 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
-            <p className="font-black">🍊 Target Tracker</p>
+            <p className="font-black">Target Tracker</p>
             <p className="mt-2 text-sm leading-7 text-neutral-600">أداة مساعدة مستقلة وغير رسمية، وليست تطبيقًا رسميًا تابعًا لشركة Orange.</p>
           </section>
         </div>

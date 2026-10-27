@@ -170,7 +170,7 @@ export default function WikiPage() {
       {section === "hub" ? (
         <>
           <section className="text-center">
-            <h1 className="text-3xl font-black text-neutral-900">مرجع أورانج 🍊</h1>
+            <h1 className="text-3xl font-black text-neutral-900">مرجع أورانج</h1>
             <p className="mt-2 text-sm text-neutral-400">بحث شامل في أكواد SR والباقات والأرقام والإيميلات</p>
           </section>
           <SearchBox value={query} onChange={setQuery} placeholder="ابحث بالكود أو الاسم أو الرقم..." />
