@@ -126,93 +126,95 @@ function roundRect(ctx: CanvasRenderingContext2D, x: number, y: number, w: numbe
   ctx.closePath();
 }
 
-/** بيرسم صورة TOP بالتصميم البرتقالي ويحمّلها كـ PNG. */
-function exportTopImage(list: TopRow[]) {
+/** بيرسم صورة TOP N بمقاس الموبايل (1080×1920) ويحمّلها كـ PNG. */
+function exportTopImage(list: TopRow[], n: number) {
+  const top = list.slice(0, n);
   const width = 1080;
-  const rowH = 132;
-  const headerH = 300;
-  const height = headerH + list.length * rowH + 110;
+  const height = 1920;
   const canvas = document.createElement("canvas");
   canvas.width = width;
   canvas.height = height;
   const ctx = canvas.getContext("2d");
   if (!ctx) return;
 
-  const bg = ctx.createLinearGradient(0, 0, 0, height);
-  bg.addColorStop(0, "#fbe9da");
-  bg.addColorStop(1, "#fff8f2");
+  // خلفية برتقالي غامق بتدرج
+  const bg = ctx.createLinearGradient(0, 0, width, height);
+  bg.addColorStop(0, "#f0802a");
+  bg.addColorStop(0.5, "#b84700");
+  bg.addColorStop(1, "#5c2300");
   ctx.fillStyle = bg;
   ctx.fillRect(0, 0, width, height);
 
-  const head = ctx.createLinearGradient(0, 0, width, headerH);
-  head.addColorStop(0, "#f0802a");
-  head.addColorStop(0.6, "#e06600");
-  head.addColorStop(1, "#b84700");
-  ctx.fillStyle = head;
-  ctx.fillRect(0, 0, width, headerH);
+  // دوائر ناعمة في الخلفية
+  ctx.fillStyle = "rgba(255,255,255,0.08)";
+  ctx.beginPath();
+  ctx.arc(width - 120, 260, 360, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.beginPath();
+  ctx.arc(120, height - 280, 300, 0, Math.PI * 2);
+  ctx.fill();
 
-  ctx.fillStyle = "#ffffff";
   ctx.textAlign = "center";
-  ctx.font = "900 120px system-ui, sans-serif";
-  ctx.fillText("TOP", width / 2, 150);
-  ctx.font = "600 30px system-ui, sans-serif";
-  ctx.fillStyle = "rgba(255,255,255,0.9)";
-  ctx.fillText("Track Your Sales · by Mahmoud Khairy · Mr. Abdelrahman Mahmoud", width / 2, 215);
-  ctx.font = "500 28px system-ui, sans-serif";
-  ctx.fillStyle = "rgba(255,255,255,0.8)";
-  ctx.fillText(new Date().toLocaleDateString("en-GB", { timeZone: "Africa/Cairo" }), width / 2, 262);
+  ctx.fillStyle = "#ffffff";
+  ctx.font = "900 210px system-ui, sans-serif";
+  ctx.fillText(`TOP ${n}`, width / 2, 330);
+  ctx.font = "600 38px system-ui, sans-serif";
+  ctx.fillStyle = "rgba(255,255,255,0.85)";
+  ctx.fillText("Track Your Sales", width / 2, 400);
 
-  const medal = ["#f5b400", "#9aa4b2", "#c27a3a"];
-  list.forEach((row, i) => {
-    const y = headerH + 40 + i * rowH;
+  const cardTop = 480;
+  const cardH = Math.min(260, Math.floor((height - cardTop - 220) / Math.max(1, top.length)) - 30);
+  const medal = ["#f5c542", "#c9d1dc", "#d68a4c"];
+
+  top.forEach((row, i) => {
+    const y = cardTop + i * (cardH + 30);
     ctx.save();
-    ctx.shadowColor = "rgba(190,90,0,0.15)";
-    ctx.shadowBlur = 24;
-    ctx.shadowOffsetY = 8;
-    ctx.fillStyle = "#ffffff";
-    roundRect(ctx, 50, y, width - 100, rowH - 22, 34);
+    ctx.shadowColor = "rgba(0,0,0,0.25)";
+    ctx.shadowBlur = 40;
+    ctx.shadowOffsetY = 16;
+    ctx.fillStyle = "rgba(255,255,255,0.97)";
+    roundRect(ctx, 80, y, width - 160, cardH, 56);
     ctx.fill();
     ctx.restore();
 
+    // الترتيب
     ctx.fillStyle = i < 3 ? medal[i] : "#fbe9da";
     ctx.beginPath();
-    ctx.arc(120, y + (rowH - 22) / 2, 38, 0, Math.PI * 2);
+    ctx.arc(190, y + cardH / 2, 66, 0, Math.PI * 2);
     ctx.fill();
-    ctx.fillStyle = i < 3 ? "#ffffff" : "#8f4300";
-    ctx.font = "900 40px system-ui, sans-serif";
-    ctx.fillText(String(row.rank), 120, y + (rowH - 22) / 2 + 14);
+    ctx.fillStyle = i < 3 ? "#5c2300" : "#8f4300";
+    ctx.font = "900 76px system-ui, sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText(String(row.rank), 190, y + cardH / 2 + 26);
 
+    // الاسم والفرع
     ctx.textAlign = "left";
     ctx.fillStyle = "#1d1a16";
-    ctx.font = "800 38px system-ui, sans-serif";
-    ctx.fillText(row.name.slice(0, 26), 190, y + 56);
+    ctx.font = "900 56px system-ui, sans-serif";
+    ctx.fillText(row.name.slice(0, 22), 300, y + cardH / 2 - 6);
     ctx.fillStyle = "#7a7068";
-    ctx.font = "500 26px system-ui, sans-serif";
-    ctx.fillText(row.branch.slice(0, 34), 190, y + 92);
+    ctx.font = "600 34px system-ui, sans-serif";
+    ctx.fillText(row.branch.slice(0, 30), 300, y + cardH / 2 + 46);
 
+    // النسبة
     ctx.textAlign = "right";
     ctx.fillStyle = "#e06600";
-    ctx.font = "900 52px system-ui, sans-serif";
-    ctx.fillText(`${Math.round(row.percent)}%`, width - 110, y + 66);
-
-    const barX = 190;
-    const barW = width - 100 - 190 - 110;
-    ctx.fillStyle = "#f3e7dc";
-    roundRect(ctx, barX, y + 100, barW, 10, 5);
-    ctx.fill();
-    ctx.fillStyle = "#e06600";
-    roundRect(ctx, barX, y + 100, Math.max(10, (barW * Math.min(100, Math.max(0, row.percent))) / 100), 10, 5);
-    ctx.fill();
-    ctx.textAlign = "center";
+    ctx.font = "900 100px system-ui, sans-serif";
+    ctx.fillText(`${Math.round(row.percent)}%`, width - 120, y + cardH / 2 + 34);
   });
+
+  ctx.textAlign = "center";
+  ctx.fillStyle = "rgba(255,255,255,0.8)";
+  ctx.font = "600 30px system-ui, sans-serif";
+  ctx.fillText(new Date().toLocaleDateString("en-GB", { timeZone: "Africa/Cairo" }), width / 2, height - 120);
 
   canvas.toBlob((blob) => {
     if (!blob) return;
     const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "TOP.png";
-    a.click();
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `TOP-${n}.png`;
+    link.click();
     URL.revokeObjectURL(url);
   }, "image/png");
 }
@@ -253,6 +255,7 @@ export default function ManagerPage() {
   const [error, setError] = useState("");
   const [pending, setPending] = useState(false);
 
+  const [topN, setTopN] = useState(3);
   const topRows: TopRow[] = (rows ?? [])
     .map((r) => ({ name: r.employee_name, branch: r.branch_name || "بدون فرع", percent: r.payload.overall ?? 0 }))
     .sort((a, b) => b.percent - a.percent)
@@ -399,7 +402,7 @@ export default function ManagerPage() {
               <img src="/track-your-sales/logo-mark.png" alt="" className="h-10 w-10 object-contain" />
               <div>
                 <p className="text-sm font-black tracking-tight" dir="ltr">Track Your Sales</p>
-                <p className="text-[11px] text-white/85" dir="ltr">Manager Dashboard · by Mahmoud Khairy</p>
+                <p className="text-[11px] text-white/85" dir="ltr">Manager Dashboard</p>
               </div>
             </div>
             <p className="rounded-full bg-white/20 px-3 py-1 text-[11px] font-extrabold ring-1 ring-white/30" dir="ltr">👑 Mr. Abdelrahman Mahmoud</p>
@@ -432,6 +435,7 @@ export default function ManagerPage() {
           </form>
         ) : (
           <>
+            {error ? <p className="rounded-2xl bg-red-50 p-3 text-xs font-bold text-red-600">{error}</p> : null}
             {view === "top" ? (
               <div className="space-y-3">
                 <button type="button" onClick={() => setView("list")} className="text-sm font-extrabold text-[#e06600]">← رجوع</button>
@@ -442,11 +446,23 @@ export default function ManagerPage() {
                   </div>
                   <button
                     type="button"
-                    onClick={() => exportTopImage(topRows)}
+                    onClick={() => exportTopImage(topRows, topN)}
                     className="rounded-2xl bg-white px-3 py-2 text-xs font-extrabold text-[#8f4300] shadow-md"
                   >
-                    📸 صدّر صورة
+                    📸 صدّر TOP {topN}
                   </button>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {[1, 2, 3, 5, 10].map((n) => (
+                    <button
+                      key={n}
+                      type="button"
+                      onClick={() => setTopN(n)}
+                      className={`rounded-full px-3 py-1.5 text-xs font-black ${topN === n ? "bg-[#e06600] text-white" : "bg-white text-[#8f4300] ring-1 ring-orange-200/70"}`}
+                    >
+                      TOP {n}
+                    </button>
+                  ))}
                 </div>
                 {topRows.map((row) => (
                   <div key={`${row.branch}-${row.name}-${row.rank}`} className="flex items-center justify-between rounded-[22px] bg-white p-3.5 shadow-[0_8px_24px_rgba(40,20,0,0.06)] ring-1 ring-orange-200/70">
@@ -469,8 +485,8 @@ export default function ManagerPage() {
             <div className="flex items-center justify-between">
               <p className="text-sm font-bold text-neutral-500">{rows.length} موظف</p>
               <button type="button" onClick={() => setView("top")} className="rounded-full bg-gradient-to-br from-[#f0802a] to-[#b84700] px-3 py-1.5 text-xs font-black text-white">🏆 TOP</button>
-              <button type="button" onClick={() => load()} className="rounded-full bg-white px-3 py-1.5 text-xs font-extrabold text-[#8f4300] ring-1 ring-orange-200/70">
-                🔄 تحديث
+              <button type="button" disabled={pending} onClick={() => load()} className="rounded-full bg-white px-3 py-1.5 text-xs font-extrabold text-[#8f4300] ring-1 ring-orange-200/70 disabled:opacity-60">
+                {pending ? "⏳ بنحدّث..." : "🔄 تحديث"}
               </button>
             </div>
             {rows.length === 0 ? (
