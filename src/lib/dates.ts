@@ -121,7 +121,7 @@ export function remainingWorkingDates(
 
 export function formatTimeCairo(date: Date | string): string {
   const value = typeof date === "string" ? new Date(date) : date;
-  return new Intl.DateTimeFormat("ar-EG", {
+  return new Intl.DateTimeFormat("en-US", {
     timeZone: CAIRO_TZ,
     hour: "2-digit",
     minute: "2-digit",
