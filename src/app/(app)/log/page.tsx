@@ -105,6 +105,25 @@ export default function LogPage() {
 
       {error ? <Banner tone="error">❌ {error}</Banner> : null}
 
+      {dash ? (
+        <section className="relative overflow-hidden rounded-[28px] bg-gradient-to-br from-[#f0802a] via-[#e06600] to-[#b84700] p-5 text-white shadow-[0_20px_50px_rgba(190,90,0,0.35)] ring-1 ring-white/30">
+          <div className="grid grid-cols-3 gap-2 text-center">
+            <div className="rounded-2xl bg-white/15 px-2 py-3 ring-1 ring-white/25">
+              <p className="text-xl font-black tabular-nums">{formatQty(Math.round(dash.overall))}%</p>
+              <p className="text-[11px] text-white/85">التوتال</p>
+            </div>
+            <div className="rounded-2xl bg-white/15 px-2 py-3 ring-1 ring-white/25">
+              <p className="text-xl font-black tabular-nums">{formatQty(workLeft)}</p>
+              <p className="text-[11px] text-white/85">أيام فاضلة</p>
+            </div>
+            <div className="rounded-2xl bg-white/15 px-2 py-3 ring-1 ring-white/25">
+              <p className="text-xl font-black tabular-nums">{formatQty(onTrack.length)}</p>
+              <p className="text-[11px] text-white/85">مؤشرات ناقصة</p>
+            </div>
+          </div>
+        </section>
+      ) : null}
+
       {onTrack.length > 0 ? (
         <section className="rounded-[24px] bg-orange-100 p-4 text-[#8f4300]">
           <p className="text-sm font-extrabold">⚡ المطلوب منك النهارده عشان تفضل ON TRACK</p>
