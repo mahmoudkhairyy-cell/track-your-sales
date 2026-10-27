@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { useHistoryView } from "@/lib/use-history-view";
 import { cloudRpc } from "@/lib/cloud";
 
@@ -135,22 +135,34 @@ function groupByBranch(rows: ReportRow[]): [string, ReportRow[]][] {
 
 export default function ManagerPage() {
   const [password, setPassword] = useState("");
-  const [openId, setOpenId] = useState<string | null>(null);
   const [detailsId, setDetailsId] = useState<string | null>(null);
   const [branchOpen, setBranchOpen] = useState(false);
   // "list" = قايمة الفروع، و"branch:<اسم>" = صفحة فرع. الرجوع بيتسجل في تاريخ المتصفح.
+  // "list" = الفروع، "b:<فرع>" = صفحة فرع، "b:<فرع>|e:<id>" = موظف مفتوح. كل خطوة بتتسجل في تاريخ المتصفح.
   const [view, setView] = useHistoryView<string>("list");
-  const branch = view.startsWith("branch:") ? view.slice("branch:".length) : null;
+  const branch = view.startsWith("b:") ? view.slice(2).split("|e:")[0] : null;
+  const openId = view.includes("|e:") ? view.split("|e:")[1] : null;
+  const setOpenId = (id: string | null) => {
+    if (!branch) return;
+    setView(id ? `b:${branch}|e:${id}` : `b:${branch}`);
+  };
   const [rows, setRows] = useState<ReportRow[] | null>(null);
   const [error, setError] = useState("");
   const [pending, setPending] = useState(false);
 
-  async function load(event?: FormEvent) {
+  async function load(event?: FormEvent, savedPassword?: string) {
     event?.preventDefault();
+    const pw = savedPassword ?? password;
     setPending(true);
     setError("");
     try {
-      const data = await cloudRpc<ReportRow[]>("get_all_reports", { p_password: password });
+      const data = await cloudRpc<ReportRow[]>("get_all_reports", { p_password: pw });
+      // الباسورد بيفضل في الجلسة عشان الريفريش ما يطلبوش تاني.
+      try {
+        sessionStorage.setItem("tys.mgrPass", pw);
+      } catch {
+        // التخزين مش متاح، هيطلب الباسورد تاني.
+      }
       setRows(data ?? []);
     } catch (err) {
       setRows(null);
@@ -160,6 +172,20 @@ export default function ManagerPage() {
       setPending(false);
     }
   }
+
+  useEffect(() => {
+    let saved: string | null = null;
+    try {
+      saved = sessionStorage.getItem("tys.mgrPass");
+    } catch {
+      saved = null;
+    }
+    if (saved) {
+      setPassword(saved);
+      void load(undefined, saved);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   function renderRow(row: ReportRow) {
     const open = openId === row.branch_id;
@@ -306,7 +332,7 @@ export default function ManagerPage() {
                     <button
                       key={branchName}
                       type="button"
-                      onClick={() => setView(`branch:${branchName}`)}
+                      onClick={() => setView(`b:${branchName}`)}
                       className="flex w-full items-center justify-between rounded-[24px] bg-white p-4 text-right shadow-[0_12px_32px_rgba(40,20,0,0.07)] ring-1 ring-orange-200/70"
                     >
                       <div>
@@ -321,7 +347,7 @@ export default function ManagerPage() {
               </div>
             ) : (
               <div className="space-y-3">
-                <button type="button" onClick={() => { setView("list"); setOpenId(null); }} className="text-sm font-extrabold text-[#e06600]">← كل الفروع</button>
+                <button type="button" onClick={() => setView("list")} className="text-sm font-extrabold text-[#e06600]">← كل الفروع</button>
                 <div className="rounded-[24px] bg-[#e06600] p-4 text-white">
                   <p className="text-xs text-white/80">الفرع</p>
                   <h2 className="font-black" dir="ltr">{branch}</h2>
