@@ -294,6 +294,22 @@ export default function MorePage() {
         <p className="text-lg font-black">🍊 Target Tracker</p>
         <p className="mt-1 text-xs text-white/85">أداة مساعدة مستقلة وغير رسمية، وليست تطبيقًا رسميًا تابعًا لشركة Orange.</p>
         <p className="mt-3 text-xs text-white/80">ملخص النهارده، سجل الشهر، النسخة الاحتياطية، والمساعد.</p>
+        {reportData ? (
+          <div className="mt-4 grid grid-cols-3 gap-2 text-center">
+            <div className="rounded-2xl bg-white/15 px-2 py-3 ring-1 ring-white/25">
+              <p className="text-xl font-black tabular-nums">{Math.round(reportData.overall)}%</p>
+              <p className="text-[11px] text-white/85">التوتال</p>
+            </div>
+            <div className="rounded-2xl bg-white/15 px-2 py-3 ring-1 ring-white/25">
+              <p className="text-xl font-black tabular-nums">{Math.round(reportData.estimatedCommission)}</p>
+              <p className="text-[11px] text-white/85">الكوميشن (ج)</p>
+            </div>
+            <div className="rounded-2xl bg-white/15 px-2 py-3 ring-1 ring-white/25">
+              <p className="text-xl font-black tabular-nums">{entries.length}</p>
+              <p className="text-[11px] text-white/85">سجلات الشهر</p>
+            </div>
+          </div>
+        ) : null}
       </section>
 
       {view === "menu" ? (
