@@ -258,6 +258,9 @@ export default function TargetPage() {
           <h2 className="text-lg font-black">الإيتمز والأوزان</h2>
           <p className="text-[11px] font-bold text-neutral-400">بتتدخل مرة واحدة في الشهر</p>
         </div>
+        <p className="mb-2 rounded-xl bg-orange-50 px-3 py-2 text-[11px] font-bold leading-5 text-[#8f4300]">
+          📌 الأوزان مختلفة للموظف والمدير. ده وزن {kpis.some((k) => k.kpiKey === "productivity" && k.weight > 0) ? "المدير" : "الموظف"}، وبيتحدد أوتوماتيك حسب اختيارك في أول مرة، ومش بيتعدل من التطبيق.
+        </p>
         <div className="grid grid-cols-[1fr_74px_74px] gap-2 border-b border-dashed border-orange-200/70 pb-2 text-[11px] font-bold text-neutral-400">
           <span>الإيتم</span>
           <span className="text-center">التارجت</span>
