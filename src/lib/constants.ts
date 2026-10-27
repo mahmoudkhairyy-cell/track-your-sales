@@ -11,6 +11,17 @@ export const SESSION_DAYS = 30;
 export const SCHEMA_VERSION = 1;
 export const DEFAULT_COMMISSION = 6000;
 
+/** الفروع المتاحة: الموظف بيختار فرعه أول مرة. */
+export const BRANCHES = [
+  "OB.hagar elnawatya",
+  "OB.Mawaser",
+  "Exp.dabaa",
+  "Exp.Alamin",
+  "Exp.Matrouh",
+  "OB.ras elhekma",
+  "Exp.Elhammam",
+] as const;
+
 export const WEEK_DAYS = [
   { key: "sat", label: "السبت", jsDay: 6 },
   { key: "sun", label: "الأحد", jsDay: 0 },
