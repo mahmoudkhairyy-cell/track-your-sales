@@ -143,26 +143,22 @@ function saveCanvas(canvas: HTMLCanvasElement, fileName: string) {
   }, "image/png");
 }
 
-/** بيرسم صورة TOP N بمقاس الموبايل (1080×1920) ويحمّلها كـ PNG. */
-function exportTopImage(list: TopRow[], n: number) {
-  const top = list.slice(0, n);
+/** صورة موبايل لموظف واحد بترتيبه ونسبته. */
+function drawTopCard(row: TopRow) {
   const width = 1080;
   const height = 1920;
   const canvas = document.createElement("canvas");
   canvas.width = width;
   canvas.height = height;
   const ctx = canvas.getContext("2d");
-  if (!ctx) return;
+  if (!ctx) return null;
 
-  // خلفية برتقالي غامق بتدرج
   const bg = ctx.createLinearGradient(0, 0, width, height);
   bg.addColorStop(0, "#f0802a");
   bg.addColorStop(0.5, "#b84700");
   bg.addColorStop(1, "#5c2300");
   ctx.fillStyle = bg;
   ctx.fillRect(0, 0, width, height);
-
-  // دوائر ناعمة في الخلفية
   ctx.fillStyle = "rgba(255,255,255,0.08)";
   ctx.beginPath();
   ctx.arc(width - 120, 260, 360, 0, Math.PI * 2);
@@ -173,59 +169,53 @@ function exportTopImage(list: TopRow[], n: number) {
 
   ctx.textAlign = "center";
   ctx.fillStyle = "#ffffff";
-  ctx.font = "900 210px system-ui, sans-serif";
-  ctx.fillText(`TOP ${n}`, width / 2, 330);
+  ctx.font = "900 180px system-ui, sans-serif";
+  ctx.fillText(`#${row.rank}`, width / 2, 380);
   ctx.font = "600 38px system-ui, sans-serif";
   ctx.fillStyle = "rgba(255,255,255,0.85)";
-  ctx.fillText("Track Your Sales", width / 2, 400);
+  ctx.fillText("Track Your Sales", width / 2, 450);
 
-  const cardTop = 480;
-  const cardH = Math.min(260, Math.floor((height - cardTop - 220) / Math.max(1, top.length)) - 30);
-  const medal = ["#f5c542", "#c9d1dc", "#d68a4c"];
-
-  top.forEach((row, i) => {
-    const y = cardTop + i * (cardH + 30);
-    ctx.save();
-    ctx.shadowColor = "rgba(0,0,0,0.25)";
-    ctx.shadowBlur = 40;
-    ctx.shadowOffsetY = 16;
-    ctx.fillStyle = "rgba(255,255,255,0.97)";
-    roundRect(ctx, 80, y, width - 160, cardH, 56);
-    ctx.fill();
-    ctx.restore();
-
-    // الترتيب
-    ctx.fillStyle = i < 3 ? medal[i] : "#fbe9da";
-    ctx.beginPath();
-    ctx.arc(190, y + cardH / 2, 66, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.fillStyle = i < 3 ? "#5c2300" : "#8f4300";
-    ctx.font = "900 76px system-ui, sans-serif";
-    ctx.textAlign = "center";
-    ctx.fillText(String(row.rank), 190, y + cardH / 2 + 26);
-
-    // الاسم والفرع
-    ctx.textAlign = "left";
-    ctx.fillStyle = "#1d1a16";
-    ctx.font = "900 56px system-ui, sans-serif";
-    ctx.fillText(row.name.slice(0, 22), 300, y + cardH / 2 - 6);
-    ctx.fillStyle = "#7a7068";
-    ctx.font = "600 34px system-ui, sans-serif";
-    ctx.fillText(row.branch.slice(0, 30), 300, y + cardH / 2 + 46);
-
-    // النسبة
-    ctx.textAlign = "right";
-    ctx.fillStyle = "#e06600";
-    ctx.font = "900 100px system-ui, sans-serif";
-    ctx.fillText(`${Math.round(row.percent)}%`, width - 120, y + cardH / 2 + 34);
-  });
+  // كارت الموظف
+  const cardY = 560;
+  const cardH = 900;
+  ctx.save();
+  ctx.shadowColor = "rgba(0,0,0,0.25)";
+  ctx.shadowBlur = 50;
+  ctx.shadowOffsetY = 20;
+  ctx.fillStyle = "rgba(255,255,255,0.97)";
+  roundRect(ctx, 80, cardY, width - 160, cardH, 60);
+  ctx.fill();
+  ctx.restore();
 
   ctx.textAlign = "center";
+  ctx.fillStyle = "#1d1a16";
+  ctx.font = "900 78px system-ui, sans-serif";
+  ctx.fillText(row.name.slice(0, 24), width / 2, cardY + 230);
+  ctx.fillStyle = "#7a7068";
+  ctx.font = "600 42px system-ui, sans-serif";
+  ctx.fillText(row.branch.slice(0, 30), width / 2, cardY + 300);
+
+  ctx.fillStyle = "#e06600";
+  ctx.font = "900 300px system-ui, sans-serif";
+  ctx.fillText(`${Math.round(row.percent)}%`, width / 2, cardY + 630);
+  ctx.fillStyle = "#7a7068";
+  ctx.font = "600 40px system-ui, sans-serif";
+  ctx.fillText("نسبة التحقيق", width / 2, cardY + 720);
+
   ctx.fillStyle = "rgba(255,255,255,0.8)";
   ctx.font = "600 30px system-ui, sans-serif";
   ctx.fillText(new Date().toLocaleDateString("en-GB", { timeZone: "Africa/Cairo" }), width / 2, height - 120);
+  return canvas;
+}
 
-  saveCanvas(canvas, `TOP-${n}.png`);
+/** بيصدّر صورة منفصلة لكل موظف في الـ TOP N، مرتبين بنسبة التحقيق. */
+function exportTopImage(list: TopRow[], n: number) {
+  list.slice(0, n).forEach((row, i) => {
+    window.setTimeout(() => {
+      const canvas = drawTopCard(row);
+      if (canvas) saveCanvas(canvas, `${row.rank}-${row.name}.png`);
+    }, i * 600);
+  });
 }
 
 /** صورة موبايل premium لموظف واحد، اسم الملف = اسم الموظف. */
