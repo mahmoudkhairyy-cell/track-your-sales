@@ -261,7 +261,15 @@ export default function ManagerPage() {
         <h1 className="text-2xl font-black">لوحة المدير</h1>
 
         {rows === null ? (
-          <form onSubmit={load} className="rounded-[24px] bg-white p-5 shadow-[0_12px_32px_rgba(40,20,0,0.07)] ring-1 ring-orange-200/70">
+          <form onSubmit={load} className="overflow-hidden rounded-[28px] bg-white p-6 shadow-[0_20px_50px_rgba(190,90,0,0.15)] ring-1 ring-orange-200/70">
+            <div className="-mx-6 -mt-6 mb-5 bg-gradient-to-br from-[#f0802a] via-[#e06600] to-[#b84700] px-6 py-6 text-center text-white">
+              <img src="/track-your-sales/logo-mark.png" alt="" className="mx-auto h-14 w-14 object-contain" />
+              <p className="mt-2 text-lg font-black tracking-tight" dir="ltr">Track Your Sales</p>
+              <p className="mt-2 inline-block rounded-full bg-white/20 px-3 py-1 text-xs font-extrabold ring-1 ring-white/30" dir="ltr">
+                👑 Mr. Abdelrahman Mahmoud
+              </p>
+              <p className="mt-1 text-[11px] text-white/80" dir="ltr">Manager Dashboard</p>
+            </div>
             <label className="block text-sm font-bold text-neutral-700">
               كلمة السر
               <input
