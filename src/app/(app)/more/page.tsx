@@ -291,7 +291,7 @@ export default function MorePage() {
   return (
     <div className="space-y-5">
       <section className="relative overflow-hidden rounded-[24px] bg-gradient-to-br from-[#f0802a] via-[#e06600] to-[#b84700] p-5 text-white shadow-[0_20px_50px_rgba(190,90,0,0.35)]">
-        <p className="text-lg font-black">🍊 Target Tracker</p>
+        <img src="/track-your-sales/logo-full.png" alt="Track Your Sales" className="h-16 w-auto object-contain" />
         <p className="mt-1 text-xs text-white/85">أداة مساعدة مستقلة وغير رسمية، وليست تطبيقًا رسميًا تابعًا لشركة Orange.</p>
         <p className="mt-3 text-xs text-white/80">ملخص النهارده، سجل الشهر، النسخة الاحتياطية، والمساعد.</p>
         {reportData ? (

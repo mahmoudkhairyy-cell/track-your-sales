@@ -22,8 +22,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang="ar" dir="rtl">
       <head>
         <link rel="manifest" href="/track-your-sales/manifest.webmanifest" />
-        <link rel="icon" href="/track-your-sales/icon.svg" type="image/svg+xml" />
-        <link rel="apple-touch-icon" href="/track-your-sales/icon.svg" />
+        <link rel="icon" href="/track-your-sales/logo-mark.png" type="image/png" />
+        <link rel="apple-touch-icon" href="/track-your-sales/app-icon-192.png" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-title" content="Track Sales" />
       </head>
