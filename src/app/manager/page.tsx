@@ -285,6 +285,18 @@ export default function ManagerPage() {
     <main className="min-h-screen bg-[#fbe9da] p-4 text-neutral-900" dir="rtl">
       <div className="mx-auto max-w-3xl space-y-4">
         <h1 className="text-2xl font-black">لوحة المدير</h1>
+        {rows !== null ? (
+          <div className="flex items-center justify-between rounded-[24px] bg-gradient-to-br from-[#f0802a] via-[#e06600] to-[#b84700] p-4 text-white shadow-[0_12px_32px_rgba(190,90,0,0.25)]">
+            <div className="flex items-center gap-3">
+              <img src="/track-your-sales/logo-mark.png" alt="" className="h-10 w-10 object-contain" />
+              <div>
+                <p className="text-sm font-black tracking-tight" dir="ltr">Track Your Sales</p>
+                <p className="text-[11px] text-white/85" dir="ltr">Manager Dashboard</p>
+              </div>
+            </div>
+            <p className="rounded-full bg-white/20 px-3 py-1 text-[11px] font-extrabold ring-1 ring-white/30" dir="ltr">👑 Mr. Abdelrahman Mahmoud</p>
+          </div>
+        ) : null}
 
         {rows === null ? (
           <form onSubmit={load} className="overflow-hidden rounded-[28px] bg-white p-6 shadow-[0_20px_50px_rgba(190,90,0,0.15)] ring-1 ring-orange-200/70">
