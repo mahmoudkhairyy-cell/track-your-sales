@@ -19,7 +19,7 @@ const CHEERS = [
 ];
 
 type DashKpi = { kpiKey: KpiKey; target: number; weight: number; remaining: number; unitAr: string; contribution: number; gated: boolean };
-type DashData = { kpis: DashKpi[]; fullCommission: number; work: { remaining: number } };
+type DashData = { kpis: DashKpi[]; fullCommission: number; overall: number; work: { remaining: number } };
 
 export default function LogPage() {
   const toast = useToast();
@@ -125,7 +125,9 @@ export default function LogPage() {
 
       {KPI_CATALOG.filter((item) => item.key !== "quality").map((item) => {
         const d = dashByKey.get(item.key);
-        const commission = d ? Math.round((d.contribution / 100) * (dash?.fullCommission ?? 0)) : 0;
+        const overall = dash?.overall ?? 0;
+        const capFactor = overall > 0 ? Math.min(overall, 200) / overall : 0;
+        const commission = d ? Math.round((d.contribution / 100) * (dash?.fullCommission ?? 0) * capFactor) : 0;
         const excluded = !!d && d.weight > 0 && d.gated;
         const needToday = d && workLeft > 0 ? Math.ceil(Math.max(0, d.remaining) / workLeft) : 0;
         return (

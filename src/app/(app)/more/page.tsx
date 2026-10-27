@@ -35,10 +35,18 @@ type TodayItem = {
 };
 
 export default function MorePage() {
-  const [view, setView] = useHistoryView<"menu" | "today" | "history" | "profile" | "backup" | "about">("menu");
+  const [view, setView] = useHistoryView<"menu" | "today" | "history" | "profile" | "backup" | "about" | "report">("menu");
+  const [reportData, setReportData] = useState<{ overall: number; estimatedCommission: number; fullCommission: number; kpis: { kpiKey: string; nameEn: string; achieved: number; target: number; percent: number; contribution: number }[] } | null>(null);
+
   const toast = useToast();
   const router = useRouter();
   const month = useMonth();
+  useEffect(() => {
+    if (view !== "report") return;
+    api<{ overall: number; estimatedCommission: number; fullCommission: number; kpis: { kpiKey: string; nameEn: string; achieved: number; target: number; percent: number; contribution: number }[] }>(`/api/dashboard?month=${month}`)
+      .then((result) => setReportData(result))
+      .catch(() => setReportData(null));
+  }, [view, month]);
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -295,6 +303,7 @@ export default function MorePage() {
             { key: "history", icon: "🗂️", title: "سجل العمليات", desc: "كل الإنجازات الشهر ده" },
             { key: "profile", icon: "👤", title: "بياناتك", desc: "الاسم والفرع" },
             { key: "backup", icon: "💾", title: "نسخة احتياطية واستعادة", desc: "احفظ بياناتك أو استرجعها" },
+            { key: "report", icon: "📄", title: "تقرير الشهر", desc: "اطبعه أو احفظه PDF" },
             { key: "about", icon: "ℹ️", title: "حول التطبيق", desc: "معلومات عن الأداة" },
           ].map((item) => (
             <button
@@ -312,6 +321,38 @@ export default function MorePage() {
             </button>
           ))}
         </div>
+      ) : null}
+
+      {view === "report" ? (
+        <section className="space-y-4">
+          <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[#e06600]">← رجوع للقائمة</button>
+          <div id="report-print" className="rounded-[24px] border border-orange-200/70 bg-white p-5 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
+            <p className="text-xs font-bold text-neutral-500">تقرير الشهر · {monthLabelAr(month)}</p>
+            <h2 className="mt-1 text-xl font-black">{profile.name || "—"}</h2>
+            <p className="text-sm text-neutral-500">📍 {profile.branch || "—"}</p>
+            {reportData ? (
+              <>
+                <div className="mt-4 grid grid-cols-2 gap-3">
+                  <div className="rounded-2xl bg-orange-100 p-3"><p className="text-[11px] font-bold text-neutral-500">التوتال</p><p className="text-2xl font-black text-[#8f4300]">{reportData.overall.toFixed(1)}%</p></div>
+                  <div className="rounded-2xl bg-orange-100 p-3"><p className="text-[11px] font-bold text-neutral-500">الكوميشن المتوقع</p><p className="text-2xl font-black text-[#8f4300]">{Math.round(reportData.estimatedCommission)} ج</p><p className="text-[10px] text-neutral-500">من {Math.round(reportData.fullCommission)} ج</p></div>
+                </div>
+                <div className="mt-4 divide-y divide-dashed divide-orange-200">
+                  {reportData.kpis.map((kpi) => (
+                    <div key={kpi.kpiKey} className="flex items-center justify-between py-2.5 text-sm">
+                      <span className="font-extrabold" dir="ltr">{kpi.nameEn}</span>
+                      <span className="text-neutral-600">{formatQty(kpi.achieved)} / {formatQty(kpi.target)} · <b className="text-[#8f4300]">{kpi.percent.toFixed(0)}%</b></span>
+                    </div>
+                  ))}
+                </div>
+              </>
+            ) : (
+              <p className="mt-4 text-sm text-neutral-500">بنحمّل التقرير...</p>
+            )}
+          </div>
+          <button type="button" onClick={() => window.print()} className="w-full rounded-2xl bg-gradient-to-br from-[#f0802a] to-[#b84700] py-3 font-extrabold text-white shadow-[0_10px_24px_rgba(190,90,0,0.3)]">
+            🖨️ اطبع / احفظ PDF
+          </button>
+        </section>
       ) : null}
 
       {view === "about" ? (

@@ -31,3 +31,9 @@ textarea {
 ::selection {
   background: #f5b98a;
 }
+
+@media print {
+  body * { visibility: hidden !important; }
+  #report-print, #report-print * { visibility: visible !important; }
+  #report-print { position: absolute; inset: 0; box-shadow: none !important; }
+}
