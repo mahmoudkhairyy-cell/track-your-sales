@@ -10,6 +10,7 @@ import { parseBackup, type BackupFile } from "@/lib/backup";
 import { KPI_CATALOG, kpiEmoji, type KpiKey } from "@/lib/constants";
 import { useMonth } from "@/components/AppShell";
 import { KpiIcon } from "@/components/KpiIcon";
+import { useHistoryView } from "@/lib/use-history-view";
 import { quantityHint, quantityMax, quantityMin, quantityStep, validateQuantity } from "@/lib/quantity";
 
 type EntryRow = {
@@ -34,7 +35,7 @@ type TodayItem = {
 };
 
 export default function MorePage() {
-  const [view, setView] = useState<"menu" | "today" | "history" | "profile" | "backup" | "about">("menu");
+  const [view, setView] = useHistoryView<"menu" | "today" | "history" | "profile" | "backup" | "about">("menu");
   const toast = useToast();
   const router = useRouter();
   const month = useMonth();

@@ -1,5 +1,6 @@
 "use client";
 
+import { useHistoryView } from "@/lib/use-history-view";
 import { FormEvent, useEffect, useMemo, useState, type ReactNode } from "react";
 import {
   Banner,
@@ -73,7 +74,7 @@ function Back({ onClick, title }: { onClick: () => void; title: string }) {
 
 export default function WikiPage() {
   const toast = useToast();
-  const [section, setSection] = useState<SectionId>("hub");
+  const [section, setSection] = useHistoryView<SectionId>("hub");
   const [query, setQuery] = useState("");
   const [srCategory, setSrCategory] = useState("الكل");
   const [openSr, setOpenSr] = useState<SrItem | null>(null);
