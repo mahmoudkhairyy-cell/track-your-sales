@@ -139,24 +139,36 @@ function emptyState(): State {
 }
 
 function loadState(): State {
+  let raw: string | null = null;
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
+    raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return emptyState();
     const parsed = JSON.parse(raw) as Partial<State>;
     return { ...emptyState(), ...parsed };
   } catch {
+    // البيانات المحفوظة بايظة: منمسحهاش، ننسخها جنب الأصلية قبل ما أي حفظ جديد يكتب فوقها.
+    if (raw) {
+      try {
+        localStorage.setItem(`${STORAGE_KEY}.corrupt.${Date.now()}`, raw);
+      } catch {
+        // لو المساحة خلصت، مفيش أكتر من كده نعمله.
+      }
+    }
     return emptyState();
   }
 }
 
-function saveState(state: State) {
+/** بترجع false لو التخزين فشل فعلاً، عشان العملية تتبلّغ إنها ما اتحفظتش. */
+function saveState(state: State): boolean {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    return true;
   } catch {
     // لو المتصفح منعنا من الحفظ، نبلغ المستخدم عشان ما يفتكرش إن الإنجاز اتحفظ.
     if (typeof window !== "undefined") {
       window.dispatchEvent(new CustomEvent("tys-storage-error"));
     }
+    return false;
   }
 }
 
@@ -782,7 +794,9 @@ export function runLocalApi(url: string, method: string, body: unknown): LocalRe
       fail(404, "المسار ده مش موجود");
     }
 
-    if (changed) saveState(state);
+    if (changed && !saveState(state)) {
+      return { ok: false, status: 507, message: "المتصفح مانعش الحفظ، فالعملية ما اتحفظتش. فضّي مساحة وجرّب تاني." };
+    }
     return { ok: true, data: { ok: true, ...result } };
   } catch (error) {
     if (error instanceof LocalError) {
