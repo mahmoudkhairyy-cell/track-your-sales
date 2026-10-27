@@ -34,7 +34,7 @@ type SectionId = "hub" | "sr" | "premier" | "freemax" | "go" | "hunts" | "home" 
 
 const HUB: { id: SectionId; title: string; desc: string; count: string; icon: ReactNode }[] = [
   { id: "freemax", title: "FREEmax", desc: "باقات فري ماكس والأسعار", count: `${FREEMAX.plans.length} باقة`, icon: <StarIcon className="text-[#e06600]" /> },
-  { id: "sr", title: "موسوعة الـ SR", desc: "أكواد Service Request", count: `${SR_ITEMS.length} كود`, icon: <BookIcon className="text-[#e06600]" /> },
+  { id: "sr", title: "مرجع الـ SR", desc: "أكواد Service Request", count: `${SR_ITEMS.length} كود`, icon: <BookIcon className="text-[#e06600]" /> },
   { id: "go", title: "Go", desc: "باقات Go Monthly و Extra", count: "باقات شهرية", icon: <PhoneIcon className="text-[#e06600]" /> },
   { id: "premier", title: "Premier", desc: "Premier و Super Max", count: "باقات بوست بايد", icon: <StarIcon className="text-[#e06600]" /> },
   { id: "hunts", title: "أرقام Hunts", desc: "جهات للتواصل السريع", count: `${HUNTS.length} جهة`, icon: <CallIcon className="text-[#e06600]" /> },
@@ -170,7 +170,7 @@ export default function WikiPage() {
       {section === "hub" ? (
         <>
           <section className="text-center">
-            <h1 className="text-3xl font-black text-neutral-900">موسوعة أورانج 🍊</h1>
+            <h1 className="text-3xl font-black text-neutral-900">مرجع أورانج 🍊</h1>
             <p className="mt-2 text-sm text-neutral-400">بحث شامل في أكواد SR والباقات والأرقام والإيميلات</p>
           </section>
           <SearchBox value={query} onChange={setQuery} placeholder="ابحث بالكود أو الاسم أو الرقم..." />
@@ -265,7 +265,7 @@ export default function WikiPage() {
 
       {section === "sr" ? (
         <div>
-          <Back onClick={() => setSection("hub")} title="موسوعة الـ SR" />
+          <Back onClick={() => setSection("hub")} title="مرجع الـ SR" />
           <SearchBox value={query} onChange={setQuery} placeholder="ابحث بكود SR أو اسم الإجراء..." />
           <div className="mt-3 flex gap-2 overflow-x-auto pb-2">
             {["الكل", ...SR_CATEGORIES].map((cat) => (

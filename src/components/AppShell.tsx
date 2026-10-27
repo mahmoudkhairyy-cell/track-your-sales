@@ -30,7 +30,7 @@ const NAV = [
   { href: "/home", label: "الرئيسية", icon: HomeIcon },
   { href: "/target", label: "التارجت", icon: TargetIcon },
   { href: "/log", label: "تسجيل", icon: PlusIcon, emphasize: true },
-  { href: "/wiki", label: "الموسوعة", icon: BookIcon },
+  { href: "/wiki", label: "المرجع", icon: BookIcon },
   { href: "/more", label: "المزيد", icon: MoreIcon },
 ];
 
