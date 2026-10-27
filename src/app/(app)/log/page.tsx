@@ -125,9 +125,7 @@ export default function LogPage() {
 
       {KPI_CATALOG.filter((item) => item.key !== "quality").map((item) => {
         const d = dashByKey.get(item.key);
-        const overall = dash?.overall ?? 0;
-        const capFactor = overall > 0 ? Math.min(overall, 200) / overall : 0;
-        const commission = d ? Math.round((d.contribution / 100) * (dash?.fullCommission ?? 0) * capFactor) : 0;
+        const commission = d ? Math.round((d.contribution / 100) * (dash?.fullCommission ?? 0)) : 0;
         const excluded = !!d && d.weight > 0 && d.gated;
         const needToday = d && workLeft > 0 ? Math.ceil(Math.max(0, d.remaining) / workLeft) : 0;
         return (
@@ -137,14 +135,25 @@ export default function LogPage() {
                 <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-orange-100 text-[#e06600]"><KpiIcon kpiKey={item.key} className="h-5 w-5" /></span>
                 <div>
                   <p className="font-extrabold" dir="ltr">{item.nameEn}</p>
-                  <p className="text-[11px] text-neutral-400">
-                    التارجت: {d ? formatQty(d.target) : "—"} · الوزن: {d ? d.weight : 0}%
+                  <p className="text-[11px] font-bold text-[#8f4300]">
+                    {excluded ? "متتحسبش" : commission > 0 ? `كوميشن ${commission} ج` : " "}
                   </p>
                 </div>
               </div>
-              <p className="text-[11px] font-bold text-[#8f4300]">
-                {excluded ? "متتحسبش" : commission > 0 ? `كوميشن ${commission} ج` : ""}
-              </p>
+            </div>
+            <div className="mt-3 grid grid-cols-3 gap-2 rounded-2xl bg-orange-50/70 p-2.5 text-center">
+              <div>
+                <p className="text-[10px] text-neutral-500">المستهدف</p>
+                <p className="text-sm font-black tabular-nums">{d ? formatQty(d.target) : "—"}</p>
+              </div>
+              <div>
+                <p className="text-[10px] text-neutral-500">الوزن</p>
+                <p className="text-sm font-black tabular-nums">{d ? d.weight : 0}%</p>
+              </div>
+              <div>
+                <p className="text-[10px] text-neutral-500">الباقي</p>
+                <p className="text-sm font-black tabular-nums text-[#b84700]">{d ? formatQty(Math.max(0, d.remaining)) : "—"}</p>
+              </div>
             </div>
             <div className="mt-3 flex items-center gap-2">
               <input
