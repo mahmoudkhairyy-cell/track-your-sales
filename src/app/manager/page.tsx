@@ -126,6 +126,23 @@ function roundRect(ctx: CanvasRenderingContext2D, x: number, y: number, w: numbe
   ctx.closePath();
 }
 
+/** تحميل الصورة: على الموبايل بيفتحها في تبويب لو التحميل المباشر ما اشتغلش. */
+function saveCanvas(canvas: HTMLCanvasElement, fileName: string) {
+  canvas.toBlob((blob) => {
+    if (!blob) return;
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = fileName;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.setTimeout(() => {
+      URL.revokeObjectURL(url);
+    }, 4000);
+  }, "image/png");
+}
+
 /** بيرسم صورة TOP N بمقاس الموبايل (1080×1920) ويحمّلها كـ PNG. */
 function exportTopImage(list: TopRow[], n: number) {
   const top = list.slice(0, n);
@@ -208,15 +225,7 @@ function exportTopImage(list: TopRow[], n: number) {
   ctx.font = "600 30px system-ui, sans-serif";
   ctx.fillText(new Date().toLocaleDateString("en-GB", { timeZone: "Africa/Cairo" }), width / 2, height - 120);
 
-  canvas.toBlob((blob) => {
-    if (!blob) return;
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = `TOP-${n}.png`;
-    link.click();
-    URL.revokeObjectURL(url);
-  }, "image/png");
+  saveCanvas(canvas, `TOP-${n}.png`);
 }
 
 /** صورة موبايل premium لموظف واحد، اسم الملف = اسم الموظف. */
@@ -292,15 +301,7 @@ function exportEmployeeImage(row: ReportRow) {
   ctx.font = "600 30px system-ui, sans-serif";
   ctx.fillText(new Date().toLocaleDateString("en-GB", { timeZone: "Africa/Cairo" }), width / 2, height - 120);
 
-  canvas.toBlob((blob) => {
-    if (!blob) return;
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = `${row.employee_name}.png`;
-    link.click();
-    URL.revokeObjectURL(url);
-  }, "image/png");
+  saveCanvas(canvas, `${row.employee_name}.png`);
 }
 
 function groupAverage(group: ReportRow[]): number {
