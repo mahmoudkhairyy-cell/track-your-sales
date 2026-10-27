@@ -463,6 +463,30 @@ export default function MorePage() {
       {view === "profile" ? (
         <div className="space-y-4">
           <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[#e06600]">← رجوع للقائمة</button>
+      <section className="rounded-[24px] border border-red-200 bg-white p-5">
+        <h2 className="text-lg font-black tracking-tight">🚪 تسجيل خروج (نقل لفرع تاني)</h2>
+        <p className="mt-1 text-xs leading-5 text-neutral-500">
+          ده بيمسح بيانات الجهاز كلها (الإنجازات والتارجت) وبيرجع لشاشة التسجيل. لو عايز تحتفظ بالبيانات، اطلع نسخة احتياطية الأول.
+        </p>
+        <button
+          type="button"
+          onClick={() => {
+            if (!window.confirm("متأكد؟ هيتمسح كل بيانات الجهاز. اطلعت نسخة احتياطية؟")) return;
+            try {
+              localStorage.removeItem("trackYourSales.local.v1");
+              localStorage.removeItem("tys.branchId");
+              localStorage.removeItem("tys.lastSync");
+            } catch {
+              // لو التخزين مش متاح، نكمّل ونعمل ريلود.
+            }
+            window.location.href = "/track-your-sales/home/";
+          }}
+          className="mt-3 w-full rounded-2xl border border-red-300 bg-red-50 py-2.5 text-sm font-extrabold text-red-700"
+        >
+          تسجيل خروج
+        </button>
+      </section>
+
       <section className="rounded-[24px] border border-orange-200/70 bg-white p-5 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
         <h2 className="text-lg font-black tracking-tight">👤 بياناتك</h2>
         <form className="mt-4 space-y-3" onSubmit={saveProfile}>
