@@ -334,7 +334,9 @@ export default function ManagerPage() {
                   <p className="mb-3 text-sm font-black">إجمالي الفرع لكل مؤشر</p>
                   <div className="grid grid-cols-2 gap-2">
                     {aggregateKpis(rows.filter((r) => (r.branch_name || "بدون فرع") === branch)).map((kpi) => (
-                      <KpiTile key={kpi.name} kpi={kpi} />
+                      <div key={kpi.name}>
+                        <KpiTile kpi={kpi} />
+                      </div>
                     ))}
                   </div>
                 </section>
