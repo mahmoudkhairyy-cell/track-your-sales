@@ -30,7 +30,7 @@ export const DEFAULT_WORKING_DAYS: WorkingDays = {
   tue: true,
   wed: true,
   thu: true,
-  fri: false,
+  fri: true,
 };
 
 export const KPI_CATALOG = [

@@ -291,7 +291,7 @@ function loadBundle(state: State, yearMonth: string): Bundle {
     yearMonth,
     fullCommission: row.fullCommission,
     allowCommissionOver100: row.allowCommissionOver100,
-    workingDays: row.workingDays,
+    workingDays: { ...DEFAULT_WORKING_DAYS },
     kpis,
     holidays: [...row.holidays].sort((a, b) => a.date.localeCompare(b.date)),
     quality: row.quality ? { ...row.quality } : { ...ZERO_QUALITY },
@@ -575,7 +575,7 @@ function exportBackup(state: State) {
     yearMonth,
     fullCommission: row.fullCommission,
     allowCommissionOver100: row.allowCommissionOver100,
-    workingDays: row.workingDays,
+    workingDays: { ...DEFAULT_WORKING_DAYS },
     kpis: loadBundle(state, yearMonth).kpis,
     holidays: row.holidays.map((item) => ({ date: item.date, note: item.note })),
   }));
