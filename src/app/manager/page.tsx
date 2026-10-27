@@ -175,7 +175,9 @@ export default function ManagerPage() {
             ) : null}
             {branch === null ? (
               <div className="space-y-3">
-                {groupByBranch(rows).map(([branchName, group]) => {
+                {groupByBranch(rows)
+                  .sort((a, b) => groupAverage(b[1]) - groupAverage(a[1]))
+                  .map(([branchName, group]) => {
                   const withData = group.filter((r) => typeof r.payload.overall === "number");
                   const avg = withData.length ? withData.reduce((sum, r) => sum + (r.payload.overall ?? 0), 0) / withData.length : 0;
                   return (
