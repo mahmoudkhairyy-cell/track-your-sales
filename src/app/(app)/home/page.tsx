@@ -127,9 +127,17 @@ export default function HomePage() {
         <div className="mt-5 flex h-4 overflow-hidden rounded-full bg-white/25">
           <div className="h-full rounded-full bg-white transition-all" style={{ width: `${Math.min(100, Math.max(0, data.overall))}%` }} />
         </div>
-        <div className="mt-2 flex items-center justify-between text-xs text-white/85">
-          <span>{gap > 0 ? `فاضل ${formatPercent(gap)}%` : "مفيش فاضل، قفلت الشهر"}</span>
-          <span className="font-extrabold">💰 {formatMoney(data.estimatedCommission)} من {formatMoney(data.fullCommission)} جنيه</span>
+        <div className="mt-4 grid grid-cols-2 gap-2">
+          <div className="rounded-2xl bg-white/15 px-3 py-2.5 ring-1 ring-white/25">
+            <p className="text-[11px] text-white/80">{gap > 0 ? "فاضل" : "الحالة"}</p>
+            <p className="text-base font-black tabular-nums">{gap > 0 ? `${formatPercent(gap)}%` : "قفلت الشهر ✅"}</p>
+          </div>
+          <div className="rounded-2xl bg-white/15 px-3 py-2.5 ring-1 ring-white/25">
+            <p className="text-[11px] text-white/80">الكوميشن المتوقع</p>
+            <p className="text-base font-black tabular-nums">
+              {formatMoney(data.estimatedCommission)} <span className="text-[11px] font-bold text-white/80">من {formatMoney(data.fullCommission)} جنيه</span>
+            </p>
+          </div>
         </div>
       </section>
 
@@ -224,9 +232,19 @@ export default function HomePage() {
                 </div>
                 <p className="text-lg font-black text-[#e06600]">{formatPercent(kpi.percent)}%</p>
               </div>
-              <div className="mt-3 flex items-center justify-between text-sm">
-                <span className="text-neutral-500">المستهدف: {formatQty(kpi.target)}</span>
-                <span className="font-bold">المحقق: {formatQty(kpi.achieved)}</span>
+              <div className="mt-3 grid grid-cols-3 gap-2 rounded-2xl bg-orange-50/70 p-2.5 text-center">
+                <div>
+                  <p className="text-[10px] text-neutral-500">المستهدف</p>
+                  <p className="text-sm font-black tabular-nums">{formatQty(kpi.target)}</p>
+                </div>
+                <div>
+                  <p className="text-[10px] text-neutral-500">المحقق</p>
+                  <p className="text-sm font-black tabular-nums text-[#b84700]">{formatQty(kpi.achieved)}</p>
+                </div>
+                <div>
+                  <p className="text-[10px] text-neutral-500">الباقي</p>
+                  <p className="text-sm font-black tabular-nums">{formatQty(kpi.remaining)}</p>
+                </div>
               </div>
               <div className="mt-3 h-2 overflow-hidden rounded-full bg-neutral-100">
                 <div className="h-full rounded-full bg-gradient-to-r from-[#f0802a] to-[#b84700] transition-all" style={{ width: `${visual}%` }} />
