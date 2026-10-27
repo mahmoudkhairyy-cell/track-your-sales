@@ -245,15 +245,12 @@ function defaultBundle(yearMonth: string): Bundle {
   return {
     saved: false,
     yearMonth,
-    fullCommission: DEFAULT_COMMISSION,
+    fullCommission: 0,
     allowCommissionOver100: false,
     workingDays: { ...DEFAULT_WORKING_DAYS },
     kpis: KPI_CATALOG.map((kpi, index) => ({
       kpiKey: kpi.key,
-      target:
-        kpi.key === "new_orange_cash"
-          ? Math.ceil(KPI_CATALOG.find((k) => k.key === "new_lines")!.defaultTarget * 0.9)
-          : kpi.defaultTarget,
+      target: 0,
       weight: kpi.defaultWeight,
       unitAr: kpi.unitAr,
       sortOrder: index,
@@ -269,18 +266,19 @@ function loadBundle(state: State, yearMonth: string): Bundle {
   if (!row) return defaultBundle(yearMonth);
 
   const savedMap = new Map(row.kpis.map((item) => [item.kpiKey, item]));
-  const newLinesTarget = savedMap.get("new_lines")?.target ?? KPI_CATALOG.find((k) => k.key === "new_lines")!.defaultTarget;
+  const newLinesTarget = savedMap.get("new_lines")?.target ?? 0;
   const kpis = KPI_CATALOG.map((kpi, index) => {
     const saved = savedMap.get(kpi.key);
     // تارجت المحافظ الجديدة = 90% من تارجت الـ New Lines تلقائيًا.
     const target =
       kpi.key === "new_orange_cash"
         ? Math.ceil(newLinesTarget * 0.9)
-        : saved?.target ?? kpi.defaultTarget;
+        : saved?.target ?? 0;
     return {
       kpiKey: kpi.key,
       target,
-      weight: saved?.weight ?? kpi.defaultWeight,
+      // الأوزان ثابتة من الكود بس، مش بتتغير من التطبيق.
+      weight: kpi.defaultWeight,
       unitAr: saved?.unitAr ?? kpi.unitAr,
       sortOrder: saved?.sortOrder ?? index,
     };
@@ -395,14 +393,14 @@ function putMonth(state: State, yearMonth: string, data: Record<string, unknown>
       fail(400, "فيه إيتم مش معروف");
     }
     const target = Number(row.target);
-    const weight = Number(row.weight);
     if (!Number.isFinite(target) || target < 0) fail(400, `تارجت ${kpiKey} غير صالح`);
-    if (!Number.isFinite(weight) || weight < 0) fail(400, `وزن ${kpiKey} غير صالح`);
     const catalog = KPI_CATALOG.find((kpi) => kpi.key === kpiKey)!;
+    if (catalog.defaultWeight > 0 && target <= 0) fail(400, `لازم تدخل تارجت ${catalog.nameEn}`);
     return {
       kpiKey: kpiKey as KpiKey,
       target,
-      weight,
+      // الوزن ثابت من الكود، أي قيمة جاية من الواجهة بتتجاهل.
+      weight: catalog.defaultWeight,
       unitAr: typeof row.unitAr === "string" && row.unitAr.trim() ? row.unitAr.trim() : catalog.unitAr,
       sortOrder: index,
     };
@@ -479,7 +477,7 @@ function deleteArticle(state: State, id: string) {
 
 function updateProfile(state: State, data: Record<string, unknown>) {
   const name = trimText(data.name, "اسم الموظف", 2, 80);
-  const branch = trimText(data.branch, "الفرع", 2, 80);
+  const branch = typeof data.branch === "string" ? data.branch.trim().slice(0, 80) : "";
   state.profile = { ...state.profile, name, branch };
   return { user: { id: "local", name, branch, role: state.profile.role }, message: "✅ بياناتك اتحدثت" };
 }

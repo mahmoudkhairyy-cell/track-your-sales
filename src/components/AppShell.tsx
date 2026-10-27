@@ -103,8 +103,8 @@ function FirstRunProfile({ onDone }: { onDone: () => void }) {
 
   async function submit(event: FormEvent) {
     event.preventDefault();
-    if (name.trim().length < 2 || branch.trim().length < 2) {
-      setError("اكتب اسمك واسم الفرع (حرفين على الأقل)");
+    if (name.trim().length < 2) {
+      setError("اكتب اسمك (حرفين على الأقل)");
       return;
     }
     setPending(true);
@@ -124,14 +124,14 @@ function FirstRunProfile({ onDone }: { onDone: () => void }) {
         <div className="mb-5 text-center">
           <img src="/track-your-sales/logo-mark.png" alt="" className="mx-auto h-16 w-16 object-contain" />
           <h1 className="mt-2 text-xl font-black">أهلاً بيك في {APP_NAME}</h1>
-          <p className="mt-1 text-sm text-neutral-500">عشان نبدأ، اكتب اسمك واسم الفرع</p>
+          <p className="mt-1 text-sm text-neutral-500">عشان نبدأ، اكتب اسمك (واسم الفرع لو حابب)</p>
         </div>
         <label className="mb-3 block text-sm font-bold text-neutral-700">
           الاسم
           <input value={name} onChange={(e) => setName(e.target.value)} className="mt-1 w-full rounded-2xl border border-orange-200 px-4 py-3 outline-none focus:border-[#e06600]" maxLength={80} />
         </label>
         <label className="mb-4 block text-sm font-bold text-neutral-700">
-          اسم الفرع
+          اسم الفرع (اختياري)
           <input value={branch} onChange={(e) => setBranch(e.target.value)} className="mt-1 w-full rounded-2xl border border-orange-200 px-4 py-3 outline-none focus:border-[#e06600]" maxLength={80} />
         </label>
         {error ? <p className="mb-3 text-sm font-bold text-red-600">{error}</p> : null}
@@ -201,7 +201,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   useEffect(() => {
     let cancelled = false;
     const profile = readProfile();
-    if (!profile.name.trim() || !profile.branch.trim()) {
+    if (!profile.name.trim()) {
       setStatus("profile");
       return;
     }

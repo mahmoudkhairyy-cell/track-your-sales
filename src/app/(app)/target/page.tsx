@@ -292,18 +292,7 @@ export default function TargetPage() {
                   setKpis((current) => current.map((row, rowIndex) => (rowIndex === index ? { ...row, target } : row)));
                 }}
               />
-              <input
-                aria-label={`وزن ${catalog?.nameEn}`}
-                className={`${inputClass} px-2 py-2 text-center text-sm font-black`}
-                type="number"
-                min={0}
-                step="0.01"
-                value={kpi.weight}
-                onChange={(e) => {
-                  const weight = Number(e.target.value);
-                  setKpis((current) => current.map((row, rowIndex) => (rowIndex === index ? { ...row, weight } : row)));
-                }}
-              />
+              <p aria-label={`وزن ${catalog?.nameEn}`} className="py-2 text-center text-sm font-black text-neutral-600">{kpi.weight}%</p>
             </div>
           );
         })}
