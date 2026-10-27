@@ -219,6 +219,90 @@ function exportTopImage(list: TopRow[], n: number) {
   }, "image/png");
 }
 
+/** صورة موبايل premium لموظف واحد، اسم الملف = اسم الموظف. */
+function exportEmployeeImage(row: ReportRow) {
+  const width = 1080;
+  const height = 1920;
+  const canvas = document.createElement("canvas");
+  canvas.width = width;
+  canvas.height = height;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return;
+  const percent = Math.round(row.payload.overall ?? 0);
+  const kpis = (row.payload.kpis ?? []).filter((k) => k.weight > 0);
+
+  const bg = ctx.createLinearGradient(0, 0, width, height);
+  bg.addColorStop(0, "#f0802a");
+  bg.addColorStop(0.5, "#b84700");
+  bg.addColorStop(1, "#5c2300");
+  ctx.fillStyle = bg;
+  ctx.fillRect(0, 0, width, height);
+  ctx.fillStyle = "rgba(255,255,255,0.08)";
+  ctx.beginPath();
+  ctx.arc(width - 120, 260, 360, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.textAlign = "center";
+  ctx.fillStyle = "#ffffff";
+  ctx.font = "900 72px system-ui, sans-serif";
+  ctx.fillText(row.employee_name.slice(0, 26), width / 2, 260);
+  ctx.font = "600 38px system-ui, sans-serif";
+  ctx.fillStyle = "rgba(255,255,255,0.85)";
+  ctx.fillText(row.branch_name, width / 2, 320);
+
+  // نسبة التحقيق الإجمالية
+  ctx.font = "900 280px system-ui, sans-serif";
+  ctx.fillStyle = "#ffffff";
+  ctx.fillText(`${percent}%`, width / 2, 640);
+  ctx.font = "600 40px system-ui, sans-serif";
+  ctx.fillStyle = "rgba(255,255,255,0.85)";
+  ctx.fillText("نسبة التحقيق", width / 2, 700);
+
+  // بطاقة لكل مؤشر
+  const top = 780;
+  const gap = 24;
+  const cardH = Math.min(170, Math.floor((height - top - 240 - gap * kpis.length) / Math.max(1, kpis.length)));
+  kpis.forEach((kpi, i) => {
+    const y = top + i * (cardH + gap);
+    const ok = kpi.percent >= (kpi.expectedPercent ?? 0) - 10;
+    ctx.save();
+    ctx.shadowColor = "rgba(0,0,0,0.25)";
+    ctx.shadowBlur = 30;
+    ctx.shadowOffsetY = 12;
+    ctx.fillStyle = "rgba(255,255,255,0.97)";
+    roundRect(ctx, 80, y, width - 160, cardH, 42);
+    ctx.fill();
+    ctx.restore();
+    ctx.fillStyle = ok ? "#1f9d55" : "#dc2626";
+    roundRect(ctx, 80, y, 14, cardH, 7);
+    ctx.fill();
+
+    ctx.textAlign = "left";
+    ctx.fillStyle = "#1d1a16";
+    ctx.font = "800 42px system-ui, sans-serif";
+    ctx.fillText(kpi.name.slice(0, 30), 130, y + cardH / 2 + 14);
+    ctx.textAlign = "right";
+    ctx.fillStyle = ok ? "#1f9d55" : "#dc2626";
+    ctx.font = "900 56px system-ui, sans-serif";
+    ctx.fillText(`${Math.round(kpi.percent)}%`, width - 130, y + cardH / 2 + 18);
+  });
+
+  ctx.textAlign = "center";
+  ctx.fillStyle = "rgba(255,255,255,0.8)";
+  ctx.font = "600 30px system-ui, sans-serif";
+  ctx.fillText(new Date().toLocaleDateString("en-GB", { timeZone: "Africa/Cairo" }), width / 2, height - 120);
+
+  canvas.toBlob((blob) => {
+    if (!blob) return;
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `${row.employee_name}.png`;
+    link.click();
+    URL.revokeObjectURL(url);
+  }, "image/png");
+}
+
 function groupAverage(group: ReportRow[]): number {
   const withData = group.filter((r) => typeof r.payload.overall === "number");
   return withData.length ? withData.reduce((sum, r) => sum + (r.payload.overall ?? 0), 0) / withData.length : 0;
@@ -305,7 +389,8 @@ export default function ManagerPage() {
     const percent = Math.round(row.payload.overall ?? 0);
     return (
       <article key={row.branch_id} className="rounded-[24px] bg-white p-4 shadow-[0_12px_32px_rgba(40,20,0,0.07)] ring-1 ring-orange-200/70">
-        <button type="button" onClick={() => setOpenId(open ? null : row.branch_id)} className="flex w-full items-center justify-between gap-3 text-right">
+        <div className="flex items-center gap-2">
+        <button type="button" onClick={() => setOpenId(open ? null : row.branch_id)} className="flex min-w-0 flex-1 items-center justify-between gap-3 text-right">
           <div>
             <h3 className="font-black">{row.employee_name}</h3>
             <div className="mt-1 flex flex-wrap items-center gap-1">
@@ -320,6 +405,15 @@ export default function ManagerPage() {
             <span className="text-neutral-400">{open ? "▲" : "▼"}</span>
           </div>
         </button>
+        <button
+          type="button"
+          onClick={() => exportEmployeeImage(row)}
+          aria-label={`صدّر صورة ${row.employee_name}`}
+          className="shrink-0 rounded-2xl bg-orange-50 px-3 py-2 text-lg ring-1 ring-orange-200/70"
+        >
+          📸
+        </button>
+        </div>
 
         {open ? (
           <>
