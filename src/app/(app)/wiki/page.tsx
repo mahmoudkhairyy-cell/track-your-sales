@@ -179,7 +179,7 @@ export default function WikiPage() {
             <div className="space-y-3">
               <p className="text-sm font-bold text-neutral-500">نتائج البحث</p>
               {globalHits.sr.map((item) => (
-                <button key={item.id + item.title} type="button" onClick={() => setOpenSr(item)} className="w-full rounded-[22px] bg-white p-4 text-right shadow-sm">
+                <button key={item.id + item.title} type="button" onClick={() => setOpenSr(item)} className="w-full rounded-[24px] border border-orange-200/70 bg-white p-4 text-right shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
                   <p className="text-xs font-extrabold text-[#e06600]">{item.id}</p>
                   <p className="font-extrabold">{item.titleAr || item.title}</p>
                 </button>
@@ -191,7 +191,7 @@ export default function WikiPage() {
                 </a>
               ))}
               {globalHits.emails.map((item) => (
-                <button key={item.email} type="button" onClick={() => copyText(item.email, toast, "📋 الإيميل اتنسخ")} className="w-full rounded-[22px] bg-white p-4 text-right shadow-sm">
+                <button key={item.email} type="button" onClick={() => copyText(item.email, toast, "📋 الإيميل اتنسخ")} className="w-full rounded-[24px] border border-orange-200/70 bg-white p-4 text-right shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
                   <p className="font-extrabold">{item.name}</p>
                   <p className="text-sm text-[#e06600]">{item.email}</p>
                 </button>
@@ -282,7 +282,7 @@ export default function WikiPage() {
           <p className="mt-2 text-xs text-neutral-400">{filteredSr.length} نتيجة</p>
           <div className="mt-3 space-y-2">
             {filteredSr.map((item) => (
-              <button key={`${item.id}-${item.title}`} type="button" onClick={() => setOpenSr(item)} className="w-full rounded-[22px] bg-white p-4 text-right shadow-sm">
+              <button key={`${item.id}-${item.title}`} type="button" onClick={() => setOpenSr(item)} className="w-full rounded-[24px] border border-orange-200/70 bg-white p-4 text-right shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
                 <p className="text-xs font-extrabold text-[#e06600]">{item.id}</p>
                 <p className="font-extrabold">{item.titleAr || item.title}</p>
                 <p className="mt-1 line-clamp-2 text-xs leading-6 text-neutral-500">{item.description}</p>
