@@ -11,13 +11,35 @@ type ReportRow = {
   payload: {
     monthLabel?: string;
     overall?: number;
+    expectedPercent?: number;
     estimatedCommission?: number;
     fullCommission?: number;
-    kpis?: { name: string; achieved: number; target: number; percent: number; weight: number }[];
+    kpis?: { name: string; achieved: number; target: number; percent: number; weight: number; expectedPercent?: number }[];
     settings?: { fullCommission: number; kpis: { kpiKey: string; target: number; weight: number; unitAr: string }[]; holidays: { date: string }[] };
     entries?: { date: string; kpi: string; quantity: number; unit: string; note: string }[];
   };
 };
+
+/** On track = النسبة المحققة أكبر من أو تساوي المطلوب لحد النهارده (بهامش 5%). */
+function TrackBadge({ percent, expected }: { percent?: number; expected?: number }) {
+  if (typeof percent !== "number" || typeof expected !== "number") return null;
+  const onTrack = percent >= expected - 5;
+  return (
+    <span className={`rounded-full px-2 py-0.5 text-[10px] font-black ${onTrack ? "bg-emerald-100 text-emerald-800" : "bg-red-100 text-red-700"}`}>
+      {onTrack ? "🟢 On track" : "🔴 متأخر"}
+    </span>
+  );
+}
+
+function groupAverage(group: ReportRow[]): number {
+  const withData = group.filter((r) => typeof r.payload.overall === "number");
+  return withData.length ? withData.reduce((sum, r) => sum + (r.payload.overall ?? 0), 0) / withData.length : 0;
+}
+
+function groupExpected(group: ReportRow[]): number | undefined {
+  const withData = group.filter((r) => typeof r.payload.expectedPercent === "number");
+  return withData.length ? withData.reduce((sum, r) => sum + (r.payload.expectedPercent ?? 0), 0) / withData.length : undefined;
+}
 
 function groupByBranch(rows: ReportRow[]): [string, ReportRow[]][] {
   const map = new Map<string, ReportRow[]>();
@@ -59,6 +81,7 @@ export default function ManagerPage() {
         <div className="flex items-start justify-between gap-3">
           <div>
             <h3 className="font-black">{row.employee_name}</h3>
+            <div className="mt-1"><TrackBadge percent={row.payload.overall} expected={row.payload.expectedPercent} /></div>
             <p className="text-[10px] text-neutral-400" dir="ltr">
               {new Date(row.updated_at).toLocaleString("en-US", { timeZone: "Africa/Cairo", hour12: false })}
             </p>
@@ -70,7 +93,10 @@ export default function ManagerPage() {
         <div className="mt-3 space-y-2">
           {(row.payload.kpis ?? []).map((kpi) => (
             <div key={kpi.name} className="flex items-center justify-between text-xs">
-              <span className="font-bold" dir="ltr">{kpi.name}</span>
+              <span className="flex items-center gap-1.5 font-bold" dir="ltr">
+                <span className={`inline-block h-2 w-2 rounded-full ${kpi.weight === 0 ? "bg-neutral-300" : kpi.percent >= (kpi.expectedPercent ?? 0) - 5 ? "bg-emerald-500" : "bg-red-500"}`} />
+                {kpi.name}
+              </span>
               <span className="tabular-nums text-neutral-600">
                 {kpi.achieved} / {kpi.target} ({Math.round(kpi.percent)}%)
               </span>
@@ -159,6 +185,7 @@ export default function ManagerPage() {
                       <div>
                         <p className="font-black" dir="ltr">{branchName}</p>
                         <p className="text-xs text-neutral-500">{group.length} موظف</p>
+                        <div className="mt-1"><TrackBadge percent={avg} expected={groupExpected(group)} /></div>
                       </div>
                       <p className="text-xl font-black text-[#e06600] tabular-nums">{Math.round(avg)}%</p>
                     </button>
@@ -171,6 +198,12 @@ export default function ManagerPage() {
                 <div className="rounded-[24px] bg-[#e06600] p-4 text-white">
                   <p className="text-xs text-white/80">الفرع</p>
                   <h2 className="font-black" dir="ltr">{branch}</h2>
+                  <div className="mt-2">
+                    <TrackBadge
+                      percent={groupAverage(rows.filter((r) => (r.branch_name || "بدون فرع") === branch))}
+                      expected={groupExpected(rows.filter((r) => (r.branch_name || "بدون فرع") === branch))}
+                    />
+                  </div>
                 </div>
                 {groupByBranch(rows)
                   .filter(([name]) => name === branch)
