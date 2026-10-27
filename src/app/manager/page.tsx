@@ -155,9 +155,9 @@ function exportTopImage(list: TopRow[]) {
   ctx.textAlign = "center";
   ctx.font = "900 120px system-ui, sans-serif";
   ctx.fillText("TOP", width / 2, 150);
-  ctx.font = "600 34px system-ui, sans-serif";
+  ctx.font = "600 30px system-ui, sans-serif";
   ctx.fillStyle = "rgba(255,255,255,0.9)";
-  ctx.fillText("Track Your Sales · Mr. Abdelrahman Mahmoud", width / 2, 215);
+  ctx.fillText("Track Your Sales · by Mahmoud Khairy · Mr. Abdelrahman Mahmoud", width / 2, 215);
   ctx.font = "500 28px system-ui, sans-serif";
   ctx.fillStyle = "rgba(255,255,255,0.8)";
   ctx.fillText(new Date().toLocaleDateString("en-GB", { timeZone: "Africa/Cairo" }), width / 2, 262);
@@ -399,7 +399,7 @@ export default function ManagerPage() {
               <img src="/track-your-sales/logo-mark.png" alt="" className="h-10 w-10 object-contain" />
               <div>
                 <p className="text-sm font-black tracking-tight" dir="ltr">Track Your Sales</p>
-                <p className="text-[11px] text-white/85" dir="ltr">Manager Dashboard</p>
+                <p className="text-[11px] text-white/85" dir="ltr">Manager Dashboard · by Mahmoud Khairy</p>
               </div>
             </div>
             <p className="rounded-full bg-white/20 px-3 py-1 text-[11px] font-extrabold ring-1 ring-white/30" dir="ltr">👑 Mr. Abdelrahman Mahmoud</p>
