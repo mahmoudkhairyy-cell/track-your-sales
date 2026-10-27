@@ -145,9 +145,7 @@ export function applyCompanyRules(kpis: RulesKpi[]) {
     const percent = achievementPercent(kpi.achieved, kpi.target);
     const eligible = kpi.weight > 0 && kpi.target > 0;
     const gated = eligible && percent < KPI_MIN_PERCENT;
-    // كل item بيقف عند 200% من تارجته، زي التوتال.
-    const cappedAchieved = Math.min(kpi.achieved, kpi.target * 2);
-    const contribution = eligible && !gated ? kpiContribution(cappedAchieved, kpi.target, kpi.weight) : 0;
+    const contribution = eligible && !gated ? kpiContribution(kpi.achieved, kpi.target, kpi.weight) : 0;
     return { kpiKey: kpi.kpiKey, contribution, percent, gated };
   });
 
