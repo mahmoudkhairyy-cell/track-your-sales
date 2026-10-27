@@ -63,6 +63,57 @@ function downloadBranchCsv(branchName: string, group: ReportRow[]) {
   URL.revokeObjectURL(url);
 }
 
+type AggKpi = { name: string; achieved: number; target: number; percent: number; weight: number; expectedPercent?: number };
+
+/** بيجمع كل موظفين الفرع لكل مؤشر: المحقق الكلي ÷ التارجت الكلي. الـ Quality بيتحسب متوسط نسبه لأنه مش بيتجمع. */
+function aggregateKpis(group: ReportRow[]): AggKpi[] {
+  const map = new Map<string, { achieved: number; target: number; weight: number; percents: number[]; expected: number[] }>();
+  for (const row of group) {
+    for (const k of row.payload.kpis ?? []) {
+      const cur = map.get(k.name) ?? { achieved: 0, target: 0, weight: k.weight, percents: [], expected: [] };
+      cur.achieved += k.achieved;
+      cur.target += k.target;
+      cur.percents.push(k.percent);
+      if (typeof k.expectedPercent === "number") cur.expected.push(k.expectedPercent);
+      map.set(k.name, cur);
+    }
+  }
+  const avg = (xs: number[]) => (xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : 0);
+  return [...map.entries()].map(([name, v]) => {
+    const isQuality = name.toLowerCase() === "quality";
+    return {
+      name,
+      achieved: isQuality ? Math.round(avg(v.percents) * 10) / 10 : v.achieved,
+      target: isQuality ? 100 : v.target,
+      percent: isQuality ? avg(v.percents) : v.target > 0 ? (v.achieved / v.target) * 100 : 0,
+      weight: v.weight,
+      expectedPercent: v.expected.length ? avg(v.expected) : undefined,
+    };
+  });
+}
+
+function KpiTile({ kpi }: { kpi: AggKpi }) {
+  const ok = kpi.percent >= (kpi.expectedPercent ?? 0) - 10;
+  const neutral = kpi.weight === 0;
+  const tone = neutral
+    ? { text: "text-neutral-500", bar: "from-neutral-300 to-neutral-400", ring: "ring-neutral-200" }
+    : ok
+      ? { text: "text-emerald-700", bar: "from-emerald-400 to-emerald-600", ring: "ring-emerald-200" }
+      : { text: "text-red-600", bar: "from-red-400 to-red-600", ring: "ring-red-200" };
+  return (
+    <div className={`relative overflow-hidden rounded-2xl bg-gradient-to-br from-white to-orange-50/60 p-3 shadow-[0_6px_18px_rgba(40,20,0,0.06)] ring-1 ${tone.ring}`}>
+      <p className="truncate text-[10px] font-extrabold text-neutral-500" dir="ltr">{kpi.name}</p>
+      <p className={`mt-1 text-2xl font-black tabular-nums tracking-tight ${tone.text}`}>
+        {Math.round(kpi.percent)}<span className="text-sm">%</span>
+      </p>
+      <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-white/80">
+        <div className={`h-full rounded-full bg-gradient-to-r ${tone.bar}`} style={{ width: `${Math.min(100, Math.max(0, kpi.percent))}%` }} />
+      </div>
+      <p className="mt-1.5 text-[10px] tabular-nums text-neutral-500" dir="ltr">{Math.round(kpi.achieved)} / {kpi.target}</p>
+    </div>
+  );
+}
+
 function groupAverage(group: ReportRow[]): number {
   const withData = group.filter((r) => typeof r.payload.overall === "number");
   return withData.length ? withData.reduce((sum, r) => sum + (r.payload.overall ?? 0), 0) / withData.length : 0;
@@ -279,6 +330,14 @@ export default function ManagerPage() {
                     />
                   </div>
                 </div>
+                <section className="rounded-[24px] bg-white p-4 shadow-[0_12px_32px_rgba(40,20,0,0.07)] ring-1 ring-orange-200/70">
+                  <p className="mb-3 text-sm font-black">إجمالي الفرع لكل مؤشر</p>
+                  <div className="grid grid-cols-2 gap-2">
+                    {aggregateKpis(rows.filter((r) => (r.branch_name || "بدون فرع") === branch)).map((kpi) => (
+                      <KpiTile key={kpi.name} kpi={kpi} />
+                    ))}
+                  </div>
+                </section>
                 {groupByBranch(rows)
                   .filter(([name]) => name === branch)
                   .flatMap(([, group]) =>
