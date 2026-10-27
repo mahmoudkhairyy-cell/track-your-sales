@@ -169,9 +169,9 @@ export default function TargetPage() {
 
       <section className="overflow-hidden rounded-[32px] bg-gradient-to-br from-[#f0802a] via-[#e06600] to-[#b84700] p-5 text-white shadow-[0_20px_50px_rgba(190,90,0,0.35)]">
         <div className="grid grid-cols-3 gap-2 text-center">
-          <div><p className="text-2xl font-black">{monthDays.length}</p><p className="text-[11px] text-white/85">أيام الشهر</p></div>
-          <div><p className="text-2xl font-black">{holidays.length}</p><p className="text-[11px] text-white/85">إجازات</p></div>
-          <div><p className="text-2xl font-black">{workingDatesInMonth(month, workingDays, holidays.map((item) => item.date)).length}</p><p className="text-[11px] text-white/85">أيام شغل</p></div>
+          <div className="rounded-2xl bg-white/15 px-2 py-3 ring-1 ring-white/25"><p className="text-2xl font-black tabular-nums">{monthDays.length}</p><p className="text-[11px] text-white/85">أيام الشهر</p></div>
+          <div className="rounded-2xl bg-white/15 px-2 py-3 ring-1 ring-white/25"><p className="text-2xl font-black tabular-nums">{holidays.length}</p><p className="text-[11px] text-white/85">إجازات</p></div>
+          <div className="rounded-2xl bg-white/15 px-2 py-3 ring-1 ring-white/25"><p className="text-2xl font-black tabular-nums">{workingDatesInMonth(month, workingDays, holidays.map((item) => item.date)).length}</p><p className="text-[11px] text-white/85">أيام شغل</p></div>
         </div>
       </section>
 
