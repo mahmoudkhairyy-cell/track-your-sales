@@ -114,6 +114,109 @@ function KpiTile({ kpi }: { kpi: AggKpi }) {
   );
 }
 
+type TopRow = { rank: number; name: string; branch: string; percent: number };
+
+function roundRect(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, r: number) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.arcTo(x + w, y, x + w, y + h, r);
+  ctx.arcTo(x + w, y + h, x, y + h, r);
+  ctx.arcTo(x, y + h, x, y, r);
+  ctx.arcTo(x, y, x + w, y, r);
+  ctx.closePath();
+}
+
+/** بيرسم صورة TOP بالتصميم البرتقالي ويحمّلها كـ PNG. */
+function exportTopImage(list: TopRow[]) {
+  const width = 1080;
+  const rowH = 132;
+  const headerH = 300;
+  const height = headerH + list.length * rowH + 110;
+  const canvas = document.createElement("canvas");
+  canvas.width = width;
+  canvas.height = height;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return;
+
+  const bg = ctx.createLinearGradient(0, 0, 0, height);
+  bg.addColorStop(0, "#fbe9da");
+  bg.addColorStop(1, "#fff8f2");
+  ctx.fillStyle = bg;
+  ctx.fillRect(0, 0, width, height);
+
+  const head = ctx.createLinearGradient(0, 0, width, headerH);
+  head.addColorStop(0, "#f0802a");
+  head.addColorStop(0.6, "#e06600");
+  head.addColorStop(1, "#b84700");
+  ctx.fillStyle = head;
+  ctx.fillRect(0, 0, width, headerH);
+
+  ctx.fillStyle = "#ffffff";
+  ctx.textAlign = "center";
+  ctx.font = "900 120px system-ui, sans-serif";
+  ctx.fillText("TOP", width / 2, 150);
+  ctx.font = "600 34px system-ui, sans-serif";
+  ctx.fillStyle = "rgba(255,255,255,0.9)";
+  ctx.fillText("Track Your Sales · Mr. Abdelrahman Mahmoud", width / 2, 215);
+  ctx.font = "500 28px system-ui, sans-serif";
+  ctx.fillStyle = "rgba(255,255,255,0.8)";
+  ctx.fillText(new Date().toLocaleDateString("en-GB", { timeZone: "Africa/Cairo" }), width / 2, 262);
+
+  const medal = ["#f5b400", "#9aa4b2", "#c27a3a"];
+  list.forEach((row, i) => {
+    const y = headerH + 40 + i * rowH;
+    ctx.save();
+    ctx.shadowColor = "rgba(190,90,0,0.15)";
+    ctx.shadowBlur = 24;
+    ctx.shadowOffsetY = 8;
+    ctx.fillStyle = "#ffffff";
+    roundRect(ctx, 50, y, width - 100, rowH - 22, 34);
+    ctx.fill();
+    ctx.restore();
+
+    ctx.fillStyle = i < 3 ? medal[i] : "#fbe9da";
+    ctx.beginPath();
+    ctx.arc(120, y + (rowH - 22) / 2, 38, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = i < 3 ? "#ffffff" : "#8f4300";
+    ctx.font = "900 40px system-ui, sans-serif";
+    ctx.fillText(String(row.rank), 120, y + (rowH - 22) / 2 + 14);
+
+    ctx.textAlign = "left";
+    ctx.fillStyle = "#1d1a16";
+    ctx.font = "800 38px system-ui, sans-serif";
+    ctx.fillText(row.name.slice(0, 26), 190, y + 56);
+    ctx.fillStyle = "#7a7068";
+    ctx.font = "500 26px system-ui, sans-serif";
+    ctx.fillText(row.branch.slice(0, 34), 190, y + 92);
+
+    ctx.textAlign = "right";
+    ctx.fillStyle = "#e06600";
+    ctx.font = "900 52px system-ui, sans-serif";
+    ctx.fillText(`${Math.round(row.percent)}%`, width - 110, y + 66);
+
+    const barX = 190;
+    const barW = width - 100 - 190 - 110;
+    ctx.fillStyle = "#f3e7dc";
+    roundRect(ctx, barX, y + 100, barW, 10, 5);
+    ctx.fill();
+    ctx.fillStyle = "#e06600";
+    roundRect(ctx, barX, y + 100, Math.max(10, (barW * Math.min(100, Math.max(0, row.percent))) / 100), 10, 5);
+    ctx.fill();
+    ctx.textAlign = "center";
+  });
+
+  canvas.toBlob((blob) => {
+    if (!blob) return;
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "TOP.png";
+    a.click();
+    URL.revokeObjectURL(url);
+  }, "image/png");
+}
+
 function groupAverage(group: ReportRow[]): number {
   const withData = group.filter((r) => typeof r.payload.overall === "number");
   return withData.length ? withData.reduce((sum, r) => sum + (r.payload.overall ?? 0), 0) / withData.length : 0;
@@ -149,6 +252,11 @@ export default function ManagerPage() {
   const [rows, setRows] = useState<ReportRow[] | null>(null);
   const [error, setError] = useState("");
   const [pending, setPending] = useState(false);
+
+  const topRows: TopRow[] = (rows ?? [])
+    .map((r) => ({ name: r.employee_name, branch: r.branch_name || "بدون فرع", percent: r.payload.overall ?? 0 }))
+    .sort((a, b) => b.percent - a.percent)
+    .map((r, i) => ({ ...r, rank: i + 1 }));
 
   async function load(event?: FormEvent, savedPassword?: string) {
     event?.preventDefault();
@@ -324,8 +432,43 @@ export default function ManagerPage() {
           </form>
         ) : (
           <>
+            {view === "top" ? (
+              <div className="space-y-3">
+                <button type="button" onClick={() => setView("list")} className="text-sm font-extrabold text-[#e06600]">← رجوع</button>
+                <div className="flex items-center justify-between rounded-[24px] bg-gradient-to-br from-[#f0802a] to-[#b84700] p-4 text-white">
+                  <div>
+                    <p className="text-3xl font-black tracking-tight">TOP</p>
+                    <p className="text-[11px] text-white/85">كل الموظفين مرتبين حسب نسبة التحقيق</p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => exportTopImage(topRows)}
+                    className="rounded-2xl bg-white px-3 py-2 text-xs font-extrabold text-[#8f4300] shadow-md"
+                  >
+                    📸 صدّر صورة
+                  </button>
+                </div>
+                {topRows.map((row) => (
+                  <div key={`${row.branch}-${row.name}-${row.rank}`} className="flex items-center justify-between rounded-[22px] bg-white p-3.5 shadow-[0_8px_24px_rgba(40,20,0,0.06)] ring-1 ring-orange-200/70">
+                    <div className="flex items-center gap-3">
+                      <span className={`flex h-10 w-10 items-center justify-center rounded-full text-sm font-black ${row.rank <= 3 ? "bg-gradient-to-br from-[#f5c542] to-[#e8a400] text-white" : "bg-orange-100 text-[#8f4300]"}`}>
+                        {row.rank}
+                      </span>
+                      <div>
+                        <p className="font-black">{row.name}</p>
+                        <p className="text-[11px] text-neutral-500" dir="ltr">{row.branch}</p>
+                      </div>
+                    </div>
+                    <p className="text-xl font-black tabular-nums text-[#e06600]">{Math.round(row.percent)}%</p>
+                  </div>
+                ))}
+              </div>
+            ) : null}
+            {view !== "top" ? (
+            <>
             <div className="flex items-center justify-between">
               <p className="text-sm font-bold text-neutral-500">{rows.length} موظف</p>
+              <button type="button" onClick={() => setView("top")} className="rounded-full bg-gradient-to-br from-[#f0802a] to-[#b84700] px-3 py-1.5 text-xs font-black text-white">🏆 TOP</button>
               <button type="button" onClick={() => load()} className="rounded-full bg-white px-3 py-1.5 text-xs font-extrabold text-[#8f4300] ring-1 ring-orange-200/70">
                 🔄 تحديث
               </button>
@@ -425,6 +568,8 @@ export default function ManagerPage() {
                   )}
               </div>
             )}
+            </>
+            ) : null}
           </>
         )}
       </div>
