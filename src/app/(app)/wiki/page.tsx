@@ -479,7 +479,7 @@ export default function WikiPage() {
           <Back onClick={() => setSection("hub")} title="أرقام Hunts" />
           <SearchBox value={query} onChange={setQuery} placeholder="ابحث باسم الفريق أو الرقم..." />
           {["Orange", "ADSL"].map((type) => {
-            const rows = HUNTS.filter((item) => item.type === type && (!q || `${item.name} ${item.number}`.toLowerCase().includes(q)));
+            const rows = HUNTS.filter((item) => item.type === type && (!q || matchesQuery(`${item.name} ${item.number}`, q)));
             if (!rows.length) return null;
             return (
               <div key={type}>
@@ -510,7 +510,7 @@ export default function WikiPage() {
         <div className="space-y-2">
           <Back onClick={() => setSection("hub")} title="E-Mails" />
           <SearchBox value={query} onChange={setQuery} placeholder="ابحث باسم الفريق أو الإيميل..." />
-          {EMAILS.filter((item) => !q || `${item.name} ${item.email} ${item.description}`.toLowerCase().includes(q)).map((item) => (
+          {EMAILS.filter((item) => !q || matchesQuery(`${item.name} ${item.email} ${item.description}`, q)).map((item) => (
             <article key={item.email} className="rounded-[24px] bg-white p-4 border border-orange-200/70 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
               <p className="font-black">{item.name}</p>
               <p className="text-xs text-neutral-400">{item.description}</p>
