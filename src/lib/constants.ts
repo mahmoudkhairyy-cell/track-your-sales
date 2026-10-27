@@ -54,8 +54,8 @@ export const KPI_CATALOG = [
   },
   {
     key: "existing_wallets",
-    nameEn: "Existing Wallets",
-    nameAr: "Existing Wallets",
+    nameEn: "Exist",
+    nameAr: "Exist",
     emoji: "💳",
     unitAr: "محفظة",
     defaultTarget: 74,

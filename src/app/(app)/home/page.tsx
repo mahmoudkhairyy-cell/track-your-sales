@@ -51,7 +51,7 @@ function greeting() {
 
 const SHORT_KPI_NAMES: Record<string, string> = {
   "New Orange Cash Wallets": "New",
-  "Existing Wallets": "Existing",
+  "Exist": "Exist",
 };
 
 function shortKpiName(name: string) {
