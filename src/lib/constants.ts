@@ -94,8 +94,8 @@ export const KPI_CATALOG = [
     nameEn: "Productivity (GA & OC)",
     nameAr: "الإنتاجية",
     emoji: "📈",
-    unitAr: "عملية",
-    defaultTarget: 0,
+    unitAr: "%",
+    defaultTarget: 100,
     defaultWeight: 0,
   },
   {
