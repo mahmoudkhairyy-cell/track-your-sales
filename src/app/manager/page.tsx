@@ -137,6 +137,7 @@ export default function ManagerPage() {
   const [password, setPassword] = useState("");
   const [openId, setOpenId] = useState<string | null>(null);
   const [detailsId, setDetailsId] = useState<string | null>(null);
+  const [branchOpen, setBranchOpen] = useState(false);
   // "list" = قايمة الفروع، و"branch:<اسم>" = صفحة فرع. الرجوع بيتسجل في تاريخ المتصفح.
   const [view, setView] = useHistoryView<string>("list");
   const branch = view.startsWith("branch:") ? view.slice("branch:".length) : null;
@@ -330,16 +331,38 @@ export default function ManagerPage() {
                     />
                   </div>
                 </div>
-                <section className="rounded-[24px] bg-white p-4 shadow-[0_12px_32px_rgba(40,20,0,0.07)] ring-1 ring-orange-200/70">
-                  <p className="mb-3 text-sm font-black">إجمالي الفرع لكل مؤشر</p>
-                  <div className="grid grid-cols-2 gap-2">
-                    {aggregateKpis(rows.filter((r) => (r.branch_name || "بدون فرع") === branch)).map((kpi) => (
-                      <div key={kpi.name}>
-                        <KpiTile kpi={kpi} />
+                <article className="rounded-[24px] bg-white p-4 shadow-[0_12px_32px_rgba(40,20,0,0.07)] ring-1 ring-orange-200/70">
+                  <button
+                    type="button"
+                    onClick={() => setBranchOpen(!branchOpen)}
+                    className="flex w-full items-center justify-between gap-3 text-right"
+                  >
+                    <div>
+                      <h3 className="font-black">إجمالي الفرع</h3>
+                      <div className="mt-1">
+                        <TrackBadge
+                          percent={groupAverage(rows.filter((r) => (r.branch_name || "بدون فرع") === branch))}
+                          expected={groupExpected(rows.filter((r) => (r.branch_name || "بدون فرع") === branch))}
+                        />
                       </div>
-                    ))}
-                  </div>
-                </section>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <p className="text-2xl font-black text-[#e06600] tabular-nums">
+                        {Math.round(groupAverage(rows.filter((r) => (r.branch_name || "بدون فرع") === branch)))}%
+                      </p>
+                      <span className="text-neutral-400">{branchOpen ? "▲" : "▼"}</span>
+                    </div>
+                  </button>
+                  {branchOpen ? (
+                    <div className="mt-3 grid grid-cols-2 gap-2">
+                      {aggregateKpis(rows.filter((r) => (r.branch_name || "بدون فرع") === branch)).map((kpi) => (
+                        <div key={kpi.name}>
+                          <KpiTile kpi={kpi} />
+                        </div>
+                      ))}
+                    </div>
+                  ) : null}
+                </article>
                 {groupByBranch(rows)
                   .filter(([name]) => name === branch)
                   .flatMap(([, group]) =>
