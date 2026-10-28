@@ -116,208 +116,6 @@ function KpiTile({ kpi }: { kpi: AggKpi }) {
 
 type TopRow = { rank: number; name: string; branch: string; percent: number };
 
-function roundRect(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, r: number) {
-  ctx.beginPath();
-  ctx.moveTo(x + r, y);
-  ctx.arcTo(x + w, y, x + w, y + h, r);
-  ctx.arcTo(x + w, y + h, x, y + h, r);
-  ctx.arcTo(x, y + h, x, y, r);
-  ctx.arcTo(x, y, x + w, y, r);
-  ctx.closePath();
-}
-
-/** تحميل الصورة: على الموبايل بيفتحها في تبويب لو التحميل المباشر ما اشتغلش. */
-function saveCanvas(canvas: HTMLCanvasElement, fileName: string) {
-  canvas.toBlob((blob) => {
-    if (!blob) return;
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = fileName;
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-    window.setTimeout(() => {
-      URL.revokeObjectURL(url);
-    }, 4000);
-  }, "image/png");
-}
-
-const RANK_WORDS = ["الأول", "الثاني", "الثالث", "الرابع", "الخامس", "السادس", "السابع", "الثامن", "التاسع", "العاشر"];
-
-/** صورة احتفال موبايل لموظف واحد: لوحة معدنية باسمه وفرعه وترتيبه ونسبته. */
-function drawTopCard(row: TopRow) {
-  const width = 1080;
-  const height = 1920;
-  const canvas = document.createElement("canvas");
-  canvas.width = width;
-  canvas.height = height;
-  const ctx = canvas.getContext("2d");
-  if (!ctx) return null;
-
-  // خلفية برتقالي ساتان
-  const bg = ctx.createLinearGradient(0, 0, width, height);
-  bg.addColorStop(0, "#f7923f");
-  bg.addColorStop(0.45, "#c24a05");
-  bg.addColorStop(1, "#5a2100");
-  ctx.fillStyle = bg;
-  ctx.fillRect(0, 0, width, height);
-  const glow = ctx.createRadialGradient(width / 2, 900, 80, width / 2, 900, 800);
-  glow.addColorStop(0, "rgba(255,200,130,0.35)");
-  glow.addColorStop(1, "rgba(255,200,130,0)");
-  ctx.fillStyle = glow;
-  ctx.fillRect(0, 0, width, height);
-
-  ctx.textAlign = "center";
-  ctx.fillStyle = "#ffffff";
-  ctx.font = "900 92px system-ui, sans-serif";
-  ctx.fillText("احتفال نجاح المبيعات", width / 2, 230);
-  ctx.font = "700 52px system-ui, sans-serif";
-  ctx.fillStyle = "rgba(255,240,225,0.95)";
-  ctx.fillText("تفوّق المبيعات لعام 2026", width / 2, 310);
-
-  // اللوحة المعدنية
-  const px = 90, py = 420, pw = width - 180, ph = 1000;
-  ctx.save();
-  ctx.shadowColor = "rgba(255,160,60,0.9)";
-  ctx.shadowBlur = 60;
-  const metal = ctx.createLinearGradient(px, py, px + pw, py + ph);
-  metal.addColorStop(0, "#f4f4f4");
-  metal.addColorStop(0.5, "#9aa0a6");
-  metal.addColorStop(1, "#e6e6e6");
-  ctx.fillStyle = metal;
-  roundRect(ctx, px, py, pw, ph, 60);
-  ctx.fill();
-  ctx.restore();
-  ctx.fillStyle = "#3a3f44";
-  roundRect(ctx, px + 36, py + 36, pw - 72, ph - 72, 40);
-  ctx.fill();
-
-  // شارة الترتيب
-  const rankWord = RANK_WORDS[row.rank - 1] ?? `${row.rank}`;
-  ctx.fillStyle = "#e06600";
-  roundRect(ctx, width / 2 - 300, py + 90, 600, 130, 65);
-  ctx.fill();
-  ctx.fillStyle = "#ffffff";
-  ctx.font = "900 78px system-ui, sans-serif";
-  ctx.fillText(row.rank <= 10 ? `المركز ${rankWord}` : `المركز ${row.rank}`, width / 2, py + 180);
-
-  // الفرع والاسم
-  ctx.fillStyle = "#ffd9b0";
-  ctx.font = "700 52px system-ui, sans-serif";
-  ctx.fillText(`فرع ${row.branch.slice(0, 30)}`, width / 2, py + 330);
-  ctx.fillStyle = "#ffffff";
-  ctx.font = "900 96px system-ui, sans-serif";
-  ctx.fillText(row.name.slice(0, 22), width / 2, py + 470);
-
-  ctx.fillStyle = "#ffffff";
-  ctx.globalAlpha = 0.25;
-  ctx.fillRect(width / 2 - 320, py + 530, 640, 3);
-  ctx.globalAlpha = 1;
-
-  ctx.fillStyle = "#ffd9b0";
-  ctx.font = "700 46px system-ui, sans-serif";
-  ctx.fillText("نسبة التحقيق", width / 2, py + 630);
-  ctx.fillStyle = "#ffb366";
-  ctx.font = "900 220px system-ui, sans-serif";
-  ctx.fillText(`${Math.round(row.percent)}%`, width / 2, py + 850);
-
-  // الفوتر
-  ctx.fillStyle = "#ffffff";
-  ctx.font = "800 44px system-ui, sans-serif";
-  ctx.fillText("Track Your Sales", width / 2, height - 170);
-  ctx.fillStyle = "rgba(255,240,225,0.8)";
-  ctx.font = "600 30px system-ui, sans-serif";
-  ctx.fillText(new Date().toLocaleDateString("en-GB", { timeZone: "Africa/Cairo" }), width / 2, height - 110);
-  return canvas;
-}
-
-/** بيصدّر صورة منفصلة لكل موظف في الـ TOP N، مرتبين بنسبة التحقيق. */
-function exportTopImage(list: TopRow[], n: number) {
-  list.slice(0, n).forEach((row, i) => {
-    window.setTimeout(() => {
-      const canvas = drawTopCard(row);
-      if (canvas) saveCanvas(canvas, `${row.rank}-${row.name}.png`);
-    }, i * 600);
-  });
-}
-
-/** صورة موبايل premium لموظف واحد، اسم الملف = اسم الموظف. */
-function exportEmployeeImage(row: ReportRow) {
-  const width = 1080;
-  const height = 1920;
-  const canvas = document.createElement("canvas");
-  canvas.width = width;
-  canvas.height = height;
-  const ctx = canvas.getContext("2d");
-  if (!ctx) return;
-  const percent = Math.round(row.payload.overall ?? 0);
-  const kpis = (row.payload.kpis ?? []).filter((k) => k.weight > 0);
-
-  const bg = ctx.createLinearGradient(0, 0, width, height);
-  bg.addColorStop(0, "#f0802a");
-  bg.addColorStop(0.5, "#b84700");
-  bg.addColorStop(1, "#5c2300");
-  ctx.fillStyle = bg;
-  ctx.fillRect(0, 0, width, height);
-  ctx.fillStyle = "rgba(255,255,255,0.08)";
-  ctx.beginPath();
-  ctx.arc(width - 120, 260, 360, 0, Math.PI * 2);
-  ctx.fill();
-
-  ctx.textAlign = "center";
-  ctx.fillStyle = "#ffffff";
-  ctx.font = "900 72px system-ui, sans-serif";
-  ctx.fillText(row.employee_name.slice(0, 26), width / 2, 260);
-  ctx.font = "600 38px system-ui, sans-serif";
-  ctx.fillStyle = "rgba(255,255,255,0.85)";
-  ctx.fillText(row.branch_name, width / 2, 320);
-
-  // نسبة التحقيق الإجمالية
-  ctx.font = "900 280px system-ui, sans-serif";
-  ctx.fillStyle = "#ffffff";
-  ctx.fillText(`${percent}%`, width / 2, 640);
-  ctx.font = "600 40px system-ui, sans-serif";
-  ctx.fillStyle = "rgba(255,255,255,0.85)";
-  ctx.fillText("نسبة التحقيق", width / 2, 700);
-
-  // بطاقة لكل مؤشر
-  const top = 780;
-  const gap = 24;
-  const cardH = Math.min(170, Math.floor((height - top - 240 - gap * kpis.length) / Math.max(1, kpis.length)));
-  kpis.forEach((kpi, i) => {
-    const y = top + i * (cardH + gap);
-    const ok = kpi.percent >= (kpi.expectedPercent ?? 0) - 10;
-    ctx.save();
-    ctx.shadowColor = "rgba(0,0,0,0.25)";
-    ctx.shadowBlur = 30;
-    ctx.shadowOffsetY = 12;
-    ctx.fillStyle = "rgba(255,255,255,0.97)";
-    roundRect(ctx, 80, y, width - 160, cardH, 42);
-    ctx.fill();
-    ctx.restore();
-    ctx.fillStyle = ok ? "#1f9d55" : "#dc2626";
-    roundRect(ctx, 80, y, 14, cardH, 7);
-    ctx.fill();
-
-    ctx.textAlign = "left";
-    ctx.fillStyle = "#1d1a16";
-    ctx.font = "800 42px system-ui, sans-serif";
-    ctx.fillText(kpi.name.slice(0, 30), 130, y + cardH / 2 + 14);
-    ctx.textAlign = "right";
-    ctx.fillStyle = ok ? "#1f9d55" : "#dc2626";
-    ctx.font = "900 56px system-ui, sans-serif";
-    ctx.fillText(`${Math.round(kpi.percent)}%`, width - 130, y + cardH / 2 + 18);
-  });
-
-  ctx.textAlign = "center";
-  ctx.fillStyle = "rgba(255,255,255,0.8)";
-  ctx.font = "600 30px system-ui, sans-serif";
-  ctx.fillText(new Date().toLocaleDateString("en-GB", { timeZone: "Africa/Cairo" }), width / 2, height - 120);
-
-  saveCanvas(canvas, `${row.employee_name}.png`);
-}
-
 function groupAverage(group: ReportRow[]): number {
   const withData = group.filter((r) => typeof r.payload.overall === "number");
   return withData.length ? withData.reduce((sum, r) => sum + (r.payload.overall ?? 0), 0) / withData.length : 0;
@@ -354,7 +152,6 @@ export default function ManagerPage() {
   const [error, setError] = useState("");
   const [pending, setPending] = useState(false);
 
-  const [topN, setTopN] = useState(3);
   const topRows: TopRow[] = (rows ?? [])
     .map((r) => ({ name: r.employee_name, branch: r.branch_name || "بدون فرع", percent: r.payload.overall ?? 0 }))
     .sort((a, b) => b.percent - a.percent)
@@ -404,8 +201,7 @@ export default function ManagerPage() {
     const percent = Math.round(row.payload.overall ?? 0);
     return (
       <article key={row.branch_id} className="rounded-[24px] bg-white p-4 shadow-[0_12px_32px_rgba(40,20,0,0.07)] ring-1 ring-orange-200/70">
-        <div className="flex items-center gap-2">
-        <button type="button" onClick={() => setOpenId(open ? null : row.branch_id)} className="flex min-w-0 flex-1 items-center justify-between gap-3 text-right">
+        <button type="button" onClick={() => setOpenId(open ? null : row.branch_id)} className="flex w-full items-center justify-between gap-3 text-right">
           <div>
             <h3 className="font-black">{row.employee_name}</h3>
             <div className="mt-1 flex flex-wrap items-center gap-1">
@@ -420,15 +216,6 @@ export default function ManagerPage() {
             <span className="text-neutral-400">{open ? "▲" : "▼"}</span>
           </div>
         </button>
-        <button
-          type="button"
-          onClick={() => exportEmployeeImage(row)}
-          aria-label={`صدّر صورة ${row.employee_name}`}
-          className="shrink-0 rounded-2xl bg-orange-50 px-3 py-2 text-lg ring-1 ring-orange-200/70"
-        >
-          📸
-        </button>
-        </div>
 
         {open ? (
           <>
@@ -553,25 +340,6 @@ export default function ManagerPage() {
                     <p className="text-3xl font-black tracking-tight">TOP</p>
                     <p className="text-[11px] text-white/85">كل الموظفين مرتبين حسب نسبة التحقيق</p>
                   </div>
-                  <button
-                    type="button"
-                    onClick={() => exportTopImage(topRows, topN)}
-                    className="rounded-2xl bg-white px-3 py-2 text-xs font-extrabold text-[#8f4300] shadow-md"
-                  >
-                    📸 صدّر TOP {topN}
-                  </button>
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  {[1, 2, 3, 5, 10].map((n) => (
-                    <button
-                      key={n}
-                      type="button"
-                      onClick={() => setTopN(n)}
-                      className={`rounded-full px-3 py-1.5 text-xs font-black ${topN === n ? "bg-[#e06600] text-white" : "bg-white text-[#8f4300] ring-1 ring-orange-200/70"}`}
-                    >
-                      TOP {n}
-                    </button>
-                  ))}
                 </div>
                 {topRows.map((row) => (
                   <div key={`${row.branch}-${row.name}-${row.rank}`} className="flex items-center justify-between rounded-[22px] bg-white p-3.5 shadow-[0_8px_24px_rgba(40,20,0,0.06)] ring-1 ring-orange-200/70">
