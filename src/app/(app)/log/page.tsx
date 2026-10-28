@@ -18,6 +18,16 @@ const CHEERS = [
   "🎯 تمام التمام، اتحفظت",
 ];
 
+type QualityKey = "kyc" | "visits" | "training" | "pos" | "csat";
+type Quality = { kyc: number; visits: number; training: number; pos: number; csat: number; checks?: Partial<Record<QualityKey, boolean>> };
+const QUALITY_ITEMS: { key: QualityKey; label: string; weight: number }[] = [
+  { key: "kyc", label: "KYC & Compliance", weight: 5 },
+  { key: "visits", label: "Quality Visits", weight: 5 },
+  { key: "training", label: "Training & Quiz", weight: 2 },
+  { key: "pos", label: "POS machines", weight: 1 },
+  { key: "csat", label: "CSAT / Complaints", weight: 2 },
+];
+
 type DashKpi = { kpiKey: KpiKey; target: number; weight: number; remaining: number; unitAr: string; contribution: number; gated: boolean };
 type DashData = { kpis: DashKpi[]; fullCommission: number; overall: number; work: { remaining: number } };
 
@@ -53,6 +63,50 @@ export default function LogPage() {
       cancelled = true;
     };
   }, [month, refreshTick]);
+
+  // الكواليتي: بنند متعلم كل شهر. بيتحفظ فوراً مع إعدادات الشهر.
+  const [settingsFull, setSettingsFull] = useState<Record<string, unknown> | null>(null);
+  const [quality, setQuality] = useState<Quality | null>(null);
+  const [qualityBusy, setQualityBusy] = useState(false);
+  useEffect(() => {
+    let cancelled = false;
+    api<Record<string, unknown> & { quality: Quality }>(`/api/months/${month}`)
+      .then((result) => {
+        if (cancelled) return;
+        const { quality: q, ...rest } = result.settings as unknown as Record<string, unknown> & { quality: Quality };
+        setSettingsFull(rest);
+        setQuality(q ?? { kyc: 0, visits: 0, training: 0, pos: 0, csat: 0, checks: {} });
+      })
+      .catch(() => {
+        if (!cancelled) setQuality(null);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [month, refreshTick]);
+
+  async function toggleQuality(key: QualityKey) {
+    if (!quality || !settingsFull || qualityBusy) return;
+    const nextQuality: Quality = { ...quality, checks: { ...quality.checks, [key]: !quality.checks?.[key] } };
+    setQuality(nextQuality);
+    setQualityBusy(true);
+    try {
+      await api(`/api/months/${month}`, {
+        method: "PUT",
+        body: JSON.stringify({ ...settingsFull, quality: nextQuality }),
+      });
+      window.dispatchEvent(new Event("tys-data-changed"));
+    } catch (err) {
+      setQuality(quality);
+      setError(err instanceof ApiError || err instanceof Error ? err.message : "مقدرناش نحفظ الكواليتي");
+    } finally {
+      setQualityBusy(false);
+    }
+  }
+
+  const qualityScore = quality
+    ? QUALITY_ITEMS.reduce((sum, item) => sum + (quality.checks?.[item.key] ? item.weight : 0), 0)
+    : 0;
 
   const dashByKey = new Map((dash?.kpis ?? []).map((k) => [k.kpiKey, k]));
   const onTrack = (dash?.kpis ?? []).filter((k) => k.weight > 0 && k.remaining > 0);
@@ -204,6 +258,36 @@ export default function LogPage() {
           </article>
         );
       })}
+
+      {quality ? (
+        <section className="rounded-[24px] border border-orange-200/70 bg-white p-4 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
+          <div className="mb-2 flex items-center justify-between">
+            <p className="text-sm font-black">✅ الكواليتي (15%)</p>
+            <p className="text-xs font-extrabold text-[#8f4300]">{qualityScore}% من 15%</p>
+          </div>
+          <p className="mb-3 text-[11px] text-neutral-400">علّم البند لو اتحقق بالكامل، والتغيير بيتحفظ فوراً.</p>
+          <div className="space-y-2">
+            {QUALITY_ITEMS.map((item) => {
+              const on = !!quality.checks?.[item.key];
+              return (
+                <button
+                  key={item.key}
+                  type="button"
+                  disabled={qualityBusy}
+                  onClick={() => toggleQuality(item.key)}
+                  className="flex w-full items-center justify-between rounded-2xl border border-orange-200/70 bg-white px-3 py-2.5 text-right disabled:opacity-60"
+                >
+                  <span className="flex items-center gap-3">
+                    <span className={`flex h-6 w-6 items-center justify-center rounded-full border-2 text-xs font-black ${on ? "border-emerald-500 bg-emerald-500 text-white" : "border-orange-200 text-transparent"}`}>✓</span>
+                    <span className="text-sm font-extrabold" dir="ltr">{item.label}</span>
+                  </span>
+                  <span className="text-xs font-black text-neutral-500">{item.weight}%</span>
+                </button>
+              );
+            })}
+          </div>
+        </section>
+      ) : null}
 
       <section className="rounded-[24px] border border-orange-200/70 bg-white p-4">
         <label className="block text-xs font-bold text-neutral-500">📝 ملاحظة (لو حابب)</label>
