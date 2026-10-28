@@ -160,6 +160,11 @@ export default function ManagerPage() {
   const openId = view.includes("|e:") ? view.split("|e:")[1] : null;
   const setOpenId = (id: string | null) => {
     if (!branch) return;
+    // قفل الموظف: نرجع خطوة لورا في التاريخ بدل ما نضيف خطوة جديدة، عشان زرار الرجوع ما يفتحش الموظف تاني.
+    if (!id && openId && typeof window !== "undefined" && window.history.state?.tysView === view) {
+      window.history.back();
+      return;
+    }
     setView(id ? `b:${branch}|e:${id}` : `b:${branch}`);
   };
   const [rows, setRows] = useState<ReportRow[] | null>(null);
