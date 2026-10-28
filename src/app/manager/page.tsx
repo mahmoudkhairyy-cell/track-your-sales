@@ -260,10 +260,9 @@ export default function ManagerPage() {
             </p>
             <div className="mt-3 grid grid-cols-2 gap-2">
               {(row.payload.kpis ?? []).map((kpi) => (
-                <KpiTile
-                  key={kpi.name}
-                  kpi={{ name: kpi.name, achieved: kpi.achieved, target: kpi.target, percent: kpi.percent, weight: kpi.weight, expectedPercent: kpi.expectedPercent }}
-                />
+                <div key={kpi.name}>
+                  <KpiTile kpi={kpi} />
+                </div>
               ))}
             </div>
             <button
@@ -448,7 +447,9 @@ export default function ManagerPage() {
                       {branchOpen ? (
                         <div className="mt-3 grid grid-cols-2 gap-2">
                           {aggregateKpis(branchRows).map((kpi) => (
-                            <KpiTile key={kpi.name} kpi={kpi} />
+                            <div key={kpi.name}>
+              <KpiTile kpi={kpi} />
+            </div>
                           ))}
                         </div>
                       ) : null}
