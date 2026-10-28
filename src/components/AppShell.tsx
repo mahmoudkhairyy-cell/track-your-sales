@@ -187,10 +187,15 @@ function TargetGate({ month }: { month: string }) {
 
 function SplashScreen({ name }: { name: string }) {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-[#fbe9da] px-6 text-center" dir="rtl">
-      <img src="/track-your-sales/logo-full.png" alt={APP_NAME} className="w-56 max-w-full object-contain" />
-      {name.trim() ? <p className="text-lg font-black text-neutral-900">أهلاً يا {name.trim().split(" ")[0]} 👋</p> : null}
-      <p className="text-xs font-bold text-neutral-500" dir="ltr">{BRAND_BY}</p>
+    <div
+      className="flex min-h-screen flex-col items-center justify-center gap-5 px-6 text-center text-white"
+      style={{ background: "radial-gradient(ellipse at 50% 35%, #2a2118 0%, #0d0b09 60%, #050404 100%)" }}
+      dir="rtl"
+    >
+      <img src="/track-your-sales/logo-full.png" alt={APP_NAME} className="w-56 max-w-full object-contain drop-shadow-[0_0_24px_rgba(212,168,83,0.25)]" />
+      <div className="h-px w-24 bg-gradient-to-r from-transparent via-[#d4a853] to-transparent" />
+      {name.trim() ? <p className="text-base font-bold text-[#e9d7b0]">أهلاً يا {name.trim().split(" ")[0]}</p> : null}
+      <p className="text-[11px] font-semibold tracking-[0.2em] text-[#8a7650]" dir="ltr">{BRAND_BY.toUpperCase()}</p>
     </div>
   );
 }
