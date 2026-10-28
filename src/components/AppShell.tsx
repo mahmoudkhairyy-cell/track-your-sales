@@ -113,6 +113,10 @@ function FirstRunProfile({ onDone }: { onDone: () => void }) {
       setError("اختار إنت موظف ولا مدير");
       return;
     }
+    if (!branch.trim()) {
+      setError("اختار الفرع بتاعك");
+      return;
+    }
     setPending(true);
     try {
       await api("/api/profile", { method: "PATCH", body: JSON.stringify({ name: name.trim(), branch: branch.trim(), role }) });
@@ -155,7 +159,7 @@ function FirstRunProfile({ onDone }: { onDone: () => void }) {
           </div>
         </div>
         <label className="mb-4 block text-sm font-bold text-neutral-700">
-          اسم الفرع (اختياري)
+          اسم الفرع
           <select value={branch} onChange={(e) => setBranch(e.target.value)} className="mt-1 w-full rounded-2xl border border-orange-200 bg-white px-4 py-3 outline-none focus:border-[#e06600]">
             <option value="">— اختار الفرع —</option>
             {BRANCHES.map((item) => (
