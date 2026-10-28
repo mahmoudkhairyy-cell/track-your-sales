@@ -260,14 +260,6 @@ export default function ManagerPage() {
               {new Date(row.updated_at).toLocaleString("en-US", { timeZone: "Africa/Cairo", hour12: false })}
             </p>
             <div className="mt-3 grid grid-cols-2 gap-2">
-              <div className="rounded-2xl bg-gradient-to-br from-[#f0802a] to-[#b84700] p-3 text-white">
-                <p className="text-[10px] font-extrabold text-white/80">الكوميشن المتوقع</p>
-                <p className="mt-1 text-xl font-black tabular-nums" dir="ltr">{Math.round(row.payload.estimatedCommission ?? 0).toLocaleString("en-US")}</p>
-              </div>
-              <div className="rounded-2xl bg-white p-3 ring-1 ring-orange-200/70">
-                <p className="text-[10px] font-extrabold text-neutral-500">الكوميشن الكامل</p>
-                <p className="mt-1 text-xl font-black tabular-nums text-[#8f4300]" dir="ltr">{Math.round(row.payload.fullCommission ?? 0).toLocaleString("en-US")}</p>
-              </div>
               {(row.payload.kpis ?? []).map((kpi) => (
                 <div key={kpi.name}>
                   <KpiTile kpi={kpi} />
