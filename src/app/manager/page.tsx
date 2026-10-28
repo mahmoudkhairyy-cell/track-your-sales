@@ -143,7 +143,9 @@ function saveCanvas(canvas: HTMLCanvasElement, fileName: string) {
   }, "image/png");
 }
 
-/** صورة موبايل لموظف واحد بترتيبه ونسبته. */
+const RANK_WORDS = ["الأول", "الثاني", "الثالث", "الرابع", "الخامس", "السادس", "السابع", "الثامن", "التاسع", "العاشر"];
+
+/** صورة احتفال موبايل لموظف واحد: لوحة معدنية باسمه وفرعه وترتيبه ونسبته. */
 function drawTopCard(row: TopRow) {
   const width = 1080;
   const height = 1920;
@@ -153,58 +155,80 @@ function drawTopCard(row: TopRow) {
   const ctx = canvas.getContext("2d");
   if (!ctx) return null;
 
+  // خلفية برتقالي ساتان
   const bg = ctx.createLinearGradient(0, 0, width, height);
-  bg.addColorStop(0, "#f0802a");
-  bg.addColorStop(0.5, "#b84700");
-  bg.addColorStop(1, "#5c2300");
+  bg.addColorStop(0, "#f7923f");
+  bg.addColorStop(0.45, "#c24a05");
+  bg.addColorStop(1, "#5a2100");
   ctx.fillStyle = bg;
   ctx.fillRect(0, 0, width, height);
-  ctx.fillStyle = "rgba(255,255,255,0.08)";
-  ctx.beginPath();
-  ctx.arc(width - 120, 260, 360, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.beginPath();
-  ctx.arc(120, height - 280, 300, 0, Math.PI * 2);
-  ctx.fill();
+  const glow = ctx.createRadialGradient(width / 2, 900, 80, width / 2, 900, 800);
+  glow.addColorStop(0, "rgba(255,200,130,0.35)");
+  glow.addColorStop(1, "rgba(255,200,130,0)");
+  ctx.fillStyle = glow;
+  ctx.fillRect(0, 0, width, height);
 
   ctx.textAlign = "center";
   ctx.fillStyle = "#ffffff";
-  ctx.font = "900 180px system-ui, sans-serif";
-  ctx.fillText(`#${row.rank}`, width / 2, 380);
-  ctx.font = "600 38px system-ui, sans-serif";
-  ctx.fillStyle = "rgba(255,255,255,0.85)";
-  ctx.fillText("Track Your Sales", width / 2, 450);
+  ctx.font = "900 92px system-ui, sans-serif";
+  ctx.fillText("احتفال نجاح المبيعات", width / 2, 230);
+  ctx.font = "700 52px system-ui, sans-serif";
+  ctx.fillStyle = "rgba(255,240,225,0.95)";
+  ctx.fillText("تفوّق المبيعات لعام 2026", width / 2, 310);
 
-  // كارت الموظف
-  const cardY = 560;
-  const cardH = 900;
+  // اللوحة المعدنية
+  const px = 90, py = 420, pw = width - 180, ph = 1000;
   ctx.save();
-  ctx.shadowColor = "rgba(0,0,0,0.25)";
-  ctx.shadowBlur = 50;
-  ctx.shadowOffsetY = 20;
-  ctx.fillStyle = "rgba(255,255,255,0.97)";
-  roundRect(ctx, 80, cardY, width - 160, cardH, 60);
+  ctx.shadowColor = "rgba(255,160,60,0.9)";
+  ctx.shadowBlur = 60;
+  const metal = ctx.createLinearGradient(px, py, px + pw, py + ph);
+  metal.addColorStop(0, "#f4f4f4");
+  metal.addColorStop(0.5, "#9aa0a6");
+  metal.addColorStop(1, "#e6e6e6");
+  ctx.fillStyle = metal;
+  roundRect(ctx, px, py, pw, ph, 60);
   ctx.fill();
   ctx.restore();
+  ctx.fillStyle = "#3a3f44";
+  roundRect(ctx, px + 36, py + 36, pw - 72, ph - 72, 40);
+  ctx.fill();
 
-  ctx.textAlign = "center";
-  ctx.fillStyle = "#1d1a16";
-  ctx.font = "900 78px system-ui, sans-serif";
-  ctx.fillText(row.name.slice(0, 24), width / 2, cardY + 230);
-  ctx.fillStyle = "#7a7068";
-  ctx.font = "600 42px system-ui, sans-serif";
-  ctx.fillText(row.branch.slice(0, 30), width / 2, cardY + 300);
-
+  // شارة الترتيب
+  const rankWord = RANK_WORDS[row.rank - 1] ?? `${row.rank}`;
   ctx.fillStyle = "#e06600";
-  ctx.font = "900 300px system-ui, sans-serif";
-  ctx.fillText(`${Math.round(row.percent)}%`, width / 2, cardY + 630);
-  ctx.fillStyle = "#7a7068";
-  ctx.font = "600 40px system-ui, sans-serif";
-  ctx.fillText("نسبة التحقيق", width / 2, cardY + 720);
+  roundRect(ctx, width / 2 - 300, py + 90, 600, 130, 65);
+  ctx.fill();
+  ctx.fillStyle = "#ffffff";
+  ctx.font = "900 78px system-ui, sans-serif";
+  ctx.fillText(row.rank <= 10 ? `المركز ${rankWord}` : `المركز ${row.rank}`, width / 2, py + 180);
 
-  ctx.fillStyle = "rgba(255,255,255,0.8)";
+  // الفرع والاسم
+  ctx.fillStyle = "#ffd9b0";
+  ctx.font = "700 52px system-ui, sans-serif";
+  ctx.fillText(`فرع ${row.branch.slice(0, 30)}`, width / 2, py + 330);
+  ctx.fillStyle = "#ffffff";
+  ctx.font = "900 96px system-ui, sans-serif";
+  ctx.fillText(row.name.slice(0, 22), width / 2, py + 470);
+
+  ctx.fillStyle = "#ffffff";
+  ctx.globalAlpha = 0.25;
+  ctx.fillRect(width / 2 - 320, py + 530, 640, 3);
+  ctx.globalAlpha = 1;
+
+  ctx.fillStyle = "#ffd9b0";
+  ctx.font = "700 46px system-ui, sans-serif";
+  ctx.fillText("نسبة التحقيق", width / 2, py + 630);
+  ctx.fillStyle = "#ffb366";
+  ctx.font = "900 220px system-ui, sans-serif";
+  ctx.fillText(`${Math.round(row.percent)}%`, width / 2, py + 850);
+
+  // الفوتر
+  ctx.fillStyle = "#ffffff";
+  ctx.font = "800 44px system-ui, sans-serif";
+  ctx.fillText("Track Your Sales", width / 2, height - 170);
+  ctx.fillStyle = "rgba(255,240,225,0.8)";
   ctx.font = "600 30px system-ui, sans-serif";
-  ctx.fillText(new Date().toLocaleDateString("en-GB", { timeZone: "Africa/Cairo" }), width / 2, height - 120);
+  ctx.fillText(new Date().toLocaleDateString("en-GB", { timeZone: "Africa/Cairo" }), width / 2, height - 110);
   return canvas;
 }
 
