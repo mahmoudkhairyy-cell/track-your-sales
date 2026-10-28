@@ -410,7 +410,8 @@ function putMonth(state: State, yearMonth: string, data: Record<string, unknown>
     if (typeof kpiKey !== "string" || !KPI_CATALOG.some((kpi) => kpi.key === kpiKey)) {
       fail(400, "فيه إيتم مش معروف");
     }
-    const target = Number(row.target);
+    // الـ Quality تارجته ثابت 100% (بيتحسب من البنود المتعلمة)، فمايتطلبش من الموظف.
+    const target = kpiKey === "quality" ? 100 : Number(row.target);
     if (!Number.isFinite(target) || target < 0) fail(400, `تارجت ${kpiKey} غير صالح`);
     const catalog = KPI_CATALOG.find((kpi) => kpi.key === kpiKey)!;
     const weight = kpiWeight(kpiKey as KpiKey, roleOf(state));
