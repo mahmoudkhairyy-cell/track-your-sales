@@ -222,7 +222,7 @@ export function AppShell({ children }: { children: ReactNode }) {
     }
     if (alreadyShown) return;
     setSplash(true);
-    const timer = setTimeout(() => setSplash(false), 2000);
+    const timer = setTimeout(() => setSplash(false), 4000);
     return () => clearTimeout(timer);
   }, []);
 
