@@ -426,6 +426,29 @@ export default function ManagerPage() {
                     </section>
                   );
                 })() : null}
+                {branch === null && allRows.length > 0 ? (() => {
+                  // تنبيه: الموظفين اللي ما سجلوش إنجاز امبارح (ومش في إجازة امبارح).
+                  const yesterday = cairoISODate(new Date(Date.now() - 24 * 60 * 60 * 1000));
+                  const missedYesterday = allRows.filter(
+                    (r) =>
+                      !(r.payload.settings?.holidays ?? []).some((h) => h.date === yesterday) &&
+                      !(r.payload.entries ?? []).some((e) => e.date === yesterday),
+                  );
+                  if (missedYesterday.length === 0) return null;
+                  return (
+                    <section className="rounded-[24px] border-2 border-red-300 bg-red-50 p-4">
+                      <p className="text-sm font-black text-red-700">🔔 ما سجلوش إنجاز امبارح ({yesterday})</p>
+                      <div className="mt-2 space-y-1">
+                        {missedYesterday.map((r) => (
+                          <p key={r.branch_id} className="flex justify-between text-sm font-bold text-red-800">
+                            <span>{r.employee_name}</span>
+                            <span className="text-[11px] font-semibold" dir="ltr">{r.branch_name || NO_BRANCH}</span>
+                          </p>
+                        ))}
+                      </div>
+                    </section>
+                  );
+                })() : null}
                 {branch === null ? (
                   <div className="space-y-3">
                     {groupByBranch(allRows)
