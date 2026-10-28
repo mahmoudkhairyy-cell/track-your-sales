@@ -54,6 +54,8 @@ export default function TargetPage() {
   });
   const [kpis, setKpis] = useState<KpiForm[]>([]);
   const [holidays, setHolidays] = useState<Holiday[]>([]);
+  // أول مرة للشهر: لازم الموظف يأكد إجازاته (أو يأكد إنه مفيش) قبل الحفظ.
+  const [holidaysConfirmed, setHolidaysConfirmed] = useState(false);
   const [quality, setQuality] = useState<Quality>(ZERO_QUALITY_FORM);
   const [holidayDate, setHolidayDate] = useState(`${month}-01`);
   const [holidayNote, setHolidayNote] = useState("");
@@ -113,6 +115,12 @@ export default function TargetPage() {
   async function onSave(event: FormEvent) {
     event.preventDefault();
     setError("");
+    if (!saved && !holidaysConfirmed) {
+      const message = "لازم تأكد إجازاتك الأول (أو إنه مفيش إجازات) قبل ما تحفظ";
+      setError(message);
+      toast.push("error", message);
+      return;
+    }
     if (Math.abs(sumWeights(kpis) - 100) > 0.01) {
       const message = `مجموع الأوزان لازم يبقى 100%. دلوقتي ${sumWeights(kpis)}%`;
       setError(message);
@@ -166,6 +174,17 @@ export default function TargetPage() {
         <h1 className="text-3xl font-black">التارجت 🎯</h1>
         <p className="mt-1 text-xs text-neutral-400">{saved ? "✅ محفوظة لهذا الشهر" : "⚠️ لسه مش محفوظة، اضغط حفظ"}</p>
       </section>
+
+      {!saved ? (
+        <section className="rounded-[24px] border-2 border-[#e06600] bg-orange-50 p-4 text-[#8f4300]">
+          <p className="text-sm font-black">📅 الخطوة الأولى: اختار إجازاتك لهذا الشهر</p>
+          <p className="mt-1 text-xs leading-6">اضغط على الأيام اللي هتاخد فيها إجازة في التقويم تحت. لو مش هتاخد إجازة، فعّل التأكيد بس.</p>
+          <label className="mt-3 flex items-center gap-2 text-sm font-extrabold">
+            <input type="checkbox" checked={holidaysConfirmed} onChange={(e) => setHolidaysConfirmed(e.target.checked)} className="h-5 w-5 accent-[#e06600]" />
+            {holidays.length > 0 ? `أكدت إن عندي ${holidays.length} إجازة` : "مفيش عندي إجازات الشهر ده"}
+          </label>
+        </section>
+      ) : null}
 
       <section className="overflow-hidden rounded-[32px] bg-gradient-to-br from-[#f0802a] via-[#e06600] to-[#b84700] p-5 text-white shadow-[0_20px_50px_rgba(190,90,0,0.35)]">
         <div className="grid grid-cols-3 gap-2 text-center">
