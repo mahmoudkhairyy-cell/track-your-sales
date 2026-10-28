@@ -32,6 +32,14 @@ export default function LogPage() {
   const [error, setError] = useState("");
   const [pending, setPending] = useState(false);
 
+  // بنحدّث الأرقام لما نسجّل إنجاز جديد (tys-data-changed) عشان "الباقي" و"التوتال" ما يفضلوش قديمين.
+  const [refreshTick, setRefreshTick] = useState(0);
+  useEffect(() => {
+    const bump = () => setRefreshTick((n) => n + 1);
+    window.addEventListener("tys-data-changed", bump);
+    return () => window.removeEventListener("tys-data-changed", bump);
+  }, []);
+
   useEffect(() => {
     let cancelled = false;
     api<DashData>(`/api/dashboard?month=${month}`)
@@ -44,7 +52,7 @@ export default function LogPage() {
     return () => {
       cancelled = true;
     };
-  }, [month]);
+  }, [month, refreshTick]);
 
   const dashByKey = new Map((dash?.kpis ?? []).map((k) => [k.kpiKey, k]));
   const onTrack = (dash?.kpis ?? []).filter((k) => k.weight > 0 && k.remaining > 0);
