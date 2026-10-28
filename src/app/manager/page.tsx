@@ -3,6 +3,7 @@
 import { FormEvent, useEffect, useState } from "react";
 import { useHistoryView } from "@/lib/use-history-view";
 import { cloudRpc } from "@/lib/cloud";
+import { KPI_CATALOG } from "@/lib/constants";
 
 type ReportRow = {
   branch_id: string;
@@ -21,7 +22,11 @@ type ReportRow = {
   };
 };
 
-/** On track = النسبة المحققة أكبر من أو تساوي المطلوب لحد النهارده (بهامش 5%). */
+type AggKpi = { name: string; achieved: number; target: number; percent: number; weight: number; expectedPercent?: number };
+
+const NO_BRANCH = "بدون فرع";
+
+/** On track = النسبة المحققة أكبر من أو تساوي المطلوب لحد النهارده (بهامش 10%). */
 function TrackBadge({ percent, expected }: { percent?: number; expected?: number }) {
   if (typeof percent !== "number" || typeof expected !== "number") return null;
   const onTrack = percent >= expected - 10;
@@ -34,6 +39,23 @@ function TrackBadge({ percent, expected }: { percent?: number; expected?: number
 
 function daysSince(iso: string): number {
   return (Date.now() - new Date(iso).getTime()) / (24 * 60 * 60 * 1000);
+}
+
+/** اسم المؤشر بالإنجليزي من الكتالوج، ولو مش موجود بيرجع المفتاح نفسه. */
+function kpiLabel(key: string): string {
+  return KPI_CATALOG.find((item) => item.key === key)?.nameEn ?? key;
+}
+
+/** تحميل ملف: الرابط بيتضاف للصفحة ويتلغى بعد شوية عشان الموبايل يلحق يحمّل. */
+function saveBlob(blob: Blob, fileName: string) {
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = fileName;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  window.setTimeout(() => URL.revokeObjectURL(url), 4000);
 }
 
 function downloadBranchCsv(branchName: string, group: ReportRow[]) {
@@ -54,16 +76,8 @@ function downloadBranchCsv(branchName: string, group: ReportRow[]) {
   const csv = [header, ...lines]
     .map((cols) => cols.map((c) => `"${String(c).replace(/"/g, '""')}"`).join(","))
     .join("\r\n");
-  const blob = new Blob(["\ufeff" + csv], { type: "text/csv;charset=utf-8" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = `${branchName}.csv`;
-  a.click();
-  URL.revokeObjectURL(url);
+  saveBlob(new Blob(["﻿" + csv], { type: "text/csv;charset=utf-8" }), `${branchName}.csv`);
 }
-
-type AggKpi = { name: string; achieved: number; target: number; percent: number; weight: number; expectedPercent?: number };
 
 /** بيجمع كل موظفين الفرع لكل مؤشر: المحقق الكلي ÷ التارجت الكلي. الـ Quality بيتحسب متوسط نسبه لأنه مش بيتجمع. */
 function aggregateKpis(group: ReportRow[]): AggKpi[] {
@@ -129,7 +143,7 @@ function groupExpected(group: ReportRow[]): number | undefined {
 function groupByBranch(rows: ReportRow[]): [string, ReportRow[]][] {
   const map = new Map<string, ReportRow[]>();
   for (const row of rows) {
-    const key = row.branch_name || "بدون فرع";
+    const key = row.branch_name || NO_BRANCH;
     map.set(key, [...(map.get(key) ?? []), row]);
   }
   return [...map.entries()];
@@ -139,7 +153,6 @@ export default function ManagerPage() {
   const [password, setPassword] = useState("");
   const [detailsId, setDetailsId] = useState<string | null>(null);
   const [branchOpen, setBranchOpen] = useState(false);
-  // "list" = قايمة الفروع، و"branch:<اسم>" = صفحة فرع. الرجوع بيتسجل في تاريخ المتصفح.
   // "list" = الفروع، "b:<فرع>" = صفحة فرع، "b:<فرع>|e:<id>" = موظف مفتوح. كل خطوة بتتسجل في تاريخ المتصفح.
   const [view, setView] = useHistoryView<string>("list");
   const branch = view.startsWith("b:") ? view.slice(2).split("|e:")[0] : null;
@@ -151,9 +164,20 @@ export default function ManagerPage() {
   const [rows, setRows] = useState<ReportRow[] | null>(null);
   const [error, setError] = useState("");
   const [pending, setPending] = useState(false);
+  const [lastLoaded, setLastLoaded] = useState<Date | null>(null);
 
-  const topRows: TopRow[] = (rows ?? [])
-    .map((r) => ({ name: r.employee_name, branch: r.branch_name || "بدون فرع", percent: r.payload.overall ?? 0 }))
+  // إجمالي الفرع المفتوح بيتقفل لما تغيّر الفرع
+  useEffect(() => {
+    setBranchOpen(false);
+  }, [branch]);
+
+  const allRows = rows ?? [];
+  const branchRows = branch ? allRows.filter((r) => (r.branch_name || NO_BRANCH) === branch) : [];
+  const branchAvg = groupAverage(branchRows);
+  const branchExpected = groupExpected(branchRows);
+
+  const topRows: TopRow[] = allRows
+    .map((r) => ({ name: r.employee_name, branch: r.branch_name || NO_BRANCH, percent: r.payload.overall ?? 0 }))
     .sort((a, b) => b.percent - a.percent)
     .map((r, i) => ({ ...r, rank: i + 1 }));
 
@@ -171,10 +195,22 @@ export default function ManagerPage() {
         // التخزين مش متاح، هيطلب الباسورد تاني.
       }
       setRows(data ?? []);
+      setLastLoaded(new Date());
     } catch (err) {
-      setRows(null);
       const raw = err instanceof Error ? err.message : "";
-      setError(raw.includes("wrong password") ? "كلمة السر غلط" : `مقدرناش نجيب البيانات، جرّب تاني. (${raw.slice(0, 160)})`);
+      if (raw.includes("wrong password")) {
+        // الباسورد غلط: نرجع لشاشة الدخول.
+        setRows(null);
+        try {
+          sessionStorage.removeItem("tys.mgrPass");
+        } catch {
+          // لا شيء
+        }
+        setError("كلمة السر غلط");
+      } else {
+        // خطأ نت أو غيره: نحتفظ بالبيانات اللي موجودة ونعرض الخطأ فوقها.
+        setError(`مقدرناش نحدّث البيانات، جرّب تاني. (${raw.slice(0, 160)})`);
+      }
     } finally {
       setPending(false);
     }
@@ -223,33 +259,12 @@ export default function ManagerPage() {
               {new Date(row.updated_at).toLocaleString("en-US", { timeZone: "Africa/Cairo", hour12: false })}
             </p>
             <div className="mt-3 grid grid-cols-2 gap-2">
-              {(row.payload.kpis ?? []).map((kpi) => {
-                const ok = kpi.percent >= (kpi.expectedPercent ?? 0) - 10;
-                const neutral = kpi.weight === 0;
-                const tone = neutral
-                  ? { text: "text-neutral-500", bar: "from-neutral-300 to-neutral-400", ring: "ring-neutral-200" }
-                  : ok
-                    ? { text: "text-emerald-700", bar: "from-emerald-400 to-emerald-600", ring: "ring-emerald-200" }
-                    : { text: "text-red-600", bar: "from-red-400 to-red-600", ring: "ring-red-200" };
-                const width = Math.min(100, Math.max(0, kpi.percent));
-                return (
-                  <div
-                    key={kpi.name}
-                    className={`relative overflow-hidden rounded-2xl bg-gradient-to-br from-white to-orange-50/60 p-3 shadow-[0_6px_18px_rgba(40,20,0,0.06)] ring-1 ${tone.ring}`}
-                  >
-                    <p className="truncate text-[10px] font-extrabold text-neutral-500" dir="ltr">{kpi.name}</p>
-                    <p className={`mt-1 text-2xl font-black tabular-nums tracking-tight ${tone.text}`}>
-                      {Math.round(kpi.percent)}<span className="text-sm">%</span>
-                    </p>
-                    <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-white/80">
-                      <div className={`h-full rounded-full bg-gradient-to-r ${tone.bar}`} style={{ width: `${width}%` }} />
-                    </div>
-                    <p className="mt-1.5 text-[10px] tabular-nums text-neutral-500" dir="ltr">
-                      {kpi.achieved} / {kpi.target}
-                    </p>
-                  </div>
-                );
-              })}
+              {(row.payload.kpis ?? []).map((kpi) => (
+                <KpiTile
+                  key={kpi.name}
+                  kpi={{ name: kpi.name, achieved: kpi.achieved, target: kpi.target, percent: kpi.percent, weight: kpi.weight, expectedPercent: kpi.expectedPercent }}
+                />
+              ))}
             </div>
             <button
               type="button"
@@ -264,7 +279,7 @@ export default function ManagerPage() {
                   <p className="mb-1 font-black">التارجت والأوزان</p>
                   {(row.payload.settings?.kpis ?? []).map((k) => (
                     <div key={k.kpiKey} className="flex justify-between">
-                      <span dir="ltr">{k.kpiKey}</span>
+                      <span dir="ltr">{kpiLabel(k.kpiKey)}</span>
                       <span className="tabular-nums">تارجت {k.target} · وزن {k.weight}%</span>
                     </div>
                   ))}
@@ -275,7 +290,7 @@ export default function ManagerPage() {
                   {(row.payload.entries ?? []).map((e, i) => (
                     <div key={`${e.date}-${i}`} className="flex justify-between border-b border-dashed border-orange-200/70 py-1">
                       <span dir="ltr">{e.date}</span>
-                      <span dir="ltr">{e.kpi}</span>
+                      <span dir="ltr">{kpiLabel(e.kpi)}</span>
                       <span className="tabular-nums">{e.quantity} {e.unit}</span>
                     </div>
                   ))}
@@ -356,99 +371,89 @@ export default function ManagerPage() {
                   </div>
                 ))}
               </div>
-            ) : null}
-            {view !== "top" ? (
-            <>
-            <div className="flex items-center justify-between">
-              <p className="text-sm font-bold text-neutral-500">{rows.length} موظف</p>
-              <button type="button" onClick={() => setView("top")} className="rounded-full bg-gradient-to-br from-[#f0802a] to-[#b84700] px-3 py-1.5 text-xs font-black text-white">🏆 TOP</button>
-              <button type="button" disabled={pending} onClick={() => load()} className="rounded-full bg-white px-3 py-1.5 text-xs font-extrabold text-[#8f4300] ring-1 ring-orange-200/70 disabled:opacity-60">
-                {pending ? "⏳ بنحدّث..." : "🔄 تحديث"}
-              </button>
-            </div>
-            {rows.length === 0 ? (
-              <p className="rounded-2xl bg-white p-4 text-sm font-bold text-neutral-500">مفيش فروع بعتت بيانات لحد دلوقتي.</p>
-            ) : null}
-            {branch === null ? (
-              <div className="space-y-3">
-                {groupByBranch(rows)
-                  .sort((a, b) => groupAverage(b[1]) - groupAverage(a[1]))
-                  .map(([branchName, group]) => {
-                  const withData = group.filter((r) => typeof r.payload.overall === "number");
-                  const avg = withData.length ? withData.reduce((sum, r) => sum + (r.payload.overall ?? 0), 0) / withData.length : 0;
-                  return (
-                    <button
-                      key={branchName}
-                      type="button"
-                      onClick={() => setView(`b:${branchName}`)}
-                      className="flex w-full items-center justify-between rounded-[24px] bg-white p-4 text-right shadow-[0_12px_32px_rgba(40,20,0,0.07)] ring-1 ring-orange-200/70"
-                    >
-                      <div>
-                        <p className="font-black" dir="ltr">{branchName}</p>
-                        <p className="text-xs text-neutral-500">{group.length} موظف</p>
-                        <div className="mt-1"><TrackBadge percent={avg} expected={groupExpected(group)} /></div>
-                      </div>
-                      <p className="text-xl font-black text-[#e06600] tabular-nums">{Math.round(avg)}%</p>
-                    </button>
-                  );
-                })}
-              </div>
             ) : (
-              <div className="space-y-3">
-                <button type="button" onClick={() => setView("list")} className="text-sm font-extrabold text-[#e06600]">← كل الفروع</button>
-                <div className="rounded-[24px] bg-[#e06600] p-4 text-white">
-                  <p className="text-xs text-white/80">الفرع</p>
-                  <h2 className="font-black" dir="ltr">{branch}</h2>
-                  <button
-                    type="button"
-                    onClick={() => downloadBranchCsv(branch, rows.filter((r) => (r.branch_name || "بدون فرع") === branch))}
-                    className="mt-3 rounded-full bg-white px-3 py-1.5 text-xs font-extrabold text-[#8f4300]"
-                  >
-                    📥 تحميل الفرع (Excel)
-                  </button>
-                  <div className="mt-2">
-                    <TrackBadge
-                      percent={groupAverage(rows.filter((r) => (r.branch_name || "بدون فرع") === branch))}
-                      expected={groupExpected(rows.filter((r) => (r.branch_name || "بدون فرع") === branch))}
-                    />
+              <>
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <p className="text-sm font-bold text-neutral-500">
+                    {allRows.length} موظف
+                    {lastLoaded ? <span className="block text-[10px] font-semibold text-neutral-400" dir="ltr">آخر تحديث {lastLoaded.toLocaleTimeString("en-US", { timeZone: "Africa/Cairo", hour: "2-digit", minute: "2-digit", hour12: false })}</span> : null}
+                  </p>
+                  <div className="flex gap-2">
+                    <button type="button" onClick={() => setView("top")} className="rounded-full bg-gradient-to-br from-[#f0802a] to-[#b84700] px-3 py-1.5 text-xs font-black text-white">🏆 TOP</button>
+                    <button type="button" disabled={pending} onClick={() => load()} className="rounded-full bg-white px-3 py-1.5 text-xs font-extrabold text-[#8f4300] ring-1 ring-orange-200/70 disabled:opacity-60">
+                      {pending ? "⏳ بنحدّث..." : "🔄 تحديث"}
+                    </button>
                   </div>
                 </div>
-                <article className="rounded-[24px] bg-white p-4 shadow-[0_12px_32px_rgba(40,20,0,0.07)] ring-1 ring-orange-200/70">
-                  <button
-                    type="button"
-                    onClick={() => setBranchOpen(!branchOpen)}
-                    className="flex w-full items-center justify-between gap-3 text-right"
-                  >
-                    <div>
-                      <h3 className="font-black">إجمالي الفرع</h3>
-                      <div className="mt-1">
-                        <TrackBadge
-                          percent={groupAverage(rows.filter((r) => (r.branch_name || "بدون فرع") === branch))}
-                          expected={groupExpected(rows.filter((r) => (r.branch_name || "بدون فرع") === branch))}
-                        />
+                {allRows.length === 0 ? (
+                  <p className="rounded-2xl bg-white p-4 text-sm font-bold text-neutral-500">مفيش فروع بعتت بيانات لحد دلوقتي.</p>
+                ) : null}
+                {branch === null ? (
+                  <div className="space-y-3">
+                    {groupByBranch(allRows)
+                      .sort((a, b) => groupAverage(b[1]) - groupAverage(a[1]))
+                      .map(([branchName, group]) => {
+                        const avg = groupAverage(group);
+                        return (
+                          <button
+                            key={branchName}
+                            type="button"
+                            onClick={() => setView(`b:${branchName}`)}
+                            className="flex w-full items-center justify-between rounded-[24px] bg-white p-4 text-right shadow-[0_12px_32px_rgba(40,20,0,0.07)] ring-1 ring-orange-200/70"
+                          >
+                            <div>
+                              <p className="font-black" dir="ltr">{branchName}</p>
+                              <p className="text-xs text-neutral-500">{group.length} موظف</p>
+                              <div className="mt-1"><TrackBadge percent={avg} expected={groupExpected(group)} /></div>
+                            </div>
+                            <p className="text-xl font-black text-[#e06600] tabular-nums">{Math.round(avg)}%</p>
+                          </button>
+                        );
+                      })}
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    <button type="button" onClick={() => setView("list")} className="text-sm font-extrabold text-[#e06600]">← كل الفروع</button>
+                    <div className="rounded-[24px] bg-[#e06600] p-4 text-white">
+                      <p className="text-xs text-white/80">الفرع</p>
+                      <h2 className="font-black" dir="ltr">{branch}</h2>
+                      <button
+                        type="button"
+                        onClick={() => downloadBranchCsv(branch, branchRows)}
+                        className="mt-3 rounded-full bg-white px-3 py-1.5 text-xs font-extrabold text-[#8f4300]"
+                      >
+                        📥 تحميل الفرع (Excel)
+                      </button>
+                      <div className="mt-2">
+                        <TrackBadge percent={branchAvg} expected={branchExpected} />
                       </div>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <p className="text-2xl font-black text-[#e06600] tabular-nums">
-                        {Math.round(groupAverage(rows.filter((r) => (r.branch_name || "بدون فرع") === branch)))}%
-                      </p>
-                      <span className="text-neutral-400">{branchOpen ? "▲" : "▼"}</span>
-                    </div>
-                  </button>
-                  {branchOpen ? (
-                    <div className="mt-3 grid grid-cols-2 gap-2">
-                      {aggregateKpis(rows.filter((r) => (r.branch_name || "بدون فرع") === branch)).map((kpi) => (
-                        <div key={kpi.name}>
-                          <KpiTile kpi={kpi} />
+                    <article className="rounded-[24px] bg-white p-4 shadow-[0_12px_32px_rgba(40,20,0,0.07)] ring-1 ring-orange-200/70">
+                      <button
+                        type="button"
+                        onClick={() => setBranchOpen(!branchOpen)}
+                        className="flex w-full items-center justify-between gap-3 text-right"
+                      >
+                        <div>
+                          <h3 className="font-black">إجمالي الفرع</h3>
+                          <div className="mt-1">
+                            <TrackBadge percent={branchAvg} expected={branchExpected} />
+                          </div>
                         </div>
-                      ))}
-                    </div>
-                  ) : null}
-                </article>
-                {groupByBranch(rows)
-                  .filter(([name]) => name === branch)
-                  .flatMap(([, group]) =>
-                    [...group]
+                        <div className="flex items-center gap-2">
+                          <p className="text-2xl font-black text-[#e06600] tabular-nums">{Math.round(branchAvg)}%</p>
+                          <span className="text-neutral-400">{branchOpen ? "▲" : "▼"}</span>
+                        </div>
+                      </button>
+                      {branchOpen ? (
+                        <div className="mt-3 grid grid-cols-2 gap-2">
+                          {aggregateKpis(branchRows).map((kpi) => (
+                            <KpiTile key={kpi.name} kpi={kpi} />
+                          ))}
+                        </div>
+                      ) : null}
+                    </article>
+                    {[...branchRows]
                       .sort((a, b) => (b.payload.overall ?? 0) - (a.payload.overall ?? 0))
                       .map((row, index) => (
                         <div key={row.branch_id} className="relative">
@@ -457,12 +462,11 @@ export default function ManagerPage() {
                           </span>
                           {renderRow(row)}
                         </div>
-                      )),
-                  )}
-              </div>
+                      ))}
+                  </div>
+                )}
+              </>
             )}
-            </>
-            ) : null}
           </>
         )}
       </div>
