@@ -4,6 +4,7 @@ import { FormEvent, useEffect, useState } from "react";
 import { useHistoryView } from "@/lib/use-history-view";
 import { cloudRpc } from "@/lib/cloud";
 import { KPI_CATALOG } from "@/lib/constants";
+import { cairoISODate } from "@/lib/dates";
 
 type ReportRow = {
   branch_id: string;
@@ -395,6 +396,39 @@ export default function ManagerPage() {
                 {allRows.length === 0 ? (
                   <p className="rounded-2xl bg-white p-4 text-sm font-bold text-neutral-500">مفيش فروع بعتت بيانات لحد دلوقتي.</p>
                 ) : null}
+                {branch === null && allRows.length > 0 ? (() => {
+                  const today = cairoISODate();
+                  const logged: ReportRow[] = [];
+                  const missing: ReportRow[] = [];
+                  const leave: ReportRow[] = [];
+                  for (const r of allRows) {
+                    if ((r.payload.settings?.holidays ?? []).some((h) => h.date === today)) leave.push(r);
+                    else if ((r.payload.entries ?? []).some((e) => e.date === today)) logged.push(r);
+                    else missing.push(r);
+                  }
+                  const names = (list: ReportRow[]) => (list.length === 0 ? <p className="text-xs text-neutral-400">لا يوجد</p> : list.map((r) => (
+                    <p key={r.branch_id} className="flex justify-between text-sm font-bold">
+                      <span>{r.employee_name}</span>
+                      <span className="text-[11px] font-semibold text-neutral-500" dir="ltr">{r.branch_name || NO_BRANCH}</span>
+                    </p>
+                  )));
+                  return (
+                    <section className="rounded-[24px] bg-white p-4 shadow-[0_12px_32px_rgba(40,20,0,0.07)] ring-1 ring-orange-200/70">
+                      <p className="mb-3 text-sm font-black">📅 النهارده ({today})</p>
+                      <div className="grid grid-cols-3 gap-2 text-center text-xs font-extrabold">
+                        <div className="rounded-2xl bg-emerald-50 p-2 text-emerald-800">✅ سجّل<br /><span className="text-lg tabular-nums">{logged.length}</span></div>
+                        <div className="rounded-2xl bg-red-50 p-2 text-red-700">❌ مسجلش<br /><span className="text-lg tabular-nums">{missing.length}</span></div>
+                        <div className="rounded-2xl bg-neutral-100 p-2 text-neutral-700">🏖️ إجازة<br /><span className="text-lg tabular-nums">{leave.length}</span></div>
+                      </div>
+                      <div className="mt-3 space-y-3">
+                        <div><p className="mb-1 text-xs font-black text-emerald-800">سجّلوا</p>{names(logged)}</div>
+                        <div><p className="mb-1 text-xs font-black text-red-700">مسجلوش لسه</p>{names(missing)}</div>
+                        <div><p className="mb-1 text-xs font-black text-neutral-600">في إجازة</p>{names(leave)}</div>
+                      </div>
+                      <p className="mt-3 text-[10px] text-neutral-400">* بيعتمد على آخر مزامنة من كل موظف.</p>
+                    </section>
+                  );
+                })() : null}
                 {branch === null ? (
                   <div className="space-y-3">
                     {groupByBranch(allRows)
