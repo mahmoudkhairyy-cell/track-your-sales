@@ -6,7 +6,7 @@ import { createContext, useContext, useEffect, useState, type FormEvent, type Re
 import { readProfile } from "@/lib/local-api";
 import { pushReport } from "@/lib/sync";
 import { api } from "@/lib/client";
-import { APP_DISCLAIMER, APP_NAME, BRAND_BY, BRANCHES } from "@/lib/constants";
+import { APP_DISCLAIMER, APP_NAME, BRAND_BY, BRANCHES, OUTSIDE_BRANCHES } from "@/lib/constants";
 import { cairoYearMonth, isValidYearMonth, monthLabelAr, shiftYearMonth } from "@/lib/dates";
 import { BookIcon, ChevronIcon, HomeIcon, LogoMark, MoreIcon, PlusIcon, TargetIcon } from "@/components/icons";
 import { ToastProvider, useToast } from "@/components/ui";
@@ -165,6 +165,7 @@ function FirstRunProfile({ onDone }: { onDone: () => void }) {
             {BRANCHES.map((item) => (
               <option key={item} value={item}>{item}</option>
             ))}
+            <option value={OUTSIDE_BRANCHES}>{OUTSIDE_BRANCHES}</option>
           </select>
         </label>
         {error ? <p className="mb-3 text-sm font-bold text-red-600">{error}</p> : null}

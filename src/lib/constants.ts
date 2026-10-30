@@ -22,6 +22,9 @@ export const BRANCHES = [
   "Exp.Elhammam",
 ] as const;
 
+/** اختيار لمن مش تابع لفرع: بيتسجل عنده، ومايظهرش في لوحة المدير. */
+export const OUTSIDE_BRANCHES = "خارج الفروع";
+
 export const WEEK_DAYS = [
   { key: "sat", label: "السبت", jsDay: 6 },
   { key: "sun", label: "الأحد", jsDay: 0 },

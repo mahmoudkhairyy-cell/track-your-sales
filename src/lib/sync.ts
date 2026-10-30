@@ -2,6 +2,7 @@ import { api } from "@/lib/client";
 import { cloudRpc } from "@/lib/cloud";
 import { cairoYearMonth } from "@/lib/dates";
 import { readProfile } from "@/lib/local-api";
+import { OUTSIDE_BRANCHES } from "@/lib/constants";
 
 const BRANCH_KEY = "tys.branchId";
 
@@ -81,6 +82,8 @@ export async function pushReport(): Promise<boolean> {
   }
   const id = branchId();
   const profile = readProfile();
+  // الموظف "خارج الفروع" مش بيظهر في لوحة المدير، فمايبعتش ملخصه.
+  if (profile.branch === OUTSIDE_BRANCHES) return false;
   if (!id || !profile.name.trim() || running) return false;
 
   running = true;
