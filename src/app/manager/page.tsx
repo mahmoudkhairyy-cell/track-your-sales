@@ -236,6 +236,22 @@ export default function ManagerPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  async function deleteEmployee(row: ReportRow) {
+    if (!window.confirm(`متأكد إنك عايز تمسح ${row.employee_name}؟ الملخص بتاعه هيتمسح من اللوحة.`)) return;
+    setPending(true);
+    setError("");
+    try {
+      const pw = password || sessionStorage.getItem("tys.mgrPass") || "";
+      await cloudRpc("delete_report", { p_password: pw, p_branch_id: row.branch_id });
+      setRows((cur) => (cur ?? []).filter((r) => r.branch_id !== row.branch_id));
+      setOpenId(null);
+    } catch (err) {
+      setError(`مقدرناش نمسح ${row.employee_name}. (${err instanceof Error ? err.message.slice(0, 120) : ""})`);
+    } finally {
+      setPending(false);
+    }
+  }
+
   function renderRow(row: ReportRow) {
     const open = openId === row.branch_id;
     const days = daysSince(row.updated_at);
@@ -277,6 +293,14 @@ export default function ManagerPage() {
               className="mt-3 w-full rounded-2xl bg-orange-50 py-2 text-xs font-extrabold text-[#8f4300]"
             >
               {detailsId === row.branch_id ? "إخفاء التفاصيل" : `عرض كل التفاصيل (${row.payload.entries?.length ?? 0} إنجاز)`}
+            </button>
+            <button
+              type="button"
+              disabled={pending}
+              onClick={() => deleteEmployee(row)}
+              className="mt-3 w-full rounded-2xl border border-red-200 bg-red-50 py-2 text-xs font-extrabold text-red-700 disabled:opacity-60"
+            >
+              🗑 امسح الموظف من اللوحة
             </button>
             {detailsId === row.branch_id ? (
               <div className="mt-3 space-y-3 text-xs">
