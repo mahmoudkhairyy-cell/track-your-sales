@@ -55,26 +55,6 @@ const SHORT_KPI_NAMES: Record<string, string> = {
   "Exist": "Exist",
 };
 
-// كلام مصري بيتغيّر كل يوم (بيتاخد من رقم اليوم في السنة، فكل يوم له جملة).
-const DAILY_LINES = [
-  "يلا يا وحش، كل إنجاز بيقرّبك للكوميشن 💪",
-  "النهارده يوم جديد، وإنت عارف تعمل حاجة كويسة 🔥",
-  "خليك جامد يا بطل، التارجت مستنيك 🏆",
-  "ماتقلقش، الشغل الصبح بيتحسب آخر الشهر 😎",
-  "شد حيلك شوية، ده أنت قدها وزيادة 👊",
-  "كل عملية نضيفة بتفرق، فكّر فيها وإنت بتسجّل ✨",
-  "خد نفَس وكمّل، إنت ماشي صح 🌟",
-  "إنت مش بتشتغل بس، إنت بتبني سمعة يا باشا 🎯",
-  "التارجت مش بيتحقق لوحده، والشغل بيتحقق بيك 💼",
-  "الشغلانة دي بتحتاج صبر وشطارة، وإنت الاتنين 🙌",
-];
-
-function dailyLine(): string {
-  const start = new Date(new Date().getFullYear(), 0, 0).getTime();
-  const dayOfYear = Math.floor((Date.now() - start) / 86400000);
-  return DAILY_LINES[dayOfYear % DAILY_LINES.length];
-}
-
 function shortKpiName(name: string) {
   return SHORT_KPI_NAMES[name] ?? name;
 }
@@ -153,8 +133,6 @@ export default function HomePage() {
         </p>
         <p className="text-[11px] text-neutral-400">📍 {data.profile.branch}</p>
       </section>
-
-      <p className="rounded-2xl bg-orange-50 px-4 py-3 text-center text-sm font-extrabold text-[#8f4300] ring-1 ring-orange-200/70">{dailyLine()}</p>
 
       <section className="relative overflow-hidden rounded-[32px] bg-gradient-to-br from-[#f0802a] via-[#e06600] to-[#b84700] p-6 text-white shadow-[0_20px_50px_rgba(190,90,0,0.35)] ring-1 ring-white/30">
         <div className="pointer-events-none absolute -top-16 -left-16 h-48 w-48 rounded-full bg-white/15" />
