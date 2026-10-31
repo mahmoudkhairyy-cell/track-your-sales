@@ -39,7 +39,9 @@ const HUB: { id: SectionId; title: string; desc: string; count: string; icon: Re
   { id: "go", title: "Go", desc: "باقات Go Monthly و Extra", count: "باقات شهرية", icon: <PhoneIcon className="text-[#e06600]" /> },
   { id: "premier", title: "Premier", desc: "Premier و Super Max", count: "باقات بوست بايد", icon: <StarIcon className="text-[#e06600]" /> },
   { id: "hunts", title: "أرقام Hunts", desc: "جهات للتواصل السريع", count: `${HUNTS.length} جهة`, icon: <CallIcon className="text-[#e06600]" /> },
-  { id: "home", title: "Home Wireless", desc: "باقات الإنترنت اللاسلكي", count: "7 باقات", icon: <WifiIcon className="text-[#e06600]" /> },
+  { id: "home", title: "Home Wireless", desc: "باقات الإنترنت اللاسلكي", count: `${PLAN_GROUPS.find((g) => g.category === "Home Wireless")?.plans.length ?? 0} باقة`, icon: <WifiIcon className="text-[#e06600]" /> },
+  { id: "dsl", title: "Home Internet", desc: "باقات DSL والراوتر", count: `${DSL.plans.length} باقة`, icon: <WifiIcon className="text-[#e06600]" /> },
+  { id: "notes", title: "ملاحظاتي", desc: "مرجع شخصي بتضيفه بنفسك", count: "", icon: <CheckIcon className="text-[#e06600]" /> },
   { id: "docs", title: "أهم المستندات", desc: "نماذج ومستندات", count: `${DOCS.length} ملف`, icon: <CardIcon className="text-[#e06600]" /> },
   { id: "emails", title: "E-Mails", desc: "إيميلات للتواصل", count: `${EMAILS.length} إيميل`, icon: <WalletIcon className="text-[#e06600]" /> },
 ];
@@ -179,30 +181,41 @@ export default function WikiPage() {
           {globalHits ? (
             <div className="space-y-3">
               <p className="text-sm font-bold text-neutral-500">نتائج البحث</p>
+              {globalHits.sr.length > 0 ? <p className="text-xs font-black text-[#8f4300]">أكواد SR</p> : null}
               {globalHits.sr.map((item) => (
                 <button key={item.id + item.title} type="button" onClick={() => setOpenSr(item)} className="w-full rounded-[24px] border border-orange-200/70 bg-white p-4 text-right shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
                   <p className="text-xs font-extrabold text-[#e06600]">{item.id}</p>
                   <p className="font-extrabold">{item.titleAr || item.title}</p>
                 </button>
               ))}
+              {globalHits.hunts.length > 0 ? <p className="text-xs font-black text-[#8f4300]">أرقام</p> : null}
               {globalHits.hunts.map((item) => (
-                <a key={item.number + item.name} href={`tel:${item.number}`} className="block rounded-[24px] bg-white p-4 border border-orange-200/70 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
-                  <p className="font-extrabold">{item.name}</p>
-                  <p className="text-[#e06600]">{item.number}</p>
-                </a>
+                <div key={item.number + item.name} className="flex items-center justify-between gap-3 rounded-[24px] bg-white p-4 border border-orange-200/70 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
+                  <div className="min-w-0">
+                    <p className="font-extrabold">{item.name}</p>
+                    <p className="text-[#e06600]" dir="ltr">{item.number}</p>
+                  </div>
+                  <div className="flex shrink-0 gap-2">
+                    <button type="button" onClick={() => copyText(item.number, toast, "📋 الرقم اتنسخ")} className="rounded-full bg-neutral-100 px-3 py-2 text-xs font-extrabold">نسخ</button>
+                    <a href={`tel:${item.number}`} className="rounded-full bg-orange-100 px-3 py-2 text-xs font-extrabold text-[#e06600]">اتصال</a>
+                  </div>
+                </div>
               ))}
+              {globalHits.emails.length > 0 ? <p className="text-xs font-black text-[#8f4300]">إيميلات</p> : null}
               {globalHits.emails.map((item) => (
                 <button key={item.email} type="button" onClick={() => copyText(item.email, toast, "📋 الإيميل اتنسخ")} className="w-full rounded-[24px] border border-orange-200/70 bg-white p-4 text-right shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
                   <p className="font-extrabold">{item.name}</p>
                   <p className="text-sm text-[#e06600]">{item.email}</p>
                 </button>
               ))}
+              {globalHits.fm.length > 0 ? <p className="text-xs font-black text-[#8f4300]">FREEmax</p> : null}
               {globalHits.fm.map((item) => (
                 <article key={item.name} className="rounded-[24px] bg-white p-4 border border-orange-200/70 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
                   <p className="font-extrabold">{item.nameAr}</p>
                   <p className="text-sm text-neutral-500">{item.units} وحدة · تجديد {money(item.renewalPrice)} ج</p>
                 </article>
               ))}
+              {globalHits.plans.length > 0 ? <p className="text-xs font-black text-[#8f4300]">باقات</p> : null}
               {globalHits.plans.map((item) => (
                 <article key={item.group + item.name} className="rounded-[24px] bg-white p-4 border border-orange-200/70 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
                   <p className="text-xs text-[#e06600]">{item.group}</p>
@@ -210,12 +223,14 @@ export default function WikiPage() {
                   <p className="text-sm text-neutral-500">{item.fees || item.data}</p>
                 </article>
               ))}
+              {globalHits.dsl.length > 0 ? <p className="text-xs font-black text-[#8f4300]">Home Internet</p> : null}
               {globalHits.dsl.map((item) => (
                 <article key={item.name} className="rounded-[24px] bg-white p-4 border border-orange-200/70 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
                   <p className="font-extrabold">{item.name}</p>
                   <p className="text-sm text-neutral-500">{item.speed} Mbps · {item.quota} GB · {money(item.price)} ج</p>
                 </article>
               ))}
+              {globalHits.docs.length > 0 ? <p className="text-xs font-black text-[#8f4300]">مستندات</p> : null}
               {globalHits.docs.map((item) => (
                 <a key={item.title} href={item.url} target="_blank" rel="noreferrer" className="block rounded-[24px] bg-white p-4 border border-orange-200/70 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
                   <p className="font-extrabold">{item.title}</p>
@@ -239,24 +254,6 @@ export default function WikiPage() {
                     <span className="shrink-0 text-[11px] font-bold text-[#e06600]">{card.count}</span>
                   </button>
                 ))}
-                <button type="button" onClick={() => setSection("dsl")} className="flex w-full items-center gap-3 rounded-[24px] bg-white p-3.5 text-right shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
-                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-orange-100">
-                    <WifiIcon className="text-[#e06600]" />
-                  </span>
-                  <span className="min-w-0 flex-1">
-                    <span className="block font-black">Home Internet</span>
-                    <span className="block text-xs text-neutral-400">باقات DSL والراوتر</span>
-                  </span>
-                </button>
-                <button type="button" onClick={() => setSection("notes")} className="flex w-full items-center gap-3 rounded-[24px] bg-white p-3.5 text-right shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
-                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-orange-100">
-                    <CheckIcon className="text-[#e06600]" />
-                  </span>
-                  <span className="min-w-0 flex-1">
-                    <span className="block font-black">ملاحظاتي</span>
-                    <span className="block text-xs text-neutral-400">مرجع شخصي بتضيفه بنفسك</span>
-                  </span>
-                </button>
               </div>
               <p className="text-center text-[11px] leading-6 text-neutral-400">مرجع شغل داخلي للموظف. مش منتج رسمي أو معتمد من Orange.</p>
             </>
