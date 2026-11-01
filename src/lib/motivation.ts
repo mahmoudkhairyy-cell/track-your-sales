@@ -85,11 +85,11 @@ export function kpiMood(args: { percent: number; expectedPercent: number; weight
 } {
   const { percent, expectedPercent, weight } = args;
   if (weight === 0) return { emoji: "ℹ️", text: "للمتابعة بس", tone: "neutral" };
-  if (percent >= 100) return { emoji: "🎉", text: "اتقفل!", tone: "good" };
+  if (percent >= 100) return { emoji: "🎉", text: "قفلته يا وحش!", tone: "good" };
   const gap = percent - expectedPercent;
-  if (gap >= 0) return { emoji: "👌", text: "ماشي تمام", tone: "good" };
-  if (gap >= -15) return { emoji: "⏳", text: "محتاج شوية تركيز", tone: "warn" };
-  return { emoji: "🔴", text: "متأخر", tone: "bad" };
+  if (gap >= 0) return { emoji: "👌", text: "ماشي على كيفك، كمّل كده", tone: "good" };
+  if (gap >= -15) return { emoji: "⏳", text: "قرّبت، زوّد شوية وإنت تقفله", tone: "warn" };
+  return { emoji: "🔴", text: "لسه بعيد، ابدأ بيه النهارده", tone: "bad" };
 }
 
 export const MOOD_STYLES: Record<MoodTone, { box: string; title: string; text: string }> = {
