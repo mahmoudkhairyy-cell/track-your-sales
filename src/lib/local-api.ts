@@ -278,10 +278,31 @@ function defaultBundle(yearMonth: string, role: Role): Bundle {
   };
 }
 
+/** شهر جديد: بنعتمد تارجت وأوزان وكومشن آخر شهر اتحفظ قبله، والموظف يقدر يغيّر بعدين. الإجازات والكواليتي بتبدأ فاضية. */
+function prefillBundle(state: State, yearMonth: string, role: Role): Bundle {
+  const base = defaultBundle(yearMonth, role);
+  const previous = Object.keys(state.months)
+    .filter((key) => key < yearMonth)
+    .sort()
+    .pop();
+  const prev = previous ? state.months[previous] : undefined;
+  if (!prev) return base;
+  const prevMap = new Map(prev.kpis.map((item) => [item.kpiKey, item]));
+  return {
+    ...base,
+    fullCommission: prev.fullCommission,
+    allowCommissionOver100: prev.allowCommissionOver100,
+    kpis: base.kpis.map((kpi) => {
+      const old = prevMap.get(kpi.kpiKey);
+      return old && kpi.kpiKey !== "new_orange_cash" ? { ...kpi, target: old.target } : kpi;
+    }),
+  };
+}
+
 function loadBundle(state: State, yearMonth: string): Bundle {
   const row = state.months[yearMonth];
   const role = roleOf(state);
-  if (!row) return defaultBundle(yearMonth, role);
+  if (!row) return prefillBundle(state, yearMonth, role);
 
   const savedMap = new Map(row.kpis.map((item) => [item.kpiKey, item]));
   const newLinesTarget = savedMap.get("new_lines")?.target ?? 0;
