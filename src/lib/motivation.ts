@@ -90,7 +90,7 @@ export function kpiMood(args: { percent: number; expectedPercent: number; weight
   const gap = percent - expectedPercent;
   if (gap >= 0) return { emoji: "👌", text: "ماشي على كيفك، كمّل كده", tone: "good" };
   // "قرّبت" بس لو الإنجاز فعلاً وصل لنص المطلوب على الأقل.
-  if (gap >= -15 && percent >= 50) return { emoji: "⏳", text: "قرّبت، زوّد شوية وإنت تقفله", tone: "warn" };
+  if (gap >= -15 && percent >= 50) return { emoji: "⏳", text: "قربت تبقى ON TRACK، زوّد شوية", tone: "warn" };
   return { emoji: "🔴", text: "لسه بعيد، ابدأ بيه النهارده", tone: "bad" };
 }
 
