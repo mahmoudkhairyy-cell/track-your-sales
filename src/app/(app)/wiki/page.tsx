@@ -385,7 +385,8 @@ export default function WikiPage() {
               </div>
               <div className="mt-3 grid grid-cols-2 gap-2 text-xs leading-6 text-neutral-600">
                 <p>سعر الخط بالباقة: {money(plan.customerPrice)}</p>
-                <p>اشحن ع الخط ب {money(plan.activationNoTax)} ج</p>
+                <p>تفعيل بضريبة: {money(plan.activationWithTax)}</p>
+                <p>اشحن ع الخط عشان يوصله {money(plan.activationNoTax)} ج</p>
                 <p>Facebook / WhatsApp: {plan.facebook}</p>
               </div>
               {plan.perks.length ? <p className="mt-2 text-xs font-bold text-[#e06600]">{plan.perks.join(" · ")}</p> : null}
