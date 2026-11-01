@@ -16,7 +16,7 @@
           "Spotify",
           "Amazon Prime"
         ],
-        "fees": "652 L.E"
+        "fees": "520 L.E"
       },
       {
         "name": "PREMIER Plus",
@@ -30,9 +30,10 @@
         "installment": "Up to 45000 L.E",
         "subscriptions": [
           "Spotify",
-          "Amazon Prime"
+          "Amazon Prime",
+          "Gourmet food"
         ],
-        "fees": "861 L.E"
+        "fees": "690 L.E"
       },
       {
         "name": "PREMIER Select",
@@ -50,7 +51,7 @@
           "Gourmet food",
           "TOD (3 months)"
         ],
-        "fees": "1070 L.E"
+        "fees": "860 L.E"
       },
       {
         "name": "PREMIER Ultra",
@@ -68,7 +69,7 @@
           "Gourmet food",
           "TOD (6 months)"
         ],
-        "fees": "1489 L.E"
+        "fees": "1200 L.E"
       },
       {
         "name": "PREMIER Platinum",
@@ -86,7 +87,7 @@
           "Gourmet food",
           "TOD (Life)"
         ],
-        "fees": "2134 L.E"
+        "fees": "1725 L.E"
       }
     ]
   },
