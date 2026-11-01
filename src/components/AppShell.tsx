@@ -271,7 +271,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       setStatus("profile");
       return;
     }
-    api<{ settings: { saved: boolean } }>(`/api/months/${month}`)
+    api<{ settings: { saved: boolean; kpis: { target: number }[] } }>(`/api/months/${month}`)
       .then((result) => {
         // الشهر بيبدأ تلقائياً من تارجت الشهر اللي قبله. بس لو مفيش أي تارجت خالص (أول مرة)، بنطلب من الموظف يدخله.
         const hasTargets = result.settings.kpis.some((kpi) => kpi.target > 0);
