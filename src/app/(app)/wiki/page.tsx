@@ -310,8 +310,13 @@ export default function WikiPage() {
           <div className="space-y-4">
             {PREMIER_PERKS.map((pkg) => (
               <article key={pkg.name} className="rounded-[24px] border border-orange-200/70 bg-white p-4 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
-                <p className="text-right text-lg font-black">{pkg.name}</p>
-                <p className="text-right text-sm font-bold text-neutral-600">اشتراك شهري {pkg.price.toLocaleString("en-US")} جنيه</p>
+                <div className="flex items-center justify-between gap-3">
+                  <p className="text-lg font-black">{pkg.name}</p>
+                  <p className="rounded-xl bg-gradient-to-br from-[#ff9a3c] to-[#e06600] px-3 py-1.5 text-center text-sm font-extrabold leading-5 text-white">
+                    {pkg.price.toLocaleString("en-US")} جنيه
+                    <span className="block text-[10px] font-bold opacity-90">اشتراك شهري</span>
+                  </p>
+                </div>
                 <div className="mt-4 grid grid-cols-3 gap-2 text-center">
                   {[
                     [`${pkg.gb}`, "جيجابايت موبايل انترنت"],
@@ -338,10 +343,6 @@ export default function WikiPage() {
                   {pkg.subs.map((sub) => (
                     <span key={sub} className="flex h-11 min-w-11 items-center justify-center rounded-xl bg-neutral-900 px-2 text-[10px] font-bold text-white">{sub}</span>
                   ))}
-                </div>
-                <div className="mt-4 grid grid-cols-2 gap-2">
-                  <span className="rounded-xl border-2 border-neutral-800 py-2.5 text-center text-sm font-bold text-neutral-800">اشتري الآن</span>
-                  <span className="rounded-xl border-2 border-neutral-800 py-2.5 text-center text-sm font-bold text-neutral-800">حول نظامك</span>
                 </div>
               </article>
             ))}
