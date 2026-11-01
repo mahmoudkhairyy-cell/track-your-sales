@@ -55,6 +55,51 @@ const SHORT_KPI_NAMES: Record<string, string> = {
   "Exist": "Exist",
 };
 
+// رسالة ترحيب أول ما الشهر يبدأ (قبل أول إنجاز)، بتتغيّر حسب الشهر.
+const WELCOME_LINES = [
+  "يلا يا بطل، شهر جديد وفرصة جديدة تكسّر فيها الأرقام 💪",
+  "نورتنا يا وحش! الشهر ده هيبقى أحسن من اللي فات بإذن الله 🔥",
+  "ده شهر جديد وإنت جاهز تعمله، خليك جامد وكمّل كده 🚀",
+  "أهلاً بيك في الشهر الجديد، كل إنجاز النهارده بيفرق معاك 🌟",
+];
+
+function WelcomeCard({ name, yearMonth, monthLabel }: { name: string; yearMonth: string; monthLabel: string }) {
+  const key = `tys.welcome.${yearMonth}`;
+  const [hidden, setHidden] = useState(true);
+  useEffect(() => {
+    let seen = false;
+    try {
+      seen = localStorage.getItem(key) === "1";
+    } catch {
+      seen = false;
+    }
+    setHidden(seen);
+  }, [key]);
+  if (hidden) return null;
+  const idx = Number(yearMonth.slice(-2)) % WELCOME_LINES.length;
+  return (
+    <section className="rounded-[24px] bg-gradient-to-br from-[#fff3e6] to-[#fde1c4] p-5 text-[#8f4300] ring-1 ring-orange-200/70">
+      <p className="text-lg font-black">أهلاً يا {name.trim().split(" ")[0] || "بطل"} 👋</p>
+      <p className="mt-1 text-sm font-bold">نورتنا في شهر {monthLabel}</p>
+      <p className="mt-2 text-sm leading-7">{WELCOME_LINES[idx]}</p>
+      <button
+        type="button"
+        onClick={() => {
+          try {
+            localStorage.setItem(key, "1");
+          } catch {
+            // لو التخزين مش متاح، الكارت هيفضل.
+          }
+          setHidden(true);
+        }}
+        className="mt-3 rounded-full bg-white px-4 py-2 text-xs font-extrabold text-[#8f4300] ring-1 ring-orange-200/70"
+      >
+        تمام، يلا بينا
+      </button>
+    </section>
+  );
+}
+
 function shortKpiName(name: string) {
   return SHORT_KPI_NAMES[name] ?? name;
 }
@@ -127,6 +172,10 @@ export default function HomePage() {
             : `⚠️ ماتبعتش للمدير: ${sync.error ?? ""}`}
         </p>
       ) : null}
+      {data.entriesCount === 0 ? (
+        <WelcomeCard name={data.profile.name} yearMonth={data.yearMonth} monthLabel={data.monthLabel} />
+      ) : null}
+
       <section className="text-right">
         <p className="text-sm font-extrabold text-neutral-700">
           {greeting()} {data.profile.name.split(" ")[0]} 👋
