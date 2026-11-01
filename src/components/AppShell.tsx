@@ -51,10 +51,10 @@ function MonthSwitcher() {
       <button
         type="button"
         onClick={() => go(shiftYearMonth(month, -1))}
-        className="flex h-9 w-9 rotate-180 items-center justify-center rounded-full text-neutral-700"
+        className="flex h-9 w-9 rotate-180 items-center justify-center rounded-full bg-white text-[#e06600] shadow-[0_2px_6px_rgba(40,20,0,0.12)] active:scale-95"
         aria-label="الشهر السابق"
       >
-        <ChevronIcon />
+        <ChevronIcon width={18} height={18} strokeWidth={2.6} />
       </button>
       <div className="min-w-24 px-1 text-center">
         <p className="text-xs font-extrabold text-neutral-900">{monthLabelAr(month)}</p>
@@ -62,10 +62,10 @@ function MonthSwitcher() {
       <button
         type="button"
         onClick={() => go(shiftYearMonth(month, 1))}
-        className="flex h-9 w-9 items-center justify-center rounded-full text-neutral-700"
+        className="flex h-9 w-9 items-center justify-center rounded-full bg-white text-[#e06600] shadow-[0_2px_6px_rgba(40,20,0,0.12)] active:scale-95"
         aria-label="الشهر التالي"
       >
-        <ChevronIcon />
+        <ChevronIcon width={18} height={18} strokeWidth={2.6} />
       </button>
     </div>
   );
