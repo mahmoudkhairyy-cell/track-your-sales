@@ -288,8 +288,16 @@ function prefillBundle(state: State, yearMonth: string, role: Role): Bundle {
   const prev = previous ? state.months[previous] : undefined;
   if (!prev) return base;
   const prevMap = new Map(prev.kpis.map((item) => [item.kpiKey, item]));
+  // الإجازات بتتنقل بنفس رقم اليوم في الشهر الجديد (لو اليوم موجود في الشهر).
+  const [year, month] = yearMonth.split("-").map(Number);
+  const daysInMonth = new Date(Date.UTC(year, month, 0)).getUTCDate();
+  const holidays = prev.holidays
+    .map((item) => ({ ...item, date: item.date.slice(-2) }))
+    .filter((item) => Number(item.date) <= daysInMonth)
+    .map((item) => ({ date: `${yearMonth}-${item.date}`, note: item.note }));
   return {
     ...base,
+    holidays,
     fullCommission: prev.fullCommission,
     allowCommissionOver100: prev.allowCommissionOver100,
     kpis: base.kpis.map((kpi) => {
