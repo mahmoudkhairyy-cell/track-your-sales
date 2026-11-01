@@ -7,6 +7,7 @@ import { formatMoney, formatPercent, formatQty } from "@/lib/calculations";
 import { useMonth } from "@/components/AppShell";
 import { KpiIcon } from "@/components/KpiIcon";
 import { kpiMood } from "@/lib/motivation";
+import { KPI_LINES, overallBandLines, pickPhrase, timeLines } from "@/lib/phrases";
 import { readSyncStatus, type SyncStatus } from "@/lib/sync";
 
 type KpiRow = {
@@ -149,17 +150,11 @@ export default function HomePage() {
   if (!data) return <Banner tone="error">مفيش بيانات نعرضها</Banner>;
 
   const gap = Math.max(0, 100 - data.overall);
-  const expectedPercent = data.work.total > 0 ? (data.work.elapsed / data.work.total) * 100 : 0;
-  const statusTextEgy =
-    data.overall >= 100
-      ? "قفلت التارجت يا وحش 🏆 كمّل بنفس الروح"
-      : data.overall >= 80
-        ? "إنت على آخر خطوة! يلا يا بطل"
-      : data.overall >= expectedPercent + 5
-        ? "ماشي تمام جدًا، كمّل كده 💪"
-        : data.overall >= expectedPercent - 5
-          ? "إنت ماشي على الخط، شد حيلك 👊"
-          : "لازم نزوّد شوية النهارده 🔥 ابدأ بالأهم";
+  const statusTextEgy = pickPhrase(overallBandLines(data.overall), `overall|${data.yearMonth}`);
+  const timeText = pickPhrase(
+    timeLines(data.work.remaining, data.work.total, data.work.elapsed),
+    `time|${data.yearMonth}`,
+  );
 
 
 
@@ -188,6 +183,7 @@ export default function HomePage() {
         <p className="text-sm font-bold text-white/90">إجمالي التارجت الشهري</p>
         <p className="mt-1 text-5xl font-black tabular-nums tracking-tight">{formatPercent(data.overall)}%</p>
         <p className="mt-1 text-sm font-extrabold text-white">{statusTextEgy}</p>
+        <p className="mt-1 text-xs font-bold text-white/80">{timeText}</p>
         <div className="mt-5 flex h-4 overflow-hidden rounded-full bg-white/25">
           <div className="h-full rounded-full bg-white transition-all" style={{ width: `${Math.min(100, Math.max(0, data.overall))}%` }} />
         </div>
@@ -290,7 +286,7 @@ export default function HomePage() {
                       {kpi.nameEn}
                     </h3>
                     <p className={`text-xs font-bold ${moodColor}`}>
-                      {m.emoji} {m.text}
+                      {m.emoji} {kpi.percent >= 100 || kpi.percent < 1 || kpi.weight === 0 || !KPI_LINES[kpi.kpiKey] ? m.text : pickPhrase(KPI_LINES[kpi.kpiKey], `kpi|${kpi.kpiKey}|${data.yearMonth}`)}
                     </p>
                   </div>
                 </div>
