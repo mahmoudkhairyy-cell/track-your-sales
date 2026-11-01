@@ -9,6 +9,7 @@ import { useMonth } from "@/components/AppShell";
 import { KpiIcon } from "@/components/KpiIcon";
 import { formatQty } from "@/lib/calculations";
 import { quantityHint, quantityMax, quantityMin, quantityStep, validateQuantity } from "@/lib/quantity";
+import { saleCheer } from "@/lib/phrases";
 
 const CHEERS = [
   "🔥 عاش يا بطل! العملية اتسجلت",
@@ -145,7 +146,7 @@ export default function LogPage() {
         saved += 1;
       }
       if (typeof navigator !== "undefined" && "vibrate" in navigator) navigator.vibrate?.(30);
-      toast.push("success", `${CHEERS[Math.floor(Math.random() * CHEERS.length)]} (${saved})`);
+      toast.push("success", `${saleCheer(filled.map((item) => item.key), CHEERS)} (${saved})`);
       window.dispatchEvent(new Event("tys-data-changed"));
       setQuantities({});
       setNote("");

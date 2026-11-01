@@ -14,9 +14,10 @@ export const OVERALL_BANDS = [
 
 // الجمل دي بتتعرض على كارت كل مؤشر لما يكون لسه ما اتقفلش.
 export const KPI_LINES: Record<string, string[]> = {
+  new_orange_cash: ["المحفظة الجاية هتفرق!", "متنساش تفتح محافظ جديدة.", "كل عميل فرصة لمحفظة جديدة.", "عايزين نلحق نسبة المحافظ.", "المحفظة مش هتفتح نفسها 😂"],
   new_lines: ["يلا نبيع خطوط جديدة!", "كل خط بيفرق في النسبة.", "السوق مليان فرص، انزل اصطادها.", "محتاجين شوية خطوط كمان.", "الخطوط هي مفتاح التارجت.", "خط ورا خط هتوصل.", "زوّد الرتم يا نجم.", "النهارده يوم خطوط!"],
   existing_wallets: ["المحفظة الجاية هتفرق!", "متنساش تفتح محافظ جديدة.", "كل عميل فرصة لمحفظة جديدة.", "عايزين نلحق نسبة المحافظ.", "المحفظة مش هتفتح نفسها 😂", "خليك صاحي للمحافظ الجديدة.", "أنت قريب من النسبة المطلوبة."],
-  postpaid: ["بوست بيد واحدة ممكن تفرق كتير.", "محتاجين نزود الـ Postpaid.", "متنساش الفرص الكبيرة.", "خط بوست بيد يرفع النسبة.", "يلا نقفل المطلوب.", "خليك مركز في الـ Postpaid."],
+  postpaid_lines: ["بوست بيد واحدة ممكن تفرق كتير.", "محتاجين نزود الـ Postpaid.", "متنساش الفرص الكبيرة.", "خط بوست بيد يرفع النسبة.", "يلا نقفل المطلوب.", "خليك مركز في الـ Postpaid."],
   points: ["النقاط بتتجمع، والإنجاز بيكبر.", "كل نقطة ليها تمن.", "محتاجين نزود النقاط.", "أنت بتجمع نقاط ولا بتوزعها؟ 😂", "النقاط قربت تقفل.", "شد حيلك في الـ Points.", "خلي عينك على النقاط."],
   dsl: ["الـ DSL مستني لمستك.", "متنساش فرص الـ DSL.", "عميل واحد ممكن يقفل المطلوب.", "محتاجين نتحرك في الـ DSL.", "الـ DSL لسه مستني أول ضربة.", "يلا نقفل كارت الـ DSL."],
 };
@@ -55,7 +56,9 @@ export function pickPhrase(lines: string[], key: string): string {
 }
 
 export function overallBandLines(overall: number): string[] {
-  const band = OVERALL_BANDS.find((b) => overall >= b.min && overall <= b.max) ?? OVERALL_BANDS[0];
+  // الأرقام الكسرية (زي 99.5) لازم تقع في الشريحة الصح، فبنقارن بالحد الأدنى بس.
+  let band = OVERALL_BANDS[0];
+  for (const b of OVERALL_BANDS) if (overall >= b.min) band = b;
   return band.lines;
 }
 
@@ -81,9 +84,10 @@ export const OVER_100_LINES = ["يا نهار أبيض! إنت بتبيع ولا
 export const ZERO_LINES = ["صفر؟ حتى الصفر زعلان منك! 😂", "إحنا لسه بنبدأ ولا اليوم خلص؟", "أول بيعة هي اللي هتكسر الحاجز!", "التارجت واقف مستني أول إشارة حياة!", "يلا نبدأ بخط واحد ونفك النحس!", "الشاشة مستنية تشوف رقم غير الصفر!"];
 
 export const KPI_EXTRA_LINES: Record<string, string[]> = {
+  new_orange_cash: ["المحفظة مش هتفتح لوحدها يا نجم! 😂", "يلا نفتح محافظ جديدة!", "كل محفظة بتفرق حتى لو وزنها صفر!", "متنساش شرط المحافظ جنب الخطوط!", "المحفظة الجديدة مكسب للعميل وليك!"],
   new_lines: ["كل خط بيقربك من هدفك!", "الخطوط بتنادي عليك يا نجم!", "خط كمان والعداد يفرح!", "مش هنسيب الخطوط تهرب النهارده!"],
   existing_wallets: ["المحفظة مش هتفتح لوحدها يا نجم! 😂", "يلا نفتح محافظ جديدة!", "كل محفظة بتفرق حتى لو وزنها صفر!", "متنساش شرط المحافظ جنب الخطوط!", "المحفظة الجديدة مكسب للعميل وليك!"],
-  postpaid: ["بوست بيد يا باشا، مش أي بيع وخلاص!", "خط بوست بيد ممكن يفرق معاك جامد!", "فين صفقات التقيل؟", "عميل واحد صح ممكن يظبط المؤشر!", "ركز في البوست بيد، الفرصة تستاهل!"],
+  postpaid_lines: ["بوست بيد يا باشا، مش أي بيع وخلاص!", "خط بوست بيد ممكن يفرق معاك جامد!", "فين صفقات التقيل؟", "عميل واحد صح ممكن يظبط المؤشر!", "ركز في البوست بيد، الفرصة تستاهل!"],
   points: ["النقاط بتتجمع، متسيبش ولا نقطة!", "كل نقطة بتقربك من الهدف!", "إنت محتاج نقاط مش محتاج معجزة!", "النقاط دي عايزة شوية شطارة!", "يلا نلم النقط قبل نهاية الشهر!"],
   dsl: ["عميل واحد DSL ممكن يغير الحسبة!", "فين صيد الـ DSL النهارده؟", "متعديش عميل محتاج إنترنت من غير ما تعرض عليه!", "فرصة DSL مستنياك يا نجم!"],
 };
@@ -103,5 +107,65 @@ export function kpiLines(kpiKey: string, percent: number): string[] | null {
     const own = [...(KPI_LINES[kpiKey] ?? []), ...(KPI_EXTRA_LINES[kpiKey] ?? [])];
     return own.length ? own : NEAR_LINES;
   }
+  return null;
+}
+
+// ===== الدفعة التالتة: تشغيل الجمل في الصفحات =====
+
+const DAY = () => new Date().toLocaleDateString("en-CA", { timeZone: "Africa/Cairo" });
+
+// رسائل بعد تسجيل عملية ناجحة، حسب نوع المؤشر.
+export const SALE_CHEERS: Record<string, string[]> = {
+  new_lines: ["🔥 خط جديد! العداد بيفرح", "📱 خط ورا خط، كمّل!", "🚀 New Line اتسجل، التارجت بيقرب"],
+  new_orange_cash: ["💰 محفظة جديدة! شغل نضيف", "👛 المحفظة اتسجلت، عاش!"],
+  existing_wallets: ["👛 المحفظة اتسجلت، عاش!", "💰 Exist اتسجل، كمّل كده"],
+  points: ["⭐ نقاط اتسجلت، بتتجمع!", "🎯 كل نقطة بتفرق، عاش"],
+  postpaid_lines: ["💎 بوست بيد! صفقة تقيلة", "🏆 Postpaid اتسجل، ده الكلام!"],
+  dsl: ["🏠 DSL اتسجل! عميل تقيل", "📶 DSL في الحساب، برافو"],
+  productivity: ["⚡ إنتاجية اتسجلت، كمّل كده", "🔥 شغل نضيف في الإنتاجية"],
+};
+
+let lastCheer = "";
+/** رسالة تشجيع حسب نوع البيع، بدون تكرار متتابع. */
+export function saleCheer(kpiKeys: string[], fallback: string[]): string {
+  const pool = kpiKeys.flatMap((k) => SALE_CHEERS[k] ?? []);
+  const lines = pool.length ? pool : fallback;
+  let pick = lines[Math.floor(Math.random() * lines.length)];
+  if (lines.length > 1 && pick === lastCheer) pick = lines[(lines.indexOf(pick) + 1) % lines.length];
+  lastCheer = pick;
+  return pick;
+}
+
+/** جملة الترحيب حسب مستوى الأداء. */
+export function welcomeLine(overall: number): string {
+  const lines = overall <= 0 ? ZERO_LINES : overallBandLines(overall);
+  return pickPhrase(lines, `welcome|${DAY()}`);
+}
+
+/** جملة ساخرة لطيفة، بتظهر بس لما الأداء يكون في نطاق مريح (مش ضعيف، ومش مكتمل). */
+export const SARCASTIC_EXTRA = [
+  "أنا بحسب وإنت بتبيع، كل واحد يركز في شغله! 😂",
+  "الأرقام مش بتكدب، بس ساعات بتصدم!",
+  "متبصليش أنا، بص للتارجت!",
+  "أنا مساعدك مش ساحر يا نجم!",
+  "لو التارجت بيتحقق بالكلام كنا خلصنا من بدري!",
+  "محتاجين نشتغل مش نفضل نحدّث الشاشة!",
+  "أنا معاك للآخر، بس البيع عليك! 😂",
+];
+export function sarcasticLine(overall: number): string | null {
+  if (overall < 41 || overall >= 100) return null;
+  return pickPhrase([...LIGHT_LINES, ...SARCASTIC_EXTRA], `sarc|${DAY()}`);
+}
+
+export function overallLine(): string {
+  return pickPhrase(OVERALL_LINES, `overallLine|${DAY()}`);
+}
+
+/** تنبيه داخلي واحد بس في اليوم لأهم الجمل، مع تذكّر آخر تنبيه اتعرض. */
+export type NudgeKind = "milestone" | "lastWeek";
+export function nudgeFor(overall: number, remainingDays: number): { kind: NudgeKind; text: string } | null {
+  if (overall >= 90 && overall < 100) return { kind: "milestone", text: pickPhrase(NINETY_LINES, `nudge|${DAY()}`) };
+  if (overall >= 100) return { kind: "milestone", text: pickPhrase(OVER_100_LINES, `nudge|${DAY()}`) };
+  if (remainingDays > 0 && remainingDays <= 5) return { kind: "lastWeek", text: pickPhrase(TIME_LINES.lastWeek, `nudge|${DAY()}`) };
   return null;
 }

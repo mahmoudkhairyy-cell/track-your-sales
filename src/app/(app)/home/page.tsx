@@ -7,7 +7,7 @@ import { formatMoney, formatPercent, formatQty } from "@/lib/calculations";
 import { useMonth } from "@/components/AppShell";
 import { KpiIcon } from "@/components/KpiIcon";
 import { kpiMood } from "@/lib/motivation";
-import { MORNING_LINES, kpiLines, overallBandLines, pickPhrase, timeLines } from "@/lib/phrases";
+import { MORNING_LINES, kpiLines, nudgeFor, overallBandLines, overallLine, pickPhrase, sarcasticLine, timeLines, welcomeLine } from "@/lib/phrases";
 import { readSyncStatus, type SyncStatus } from "@/lib/sync";
 
 type KpiRow = {
@@ -56,15 +56,32 @@ const SHORT_KPI_NAMES: Record<string, string> = {
   "Exist": "Exist",
 };
 
-// رسالة ترحيب أول ما الشهر يبدأ (قبل أول إنجاز)، بتتغيّر حسب الشهر.
-const WELCOME_LINES = [
-  "يلا يا بطل، شهر جديد وفرصة جديدة تكسّر فيها الأرقام 💪",
-  "نورتنا يا وحش! الشهر ده هيبقى أحسن من اللي فات بإذن الله 🔥",
-  "ده شهر جديد وإنت جاهز تعمله، خليك جامد وكمّل كده 🚀",
-  "أهلاً بيك في الشهر الجديد، كل إنجاز النهارده بيفرق معاك 🌟",
-];
+// تنبيه داخلي واحد بس في اليوم، بيتقفل لوحده ومبيتكررش في نفس اليوم.
+function NudgeBanner({ overall, remainingDays }: { overall: number; remainingDays: number }) {
+  const nudge = nudgeFor(overall, remainingDays);
+  const [shown, setShown] = useState(false);
+  useEffect(() => {
+    if (!nudge) return;
+    const day = new Date().toLocaleDateString("en-CA", { timeZone: "Africa/Cairo" });
+    const key = "tys.nudge.last";
+    try {
+      if (localStorage.getItem(key) === `${day}|${nudge.kind}`) return;
+      localStorage.setItem(key, `${day}|${nudge.kind}`);
+    } catch {
+      // لو التخزين مش متاح، التنبيه هيظهر بس من غير منع التكرار.
+    }
+    setShown(true);
+  }, [nudge?.kind]);
+  if (!nudge || !shown) return null;
+  return (
+    <section className="rounded-2xl bg-amber-50 px-4 py-3 text-sm font-extrabold text-amber-900 ring-1 ring-amber-200">
+      🔔 {nudge.text}
+    </section>
+  );
+}
 
-function WelcomeCard({ name, yearMonth, monthLabel }: { name: string; yearMonth: string; monthLabel: string }) {
+
+function WelcomeCard({ name, yearMonth, monthLabel, overall }: { name: string; yearMonth: string; monthLabel: string; overall: number }) {
   const key = `tys.welcome.${yearMonth}`;
   const [hidden, setHidden] = useState(true);
   useEffect(() => {
@@ -77,12 +94,11 @@ function WelcomeCard({ name, yearMonth, monthLabel }: { name: string; yearMonth:
     setHidden(seen);
   }, [key]);
   if (hidden) return null;
-  const idx = Number(yearMonth.slice(-2)) % WELCOME_LINES.length;
   return (
     <section className="rounded-[24px] bg-gradient-to-br from-[#fff3e6] to-[#fde1c4] p-5 text-[#8f4300] ring-1 ring-orange-200/70">
       <p className="text-lg font-black">أهلاً يا {name.trim().split(" ")[0] || "بطل"} 👋</p>
       <p className="mt-1 text-sm font-bold">نورتنا في شهر {monthLabel}</p>
-      <p className="mt-2 text-sm leading-7">{WELCOME_LINES[idx]}</p>
+      <p className="mt-2 text-sm leading-7">{welcomeLine(overall)}</p>
       <button
         type="button"
         onClick={() => {
@@ -167,8 +183,9 @@ export default function HomePage() {
             : `⚠️ ماتبعتش للمدير: ${sync.error ?? ""}`}
         </p>
       ) : null}
+      <NudgeBanner overall={data.overall} remainingDays={data.work.remaining} />
       {data.entriesCount === 0 ? (
-        <WelcomeCard name={data.profile.name} yearMonth={data.yearMonth} monthLabel={data.monthLabel} />
+        <WelcomeCard name={data.profile.name} yearMonth={data.yearMonth} monthLabel={data.monthLabel} overall={data.overall} />
       ) : null}
 
       <section className="text-right">
@@ -185,6 +202,8 @@ export default function HomePage() {
         <p className="mt-1 text-5xl font-black tabular-nums tracking-tight">{formatPercent(data.overall)}%</p>
         <p className="mt-1 text-sm font-extrabold text-white">{statusTextEgy}</p>
         <p className="mt-1 text-xs font-bold text-white/80">{timeText}</p>
+        <p className="mt-1 text-xs font-bold text-white/80">{overallLine()}</p>
+        {sarcasticLine(data.overall) ? <p className="mt-1 text-xs font-bold text-white/70">{sarcasticLine(data.overall)}</p> : null}
         <div className="mt-5 flex h-4 overflow-hidden rounded-full bg-white/25">
           <div className="h-full rounded-full bg-white transition-all" style={{ width: `${Math.min(100, Math.max(0, data.overall))}%` }} />
         </div>
