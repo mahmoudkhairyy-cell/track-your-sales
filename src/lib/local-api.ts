@@ -27,6 +27,7 @@ import {
 import { cairoISODate, cairoYearMonth, monthDateRange, monthLabelAr } from "@/lib/dates";
 import { validateQuantity } from "@/lib/quantity";
 import { backupSummary, parseBackup, planEntryRestore, type BackupFile } from "@/lib/backup";
+import { buildAssistant } from "@/lib/assistant";
 import type { WorkingDays } from "@/lib/types";
 
 const STORAGE_KEY = "trackYourSales.local.v1";
@@ -600,11 +601,26 @@ function getDashboard(state: State, params: URLSearchParams) {
     };
   });
 
+  const assistant = buildAssistant({
+    kpis: kpis.map((kpi) => ({
+      kpiKey: kpi.kpiKey,
+      nameEn: kpi.nameEn,
+      target: kpi.target,
+      weight: kpi.weight,
+      achieved: kpi.achieved,
+      percent: kpi.percent,
+    })),
+    overall,
+    work,
+    remainingDates: work.remainingDates.map((date) => date),
+  });
+
   return {
     profile: { name: state.profile.name, branch: state.profile.branch, role: state.profile.role },
     yearMonth,
     monthLabel: monthLabelAr(yearMonth),
     today,
+    assistant,
     settingsSaved: bundle.saved,
     fullCommission: bundle.fullCommission,
     allowCommissionOver100: bundle.allowCommissionOver100,

@@ -24,7 +24,35 @@ type KpiRow = {
   overTarget: boolean;
 };
 
+type AssistantKpiView = {
+  kpiKey: string;
+  nameEn: string;
+  weight: number;
+  achieved: number;
+  target: number;
+  percent: number;
+  remaining: number;
+  needPerDayTo90: number | null;
+  needPerDayTo100: number | null;
+  status: "done" | "ahead" | "behind" | "no-target";
+  averagePerDay: number | null;
+  reach90On: string | null;
+  reach100On: string | null;
+  projectedPercent: number | null;
+  gapToExpected: number;
+  note: string | null;
+};
+
+type AssistantView = {
+  enoughData: boolean;
+  dataMessage: string | null;
+  overall: { percent: number; expectedPercent: number; status: "ahead" | "on" | "behind" | "done" | "no-days"; gapPoints: number };
+  kpis: AssistantKpiView[];
+  recommendations: string[];
+};
+
 type Dashboard = {
+  assistant: AssistantView;
   profile: { name: string; branch: string };
   yearMonth: string;
   monthLabel: string;
@@ -43,6 +71,67 @@ type Dashboard = {
   pace: { remaining: number; remainingDays: number; perDay: number | null; message: string };
 };
 
+
+function formatAssistDate(iso: string | null): string | null {
+  if (!iso) return null;
+  return new Intl.DateTimeFormat("ar-EG", { weekday: "long", day: "numeric", month: "long", timeZone: "Africa/Cairo" }).format(new Date(`${iso}T12:00:00+02:00`));
+}
+
+const OVERALL_STATUS_TEXT: Record<AssistantView["overall"]["status"], string> = {
+  done: "خلصت التارجت، والمساعد بيراقب بس.",
+  ahead: "إنت متقدم على المعدل المطلوب 👏",
+  on: "إنت ماشي على المعدل المطلوب.",
+  behind: "إنت متأخر عن المعدل المطلوب شوية، زوّد إيقاعك.",
+  "no-days": "أيام الشغل خلصت.",
+};
+
+function AssistantCard({ assistant }: { assistant: AssistantView }) {
+  return (
+    <details className="rounded-[24px] bg-white p-4 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)] ring-1 ring-orange-200/70">
+      <summary className="cursor-pointer list-none text-lg font-black">🧭 مساعد التارجت</summary>
+      <div className="mt-3 space-y-3 text-sm">
+        {assistant.dataMessage ? <p className="rounded-2xl bg-orange-50 px-3 py-2 font-bold text-[#8f4300]">{assistant.dataMessage}</p> : null}
+        <p className="font-extrabold">{OVERALL_STATUS_TEXT[assistant.overall.status]}</p>
+        <p className="text-xs text-neutral-500">
+          المفروض تكون عند {formatPercent(assistant.overall.expectedPercent)}% لحد النهارده · فرقك {assistant.overall.gapPoints >= 0 ? "+" : ""}
+          {formatPercent(assistant.overall.gapPoints)} نقطة
+        </p>
+        <div className="space-y-2">
+          {assistant.kpis.map((kpi) => (
+            <div key={kpi.kpiKey} className="rounded-2xl bg-orange-50/70 p-3">
+              <div className="flex items-center justify-between gap-2">
+                <p className="font-extrabold" dir="ltr">{kpi.nameEn}</p>
+                <p className="text-xs font-bold text-[#e06600]">{formatPercent(kpi.percent)}%</p>
+              </div>
+              {kpi.status === "no-target" || kpi.note ? (
+                <p className="mt-1 text-xs text-neutral-500">{kpi.note ?? "من غير تارجت."}</p>
+              ) : (
+                <div className="mt-1 grid grid-cols-2 gap-1 text-xs leading-5 text-neutral-600">
+                  <p>فاضل: <span className="font-black">{formatQty(kpi.remaining)}</span></p>
+                  <p>{kpi.status === "ahead" ? "متقدم" : kpi.status === "done" ? "اتقفل ✅" : "متأخر"} {kpi.status === "done" ? "" : `عن المعدل بـ ${formatQty(Math.abs(kpi.gapToExpected))}`}</p>
+                  {kpi.needPerDayTo90 !== null ? <p>لـ 90%: <span className="font-black">{formatQty(kpi.needPerDayTo90)}</span> في اليوم</p> : null}
+                  {kpi.needPerDayTo100 !== null ? <p>لـ 100%: <span className="font-black">{formatQty(kpi.needPerDayTo100)}</span> في اليوم</p> : null}
+                  {kpi.reach90On ? <p className="col-span-2">بالمعدل ده توصل 90% يوم {formatAssistDate(kpi.reach90On)}</p> : null}
+                  {kpi.projectedPercent !== null ? <p className="col-span-2">متوقع تقفل الشهر على {formatPercent(kpi.projectedPercent)}%</p> : null}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+        {assistant.recommendations.length ? (
+          <div>
+            <p className="font-black">توصيات:</p>
+            <ul className="mt-1 space-y-1 text-xs leading-6">
+              {assistant.recommendations.map((item) => (
+                <li key={item}>• {item}</li>
+              ))}
+            </ul>
+          </div>
+        ) : null}
+      </div>
+    </details>
+  );
+}
 
 function greeting() {
   const hour = Number(new Intl.DateTimeFormat("en-GB", { hour: "2-digit", hour12: false, timeZone: "Africa/Cairo" }).format(new Date()));
@@ -287,6 +376,8 @@ export default function HomePage() {
           })}
         </div>
       </section>
+
+      <AssistantCard assistant={data.assistant} />
 
       <h2 className="text-xl font-black">مؤشرات الأداء</h2>
       <div className="space-y-3">
