@@ -288,13 +288,20 @@ function prefillBundle(state: State, yearMonth: string, role: Role): Bundle {
   const prev = previous ? state.months[previous] : undefined;
   if (!prev) return base;
   const prevMap = new Map(prev.kpis.map((item) => [item.kpiKey, item]));
-  // الإجازات بتتنقل بنفس رقم اليوم في الشهر الجديد (لو اليوم موجود في الشهر).
+  // الإجازات بتتنقل حسب أيام الأسبوع: لو اختار التلات، كل التلاتات في الشهر الجديد إجازة.
   const [year, month] = yearMonth.split("-").map(Number);
   const daysInMonth = new Date(Date.UTC(year, month, 0)).getUTCDate();
-  const holidays = prev.holidays
-    .map((item) => ({ ...item, date: item.date.slice(-2) }))
-    .filter((item) => Number(item.date) <= daysInMonth)
-    .map((item) => ({ date: `${yearMonth}-${item.date}`, note: item.note }));
+  const weekdays = new Set(prev.holidays.map((item) => {
+    const [y, m, d] = item.date.split("-").map(Number);
+    return new Date(Date.UTC(y, m - 1, d)).getUTCDay();
+  }));
+  const holidays: Holiday[] = [];
+  for (let day = 1; day <= daysInMonth; day += 1) {
+    const weekday = new Date(Date.UTC(year, month - 1, day)).getUTCDay();
+    if (weekdays.has(weekday)) {
+      holidays.push({ date: `${yearMonth}-${String(day).padStart(2, "0")}`, note: null });
+    }
+  }
   return {
     ...base,
     holidays,
