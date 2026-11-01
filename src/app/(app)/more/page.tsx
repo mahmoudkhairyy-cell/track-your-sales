@@ -474,6 +474,7 @@ export default function MorePage() {
             if (!window.confirm("متأكد؟ هيتمسح كل بيانات الجهاز. اطلعت نسخة احتياطية؟")) return;
             try {
               localStorage.removeItem("trackYourSales.local.v1");
+              localStorage.removeItem("trackYourSales.local.v1.beforeRestore");
               localStorage.removeItem("tys.branchId");
               localStorage.removeItem("tys.lastSync");
             } catch {

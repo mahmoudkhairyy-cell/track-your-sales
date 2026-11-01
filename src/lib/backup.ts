@@ -16,6 +16,15 @@ export type BackupHoliday = {
   note: string | null;
 };
 
+export type BackupQuality = {
+  kyc: number;
+  visits: number;
+  training: number;
+  pos: number;
+  csat: number;
+  checks?: Record<string, boolean>;
+};
+
 export type BackupMonth = {
   yearMonth: string;
   fullCommission: number;
@@ -23,6 +32,8 @@ export type BackupMonth = {
   workingDays: WorkingDays;
   kpis: BackupKpi[];
   holidays: BackupHoliday[];
+  /** اختياري: الملفات القديمة من غيره بتفضل شغالة */
+  quality?: BackupQuality;
 };
 
 export type BackupEntry = {
@@ -100,12 +111,27 @@ function asBoolean(value: unknown, field: string): boolean {
   return value;
 }
 
-function assertNoSecrets(record: Record<string, unknown>, path: string) {
-  for (const key of Object.keys(record)) {
+/** بيفحص الملف كله (كل المستويات) عشان ما يدخلش أي حقل حساس. */
+function assertNoSecrets(value: unknown, path: string) {
+  if (Array.isArray(value)) {
+    value.forEach((item, index) => assertNoSecrets(item, `${path}[${index}]`));
+    return;
+  }
+  if (!isRecord(value)) return;
+  for (const key of Object.keys(value)) {
     if (FORBIDDEN.includes(key)) {
       throw new Error(`الملف فيه حقل ممنوع (${path}.${key})`);
     }
+    assertNoSecrets(value[key], `${path}.${key}`);
   }
+}
+
+/** تاريخ بصيغة YYYY-MM-DD وفي الحقيقة (مش 2026-13-40). */
+function isRealIsoDate(value: string): boolean {
+  if (!ISO_DATE_RE.test(value)) return false;
+  const [y, m, d] = value.split("-").map(Number);
+  const date = new Date(Date.UTC(y, m - 1, d));
+  return date.getUTCFullYear() === y && date.getUTCMonth() === m - 1 && date.getUTCDate() === d;
 }
 
 function parseWorkingDays(value: unknown): WorkingDays {
@@ -140,10 +166,31 @@ function parseKpi(value: unknown, index: number): BackupKpi {
 function parseHoliday(value: unknown, index: number): BackupHoliday {
   if (!isRecord(value)) throw new Error(`إجازة رقم ${index + 1} شكلها غلط`);
   const date = asString(value.date, `holidays[${index}].date`);
-  if (!ISO_DATE_RE.test(date)) {
+  if (!isRealIsoDate(date)) {
     throw new Error(`تاريخ إجازة غلط: ${date}`);
   }
   return { date, note: asOptionalString(value.note, `holidays[${index}].note`) };
+}
+
+const QUALITY_NUM_KEYS = ["kyc", "visits", "training", "pos", "csat"] as const;
+
+function parseQuality(value: unknown, index: number): BackupQuality | undefined {
+  if (value === undefined || value === null) return undefined;
+  if (!isRecord(value)) throw new Error(`تشيك Quality لشهر رقم ${index + 1} شكله غلط`);
+  const result: BackupQuality = { kyc: 0, visits: 0, training: 0, pos: 0, csat: 0 };
+  for (const key of QUALITY_NUM_KEYS) {
+    const raw = value[key] === undefined ? 0 : asNumber(value[key], `months[${index}].quality.${key}`);
+    if (raw < 0) throw new Error(`قيمة Quality ${key} مش ممكن تكون سالبة`);
+    result[key] = raw;
+  }
+  if (isRecord(value.checks)) {
+    const checks: Record<string, boolean> = {};
+    for (const [k, v] of Object.entries(value.checks)) {
+      if (typeof v === "boolean") checks[k] = v;
+    }
+    result.checks = checks;
+  }
+  return result;
 }
 
 function parseMonth(value: unknown, index: number): BackupMonth {
@@ -168,6 +215,7 @@ function parseMonth(value: unknown, index: number): BackupMonth {
     workingDays: parseWorkingDays(value.workingDays),
     kpis: value.kpis.map((item, kpiIndex) => parseKpi(item, kpiIndex)),
     holidays: value.holidays.map((item, holidayIndex) => parseHoliday(item, holidayIndex)),
+    quality: parseQuality(value.quality, index),
   };
 }
 
@@ -178,7 +226,7 @@ function parseEntry(value: unknown, index: number): BackupEntry {
     throw new Error(`سجل بمؤشر غير معروف: ${kpiKey}`);
   }
   const entryDate = asString(value.entryDate, `entries[${index}].entryDate`);
-  if (!ISO_DATE_RE.test(entryDate)) {
+  if (!isRealIsoDate(entryDate)) {
     throw new Error(`تاريخ سجل غلط: ${entryDate}`);
   }
   const rawQuantity = asNumber(value.quantity, `entries[${index}].quantity`);
@@ -217,7 +265,7 @@ export function parseBackup(raw: unknown): BackupFile {
   if (!isRecord(raw)) {
     throw new Error("ملف الاستعادة مش كائن JSON صحيح");
   }
-  assertNoSecrets(raw, "root");
+  assertNoSecrets(raw, "backup");
   const schemaVersion = asNumber(raw.schemaVersion, "schemaVersion");
   if (schemaVersion !== SCHEMA_VERSION) {
     throw new Error(`إصدار الملف غير مدعوم (${schemaVersion})`);

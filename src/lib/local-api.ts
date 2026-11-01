@@ -632,9 +632,10 @@ function exportBackup(state: State) {
     yearMonth,
     fullCommission: row.fullCommission,
     allowCommissionOver100: row.allowCommissionOver100,
-    workingDays: { ...DEFAULT_WORKING_DAYS },
+    workingDays: { ...(row.workingDays ?? DEFAULT_WORKING_DAYS) },
     kpis: loadBundle(state, yearMonth).kpis,
     holidays: row.holidays.map((item) => ({ date: item.date, note: item.note })),
+    quality: row.quality ? { ...row.quality } : undefined,
   }));
   const isEmpty = months.length === 0 && state.entries.length === 0 && state.articles.length === 0;
   const backup = {
@@ -688,6 +689,15 @@ function restoreBackup(state: State, data: Record<string, unknown>) {
     fail(400, "الاستبدال محتاج تأكيد صريح بعد تحميل نسخة احتياطية");
   }
 
+  // قبل الاستبدال بنحفظ نسخة من البيانات القديمة جنب الأصلية، عشان لو حصل خطأ ترجع منها.
+  if (mode === "replace") {
+    try {
+      localStorage.setItem(`${STORAGE_KEY}.beforeRestore`, JSON.stringify(state));
+    } catch {
+      // لو المساحة خلصت، نكمّل بالنسخة اللي اتنزلت للجهاز قبل الاستبدال (من الواجهة).
+    }
+  }
+
   state.profile = { ...state.profile, name: backup.profile.name, branch: backup.profile.branch };
   if (mode === "replace") {
     state.entries = [];
@@ -702,6 +712,7 @@ function restoreBackup(state: State, data: Record<string, unknown>) {
       workingDays: month.workingDays,
       kpis: month.kpis.map((kpi, index) => ({ ...kpi, sortOrder: kpi.sortOrder ?? index })),
       holidays: month.holidays.map((item) => ({ date: item.date, note: item.note })),
+      quality: month.quality ? { ...month.quality } : state.months[month.yearMonth]?.quality,
     };
   }
 
