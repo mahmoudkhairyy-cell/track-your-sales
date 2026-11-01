@@ -7,7 +7,7 @@ import { formatMoney, formatPercent, formatQty } from "@/lib/calculations";
 import { useMonth } from "@/components/AppShell";
 import { KpiIcon } from "@/components/KpiIcon";
 import { kpiMood } from "@/lib/motivation";
-import { KPI_LINES, overallBandLines, pickPhrase, timeLines } from "@/lib/phrases";
+import { MORNING_LINES, kpiLines, overallBandLines, pickPhrase, timeLines } from "@/lib/phrases";
 import { readSyncStatus, type SyncStatus } from "@/lib/sync";
 
 type KpiRow = {
@@ -176,6 +176,7 @@ export default function HomePage() {
           {greeting()} {data.profile.name.split(" ")[0]} 👋
         </p>
         <p className="text-[11px] text-neutral-400">📍 {data.profile.branch}</p>
+        {new Date().getHours() < 12 ? <p className="mt-1 text-xs font-bold text-[#8f4300]">{pickPhrase(MORNING_LINES, `morning|${data.yearMonth}`)}</p> : null}
       </section>
 
       <section className="relative overflow-hidden rounded-[32px] bg-gradient-to-br from-[#f0802a] via-[#e06600] to-[#b84700] p-6 text-white shadow-[0_20px_50px_rgba(190,90,0,0.35)] ring-1 ring-white/30">
@@ -286,7 +287,7 @@ export default function HomePage() {
                       {kpi.nameEn}
                     </h3>
                     <p className={`text-xs font-bold ${moodColor}`}>
-                      {m.emoji} {kpi.percent >= 100 || kpi.percent < 1 || kpi.weight === 0 || !KPI_LINES[kpi.kpiKey] ? m.text : pickPhrase(KPI_LINES[kpi.kpiKey], `kpi|${kpi.kpiKey}|${data.yearMonth}`)}
+                      {m.emoji} {kpi.weight === 0 || kpi.percent < 0 ? m.text : (() => { const lines = kpiLines(kpi.kpiKey, kpi.percent); return lines ? pickPhrase(lines, `kpi|${kpi.kpiKey}|${data.yearMonth}`) : m.text; })()}
                     </p>
                   </div>
                 </div>
