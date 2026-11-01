@@ -51,7 +51,7 @@ function MonthSwitcher() {
       <button
         type="button"
         onClick={() => go(shiftYearMonth(month, -1))}
-        className="flex h-9 w-9 items-center justify-center rounded-full text-neutral-700"
+        className="flex h-9 w-9 rotate-180 items-center justify-center rounded-full text-neutral-700"
         aria-label="الشهر السابق"
       >
         <ChevronIcon />
@@ -62,7 +62,7 @@ function MonthSwitcher() {
       <button
         type="button"
         onClick={() => go(shiftYearMonth(month, 1))}
-        className="flex h-9 w-9 rotate-180 items-center justify-center rounded-full text-neutral-700"
+        className="flex h-9 w-9 items-center justify-center rounded-full text-neutral-700"
         aria-label="الشهر التالي"
       >
         <ChevronIcon />
