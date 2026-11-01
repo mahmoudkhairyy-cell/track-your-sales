@@ -200,7 +200,6 @@ function SplashScreen({ name }: { name: string }) {
       <img src="/track-your-sales/logo-full-light.png" alt={APP_NAME} className="w-56 max-w-full object-contain drop-shadow-[0_0_24px_rgba(212,168,83,0.25)]" />
       <div className="h-px w-24 bg-gradient-to-r from-transparent via-[#d4a853] to-transparent" />
       {name.trim() ? <p className="text-base font-bold text-[#e9d7b0]">أهلاً يا {name.trim().split(" ")[0]}</p> : null}
-      <p className="text-[11px] font-semibold tracking-[0.2em] text-[#8a7650]" dir="ltr">{BRAND_BY.toUpperCase()}</p>
     </div>
   );
 }
