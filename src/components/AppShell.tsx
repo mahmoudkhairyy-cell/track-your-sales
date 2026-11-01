@@ -273,7 +273,9 @@ export function AppShell({ children }: { children: ReactNode }) {
     }
     api<{ settings: { saved: boolean } }>(`/api/months/${month}`)
       .then((result) => {
-        if (!cancelled) setStatus(result.settings.saved ? "ready" : "target");
+        // الشهر بيبدأ تلقائياً من تارجت الشهر اللي قبله. بس لو مفيش أي تارجت خالص (أول مرة)، بنطلب من الموظف يدخله.
+        const hasTargets = result.settings.kpis.some((kpi) => kpi.target > 0);
+        if (!cancelled) setStatus(result.settings.saved || hasTargets ? "ready" : "target");
       })
       .catch(() => {
         if (!cancelled) setStatus("ready");
