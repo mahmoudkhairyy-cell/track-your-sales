@@ -209,7 +209,20 @@ export function AppShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const params = useSearchParams();
   const raw = params.get("month");
-  const month = raw && isValidYearMonth(raw) ? raw : cairoYearMonth();
+  // الشهر الحالي بيتحدّث لوحده لو التطبيق فضل مفتوح (مثلاً لحد بعد نص الليل) أو رجع للواجهة.
+  const [currentMonth, setCurrentMonth] = useState(() => cairoYearMonth());
+  useEffect(() => {
+    const refresh = () => setCurrentMonth(cairoYearMonth());
+    const timer = window.setInterval(refresh, 60 * 1000);
+    document.addEventListener("visibilitychange", refresh);
+    window.addEventListener("focus", refresh);
+    return () => {
+      window.clearInterval(timer);
+      document.removeEventListener("visibilitychange", refresh);
+      window.removeEventListener("focus", refresh);
+    };
+  }, []);
+  const month = raw && isValidYearMonth(raw) ? raw : currentMonth;
   const [status, setStatus] = useState<GateStatus>("checking");
   const [rev, setRev] = useState(0);
   const [splash, setSplash] = useState(false);
