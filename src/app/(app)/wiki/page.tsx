@@ -396,21 +396,35 @@ export default function WikiPage() {
             ))}
           </div>
           {FREEMAX.plans.map((plan) => (
-            <article key={plan.name} className="rounded-[24px] bg-white p-4 border border-orange-200/70 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
-              <div className="flex items-start justify-between">
-                <div>
-                  <p className="font-black">{plan.nameAr}</p>
-                  <p className="text-xs text-neutral-400">{plan.units} وحدة</p>
-                </div>
-                <p className="text-lg font-black text-[#e06600]">{money(plan.renewalPrice)} ج</p>
+            <article key={plan.name} className="rounded-[24px] border border-orange-200/70 bg-white p-4 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
+              <div className="flex items-center justify-between gap-3">
+                <p className="text-lg font-black">{plan.nameAr}</p>
+                <p className="rounded-xl bg-gradient-to-br from-[#ff9a3c] to-[#e06600] px-3 py-1.5 text-center text-sm font-extrabold leading-5 text-white">
+                  {money(plan.renewalPrice)} جنيه
+                  <span className="block text-[10px] font-bold opacity-90">تجديد</span>
+                </p>
               </div>
-              <div className="mt-3 grid grid-cols-2 gap-2 text-xs leading-6 text-neutral-600">
-                <p>سعر الخط بالباقة: {money(plan.customerPrice)}</p>
-                <p>تفعيل بضريبة: {money(plan.activationWithTax)}</p>
-                <p>اشحن ع الخط عشان يوصله {money(plan.activationNoTax)} ج</p>
-                <p>Facebook / WhatsApp: {plan.facebook}</p>
+              <div className="mt-4 grid grid-cols-3 gap-2 text-center">
+                {[
+                  [plan.units, "وحدة"],
+                  [plan.facebook, "فيسبوك"],
+                  [plan.whatsapp, "واتساب"],
+                ].map(([num, label]) => (
+                  <div key={label}>
+                    <p className="text-2xl font-black text-[#e06600]">{num}</p>
+                    <p className="text-[11px] leading-4 text-neutral-500">{label}</p>
+                  </div>
+                ))}
               </div>
-              {plan.perks.length ? <p className="mt-2 text-xs font-bold text-[#e06600]">{plan.perks.join(" · ")}</p> : null}
+              <p className="my-3 text-center text-lg font-black text-neutral-400">+</p>
+              <ul className="space-y-2 text-sm leading-6 text-neutral-700">
+                <li>• سعر الخط بالباقة: <span className="font-black text-[#e06600]">{money(plan.customerPrice)} جنيه</span></li>
+                <li>• تفعيل بضريبة: <span className="font-black text-[#e06600]">{money(plan.activationWithTax)} جنيه</span></li>
+                <li>• اشحن ع الخط عشان يوصله <span className="font-black text-[#e06600]">{money(plan.activationNoTax)} جنيه</span></li>
+                {plan.perks.map((perk) => (
+                  <li key={perk}>• <span className="font-black text-[#e06600]">{perk}</span></li>
+                ))}
+              </ul>
             </article>
           ))}
           <article className="rounded-[24px] bg-white p-4 border border-orange-200/70 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
