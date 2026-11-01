@@ -212,7 +212,22 @@ export function AppShell({ children }: { children: ReactNode }) {
   // الشهر الحالي بيتحدّث لوحده لو التطبيق فضل مفتوح (مثلاً لحد بعد نص الليل) أو رجع للواجهة.
   const [currentMonth, setCurrentMonth] = useState(() => cairoYearMonth());
   useEffect(() => {
-    const refresh = () => setCurrentMonth(cairoYearMonth());
+    const refresh = () => {
+      const now = cairoYearMonth();
+      setCurrentMonth(now);
+      // لو الشهر اتغير وفي شهر قديم في الرابط، بنشيله عشان يفتح على الشهر الحالي.
+      let last: string | null = null;
+      try {
+        last = localStorage.getItem("tys.currentMonth");
+        localStorage.setItem("tys.currentMonth", now);
+      } catch {
+        last = null;
+      }
+      if (last && last !== now && window.location.search.includes("month=")) {
+        window.history.replaceState(null, "", window.location.pathname);
+      }
+    };
+    refresh();
     const timer = window.setInterval(refresh, 60 * 1000);
     document.addEventListener("visibilitychange", refresh);
     window.addEventListener("focus", refresh);
