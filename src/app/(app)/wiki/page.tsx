@@ -341,7 +341,17 @@ export default function WikiPage() {
                 <p className="mt-4 text-xs text-neutral-500">اشتراكات</p>
                 <div className="mt-2 flex flex-wrap gap-2">
                   {pkg.subs.map((sub) => (
-                    <span key={sub} className="flex h-11 min-w-11 items-center justify-center rounded-xl bg-neutral-900 px-2 text-[10px] font-bold text-white">{sub}</span>
+                    <span key={sub} className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-xl bg-neutral-900">
+                      {sub === "Spotify" ? (
+                        <svg viewBox="0 0 24 24" className="h-7 w-7" aria-label="Spotify"><circle cx="12" cy="12" r="11" fill="#1DB954" /><path d="M6 9.2c3.8-1.1 8.3-.8 11.7 1.2" stroke="#000" strokeWidth="2" fill="none" strokeLinecap="round" /><path d="M6.6 12.6c3.2-.9 6.9-.6 9.7 1" stroke="#000" strokeWidth="1.9" fill="none" strokeLinecap="round" /><path d="M7.2 15.8c2.6-.7 5.5-.5 7.8.8" stroke="#000" strokeWidth="1.7" fill="none" strokeLinecap="round" /></svg>
+                      ) : sub === "prime" ? (
+                        <span className="text-[13px] font-bold leading-none text-[#00a8e1]">prime<span className="block text-center text-[7px] text-white">⌣</span></span>
+                      ) : sub === "TOD" ? (
+                        <span className="text-[15px] font-black leading-none text-[#f5b800]">TOD</span>
+                      ) : (
+                        <span className="text-[7px] font-bold leading-[1.1] tracking-tight text-white">GOURMET</span>
+                      )}
+                    </span>
                   ))}
                 </div>
               </article>
