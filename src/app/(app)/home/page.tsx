@@ -175,7 +175,7 @@ export default function HomePage() {
 
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-3">
       {sync ? (
         <p className={`px-1 text-[11px] font-bold ${sync.ok ? "text-emerald-700" : "text-red-600"}`} dir="rtl">
           {sync.ok
@@ -196,23 +196,23 @@ export default function HomePage() {
         {new Date().getHours() < 12 ? <p className="mt-1 text-xs font-bold text-[#8f4300]">{pickPhrase(MORNING_LINES, `morning|${data.yearMonth}`)}</p> : null}
       </section>
 
-      <section className="relative overflow-hidden rounded-[32px] bg-gradient-to-br from-[#f0802a] via-[#e06600] to-[#b84700] p-6 text-white shadow-[0_20px_50px_rgba(190,90,0,0.35)] ring-1 ring-white/30">
+      <section className="relative overflow-hidden rounded-[28px] bg-gradient-to-br from-[#f0802a] via-[#e06600] to-[#b84700] p-4 text-white shadow-[0_20px_50px_rgba(190,90,0,0.35)] ring-1 ring-white/30">
         <div className="pointer-events-none absolute -top-16 -left-16 h-48 w-48 rounded-full bg-white/15" />
-        <p className="text-sm font-bold text-white/90">إجمالي التارجت الشهري</p>
-        <p className="mt-1 text-5xl font-black tabular-nums tracking-tight">{formatPercent(data.overall)}%</p>
+        <p className="text-xs font-bold text-white/90">إجمالي التارجت الشهري</p>
+        <p className="mt-0.5 text-4xl font-black tabular-nums tracking-tight">{formatPercent(data.overall)}%</p>
         <p className="mt-1 text-sm font-extrabold text-white">{statusTextEgy}</p>
         <p className="mt-1 text-xs font-bold text-white/80">{timeText}</p>
         <p className="mt-1 text-xs font-bold text-white/80">{overallLine()}</p>
         {sarcasticLine(data.overall) ? <p className="mt-1 text-xs font-bold text-white/70">{sarcasticLine(data.overall)}</p> : null}
-        <div className="mt-5 flex h-4 overflow-hidden rounded-full bg-white/25">
+        <div className="mt-3 flex h-3 overflow-hidden rounded-full bg-white/25">
           <div className="h-full rounded-full bg-white transition-all" style={{ width: `${Math.min(100, Math.max(0, data.overall))}%` }} />
         </div>
-        <div className="mt-4 grid grid-cols-2 gap-2">
-          <div className="rounded-2xl bg-white/15 px-3 py-2.5 ring-1 ring-white/25">
+        <div className="mt-3 grid grid-cols-2 gap-2">
+          <div className="rounded-2xl bg-white/15 px-3 py-2 ring-1 ring-white/25">
             <p className="text-[11px] text-white/80">{gap > 0 ? "فاضل" : "الحالة"}</p>
             <p className="text-base font-black tabular-nums">{gap > 0 ? `${formatPercent(gap)}%` : "قفلت الشهر ✅"}</p>
           </div>
-          <div className="rounded-2xl bg-white/15 px-3 py-2.5 ring-1 ring-white/25">
+          <div className="rounded-2xl bg-white/15 px-3 py-2 ring-1 ring-white/25">
             <p className="text-[11px] text-white/80">الكوميشن المتوقع</p>
             <p className="text-base font-black tabular-nums">
               {formatMoney(data.estimatedCommission)} <span className="text-[11px] font-bold text-white/80">من {formatMoney(data.fullCommission)} جنيه</span>
@@ -239,7 +239,7 @@ export default function HomePage() {
             setCopied(false);
           }
         }}
-        className="flex w-full items-center justify-center gap-2 rounded-2xl border border-orange-200/70 bg-white py-3 text-sm font-extrabold text-[#8f4300] shadow-[0_1px_2px_rgba(40,20,0,0.04)] active:scale-[0.99]"
+        className="flex w-full items-center justify-center gap-2 rounded-2xl border border-orange-200/70 bg-white py-2.5 text-sm font-extrabold text-[#8f4300] shadow-[0_1px_2px_rgba(40,20,0,0.04)] active:scale-[0.99]"
       >
         {copied ? "✅ اتنسخ الملخص" : "📋 انسخ ملخص الشهر"}
       </button>
@@ -269,12 +269,12 @@ export default function HomePage() {
         );
       })()}
 
-      <section className="rounded-[24px] border border-orange-200/70 bg-white p-5 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
+      <section className="rounded-[22px] border border-orange-200/70 bg-white p-3.5 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
         <div className="flex items-end justify-between">
           <p className="text-sm font-black text-neutral-800">نسبة الإنجاز</p>
           <p className="text-xs text-neutral-400">{data.kpis.length} مؤشر</p>
         </div>
-        <div className="mt-4 flex h-36 items-end justify-around gap-2">
+        <div className="mt-2 flex h-24 items-end justify-around gap-2">
           {data.kpis.map((kpi) => {
             const h = Math.min(100, Math.max(4, kpi.percent));
             return (
@@ -288,8 +288,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      <h2 className="text-xl font-black">مؤشرات الأداء</h2>
-      <div className="space-y-3">
+      <h2 className="text-lg font-black">مؤشرات الأداء</h2>
+      <div className="space-y-2">
         {data.kpis.map((kpi) => {
           const visual = Math.min(100, Math.max(0, kpi.percent));
           const kpiExpected = kpi.target > 0 ? (kpi.expectedToDate / kpi.target) * 100 : 0;
@@ -297,12 +297,12 @@ export default function HomePage() {
           const moodColor =
             m.tone === "good" ? "text-emerald-700" : m.tone === "warn" ? "text-yellow-700" : m.tone === "bad" ? "text-red-600" : "text-neutral-400";
           return (
-            <article key={kpi.kpiKey} className="rounded-[24px] bg-white p-3.5 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)] ring-1 ring-orange-200/70">
-              <div className="flex items-start justify-between gap-3">
-                <div className="flex items-center gap-3">
-                  <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-orange-100 text-[#e06600]"><KpiIcon kpiKey={kpi.kpiKey} className="h-5 w-5" /></span>
+            <article key={kpi.kpiKey} className="rounded-[18px] bg-white px-3 py-2.5 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)] ring-1 ring-orange-200/70">
+              <div className="flex items-start justify-between gap-2">
+                <div className="flex items-center gap-2.5">
+                  <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-orange-100 text-[#e06600]"><KpiIcon kpiKey={kpi.kpiKey} className="h-4 w-4" /></span>
                   <div>
-                    <h3 className="font-extrabold text-neutral-900" dir="ltr">
+                    <h3 className="text-sm font-extrabold text-neutral-900" dir="ltr">
                       {kpi.nameEn}
                     </h3>
                     <p className={`text-xs font-bold ${moodColor}`}>
@@ -310,33 +310,33 @@ export default function HomePage() {
                     </p>
                   </div>
                 </div>
-                <p className="text-lg font-black text-[#e06600]">{formatPercent(kpi.percent)}%</p>
+                <p className="text-base font-black text-[#e06600]">{formatPercent(kpi.percent)}%</p>
               </div>
-              <div className="mt-3 grid grid-cols-3 gap-2 rounded-2xl bg-orange-50/70 p-2.5 text-center">
-                <div>
-                  <p className="text-[10px] text-neutral-500">المستهدف</p>
-                  <p className="text-sm font-black tabular-nums">{formatQty(kpi.target)}</p>
-                </div>
-                <div>
-                  <p className="text-[10px] text-neutral-500">المحقق</p>
-                  <p className="text-sm font-black tabular-nums text-[#b84700]">{formatQty(kpi.achieved)}</p>
-                </div>
-                <div>
-                  <p className="text-[10px] text-neutral-500">الباقي</p>
-                  <p className="text-sm font-black tabular-nums">{formatQty(kpi.remaining)}</p>
-                </div>
+              <div className="mt-2 grid grid-cols-3 gap-1 rounded-lg bg-orange-50/70 px-1.5 py-1.5 text-center text-[11px]">
+                <p>
+                  <span className="text-neutral-500">المستهدف </span>
+                  <span className="font-black tabular-nums">{formatQty(kpi.target)}</span>
+                </p>
+                <p>
+                  <span className="text-neutral-500">المحقق </span>
+                  <span className="font-black tabular-nums text-[#b84700]">{formatQty(kpi.achieved)}</span>
+                </p>
+                <p>
+                  <span className="text-neutral-500">الباقي </span>
+                  <span className="font-black tabular-nums">{formatQty(kpi.remaining)}</span>
+                </p>
               </div>
-              <div className="mt-3 h-2 overflow-hidden rounded-full bg-neutral-100">
+              <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-neutral-100">
                 <div className="h-full rounded-full bg-gradient-to-r from-[#f0802a] to-[#b84700] transition-all" style={{ width: `${visual}%` }} />
               </div>
-              <div className="mt-3 flex items-center justify-between text-xs font-bold">
+              <div className="mt-1.5 flex flex-wrap items-center justify-between gap-x-2 text-[10px] font-bold leading-4">
                 <span className="text-[#e06600]">مساهمة: {formatPercent(kpi.contribution)}%</span>
                 <span className="text-neutral-400">الوزن: {kpi.weight}%</span>
+                <span className="w-full text-neutral-400">
+                  المفروض تكون عند {formatQty(kpi.expectedToDate)} {kpi.unitAr} دلوقتي · فاضل {formatQty(kpi.remaining)}
+                </span>
               </div>
-              <p className="mt-1 text-[11px] text-neutral-400">
-                المفروض تكون عند {formatQty(kpi.expectedToDate)} {kpi.unitAr} دلوقتي · فاضل {formatQty(kpi.remaining)}
-              </p>
-              {kpi.overTarget ? <p className="mt-2 text-xs font-bold text-[#e06600]">🎉 عدّيت التارجت! الشريط واقف عند 100% بس الرقم الحقيقي ظاهر فوق.</p> : null}
+              {kpi.overTarget ? <p className="mt-1 text-[10px] font-bold text-[#e06600]">🎉 عدّيت التارجت! الشريط واقف عند 100% بس الرقم الحقيقي ظاهر فوق.</p> : null}
             </article>
           );
         })}
