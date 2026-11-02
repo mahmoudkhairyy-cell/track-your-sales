@@ -485,7 +485,10 @@ export default function WikiPage() {
                   {spotify ? (
                     <div className="py-2">
                       <p className="text-[11px] font-bold text-[#e06600]">اشتراكات ترفيهية في</p>
-                      <p className="font-black text-[#1DB954]">Spotify</p>
+                      <div className="mt-1 flex items-center gap-2">
+                        <BrandLogo id="spotify" size={28} />
+                        <p className="font-black text-[#1DB954]">Spotify</p>
+                      </div>
                     </div>
                   ) : null}
                 </div>
