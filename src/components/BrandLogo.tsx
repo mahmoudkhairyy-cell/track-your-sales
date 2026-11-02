@@ -81,6 +81,10 @@ const BRANDS: Record<string, Brand> = {
     bg: "#F2A900",
     svg: <text x="12" y="15" textAnchor="middle" fontSize="6.5" fontWeight="900" fill="#000" fontFamily="Arial, sans-serif">PUBG</text>,
   },
+  kazeon: {
+    bg: "#FF7900",
+    svg: <text x="12" y="16.5" textAnchor="middle" fontSize="11" fontWeight="900" fill={W} fontFamily="Arial, sans-serif">K</text>,
+  },
   netflix: {
     bg: "#E50914",
     svg: <text x="12" y="17.5" textAnchor="middle" fontSize="15" fontWeight="900" fill={W} fontFamily="Arial, sans-serif">N</text>,
@@ -105,6 +109,7 @@ export function brandKeysFrom(text: string): string[] {
   if (t.includes("skype")) add("skype");
   if (t.includes("pubg") || t.includes("play")) add("pubg");
   if (t.includes("netflix")) add("netflix");
+  if (t.includes("كازيون") || t.includes("kazeon") || t.includes("kazyon")) add("kazeon");
   return keys;
 }
 

@@ -449,8 +449,6 @@ export default function WikiPage() {
             ))}
           </div>
           {FREEMAX.plans.map((plan) => {
-            const spotify = plan.perks.some((perk) => perk.includes("Spotify"));
-            const kazeon = plan.perks.find((perk) => perk.includes("كازيون"));
             return (
               <article key={plan.name} className="overflow-hidden rounded-[24px] border border-orange-200/70 bg-white p-4 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
                 <PlanBand title={plan.nameAr} big={`${plan.units} وحدة`} />
@@ -487,15 +485,7 @@ export default function WikiPage() {
                     <p className="font-black text-[#e06600]">50 ميجا</p>
                     <p className="text-[11px] text-neutral-500">واتساب ميجابايتس</p>
                   </div>
-                  {spotify ? (
-                    <div className="py-2">
-                      <p className="text-[11px] font-bold text-[#e06600]">اشتراكات ترفيهية في</p>
-                      <div className="mt-1 flex items-center gap-2">
-                        <BrandLogo id="spotify" size={28} />
-                        <p className="font-black text-[#1DB954]">Spotify</p>
-                      </div>
-                    </div>
-                  ) : null}
+                  <EntertainRow keys={brandKeysFrom(plan.perks.join(" "))} />
                 </div>
                 <details className="mt-3 text-sm text-neutral-700">
                   <summary className="cursor-pointer text-xs font-bold text-neutral-500">تفاصيل التفعيل والمزايا</summary>
