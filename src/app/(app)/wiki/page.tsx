@@ -75,7 +75,7 @@ function Back({ onClick, title }: { onClick: () => void; title: string }) {
   );
 }
 
-/** هيدر كارت الباقة بنفس ألوان وشكل الموقع: برتقالي + لوجو التطبيق. */
+/** هيدر كارت الباقة بنفس ألوان وشكل الموقع: برتقالي. */
 function PlanBand({ title, big }: { title: string; big?: string }) {
   return (
     <div className="-mx-4 -mt-4 mb-3 flex items-center justify-between gap-3 rounded-t-[24px] bg-gradient-to-br from-[#ff9a3c] via-[#e06600] to-[#b84700] px-4 py-3 text-white">
@@ -83,7 +83,6 @@ function PlanBand({ title, big }: { title: string; big?: string }) {
         <p className="truncate text-[11px] font-bold opacity-90">{title}</p>
         <p className="truncate text-2xl font-black tabular-nums">{big ?? title}</p>
       </div>
-      <img src="/track-your-sales/logo-mark.png" alt="" className="h-10 w-10 shrink-0 object-contain brightness-0 invert" />
     </div>
   );
 }
