@@ -106,12 +106,18 @@ export const COMPARE_DOWN_LINES = ["إيه التراجع ده؟ حصل إيه �
 
 export const MONTH_END_LINES = ["الشهر بيجري يا بطل، الحق نفسك!", "مفيش وقت للكسل، كل بيعة بتفرق!", "آخر الشهر مش وقت الأعذار!", "فاضل كام يوم ونقفلها صح!", "عايزين نهاية تليق بالمجهود!", "متخليش الشهر يخلص وإنت بتقول يا ريتني!"];
 
+// جمل المحافظ: مش بتذكر خطوط أبدًا.
+const WALLET_KEYS = ["new_orange_cash", "existing_wallets"];
+const WALLET_LOW_LINES = ["المحافظ لسه محتاجة نفس أكتر، ولسه فيه وقت!", "فين المحافظ دي يا بطل؟ 😂", "شغل المحافظ لسه في أوله، شد حيلك!", "محتاجين نفتح محافظ جديدة الأول! 🚑"];
+const WALLET_ZERO_LINES = ["صفر محافظ؟ أول محفظة هتكسر الحاجز!", "المحافظ لسه واقفة، ابدأ بمحفظة واحدة!", "الشاشة مستنية أول محفظة! 😂"];
+
 /** جمل المؤشر حسب نسبته: ضعيف، قرب، 90%+ */
 export function kpiLines(kpiKey: string, percent: number): string[] | null {
+  const isWallet = WALLET_KEYS.includes(kpiKey);
   if (percent >= 100) return OVER_100_LINES;
   if (percent >= 90) return NINETY_LINES;
-  if (percent < 1) return ZERO_LINES;
-  if (percent < 50) return LOW_LINES;
+  if (percent < 1) return isWallet ? WALLET_ZERO_LINES : ZERO_LINES;
+  if (percent < 50) return isWallet ? WALLET_LOW_LINES : LOW_LINES;
   if (percent < 90) {
     const own = [...(KPI_LINES[kpiKey] ?? []), ...(KPI_EXTRA_LINES[kpiKey] ?? [])];
     return own.length ? own : NEAR_LINES;
