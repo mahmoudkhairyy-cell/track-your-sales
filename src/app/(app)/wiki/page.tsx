@@ -28,7 +28,7 @@ import {
   type SrItem,
 } from "@/data";
 import { BookIcon, CallIcon, CardIcon, CheckIcon, PhoneIcon, StarIcon, WalletIcon, WifiIcon } from "@/components/icons";
-import { matchesQuery } from "@/lib/search";
+import { matchesQuery, rankSr } from "@/lib/search";
 
 type Article = { id: string; title: string; content: string; updatedAt: string };
 type SectionId = "hub" | "sr" | "premier" | "freemax" | "go" | "hunts" | "home" | "dsl" | "docs" | "emails" | "notes";
@@ -109,12 +109,8 @@ export default function WikiPage() {
   const q = query.trim();
 
   const filteredSr = useMemo(() => {
-    return SR_ITEMS.filter((item) => {
-      const catOk = srCategory === "الكل" || item.category === srCategory;
-      if (!catOk) return false;
-      if (!q) return true;
-      return matchesQuery([item.id, item.title, item.titleAr, item.description, item.steps, item.category].join(" "), q);
-    });
+    const inCategory = SR_ITEMS.filter((item) => srCategory === "الكل" || item.category === srCategory);
+    return rankSr(inCategory, q);
   }, [q, srCategory]);
 
   const globalHits = useMemo(() => {

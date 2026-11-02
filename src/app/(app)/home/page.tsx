@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { Banner, Spinner } from "@/components/ui";
 import { ApiError, api } from "@/lib/client";
 import { formatMoney, formatPercent, formatQty } from "@/lib/calculations";
+import { cairoISODate } from "@/lib/dates";
+import { buildCandidates as buildNotificationCandidates, mergeNotifications as mergeNotificationList } from "@/lib/notifications";
 import { useMonth } from "@/components/AppShell";
 import { KpiIcon } from "@/components/KpiIcon";
 import { kpiMood } from "@/lib/motivation";
@@ -51,8 +53,45 @@ type AssistantView = {
   recommendations: string[];
 };
 
+type AnalysisView = {
+  hasData: boolean;
+  strongest: { kpiKey: string; nameEn: string; percent: number } | null;
+  weakest: { kpiKey: string; nameEn: string; percent: number } | null;
+  ranking: { kpiKey: string; nameEn: string; percent: number }[];
+  needsIntervention: { kpiKey: string; nameEn: string; percent: number }[];
+  overallText: string;
+};
+
+type BadgeView = { id: string; earned: boolean };
+
+type CommissionView = {
+  hasFullCommission: boolean;
+  message: string | null;
+  current: { overall: number; commission: number; belowMinimum: boolean };
+  scenarios: { label: string; overall: number; commission: number }[];
+  perOnePercent: number;
+};
+
+type DailyLogView = {
+  days: { date: string; operations: number; byKpi: Record<string, number> }[];
+  today: { date: string; operations: number; yesterdayOperations: number; diff: number };
+  best: { date: string; operations: number } | null;
+  worst: { date: string; operations: number } | null;
+  weekdayAverages: { weekday: number; average: number; days: number }[];
+  byKpiTotals: Record<string, number>;
+};
+
+const WEEKDAY_AR = ["الأحد", "الاتنين", "التلات", "الأربعاء", "الخميس", "الجمعة", "السبت"];
+
+type ChallengeView = { id: string; title: string; target: number; progress: number; done: boolean; note: string };
+
 type Dashboard = {
+  challenge: ChallengeView;
+  dailyLog: DailyLogView;
+  badges: BadgeView[];
+  commissionScenarios: CommissionView;
   assistant: AssistantView;
+  analysis: AnalysisView;
   profile: { name: string; branch: string };
   yearMonth: string;
   monthLabel: string;
@@ -85,7 +124,30 @@ const OVERALL_STATUS_TEXT: Record<AssistantView["overall"]["status"], string> = 
   "no-days": "أيام الشغل خلصت.",
 };
 
-function AssistantCard({ assistant }: { assistant: AssistantView }) {
+function AnalysisBlock({ analysis }: { analysis: AnalysisView }) {
+  if (!analysis.hasData) return null;
+  return (
+    <div className="rounded-2xl bg-white p-3 ring-1 ring-orange-200/70">
+      <p className="font-black">📊 تحليل الأداء</p>
+      <p className="mt-1 text-xs leading-6 text-neutral-600">{analysis.overallText}</p>
+      {analysis.strongest ? <p className="mt-1 text-xs">💪 أقوى مؤشر: <span className="font-black" dir="ltr">{analysis.strongest.nameEn}</span> ({formatPercent(analysis.strongest.percent)}%)</p> : null}
+      {analysis.weakest ? <p className="text-xs">🎯 أضعف مؤشر: <span className="font-black" dir="ltr">{analysis.weakest.nameEn}</span> ({formatPercent(analysis.weakest.percent)}%)</p> : null}
+      {analysis.needsIntervention.length ? (
+        <p className="mt-1 text-xs text-red-700">محتاجين تدخل في: {analysis.needsIntervention.map((k) => k.nameEn).join("، ")}</p>
+      ) : null}
+      <div className="mt-2 space-y-1">
+        {analysis.ranking.map((k, i) => (
+          <div key={k.kpiKey} className="flex items-center justify-between text-xs">
+            <span dir="ltr">{i + 1}. {k.nameEn}</span>
+            <span className="font-black text-[#e06600]">{formatPercent(k.percent)}%</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function AssistantCard({ assistant, analysis }: { assistant: AssistantView; analysis: AnalysisView }) {
   return (
     <details className="rounded-[24px] bg-white p-4 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)] ring-1 ring-orange-200/70">
       <summary className="cursor-pointer list-none text-lg font-black">🧭 مساعد التارجت</summary>
@@ -118,6 +180,7 @@ function AssistantCard({ assistant }: { assistant: AssistantView }) {
             </div>
           ))}
         </div>
+        <AnalysisBlock analysis={analysis} />
         {assistant.recommendations.length ? (
           <div>
             <p className="font-black">توصيات:</p>
@@ -130,6 +193,229 @@ function AssistantCard({ assistant }: { assistant: AssistantView }) {
         ) : null}
       </div>
     </details>
+  );
+}
+
+const BADGE_META: Record<string, { title: string; icon: string; hint: string }> = {
+  first_sale: { title: "أول عملية بيع", icon: "🎉", hint: "سجّل أول عملية" },
+  ten_lines: { title: "أول 10 خطوط", icon: "📱", hint: "سجّل 10 خطوط New Lines" },
+  reach_50: { title: "وصلت 50%", icon: "🌱", hint: "وصّل إجمالي 50% في الشهر" },
+  reach_90: { title: "وصلت 90%", icon: "🔥", hint: "وصّل إجمالي 90% في الشهر" },
+  reach_100: { title: "قفلت التارجت 100%", icon: "🏆", hint: "وصّل إجمالي 100% في الشهر" },
+  reach_120: { title: "تخطيت 120%", icon: "👑", hint: "وصّل إجمالي 120% في الشهر" },
+  record_day: { title: "رقم قياسي جديد", icon: "⚡", hint: "أعلى يوم في كل السجلات" },
+  all_kpis: { title: "كل المؤشرات مكتملة", icon: "💎", hint: "كل مؤشر بوزن وصل 100%" },
+};
+const BADGES_STORE_KEY = "tys.badges.v1";
+
+/** الشارات: بتتحسب من السجلات، وتاريخ أول مرة اتكسبت بيتحفظ عشان ما تتكررش. */
+function ChallengeCard({ challenge }: { challenge: ChallengeView }) {
+  const pct = Math.min(100, Math.round((challenge.progress / challenge.target) * 100));
+  return (
+    <section className="rounded-[24px] bg-white p-4 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)] ring-1 ring-orange-200/70">
+      <div className="flex items-center justify-between gap-2">
+        <h2 className="text-lg font-black">🎯 تحدي اليوم</h2>
+        {challenge.done ? <span className="rounded-full bg-emerald-100 px-2.5 py-1 text-[11px] font-black text-emerald-800">خلصته ✅</span> : null}
+      </div>
+      <p className="mt-2 text-sm font-extrabold">{challenge.title}</p>
+      <div className="mt-2 h-2.5 overflow-hidden rounded-full bg-orange-100">
+        <div className="h-full rounded-full bg-gradient-to-r from-[#ff9a3c] to-[#e06600]" style={{ width: `${pct}%` }} />
+      </div>
+      <p className="mt-1 text-xs text-neutral-600">{challenge.progress} / {challenge.target}</p>
+      <p className="mt-1 text-[11px] text-neutral-500">{challenge.note}</p>
+    </section>
+  );
+}
+
+type NotificationItem = { id: string; day: string; type: string; text: string; read: boolean };
+const NOTIF_KEY = "tys.notifications.v1";
+
+/** مركز الإشعارات: بيتحسب من الأرقام الحالية وبيتحفظ محلياً، ومفيش إشعار يتكرر أو يزيد عن حد اليوم. */
+function NotificationsCard({ data }: { data: Dashboard }) {
+  const today = cairoISODate();
+  const [items, setItems] = useState<NotificationItem[]>([]);
+  useEffect(() => {
+    let stored: NotificationItem[] = [];
+    try {
+      const raw = localStorage.getItem(NOTIF_KEY);
+      if (raw) stored = JSON.parse(raw) as NotificationItem[];
+    } catch {
+      stored = [];
+    }
+    let newBadges: string[] = [];
+    try {
+      const earned = JSON.parse(localStorage.getItem(BADGES_STORE_KEY) ?? "{}") as Record<string, string>;
+      newBadges = data.badges.filter((b) => b.earned && earned[b.id] === today).map((b) => BADGE_META[b.id]?.title ?? b.id);
+    } catch {
+      newBadges = [];
+    }
+    const lagging = data.kpis.filter((k) => k.weight > 0 && k.target > 0 && k.percent < 90 && k.remaining > 0).map((k) => ({ nameEn: k.nameEn, percent: k.percent }));
+    const candidates = buildNotificationCandidates({
+      day: today,
+      overall: data.overall,
+      remainingDays: data.work.remaining,
+      lagging,
+      newBadges,
+      challenge: data.challenge ? { title: data.challenge.title, done: data.challenge.done } : null,
+    });
+    const merged = mergeNotificationList(stored, candidates, today) as NotificationItem[];
+    try {
+      localStorage.setItem(NOTIF_KEY, JSON.stringify(merged));
+    } catch {
+      // لو التخزين مش متاح، الإشعارات هتتحسب تاني في الزيارة الجاية.
+    }
+    setItems(merged);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data.overall, data.work.remaining, data.badges.length]);
+
+  const unread = items.filter((n) => !n.read).length;
+  const shown = [...items].reverse().slice(0, 10);
+  return (
+    <section className="rounded-[24px] bg-white p-4 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)] ring-1 ring-orange-200/70">
+      <div className="flex items-center justify-between">
+        <h2 className="text-lg font-black">🔔 الإشعارات {unread > 0 ? <span className="mr-1 rounded-full bg-[#e06600] px-2 py-0.5 text-[11px] text-white">{unread}</span> : null}</h2>
+        {unread > 0 ? (
+          <button
+            type="button"
+            onClick={() => {
+              const all = items.map((n) => ({ ...n, read: true }));
+              setItems(all);
+              try {
+                localStorage.setItem(NOTIF_KEY, JSON.stringify(all));
+              } catch {
+                // لو التخزين مش متاح، الحالة هتفضل في الشاشة دي بس.
+              }
+            }}
+            className="text-xs font-extrabold text-[#e06600]"
+          >
+            علّم الكل كمقروء
+          </button>
+        ) : null}
+      </div>
+      {shown.length === 0 ? (
+        <p className="mt-2 text-sm text-neutral-600">مفيش إشعارات لسه.</p>
+      ) : (
+        <ul className="mt-3 space-y-2">
+          {shown.map((n) => (
+            <li key={n.id} className={`rounded-2xl px-3 py-2 text-xs leading-6 ${n.read ? "bg-neutral-50" : "bg-orange-50 font-bold"}`}>
+              {n.text} <span className="text-[10px] text-neutral-400">· {n.day}</span>
+            </li>
+          ))}
+        </ul>
+      )}
+    </section>
+  );
+}
+
+function DailyLogCard({ log }: { log: DailyLogView }) {
+  const max = Math.max(1, ...log.days.map((d) => d.operations));
+  const diff = log.today.diff;
+  return (
+    <section className="rounded-[24px] bg-white p-4 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)] ring-1 ring-orange-200/70">
+      <h2 className="text-lg font-black">📈 سجل الأداء اليومي</h2>
+      {log.days.length === 0 ? (
+        <p className="mt-2 text-sm text-neutral-600">لسه مفيش سجلات الشهر ده. أول ما تسجل عملية هتظهر هنا.</p>
+      ) : (
+        <>
+          <div className="mt-3 grid grid-cols-2 gap-2 text-center text-xs">
+            <div className="rounded-2xl bg-orange-50/70 p-2.5">
+              <p className="text-neutral-500">النهارده</p>
+              <p className="text-lg font-black text-[#e06600]">{log.today.operations}</p>
+            </div>
+            <div className="rounded-2xl bg-orange-50/70 p-2.5">
+              <p className="text-neutral-500">مقارنة بامبارح</p>
+              <p className={`text-lg font-black ${diff >= 0 ? "text-emerald-700" : "text-red-600"}`}>{diff > 0 ? `+${diff}` : diff}</p>
+            </div>
+          </div>
+          <div className="mt-4 flex h-28 items-end gap-1 overflow-hidden">
+            {log.days.map((d) => (
+              <div key={d.date} className="flex flex-1 flex-col items-center justify-end" title={`${d.date}: ${d.operations}`}>
+                <div className="w-full rounded-t-md bg-gradient-to-t from-[#e06600] to-[#ff9a3c]" style={{ height: `${(d.operations / max) * 100}%`, minHeight: 4 }} />
+              </div>
+            ))}
+          </div>
+          <p className="mt-1 text-[10px] text-neutral-500">عدد العمليات في كل يوم سجّلت فيه</p>
+          <div className="mt-3 space-y-1 text-xs">
+            {log.best ? <p>أحسن يوم: <span className="font-black">{log.best.date}</span> ({log.best.operations} عملية)</p> : null}
+            {log.worst && log.best && log.worst.date !== log.best.date ? <p>أقل يوم: <span className="font-black">{log.worst.date}</span> ({log.worst.operations} عملية)</p> : null}
+            <p className="text-neutral-600">متوسط أيام الأسبوع: {log.weekdayAverages.filter((w) => w.days > 0).map((w) => `${WEEKDAY_AR[w.weekday]} ${w.average}`).join("، ")}</p>
+          </div>
+        </>
+      )}
+    </section>
+  );
+}
+
+function CommissionCard({ data }: { data: CommissionView }) {
+  return (
+    <section className="rounded-[24px] bg-white p-4 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)] ring-1 ring-orange-200/70">
+      <h2 className="text-lg font-black">💰 توقع العمولة</h2>
+      {!data.hasFullCommission ? (
+        <p className="mt-2 text-sm text-neutral-600">{data.message}</p>
+      ) : (
+        <>
+          <p className="mt-2 text-sm">
+            حسب أداءك الحالي ({formatPercent(data.current.overall)}%): <span className="font-black text-[#e06600]">{formatMoney(data.current.commission)} ج</span>
+            {data.current.belowMinimum ? <span className="block text-xs text-neutral-500">لازم توصل {OVERALL_MIN_PERCENT_UI}% عشان يبدأ الحافز.</span> : null}
+          </p>
+          <div className="mt-3 space-y-1.5">
+            {data.scenarios.map((sc) => (
+              <div key={sc.label} className="flex items-center justify-between rounded-2xl bg-orange-50/70 px-3 py-2 text-xs">
+                <span>{sc.label}</span>
+                <span className="font-black text-[#e06600]">{formatMoney(sc.commission)} ج</span>
+              </div>
+            ))}
+          </div>
+          <p className="mt-2 text-[11px] text-neutral-500">كل 1% بيزوّد حوالي {formatMoney(data.perOnePercent)} ج.</p>
+        </>
+      )}
+    </section>
+  );
+}
+
+const OVERALL_MIN_PERCENT_UI = 80;
+
+function BadgesCard({ badges, today }: { badges: BadgeView[]; today: string }) {
+  const [earnedOn, setEarnedOn] = useState<Record<string, string>>({});
+  useEffect(() => {
+    let stored: Record<string, string> = {};
+    try {
+      const raw = localStorage.getItem(BADGES_STORE_KEY);
+      if (raw) stored = JSON.parse(raw) as Record<string, string>;
+    } catch {
+      stored = {};
+    }
+    const updated = { ...stored };
+    for (const b of badges) if (b.earned && !updated[b.id]) updated[b.id] = today;
+    try {
+      localStorage.setItem(BADGES_STORE_KEY, JSON.stringify(updated));
+    } catch {
+      // لو التخزين مش متاح، الشارات هتتحسب تاني من السجلات.
+    }
+    setEarnedOn(updated);
+  }, [badges, today]);
+  const earnedCount = badges.filter((b) => b.earned).length;
+  return (
+    <section className="rounded-[24px] bg-white p-4 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)] ring-1 ring-orange-200/70">
+      <div className="flex items-center justify-between">
+        <h2 className="text-lg font-black">🏅 الإنجازات</h2>
+        <p className="text-xs font-bold text-neutral-500">{earnedCount} / {badges.length}</p>
+      </div>
+      <div className="mt-3 grid grid-cols-2 gap-2">
+        {badges.map((b) => {
+          const meta = BADGE_META[b.id];
+          const on = b.earned || Boolean(earnedOn[b.id]);
+          const isNew = on && earnedOn[b.id] === today;
+          return (
+            <div key={b.id} className={`rounded-2xl p-3 text-center ring-1 ${on ? "bg-orange-50 ring-orange-200" : "bg-neutral-50 ring-neutral-200 opacity-60"}`}>
+              <p className="text-2xl">{on ? meta.icon : "🔒"}</p>
+              <p className="mt-1 text-xs font-black leading-5">{meta.title}</p>
+              <p className="text-[10px] leading-4 text-neutral-500">{on ? (isNew ? "اتكسبت النهارده 🎉" : "اتكسبت") : meta.hint}</p>
+            </div>
+          );
+        })}
+      </div>
+    </section>
   );
 }
 
@@ -377,7 +663,17 @@ export default function HomePage() {
         </div>
       </section>
 
-      <AssistantCard assistant={data.assistant} />
+      <AssistantCard assistant={data.assistant} analysis={data.analysis} />
+
+      <CommissionCard data={data.commissionScenarios} />
+
+      <ChallengeCard challenge={data.challenge} />
+
+      <DailyLogCard log={data.dailyLog} />
+
+      <NotificationsCard data={data} />
+
+      <BadgesCard badges={data.badges} today={cairoISODate()} />
 
       <h2 className="text-xl font-black">مؤشرات الأداء</h2>
       <div className="space-y-3">

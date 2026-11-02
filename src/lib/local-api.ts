@@ -28,6 +28,11 @@ import { cairoISODate, cairoYearMonth, monthDateRange, monthLabelAr } from "@/li
 import { validateQuantity } from "@/lib/quantity";
 import { backupSummary, parseBackup, planEntryRestore, type BackupFile } from "@/lib/backup";
 import { buildAssistant } from "@/lib/assistant";
+import { analyzePerformance } from "@/lib/analysis";
+import { evaluateBadges } from "@/lib/badges";
+import { buildCommissionScenarios } from "@/lib/commission-scenarios";
+import { buildDailyLog } from "@/lib/daily-log";
+import { buildDailyChallenge } from "@/lib/challenges";
 import type { WorkingDays } from "@/lib/types";
 
 const STORAGE_KEY = "trackYourSales.local.v1";
@@ -621,6 +626,31 @@ function getDashboard(state: State, params: URLSearchParams) {
     monthLabel: monthLabelAr(yearMonth),
     today,
     assistant,
+    dailyLog: buildDailyLog(state.entries, yearMonth, today),
+    challenge: buildDailyChallenge({
+      today,
+      entries: state.entries.map((e) => ({ kpiKey: e.kpiKey, quantity: e.quantity, entryDate: e.entryDate })),
+      weakestKpiKey: (() => {
+        const weighted = kpis.filter((k) => k.weight > 0 && k.target > 0).sort((a, b) => a.percent - b.percent);
+        return weighted.length ? weighted[0].kpiKey : null;
+      })(),
+    }),
+    commissionScenarios: buildCommissionScenarios({
+      fullCommission: bundle.fullCommission,
+      overall,
+      allowCommissionOver100: bundle.allowCommissionOver100,
+      belowOverall: rules.belowOverall,
+    }),
+    badges: evaluateBadges({
+      entries: state.entries.map((e) => ({ kpiKey: e.kpiKey, quantity: e.quantity, entryDate: e.entryDate })),
+      overall,
+      kpis: kpis.map((kpi) => ({ kpiKey: kpi.kpiKey, weight: kpi.weight, target: kpi.target, percent: kpi.percent })),
+      today,
+    }),
+    analysis: analyzePerformance(
+      kpis.map((kpi) => ({ kpiKey: kpi.kpiKey, nameEn: kpi.nameEn, weight: kpi.weight, target: kpi.target, percent: kpi.percent })),
+      overall,
+    ),
     settingsSaved: bundle.saved,
     fullCommission: bundle.fullCommission,
     allowCommissionOver100: bundle.allowCommissionOver100,
