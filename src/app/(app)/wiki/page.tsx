@@ -507,12 +507,15 @@ export default function WikiPage() {
             <div key={group.category}>
               <h2 className="mb-2 text-lg font-black tracking-tight">{group.category}</h2>
               {group.plans.map((plan) => (
-                <article key={plan.name} className="mb-2 flex items-center justify-between rounded-[24px] bg-white p-4 border border-orange-200/70 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
+                <article key={plan.name} className="mb-2 overflow-hidden rounded-[24px] bg-white p-4 border border-orange-200/70 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
+                  <PlanBand title={plan.name} big={String(plan.data ?? "")} />
+                  <div className="flex items-center justify-between">
                   <div>
                     <p className="font-black">{plan.name}</p>
                     <p className="text-xs text-neutral-400">{String(plan.data ?? "")}</p>
                   </div>
                   <TwoPrice fees={String(plan.fees ?? "")} />
+                  </div>
                 </article>
               ))}
             </div>
@@ -524,12 +527,15 @@ export default function WikiPage() {
         <div className="space-y-3">
           <Back onClick={() => setSection("hub")} title="Home Wireless" />
           {homePlans?.plans.map((plan) => (
-            <article key={plan.name} className="flex items-center justify-between rounded-[24px] bg-white p-4 border border-orange-200/70 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
+            <article key={plan.name} className="overflow-hidden rounded-[24px] bg-white p-4 border border-orange-200/70 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
+              <PlanBand title={plan.name} big={String(plan.data ?? "")} />
+              <div className="flex items-center justify-between">
               <div>
                 <p className="font-black">{plan.name}</p>
                 <p className="text-xs text-neutral-400">{String(plan.data ?? "")}</p>
               </div>
               <p className="font-extrabold text-[#e06600]">{String(plan.fees ?? "")}</p>
+              </div>
             </article>
           ))}
         </div>
@@ -539,7 +545,8 @@ export default function WikiPage() {
         <div className="space-y-3">
           <Back onClick={() => setSection("hub")} title="Home Internet DSL" />
           {DSL.plans.map((plan) => (
-            <article key={plan.name} className="rounded-[24px] bg-white p-4 border border-orange-200/70 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
+            <article key={plan.name} className="overflow-hidden rounded-[24px] bg-white p-4 border border-orange-200/70 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
+              <PlanBand title={plan.name} big={`${plan.speed} Mbps`} />
               <div className="flex items-start justify-between">
                 <p className="font-black">{plan.name}</p>
                 <p className="font-extrabold text-[#e06600]">{money(plan.price)} ج</p>
