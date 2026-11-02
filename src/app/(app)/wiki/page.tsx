@@ -75,6 +75,25 @@ function Back({ onClick, title }: { onClick: () => void; title: string }) {
   );
 }
 
+/** خانتين للسعر: قبل الضريبة (المكتوب) وبعد الضريبة (= قبل ÷ 0.7). */
+function TwoPrice({ fees }: { fees: string }) {
+  const after = parseFloat(fees);
+  if (!Number.isFinite(after)) return <p className="font-extrabold text-[#e06600]">{fees}</p>;
+  const before = Math.round(after * 0.7 * 100) / 100;
+  return (
+    <div className="flex gap-2 text-center">
+      <div className="rounded-xl bg-orange-50 px-2.5 py-1.5">
+        <p className="text-[10px] font-bold text-neutral-500">قبل الضريبة</p>
+        <p className="font-extrabold text-[#e06600]">{before.toFixed(2)} جنيه</p>
+      </div>
+      <div className="rounded-xl bg-orange-100 px-2.5 py-1.5">
+        <p className="text-[10px] font-bold text-neutral-500">بعد الضريبة</p>
+        <p className="font-extrabold text-[#8f4300]">{after.toFixed(2)} جنيه</p>
+      </div>
+    </div>
+  );
+}
+
 export default function WikiPage() {
   const toast = useToast();
   const [section, setSection] = useHistoryView<SectionId>("hub");
@@ -478,7 +497,7 @@ export default function WikiPage() {
                     <p className="font-black">{plan.name}</p>
                     <p className="text-xs text-neutral-400">{String(plan.data ?? "")}</p>
                   </div>
-                  <p className="font-extrabold text-[#e06600]">{String(plan.fees ?? "")}</p>
+                  <TwoPrice fees={String(plan.fees ?? "")} />
                 </article>
               ))}
             </div>
