@@ -282,7 +282,7 @@ export default function HomePage() {
                       {kpi.nameEn}
                     </h3>
                     <p className={`text-xs font-bold ${moodColor}`}>
-                      {m.emoji} {kpi.weight === 0 || kpi.percent < 0 ? m.text : kpi.kpiKey === "quality" ? qualityCardLine(qChecks, data.yearMonth) : (() => { const lines = kpiLines(kpi.kpiKey, kpi.percent); return lines ? pickPhrase(lines, `kpi|${kpi.kpiKey}|${data.yearMonth}`) : m.text; })()}
+                      {m.emoji} {(kpi.weight === 0 && kpi.kpiKey !== "new_orange_cash") || kpi.percent < 0 ? m.text : kpi.kpiKey === "quality" ? qualityCardLine(qChecks, data.yearMonth) : (() => { const lines = kpiLines(kpi.kpiKey, kpi.percent); return lines ? pickPhrase(lines, `kpi|${kpi.kpiKey}|${data.yearMonth}`) : m.text; })()}
                     </p>
                   </div>
                 </div>
