@@ -586,7 +586,7 @@ export default function WikiPage() {
               <p className="text-xs font-extrabold text-[#e06600]">{item.tag}</p>
               <p className="font-black">{item.name}</p>
               <p className="mt-1 text-sm text-neutral-500">{item.desc}</p>
-              <p className="mt-2 text-sm">كاش {money(item.cash)} ج · عرض {money(item.promoCash)} ج · تقسيط {item.installment} ج × {item.months} شهر</p>
+              <p className="mt-2 text-sm">كاش {money(item.cash)} ج · تقسيط {item.installment} ج × {item.months} شهر</p>
             </article>
           ))}
         </div>
