@@ -174,7 +174,11 @@ export default function HomePage() {
   if (!data) return <Banner tone="error">مفيش بيانات نعرضها</Banner>;
 
   const gap = Math.max(0, 100 - data.overall);
-  const statusTextEgy = pickPhrase(overallBandLines(data.overall), `overall|${data.yearMonth}`);
+  // اون تراك: الإجمالي وصل لنسبة الأيام اللي عدّت من الشهر (أيام الشغل). لو مفيش أيام، مبنحكمش.
+  const onTrack: boolean | null = data.work.total > 0 ? data.overall >= (data.work.elapsed / data.work.total) * 100 : null;
+  const statusTextEgy = onTrack === false
+    ? pickPhrase(overallBandLines(Math.min(data.overall, 69.9)), `overall|off|${data.yearMonth}`)
+    : pickPhrase(overallBandLines(data.overall), `overall|${data.yearMonth}`);
   const timeText = pickPhrase(
     timeLines(data.work.remaining, data.work.total, data.work.elapsed),
     `time|${data.yearMonth}`,
@@ -206,7 +210,13 @@ export default function HomePage() {
 
       <section className="relative overflow-hidden rounded-[28px] bg-gradient-to-br from-[#f0802a] via-[#e06600] to-[#b84700] p-4 text-white shadow-[0_20px_50px_rgba(190,90,0,0.35)] ring-1 ring-white/30">
         <div className="pointer-events-none absolute -top-16 -left-16 h-48 w-48 rounded-full bg-white/15" />
-        <p className="text-xs font-bold text-white/90">إجمالي التارجت الشهري</p>
+        <p className="flex items-center gap-2 text-xs font-bold text-white/90">
+          <span
+            aria-label={onTrack === null ? "" : onTrack ? "على المسار" : "متأخر عن المسار"}
+            className={`inline-block h-2.5 w-2.5 rounded-full ring-2 ring-white/60 ${onTrack === null ? "hidden" : onTrack ? "bg-emerald-400" : "bg-red-500"}`}
+          />
+          إجمالي التارجت الشهري
+        </p>
         <p className="mt-0.5 text-4xl font-black tabular-nums tracking-tight">{formatPercent(data.overall)}%</p>
         <p className="mt-1 text-sm font-extrabold text-white">{statusTextEgy}</p>
         <p className="mt-1 text-xs font-bold text-white/80">{timeText}</p>
