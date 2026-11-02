@@ -120,6 +120,8 @@ export function buildWorkdayStats(
   return {
     total: totalDates.length,
     elapsed: elapsedDates.length,
+    // الأيام اللي عدّت قبل النهارده بس (النهارده مش محسوب في المقارنة اليومية للتراك).
+    elapsedBeforeToday: elapsedDates.filter((iso) => iso < todayISO).length,
     remaining: remainingDates.length,
     totalDates,
     elapsedDates,

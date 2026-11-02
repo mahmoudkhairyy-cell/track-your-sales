@@ -39,7 +39,7 @@ type Dashboard = {
   weightWarning: boolean;
   empty: boolean;
   entriesCount: number;
-  work: { total: number; elapsed: number; remaining: number };
+  work: { total: number; elapsed: number; elapsedBeforeToday?: number; remaining: number };
   pace: { remaining: number; remainingDays: number; perDay: number | null; message: string };
 };
 
@@ -175,7 +175,9 @@ export default function HomePage() {
 
   const gap = Math.max(0, 100 - data.overall);
   // اون تراك: الإجمالي وصل لنسبة الأيام اللي عدّت من الشهر (أيام الشغل). لو مفيش أيام، مبنحكمش.
-  const onTrack: boolean | null = data.work.total > 0 ? data.overall >= (data.work.elapsed / data.work.total) * 100 : null;
+  // النهارده مش محسوب في الأيام اللي عدّت.
+  const doneDays = data.work.elapsedBeforeToday ?? data.work.elapsed;
+  const onTrack: boolean | null = data.work.total > 0 ? data.overall >= (doneDays / data.work.total) * 100 : null;
   const statusTextEgy = onTrack === false
     ? pickPhrase(overallBandLines(Math.min(data.overall, 69.9)), `overall|off|${data.yearMonth}`)
     : pickPhrase(overallBandLines(data.overall), `overall|${data.yearMonth}`);
