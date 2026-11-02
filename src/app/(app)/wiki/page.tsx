@@ -98,18 +98,11 @@ function EntertainRow({ keys }: { keys: string[] }) {
 }
 
 /** هيدر كارت الباقة بنفس ألوان وشكل الموقع: برتقالي. */
-function PlanBand({ title, big, logos = [] }: { title: string; big?: string; logos?: string[] }) {
+function PlanBand({ title, big }: { title: string; big?: string }) {
   return (
-    <div className="-mx-4 -mt-4 mb-3 flex items-center justify-between gap-3 rounded-t-[24px] bg-gradient-to-br from-[#ff9a3c] via-[#e06600] to-[#b84700] px-4 py-3 text-white">
-      <div className="min-w-0">
-        <p className="truncate text-[11px] font-bold opacity-90">{title}</p>
-        <p className="truncate text-2xl font-black tabular-nums">{big ?? title}</p>
-      </div>
-      {logos.length ? (
-        <div className="flex shrink-0 flex-wrap justify-end gap-1.5">
-          {logos.map((id) => <BrandLogo key={id} id={id} size={30} />)}
-        </div>
-      ) : null}
+    <div className="-mx-4 -mt-4 mb-2 flex items-center justify-between gap-2 rounded-t-[24px] bg-gradient-to-br from-[#ff9a3c] via-[#e06600] to-[#b84700] px-3 py-1.5 text-white">
+      <p className="min-w-0 truncate text-[10px] font-bold opacity-90">{title}</p>
+      <p className="shrink-0 truncate text-sm font-black tabular-nums">{big ?? title}</p>
     </div>
   );
 }
