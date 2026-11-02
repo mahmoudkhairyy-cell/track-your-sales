@@ -566,7 +566,7 @@ export default function WikiPage() {
                 <p className="font-extrabold text-[#e06600]">{money(plan.price)} ج</p>
               </div>
               <p className="mt-1 text-sm text-neutral-500">
-                {plan.speed} Mbps · {plan.quota} GB
+                {plan.quota} GB
               </p>
             </article>
           ))}
