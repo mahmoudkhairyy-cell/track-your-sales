@@ -86,6 +86,17 @@ function goLogos(name: string): string[] {
   return Array.from(new Set(keys));
 }
 
+/** صف الاشتراكات الترفيهية بلوجوهاتها بس. */
+function EntertainRow({ keys }: { keys: string[] }) {
+  if (!keys.length) return null;
+  return (
+    <div className="mb-3 flex flex-wrap items-center gap-2">
+      <span className="text-[11px] font-bold text-[#e06600]">اشتراكات ترفيهية</span>
+      {keys.map((id) => <BrandLogo key={id} id={id} size={26} />)}
+    </div>
+  );
+}
+
 /** هيدر كارت الباقة بنفس ألوان وشكل الموقع: برتقالي. */
 function PlanBand({ title, big, logos = [] }: { title: string; big?: string; logos?: string[] }) {
   return (
@@ -409,7 +420,8 @@ export default function WikiPage() {
               <h2 className="pt-2 text-lg font-black tracking-tight">{group.category}</h2>
               {group.plans.map((plan) => (
                 <article key={plan.name} className="overflow-hidden rounded-[24px] bg-white p-4 border border-orange-200/70 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
-                  <PlanBand title={plan.name} big={plan.data ? String(plan.data) : undefined} logos={brandKeysFrom(String(plan.subscriptions ?? ""))} />
+                  <PlanBand title={plan.name} big={plan.data ? String(plan.data) : undefined} />
+                  <EntertainRow keys={brandKeysFrom(String(plan.subscriptions ?? ""))} />
                   <div className="flex items-start justify-between gap-3">
                     <p className="font-black">{plan.name}</p>
                     <p className="font-extrabold text-[#e06600]">{String(plan.fees ?? "")}</p>
@@ -448,7 +460,7 @@ export default function WikiPage() {
             const kazeon = plan.perks.find((perk) => perk.includes("كازيون"));
             return (
               <article key={plan.name} className="overflow-hidden rounded-[24px] border border-orange-200/70 bg-white p-4 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
-                <PlanBand title={plan.nameAr} big={`${plan.units} وحدة`} logos={brandKeysFrom(plan.perks.join(" "))} />
+                <PlanBand title={plan.nameAr} big={`${plan.units} وحدة`} />
                 <div className="flex items-start justify-between gap-3">
                   <div>
                     <p className="text-lg font-black">{plan.nameAr}</p>
@@ -526,7 +538,8 @@ export default function WikiPage() {
               <h2 className="mb-2 text-lg font-black tracking-tight">{group.category}</h2>
               {group.plans.map((plan) => (
                 <article key={plan.name} className="mb-2 overflow-hidden rounded-[24px] bg-white p-4 border border-orange-200/70 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
-                  <PlanBand title={plan.name} big={String(plan.data ?? "")} logos={goLogos(plan.name)} />
+                  <PlanBand title={plan.name} big={String(plan.data ?? "")} />
+                  <EntertainRow keys={goLogos(plan.name)} />
                   <div className="flex items-center justify-between">
                   <div>
                     <p className="font-black">{plan.name}</p>

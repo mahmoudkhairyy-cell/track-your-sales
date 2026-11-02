@@ -8,7 +8,7 @@ import { pushReport } from "@/lib/sync";
 import { api } from "@/lib/client";
 import { APP_DISCLAIMER, APP_NAME, BRAND_BY, BRANCHES, OUTSIDE_BRANCHES } from "@/lib/constants";
 import { cairoYearMonth, isValidYearMonth, monthLabelAr, shiftYearMonth } from "@/lib/dates";
-import { BookIcon, ChevronIcon, HomeIcon, LogoMark, MoreIcon, PlusIcon, TargetIcon } from "@/components/icons";
+import { BookIcon, ChevronIcon, HomeIcon, MoreIcon, PlusIcon, TargetIcon } from "@/components/icons";
 import { ToastProvider, useToast } from "@/components/ui";
 
 const MonthContext = createContext(cairoYearMonth());
@@ -346,7 +346,6 @@ function AppFrame({ children, blocked, month }: { children: ReactNode; blocked: 
           <div className="mx-auto flex min-h-screen max-w-7xl">
             <aside className="hidden w-72 shrink-0 flex-col border-l border-orange-200 bg-white p-5 lg:flex">
               <div className="flex items-center gap-3">
-                <LogoMark />
                 <div>
                   <p className="text-base font-black text-neutral-900" dir="ltr">{APP_NAME}</p>
                   <p className="text-xs text-neutral-400" dir="ltr">{BRAND_BY}</p>
@@ -371,7 +370,7 @@ function AppFrame({ children, blocked, month }: { children: ReactNode; blocked: 
                       <p className="text-sm font-black leading-none text-neutral-900" dir="ltr">{APP_NAME}</p>
                       <p className="mt-1 text-[11px] text-neutral-400" dir="ltr">{BRAND_BY}</p>
                     </div>
-                    {pathname.startsWith("/wiki") ? null : <LogoMark />}
+
                   </div>
                 </div>
               </header>
