@@ -163,47 +163,62 @@
       {
         "name": "Go Video Daily",
         "data": "200 MB",
-        "fees": "2.5 L.E"
+        "fees": "4.29 L.E"
       },
       {
         "name": "Go Video Monthly",
         "data": "450 MB",
-        "fees": "6.5 L.E"
+        "fees": "10.71 L.E"
       },
       {
         "name": "Go Video Max",
         "data": "4500 MB",
-        "fees": "45 L.E"
+        "fees": "74.29 L.E"
       },
       {
         "name": "Go Social",
         "data": "100 MB",
-        "fees": "1.25 L.E"
+        "fees": "2.14 L.E"
       },
       {
         "name": "Go @ Home التعليمية",
         "data": "1000 MB",
-        "fees": "13 L.E"
+        "fees": "21.43 L.E"
       },
       {
         "name": "Go @ Home Max",
         "data": "4500 MB",
-        "fees": "45 L.E"
+        "fees": "74.29 L.E"
       },
       {
         "name": "Go Amazon Monthly",
         "data": "450 MB",
-        "fees": "6.5 L.E"
+        "fees": "10.71 L.E"
       },
       {
         "name": "Go Amazon Plus",
         "data": "4500 MB",
-        "fees": "45 L.E"
+        "fees": "74.29 L.E"
       },
       {
         "name": "Go Tiktok",
         "data": "450 MB",
-        "fees": "6.5 L.E"
+        "fees": "10.71 L.E"
+      },
+      {
+        "name": "Go Play Daily",
+        "data": "100 MB",
+        "fees": "2.14 L.E"
+      },
+      {
+        "name": "Go Play Weekly",
+        "data": "250 + 75 MB",
+        "fees": "6.43 L.E"
+      },
+      {
+        "name": "Go Play Monthly",
+        "data": "1000 + 300 MB",
+        "fees": "21.43 L.E"
       }
     ]
   },
