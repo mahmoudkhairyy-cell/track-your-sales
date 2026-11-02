@@ -2,7 +2,7 @@
 
 import { BrandLogo, brandKeysFrom } from "@/components/BrandLogo";
 import { useHistoryView } from "@/lib/use-history-view";
-import { FormEvent, useEffect, useMemo, useState, type ReactNode } from "react";
+import { Fragment, FormEvent, useEffect, useMemo, useState, type ReactNode } from "react";
 import {
   Banner,
   EmptyState,
@@ -558,7 +558,9 @@ export default function WikiPage() {
       {section === "dsl" ? (
         <div className="space-y-3">
           <Back onClick={() => setSection("hub")} title="Home Internet DSL" />
-          {DSL.plans.map((plan) => (
+          {DSL.plans.map((plan, i) => (
+            <Fragment key={plan.name}>
+            {i > 0 && DSL.plans[i - 1].speed !== plan.speed ? <div className="my-1 flex items-center gap-3 text-[11px] font-black text-[#e06600]"><span className="h-px flex-1 bg-orange-200" />{plan.speed} Mbps<span className="h-px flex-1 bg-orange-200" /></div> : null}
             <article key={plan.name} className="overflow-hidden rounded-[24px] bg-white p-4 border border-orange-200/70 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
               <PlanBand title={plan.name} big={`${plan.speed} Mbps`} />
               <div className="flex items-start justify-between">
@@ -569,6 +571,7 @@ export default function WikiPage() {
                 {plan.quota} GB
               </p>
             </article>
+            </Fragment>
           ))}
           <h2 className="pt-2 text-lg font-black tracking-tight">إضافات الكوتا</h2>
           {DSL.addons.map((item) => (
