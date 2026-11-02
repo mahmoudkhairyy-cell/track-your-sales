@@ -7,7 +7,7 @@ import { formatMoney, formatPercent, formatQty } from "@/lib/calculations";
 import { useMonth } from "@/components/AppShell";
 import { KpiIcon } from "@/components/KpiIcon";
 import { kpiMood } from "@/lib/motivation";
-import { MORNING_LINES, kpiLines, nudgeFor, overallBandLines, overallLine, pickPhrase, sarcasticLine, timeLines, welcomeLine } from "@/lib/phrases";
+import { MORNING_LINES, kpiLines, nudgeFor, overallBandLines, overallLine, pickPhrase, qualityCardLine, sarcasticLine, timeLines, welcomeLine } from "@/lib/phrases";
 import { readSyncStatus, type SyncStatus } from "@/lib/sync";
 
 type KpiRow = {
@@ -160,6 +160,14 @@ export default function HomePage() {
 
   const loading = state.month !== month;
   const { data, error } = state;
+  const [qChecks, setQChecks] = useState<Partial<Record<string, boolean>>>({});
+  useEffect(() => {
+    let cancelled = false;
+    api<{ settings?: { quality?: { checks?: Record<string, boolean> } } }>(`/api/months/${month}`)
+      .then((r) => { if (!cancelled) setQChecks(r.settings?.quality?.checks ?? {}); })
+      .catch(() => { if (!cancelled) setQChecks({}); });
+    return () => { cancelled = true; };
+  }, [month]);
 
   if (loading) return <Spinner label="ثواني… بنحمّل لوحة الأداء" />;
   if (error) return <Banner tone="error">{error}</Banner>;
@@ -262,7 +270,7 @@ export default function HomePage() {
                       {kpi.nameEn}
                     </h3>
                     <p className={`text-xs font-bold ${moodColor}`}>
-                      {m.emoji} {kpi.weight === 0 || kpi.percent < 0 ? m.text : (() => { const lines = kpiLines(kpi.kpiKey, kpi.percent); return lines ? pickPhrase(lines, `kpi|${kpi.kpiKey}|${data.yearMonth}`) : m.text; })()}
+                      {m.emoji} {kpi.weight === 0 || kpi.percent < 0 ? m.text : kpi.kpiKey === "quality" ? qualityCardLine(qChecks, data.yearMonth) : (() => { const lines = kpiLines(kpi.kpiKey, kpi.percent); return lines ? pickPhrase(lines, `kpi|${kpi.kpiKey}|${data.yearMonth}`) : m.text; })()}
                     </p>
                   </div>
                 </div>

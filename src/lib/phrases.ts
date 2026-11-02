@@ -251,3 +251,18 @@ export function qualityItemLines(itemKey: QualityItemKey, percent: number): stri
   const band: ProductBand = percent < 70 ? "lt70" : percent < 90 ? "70_90" : percent < 100 ? "90_100" : percent < 120 ? "100_120" : "gte120";
   return QUALITY_LIBRARY[itemKey][band];
 }
+
+const QUALITY_ORDER: QualityItemKey[] = ["kyc", "visits", "training", "pos", "csat"];
+
+/** جملة كارت الكواليتي في الرئيسية: من عنصر واحد بس (أول عنصر لسه متعملش، ولو كله تم بيتاخد عنصر واحد)، مش بتخلط بين العناصر. */
+export function qualityCardLine(checks: Partial<Record<string, boolean>>, yearMonth: string): string {
+  const pending = QUALITY_ORDER.find((k) => !checks[k]);
+  if (pending) return pickPhrase(qualityItemLines(pending, 0), `qcard|${pending}|${yearMonth}`);
+  const done = QUALITY_ORDER[0];
+  return pickPhrase(qualityItemLines(done, 100), `qcard|${done}|${yearMonth}`);
+}
+
+/** جملة عنصر كواليتي واحد حسب حالته (متعملش = أقل من 70، تم = 100%). */
+export function qualityItemLine(itemKey: QualityItemKey, done: boolean): string {
+  return pickPhrase(qualityItemLines(itemKey, done ? 100 : 0), `qitem|${itemKey}|${done}`);
+}

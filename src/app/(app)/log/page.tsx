@@ -9,7 +9,7 @@ import { useMonth } from "@/components/AppShell";
 import { KpiIcon } from "@/components/KpiIcon";
 import { formatQty } from "@/lib/calculations";
 import { quantityHint, quantityMax, quantityMin, quantityStep, validateQuantity } from "@/lib/quantity";
-import { saleCheer } from "@/lib/phrases";
+import { qualityItemLine, saleCheer } from "@/lib/phrases";
 
 const CHEERS = [
   "🔥 عاش يا بطل! العملية اتسجلت",
@@ -280,7 +280,10 @@ export default function LogPage() {
                 >
                   <span className="flex items-center gap-3">
                     <span className={`flex h-6 w-6 items-center justify-center rounded-full border-2 text-xs font-black ${on ? "border-emerald-500 bg-emerald-500 text-white" : "border-orange-200 text-transparent"}`}>✓</span>
-                    <span className="text-sm font-extrabold" dir="ltr">{item.label}</span>
+                    <span className="flex flex-col items-start gap-0.5">
+                      <span className="text-sm font-extrabold" dir="ltr">{item.label}</span>
+                      <span className="text-[11px] font-bold text-neutral-500">{qualityItemLine(item.key, on)}</span>
+                    </span>
                   </span>
                   <span className="text-xs font-black text-neutral-500">{item.weight}%</span>
                 </button>
