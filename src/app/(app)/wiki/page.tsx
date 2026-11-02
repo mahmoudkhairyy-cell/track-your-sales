@@ -1,5 +1,6 @@
 "use client";
 
+import { BrandLogo, brandKeysFrom } from "@/components/BrandLogo";
 import { useHistoryView } from "@/lib/use-history-view";
 import { FormEvent, useEffect, useMemo, useState, type ReactNode } from "react";
 import {
@@ -75,14 +76,29 @@ function Back({ onClick, title }: { onClick: () => void; title: string }) {
   );
 }
 
+/** لوجوهات باقات GO حسب اسمها (فيديو، سوشيال، بلاي...). */
+function goLogos(name: string): string[] {
+  const t = name.toLowerCase();
+  const keys = brandKeysFrom(name);
+  if (t.includes("video")) keys.push("tiktok", "youtube");
+  if (t.includes("social")) keys.push("facebook", "whatsapp", "instagram", "snapchat", "x");
+  if (t.includes("home")) keys.push("skype");
+  return Array.from(new Set(keys));
+}
+
 /** هيدر كارت الباقة بنفس ألوان وشكل الموقع: برتقالي. */
-function PlanBand({ title, big }: { title: string; big?: string }) {
+function PlanBand({ title, big, logos = [] }: { title: string; big?: string; logos?: string[] }) {
   return (
     <div className="-mx-4 -mt-4 mb-3 flex items-center justify-between gap-3 rounded-t-[24px] bg-gradient-to-br from-[#ff9a3c] via-[#e06600] to-[#b84700] px-4 py-3 text-white">
       <div className="min-w-0">
         <p className="truncate text-[11px] font-bold opacity-90">{title}</p>
         <p className="truncate text-2xl font-black tabular-nums">{big ?? title}</p>
       </div>
+      {logos.length ? (
+        <div className="flex shrink-0 flex-wrap justify-end gap-1.5">
+          {logos.map((id) => <BrandLogo key={id} id={id} size={30} />)}
+        </div>
+      ) : null}
     </div>
   );
 }
@@ -393,7 +409,7 @@ export default function WikiPage() {
               <h2 className="pt-2 text-lg font-black tracking-tight">{group.category}</h2>
               {group.plans.map((plan) => (
                 <article key={plan.name} className="overflow-hidden rounded-[24px] bg-white p-4 border border-orange-200/70 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
-                  <PlanBand title={plan.name} big={plan.data ? String(plan.data) : undefined} />
+                  <PlanBand title={plan.name} big={plan.data ? String(plan.data) : undefined} logos={brandKeysFrom(String(plan.subscriptions ?? ""))} />
                   <div className="flex items-start justify-between gap-3">
                     <p className="font-black">{plan.name}</p>
                     <p className="font-extrabold text-[#e06600]">{String(plan.fees ?? "")}</p>
@@ -432,7 +448,7 @@ export default function WikiPage() {
             const kazeon = plan.perks.find((perk) => perk.includes("كازيون"));
             return (
               <article key={plan.name} className="overflow-hidden rounded-[24px] border border-orange-200/70 bg-white p-4 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
-                <PlanBand title={plan.nameAr} big={`${plan.units} وحدة`} />
+                <PlanBand title={plan.nameAr} big={`${plan.units} وحدة`} logos={brandKeysFrom(plan.perks.join(" "))} />
                 <div className="flex items-start justify-between gap-3">
                   <div>
                     <p className="text-lg font-black">{plan.nameAr}</p>
@@ -507,7 +523,7 @@ export default function WikiPage() {
               <h2 className="mb-2 text-lg font-black tracking-tight">{group.category}</h2>
               {group.plans.map((plan) => (
                 <article key={plan.name} className="mb-2 overflow-hidden rounded-[24px] bg-white p-4 border border-orange-200/70 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
-                  <PlanBand title={plan.name} big={String(plan.data ?? "")} />
+                  <PlanBand title={plan.name} big={String(plan.data ?? "")} logos={goLogos(plan.name)} />
                   <div className="flex items-center justify-between">
                   <div>
                     <p className="font-black">{plan.name}</p>
