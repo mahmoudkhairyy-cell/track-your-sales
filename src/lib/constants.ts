@@ -50,8 +50,8 @@ export const DEFAULT_WORKING_DAYS: WorkingDays = {
 export const KPI_CATALOG = [
   {
     key: "new_lines",
-    nameEn: "New Lines",
-    nameAr: "New Lines",
+    nameEn: "GAs",
+    nameAr: "GAs",
     emoji: "📱",
     unitAr: "خط",
     defaultTarget: 175,
@@ -68,8 +68,8 @@ export const KPI_CATALOG = [
   },
   {
     key: "existing_wallets",
-    nameEn: "Exist",
-    nameAr: "Exist",
+    nameEn: "OC Wallets for Existing Customers",
+    nameAr: "OC Wallets for Existing Customers",
     emoji: "💳",
     unitAr: "محفظة",
     defaultTarget: 74,
@@ -86,8 +86,8 @@ export const KPI_CATALOG = [
   },
   {
     key: "postpaid_lines",
-    nameEn: "Postpaid Lines",
-    nameAr: "Postpaid Lines",
+    nameEn: "Postpaid: Achieve Product Mix",
+    nameAr: "Postpaid: Achieve Product Mix",
     emoji: "📞",
     unitAr: "خط",
     defaultTarget: 10,
@@ -95,8 +95,8 @@ export const KPI_CATALOG = [
   },
   {
     key: "dsl",
-    nameEn: "DSL",
-    nameAr: "DSL",
+    nameEn: "Home ADSL",
+    nameAr: "Home ADSL",
     emoji: "🌐",
     unitAr: "خط",
     defaultTarget: 1,
@@ -114,8 +114,8 @@ export const KPI_CATALOG = [
   },
   {
     key: "quality",
-    nameEn: "Quality",
-    nameAr: "Quality",
+    nameEn: "KYC & Compliance standards",
+    nameAr: "KYC & Compliance standards",
     emoji: "✅",
     unitAr: "%",
     defaultTarget: 100,

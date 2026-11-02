@@ -53,7 +53,7 @@ function greeting() {
 
 const SHORT_KPI_NAMES: Record<string, string> = {
   "New Orange Cash Wallets": "New",
-  "Exist": "Exist",
+  "OC Wallets for Existing Customers": "Existing",
 };
 
 // تنبيه داخلي واحد بس في اليوم، بيتقفل لوحده ومبيتكررش في نفس اليوم.
