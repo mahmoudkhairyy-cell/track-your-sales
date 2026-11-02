@@ -75,6 +75,19 @@ function Back({ onClick, title }: { onClick: () => void; title: string }) {
   );
 }
 
+/** هيدر كارت الباقة بنفس ألوان وشكل الموقع: برتقالي + لوجو التطبيق. */
+function PlanBand({ title, big }: { title: string; big?: string }) {
+  return (
+    <div className="-mx-4 -mt-4 mb-3 flex items-center justify-between gap-3 rounded-t-[24px] bg-gradient-to-br from-[#ff9a3c] via-[#e06600] to-[#b84700] px-4 py-3 text-white">
+      <div className="min-w-0">
+        <p className="truncate text-[11px] font-bold opacity-90">{title}</p>
+        <p className="truncate text-2xl font-black tabular-nums">{big ?? title}</p>
+      </div>
+      <img src="/track-your-sales/logo-mark.png" alt="" className="h-10 w-10 shrink-0 object-contain brightness-0 invert" />
+    </div>
+  );
+}
+
 /** خانتين للسعر: قبل الضريبة (المكتوب) وبعد الضريبة (= قبل ÷ 0.7). */
 function TwoPrice({ fees }: { fees: string }) {
   const after = parseFloat(fees);
@@ -380,7 +393,8 @@ export default function WikiPage() {
             <div key={group.category} className="space-y-2">
               <h2 className="pt-2 text-lg font-black tracking-tight">{group.category}</h2>
               {group.plans.map((plan) => (
-                <article key={plan.name} className="rounded-[24px] bg-white p-4 border border-orange-200/70 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
+                <article key={plan.name} className="overflow-hidden rounded-[24px] bg-white p-4 border border-orange-200/70 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
+                  <PlanBand title={plan.name} big={plan.data ? String(plan.data) : undefined} />
                   <div className="flex items-start justify-between gap-3">
                     <p className="font-black">{plan.name}</p>
                     <p className="font-extrabold text-[#e06600]">{String(plan.fees ?? "")}</p>
@@ -418,7 +432,8 @@ export default function WikiPage() {
             const spotify = plan.perks.some((perk) => perk.includes("Spotify"));
             const kazeon = plan.perks.find((perk) => perk.includes("كازيون"));
             return (
-              <article key={plan.name} className="rounded-[24px] border border-orange-200/70 bg-white p-4 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
+              <article key={plan.name} className="overflow-hidden rounded-[24px] border border-orange-200/70 bg-white p-4 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
+                <PlanBand title={plan.nameAr} big={`${plan.units} وحدة`} />
                 <div className="flex items-start justify-between gap-3">
                   <div>
                     <p className="text-lg font-black">{plan.nameAr}</p>
