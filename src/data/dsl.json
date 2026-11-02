@@ -133,10 +133,10 @@
       "name": "راوتر VDSL (Standard)",
       "tag": "الخيار الاقتصادي",
       "desc": "يدعم سرعات حتى 100 ميجا / تغطية WiFi قياسية",
-      "cash": 920,
-      "promoCash": 460,
+      "cash": 399,
+      "promoCash": 350,
       "installment": 57,
-      "months": 12
+      "months": 15
     },
     {
       "name": "راوتر VDSL (High End)",
