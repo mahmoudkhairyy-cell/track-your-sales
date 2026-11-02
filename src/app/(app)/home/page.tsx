@@ -221,53 +221,9 @@ export default function HomePage() {
         </div>
       </section>
 
-      <button
-        type="button"
-        onClick={async () => {
-          const lines = [
-            `📊 ملخص ${data.monthLabel}`,
-            `التوتال: ${formatPercent(data.overall)}%`,
-            `الكوميشن: ${formatMoney(data.estimatedCommission)} من ${formatMoney(data.fullCommission)} جنيه`,
-            ...data.kpis.map((kpi) => `• ${kpi.nameEn}: ${formatQty(kpi.achieved)} / ${formatQty(kpi.target)} (${formatPercent(kpi.percent)}%)`),
-          ];
-          const text = lines.join("\n");
-          try {
-            await navigator.clipboard.writeText(text);
-            setCopied(true);
-            setTimeout(() => setCopied(false), 2000);
-          } catch {
-            setCopied(false);
-          }
-        }}
-        className="flex w-full items-center justify-center gap-2 rounded-2xl border border-orange-200/70 bg-white py-2.5 text-sm font-extrabold text-[#8f4300] shadow-[0_1px_2px_rgba(40,20,0,0.04)] active:scale-[0.99]"
-      >
-        {copied ? "✅ اتنسخ الملخص" : "📋 انسخ ملخص الشهر"}
-      </button>
 
-      {data.todaySummary.every((row) => row.count === 0) ? (
-        <p className="rounded-2xl bg-white px-4 py-3 text-sm font-bold text-[#8f4300] shadow-[0_1px_2px_rgba(40,20,0,0.04)]">
-          🔔 لسه مسجلتش إنجاز النهارده. سجّل من تبويب تسجيل.
-        </p>
-      ) : null}
 
-      {data.pace.message ? <p className="px-1 text-xs leading-6 text-neutral-500">{data.pace.message}</p> : null}
 
-      {(() => {
-        const names = (keys: string[]) => keys.map((key) => data.kpis.find((k) => k.kpiKey === key)?.nameEn ?? key).join(" · ");
-        const notes: string[] = [];
-        if (data.rules.belowOverall) notes.push("التوتال أقل من 80%: مفيش حافز");
-        if (data.rules.belowKpis.length > 0) notes.push(`أقل من 90% (متتحسبش): ${names(data.rules.belowKpis)}`);
-        if (data.rules.clawBacks.length > 0) notes.push(`خصم 5 نقاط: ${names(data.rules.clawBacks)}`);
-        if (data.weightWarning) notes.push(`الأوزان ${formatPercent(data.weightSum)}% (لازم 100%)`);
-        if (notes.length === 0) return null;
-        return (
-          <div className="rounded-xl border border-amber-200 bg-amber-50 px-3 py-2 text-[11px] leading-5 text-amber-950">
-            {notes.map((note) => (
-              <p key={note}>⚠️ {note}</p>
-            ))}
-          </div>
-        );
-      })()}
 
       <section className="rounded-[22px] border border-orange-200/70 bg-white p-3.5 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
         <div className="flex items-end justify-between">
