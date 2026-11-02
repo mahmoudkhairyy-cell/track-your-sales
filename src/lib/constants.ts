@@ -68,8 +68,8 @@ export const KPI_CATALOG = [
   },
   {
     key: "existing_wallets",
-    nameEn: "OC Wallets for Existing Customers",
-    nameAr: "OC Wallets for Existing Customers",
+    nameEn: "Existing OC Wallets",
+    nameAr: "Existing OC Wallets",
     emoji: "💳",
     unitAr: "محفظة",
     defaultTarget: 74,
@@ -86,8 +86,8 @@ export const KPI_CATALOG = [
   },
   {
     key: "postpaid_lines",
-    nameEn: "Postpaid: Achieve Product Mix",
-    nameAr: "Postpaid: Achieve Product Mix",
+    nameEn: "Postpaid Mix",
+    nameAr: "Postpaid Mix",
     emoji: "📞",
     unitAr: "خط",
     defaultTarget: 10,
@@ -114,8 +114,8 @@ export const KPI_CATALOG = [
   },
   {
     key: "quality",
-    nameEn: "KYC & Compliance standards",
-    nameAr: "KYC & Compliance standards",
+    nameEn: "KYC & Compliance",
+    nameAr: "KYC & Compliance",
     emoji: "✅",
     unitAr: "%",
     defaultTarget: 100,
