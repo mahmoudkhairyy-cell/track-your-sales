@@ -406,8 +406,8 @@ export default function WikiPage() {
                     <p className="text-xs text-neutral-500">اشتراك شهري {money(plan.price)} جنيه رصيد</p>
                   </div>
                   <p className="rounded-xl bg-gradient-to-br from-[#ff9a3c] to-[#e06600] px-3 py-1.5 text-center text-sm font-extrabold leading-5 text-white">
-                    {money(plan.price)} جنيه
-                    <span className="block text-[10px] font-bold opacity-90">شهري</span>
+                    {money(plan.renewalPrice)} جنيه
+                    <span className="block text-[10px] font-bold opacity-90">تجديد</span>
                   </p>
                 </div>
                 <div className="mt-3 divide-y divide-orange-100 text-sm">
