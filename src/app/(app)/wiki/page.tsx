@@ -395,38 +395,66 @@ export default function WikiPage() {
               </p>
             ))}
           </div>
-          {FREEMAX.plans.map((plan) => (
-            <article key={plan.name} className="rounded-[24px] border border-orange-200/70 bg-white p-4 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
-              <div className="flex items-center justify-between gap-3">
-                <p className="text-lg font-black">{plan.nameAr}</p>
-                <p className="rounded-xl bg-gradient-to-br from-[#ff9a3c] to-[#e06600] px-3 py-1.5 text-center text-sm font-extrabold leading-5 text-white">
-                  {money(plan.renewalPrice)} جنيه
-                  <span className="block text-[10px] font-bold opacity-90">تجديد</span>
-                </p>
-              </div>
-              <div className="mt-4 grid grid-cols-3 gap-2 text-center">
-                {[
-                  [plan.units, "وحدة"],
-                  [plan.facebook, "فيسبوك"],
-                  [plan.whatsapp, "واتساب"],
-                ].map(([num, label]) => (
-                  <div key={label}>
-                    <p className="text-2xl font-black text-[#e06600]">{num}</p>
-                    <p className="text-[11px] leading-4 text-neutral-500">{label}</p>
+          {FREEMAX.plans.map((plan) => {
+            const spotify = plan.perks.some((perk) => perk.includes("Spotify"));
+            const kazeon = plan.perks.find((perk) => perk.includes("كازيون"));
+            return (
+              <article key={plan.name} className="rounded-[24px] border border-orange-200/70 bg-white p-4 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <p className="text-lg font-black">{plan.nameAr}</p>
+                    <p className="text-xs text-neutral-500">اشتراك شهري {money(plan.price)} جنيه رصيد</p>
                   </div>
-                ))}
-              </div>
-              <p className="my-3 text-center text-lg font-black text-neutral-400">+</p>
-              <ul className="space-y-2 text-sm leading-6 text-neutral-700">
-                <li>• سعر الخط بالباقة: <span className="font-black text-[#e06600]">{money(plan.customerPrice)} جنيه</span></li>
-                <li>• تفعيل بضريبة: <span className="font-black text-[#e06600]">{money(plan.activationWithTax)} جنيه</span></li>
-                <li>• اشحن ع الخط عشان يوصله <span className="font-black text-[#e06600]">{money(plan.activationNoTax)} جنيه</span></li>
-                {plan.perks.map((perk) => (
-                  <li key={perk}>• <span className="font-black text-[#e06600]">{perk}</span></li>
-                ))}
-              </ul>
-            </article>
-          ))}
+                  <p className="rounded-xl bg-gradient-to-br from-[#ff9a3c] to-[#e06600] px-3 py-1.5 text-center text-sm font-extrabold leading-5 text-white">
+                    {money(plan.price)} جنيه
+                    <span className="block text-[10px] font-bold opacity-90">شهري</span>
+                  </p>
+                </div>
+                <div className="mt-3 divide-y divide-orange-100 text-sm">
+                  <div className="py-2">
+                    <p className="font-black text-[#e06600]">{plan.units} وحدة</p>
+                    <p className="text-[11px] text-neutral-500">من ضمنهم فيسبوك وواتساب ميجابايتس</p>
+                  </div>
+                  <div className="py-2">
+                    <p className="font-black text-[#e06600]">50 ميجا</p>
+                    <p className="text-[11px] text-neutral-500">فيسبوك ميجابايتس</p>
+                  </div>
+                  {kazeon ? (
+                    <div className="py-2">
+                      <p className="font-black text-[#e06600]">كازيون</p>
+                      <p className="text-[11px] text-neutral-500">خصم على كل المنتجات لما تجدد باقتك</p>
+                    </div>
+                  ) : null}
+                  <div className="py-2">
+                    <p className="font-black text-[#e06600]">تحويشة</p>
+                    <p className="text-[11px] text-neutral-500">مع كل تجديد</p>
+                  </div>
+                  <div className="py-2">
+                    <p className="font-black text-[#e06600]">50 ميجا</p>
+                    <p className="text-[11px] text-neutral-500">واتساب ميجابايتس</p>
+                  </div>
+                  {spotify ? (
+                    <div className="py-2">
+                      <p className="text-[11px] font-bold text-[#e06600]">اشتراكات ترفيهية في</p>
+                      <p className="font-black text-[#1DB954]">Spotify</p>
+                    </div>
+                  ) : null}
+                </div>
+                <details className="mt-3 text-sm text-neutral-700">
+                  <summary className="cursor-pointer text-xs font-bold text-neutral-500">تفاصيل التفعيل والمزايا</summary>
+                  <ul className="mt-2 space-y-2 leading-6">
+                    <li>• سعر الخط بالباقة: <span className="font-black text-[#e06600]">{money(plan.customerPrice)} جنيه</span></li>
+                    <li>• تفعيل بضريبة: <span className="font-black text-[#e06600]">{money(plan.activationWithTax)} جنيه</span></li>
+                    <li>• اشحن ع الخط عشان يوصله <span className="font-black text-[#e06600]">{money(plan.activationNoTax)} جنيه</span></li>
+                    <li>• التجديد: <span className="font-black text-[#e06600]">{money(plan.renewalPrice)} جنيه</span></li>
+                    {plan.perks.map((perk) => (
+                      <li key={perk}>• <span className="font-black text-[#e06600]">{perk}</span></li>
+                    ))}
+                  </ul>
+                </details>
+              </article>
+            );
+          })}
           <article className="rounded-[24px] bg-white p-4 border border-orange-200/70 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
             <p className="font-black">{FREEMAX.weekly.nameAr}</p>
             <p className="text-sm text-neutral-500">{FREEMAX.weekly.units} وحدة · تجديد {FREEMAX.weekly.renewalPrice} ج</p>
