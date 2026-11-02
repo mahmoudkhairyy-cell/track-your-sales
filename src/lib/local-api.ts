@@ -594,7 +594,7 @@ function getDashboard(state: State, params: URLSearchParams) {
       contribution: rules.counted.find((row) => row.kpiKey === kpi.kpiKey)?.contribution ?? 0,
       gated: rules.belowKpis.includes(kpi.kpiKey),
       clawBack: rules.clawBacks.includes(kpi.kpiKey),
-      expectedToDate: expectedToDate(kpi.target, work.elapsed, work.total),
+      expectedToDate: expectedToDate(kpi.target, work.elapsedBeforeToday, work.total),
       remaining: Math.max(0, kpi.target - value),
       overTarget: value > kpi.target,
     };

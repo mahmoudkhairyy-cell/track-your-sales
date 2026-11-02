@@ -182,7 +182,7 @@ export default function HomePage() {
     ? pickPhrase(overallBandLines(Math.min(data.overall, 69.9)), `overall|off|${data.yearMonth}`)
     : pickPhrase(overallBandLines(data.overall), `overall|${data.yearMonth}`);
   const timeText = pickPhrase(
-    timeLines(data.work.remaining, data.work.total, data.work.elapsed),
+    timeLines(data.work.remaining, data.work.total, data.work.elapsedBeforeToday ?? data.work.elapsed),
     `time|${data.yearMonth}`,
   );
 
