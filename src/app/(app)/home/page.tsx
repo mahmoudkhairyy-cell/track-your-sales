@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { Banner, Spinner } from "@/components/ui";
 import { ApiError, api } from "@/lib/client";
 import { formatMoney, formatPercent, formatQty } from "@/lib/calculations";
@@ -149,8 +149,8 @@ function AnalysisBlock({ analysis }: { analysis: AnalysisView }) {
 
 function AssistantCard({ assistant, analysis }: { assistant: AssistantView; analysis: AnalysisView }) {
   return (
-    <details className="rounded-[24px] bg-white p-4 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)] ring-1 ring-orange-200/70">
-      <summary className="cursor-pointer list-none text-lg font-black">🧭 مساعد التارجت</summary>
+    <div className="rounded-[20px] bg-orange-50/40 p-4 ring-1 ring-orange-100">
+      <h2 className="text-base font-black">🧭 مساعد التارجت</h2>
       <div className="mt-3 space-y-3 text-sm">
         {assistant.dataMessage ? <p className="rounded-2xl bg-orange-50 px-3 py-2 font-bold text-[#8f4300]">{assistant.dataMessage}</p> : null}
         <p className="font-extrabold">{OVERALL_STATUS_TEXT[assistant.overall.status]}</p>
@@ -192,7 +192,7 @@ function AssistantCard({ assistant, analysis }: { assistant: AssistantView; anal
           </div>
         ) : null}
       </div>
-    </details>
+    </div>
   );
 }
 
@@ -419,6 +419,19 @@ function BadgesCard({ badges, today }: { badges: BadgeView[]; today: string }) {
   );
 }
 
+/** قسم قابل للفتح والإغلاق: مقفول افتراضياً، وفتحه/قفله مش بيأثر على أي بيانات. */
+function Collapsible({ title, badge, children }: { title: string; badge?: string; children: ReactNode }) {
+  return (
+    <details className="group rounded-[24px] bg-white ring-1 ring-orange-200/70 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
+      <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between gap-3 rounded-[24px] px-4 py-3.5 text-base font-black [&::-webkit-details-marker]:hidden">
+        <span className="flex items-center gap-2">{title}{badge ? <span className="rounded-full bg-orange-100 px-2 py-0.5 text-[11px] font-extrabold text-[#8f4300]">{badge}</span> : null}</span>
+        <span aria-hidden className="text-[#e06600] transition-transform group-open:rotate-180">▾</span>
+      </summary>
+      <div className="space-y-3 px-3 pb-3">{children}</div>
+    </details>
+  );
+}
+
 function greeting() {
   const hour = Number(new Intl.DateTimeFormat("en-GB", { hour: "2-digit", hour12: false, timeZone: "Africa/Cairo" }).format(new Date()));
   if (hour >= 5 && hour < 12) return "صباح الخير يا";
@@ -577,8 +590,6 @@ export default function HomePage() {
         <p className="mt-1 text-5xl font-black tabular-nums tracking-tight">{formatPercent(data.overall)}%</p>
         <p className="mt-1 text-sm font-extrabold text-white">{statusTextEgy}</p>
         <p className="mt-1 text-xs font-bold text-white/80">{timeText}</p>
-        <p className="mt-1 text-xs font-bold text-white/80">{overallLine()}</p>
-        {sarcasticLine(data.overall) ? <p className="mt-1 text-xs font-bold text-white/70">{sarcasticLine(data.overall)}</p> : null}
         <div className="mt-5 flex h-4 overflow-hidden rounded-full bg-white/25">
           <div className="h-full rounded-full bg-white transition-all" style={{ width: `${Math.min(100, Math.max(0, data.overall))}%` }} />
         </div>
@@ -663,19 +674,27 @@ export default function HomePage() {
         </div>
       </section>
 
-      <AssistantCard assistant={data.assistant} analysis={data.analysis} />
+      <Collapsible title="🧭 المساعد وتحليل الأداء">
+        <p className="rounded-2xl bg-orange-50 px-3 py-2 text-xs font-bold text-[#8f4300]">{overallLine()}</p>
+        {sarcasticLine(data.overall) ? <p className="px-1 text-xs font-bold text-neutral-500">{sarcasticLine(data.overall)}</p> : null}
+        <AssistantCard assistant={data.assistant} analysis={data.analysis} />
+      </Collapsible>
 
-      <CommissionCard data={data.commissionScenarios} />
+      <Collapsible title="🏅 الإنجازات وتحدي اليوم" badge={`${data.badges.filter((b) => b.earned).length}/${data.badges.length}`}>
+        <ChallengeCard challenge={data.challenge} />
+        <BadgesCard badges={data.badges} today={cairoISODate()} />
+      </Collapsible>
 
-      <ChallengeCard challenge={data.challenge} />
+      <Collapsible title="📈 سجل الأداء وسيناريوهات العمولة">
+        <DailyLogCard log={data.dailyLog} />
+        <CommissionCard data={data.commissionScenarios} />
+      </Collapsible>
 
-      <DailyLogCard log={data.dailyLog} />
+      <Collapsible title="🔔 الإشعارات">
+        <NotificationsCard data={data} />
+      </Collapsible>
 
-      <NotificationsCard data={data} />
-
-      <BadgesCard badges={data.badges} today={cairoISODate()} />
-
-      <h2 className="text-xl font-black">مؤشرات الأداء</h2>
+      <Collapsible title="📋 مؤشرات الأداء بالتفصيل" badge={`${data.kpis.length}`}>
       <div className="space-y-3">
         {data.kpis.map((kpi) => {
           const visual = Math.min(100, Math.max(0, kpi.percent));
@@ -728,6 +747,7 @@ export default function HomePage() {
           );
         })}
       </div>
+      </Collapsible>
     </div>
   );
 }
