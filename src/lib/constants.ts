@@ -86,8 +86,8 @@ export const KPI_CATALOG = [
   },
   {
     key: "postpaid_lines",
-    nameEn: "Postpaid Mix",
-    nameAr: "Postpaid Mix",
+    nameEn: "Postpaid",
+    nameAr: "Postpaid",
     emoji: "📞",
     unitAr: "خط",
     defaultTarget: 10,
