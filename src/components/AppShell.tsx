@@ -371,7 +371,7 @@ function AppFrame({ children, blocked, month }: { children: ReactNode; blocked: 
                       <p className="text-sm font-black leading-none text-neutral-900" dir="ltr">{APP_NAME}</p>
                       <p className="mt-1 text-[11px] text-neutral-400" dir="ltr">{BRAND_BY}</p>
                     </div>
-                    <LogoMark />
+                    {pathname.startsWith("/wiki") ? null : <LogoMark />}
                   </div>
                 </div>
               </header>
