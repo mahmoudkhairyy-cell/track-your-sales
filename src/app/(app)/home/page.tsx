@@ -6,8 +6,7 @@ import { ApiError, api } from "@/lib/client";
 import { formatMoney, formatPercent, formatQty } from "@/lib/calculations";
 import { useMonth } from "@/components/AppShell";
 import { KpiIcon } from "@/components/KpiIcon";
-import { kpiMood } from "@/lib/motivation";
-import { MORNING_LINES, kpiLines, nudgeFor, overallBandLines, overallLine, pickPhrase, qualityCardLine, sarcasticLine, timeLines, welcomeLine } from "@/lib/phrases";
+import { overallBandLines, overallLine, pickPhrase, sarcasticLine, timeLines } from "@/lib/phrases";
 import { readSyncStatus, type SyncStatus } from "@/lib/sync";
 
 type KpiRow = {
@@ -55,67 +54,6 @@ const SHORT_KPI_NAMES: Record<string, string> = {
   "New Orange Cash Wallets": "New",
   "Existing OC Wallets": "Existing",
 };
-
-// تنبيه داخلي واحد بس في اليوم، بيتقفل لوحده ومبيتكررش في نفس اليوم.
-function NudgeBanner({ overall, remainingDays }: { overall: number; remainingDays: number }) {
-  const nudge = nudgeFor(overall, remainingDays);
-  const [shown, setShown] = useState(false);
-  useEffect(() => {
-    if (!nudge) return;
-    const day = new Date().toLocaleDateString("en-CA", { timeZone: "Africa/Cairo" });
-    const key = "tys.nudge.last";
-    try {
-      if (localStorage.getItem(key) === `${day}|${nudge.kind}`) return;
-      localStorage.setItem(key, `${day}|${nudge.kind}`);
-    } catch {
-      // لو التخزين مش متاح، التنبيه هيظهر بس من غير منع التكرار.
-    }
-    setShown(true);
-  }, [nudge?.kind]);
-  if (!nudge || !shown) return null;
-  return (
-    <section className="rounded-2xl bg-amber-50 px-4 py-3 text-sm font-extrabold text-amber-900 ring-1 ring-amber-200">
-      🔔 {nudge.text}
-    </section>
-  );
-}
-
-
-function WelcomeCard({ name, yearMonth, monthLabel, overall }: { name: string; yearMonth: string; monthLabel: string; overall: number }) {
-  const key = `tys.welcome.${yearMonth}`;
-  const [hidden, setHidden] = useState(true);
-  useEffect(() => {
-    let seen = false;
-    try {
-      seen = localStorage.getItem(key) === "1";
-    } catch {
-      seen = false;
-    }
-    setHidden(seen);
-  }, [key]);
-  if (hidden) return null;
-  return (
-    <section className="rounded-[24px] bg-gradient-to-br from-[#fff3e6] to-[#fde1c4] p-5 text-[#8f4300] ring-1 ring-orange-200/70">
-      <p className="text-lg font-black">أهلاً يا {name.trim().split(" ")[0] || "بطل"} 👋</p>
-      <p className="mt-1 text-sm font-bold">نورتنا في شهر {monthLabel}</p>
-      <p className="mt-2 text-sm leading-7">{welcomeLine(overall)}</p>
-      <button
-        type="button"
-        onClick={() => {
-          try {
-            localStorage.setItem(key, "1");
-          } catch {
-            // لو التخزين مش متاح، الكارت هيفضل.
-          }
-          setHidden(true);
-        }}
-        className="mt-3 rounded-full bg-white px-4 py-2 text-xs font-extrabold text-[#8f4300] ring-1 ring-orange-200/70"
-      >
-        تمام، يلا بينا
-      </button>
-    </section>
-  );
-}
 
 function shortKpiName(name: string) {
   return SHORT_KPI_NAMES[name] ?? name;
@@ -197,17 +135,12 @@ export default function HomePage() {
             : `⚠️ ماتبعتش للمدير: ${sync.error ?? ""}`}
         </p>
       ) : null}
-      <NudgeBanner overall={data.overall} remainingDays={data.work.remaining} />
-      {data.entriesCount === 0 ? (
-        <WelcomeCard name={data.profile.name} yearMonth={data.yearMonth} monthLabel={data.monthLabel} overall={data.overall} />
-      ) : null}
 
       <section className="text-right">
         <p className="text-sm font-extrabold text-neutral-700">
           {greeting()} {data.profile.name.split(" ")[0]} 👋
         </p>
         <p className="text-[11px] text-neutral-400">📍 {data.profile.branch}</p>
-        {new Date().getHours() < 12 ? <p className="mt-1 text-xs font-bold text-[#8f4300]">{pickPhrase(MORNING_LINES, `morning|${data.yearMonth}`)}</p> : null}
       </section>
 
       <section className="relative overflow-hidden rounded-[28px] bg-gradient-to-br from-[#f0802a] via-[#e06600] to-[#b84700] p-4 text-white shadow-[0_20px_50px_rgba(190,90,0,0.35)] ring-1 ring-white/30">
@@ -268,10 +201,7 @@ export default function HomePage() {
       <div className="space-y-2">
         {data.kpis.map((kpi) => {
           const visual = Math.min(100, Math.max(0, kpi.percent));
-          const kpiExpected = kpi.target > 0 ? (kpi.expectedToDate / kpi.target) * 100 : 0;
-          const m = kpiMood({ percent: kpi.percent, expectedPercent: kpiExpected, weight: kpi.weight });
-          const moodColor =
-            m.tone === "good" ? "text-emerald-700" : m.tone === "warn" ? "text-yellow-700" : m.tone === "bad" ? "text-red-600" : "text-neutral-400";
+          const onTrackKpi = kpi.achieved >= kpi.expectedToDate;
           return (
             <article key={kpi.kpiKey} className="rounded-[18px] bg-white px-3 py-2.5 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)] ring-1 ring-orange-200/70">
               <div className="flex items-start justify-between gap-2">
@@ -281,8 +211,9 @@ export default function HomePage() {
                     <h3 className="text-sm font-extrabold text-neutral-900" dir="ltr">
                       {kpi.nameEn}
                     </h3>
-                    <p className={`text-xs font-bold ${moodColor}`}>
-                      {m.emoji} {(kpi.weight === 0 && kpi.kpiKey !== "new_orange_cash") || kpi.percent < 0 ? m.text : kpi.kpiKey === "quality" ? qualityCardLine(qChecks, data.yearMonth) : (() => { const lines = kpiLines(kpi.kpiKey, kpi.percent); return lines ? pickPhrase(lines, `kpi|${kpi.kpiKey}|${data.yearMonth}`) : m.text; })()}
+                    <p className={`flex items-center gap-1.5 text-xs font-bold ${onTrackKpi ? "text-emerald-700" : "text-red-600"}`}>
+                      <span className={`inline-block h-2 w-2 rounded-full ${onTrackKpi ? "bg-emerald-500" : "bg-red-500"}`} />
+                      {onTrackKpi ? "On Track" : formatQty(Math.max(0, Math.ceil(kpi.expectedToDate - kpi.achieved)))}
                     </p>
                   </div>
                 </div>
