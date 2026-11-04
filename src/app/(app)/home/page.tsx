@@ -126,127 +126,166 @@ export default function HomePage() {
 
 
 
+  const ringLen = 251.2;
+  const ringOffset = ringLen - (ringLen * Math.min(100, Math.max(0, data.overall))) / 100;
+  const sarcastic = sarcasticLine(data.overall);
+
   return (
-    <div className="space-y-3">
+    <div className="flex flex-col gap-4 bg-[#faf9fd] pb-28">
       {sync ? (
-        <p className={`px-1 text-[11px] font-bold ${sync.ok ? "text-emerald-700" : "text-red-600"}`} dir="rtl">
+        <p className={`text-[11px] font-bold ${sync.ok ? "text-emerald-700" : "text-red-600"}`} dir="rtl">
           {sync.ok
             ? `☁️ اتبعت للمدير ${new Date(sync.at).toLocaleTimeString("en-US", { timeZone: "Africa/Cairo", hour: "2-digit", minute: "2-digit", hour12: false })}`
             : `⚠️ ماتبعتش للمدير: ${sync.error ?? ""}`}
         </p>
       ) : null}
 
-      <section className="text-right">
-        <p className="text-sm font-extrabold text-neutral-700">
+      <section className="flex flex-col gap-1">
+        <h1 className="text-lg font-black text-[#1a1b1e]">
           {greeting()} {data.profile.name.split(" ")[0]} 👋
-        </p>
-        <p className="text-[11px] text-neutral-400">📍 {data.profile.branch}</p>
+        </h1>
+        <p className="text-[11px] text-[#584235]">📍 {data.profile.branch}</p>
       </section>
 
-      <section className="relative overflow-hidden rounded-[28px] bg-gradient-to-br from-[#f0802a] via-[#e06600] to-[#b84700] p-4 text-white shadow-[0_20px_50px_rgba(190,90,0,0.35)] ring-1 ring-white/30">
-        <div className="pointer-events-none absolute -top-16 -left-16 h-48 w-48 rounded-full bg-white/15" />
-        <p className="flex items-center gap-2 text-xs font-bold text-white/90">
-          <span
-            aria-label={onTrack === null ? "" : onTrack ? "على المسار" : "متأخر عن المسار"}
-            className={`inline-block h-2.5 w-2.5 rounded-full ring-2 ring-white/60 ${onTrack === null ? "hidden" : onTrack ? "bg-emerald-400" : "bg-red-500"}`}
-          />
-          إجمالي التارجت الشهري
-        </p>
-        <p className="mt-0.5 text-4xl font-black tabular-nums tracking-tight">{formatPercent(data.overall)}%</p>
-        <p className="mt-1 text-sm font-extrabold text-white">{statusTextEgy}</p>
-        <p className="mt-1 text-xs font-bold text-white/80">{timeText}</p>
-        <p className="mt-1 text-xs font-bold text-white/80">{overallLine()}</p>
-        {sarcasticLine(data.overall) ? <p className="mt-1 text-xs font-bold text-white/70">{sarcasticLine(data.overall)}</p> : null}
-        <div className="mt-3 flex h-3 overflow-hidden rounded-full bg-white/25">
-          <div className="h-full rounded-full bg-white transition-all" style={{ width: `${Math.min(100, Math.max(0, data.overall))}%` }} />
-        </div>
-        <div className="mt-3 grid grid-cols-2 gap-2">
-          <div className="rounded-2xl bg-white/15 px-3 py-2 ring-1 ring-white/25">
-            <p className="text-[11px] text-white/80">{gap > 0 ? "فاضل" : "الحالة"}</p>
-            <p className="text-base font-black tabular-nums">{gap > 0 ? `${formatPercent(gap)}%` : "قفلت الشهر ✅"}</p>
+      {/* الهيرو */}
+      <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#FF7900] via-[#FF8510] to-[#E05300] p-5 text-white shadow-[0_10px_25px_-5px_rgba(255,121,0,0.3)]">
+        <div className="pointer-events-none absolute -left-16 -top-16 h-40 w-40 rounded-full bg-white/15 blur-2xl" />
+        <div className="relative z-10 flex flex-col gap-3">
+          <div className="flex items-center justify-between">
+            <span className="flex items-center gap-2 text-xs font-bold text-orange-100">
+              <span
+                aria-label={onTrack === null ? "" : onTrack ? "على المسار" : "متأخر عن المسار"}
+                className={`inline-block h-2.5 w-2.5 rounded-full ring-2 ring-white/60 ${onTrack === null ? "hidden" : onTrack ? "bg-emerald-400" : "bg-red-500"}`}
+              />
+              إجمالي التارجت الشهري
+            </span>
+            <span className="rounded-full border border-white/10 bg-black/20 px-2.5 py-0.5 text-[11px] font-bold">{data.monthLabel}</span>
           </div>
-          <div className="rounded-2xl bg-white/15 px-3 py-2 ring-1 ring-white/25">
-            <p className="text-[11px] text-white/80">الكوميشن المتوقع</p>
-            <p className="text-base font-black tabular-nums">
-              {formatMoney(data.estimatedCommission)} <span className="text-[11px] font-bold text-white/80">من {formatMoney(data.fullCommission)} جنيه</span>
-            </p>
+          <div className="flex items-end justify-between">
+            <div className="flex items-baseline gap-1">
+              <span className="font-mono text-5xl font-black tracking-tight">{formatPercent(data.overall)}</span>
+              <span className="text-2xl font-bold text-orange-200">%</span>
+            </div>
+            <div className="max-w-[210px] text-right">
+              <div className="inline-block rounded-xl border border-white/25 bg-white/20 px-3 py-1 text-[11px] font-bold">{statusTextEgy}</div>
+              <p className="mt-1 text-[10px] font-medium text-orange-100">{timeText}</p>
+            </div>
           </div>
+          <div className="h-3.5 w-full rounded-full bg-black/25 p-0.5 shadow-inner">
+            <div className="relative h-full rounded-full bg-gradient-to-r from-amber-200 to-white transition-all duration-700" style={{ width: `${Math.min(100, Math.max(0, data.overall))}%` }} />
+          </div>
+          <div className="grid grid-cols-2 gap-2 border-t border-white/15 pt-2.5">
+            <div className="flex flex-col justify-between rounded-xl border border-white/10 bg-black/15 p-2.5">
+              <span className="text-[11px] font-medium text-orange-100">{gap > 0 ? "فاضل" : "الحالة"}</span>
+              <span className="mt-0.5 text-base font-black font-mono">{gap > 0 ? `${formatPercent(gap)}%` : "قفلت الشهر ✅"}</span>
+            </div>
+            <div className="flex flex-col justify-between rounded-xl border border-white/10 bg-black/15 p-2.5">
+              <span className="text-[11px] font-medium text-orange-100">الكوميشن المتوقع</span>
+              <span className="mt-0.5 text-base font-black font-mono">
+                {formatMoney(data.estimatedCommission)} <span className="text-[10px] text-orange-200">من {formatMoney(data.fullCommission)} ج.م</span>
+              </span>
+            </div>
+          </div>
+          <p className="text-xs font-bold text-orange-100">{overallLine()}</p>
+          {sarcastic ? <p className="text-xs font-bold text-orange-100/80">{sarcastic}</p> : null}
         </div>
       </section>
 
-
-
-
-
-      <section className="rounded-[22px] border border-orange-200/70 bg-white p-3.5 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
-        <div className="flex items-end justify-between">
-          <p className="text-sm font-black text-neutral-800">نسبة الإنجاز</p>
-          <p className="text-xs text-neutral-400">{data.kpis.length} مؤشر</p>
+      {/* المطلوب انهاردة */}
+      <section className="flex items-center justify-between rounded-2xl border border-orange-200/80 bg-gradient-to-r from-amber-50 to-orange-50 p-3.5 shadow-sm">
+        <div className="flex flex-col">
+          <span className="text-xs font-black text-slate-900">المطلوب انهاردة عشان تفضل On Track</span>
+          <span className="mt-0.5 text-[11px] font-semibold text-slate-600">{data.pace.message}</span>
         </div>
-        <div className="mt-2 flex h-24 items-end justify-around gap-2">
+        <span className="font-mono text-2xl font-black text-[#9a4600]">{data.pace.perDay === null ? "—" : formatQty(Math.ceil(data.pace.perDay))}</span>
+      </section>
+
+      {/* نسبة الإنجاز بالمحاور */}
+      <section className="flex flex-col gap-2">
+        <div className="flex items-center justify-between">
+          <h2 className="flex items-center gap-1.5 text-xs font-black uppercase tracking-wide text-slate-800">
+            <span>نسبة الإنجاز بالمحاور</span>
+            <span className="rounded border border-orange-200 bg-orange-50 px-1.5 text-[11px] font-bold text-[#e06600]">{data.kpis.length} مؤشرات</span>
+          </h2>
+          <span className="text-[11px] font-bold text-slate-400">اسحب ←</span>
+        </div>
+        <div className="no-scrollbar flex gap-2.5 overflow-x-auto pb-1 pt-0.5">
           {data.kpis.map((kpi) => {
-            const h = Math.min(100, Math.max(4, kpi.percent));
+            const ok = kpi.achieved >= kpi.expectedToDate;
             return (
-              <div key={kpi.kpiKey} className="flex h-full flex-1 flex-col items-center justify-end gap-1">
-                <span className="text-[10px] font-extrabold text-[#8f4300]">{Math.round(kpi.percent)}%</span>
-                <div className="w-full max-w-[28px] rounded-t-xl bg-gradient-to-t from-[#b84700] to-[#f0802a] transition-all" style={{ height: `${h}%` }} />
-                <span className="w-full truncate text-center text-[9px] text-neutral-500" dir="ltr">{shortKpiName(kpi.nameEn)}</span>
+              <div key={kpi.kpiKey} className="flex w-24 shrink-0 flex-col items-center rounded-2xl border border-slate-200/80 bg-white p-2.5 text-center shadow-sm">
+                <div className={`flex h-10 w-10 items-center justify-center rounded-full border-2 font-mono text-xs font-black ${ok ? "border-emerald-500 text-emerald-700" : "border-[#ff7900] text-[#9a4600]"}`}>
+                  {Math.round(kpi.percent)}%
+                </div>
+                <span className="mt-1.5 w-full truncate text-[11px] font-bold text-slate-800" dir="ltr">{shortKpiName(kpi.nameEn)}</span>
+                <span className={`mt-0.5 text-[9px] font-extrabold ${ok ? "text-emerald-600" : "text-red-600"}`}>{ok ? "On Track" : "متأخر"}</span>
               </div>
             );
           })}
         </div>
       </section>
 
-      <h2 className="text-lg font-black">مؤشرات الأداء</h2>
-      <div className="space-y-2">
+      {/* المؤشرات */}
+      <section className="flex flex-col gap-2.5">
+        <div className="flex items-center justify-between">
+          <h2 className="text-base font-black tracking-tight text-slate-900">مؤشرات الأداء (KPIs)</h2>
+          <span className="text-xs font-bold text-[#e06600]">تحديث فوري ⚡</span>
+        </div>
         {data.kpis.map((kpi) => {
           const visual = Math.min(100, Math.max(0, kpi.percent));
           const onTrackKpi = kpi.achieved >= kpi.expectedToDate;
           return (
-            <article key={kpi.kpiKey} className="rounded-[18px] bg-white px-3 py-2.5 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)] ring-1 ring-orange-200/70">
+            <article key={kpi.kpiKey} className="rounded-2xl border border-slate-200/80 bg-white p-3.5 shadow-sm">
               <div className="flex items-start justify-between gap-2">
                 <div className="flex items-center gap-2.5">
-                  <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-orange-100 text-[#e06600]"><KpiIcon kpiKey={kpi.kpiKey} className="h-4 w-4" /></span>
+                  <span className="flex h-9 w-9 items-center justify-center rounded-xl border border-orange-100 bg-orange-50 text-[#e06600]">
+                    <KpiIcon kpiKey={kpi.kpiKey} className="h-4 w-4" />
+                  </span>
                   <div>
-                    <h3 className="text-sm font-extrabold text-neutral-900" dir="ltr">
+                    <h3 className="flex items-center gap-1.5 text-sm font-black text-slate-800" dir="ltr">
                       {kpi.nameEn}
+                      <span className={`rounded-full border px-1.5 py-0.5 text-[10px] font-bold ${onTrackKpi ? "border-emerald-200/60 bg-emerald-50 text-emerald-700" : "border-red-200 bg-red-50 text-red-600"}`}>
+                        {onTrackKpi ? "On Track ●" : `ناقص ${formatQty(Math.max(0, Math.ceil(kpi.expectedToDate - kpi.achieved)))}`}
+                      </span>
                     </h3>
-                    <p className={`flex items-center gap-1.5 text-xs font-bold ${onTrackKpi ? "text-emerald-700" : "text-red-600"}`}>
-                      <span className={`inline-block h-2 w-2 rounded-full ${onTrackKpi ? "bg-emerald-500" : "bg-red-500"}`} />
-                      {onTrackKpi ? "On Track" : formatQty(Math.max(0, Math.ceil(kpi.expectedToDate - kpi.achieved)))}
-                    </p>
+                    <span className="text-[10px] font-semibold text-slate-400">الوزن النسبي: {kpi.weight}%</span>
                   </div>
                 </div>
-                <p className="text-base font-black text-[#e06600]">{formatPercent(kpi.percent)}%</p>
+                <span className="font-mono text-xl font-black text-slate-900">{formatPercent(kpi.percent)}<span className="text-xs font-bold text-slate-500">%</span></span>
               </div>
-              <div className="mt-2 grid grid-cols-3 gap-1 rounded-lg bg-orange-50/70 px-1.5 py-1.5 text-center text-[11px]">
-                <p>
-                  <span className="text-neutral-500">المستهدف </span>
-                  <span className="font-black tabular-nums">{formatQty(kpi.target)}</span>
-                </p>
-                <p>
-                  <span className="text-neutral-500">المحقق </span>
-                  <span className="font-black tabular-nums text-[#b84700]">{formatQty(kpi.achieved)}</span>
-                </p>
-                <p>
-                  <span className="text-neutral-500">الباقي </span>
-                  <span className="font-black tabular-nums">{formatQty(kpi.remaining)}</span>
-                </p>
+              <div className="my-2.5 grid grid-cols-3 gap-2 rounded-xl bg-slate-50/80 p-2 text-center text-xs">
+                <div>
+                  <span className="block text-[10px] font-medium text-slate-400">المستهدف</span>
+                  <span className="font-mono font-bold text-slate-700">{formatQty(kpi.target)}</span>
+                </div>
+                <div className="border-x border-slate-200/70">
+                  <span className="block text-[10px] font-bold text-[#e06600]">المحقق</span>
+                  <span className="font-mono font-extrabold text-[#e06600]">{formatQty(kpi.achieved)}</span>
+                </div>
+                <div>
+                  <span className="block text-[10px] font-medium text-slate-400">الباقي</span>
+                  <span className="font-mono font-bold text-rose-600">{formatQty(kpi.remaining)}</span>
+                </div>
               </div>
-              <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-neutral-100">
-                <div className="h-full rounded-full bg-gradient-to-r from-[#f0802a] to-[#b84700] transition-all" style={{ width: `${visual}%` }} />
+              <div className="mb-2 h-2 w-full rounded-full bg-slate-100">
+                <div className="h-2 rounded-full bg-[#ff7900] transition-all" style={{ width: `${visual}%` }} />
               </div>
-              <div className="mt-1.5 flex flex-wrap items-center justify-between gap-x-2 text-[10px] font-bold leading-4">
-                <span className="text-[#e06600]">مساهمة: {formatPercent(kpi.contribution)}%</span>
-                <span className="text-neutral-400">الوزن: {kpi.weight}%</span>
-                <span className="w-full text-neutral-400">
-                  المفروض تكون عند {formatQty(kpi.expectedToDate)} {kpi.unitAr} دلوقتي · فاضل {formatQty(kpi.remaining)}
-                </span>
+              <div className="flex items-center justify-between text-[11px] font-medium text-slate-500">
+                <span>المفروض تكون عند <strong className="font-bold text-slate-700">{formatQty(kpi.expectedToDate)} {kpi.unitAr}</strong> دلوقتي</span>
+                <span className="font-bold text-amber-600">مساهمة: {formatPercent(kpi.contribution)}%</span>
               </div>
               {kpi.overTarget ? <p className="mt-1 text-[10px] font-bold text-[#e06600]">🎉 عدّيت التارجت! الشريط واقف عند 100% بس الرقم الحقيقي ظاهر فوق.</p> : null}
             </article>
           );
         })}
+      </section>
+
+      {/* زرار التسجيل العايم */}
+      <div className="pointer-events-none fixed bottom-20 left-1/2 z-40 flex w-full max-w-[440px] -translate-x-1/2 justify-center px-4">
+        <Link href="/log/" className="pointer-events-auto flex items-center gap-2 rounded-full border-2 border-white bg-gradient-to-r from-[#ff7900] to-[#FF9100] px-6 py-2.5 text-sm font-black text-white shadow-[0_10px_25px_-5px_rgba(255,121,0,0.3)] transition-transform active:scale-95">
+          <span className="text-lg">＋</span>
+          <span>تسجيل بيعة جديدة</span>
+        </Link>
       </div>
     </div>
   );
