@@ -295,11 +295,6 @@ export function AppShell({ children }: { children: ReactNode }) {
       setStatus("profile");
       return;
     }
-    // المدير ماعندوش تارجت ولا تسجيل، وشاشته هي متابعة الفروع في /manager.
-    if (profile.role === "manager") {
-      if (!window.location.pathname.includes("/manager")) window.location.replace("/track-your-sales/manager/");
-      return;
-    }
     api<{ settings: { saved: boolean; kpis: { target: number }[] } }>(`/api/months/${month}`)
       .then((result) => {
         // الشهر بيبدأ تلقائياً من تارجت الشهر اللي قبله. بس لو مفيش أي تارجت خالص (أول مرة)، بنطلب من الموظف يدخله.
