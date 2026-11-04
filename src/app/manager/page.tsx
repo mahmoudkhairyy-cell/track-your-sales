@@ -131,17 +131,12 @@ function KpiTile({ kpi }: { kpi: AggKpi }) {
 
 type TopRow = { rank: number; name: string; branch: string; percent: number };
 
-/** وزن الموظف = مجموع كل تارجتاته (من غير الكواليتي لأنها نسبة مش عدد). */
-function employeeTargetWeight(row: ReportRow): number {
-  return (row.payload.kpis ?? []).filter((k) => k.name.toLowerCase() !== "quality").reduce((sum, k) => sum + (k.target || 0), 0);
-}
-
-/** متوسط مرجّح بمجموع تارجتات كل موظف. */
+/** نسبة الفرع: كل بند نسبته الكلية للفرع (مجموع المحقق ÷ مجموع التارجت) × وزن البند من الشيت. */
 function groupAverage(group: ReportRow[]): number {
-  const withData = group.filter((r) => typeof r.payload.overall === "number");
-  const totalWeight = withData.reduce((sum, r) => sum + employeeTargetWeight(r), 0);
-  if (totalWeight <= 0) return withData.length ? withData.reduce((sum, r) => sum + (r.payload.overall ?? 0), 0) / withData.length : 0;
-  return withData.reduce((sum, r) => sum + (r.payload.overall ?? 0) * employeeTargetWeight(r), 0) / totalWeight;
+  const kpis = aggregateKpis(group);
+  const totalWeight = kpis.reduce((sum, k) => sum + k.weight, 0);
+  if (totalWeight <= 0) return 0;
+  return kpis.reduce((sum, k) => sum + k.percent * k.weight, 0) / totalWeight;
 }
 
 function groupExpected(group: ReportRow[]): number | undefined {
