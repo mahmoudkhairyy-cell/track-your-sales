@@ -177,6 +177,18 @@ export default function HomePage() {
 
 
 
+      {/* المطلوب انهاردة عشان تفضل On Track */}
+      <section className="flex items-center justify-between rounded-xl bg-white p-3.5 shadow-sm">
+        <div className="flex flex-col">
+          <p className="text-sm font-black text-[#1a1b1e]">المطلوب انهاردة</p>
+          <p className="text-[11px] text-[#584235]">عشان تفضل On Track</p>
+        </div>
+        <div className="flex items-baseline gap-1">
+          <span className="text-3xl font-black tabular-nums text-[#9a4600]">{data.pace.perDay === null ? "—" : formatQty(Math.ceil(data.pace.perDay))}</span>
+          <span className="text-[11px] font-bold text-[#ff7900]">عملية</span>
+        </div>
+      </section>
+
       <section className="rounded-xl bg-white p-3.5 shadow-sm">
         <div className="flex items-end justify-between">
           <p className="text-sm font-black text-neutral-800">نسبة الإنجاز</p>
