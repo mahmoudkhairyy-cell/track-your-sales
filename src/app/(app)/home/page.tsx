@@ -235,21 +235,11 @@ export default function HomePage() {
           <h2 className="text-base font-black tracking-tight text-slate-900">مؤشرات الأداء (KPIs)</h2>
           <span className="text-xs font-bold text-[#e06600]">تحديث فوري ⚡</span>
         </div>
-        {[
-          { title: "متحقق", ok: true, items: data.kpis.filter((k) => k.achieved >= k.expectedToDate) },
-          { title: "متأخر", ok: false, items: data.kpis.filter((k) => k.achieved < k.expectedToDate) },
-        ].map((g) => (
-          <div key={g.title} className="flex flex-col gap-2.5">
-            <div className={`mt-1 flex items-center gap-2 text-[11px] font-black ${g.ok ? "text-emerald-700" : "text-red-600"}`}>
-              <span className={`h-px flex-1 ${g.ok ? "bg-emerald-200" : "bg-red-200"}`} />
-              <span>{g.ok ? "✅" : "⚠️"} {g.title} ({g.items.length})</span>
-              <span className={`h-px flex-1 ${g.ok ? "bg-emerald-200" : "bg-red-200"}`} />
-            </div>
-            {g.items.map((kpi) => {
+        {data.kpis.map((kpi) => {
           const visual = Math.min(100, Math.max(0, kpi.percent));
           const onTrackKpi = kpi.achieved >= kpi.expectedToDate;
           return (
-            <article key={kpi.kpiKey} className="rounded-2xl border border-slate-200/80 bg-white p-3.5 shadow-sm">
+            <article key={kpi.kpiKey} className={`rounded-2xl border p-3.5 shadow-sm ${kpi.achieved >= kpi.expectedToDate ? "border-emerald-200/80 bg-emerald-50/70" : "border-red-200/80 bg-red-50/70"}`}>
               <div className="flex items-start justify-between gap-2">
                 <div className="flex items-center gap-2.5">
                   <span className="flex h-9 w-9 items-center justify-center rounded-xl border border-orange-100 bg-orange-50 text-[#e06600]">
@@ -291,9 +281,7 @@ export default function HomePage() {
               {kpi.overTarget ? <p className="mt-1 text-[10px] font-bold text-[#e06600]">🎉 عدّيت التارجت! الشريط واقف عند 100% بس الرقم الحقيقي ظاهر فوق.</p> : null}
             </article>
           );
-            })}
-          </div>
-        ))}
+        })}
       </section>
 
       {/* زرار التسجيل العايم */}
