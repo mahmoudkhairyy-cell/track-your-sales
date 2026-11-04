@@ -136,7 +136,7 @@ export default function HomePage() {
         </p>
       ) : null}
 
-      <section className="text-right">
+      <section className="rounded-xl bg-white p-3.5 text-right shadow-sm">
         <p className="text-sm font-extrabold text-neutral-700">
           {greeting()} {data.profile.name.split(" ")[0]} 👋
         </p>
@@ -208,6 +208,7 @@ export default function HomePage() {
         </div>
       </section>
 
+      <section className="space-y-2 rounded-xl bg-white p-3.5 shadow-sm">
       <h2 className="text-lg font-black text-[#1a1b1e]">مؤشرات الأداء</h2>
       <div className="space-y-2">
         {data.kpis.map((kpi) => {
@@ -259,6 +260,7 @@ export default function HomePage() {
           );
         })}
       </div>
+      </section>
     </div>
   );
 }
