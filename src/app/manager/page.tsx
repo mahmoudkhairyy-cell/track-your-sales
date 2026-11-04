@@ -27,10 +27,10 @@ type AggKpi = { name: string; achieved: number; target: number; percent: number;
 
 const NO_BRANCH = "بدون فرع";
 
-/** On track = النسبة المحققة أكبر من أو تساوي المطلوب لحد النهارده (بهامش 10%). */
+/** On track = النسبة المحققة أكبر من أو تساوي المطلوب لحد النهارده (مقارنة مباشرة). */
 function TrackBadge({ percent, expected }: { percent?: number; expected?: number }) {
   if (typeof percent !== "number" || typeof expected !== "number") return null;
-  const onTrack = percent >= expected - 10;
+  const onTrack = percent >= expected;
   return (
     <span className={`rounded-full px-2 py-0.5 text-[10px] font-black ${onTrack ? "bg-emerald-100 text-emerald-800" : "bg-red-100 text-red-700"}`}>
       {onTrack ? "🟢 On track" : "🔴 متأخر"}
