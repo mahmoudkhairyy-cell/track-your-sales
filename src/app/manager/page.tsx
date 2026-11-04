@@ -81,10 +81,20 @@ function downloadBranchCsv(branchName: string, group: ReportRow[]) {
 }
 
 /** بيجمع كل موظفين الفرع لكل مؤشر: المحقق الكلي ÷ التارجت الكلي. الـ Quality بيتحسب متوسط نسبه لأنه مش بيتجمع. */
+/** أسماء قديمة في التقارير اللي اتبعتت قبل تغيير الأسماء: بتتجمع مع الاسم الجديد عشان متتكررش. */
+const LEGACY_KPI_NAMES: Record<string, string> = {
+  "New Lines": "GAs",
+  "Postpaid Lines": "Postpaid",
+  DSL: "Home ADSL",
+  Exist: "Existing OC Wallets",
+  Quality: "KYC & Compliance",
+};
+
 function aggregateKpis(group: ReportRow[]): AggKpi[] {
   const map = new Map<string, { achieved: number; target: number; weight: number; percents: number[]; expected: number[] }>();
   for (const row of group) {
-    for (const k of row.payload.kpis ?? []) {
+    for (const raw of row.payload.kpis ?? []) {
+      const k = { ...raw, name: LEGACY_KPI_NAMES[raw.name] ?? raw.name };
       const cur = map.get(k.name) ?? { achieved: 0, target: 0, weight: k.weight, percents: [], expected: [] };
       cur.achieved += k.achieved;
       cur.target += k.target;
