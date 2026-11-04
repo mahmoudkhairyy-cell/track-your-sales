@@ -278,7 +278,7 @@ function defaultBundle(yearMonth: string, role: Role): Bundle {
   };
 }
 
-/** شهر جديد: بنعتمد الكومشن وآخر إعدادات الكومشن بس. التارجت والإجازات بتبدأ فاضية، والموظف يدخلهم بنفسه. */
+/** شهر جديد: بنعتمد تارجت وأوزان وكومشن آخر شهر اتحفظ قبله، والموظف يقدر يغيّر بعدين. الإجازات والكواليتي بتبدأ فاضية. */
 function prefillBundle(state: State, yearMonth: string, role: Role): Bundle {
   const base = defaultBundle(yearMonth, role);
   const previous = Object.keys(state.months)
@@ -287,10 +287,30 @@ function prefillBundle(state: State, yearMonth: string, role: Role): Bundle {
     .pop();
   const prev = previous ? state.months[previous] : undefined;
   if (!prev) return base;
+  const prevMap = new Map(prev.kpis.map((item) => [item.kpiKey, item]));
+  // الإجازات بتتنقل حسب أيام الأسبوع: لو اختار التلات، كل التلاتات في الشهر الجديد إجازة.
+  const [year, month] = yearMonth.split("-").map(Number);
+  const daysInMonth = new Date(Date.UTC(year, month, 0)).getUTCDate();
+  const weekdays = new Set(prev.holidays.map((item) => {
+    const [y, m, d] = item.date.split("-").map(Number);
+    return new Date(Date.UTC(y, m - 1, d)).getUTCDay();
+  }));
+  const holidays: Holiday[] = [];
+  for (let day = 1; day <= daysInMonth; day += 1) {
+    const weekday = new Date(Date.UTC(year, month - 1, day)).getUTCDay();
+    if (weekdays.has(weekday)) {
+      holidays.push({ date: `${yearMonth}-${String(day).padStart(2, "0")}`, note: null });
+    }
+  }
   return {
     ...base,
+    holidays,
     fullCommission: prev.fullCommission,
     allowCommissionOver100: prev.allowCommissionOver100,
+    kpis: base.kpis.map((kpi) => {
+      const old = prevMap.get(kpi.kpiKey);
+      return old && kpi.kpiKey !== "new_orange_cash" ? { ...kpi, target: old.target } : kpi;
+    }),
   };
 }
 
