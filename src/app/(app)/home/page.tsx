@@ -196,12 +196,18 @@ export default function HomePage() {
       </section>
 
       {/* المطلوب انهاردة */}
-      <section className="flex items-center justify-between rounded-2xl border border-orange-200/80 bg-gradient-to-r from-amber-50 to-orange-50 p-3.5 shadow-sm">
-        <div className="flex flex-col">
-          <span className="text-xs font-black text-slate-900">المطلوب انهاردة عشان تفضل On Track</span>
-          <span className="mt-0.5 text-[11px] font-semibold text-slate-600">{data.pace.message}</span>
+      <section className="flex items-stretch overflow-hidden rounded-2xl border border-orange-200/80 bg-white shadow-sm">
+        <div className="flex w-24 shrink-0 flex-col items-center justify-center bg-gradient-to-br from-[#FF7900] to-[#E05300] px-2 py-3 text-white">
+          <span className="font-mono text-3xl font-black leading-none">{data.pace.perDay === null ? "—" : formatQty(Math.ceil(data.pace.perDay))}</span>
+          <span className="mt-1 text-[10px] font-bold text-orange-100">خط / يوم</span>
         </div>
-        <span className="font-mono text-2xl font-black text-[#9a4600]">{data.pace.perDay === null ? "—" : formatQty(Math.ceil(data.pace.perDay))}</span>
+        <div className="flex min-w-0 flex-1 flex-col justify-center gap-1 p-3.5">
+          <span className="flex items-center gap-1.5 text-xs font-black text-slate-900">
+            <span className="h-1.5 w-1.5 rounded-full bg-[#FF7900]" />
+            المطلوب انهاردة عشان تفضل On Track
+          </span>
+          <span className="text-[11px] font-semibold leading-relaxed text-slate-600">{data.pace.message}</span>
+        </div>
       </section>
 
       {/* نسبة الإنجاز بالمحاور */}
