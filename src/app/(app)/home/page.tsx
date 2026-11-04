@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Banner, Spinner } from "@/components/ui";
 import { ApiError, api } from "@/lib/client";
