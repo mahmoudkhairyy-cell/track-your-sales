@@ -1,12 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { Banner, Spinner } from "@/components/ui";
 import { ApiError, api } from "@/lib/client";
 import { formatMoney, formatPercent, formatQty } from "@/lib/calculations";
 import { useMonth } from "@/components/AppShell";
 import { KpiIcon } from "@/components/KpiIcon";
-import { overallBandLines, overallLine, pickPhrase, sarcasticLine, timeLines } from "@/lib/phrases";
+import { overallBandLines, pickPhrase, timeLines } from "@/lib/phrases";
 import { readSyncStatus, type SyncStatus } from "@/lib/sync";
 
 type KpiRow = {
@@ -126,128 +127,163 @@ export default function HomePage() {
 
 
 
+  const todayQty = data.todaySummary.reduce((sum, item) => sum + item.count, 0);
+  const ringLen = 251.2;
+  const ringOffset = ringLen - (ringLen * Math.min(100, Math.max(0, data.overall))) / 100;
+  const quickLinks = [
+    { href: "/log/", label: "تسجيل بيع جديد", icon: "add_circle", primary: true },
+    { href: "/target/", label: "تحديث التارجت", icon: "tune", primary: false },
+  ];
+
   return (
-    <div className="space-y-3">
+    <div className="flex flex-col gap-4 bg-[#faf9fd] pb-6">
       {sync ? (
-        <p className={`px-1 text-[11px] font-bold ${sync.ok ? "text-emerald-700" : "text-red-600"}`} dir="rtl">
+        <p className={`text-[11px] font-bold ${sync.ok ? "text-emerald-700" : "text-red-600"}`} dir="rtl">
           {sync.ok
             ? `☁️ اتبعت للمدير ${new Date(sync.at).toLocaleTimeString("en-US", { timeZone: "Africa/Cairo", hour: "2-digit", minute: "2-digit", hour12: false })}`
             : `⚠️ ماتبعتش للمدير: ${sync.error ?? ""}`}
         </p>
       ) : null}
 
-      <section className="text-right">
-        <p className="text-sm font-extrabold text-neutral-700">
-          {greeting()} {data.profile.name.split(" ")[0]} 👋
-        </p>
-        <p className="text-[11px] text-neutral-400">📍 {data.profile.branch}</p>
-      </section>
-
-      <section className="relative overflow-hidden rounded-[28px] bg-gradient-to-br from-[#f0802a] via-[#e06600] to-[#b84700] p-4 text-white shadow-[0_20px_50px_rgba(190,90,0,0.35)] ring-1 ring-white/30">
-        <div className="pointer-events-none absolute -top-16 -left-16 h-48 w-48 rounded-full bg-white/15" />
-        <p className="flex items-center gap-2 text-xs font-bold text-white/90">
-          <span
-            aria-label={onTrack === null ? "" : onTrack ? "على المسار" : "متأخر عن المسار"}
-            className={`inline-block h-2.5 w-2.5 rounded-full ring-2 ring-white/60 ${onTrack === null ? "hidden" : onTrack ? "bg-emerald-400" : "bg-red-500"}`}
-          />
-          إجمالي التارجت الشهري
-        </p>
-        <p className="mt-0.5 text-4xl font-black tabular-nums tracking-tight">{formatPercent(data.overall)}%</p>
-        <p className="mt-1 text-sm font-extrabold text-white">{statusTextEgy}</p>
-        <p className="mt-1 text-xs font-bold text-white/80">{timeText}</p>
-        <p className="mt-1 text-xs font-bold text-white/80">{overallLine()}</p>
-        {sarcasticLine(data.overall) ? <p className="mt-1 text-xs font-bold text-white/70">{sarcasticLine(data.overall)}</p> : null}
-        <div className="mt-3 flex h-3 overflow-hidden rounded-full bg-white/25">
-          <div className="h-full rounded-full bg-white transition-all" style={{ width: `${Math.min(100, Math.max(0, data.overall))}%` }} />
-        </div>
-        <div className="mt-3 grid grid-cols-2 gap-2">
-          <div className="rounded-2xl bg-white/15 px-3 py-2 ring-1 ring-white/25">
-            <p className="text-[11px] text-white/80">{gap > 0 ? "فاضل" : "الحالة"}</p>
-            <p className="text-base font-black tabular-nums">{gap > 0 ? `${formatPercent(gap)}%` : "قفلت الشهر ✅"}</p>
-          </div>
-          <div className="rounded-2xl bg-white/15 px-3 py-2 ring-1 ring-white/25">
-            <p className="text-[11px] text-white/80">الكوميشن المتوقع</p>
-            <p className="text-base font-black tabular-nums">
-              {formatMoney(data.estimatedCommission)} <span className="text-[11px] font-bold text-white/80">من {formatMoney(data.fullCommission)} جنيه</span>
-            </p>
+      {/* الترحيب */}
+      <section className="flex items-center justify-between">
+        <div className="flex flex-col">
+          <h1 className="text-[22px] font-extrabold text-[#1a1b1e]">
+            {greeting()} {data.profile.name.split(" ")[0]} 👋
+          </h1>
+          <div className="mt-0.5 flex items-center gap-1.5 text-[12px] text-[#584235]">
+            <span>📍 {data.profile.branch}</span>
+            <span className="h-1 w-1 rounded-full bg-[#e0c0af]" />
+            <span>{data.monthLabel}</span>
           </div>
         </div>
+        <span className="rounded-full bg-[#ffdbc9] px-2.5 py-1 text-[11px] font-bold text-[#321200]">{statusTextEgy}</span>
       </section>
 
-
-
-
-
-      <section className="rounded-[22px] border border-orange-200/70 bg-white p-3.5 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
-        <div className="flex items-end justify-between">
-          <p className="text-sm font-black text-neutral-800">نسبة الإنجاز</p>
-          <p className="text-xs text-neutral-400">{data.kpis.length} مؤشر</p>
+      {/* التارجت الإجمالي */}
+      <section className="flex flex-col gap-3.5 rounded-xl bg-white p-4 shadow-sm">
+        <div className="flex items-center justify-between">
+          <span className="text-[15px] font-bold text-[#1a1b1e]">التارجت الإجمالي لشهر {data.monthLabel}</span>
+          <span className={`flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-bold ${onTrack === false ? "bg-red-50 text-red-600" : "bg-emerald-50 text-emerald-700"}`}>
+            <span className={`h-1.5 w-1.5 rounded-full ${onTrack === false ? "bg-red-500" : "bg-emerald-500"}`} />
+            {onTrack === null ? "—" : onTrack ? "On Track" : "متأخر"}
+          </span>
         </div>
-        <div className="mt-2 flex h-24 items-end justify-around gap-2">
+        <div className="flex items-center justify-between px-1">
+          <div className="relative flex h-28 w-28 shrink-0 items-center justify-center">
+            <svg className="h-28 w-28 -rotate-90" viewBox="0 0 100 100">
+              <circle cx="50" cy="50" r="40" fill="transparent" stroke="#efedf1" strokeWidth="9" />
+              <circle cx="50" cy="50" r="40" fill="transparent" stroke="#ff7900" strokeWidth="9" strokeLinecap="round" strokeDasharray={ringLen} strokeDashoffset={ringOffset} className="transition-all duration-1000 ease-out" />
+            </svg>
+            <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
+              <span className="text-[24px] font-bold leading-none text-[#1a1b1e]">{formatPercent(data.overall)}%</span>
+              <span className="mt-0.5 text-[10px] text-[#584235]">محقق</span>
+            </div>
+          </div>
+          <div className="flex flex-1 flex-col gap-2.5 pr-4">
+            <div className="flex flex-col">
+              <span className="text-[13px] font-semibold text-[#1a1b1e]">{gap > 0 ? `فاضل ${formatPercent(gap)}% للوصول للتارجت الكامل` : "وصلت للتارجت الكامل ✅"}</span>
+              <span className="text-[12px] text-[#8c7263]">{timeText}</span>
+            </div>
+            <div className="h-2 overflow-hidden rounded-full bg-[#efedf1]">
+              <div className="h-full rounded-full bg-[#ff7900] transition-all" style={{ width: `${Math.min(100, Math.max(0, data.overall))}%` }} />
+            </div>
+          </div>
+        </div>
+        <div className="flex items-center justify-between rounded-lg bg-[#ffdbc9]/40 px-3 py-2.5">
+          <span className="text-[13px] font-bold text-[#1a1b1e]">💰 العمولة المتوقعة: {formatMoney(data.estimatedCommission)} ج.م</span>
+          <span className="text-[11px] font-bold text-[#584235]">من {formatMoney(data.fullCommission)}</span>
+        </div>
+      </section>
+
+      {/* أزرار سريعة */}
+      <section className="-mx-4 flex gap-2 overflow-x-auto px-4 py-1">
+        {quickLinks.map((link) => (
+          <Link
+            key={link.href}
+            href={link.href}
+            className={`flex shrink-0 items-center gap-1.5 rounded-xl px-3.5 py-2 text-[13px] font-bold shadow-sm transition-transform active:scale-95 ${link.primary ? "bg-[#ff7900] text-white" : "bg-white text-[#1a1b1e]"}`}
+          >
+            <span className="material-symbols-outlined text-[18px]">{link.icon}</span>
+            <span>{link.label}</span>
+          </Link>
+        ))}
+      </section>
+
+      {/* أداء اليوم */}
+      <section className="flex flex-col gap-2.5 rounded-xl bg-white p-3.5 shadow-sm">
+        <div className="flex items-center justify-between">
+          <h2 className="text-[15px] font-bold text-[#1a1b1e]">أداء اليوم</h2>
+          <span className="text-[11px] text-[#584235]">{sync?.ok ? "محدث" : "غير محدث"}</span>
+        </div>
+        <div className="grid grid-cols-4 gap-2">
+          <div className="flex flex-col items-center rounded-lg bg-[#f4f3f7] p-2 text-center">
+            <span className="text-[10px] text-[#584235]">مبيعات اليوم</span>
+            <span className="mt-0.5 text-[20px] font-bold text-[#1a1b1e]">{todayQty}</span>
+            <span className="text-[10px] font-bold text-[#8e4f00]">عملية</span>
+          </div>
+          <div className="flex flex-col items-center rounded-lg bg-[#f4f3f7] p-2 text-center">
+            <span className="text-[10px] text-[#584235]">إجمالي الشهر</span>
+            <span className="mt-0.5 text-[20px] font-bold text-[#1a1b1e]">{data.entriesCount}</span>
+            <span className="text-[10px] text-[#8c7263]">عملية</span>
+          </div>
+          <div className="flex flex-col items-center rounded-lg bg-[#f4f3f7] p-2 text-center">
+            <span className="text-[10px] text-[#584235]">المعدل اليومي</span>
+            <span className="mt-0.5 text-[20px] font-bold text-[#1a1b1e]">{data.work.elapsedBeforeToday ? formatQty(Math.round((data.entriesCount / data.work.elapsedBeforeToday) * 10) / 10) : "0"}</span>
+            <span className="text-[10px] text-[#8c7263]">عملية/يوم</span>
+          </div>
+          <div className="flex flex-col items-center rounded-lg bg-[#f4f3f7] p-2 text-center">
+            <span className="text-[10px] text-[#584235]">المطلوب يومياً</span>
+            <span className="mt-0.5 text-[20px] font-bold text-[#9a4600]">{data.pace.perDay === null ? "—" : formatQty(Math.ceil(data.pace.perDay))}</span>
+            <span className="text-[10px] font-bold text-[#ff7900]">عملية</span>
+          </div>
+        </div>
+      </section>
+
+      {/* المؤشرات */}
+      <section className="flex flex-col gap-2.5">
+        <div className="flex items-center justify-between">
+          <h2 className="text-[15px] font-bold text-[#1a1b1e]">مؤشرات الأداء (KPIs)</h2>
+          <span className="rounded-full bg-[#ffdbc9] px-2 py-0.5 text-[11px] font-bold text-[#321200]">{data.kpis.length} فئات</span>
+        </div>
+        <div className="grid grid-cols-2 gap-2.5">
           {data.kpis.map((kpi) => {
-            const h = Math.min(100, Math.max(4, kpi.percent));
+            const visual = Math.min(100, Math.max(0, kpi.percent));
+            const onTrackKpi = kpi.achieved >= kpi.expectedToDate;
+            const isQuality = kpi.kpiKey === "quality";
             return (
-              <div key={kpi.kpiKey} className="flex h-full flex-1 flex-col items-center justify-end gap-1">
-                <span className="text-[10px] font-extrabold text-[#8f4300]">{Math.round(kpi.percent)}%</span>
-                <div className="w-full max-w-[28px] rounded-t-xl bg-gradient-to-t from-[#b84700] to-[#f0802a] transition-all" style={{ height: `${h}%` }} />
-                <span className="w-full truncate text-center text-[9px] text-neutral-500" dir="ltr">{shortKpiName(kpi.nameEn)}</span>
-              </div>
+              <article
+                key={kpi.kpiKey}
+                className={`flex flex-col justify-between gap-2 rounded-xl bg-white p-3 shadow-sm ${isQuality ? "col-span-2 flex-row items-center" : ""}`}
+              >
+                <div className="flex w-full items-center justify-between gap-2">
+                  <div className="flex min-w-0 items-center gap-1.5">
+                    <KpiIcon kpiKey={kpi.kpiKey} className="h-4 w-4 text-[#584235]" />
+                    <span className="truncate text-[12px] font-bold text-[#1a1b1e]" dir="ltr">{kpi.nameEn}</span>
+                  </div>
+                  <span className={`shrink-0 rounded-full px-1.5 py-0.5 text-[10px] font-bold ${onTrackKpi ? "bg-emerald-50 text-emerald-700" : "bg-red-50 text-red-600"}`}>
+                    {formatPercent(kpi.percent)}%
+                  </span>
+                </div>
+                <div className="flex w-full items-baseline justify-between">
+                  <span className="text-[18px] font-bold text-[#1a1b1e]">{formatQty(kpi.achieved)}</span>
+                  <span className="text-[11px] text-[#8c7263]">من {formatQty(kpi.target)}</span>
+                </div>
+                <div className="h-1.5 w-full overflow-hidden rounded-full bg-[#efedf1]">
+                  <div className="h-full rounded-full bg-[#ff7900] transition-all" style={{ width: `${visual}%` }} />
+                </div>
+                <div className="flex w-full items-center justify-between pt-0.5">
+                  <span className={`text-[11px] font-bold ${onTrackKpi ? "text-emerald-700" : "text-red-600"}`}>
+                    {onTrackKpi ? "On Track" : `ناقص ${formatQty(Math.max(0, Math.ceil(kpi.expectedToDate - kpi.achieved)))} ${kpi.unitAr}`}
+                  </span>
+                  <span className="text-[10px] text-[#8c7263]">الوزن {kpi.weight}%</span>
+                </div>
+                {kpi.overTarget ? <p className="text-[10px] font-bold text-[#9a4600]">🎉 عدّيت التارجت</p> : null}
+              </article>
             );
           })}
         </div>
       </section>
-
-      <h2 className="text-lg font-black">مؤشرات الأداء</h2>
-      <div className="space-y-2">
-        {data.kpis.map((kpi) => {
-          const visual = Math.min(100, Math.max(0, kpi.percent));
-          const onTrackKpi = kpi.achieved >= kpi.expectedToDate;
-          return (
-            <article key={kpi.kpiKey} className="rounded-[18px] bg-white px-3 py-2.5 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)] ring-1 ring-orange-200/70">
-              <div className="flex items-start justify-between gap-2">
-                <div className="flex items-center gap-2.5">
-                  <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-orange-100 text-[#e06600]"><KpiIcon kpiKey={kpi.kpiKey} className="h-4 w-4" /></span>
-                  <div>
-                    <h3 className="text-sm font-extrabold text-neutral-900" dir="ltr">
-                      {kpi.nameEn}
-                    </h3>
-                    <p className={`flex items-center gap-1.5 text-xs font-bold ${onTrackKpi ? "text-emerald-700" : "text-red-600"}`}>
-                      <span className={`inline-block h-2 w-2 rounded-full ${onTrackKpi ? "bg-emerald-500" : "bg-red-500"}`} />
-                      {onTrackKpi ? "On Track" : formatQty(Math.max(0, Math.ceil(kpi.expectedToDate - kpi.achieved)))}
-                    </p>
-                  </div>
-                </div>
-                <p className="text-base font-black text-[#e06600]">{formatPercent(kpi.percent)}%</p>
-              </div>
-              <div className="mt-2 grid grid-cols-3 gap-1 rounded-lg bg-orange-50/70 px-1.5 py-1.5 text-center text-[11px]">
-                <p>
-                  <span className="text-neutral-500">المستهدف </span>
-                  <span className="font-black tabular-nums">{formatQty(kpi.target)}</span>
-                </p>
-                <p>
-                  <span className="text-neutral-500">المحقق </span>
-                  <span className="font-black tabular-nums text-[#b84700]">{formatQty(kpi.achieved)}</span>
-                </p>
-                <p>
-                  <span className="text-neutral-500">الباقي </span>
-                  <span className="font-black tabular-nums">{formatQty(kpi.remaining)}</span>
-                </p>
-              </div>
-              <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-neutral-100">
-                <div className="h-full rounded-full bg-gradient-to-r from-[#f0802a] to-[#b84700] transition-all" style={{ width: `${visual}%` }} />
-              </div>
-              <div className="mt-1.5 flex flex-wrap items-center justify-between gap-x-2 text-[10px] font-bold leading-4">
-                <span className="text-[#e06600]">مساهمة: {formatPercent(kpi.contribution)}%</span>
-                <span className="text-neutral-400">الوزن: {kpi.weight}%</span>
-                <span className="w-full text-neutral-400">
-                  المفروض تكون عند {formatQty(kpi.expectedToDate)} {kpi.unitAr} دلوقتي · فاضل {formatQty(kpi.remaining)}
-                </span>
-              </div>
-              {kpi.overTarget ? <p className="mt-1 text-[10px] font-bold text-[#e06600]">🎉 عدّيت التارجت! الشريط واقف عند 100% بس الرقم الحقيقي ظاهر فوق.</p> : null}
-            </article>
-          );
-        })}
-      </div>
     </div>
   );
 }
