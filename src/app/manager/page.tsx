@@ -95,7 +95,8 @@ function aggregateKpis(group: ReportRow[]): AggKpi[] {
   }
   const avg = (xs: number[]) => (xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : 0);
   return [...map.entries()].map(([name, v]) => {
-    const isQuality = name.toLowerCase() === "quality";
+    // الكواليتي بتتحسب كمتوسط نسب الموظفين (كل موظف بحصة متساوية)، مش مجموع مرجّح.
+    const isQuality = name.toLowerCase() === "quality" || name.toLowerCase().startsWith("kyc");
     return {
       name,
       achieved: isQuality ? Math.round(avg(v.percents) * 10) / 10 : v.achieved,
