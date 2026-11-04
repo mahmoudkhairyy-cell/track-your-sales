@@ -153,6 +153,10 @@ export default function HomePage() {
         <div className="pointer-events-none absolute -left-16 -top-16 h-40 w-40 rounded-full bg-white/15 blur-2xl" />
         <div className="relative z-10 flex flex-col gap-3">
           <div className="flex items-center justify-between">
+            <span className="flex items-center gap-2 rounded-xl bg-white/15 px-2 py-1 text-xs font-bold text-white ring-1 ring-white/25">
+              <img src="/track-your-sales/logo-mark.png" alt="" className="h-5 w-5 object-contain" />
+              <span dir="ltr" className="font-black tracking-tight">Track Your Sales</span>
+            </span>
             <span className="flex items-center gap-2 text-xs font-bold text-orange-100">
               <span
                 aria-label={onTrack === null ? "" : onTrack ? "على المسار" : "متأخر عن المسار"}
