@@ -342,7 +342,7 @@ function AppFrame({ children, blocked, month }: { children: ReactNode; blocked: 
     <ToastProvider>
       <StorageErrorListener />
       <MonthContext.Provider value={month}>
-        <div className="min-h-screen bg-[#fbe9da] text-neutral-900">
+        <div className={`min-h-screen text-neutral-900 ${pathname.startsWith("/home") ? "bg-[#fffdf8]" : "bg-[#fbe9da]"}`}>
           <div className="h-1.5 bg-[#e06600]" />
           <div className="mx-auto flex min-h-screen max-w-7xl">
             <aside className="hidden w-72 shrink-0 flex-col border-l border-orange-200 bg-white p-5 lg:flex">

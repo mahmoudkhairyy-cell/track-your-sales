@@ -132,7 +132,7 @@ export default function HomePage() {
   const sarcastic = sarcasticLine(data.overall);
 
   return (
-    <div className="flex flex-col gap-4 bg-[#faf9fd] pb-28">
+    <div className="flex min-h-screen flex-col gap-4 bg-[#fffdf8] pb-28">
       {sync ? (
         <p className={`text-[11px] font-bold ${sync.ok ? "text-emerald-700" : "text-red-600"}`} dir="rtl">
           {sync.ok
