@@ -183,7 +183,8 @@ function newId(): string {
 
 export function readProfile(): { name: string; branch: string; role: Role | "" } {
   const state = loadState();
-  return { name: state.profile.name, branch: state.profile.branch, role: state.profile.role === "manager" || state.profile.role === "agent" ? state.profile.role : "" };
+  const role = state.profile.role;
+  return { name: state.profile.name, branch: state.profile.branch, role: role === "manager" || role === "agent" || role === "team_leader" ? role : "" };
 }
 
 /* ---------- تحقق من المدخلات ---------- */
@@ -255,7 +256,9 @@ function requireWorkingDays(value: unknown): WorkingDays {
 /* ---------- بناء الشهر والسجلات ---------- */
 
 function roleOf(state: State): Role {
-  return state.profile.role === "manager" ? "manager" : "agent";
+  if (state.profile.role === "manager") return "manager";
+  if (state.profile.role === "team_leader") return "team_leader";
+  return "agent";
 }
 
 function defaultBundle(yearMonth: string, role: Role): Bundle {
@@ -534,7 +537,7 @@ function deleteArticle(state: State, id: string) {
 function updateProfile(state: State, data: Record<string, unknown>) {
   const name = trimText(data.name, "اسم الموظف", 2, 80);
   const branch = typeof data.branch === "string" ? data.branch.trim().slice(0, 80) : "";
-  const role = data.role === "manager" || data.role === "agent" ? data.role : state.profile.role;
+  const role = data.role === "manager" || data.role === "agent" || data.role === "team_leader" ? data.role : state.profile.role;
   state.profile = { ...state.profile, name, branch, role };
   return { user: { id: "local", name, branch, role }, message: "✅ بياناتك اتحدثت" };
 }

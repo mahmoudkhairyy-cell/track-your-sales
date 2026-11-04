@@ -12,6 +12,7 @@ type ReportRow = {
   branch_name: string;
   updated_at: string;
   payload: {
+    role?: string;
     monthLabel?: string;
     overall?: number;
     expectedPercent?: number;
@@ -277,6 +278,7 @@ export default function ManagerPage() {
           <div>
             <h3 className="font-black">{row.employee_name}</h3>
             <div className="mt-1 flex flex-wrap items-center gap-1">
+              {row.payload.role === "team_leader" ? <span className="rounded-full bg-orange-100 px-2 py-0.5 text-[10px] font-black text-[#8f4300]">🧑‍🏫 تيم ليدر</span> : null}
               <TrackBadge percent={row.payload.overall} expected={row.payload.expectedPercent} />
               {staleClass ? (
                 <span className={`rounded-full px-2 py-0.5 text-[10px] font-black ${staleClass}`}>آخر تحديث من {Math.floor(days)} يوم</span>

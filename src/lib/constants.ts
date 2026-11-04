@@ -133,7 +133,7 @@ export function kpiEmoji(key: string): string {
 
 export type KpiKey = (typeof KPI_CATALOG)[number]["key"];
 
-export type Role = "agent" | "manager";
+export type Role = "agent" | "team_leader" | "manager";
 
 // أوزان المدير من شيت الـ KPIs (Agent & Store Manager). المدير مش بيتحسب عليه الـ Existing ولا الـ New Orange Cash كبنود مستقلة بوزن مختلف.
 const MANAGER_WEIGHTS: Partial<Record<KpiKey, number>> = {
@@ -148,6 +148,7 @@ const MANAGER_WEIGHTS: Partial<Record<KpiKey, number>> = {
 
 /** الوزن الثابت للمؤشر حسب الدور. الأوزان مش بتتعدل من التطبيق، بتتغير من الكود بس. */
 export function kpiWeight(key: KpiKey, role: Role): number {
+  // التيم ليدر أوزانه زي الموظف بالظبط.
   if (role === "manager") return MANAGER_WEIGHTS[key] ?? 0;
   return KPI_CATALOG.find((item) => item.key === key)?.defaultWeight ?? 0;
 }

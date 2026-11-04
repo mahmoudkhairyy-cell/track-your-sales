@@ -101,7 +101,7 @@ function FirstRunProfile({ onDone }: { onDone: () => void }) {
   const [branch, setBranch] = useState("");
   const [error, setError] = useState("");
   const [pending, setPending] = useState(false);
-  const [role, setRole] = useState<"agent" | "manager" | "">("");
+  const [role, setRole] = useState<"agent" | "team_leader" | "manager" | "">("");
 
   async function submit(event: FormEvent) {
     event.preventDefault();
@@ -142,9 +142,10 @@ function FirstRunProfile({ onDone }: { onDone: () => void }) {
         </label>
         <div className="mb-4">
           <p className="mb-2 text-sm font-bold text-neutral-700">إنت إيه؟</p>
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-3 gap-2">
             {([
               { key: "agent", label: "👤 موظف" },
+              { key: "team_leader", label: "🧑‍🏫 تيم ليدر" },
               { key: "manager", label: "🧑‍💼 مدير" },
             ] as const).map((option) => (
               <button
@@ -290,7 +291,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   useEffect(() => {
     let cancelled = false;
     const profile = readProfile();
-    if (!profile.name.trim() || (profile.role !== "agent" && profile.role !== "manager")) {
+    if (!profile.name.trim() || (profile.role !== "agent" && profile.role !== "team_leader" && profile.role !== "manager")) {
       setStatus("profile");
       return;
     }
