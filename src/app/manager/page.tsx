@@ -186,6 +186,33 @@ export default function ManagerPage() {
   const [error, setError] = useState("");
   const [pending, setPending] = useState(false);
   const [lastLoaded, setLastLoaded] = useState<Date | null>(null);
+  const [pwOpen, setPwOpen] = useState(false);
+  const [oldPw, setOldPw] = useState("");
+  const [newPw, setNewPw] = useState("");
+  const [newPw2, setNewPw2] = useState("");
+  const [pwMsg, setPwMsg] = useState("");
+
+  async function changePassword(event: FormEvent) {
+    event.preventDefault();
+    setPwMsg("");
+    if (newPw.length < 6) return setPwMsg("الباسورد الجديد لازم يكون 6 حروف على الأقل.");
+    if (newPw !== newPw2) return setPwMsg("الباسورد الجديد مش متطابق.");
+    try {
+      await cloudRpc("change_manager_password", { p_old: oldPw, p_new: newPw });
+      sessionStorage.setItem("tys.mgrPass", newPw);
+      setPassword(newPw);
+      setOldPw("");
+      setNewPw("");
+      setNewPw2("");
+      setPwOpen(false);
+      setPwMsg("");
+      setError("");
+      alert("✅ اتغيّر الباسورد بنجاح.");
+    } catch (err) {
+      const raw = err instanceof Error ? err.message : String(err);
+      setPwMsg(raw.includes("wrong password") ? "الباسورد القديم غلط." : "حصلت مشكلة، حاول تاني.");
+    }
+  }
 
   // إجمالي الفرع المفتوح بيتقفل لما تغيّر الفرع
   useEffect(() => {
@@ -362,6 +389,25 @@ export default function ManagerPage() {
               </div>
             </div>
             <p className="rounded-full bg-white/20 px-3 py-1 text-[11px] font-extrabold ring-1 ring-white/30" dir="ltr">👑 Mr. Abdelrahman Mahmoud</p>
+          </div>
+        ) : null}
+
+        {rows !== null ? (
+          <div className="space-y-3">
+            <button type="button" onClick={() => { setPwOpen((v) => !v); setPwMsg(""); }} className="text-sm font-extrabold text-[#e06600]">
+              🔑 {pwOpen ? "إخفاء تغيير الباسورد" : "تغيير الباسورد"}
+            </button>
+            {pwOpen ? (
+              <form onSubmit={changePassword} className="space-y-3 rounded-[24px] bg-white p-4 shadow-sm ring-1 ring-orange-200/70">
+                <input type="password" placeholder="الباسورد الحالي" value={oldPw} onChange={(e) => setOldPw(e.target.value)} className="w-full rounded-2xl border border-orange-200 px-4 py-3 outline-none focus:border-[#e06600]" />
+                <input type="password" placeholder="الباسورد الجديد (6 حروف على الأقل)" value={newPw} onChange={(e) => setNewPw(e.target.value)} className="w-full rounded-2xl border border-orange-200 px-4 py-3 outline-none focus:border-[#e06600]" />
+                <input type="password" placeholder="أكد الباسورد الجديد" value={newPw2} onChange={(e) => setNewPw2(e.target.value)} className="w-full rounded-2xl border border-orange-200 px-4 py-3 outline-none focus:border-[#e06600]" />
+                {pwMsg ? <p className="text-sm font-bold text-red-600">{pwMsg}</p> : null}
+                <button type="submit" disabled={!oldPw || !newPw || !newPw2} className="w-full rounded-2xl bg-gradient-to-br from-[#f0802a] to-[#e06600] py-3 font-extrabold text-white disabled:opacity-60">
+                  حفظ الباسورد الجديد
+                </button>
+              </form>
+            ) : null}
           </div>
         ) : null}
 
