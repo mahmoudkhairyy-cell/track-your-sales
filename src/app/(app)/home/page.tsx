@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Banner, Spinner } from "@/components/ui";
 import { ApiError, api } from "@/lib/client";
-import { formatMoney, formatPercent, formatQty } from "@/lib/calculations";
+import { formatMoney, formatPercent, formatQty, linesWord } from "@/lib/calculations";
 import { useMonth } from "@/components/AppShell";
 import { KpiIcon } from "@/components/KpiIcon";
 import { overallBandLines, overallLine, pickPhrase, sarcasticLine, timeLines } from "@/lib/phrases";
@@ -199,7 +199,7 @@ export default function HomePage() {
       <section className="flex items-stretch overflow-hidden rounded-2xl border border-orange-200/80 bg-white shadow-sm">
         <div className="flex w-24 shrink-0 flex-col items-center justify-center bg-gradient-to-br from-[#FF7900] to-[#E05300] px-2 py-3 text-white">
           <span className="font-mono text-3xl font-black leading-none">{data.pace.perDay === null ? "—" : formatQty(Math.ceil(data.pace.perDay))}</span>
-          <span className="mt-1 text-[10px] font-bold text-orange-100">خط / يوم</span>
+          <span className="mt-1 text-[10px] font-bold text-orange-100">{data.pace.perDay === null ? "" : linesWord(Math.ceil(data.pace.perDay)) + " / يوم"}</span>
         </div>
         <div className="flex min-w-0 flex-1 flex-col justify-center gap-1 p-3.5">
           <span className="flex items-center gap-1.5 text-xs font-black text-slate-900">

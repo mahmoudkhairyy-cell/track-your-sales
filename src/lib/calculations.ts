@@ -60,6 +60,13 @@ export type NewLinesPace = {
   message: string;
 };
 
+export function linesWord(n: number): string {
+  if (n === 1) return "خط";
+  if (n === 2) return "خطين";
+  if (n >= 3 && n <= 10) return "خطوط";
+  return "خط";
+}
+
 export function newLinesDailyNeed(
   target: number,
   achieved: number,
@@ -87,7 +94,7 @@ export function newLinesDailyNeed(
     remaining,
     remainingDays,
     perDay,
-    message: `📱 محتاج تقريبًا ${formatQty(Math.ceil(perDay))} خط New Lines في اليوم عشان تلحق التارجت.`,
+    message: `📱 محتاج تقريبًا ${formatQty(Math.ceil(perDay))} ${linesWord(Math.ceil(perDay))} في اليوم عشان تلحق التارجت.`,
   };
 }
 
