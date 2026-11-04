@@ -342,7 +342,7 @@ function AppFrame({ children, blocked, month }: { children: ReactNode; blocked: 
     <ToastProvider>
       <StorageErrorListener />
       <MonthContext.Provider value={month}>
-        <div className={`min-h-screen text-neutral-900 ${pathname.startsWith("/home") ? "bg-[#fffdf8]" : "bg-[#fbe9da]"}`}>
+        <div className={`min-h-screen text-neutral-900 ${pathname.startsWith("/home") ? "bg-[#faf5e8]" : "bg-[#fbe9da]"}`}>
           <div className="h-1.5 bg-[#e06600]" />
           <div className="mx-auto flex min-h-screen max-w-7xl">
             <aside className="hidden w-72 shrink-0 flex-col border-l border-orange-200 bg-white p-5 lg:flex">
@@ -363,7 +363,7 @@ function AppFrame({ children, blocked, month }: { children: ReactNode; blocked: 
             </aside>
 
             <div className="flex min-w-0 flex-1 flex-col">
-              <header className="sticky top-0 z-30 border-b border-orange-200 bg-white px-4 py-3">
+              <header className={`sticky top-0 z-30 border-b border-orange-200 px-4 py-3 ${pathname.startsWith("/home") ? "bg-[#faf5e8]" : "bg-white"}`}>
                 <div className="flex items-center justify-between gap-3">
                   <MonthSwitcher />
                   <div className="flex items-center gap-2">
@@ -382,7 +382,7 @@ function AppFrame({ children, blocked, month }: { children: ReactNode; blocked: 
             </div>
           </div>
 
-          <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-orange-200 bg-white pb-[env(safe-area-inset-bottom)] lg:hidden">
+          <nav className={`fixed inset-x-0 bottom-0 z-40 border-t border-orange-200 pb-[env(safe-area-inset-bottom)] lg:hidden ${pathname.startsWith("/home") ? "bg-[#faf5e8]" : "bg-white"}`}>
             <div className="grid grid-cols-5">
               {NAV.map((item) => {
                 const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
