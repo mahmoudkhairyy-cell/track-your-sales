@@ -119,7 +119,7 @@ function aggregateKpis(group: ReportRow[]): AggKpi[] {
 }
 
 function KpiTile({ kpi }: { kpi: AggKpi }) {
-  const ok = kpi.percent >= (kpi.expectedPercent ?? 0) - 10;
+  const ok = kpi.expectedPercent === undefined || kpi.percent >= kpi.expectedPercent;
   const neutral = kpi.weight === 0;
   const tone = neutral
     ? { text: "text-neutral-500", bar: "from-neutral-300 to-neutral-400", ring: "ring-neutral-200" }
