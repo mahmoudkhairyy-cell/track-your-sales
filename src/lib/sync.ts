@@ -30,7 +30,7 @@ type DashboardSnapshot = {
   estimatedCommission: number;
   fullCommission: number;
   kpis: { nameEn: string; achieved: number; target: number; percent: number; weight: number; expectedToDate: number }[];
-  work: { total: number; elapsed: number; remaining: number };
+  work: { total: number; elapsed: number; elapsedBeforeToday?: number; remaining: number };
   todaySummary: { kpiKey: string; quantity: number; count: number }[];
 };
 
@@ -103,7 +103,7 @@ export async function pushReport(): Promise<boolean> {
         overall: data.overall,
         estimatedCommission: data.estimatedCommission,
         fullCommission: data.fullCommission,
-        expectedPercent: data.work.total > 0 ? (data.work.elapsed / data.work.total) * 100 : 0,
+        expectedPercent: data.work.total > 0 ? ((data.work.elapsedBeforeToday ?? data.work.elapsed) / data.work.total) * 100 : 0,
         kpis: data.kpis.map((k) => ({
           name: k.nameEn,
           achieved: k.achieved,
