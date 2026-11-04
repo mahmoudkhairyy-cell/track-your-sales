@@ -387,6 +387,11 @@ export default function WikiPage() {
                   ))}
                   <li>• <span className="font-black text-[#e06600]">{pkg.roaming}</span></li>
                   {pkg.intl ? <li>• <span className="font-black text-[#e06600]">{pkg.intl}</span></li> : null}
+                  <li>• رسائل لكل الشبكات: <span className="font-black text-[#e06600]">{pkg.sms}</span></li>
+                  {pkg.callsOut ? <li>• دقائق الجوال الصادرة في التجوال: <span className="font-black text-[#e06600]">{pkg.callsOut}</span></li> : null}
+                  {pkg.callsIn ? <li>• دقائق استقبال التجوال: <span className="font-black text-[#e06600]">{pkg.callsIn}</span></li> : null}
+                  <li>• Roaming Discount: <span className="font-black text-[#e06600]">{pkg.roamingRate}</span></li>
+                  {pkg.subs.includes("Gourmet") ? <li>• Gourmet: خصم يصل إلى <span className="font-black text-[#e06600]">30%</span> على المنتجات الخاصة والمنتجة من Gourmet طول السنة، والإستمتاع بمزايا Gourmet Gold مجاناً</li> : null}
                   <li>• نظام تقسيط: يصل إلى <span className="font-black text-[#e06600]">{pkg.installment} جنيه</span></li>
                 </ul>
                 <p className="mt-4 text-xs text-neutral-500">اشتراكات</p>
