@@ -266,8 +266,9 @@ export default function TargetPage() {
             type="number"
             min={0}
             step="1"
-            value={fullCommission}
-            onChange={(e) => setFullCommission(Number(e.target.value))}
+            value={fullCommission || ""}
+            placeholder="0"
+            onChange={(e) => setFullCommission(Number(e.target.value) || 0)}
           />
         </Field>
       </section>
@@ -309,9 +310,10 @@ export default function TargetPage() {
                 type="number"
                 min={0}
                 step="0.01"
-                value={kpi.target}
+                value={kpi.target || ""}
+                placeholder="0"
                 onChange={(e) => {
-                  const target = Number(e.target.value);
+                  const target = Number(e.target.value) || 0;
                   setKpis((current) => current.map((row, rowIndex) => (rowIndex === index ? { ...row, target } : row)));
                 }}
               />
