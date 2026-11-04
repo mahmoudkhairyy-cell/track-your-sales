@@ -160,7 +160,10 @@ export default function HomePage() {
               />
               إجمالي التارجت الشهري
             </span>
-            <span className="rounded-full border border-white/10 bg-black/20 px-2.5 py-0.5 text-[11px] font-bold">{data.monthLabel}</span>
+            <span className="flex items-center gap-1.5 rounded-full border border-white/10 bg-black/20 px-2.5 py-0.5 text-[11px] font-bold backdrop-blur-md">
+              <span className="h-2 w-2 rounded-full bg-emerald-400 shadow-sm" />
+              Live Run
+            </span>
           </div>
           <div className="flex items-end justify-between">
             <div className="flex items-baseline gap-1">
