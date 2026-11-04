@@ -87,7 +87,7 @@ export function newLinesDailyNeed(
     remaining,
     remainingDays,
     perDay,
-    message: `📱 محتاج تقريبًا ${formatQty(perDay)} خط New Lines في اليوم عشان تلحق التارجت.`,
+    message: `📱 محتاج تقريبًا ${formatQty(Math.ceil(perDay))} خط New Lines في اليوم عشان تلحق التارجت.`,
   };
 }
 
