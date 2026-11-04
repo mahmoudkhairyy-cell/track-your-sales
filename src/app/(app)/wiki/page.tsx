@@ -449,6 +449,7 @@ export default function WikiPage() {
             ))}
           </div>
           {FREEMAX.plans.map((plan) => {
+            const kazeon = plan.perks.find((perk) => perk.includes("كازيون"));
             return (
               <article key={plan.name} className="overflow-hidden rounded-[24px] border border-orange-200/70 bg-white p-4 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
                 <PlanBand title={plan.nameAr} big={`${plan.units} وحدة`} />
