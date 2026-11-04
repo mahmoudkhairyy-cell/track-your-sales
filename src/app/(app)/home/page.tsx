@@ -285,7 +285,7 @@ export default function HomePage() {
                 <span>المفروض تكون عند <strong className="font-bold text-slate-700">{formatQty(kpi.expectedToDate)} {kpi.unitAr}</strong> دلوقتي</span>
                 <span className="font-bold text-amber-600">مساهمة: {formatPercent(kpi.contribution)}%</span>
               </div>
-              {!kpi.gated && kpi.percent < 90 ? <p className="mt-1 text-[10px] font-bold text-[#e06600]">🔹 لسه ما وصلتش 90% من الايتم ده.</p> : null}
+              {!kpi.gated && kpi.percent < 90 ? <p className="mt-1 text-[10px] font-bold text-[#e06600]">🔹 لسه ما وصلتش 90% من المؤشر ده.</p> : null}
               {kpi.overTarget ? <p className="mt-1 text-[10px] font-bold text-[#e06600]">🎉 عدّيت التارجت! الشريط واقف عند 100% بس الرقم الحقيقي ظاهر فوق.</p> : null}
             </article>
           );
