@@ -5,7 +5,6 @@ import { useHistoryView } from "@/lib/use-history-view";
 import { cloudRpc } from "@/lib/cloud";
 import { KPI_CATALOG } from "@/lib/constants";
 import { cairoISODate } from "@/lib/dates";
-import { KPI_MIN_PERCENT } from "@/lib/calculations";
 
 type ReportRow = {
   branch_id: string;
@@ -149,8 +148,7 @@ function groupAverage(group: ReportRow[]): number {
   const kpis = aggregateKpis(group);
   const totalWeight = kpis.reduce((sum, k) => sum + k.weight, 0);
   if (totalWeight <= 0) return 0;
-  // نفس قاعدة الموظف: البند اللي تحت 2% ما بيتحسبش (وزنه بيفضل في المقام)، والباقي بيتحسب كامل.
-  return kpis.reduce((sum, k) => sum + (k.weight > 0 && k.percent >= KPI_MIN_PERCENT ? k.percent * k.weight : 0), 0) / totalWeight;
+  return kpis.reduce((sum, k) => sum + k.percent * k.weight, 0) / totalWeight;
 }
 
 function groupExpected(group: ReportRow[]): number | undefined {

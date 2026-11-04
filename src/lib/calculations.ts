@@ -137,12 +137,11 @@ export function buildWorkdayStats(
 }
 
 // قواعد حساب الكوميشن من نظام الشركة (موظف الفرع):
-// - كل مؤشر (ليه تارجت ووزن) لازم يوصل 2% عشان يتحسب في التوتال، والزيادة فوق 100% بتتحسب عادي.
-// - المؤشر اللي تحت 2% بيتشال من التوتال، ولو وصل 2% أو أكتر بيتحسب كامل، وفي الهوم بيتكتب جنبه إنه لسه ما وصلش 90%.
+// - كل مؤشر (ليه تارجت ووزن) لازم يوصل 90% عشان يتحسب في التوتال، والزيادة فوق 100% بتتحسب عادي.
+// - المؤشر اللي تحت 90% بيتشال من التوتال.
 // - لو التوتال النهائي أقل من 80% مفيش حافز.
 // - Postpaid أو DSL لو ما وصلوش 100%: وزنهم (10%) بيتشال + خصم 5 نقاط زيادة، يعني 15 نقطة.
-export const KPI_MIN_PERCENT = 2;
-export const KPI_FULL_PERCENT = 90;
+export const KPI_MIN_PERCENT = 90;
 export const OVERALL_MIN_PERCENT = 80;
 export const CLAW_BACK_POINTS = 5;
 export const CLAW_BACK_KEYS = ["postpaid_lines", "dsl"] as const;
