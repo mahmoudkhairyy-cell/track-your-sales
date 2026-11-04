@@ -94,6 +94,8 @@ export async function pushReport(): Promise<boolean> {
       api<{ settings: SettingsSnapshot }>(`/api/months/${month}`),
       api<{ entries: EntrySnapshot[] }>(`/api/entries?month=${month}`),
     ]);
+    // الشهر اللي الموظف لسه ماحفظهوش ومفيهوش تسجيلات: منبعتش حاجة للمدير.
+    if (!settings.settings.saved && entriesResult.entries.length === 0) return false;
     await cloudRpc("submit_report", {
       p_branch_id: id,
       p_employee: profile.name,
