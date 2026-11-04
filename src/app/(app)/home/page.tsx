@@ -241,6 +241,7 @@ export default function HomePage() {
           <h2 className="text-base font-black tracking-tight text-slate-900">مؤشرات الأداء (KPIs)</h2>
           <span className="text-xs font-bold text-[#e06600]">تحديث فوري ⚡</span>
         </div>
+        <div className="grid grid-cols-2 gap-2.5">
         {data.kpis.map((kpi) => {
           const visual = Math.min(100, Math.max(0, kpi.percent));
           const onTrackKpi = kpi.achieved >= kpi.expectedToDate;
@@ -288,6 +289,7 @@ export default function HomePage() {
             </article>
           );
         })}
+        </div>
       </section>
 
       {/* زرار التسجيل العايم */}
