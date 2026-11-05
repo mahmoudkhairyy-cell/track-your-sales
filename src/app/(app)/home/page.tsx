@@ -161,7 +161,7 @@ export default function HomePage() {
               إجمالي التارجت الشهري
             </span>
             <span className="flex items-center gap-1.5 rounded-full bg-white/20 px-2.5 py-0.5 text-[11px] font-bold">
-              <span className="h-2 w-2 rounded-full bg-emerald-300" />
+              <span className="h-2 w-2 rounded-full bg-[#55B8F5]" />
               Live Run
             </span>
           </div>

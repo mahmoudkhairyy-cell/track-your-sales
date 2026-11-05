@@ -3,6 +3,14 @@
 html {
   direction: rtl;
   --font-cairo: "Tajawal";
+  --brand-primary: #D95B00;
+  --brand-deep: #B94700;
+  --brand-warm: #E87518;
+  --brand-soft: #FCEBDD;
+  --brand-tech: #55B8F5;
+  --brand-bg: #F5F8FC;
+  --brand-card: #FFFFFF;
+  --brand-text: #172033;
 }
 
 body {
