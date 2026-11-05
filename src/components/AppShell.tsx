@@ -106,12 +106,23 @@ function FirstRunProfile({ onDone }: { onDone: () => void }) {
 
   async function submit(event: FormEvent) {
     event.preventDefault();
-    if (name.trim().length < 2) {
-      setError("اكتب اسمك (حرفين على الأقل)");
-      return;
-    }
     if (!role) {
       setError("اختار إنت موظف ولا مدير");
+      return;
+    }
+    if (role === "area_manager") {
+      setPending(true);
+      try {
+        await api("/api/profile", { method: "PATCH", body: JSON.stringify({ name: name.trim() || "Area Manager", branch: "", role, areaManager: "" }) });
+        window.location.assign("/track-your-sales/manager/");
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "تعذر الحفظ");
+        setPending(false);
+      }
+      return;
+    }
+    if (name.trim().length < 2) {
+      setError("اكتب اسمك (حرفين على الأقل)");
       return;
     }
     if (!branch.trim()) {
@@ -169,6 +180,7 @@ function FirstRunProfile({ onDone }: { onDone: () => void }) {
             ))}
           </div>
         </div>
+        {role !== "area_manager" ? (
         <label className="mb-4 block text-sm font-bold text-neutral-700">
           اسم الفرع
           <select value={branch} onChange={(e) => setBranch(e.target.value)} className="mt-1 w-full rounded-2xl border border-orange-200 bg-white px-4 py-3 outline-none focus:border-[#e06600]">
@@ -179,6 +191,8 @@ function FirstRunProfile({ onDone }: { onDone: () => void }) {
             <option value={OUTSIDE_BRANCHES}>{OUTSIDE_BRANCHES}</option>
           </select>
         </label>
+        ) : null}
+        {role !== "area_manager" ? (
         <label className="mb-4 block text-sm font-bold text-neutral-700">
           مدير المنطقة (الأريا مانجر)
           <select value={areaManager} onChange={(e) => setAreaManager(e.target.value)} className="mt-1 w-full rounded-2xl border border-orange-200 bg-white px-4 py-3 outline-none focus:border-[#e06600]">
@@ -188,6 +202,7 @@ function FirstRunProfile({ onDone }: { onDone: () => void }) {
             ))}
           </select>
         </label>
+        ) : null}
         {error ? <p className="mb-3 text-sm font-bold text-red-600">{error}</p> : null}
         <button type="submit" disabled={pending} className="w-full rounded-2xl bg-gradient-to-br from-[#f0802a] to-[#e06600] py-3 font-extrabold text-white shadow-[0_10px_24px_rgba(190,90,0,0.3)] disabled:opacity-60">
           كمّل
