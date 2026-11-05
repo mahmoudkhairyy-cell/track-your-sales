@@ -145,7 +145,7 @@ function FirstRunProfile({ onDone }: { onDone: () => void }) {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#fbe9da] p-4 text-neutral-900">
+    <div className="flex min-h-screen items-center justify-center bg-[#F5F8FC] p-4 text-neutral-900">
       <form onSubmit={submit} className="w-full max-w-sm rounded-3xl bg-white p-6 shadow-[0_20px_50px_rgba(190,90,0,0.15)]" dir="rtl">
         <div className="mb-5 text-center">
           <img src="/track-your-sales/logo-mark.png" alt="" className="mx-auto h-16 w-16 object-contain" />
@@ -200,7 +200,7 @@ function FirstRunProfile({ onDone }: { onDone: () => void }) {
         </label>
         ) : null}
         {error ? <p className="mb-3 text-sm font-bold text-red-600">{error}</p> : null}
-        <button type="submit" disabled={pending} className="w-full rounded-2xl bg-gradient-to-br from-[#f0802a] to-[#e06600] py-3 font-extrabold text-white shadow-[0_10px_24px_rgba(190,90,0,0.3)] disabled:opacity-60">
+        <button type="submit" disabled={pending} className="w-full rounded-2xl bg-gradient-to-br from-[#FF7900] to-[#FF9D38] py-3 font-extrabold text-white shadow-sm disabled:opacity-60">
           كمّل
         </button>
       </form>
@@ -214,7 +214,7 @@ function TargetGate({ month }: { month: string }) {
       <div className="text-4xl">🎯</div>
       <h2 className="mt-2 text-lg font-black">لازم تدخل تارجت الشهر الأول</h2>
       <p className="mt-1 text-sm text-neutral-500">ادخل التارجت والأوزان واحفظها، وبعدها التطبيق هيفتح عادي.</p>
-      <Link href={`/target?month=${month}`} className="mt-5 inline-block rounded-2xl bg-gradient-to-br from-[#f0802a] to-[#e06600] px-6 py-3 font-extrabold text-white shadow-[0_10px_24px_rgba(190,90,0,0.3)]">
+      <Link href={`/target?month=${month}`} className="mt-5 inline-block rounded-2xl bg-gradient-to-br from-[#FF7900] to-[#FF9D38] px-6 py-3 font-extrabold text-white shadow-sm">
         ادخل التارجت
       </Link>
     </div>
@@ -343,7 +343,7 @@ export function AppShell({ children }: { children: ReactNode }) {
     return <SplashScreen name={who.name} />;
   }
   if (status === "checking") {
-    return <div className="flex min-h-screen items-center justify-center bg-[#fbe9da] text-3xl"><img src="/track-your-sales/logo-mark.png" alt="" className="h-16 w-16 object-contain" /></div>;
+    return <div className="flex min-h-screen items-center justify-center bg-[#F5F8FC] text-3xl"><img src="/track-your-sales/logo-mark.png" alt="" className="h-16 w-16 object-contain" /></div>;
   }
   if (status === "profile") {
     return (
@@ -373,7 +373,7 @@ function AppFrame({ children, blocked, month }: { children: ReactNode; blocked: 
       <StorageErrorListener />
       <MonthContext.Provider value={month}>
         <div className={`min-h-screen text-neutral-900 bg-[#F5F8FC]`}>
-          <div className="h-1.5 bg-[#e06600]" />
+          <div className="h-1.5 bg-[#FF7900]" />
           <div className="mx-auto flex min-h-screen max-w-7xl">
             <aside className="hidden w-72 shrink-0 flex-col border-l border-orange-200 bg-white p-5 lg:flex">
               <div className="flex items-center gap-3">
@@ -382,7 +382,7 @@ function AppFrame({ children, blocked, month }: { children: ReactNode; blocked: 
                   <p className="text-xs text-neutral-400" dir="ltr">{BRAND_BY}</p>
                 </div>
               </div>
-              <div className="mt-6 rounded-3xl bg-[#e06600] p-4 text-white">
+              <div className="mt-6 rounded-3xl bg-[#FF7900] p-4 text-white">
                 <p className="text-sm font-extrabold">{user.name}</p>
                 <p className="text-xs text-white/80">📍 {user.branch}</p>
               </div>
@@ -427,7 +427,7 @@ function AppFrame({ children, blocked, month }: { children: ReactNode; blocked: 
                   >
                     <span
                       className={`flex h-10 w-16 items-center justify-center rounded-full transition ${
-                        item.emphasize ? (active ? "h-11 w-11 bg-gradient-to-br from-[#f0802a] to-[#b84700] text-white shadow-[0_10px_24px_rgba(190,90,0,0.35)]" : "h-11 w-11 bg-orange-100 text-[#e06600]") : active ? "bg-gradient-to-br from-[#f0802a] to-[#e06600] text-white shadow-[0_8px_20px_rgba(190,90,0,0.3)]" : ""
+                        item.emphasize ? (active ? "h-11 w-11 bg-gradient-to-br from-[#FF7900] to-[#FF9D38] text-white shadow-[0_10px_24px_rgba(190,90,0,0.35)]" : "h-11 w-11 bg-orange-100 text-[#e06600]") : active ? "bg-gradient-to-br from-[#FF7900] to-[#FF9D38] text-white shadow-[0_8px_20px_rgba(190,90,0,0.3)]" : ""
                       }`}
                     >
                       <Icon />

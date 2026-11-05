@@ -290,7 +290,7 @@ export default function MorePage() {
 
   return (
     <div className="space-y-5">
-      <section className="relative overflow-hidden rounded-[24px] bg-gradient-to-br from-[#f0802a] via-[#e06600] to-[#b84700] p-5 text-white shadow-[0_20px_50px_rgba(190,90,0,0.35)]">
+      <section className="relative overflow-hidden rounded-[24px] bg-gradient-to-br from-[#FF7900] to-[#FF9D38] p-5 text-white shadow-sm">
         <img src="/track-your-sales/logo-full.png" alt="Track Your Sales" className="h-16 w-auto object-contain" />
         <p className="mt-1 text-xs text-white/85">أداة مساعدة مستقلة وغير رسمية، وليست تطبيقًا رسميًا تابعًا لشركة Orange.</p>
         <p className="mt-3 text-xs text-white/80">ملخص النهارده، سجل الشهر، النسخة الاحتياطية، والمساعد.</p>
@@ -326,7 +326,7 @@ export default function MorePage() {
               key={item.key}
               type="button"
               onClick={() => setView(item.key as typeof view)}
-              className="flex w-full items-center gap-4 rounded-[24px] border border-orange-200/70 bg-white p-4 text-right shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]"
+              className="flex w-full items-center gap-4 rounded-[24px] border border-orange-200/70 bg-white p-4 text-right shadow-sm"
             >
               <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-orange-100 text-2xl">{item.icon}</span>
               <span className="flex-1">
@@ -342,7 +342,7 @@ export default function MorePage() {
       {view === "report" ? (
         <section className="space-y-4">
           <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[#e06600]">← رجوع للقائمة</button>
-          <div id="report-print" className="rounded-[24px] border border-orange-200/70 bg-white p-5 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
+          <div id="report-print" className="rounded-[24px] border border-orange-200/70 bg-white p-5 shadow-sm">
             <p className="text-xs font-bold text-neutral-500">تقرير الشهر · {monthLabelAr(month)}</p>
             <h2 className="mt-1 text-xl font-black">{profile.name || "—"}</h2>
             <p className="text-sm text-neutral-500">📍 {profile.branch || "—"}</p>
@@ -365,7 +365,7 @@ export default function MorePage() {
               <p className="mt-4 text-sm text-neutral-500">بنحمّل التقرير...</p>
             )}
           </div>
-          <button type="button" onClick={() => window.print()} className="w-full rounded-2xl bg-gradient-to-br from-[#f0802a] to-[#b84700] py-3 font-extrabold text-white shadow-[0_10px_24px_rgba(190,90,0,0.3)]">
+          <button type="button" onClick={() => window.print()} className="w-full rounded-2xl bg-gradient-to-br from-[#FF7900] to-[#FF9D38] py-3 font-extrabold text-white shadow-sm">
             🖨️ اطبع / احفظ PDF
           </button>
         </section>
@@ -374,7 +374,7 @@ export default function MorePage() {
       {view === "about" ? (
         <div className="space-y-4">
           <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[#e06600]">← رجوع للقائمة</button>
-          <section className="rounded-[24px] border border-orange-200/70 bg-white p-5 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
+          <section className="rounded-[24px] border border-orange-200/70 bg-white p-5 shadow-sm">
             <p className="font-black">Target Tracker</p>
             <p className="mt-2 text-sm leading-7 text-neutral-600">أداة مساعدة مستقلة وغير رسمية، وليست تطبيقًا رسميًا تابعًا لشركة Orange.</p>
           </section>
@@ -384,7 +384,7 @@ export default function MorePage() {
       {view === "today" ? (
         <div className="space-y-4">
           <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[#e06600]">← رجوع للقائمة</button>
-      <section className="rounded-[24px] border border-orange-200/70 bg-white p-5 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
+      <section className="rounded-[24px] border border-orange-200/70 bg-white p-5 shadow-sm">
         <h2 className="text-lg font-black tracking-tight">📊 اللي عملته النهارده</h2>
         {todayItems.length === 0 ? (
           <p className="mt-3 text-sm text-neutral-400">لسه مسجلتش حاجة النهارده. يلا نبدأ! 💪</p>
@@ -412,7 +412,7 @@ export default function MorePage() {
       {view === "history" ? (
         <div className="space-y-4">
           <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[#e06600]">← رجوع للقائمة</button>
-      <section className="rounded-[24px] border border-orange-200/70 bg-white p-5 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
+      <section className="rounded-[24px] border border-orange-200/70 bg-white p-5 shadow-sm">
         <div className="flex items-center justify-between gap-3">
           <h2 className="text-lg font-black tracking-tight">🗂️ سجل عمليات {monthLabelAr(month)}</h2>
           <span className="text-sm text-neutral-400">{entries.length} سجل</span>
@@ -488,7 +488,7 @@ export default function MorePage() {
         </button>
       </section>
 
-      <section className="rounded-[24px] border border-orange-200/70 bg-white p-5 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
+      <section className="rounded-[24px] border border-orange-200/70 bg-white p-5 shadow-sm">
         <h2 className="text-lg font-black tracking-tight">👤 بياناتك</h2>
         <form className="mt-4 space-y-3" onSubmit={saveProfile}>
           <Field label="اسم الموظف">
@@ -508,7 +508,7 @@ export default function MorePage() {
       {view === "backup" ? (
         <div className="space-y-4">
           <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[#e06600]">← رجوع للقائمة</button>
-      <section className="rounded-[24px] border border-orange-200/70 bg-white p-5 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
+      <section className="rounded-[24px] border border-orange-200/70 bg-white p-5 shadow-sm">
         <h2 className="text-lg font-black tracking-tight">💾 نسخة احتياطية واستعادة</h2>
         <p className="mt-2 text-sm leading-7 text-neutral-500">التصدير بينزّل ملف JSON فيه بياناتك وإعدادات الشهور والسجلات والملاحظات. من غير أي مفاتيح أو أسرار.</p>
         <div className="mt-4 grid gap-3 sm:grid-cols-2">

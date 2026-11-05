@@ -61,7 +61,7 @@ export function PrimaryButton({
   return (
     <button
       {...props}
-      className={`inline-flex min-h-12 w-full items-center justify-center rounded-full bg-gradient-to-br from-[#f0802a] via-[#e06600] to-[#b84700] px-4 text-base font-extrabold text-white shadow-[0_12px_28px_rgba(190,90,0,0.35)] transition enabled:active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60 ${className}`}
+      className={`inline-flex min-h-12 w-full items-center justify-center rounded-full bg-gradient-to-br from-[#FF7900] to-[#FF9D38] px-4 text-base font-extrabold text-white shadow-[0_12px_28px_rgba(190,90,0,0.35)] transition enabled:active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60 ${className}`}
     >
       {children}
     </button>
@@ -145,7 +145,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
             key={toast.id}
             className={`rounded-2xl px-4 py-3 text-sm font-bold shadow-lg ${
               toast.type === "success"
-                ? "bg-[#e06600] text-white"
+                ? "bg-[#FF7900] text-white"
                 : toast.type === "error"
                   ? "bg-red-600 text-white"
                   : "bg-neutral-900 text-white"

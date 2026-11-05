@@ -162,7 +162,7 @@ export default function LogPage() {
       {error ? <Banner tone="error">❌ {error}</Banner> : null}
 
       {dash ? (
-        <section className="relative overflow-hidden rounded-[28px] bg-gradient-to-br from-[#f0802a] via-[#e06600] to-[#b84700] p-5 text-white shadow-[0_20px_50px_rgba(190,90,0,0.35)] ring-1 ring-white/30">
+        <section className="relative overflow-hidden rounded-[28px] bg-gradient-to-br from-[#FF7900] to-[#FF9D38] p-5 text-white shadow-sm ring-1 ring-white/30">
           <div className="grid grid-cols-3 gap-2 text-center">
             <div className="rounded-2xl bg-white/15 px-2 py-3 ring-1 ring-white/25">
               <p className="text-xl font-black tabular-nums">{formatQty(Math.round(dash.overall))}%</p>
@@ -193,7 +193,7 @@ export default function LogPage() {
         </section>
       ) : null}
 
-      <section className="rounded-[24px] border border-orange-200/70 bg-white p-4 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
+      <section className="rounded-[24px] border border-orange-200/70 bg-white p-4 shadow-sm">
         <label className="block text-xs font-bold text-neutral-500">📅 تاريخ الإنجاز</label>
         <input className={`${inputClass} mt-2`} type="date" value={entryDate} onChange={(e) => setEntryDate(e.target.value)} required />
       </section>
@@ -204,7 +204,7 @@ export default function LogPage() {
         const excluded = !!d && d.weight > 0 && d.gated;
         const needToday = d && workLeft > 0 ? Math.ceil(Math.max(0, d.remaining) / workLeft) : 0;
         return (
-          <article key={item.key} className="rounded-[24px] border border-orange-200/70 bg-white p-4 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
+          <article key={item.key} className="rounded-[24px] border border-orange-200/70 bg-white p-4 shadow-sm">
             <div className="flex items-center justify-between gap-3">
               <div className="flex items-center gap-3">
                 <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-orange-100 text-[#e06600]"><KpiIcon kpiKey={item.key} className="h-5 w-5" /></span>
@@ -253,7 +253,7 @@ export default function LogPage() {
       })}
 
       {quality ? (
-        <section className="rounded-[24px] border border-orange-200/70 bg-white p-4 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
+        <section className="rounded-[24px] border border-orange-200/70 bg-white p-4 shadow-sm">
           <div className="mb-2 flex items-center justify-between">
             <p className="text-sm font-black">✅ الكواليتي (15%)</p>
             <p className="text-xs font-extrabold text-[#8f4300]">{qualityScore}% من 15%</p>

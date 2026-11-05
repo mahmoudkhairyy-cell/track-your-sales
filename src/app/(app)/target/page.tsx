@@ -259,7 +259,7 @@ export default function TargetPage() {
         </section>
       ) : null}
 
-      <section className="rounded-[32px] border border-orange-200/70 bg-white p-5 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
+      <section className="rounded-[32px] border border-orange-200/70 bg-white p-5 shadow-sm">
         <Field label="💰 الكوميشن الكامل (جنيه)">
           <input
             className={`${inputClass} text-xl font-black`}
@@ -273,7 +273,7 @@ export default function TargetPage() {
         </Field>
       </section>
 
-      <section className="rounded-[24px] border border-orange-200/70 bg-white p-4 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
+      <section className="rounded-[24px] border border-orange-200/70 bg-white p-4 shadow-sm">
         <div className="mb-1 flex items-center justify-between">
           <h2 className="text-lg font-black">الإيتمز والأوزان</h2>
         </div>

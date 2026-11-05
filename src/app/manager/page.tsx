@@ -128,7 +128,7 @@ function KpiTile({ kpi }: { kpi: AggKpi }) {
       ? { text: "text-emerald-700", bar: "from-emerald-400 to-emerald-600", ring: "ring-emerald-200" }
       : { text: "text-red-600", bar: "from-red-400 to-red-600", ring: "ring-red-200" };
   return (
-    <div className={`relative overflow-hidden rounded-2xl bg-gradient-to-br from-white to-orange-50/60 p-3 shadow-[0_6px_18px_rgba(40,20,0,0.06)] ring-1 ${tone.ring}`}>
+    <div className={`relative overflow-hidden rounded-2xl bg-gradient-to-br from-white to-orange-50/60 p-3 shadow-sm ring-1 ${tone.ring}`}>
       <p className="truncate text-[10px] font-extrabold text-neutral-500" dir="ltr">{kpi.name}</p>
       <p className={`mt-1 text-2xl font-black tabular-nums tracking-tight ${tone.text}`}>
         {Math.round(kpi.percent)}<span className="text-sm">%</span>
@@ -302,7 +302,7 @@ export default function ManagerPage() {
     const staleClass = days >= 3 ? "bg-red-100 text-red-700" : days >= 1 ? "bg-amber-100 text-amber-800" : "";
     const percent = Math.round(row.payload.overall ?? 0);
     return (
-      <article key={row.branch_id} className="rounded-[24px] bg-white p-4 shadow-[0_12px_32px_rgba(40,20,0,0.07)] ring-1 ring-orange-200/70">
+      <article key={row.branch_id} className="rounded-[24px] bg-white p-4 shadow-sm ring-1 ring-orange-200/70">
         <button type="button" onClick={() => setOpenId(open ? null : row.branch_id)} className="flex w-full items-center justify-between gap-3 text-right">
           <div>
             <h3 className="font-black">{row.employee_name}</h3>
@@ -378,11 +378,11 @@ export default function ManagerPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#fbe9da] p-4 text-neutral-900" dir="rtl">
+    <main className="min-h-screen bg-[#F5F8FC] p-4 text-neutral-900" dir="rtl">
       <div className="mx-auto max-w-3xl space-y-4">
         <h1 className="text-2xl font-black">لوحة المدير</h1>
         {rows !== null ? (
-          <div className="flex items-center justify-between rounded-[24px] bg-gradient-to-br from-[#f0802a] via-[#e06600] to-[#b84700] p-4 text-white shadow-[0_12px_32px_rgba(190,90,0,0.25)]">
+          <div className="flex items-center justify-between rounded-[24px] bg-gradient-to-br from-[#FF7900] to-[#FF9D38] p-4 text-white shadow-[0_12px_32px_rgba(190,90,0,0.25)]">
             <div className="flex items-center gap-3">
               <img src="/track-your-sales/logo-mark.png" alt="" className="h-10 w-10 object-contain" />
               <div>
@@ -405,7 +405,7 @@ export default function ManagerPage() {
                 <input type="password" placeholder="الباسورد الجديد (6 حروف على الأقل)" value={newPw} onChange={(e) => setNewPw(e.target.value)} className="w-full rounded-2xl border border-orange-200 px-4 py-3 outline-none focus:border-[#e06600]" />
                 <input type="password" placeholder="أكد الباسورد الجديد" value={newPw2} onChange={(e) => setNewPw2(e.target.value)} className="w-full rounded-2xl border border-orange-200 px-4 py-3 outline-none focus:border-[#e06600]" />
                 {pwMsg ? <p className="text-sm font-bold text-red-600">{pwMsg}</p> : null}
-                <button type="submit" disabled={!oldPw || !newPw || !newPw2} className="w-full rounded-2xl bg-gradient-to-br from-[#f0802a] to-[#e06600] py-3 font-extrabold text-white disabled:opacity-60">
+                <button type="submit" disabled={!oldPw || !newPw || !newPw2} className="w-full rounded-2xl bg-gradient-to-br from-[#FF7900] to-[#FF9D38] py-3 font-extrabold text-white disabled:opacity-60">
                   حفظ الباسورد الجديد
                 </button>
               </form>
@@ -415,7 +415,7 @@ export default function ManagerPage() {
 
         {rows === null ? (
           <form onSubmit={load} className="overflow-hidden rounded-[28px] bg-white p-6 shadow-[0_20px_50px_rgba(190,90,0,0.15)] ring-1 ring-orange-200/70">
-            <div className="-mx-6 -mt-6 mb-5 bg-gradient-to-br from-[#f0802a] via-[#e06600] to-[#b84700] px-6 py-6 text-center text-white">
+            <div className="-mx-6 -mt-6 mb-5 bg-gradient-to-br from-[#FF7900] to-[#FF9D38] px-6 py-6 text-center text-white">
               <img src="/track-your-sales/logo-mark.png" alt="" className="mx-auto h-14 w-14 object-contain" />
               <p className="mt-2 text-lg font-black tracking-tight" dir="ltr">Track Your Sales</p>
               <p className="mt-2 inline-block rounded-full bg-white/20 px-3 py-1 text-xs font-extrabold ring-1 ring-white/30" dir="ltr">
@@ -433,7 +433,7 @@ export default function ManagerPage() {
               />
             </label>
             {error ? <p className="mt-3 text-sm font-bold text-red-600">{error}</p> : null}
-            <button type="submit" disabled={pending || !password} className="mt-4 w-full rounded-2xl bg-gradient-to-br from-[#f0802a] to-[#e06600] py-3 font-extrabold text-white disabled:opacity-60">
+            <button type="submit" disabled={pending || !password} className="mt-4 w-full rounded-2xl bg-gradient-to-br from-[#FF7900] to-[#FF9D38] py-3 font-extrabold text-white disabled:opacity-60">
               {pending ? "⏳ بنجيب البيانات..." : "دخول"}
             </button>
           </form>
@@ -443,14 +443,14 @@ export default function ManagerPage() {
             {view === "top" ? (
               <div className="space-y-3">
                 <button type="button" onClick={() => setView("list")} className="text-sm font-extrabold text-[#e06600]">← رجوع</button>
-                <div className="flex items-center justify-between rounded-[24px] bg-gradient-to-br from-[#f0802a] to-[#b84700] p-4 text-white">
+                <div className="flex items-center justify-between rounded-[24px] bg-gradient-to-br from-[#FF7900] to-[#FF9D38] p-4 text-white">
                   <div>
                     <p className="text-3xl font-black tracking-tight">TOP</p>
                     <p className="text-[11px] text-white/85">كل الموظفين مرتبين حسب نسبة التحقيق</p>
                   </div>
                 </div>
                 {topRows.map((row) => (
-                  <div key={`${row.branch}-${row.name}-${row.rank}`} className="flex items-center justify-between rounded-[22px] bg-white p-3.5 shadow-[0_8px_24px_rgba(40,20,0,0.06)] ring-1 ring-orange-200/70">
+                  <div key={`${row.branch}-${row.name}-${row.rank}`} className="flex items-center justify-between rounded-[22px] bg-white p-3.5 shadow-sm ring-1 ring-orange-200/70">
                     <div className="flex items-center gap-3">
                       <span className={`flex h-10 w-10 items-center justify-center rounded-full text-sm font-black ${row.rank <= 3 ? "bg-gradient-to-br from-[#f5c542] to-[#e8a400] text-white" : "bg-orange-100 text-[#8f4300]"}`}>
                         {row.rank}
@@ -472,7 +472,7 @@ export default function ManagerPage() {
                     {lastLoaded ? <span className="block text-[10px] font-semibold text-neutral-400" dir="ltr">آخر تحديث {lastLoaded.toLocaleTimeString("en-US", { timeZone: "Africa/Cairo", hour: "2-digit", minute: "2-digit", hour12: false })}</span> : null}
                   </p>
                   <div className="flex gap-2">
-                    <button type="button" onClick={() => setView("top")} className="rounded-full bg-gradient-to-br from-[#f0802a] to-[#b84700] px-3 py-1.5 text-xs font-black text-white">🏆 TOP</button>
+                    <button type="button" onClick={() => setView("top")} className="rounded-full bg-gradient-to-br from-[#FF7900] to-[#FF9D38] px-3 py-1.5 text-xs font-black text-white">🏆 TOP</button>
                     <button type="button" disabled={pending} onClick={() => load()} className="rounded-full bg-white px-3 py-1.5 text-xs font-extrabold text-[#8f4300] ring-1 ring-orange-200/70 disabled:opacity-60">
                       {pending ? "⏳ بنحدّث..." : "🔄 تحديث"}
                     </button>
@@ -498,7 +498,7 @@ export default function ManagerPage() {
                     </p>
                   )));
                   return (
-                    <section className="rounded-[24px] bg-white p-4 shadow-[0_12px_32px_rgba(40,20,0,0.07)] ring-1 ring-orange-200/70">
+                    <section className="rounded-[24px] bg-white p-4 shadow-sm ring-1 ring-orange-200/70">
                       <p className="mb-3 text-sm font-black">📅 النهارده ({today})</p>
                       <div className="grid grid-cols-3 gap-2 text-center text-xs font-extrabold">
                         <div className="rounded-2xl bg-emerald-50 p-2 text-emerald-800">✅ سجّل<br /><span className="text-lg tabular-nums">{logged.length}</span></div>
@@ -548,7 +548,7 @@ export default function ManagerPage() {
                             key={branchName}
                             type="button"
                             onClick={() => setView(`b:${branchName}`)}
-                            className="flex w-full items-center justify-between rounded-[24px] bg-white p-4 text-right shadow-[0_12px_32px_rgba(40,20,0,0.07)] ring-1 ring-orange-200/70"
+                            className="flex w-full items-center justify-between rounded-[24px] bg-white p-4 text-right shadow-sm ring-1 ring-orange-200/70"
                           >
                             <div>
                               <p className="font-black" dir="ltr">{branchName}</p>
@@ -563,7 +563,7 @@ export default function ManagerPage() {
                 ) : (
                   <div className="space-y-3">
                     <button type="button" onClick={() => setView("list")} className="text-sm font-extrabold text-[#e06600]">← كل الفروع</button>
-                    <div className="rounded-[24px] bg-[#e06600] p-4 text-white">
+                    <div className="rounded-[24px] bg-[#FF7900] p-4 text-white">
                       <p className="text-xs text-white/80">الفرع</p>
                       <h2 className="font-black" dir="ltr">{branch}</h2>
                       <button
@@ -577,7 +577,7 @@ export default function ManagerPage() {
                         <TrackBadge percent={branchAvg} expected={branchExpected} />
                       </div>
                     </div>
-                    <article className="rounded-[24px] bg-white p-4 shadow-[0_12px_32px_rgba(40,20,0,0.07)] ring-1 ring-orange-200/70">
+                    <article className="rounded-[24px] bg-white p-4 shadow-sm ring-1 ring-orange-200/70">
                       <button
                         type="button"
                         onClick={() => setBranchOpen(!branchOpen)}
