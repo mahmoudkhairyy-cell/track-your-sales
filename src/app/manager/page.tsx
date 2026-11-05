@@ -123,20 +123,20 @@ function KpiTile({ kpi }: { kpi: AggKpi }) {
   const ok = kpi.expectedPercent === undefined || kpi.percent >= kpi.expectedPercent;
   const neutral = kpi.weight === 0;
   const tone = neutral
-    ? { text: "text-[#778398]", bar: "from-neutral-300 to-neutral-400", ring: "ring-neutral-200" }
+    ? { text: "text-[#556070]", bar: "from-neutral-300 to-neutral-400", ring: "ring-neutral-200" }
     : ok
       ? { text: "text-emerald-700", bar: "from-emerald-400 to-emerald-600", ring: "ring-emerald-200" }
       : { text: "text-red-600", bar: "from-red-400 to-red-600", ring: "ring-red-200" };
   return (
     <div className={`relative overflow-hidden rounded-2xl bg-gradient-to-br from-white to-[#FCEBDD]/60 p-3 shadow-sm ring-1 ${tone.ring}`}>
-      <p className="truncate text-[10px] font-extrabold text-[#778398]" dir="ltr">{kpi.name}</p>
+      <p className="truncate text-[10px] font-extrabold text-[#556070]" dir="ltr">{kpi.name}</p>
       <p className={`mt-1 text-2xl font-black tabular-nums tracking-tight ${tone.text}`}>
         {Math.round(kpi.percent)}<span className="text-sm">%</span>
       </p>
       <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-white/80">
         <div className={`h-full rounded-full bg-gradient-to-r ${tone.bar}`} style={{ width: `${Math.min(100, Math.max(0, kpi.percent))}%` }} />
       </div>
-      <p className="mt-1.5 text-[10px] tabular-nums text-[#778398]" dir="ltr">{Math.round(kpi.achieved)} / {kpi.target}</p>
+      <p className="mt-1.5 text-[10px] tabular-nums text-[#556070]" dir="ltr">{Math.round(kpi.achieved)} / {kpi.target}</p>
     </div>
   );
 }
@@ -316,13 +316,13 @@ export default function ManagerPage() {
           </div>
           <div className="flex items-center gap-2">
             <p className="text-2xl font-black text-[#B94700] tabular-nums">{percent}%</p>
-            <span className="text-[#778398]">{open ? "▲" : "▼"}</span>
+            <span className="text-[#556070]">{open ? "▲" : "▼"}</span>
           </div>
         </button>
 
         {open ? (
           <>
-            <p className="mt-1 text-[10px] text-[#778398]" dir="ltr">
+            <p className="mt-1 text-[10px] text-[#556070]" dir="ltr">
               {new Date(row.updated_at).toLocaleString("en-US", { timeZone: "Africa/Cairo", hour12: false })}
             </p>
             <div className="mt-3 grid grid-cols-2 gap-2">
@@ -360,7 +360,7 @@ export default function ManagerPage() {
                 </div>
                 <div>
                   <p className="mb-1 font-black">كل الإنجازات</p>
-                  {(row.payload.entries ?? []).length === 0 ? <p className="text-[#778398]">لا يوجد</p> : null}
+                  {(row.payload.entries ?? []).length === 0 ? <p className="text-[#556070]">لا يوجد</p> : null}
                   {(row.payload.entries ?? []).map((e, i) => (
                     <div key={`${e.date}-${i}`} className="flex justify-between border-b border-dashed border-[#E8EDF4] py-1">
                       <span dir="ltr">{e.date}</span>
@@ -387,7 +387,7 @@ export default function ManagerPage() {
               <img src="/track-your-sales/logo-mark.png" alt="" className="h-10 w-10 object-contain" />
               <div>
                 <p className="text-sm font-black tracking-tight text-[#172033]" dir="ltr">Track Your Sales</p>
-                <p className="text-[11px] text-[#778398]" dir="ltr">Manager Dashboard</p>
+                <p className="text-[11px] text-[#556070]" dir="ltr">Manager Dashboard</p>
               </div>
             </div>
             <p className="rounded-full bg-[#FCEBDD] px-3 py-1 text-[11px] font-extrabold text-[#B94700]" dir="ltr">👑 {managerName || "المدير"}</p>
@@ -423,7 +423,7 @@ export default function ManagerPage() {
               </p>
               <p className="mt-1 text-[11px] text-white/80" dir="ltr">Manager Dashboard</p>
             </div>
-            <label className="block text-sm font-bold text-[#778398]">
+            <label className="block text-sm font-bold text-[#556070]">
               كلمة السر
               <input
                 type="password"
@@ -457,7 +457,7 @@ export default function ManagerPage() {
                       </span>
                       <div>
                         <p className="font-black">{row.name}</p>
-                        <p className="text-[11px] text-[#778398]" dir="ltr">{row.branch}</p>
+                        <p className="text-[11px] text-[#556070]" dir="ltr">{row.branch}</p>
                       </div>
                     </div>
                     <p className="text-xl font-black tabular-nums text-[#B94700]">{Math.round(row.percent)}%</p>
@@ -467,9 +467,9 @@ export default function ManagerPage() {
             ) : (
               <>
                 <div className="flex flex-wrap items-center justify-between gap-2">
-                  <p className="text-sm font-bold text-[#778398]">
+                  <p className="text-sm font-bold text-[#556070]">
                     {allRows.length} موظف
-                    {lastLoaded ? <span className="block text-[10px] font-semibold text-[#778398]" dir="ltr">آخر تحديث {lastLoaded.toLocaleTimeString("en-US", { timeZone: "Africa/Cairo", hour: "2-digit", minute: "2-digit", hour12: false })}</span> : null}
+                    {lastLoaded ? <span className="block text-[10px] font-semibold text-[#556070]" dir="ltr">آخر تحديث {lastLoaded.toLocaleTimeString("en-US", { timeZone: "Africa/Cairo", hour: "2-digit", minute: "2-digit", hour12: false })}</span> : null}
                   </p>
                   <div className="flex gap-2">
                     <button type="button" onClick={() => setView("top")} className="rounded-full bg-gradient-to-br from-[#D95B00] to-[#E87518] px-3 py-1.5 text-xs font-black text-white">🏆 TOP</button>
@@ -479,7 +479,7 @@ export default function ManagerPage() {
                   </div>
                 </div>
                 {allRows.length === 0 ? (
-                  <p className="rounded-2xl bg-white p-4 text-sm font-bold text-[#778398]">مفيش فروع بعتت بيانات لحد دلوقتي.</p>
+                  <p className="rounded-2xl bg-white p-4 text-sm font-bold text-[#556070]">مفيش فروع بعتت بيانات لحد دلوقتي.</p>
                 ) : null}
                 {branch === null && allRows.length > 0 ? (() => {
                   const today = cairoISODate();
@@ -491,10 +491,10 @@ export default function ManagerPage() {
                     else if ((r.payload.entries ?? []).some((e) => e.date === today)) logged.push(r);
                     else missing.push(r);
                   }
-                  const names = (list: ReportRow[]) => (list.length === 0 ? <p className="text-xs text-[#778398]">لا يوجد</p> : list.map((r) => (
+                  const names = (list: ReportRow[]) => (list.length === 0 ? <p className="text-xs text-[#556070]">لا يوجد</p> : list.map((r) => (
                     <p key={r.branch_id} className="flex justify-between text-sm font-bold">
                       <span>{r.employee_name}</span>
-                      <span className="text-[11px] font-semibold text-[#778398]" dir="ltr">{r.branch_name || NO_BRANCH}</span>
+                      <span className="text-[11px] font-semibold text-[#556070]" dir="ltr">{r.branch_name || NO_BRANCH}</span>
                     </p>
                   )));
                   return (
@@ -503,14 +503,14 @@ export default function ManagerPage() {
                       <div className="grid grid-cols-3 gap-2 text-center text-xs font-extrabold">
                         <div className="rounded-2xl bg-emerald-50 p-2 text-emerald-800">✅ سجّل<br /><span className="text-lg tabular-nums">{logged.length}</span></div>
                         <div className="rounded-2xl bg-red-50 p-2 text-red-700">❌ مسجلش<br /><span className="text-lg tabular-nums">{missing.length}</span></div>
-                        <div className="rounded-2xl bg-neutral-100 p-2 text-[#778398]">🏖️ إجازة<br /><span className="text-lg tabular-nums">{leave.length}</span></div>
+                        <div className="rounded-2xl bg-neutral-100 p-2 text-[#556070]">🏖️ إجازة<br /><span className="text-lg tabular-nums">{leave.length}</span></div>
                       </div>
                       <div className="mt-3 space-y-3">
                         <div><p className="mb-1 text-xs font-black text-emerald-800">سجّلوا</p>{names(logged)}</div>
                         <div><p className="mb-1 text-xs font-black text-red-700">مسجلوش لسه</p>{names(missing)}</div>
-                        <div><p className="mb-1 text-xs font-black text-[#778398]">في إجازة</p>{names(leave)}</div>
+                        <div><p className="mb-1 text-xs font-black text-[#556070]">في إجازة</p>{names(leave)}</div>
                       </div>
-                      <p className="mt-3 text-[10px] text-[#778398]">* بيعتمد على آخر مزامنة من كل موظف.</p>
+                      <p className="mt-3 text-[10px] text-[#556070]">* بيعتمد على آخر مزامنة من كل موظف.</p>
                     </section>
                   );
                 })() : null}
@@ -552,7 +552,7 @@ export default function ManagerPage() {
                           >
                             <div>
                               <p className="font-black" dir="ltr">{branchName}</p>
-                              <p className="text-xs text-[#778398]">{group.length} موظف</p>
+                              <p className="text-xs text-[#556070]">{group.length} موظف</p>
                               <div className="mt-1"><TrackBadge percent={avg} expected={groupExpected(group)} /></div>
                             </div>
                             <p className="text-xl font-black text-[#B94700] tabular-nums">{Math.round(avg)}%</p>
@@ -591,7 +591,7 @@ export default function ManagerPage() {
                         </div>
                         <div className="flex items-center gap-2">
                           <p className="text-2xl font-black text-[#B94700] tabular-nums">{Math.round(branchAvg)}%</p>
-                          <span className="text-[#778398]">{branchOpen ? "▲" : "▼"}</span>
+                          <span className="text-[#556070]">{branchOpen ? "▲" : "▼"}</span>
                         </div>
                       </button>
                       {branchOpen ? (

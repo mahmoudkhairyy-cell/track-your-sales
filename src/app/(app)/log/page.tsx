@@ -156,7 +156,7 @@ export default function LogPage() {
     <form className="space-y-4" onSubmit={onSubmit}>
       <section>
         <h1 className="text-3xl font-black">إنجاز اليوم</h1>
-        <p className="mt-1 text-sm text-[#778398]">سجّل اللي بعته النهارده — هيتحفظ تلقائيًا.</p>
+        <p className="mt-1 text-sm text-[#556070]">سجّل اللي بعته النهارده — هيتحفظ تلقائيًا.</p>
       </section>
 
       {error ? <Banner tone="error">❌ {error}</Banner> : null}
@@ -194,7 +194,7 @@ export default function LogPage() {
       ) : null}
 
       <section className="rounded-[24px] border border-[#E8EDF4] bg-white p-4 shadow-sm">
-        <label className="block text-xs font-bold text-[#778398]">📅 تاريخ الإنجاز</label>
+        <label className="block text-xs font-bold text-[#556070]">📅 تاريخ الإنجاز</label>
         <input className={`${inputClass} mt-2`} type="date" value={entryDate} onChange={(e) => setEntryDate(e.target.value)} required />
       </section>
 
@@ -218,15 +218,15 @@ export default function LogPage() {
             </div>
             <div className="mt-3 grid grid-cols-3 gap-2 rounded-2xl bg-[#F5F8FC] p-2.5 text-center">
               <div>
-                <p className="text-[10px] text-[#778398]">المستهدف</p>
+                <p className="text-[10px] text-[#556070]">المستهدف</p>
                 <p className="text-sm font-black tabular-nums">{d ? formatQty(d.target) : "—"}</p>
               </div>
               <div>
-                <p className="text-[10px] text-[#778398]">الوزن</p>
+                <p className="text-[10px] text-[#556070]">الوزن</p>
                 <p className="text-sm font-black tabular-nums">{d ? d.weight : 0}%</p>
               </div>
               <div>
-                <p className="text-[10px] text-[#778398]">الباقي</p>
+                <p className="text-[10px] text-[#556070]">الباقي</p>
                 <p className="text-sm font-black tabular-nums text-[#b84700]">{d ? formatQty(Math.max(0, d.remaining)) : "—"}</p>
               </div>
             </div>
@@ -243,9 +243,9 @@ export default function LogPage() {
                 placeholder="0"
                 aria-label={`كمية ${item.nameEn}`}
               />
-              <span className="shrink-0 text-xs font-bold text-[#778398]">{d?.unitAr ?? ""}</span>
+              <span className="shrink-0 text-xs font-bold text-[#556070]">{d?.unitAr ?? ""}</span>
             </div>
-            <p className="mt-2 text-[11px] text-[#778398]" title={quantityHint(item.key)}>
+            <p className="mt-2 text-[11px] text-[#556070]" title={quantityHint(item.key)}>
               {needToday > 0 ? `المطلوب النهارده: ${formatQty(needToday)} ${d?.unitAr ?? ""}` : "مفيش مطلوب إضافي النهارده"}
             </p>
           </article>
@@ -258,7 +258,7 @@ export default function LogPage() {
             <p className="text-sm font-black">✅ الكواليتي (15%)</p>
             <p className="text-xs font-extrabold text-[#B94700]">{qualityScore}% من 15%</p>
           </div>
-          <p className="mb-3 text-[11px] text-[#778398]">علّم البند لو اتحقق بالكامل، والتغيير بيتحفظ فوراً.</p>
+          <p className="mb-3 text-[11px] text-[#556070]">علّم البند لو اتحقق بالكامل، والتغيير بيتحفظ فوراً.</p>
           <div className="space-y-2">
             {QUALITY_ITEMS.map((item) => {
               const on = !!quality.checks?.[item.key];
@@ -276,7 +276,7 @@ export default function LogPage() {
                       <span className="text-sm font-extrabold" dir="ltr">{item.label}</span>
                     </span>
                   </span>
-                  <span className="text-xs font-black text-[#778398]">{item.weight}%</span>
+                  <span className="text-xs font-black text-[#556070]">{item.weight}%</span>
                 </button>
               );
             })}
@@ -285,7 +285,7 @@ export default function LogPage() {
       ) : null}
 
       <section className="rounded-[24px] border border-[#E8EDF4] bg-white p-4">
-        <label className="block text-xs font-bold text-[#778398]">📝 ملاحظة (لو حابب)</label>
+        <label className="block text-xs font-bold text-[#556070]">📝 ملاحظة (لو حابب)</label>
         <textarea
           className={`${inputClass} mt-2 min-h-20 py-3`}
           value={note}
@@ -298,7 +298,7 @@ export default function LogPage() {
       <PrimaryButton type="submit" disabled={pending}>
         {pending ? "⏳ بنحفظ..." : "💾 احفظ إنجاز اليوم"}
       </PrimaryButton>
-      <p className="text-center text-xs text-[#778398]">التاريخ اللي فوق هو اللي بيحدد الشهر · الشهر المعروض: {month}</p>
+      <p className="text-center text-xs text-[#556070]">التاريخ اللي فوق هو اللي بيحدد الشهر · الشهر المعروض: {month}</p>
     </form>
   );
 }

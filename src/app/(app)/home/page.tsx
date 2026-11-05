@@ -188,7 +188,7 @@ export default function HomePage() {
               </div>
             </div>
             <div className="flex min-w-0 flex-1 flex-col gap-2">
-              <span className="inline-block w-fit rounded-xl bg-white/20 px-3 py-1 text-[11px] font-bold">{statusTextEgy}</span>
+              <span className="inline-block w-fit rounded-xl bg-white/30 px-3 py-1 text-[12px] font-extrabold text-white shadow-sm">{statusTextEgy}</span>
               <p className="text-[11px] font-medium text-white/85">{timeText}</p>
               <p className="text-xs font-bold leading-5">{overallLine()}</p>
             </div>
@@ -266,7 +266,7 @@ export default function HomePage() {
       <section className="flex flex-col gap-2">
         <div className="flex items-center justify-between">
           <h2 className="text-sm font-black text-[#172033]">مؤشرات الأداء (KPIs)</h2>
-          <span className="text-[11px] font-bold text-[#778398]">{data.kpis.length} مؤشر</span>
+          <span className="text-[11px] font-bold text-[#556070]">{data.kpis.length} مؤشر</span>
         </div>
         <div className="flex flex-col gap-2">
           {data.kpis.map((kpi) => {
@@ -303,7 +303,7 @@ export default function HomePage() {
                       {onTrackKpi ? "On Track" : `ناقص ${formatQty(Math.max(0, Math.ceil(kpi.expectedToDate - kpi.achieved)))}`}
                     </span>
                   </div>
-                  <div className="flex items-center justify-between text-[11px] font-semibold text-[#778398]">
+                  <div className="flex items-center justify-between text-[11px] font-semibold text-[#556070]">
                     <span>
                       <strong className="font-mono text-[#172033]">{formatQty(kpi.achieved)}</strong> / {formatQty(kpi.target)}
                     </span>

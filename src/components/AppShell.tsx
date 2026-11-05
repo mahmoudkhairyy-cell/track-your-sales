@@ -150,7 +150,7 @@ function FirstRunProfile({ onDone }: { onDone: () => void }) {
         <div className="mb-5 text-center">
           <img src="/track-your-sales/logo-mark.png" alt="" className="mx-auto h-16 w-16 object-contain" />
           <h1 className="mt-2 text-xl font-black text-[#172033]">أهلاً بيك في {APP_NAME}</h1>
-          <p className="mt-1 text-sm text-[#778398]">عشان نبدأ، اكتب اسمك (واسم الفرع لو حابب)</p>
+          <p className="mt-1 text-sm text-[#556070]">عشان نبدأ، اكتب اسمك (واسم الفرع لو حابب)</p>
         </div>
         <label className="mb-3 block text-sm font-bold text-neutral-700">
           الاسم
@@ -399,7 +399,7 @@ function AppFrame({ children, blocked, month }: { children: ReactNode; blocked: 
                   <div className="flex items-center gap-2">
                     <div className="text-left">
                       <p className="text-sm font-black leading-none text-[#172033]" dir="ltr">{APP_NAME}</p>
-                      <p className="mt-1 text-[11px] text-[#778398]" dir="ltr">{BRAND_BY}</p>
+                      <p className="mt-1 text-[11px] text-[#556070]" dir="ltr">{BRAND_BY}</p>
                     </div>
                   </div>
                 </div>
@@ -421,7 +421,7 @@ function AppFrame({ children, blocked, month }: { children: ReactNode; blocked: 
                     key={item.href}
                     href={`${item.href}?month=${month}`}
                     className={`flex min-h-16 flex-col items-center justify-center gap-1 text-[11px] font-extrabold ${
-                      active ? "text-[#D95B00]" : "text-[#778398]"
+                      active ? "text-[#D95B00]" : "text-[#556070]"
                     }`}
                   >
                     <span

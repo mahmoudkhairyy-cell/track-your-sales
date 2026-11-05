@@ -62,7 +62,7 @@ function SearchBox({ value, onChange, placeholder }: { value: string; onChange: 
   return (
     <div className="relative">
       <input className={`${inputClass} rounded-full bg-white pr-4 pl-12`} value={value} onChange={(e) => onChange(e.target.value)} placeholder={placeholder} />
-      <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[#778398]">⌕</span>
+      <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[#556070]">⌕</span>
     </div>
   );
 }
@@ -115,11 +115,11 @@ function TwoPrice({ fees }: { fees: string }) {
   return (
     <div className="flex gap-2 text-center">
       <div className="rounded-xl bg-[#FCEBDD] px-2.5 py-1.5">
-        <p className="text-[10px] font-bold text-[#778398]">قبل الضريبة</p>
+        <p className="text-[10px] font-bold text-[#556070]">قبل الضريبة</p>
         <p className="font-extrabold text-[#B94700]">{before.toFixed(2)} جنيه</p>
       </div>
       <div className="rounded-xl bg-[#FCEBDD] px-2.5 py-1.5">
-        <p className="text-[10px] font-bold text-[#778398]">بعد الضريبة</p>
+        <p className="text-[10px] font-bold text-[#556070]">بعد الضريبة</p>
         <p className="font-extrabold text-[#b84700]">{after.toFixed(2)} جنيه</p>
       </div>
     </div>
@@ -225,13 +225,13 @@ export default function WikiPage() {
         <>
           <section className="text-center">
             <h1 className="text-3xl font-black text-[#172033]">مرجع أورانج</h1>
-            <p className="mt-2 text-sm text-[#778398]">بحث شامل في أكواد SR والباقات والأرقام والإيميلات</p>
+            <p className="mt-2 text-sm text-[#556070]">بحث شامل في أكواد SR والباقات والأرقام والإيميلات</p>
           </section>
           <SearchBox value={query} onChange={setQuery} placeholder="ابحث بالكود أو الاسم أو الرقم..." />
 
           {globalHits ? (
             <div className="space-y-3">
-              <p className="text-sm font-bold text-[#778398]">نتائج البحث</p>
+              <p className="text-sm font-bold text-[#556070]">نتائج البحث</p>
               {globalHits.sr.length > 0 ? <p className="text-xs font-black text-[#b84700]">أكواد SR</p> : null}
               {globalHits.sr.map((item) => (
                 <button key={item.id + item.title} type="button" onClick={() => setOpenSr(item)} className="w-full rounded-[24px] border border-[#E8EDF4] bg-white p-4 text-right shadow-sm">
@@ -263,7 +263,7 @@ export default function WikiPage() {
               {globalHits.fm.map((item) => (
                 <article key={item.name} className="rounded-[24px] bg-white p-4 border border-[#E8EDF4] shadow-sm">
                   <p className="font-extrabold">{item.nameAr}</p>
-                  <p className="text-sm text-[#778398]">{item.units} وحدة · تجديد {money(item.renewalPrice)} ج</p>
+                  <p className="text-sm text-[#556070]">{item.units} وحدة · تجديد {money(item.renewalPrice)} ج</p>
                 </article>
               ))}
               {globalHits.plans.length > 0 ? <p className="text-xs font-black text-[#b84700]">باقات</p> : null}
@@ -271,21 +271,21 @@ export default function WikiPage() {
                 <article key={item.group + item.name} className="rounded-[24px] bg-white p-4 border border-[#E8EDF4] shadow-sm">
                   <p className="text-xs text-[#B94700]">{item.group}</p>
                   <p className="font-extrabold">{item.name}</p>
-                  <p className="text-sm text-[#778398]">{item.fees || item.data}</p>
+                  <p className="text-sm text-[#556070]">{item.fees || item.data}</p>
                 </article>
               ))}
               {globalHits.dsl.length > 0 ? <p className="text-xs font-black text-[#b84700]">Home Internet</p> : null}
               {globalHits.dsl.map((item) => (
                 <article key={item.name} className="rounded-[24px] bg-white p-4 border border-[#E8EDF4] shadow-sm">
                   <p className="font-extrabold">{item.name}</p>
-                  <p className="text-sm text-[#778398]">{item.speed} Mbps · {item.quota} GB · {money(item.price)} ج</p>
+                  <p className="text-sm text-[#556070]">{item.speed} Mbps · {item.quota} GB · {money(item.price)} ج</p>
                 </article>
               ))}
               {globalHits.docs.length > 0 ? <p className="text-xs font-black text-[#b84700]">مستندات</p> : null}
               {globalHits.docs.map((item) => (
                 <a key={item.title} href={item.url} target="_blank" rel="noreferrer" className="block rounded-[24px] bg-white p-4 border border-[#E8EDF4] shadow-sm">
                   <p className="font-extrabold">{item.title}</p>
-                  <p className="text-sm text-[#778398]">{item.description}</p>
+                  <p className="text-sm text-[#556070]">{item.description}</p>
                 </a>
               ))}
               {!globalHits.sr.length && !globalHits.hunts.length && !globalHits.emails.length && !globalHits.fm.length && !globalHits.plans.length && !globalHits.dsl.length && !globalHits.docs.length ? (
@@ -300,13 +300,13 @@ export default function WikiPage() {
                     <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#FCEBDD]">{card.icon}</span>
                     <span className="min-w-0 flex-1">
                       <span className="block font-black">{card.title}</span>
-                      <span className="block truncate text-xs text-[#778398]">{card.desc}</span>
+                      <span className="block truncate text-xs text-[#556070]">{card.desc}</span>
                     </span>
                     <span className="shrink-0 text-[11px] font-bold text-[#B94700]">{card.count}</span>
                   </button>
                 ))}
               </div>
-              <p className="text-center text-[11px] leading-6 text-[#778398]">مرجع شغل داخلي للموظف. مش منتج رسمي أو معتمد من Orange.</p>
+              <p className="text-center text-[11px] leading-6 text-[#556070]">مرجع شغل داخلي للموظف. مش منتج رسمي أو معتمد من Orange.</p>
             </>
           )}
         </>
@@ -322,19 +322,19 @@ export default function WikiPage() {
                 key={cat}
                 type="button"
                 onClick={() => setSrCategory(cat)}
-                className={`shrink-0 rounded-full px-3 py-2 text-xs font-extrabold ${srCategory === cat ? "bg-[#D95B00] text-white" : "bg-white text-[#778398]"}`}
+                className={`shrink-0 rounded-full px-3 py-2 text-xs font-extrabold ${srCategory === cat ? "bg-[#D95B00] text-white" : "bg-white text-[#556070]"}`}
               >
                 {cat}
               </button>
             ))}
           </div>
-          <p className="mt-2 text-xs text-[#778398]">{filteredSr.length} نتيجة</p>
+          <p className="mt-2 text-xs text-[#556070]">{filteredSr.length} نتيجة</p>
           <div className="mt-3 space-y-2">
             {filteredSr.map((item) => (
               <button key={`${item.id}-${item.title}`} type="button" onClick={() => setOpenSr(item)} className="w-full rounded-[24px] border border-[#E8EDF4] bg-white p-4 text-right shadow-sm">
                 <p className="text-xs font-extrabold text-[#B94700]">{item.id}</p>
                 <p className="font-extrabold">{item.titleAr || item.title}</p>
-                <p className="mt-1 line-clamp-2 text-xs leading-6 text-[#778398]">{item.description}</p>
+                <p className="mt-1 line-clamp-2 text-xs leading-6 text-[#556070]">{item.description}</p>
               </button>
             ))}
           </div>
@@ -347,12 +347,12 @@ export default function WikiPage() {
           {PREMIER_GUIDE.steps.map((step) => (
             <article key={step.title} className="rounded-[24px] bg-white p-4 border border-[#E8EDF4] shadow-sm">
               <p className="font-extrabold text-[#B94700]">{step.title}</p>
-              <p className="mt-2 text-sm leading-7 text-[#778398]">{step.text}</p>
+              <p className="mt-2 text-sm leading-7 text-[#556070]">{step.text}</p>
             </article>
           ))}
           <article className="rounded-[24px] bg-[#FCEBDD] p-4">
             <p className="font-extrabold">مستندات القدرة على الدفع (Second ID)</p>
-            <ul className="mt-2 grid gap-1 text-sm leading-7 text-[#778398]">
+            <ul className="mt-2 grid gap-1 text-sm leading-7 text-[#556070]">
               {PREMIER_GUIDE.secondIds.map((item) => (
                 <li key={item}>• {item}</li>
               ))}
@@ -376,12 +376,12 @@ export default function WikiPage() {
                   ].map(([num, label]) => (
                     <div key={label}>
                       <p className="text-2xl font-black text-[#B94700]">{num}</p>
-                      <p className="text-[11px] leading-4 text-[#778398]">{label}</p>
+                      <p className="text-[11px] leading-4 text-[#556070]">{label}</p>
                     </div>
                   ))}
                 </div>
-                <p className="my-3 text-center text-lg font-black text-[#778398]">+</p>
-                <ul className="space-y-2 text-sm leading-6 text-[#778398]">
+                <p className="my-3 text-center text-lg font-black text-[#556070]">+</p>
+                <ul className="space-y-2 text-sm leading-6 text-[#556070]">
                   {pkg.discounts.map((d) => (
                     <li key={d.label}>• <span className="font-black text-[#B94700]">{d.amount} جنيه</span> {d.label}</li>
                   ))}
@@ -394,7 +394,7 @@ export default function WikiPage() {
                   {pkg.subs.includes("Gourmet") ? <li>• Gourmet: خصم يصل إلى <span className="font-black text-[#B94700]">30%</span> على المنتجات الخاصة والمنتجة من Gourmet طول السنة، والإستمتاع بمزايا Gourmet Gold مجاناً</li> : null}
                   <li>• نظام تقسيط: يصل إلى <span className="font-black text-[#B94700]">{pkg.installment} جنيه</span></li>
                 </ul>
-                <p className="mt-4 text-xs text-[#778398]">اشتراكات</p>
+                <p className="mt-4 text-xs text-[#556070]">اشتراكات</p>
                 <div className="mt-2 flex flex-wrap gap-2">
                   {pkg.subs.map((sub) => {
                     const [name, note] = sub.split("|");
@@ -417,7 +417,7 @@ export default function WikiPage() {
                             <span className="text-[7px] font-bold leading-[1.1] tracking-tight text-white">GOURMET</span>
                           )}
                         </span>
-                        {note ? <span className="text-[9px] font-bold text-[#778398]">{note}</span> : null}
+                        {note ? <span className="text-[9px] font-bold text-[#556070]">{note}</span> : null}
                       </span>
                     );
                   })}
@@ -436,7 +436,7 @@ export default function WikiPage() {
                     <p className="font-black">{plan.name}</p>
                     <p className="font-extrabold text-[#B94700]">{String(plan.fees ?? "")}</p>
                   </div>
-                  <div className="mt-3 grid grid-cols-2 gap-2 text-xs leading-6 text-[#778398]">
+                  <div className="mt-3 grid grid-cols-2 gap-2 text-xs leading-6 text-[#556070]">
                     {plan.minutes ? <p>دقائق: {String(plan.minutes)}</p> : null}
                     {plan.data ? <p>إنترنت: {String(plan.data)}</p> : null}
                     {plan.units ? <p>وحدات: {String(plan.units)}</p> : null}
@@ -446,7 +446,7 @@ export default function WikiPage() {
                     {plan.adslDiscount ? <p>خصم DSL: {String(plan.adslDiscount)}</p> : null}
                     {plan.hwDiscount ? <p>خصم HW: {String(plan.hwDiscount)}</p> : null}
                   </div>
-                  {Array.isArray(plan.subscriptions) ? <p className="mt-2 text-xs text-[#778398]">{plan.subscriptions.join(" · ")}</p> : null}
+                  {Array.isArray(plan.subscriptions) ? <p className="mt-2 text-xs text-[#556070]">{plan.subscriptions.join(" · ")}</p> : null}
                 </article>
               ))}
             </div>
@@ -457,7 +457,7 @@ export default function WikiPage() {
       {section === "freemax" ? (
         <div className="space-y-3">
           <Back onClick={() => setSection("hub")} title="FREEmax" />
-          <p className="text-sm leading-7 text-[#778398]">{FREEMAX.tagline}</p>
+          <p className="text-sm leading-7 text-[#556070]">{FREEMAX.tagline}</p>
           <div className="grid gap-2">
             {FREEMAX.highlights.map((item) => (
               <p key={item} className="rounded-2xl bg-[#FCEBDD] px-3 py-2 text-sm font-bold text-[#b84700]">
@@ -473,7 +473,7 @@ export default function WikiPage() {
                 <div className="flex items-start justify-between gap-3">
                   <div>
                     <p className="text-lg font-black">{plan.nameAr}</p>
-                    <p className="text-xs text-[#778398]">اشتراك شهري {money(plan.price)} جنيه رصيد</p>
+                    <p className="text-xs text-[#556070]">اشتراك شهري {money(plan.price)} جنيه رصيد</p>
                   </div>
                   <p className="rounded-xl bg-gradient-to-br from-[#E87518] to-[#D95B00] px-3 py-1.5 text-center text-sm font-extrabold leading-5 text-white">
                     {money(plan.renewalPrice)} جنيه
@@ -483,30 +483,30 @@ export default function WikiPage() {
                 <div className="mt-3 divide-y divide-[#E8EDF4] text-sm">
                   <div className="py-2">
                     <p className="font-black text-[#B94700]">{plan.units} وحدة</p>
-                    <p className="text-[11px] text-[#778398]">من ضمنهم فيسبوك وواتساب ميجابايتس</p>
+                    <p className="text-[11px] text-[#556070]">من ضمنهم فيسبوك وواتساب ميجابايتس</p>
                   </div>
                   <div className="py-2">
                     <p className="font-black text-[#B94700]">50 ميجا</p>
-                    <p className="text-[11px] text-[#778398]">فيسبوك ميجابايتس</p>
+                    <p className="text-[11px] text-[#556070]">فيسبوك ميجابايتس</p>
                   </div>
                   {kazeon ? (
                     <div className="py-2">
                       <p className="font-black text-[#B94700]">كازيون</p>
-                      <p className="text-[11px] text-[#778398]">خصم على كل المنتجات لما تجدد باقتك</p>
+                      <p className="text-[11px] text-[#556070]">خصم على كل المنتجات لما تجدد باقتك</p>
                     </div>
                   ) : null}
                   <div className="py-2">
                     <p className="font-black text-[#B94700]">تحويشة</p>
-                    <p className="text-[11px] text-[#778398]">مع كل تجديد</p>
+                    <p className="text-[11px] text-[#556070]">مع كل تجديد</p>
                   </div>
                   <div className="py-2">
                     <p className="font-black text-[#B94700]">50 ميجا</p>
-                    <p className="text-[11px] text-[#778398]">واتساب ميجابايتس</p>
+                    <p className="text-[11px] text-[#556070]">واتساب ميجابايتس</p>
                   </div>
                   <EntertainRow keys={brandKeysFrom(plan.perks.join(" "))} />
                 </div>
-                <details className="mt-3 text-sm text-[#778398]">
-                  <summary className="cursor-pointer text-xs font-bold text-[#778398]">تفاصيل التفعيل والمزايا</summary>
+                <details className="mt-3 text-sm text-[#556070]">
+                  <summary className="cursor-pointer text-xs font-bold text-[#556070]">تفاصيل التفعيل والمزايا</summary>
                   <ul className="mt-2 space-y-2 leading-6">
                     <li>• سعر الخط بالباقة: <span className="font-black text-[#B94700]">{money(plan.customerPrice)} جنيه</span></li>
                     <li>• تفعيل بضريبة: <span className="font-black text-[#B94700]">{money(plan.activationWithTax)} جنيه</span></li>
@@ -522,8 +522,8 @@ export default function WikiPage() {
           })}
           <article className="rounded-[24px] bg-white p-4 border border-[#E8EDF4] shadow-sm">
             <p className="font-black">{FREEMAX.weekly.nameAr}</p>
-            <p className="text-sm text-[#778398]">{FREEMAX.weekly.units} وحدة · تجديد {FREEMAX.weekly.renewalPrice} ج</p>
-            <p className="mt-2 text-xs leading-6 text-[#778398]">{FREEMAX.weekly.channels.join(" · ")}</p>
+            <p className="text-sm text-[#556070]">{FREEMAX.weekly.units} وحدة · تجديد {FREEMAX.weekly.renewalPrice} ج</p>
+            <p className="mt-2 text-xs leading-6 text-[#556070]">{FREEMAX.weekly.channels.join(" · ")}</p>
           </article>
           <article className="rounded-[24px] bg-[#FCEBDD] p-4 text-sm leading-7">
             الرصيد بعد الشحن = قيمة الشحن × 0.70 (خصم 30% ضريبة ومصاريف). سعر الشريحة {FREEMAX.simPrice} ج.
@@ -544,7 +544,7 @@ export default function WikiPage() {
                   <div className="flex items-center justify-between">
                   <div>
                     <p className="font-black">{plan.name}</p>
-                    <p className="text-xs text-[#778398]">{String(plan.data ?? "")}</p>
+                    <p className="text-xs text-[#556070]">{String(plan.data ?? "")}</p>
                   </div>
                   <TwoPrice fees={String(plan.fees ?? "")} />
                   </div>
@@ -564,7 +564,7 @@ export default function WikiPage() {
               <div className="flex items-center justify-between">
               <div>
                 <p className="font-black">{plan.name}</p>
-                <p className="text-xs text-[#778398]">{String(plan.data ?? "")}</p>
+                <p className="text-xs text-[#556070]">{String(plan.data ?? "")}</p>
               </div>
               <p className="font-extrabold text-[#B94700]">{String(plan.fees ?? "")}</p>
               </div>
@@ -585,7 +585,7 @@ export default function WikiPage() {
                 <p className="font-black">{plan.name}</p>
                 <p className="font-extrabold text-[#B94700]">{money(plan.price)} ج</p>
               </div>
-              <p className="mt-1 text-sm text-[#778398]">
+              <p className="mt-1 text-sm text-[#556070]">
                 {plan.quota} GB
               </p>
             </article>
@@ -603,7 +603,7 @@ export default function WikiPage() {
             <article key={item.name} className="rounded-[24px] bg-white p-4 border border-[#E8EDF4] shadow-sm">
               <p className="text-xs font-extrabold text-[#B94700]">{item.tag}</p>
               <p className="font-black">{item.name}</p>
-              <p className="mt-1 text-sm text-[#778398]">{item.desc}</p>
+              <p className="mt-1 text-sm text-[#556070]">{item.desc}</p>
               <p className="mt-2 text-sm">كاش {money(item.cash)} ج · تقسيط {item.installment} ج × {item.months} شهر</p>
             </article>
           ))}
@@ -649,7 +649,7 @@ export default function WikiPage() {
           {EMAILS.filter((item) => !q || matchesQuery(`${item.name} ${item.email} ${item.description}`, q)).map((item) => (
             <article key={item.email} className="rounded-[24px] bg-white p-4 border border-[#E8EDF4] shadow-sm">
               <p className="font-black">{item.name}</p>
-              <p className="text-xs text-[#778398]">{item.description}</p>
+              <p className="text-xs text-[#556070]">{item.description}</p>
               <p className="mt-1 break-all text-sm text-[#B94700]">{item.email}</p>
               <div className="mt-3 flex gap-2">
                 <a href={`mailto:${item.email}`} className="rounded-full bg-[#FCEBDD] px-3 py-2 text-xs font-extrabold text-[#B94700]">
@@ -670,7 +670,7 @@ export default function WikiPage() {
           {DOCS.map((item) => (
             <a key={item.title} href={item.url} target="_blank" rel="noreferrer" className="block rounded-[24px] bg-white p-4 border border-[#E8EDF4] shadow-sm">
               <p className="font-black">{item.title}</p>
-              <p className="mt-1 text-sm leading-7 text-[#778398]">{item.description}</p>
+              <p className="mt-1 text-sm leading-7 text-[#556070]">{item.description}</p>
               <p className="mt-2 text-xs font-extrabold text-[#B94700]">فتح الملف</p>
             </a>
           ))}
@@ -680,7 +680,7 @@ export default function WikiPage() {
       {section === "notes" ? (
         <div className="space-y-3">
           <Back onClick={() => setSection("hub")} title="ملاحظاتي" />
-          <p className="text-sm leading-7 text-[#778398]">مرجع شخصي بتضيفه بنفسك. مش هيخترع سياسات رسمية عن الشركة.</p>
+          <p className="text-sm leading-7 text-[#556070]">مرجع شخصي بتضيفه بنفسك. مش هيخترع سياسات رسمية عن الشركة.</p>
           <PrimaryButton
             type="button"
             onClick={() => {
@@ -697,7 +697,7 @@ export default function WikiPage() {
           {articles.map((article) => (
             <article key={article.id} className="rounded-[24px] bg-white p-4 border border-[#E8EDF4] shadow-sm">
               <h2 className="text-base font-black">{article.title}</h2>
-              <p className="mt-2 whitespace-pre-wrap text-sm leading-7 text-[#778398]">{article.content}</p>
+              <p className="mt-2 whitespace-pre-wrap text-sm leading-7 text-[#556070]">{article.content}</p>
               <div className="mt-3 flex gap-2">
                 <SecondaryButton
                   type="button"
@@ -723,9 +723,9 @@ export default function WikiPage() {
         {openSr ? (
           <div className="space-y-3 text-sm leading-7">
             <p className="font-extrabold text-[#B94700]">{openSr.id}</p>
-            <p className="text-[#778398]">{openSr.category}</p>
+            <p className="text-[#556070]">{openSr.category}</p>
             <p>{openSr.description}</p>
-            <p className="whitespace-pre-wrap text-[#778398]">{openSr.steps}</p>
+            <p className="whitespace-pre-wrap text-[#556070]">{openSr.steps}</p>
             <SecondaryButton type="button" className="w-full" onClick={() => copyText(`${openSr.id} — ${openSr.titleAr}\n${openSr.steps}`, toast, "📋 تفاصيل الـ SR اتنسخت")}>
               نسخ التفاصيل
             </SecondaryButton>
@@ -748,7 +748,7 @@ export default function WikiPage() {
       </Modal>
 
       <Modal open={Boolean(confirmId)} title="حذف الملاحظة؟" onClose={() => setConfirmId(null)}>
-        <p className="text-sm leading-7 text-[#778398]">الحذف نهائي بعد نجاح السيرفر فقط.</p>
+        <p className="text-sm leading-7 text-[#556070]">الحذف نهائي بعد نجاح السيرفر فقط.</p>
         <div className="mt-4 flex gap-2">
           <SecondaryButton type="button" onClick={() => setConfirmId(null)}>
             إلغاء
