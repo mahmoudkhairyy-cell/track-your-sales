@@ -412,7 +412,7 @@ function AppFrame({ children, blocked, month }: { children: ReactNode; blocked: 
             </div>
           </div>
 
-          <nav className={`fixed inset-x-0 bottom-0 z-40 border-t border-orange-200 pb-[env(safe-area-inset-bottom)] lg:hidden bg-[#F5F8FC]`}>
+          <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-[#E8EDF4] bg-white/95 pb-[env(safe-area-inset-bottom)] shadow-[0_-4px_16px_rgba(23,32,51,0.04)] backdrop-blur lg:hidden">
             <div className="grid grid-cols-5">
               {NAV.map((item) => {
                 const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
@@ -422,12 +422,12 @@ function AppFrame({ children, blocked, month }: { children: ReactNode; blocked: 
                     key={item.href}
                     href={`${item.href}?month=${month}`}
                     className={`flex min-h-16 flex-col items-center justify-center gap-1 text-[11px] font-extrabold ${
-                      active ? "text-[#e06600]" : "text-neutral-400"
+                      active ? "text-[#FF7900]" : "text-[#778398]"
                     }`}
                   >
                     <span
                       className={`flex h-10 w-16 items-center justify-center rounded-full transition ${
-                        item.emphasize ? (active ? "h-11 w-11 bg-gradient-to-br from-[#FF7900] to-[#FF9D38] text-white shadow-[0_10px_24px_rgba(190,90,0,0.35)]" : "h-11 w-11 bg-orange-100 text-[#e06600]") : active ? "bg-gradient-to-br from-[#FF7900] to-[#FF9D38] text-white shadow-[0_8px_20px_rgba(190,90,0,0.3)]" : ""
+                        item.emphasize ? "h-11 w-11 bg-gradient-to-br from-[#FF7900] to-[#FF9D38] text-white shadow-sm" : active ? "bg-[#FFF3E8] text-[#FF7900]" : ""
                       }`}
                     >
                       <Icon />
