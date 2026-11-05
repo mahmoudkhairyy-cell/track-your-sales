@@ -393,15 +393,14 @@ function AppFrame({ children, blocked, month }: { children: ReactNode; blocked: 
             </aside>
 
             <div className="flex min-w-0 flex-1 flex-col">
-              <header className={`sticky top-0 z-30 border-b border-orange-200 px-4 py-3 bg-[#F5F8FC]`}>
+              <header className="sticky top-0 z-30 border-b border-[#E8EDF4] bg-white/95 px-4 py-3 backdrop-blur">
                 <div className="flex items-center justify-between gap-3">
                   <MonthSwitcher />
                   <div className="flex items-center gap-2">
                     <div className="text-left">
-                      <p className="text-sm font-black leading-none text-neutral-900" dir="ltr">{APP_NAME}</p>
-                      <p className="mt-1 text-[11px] text-neutral-400" dir="ltr">{BRAND_BY}</p>
+                      <p className="text-sm font-black leading-none text-[#172033]" dir="ltr">{APP_NAME}</p>
+                      <p className="mt-1 text-[11px] text-[#778398]" dir="ltr">{BRAND_BY}</p>
                     </div>
-
                   </div>
                 </div>
               </header>
