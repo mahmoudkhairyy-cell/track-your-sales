@@ -141,6 +141,13 @@ export default function HomePage() {
         </p>
       ) : null}
 
+      <section className="flex flex-col gap-1">
+        <h1 className="text-lg font-black text-[#1a1b1e]">
+          {greeting()} {data.profile.name.split(" ")[0]} 👋
+        </h1>
+        <p className="text-[11px] text-[#584235]">📍 {data.profile.branch}</p>
+      </section>
+
       {/* الهيرو */}
       <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#B94700] via-[#D95B00] to-[#8A3400] p-4 text-white shadow-[0_14px_30px_-10px_rgba(138,52,0,0.55)]">
         
@@ -203,12 +210,6 @@ export default function HomePage() {
       </section>
 
 
-      <section className="flex flex-col gap-1">
-        <h1 className="text-lg font-black text-[#1a1b1e]">
-          {greeting()} {data.profile.name.split(" ")[0]} 👋
-        </h1>
-        <p className="text-[11px] text-[#584235]">📍 {data.profile.branch}</p>
-      </section>
 
       {/* المطلوب انهاردة */}
       <section className="flex items-stretch overflow-hidden rounded-2xl border border-[#F3D2B5]/80 bg-white shadow-sm">
