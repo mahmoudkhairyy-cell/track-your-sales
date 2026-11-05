@@ -56,30 +56,6 @@ export function UiSettings() {
         />
       </label>
 
-      <p className="mt-5 text-sm font-black text-[#172033]">ترتيب عناصر الرئيسية</p>
-      <ul className="mt-2 grid gap-2">
-        {prefs.homeOrder.map((id, index) => {
-          const hidden = prefs.homeHidden.includes(id);
-          return (
-            <li key={id} className="flex items-center justify-between gap-2 rounded-2xl border border-[#E8EDF4] bg-[#F5F8FC] px-3 py-2.5">
-              <span className={`text-sm font-extrabold ${hidden ? "text-[#778398] line-through" : "text-[#172033]"}`}>{LABELS[id]}</span>
-              <span className="flex items-center gap-1.5">
-                <button type="button" aria-label="أطلع فوق" onClick={() => move(id, -1)} disabled={index === 0} className="h-8 w-8 rounded-full bg-white text-sm font-black text-[#B94700] disabled:opacity-40">↑</button>
-                <button type="button" aria-label="أنزل تحت" onClick={() => move(id, 1)} disabled={index === prefs.homeOrder.length - 1} className="h-8 w-8 rounded-full bg-white text-sm font-black text-[#B94700] disabled:opacity-40">↓</button>
-                <button type="button" onClick={() => toggleHidden(id)} className="rounded-full bg-white px-3 py-1.5 text-xs font-extrabold text-[#B94700]">{hidden ? "إظهار" : "إخفاء"}</button>
-              </span>
-            </li>
-          );
-        })}
-      </ul>
-
-      <button
-        type="button"
-        onClick={() => update(DEFAULT_PREFS)}
-        className="mt-4 min-h-11 w-full rounded-2xl border border-[#E8EDF4] bg-white text-sm font-extrabold text-[#556070]"
-      >
-        استعادة الترتيب الافتراضي
-      </button>
       <p className="mt-2 text-[10px] text-[#778398]">الإعدادات دي بتتحفظ على جهازك بس، ومش بتأثر على بيانات المبيعات أو التارجت.</p>
     </section>
   );
