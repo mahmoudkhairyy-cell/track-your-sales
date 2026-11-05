@@ -249,59 +249,75 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* إجراءات سريعة (صفحات موجودة بس) */}
+      <section className="grid grid-cols-3 gap-2">
+        {[
+          { href: "/log/", label: "تسجيل بيعة" },
+          { href: "/target/", label: "التارجت" },
+          { href: "/wiki/", label: "المرجع" },
+        ].map((item) => (
+          <Link key={item.href} href={item.href} className="rounded-2xl border border-[#E8EDF4] bg-white px-3 py-3 text-center text-xs font-extrabold text-[#172033] shadow-sm transition-transform active:scale-95">
+            {item.label}
+          </Link>
+        ))}
+      </section>
+
       {/* المؤشرات */}
-      <section className="flex flex-col gap-2.5">
+      <section className="flex flex-col gap-2">
         <div className="flex items-center justify-between">
-          <h2 className="text-base font-black tracking-tight text-slate-900">مؤشرات الأداء (KPIs)</h2>
-          <span className="text-xs font-bold text-[#e06600]">تحديث فوري ⚡</span>
+          <h2 className="text-sm font-black text-[#172033]">مؤشرات الأداء (KPIs)</h2>
+          <span className="text-[11px] font-bold text-[#778398]">{data.kpis.length} مؤشر</span>
         </div>
-        {data.kpis.map((kpi) => {
-          const visual = Math.min(100, Math.max(0, kpi.percent));
-          const onTrackKpi = kpi.achieved >= kpi.expectedToDate;
-          return (
-            <article key={kpi.kpiKey} className={`rounded-2xl border p-3.5 shadow-sm ${kpi.achieved >= kpi.expectedToDate ? "border-emerald-200/80 bg-emerald-50/70" : "border-red-200/80 bg-red-50/70"}`}>
-              <div className="flex items-start justify-between gap-2">
-                <div className="flex items-center gap-2.5">
-                  <span className="flex h-9 w-9 items-center justify-center rounded-xl border border-orange-100 bg-orange-50 text-[#e06600]">
-                    <KpiIcon kpiKey={kpi.kpiKey} className="h-4 w-4" />
-                  </span>
-                  <div>
-                    <h3 className="flex items-center gap-1.5 text-sm font-black text-slate-800" dir="ltr">
-                      {kpi.nameEn}
-                      <span className={`rounded-full border px-1.5 py-0.5 text-[10px] font-bold ${onTrackKpi ? "border-emerald-200/60 bg-emerald-50 text-emerald-700" : "border-red-200 bg-red-50 text-red-600"}`}>
-                        {onTrackKpi ? "On Track ●" : `ناقص ${formatQty(Math.max(0, Math.ceil(kpi.expectedToDate - kpi.achieved)))}`}
-                      </span>
-                    </h3>
-                    <span className="text-[10px] font-semibold text-slate-400">الوزن النسبي: {kpi.weight}%</span>
+        <div className="flex flex-col gap-2">
+          {data.kpis.map((kpi) => {
+            const onTrackKpi = kpi.achieved >= kpi.expectedToDate;
+            const ringLen = 2 * Math.PI * 18;
+            const pct = Math.min(100, Math.max(0, kpi.percent));
+            return (
+              <article key={kpi.kpiKey} className="flex items-center gap-3 rounded-2xl border border-[#E8EDF4] bg-white p-3 shadow-sm">
+                <div className="relative h-11 w-11 shrink-0">
+                  <svg viewBox="0 0 44 44" className="h-full w-full -rotate-90">
+                    <circle cx="22" cy="22" r="18" fill="none" stroke="#F1F4F9" strokeWidth="5" />
+                    <circle
+                      cx="22"
+                      cy="22"
+                      r="18"
+                      fill="none"
+                      stroke={onTrackKpi ? "#16B981" : "#FF7900"}
+                      strokeWidth="5"
+                      strokeLinecap="round"
+                      strokeDasharray={ringLen}
+                      strokeDashoffset={ringLen * (1 - pct / 100)}
+                      className="transition-all duration-700"
+                    />
+                  </svg>
+                  <span className="absolute inset-0 flex items-center justify-center font-mono text-[10px] font-black text-[#172033]">{Math.round(kpi.percent)}%</span>
+                </div>
+                <div className="flex min-w-0 flex-1 flex-col gap-1">
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="flex min-w-0 items-center gap-1.5">
+                      <KpiIcon kpiKey={kpi.kpiKey} className="h-3.5 w-3.5 shrink-0 text-[#FF7900]" />
+                      <span className="truncate text-xs font-black text-[#172033]" dir="ltr">{kpi.nameEn}</span>
+                    </span>
+                    <span className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-extrabold ${onTrackKpi ? "bg-emerald-50 text-emerald-700" : "bg-red-50 text-red-600"}`}>
+                      {onTrackKpi ? "On Track" : `ناقص ${formatQty(Math.max(0, Math.ceil(kpi.expectedToDate - kpi.achieved)))}`}
+                    </span>
                   </div>
+                  <div className="flex items-center justify-between text-[11px] font-semibold text-[#778398]">
+                    <span>
+                      <strong className="font-mono text-[#172033]">{formatQty(kpi.achieved)}</strong> / {formatQty(kpi.target)}
+                    </span>
+                    <span>المتبقي <strong className="font-mono text-[#172033]">{formatQty(kpi.remaining)}</strong></span>
+                  </div>
+                  <div className="h-1.5 w-full overflow-hidden rounded-full bg-[#F1F4F9]">
+                    <div className="h-full rounded-full bg-gradient-to-r from-[#FF7900] to-[#FF9D38] transition-all duration-700" style={{ width: `${pct}%` }} />
+                  </div>
+                  {kpi.overTarget ? <p className="text-[10px] font-bold text-[#FF7900]">عدّيت التارجت 🎉</p> : null}
                 </div>
-                <span className="font-mono text-xl font-black text-slate-900">{formatPercent(kpi.percent)}<span className="text-xs font-bold text-slate-500">%</span></span>
-              </div>
-              <div className="my-2.5 grid grid-cols-3 gap-2 rounded-xl bg-slate-50/80 p-2 text-center text-xs">
-                <div>
-                  <span className="block text-[10px] font-medium text-slate-400">المستهدف</span>
-                  <span className="font-mono font-bold text-slate-700">{formatQty(kpi.target)}</span>
-                </div>
-                <div className="border-x border-slate-200/70">
-                  <span className="block text-[10px] font-bold text-[#e06600]">المحقق</span>
-                  <span className="font-mono font-extrabold text-[#e06600]">{formatQty(kpi.achieved)}</span>
-                </div>
-                <div>
-                  <span className="block text-[10px] font-medium text-slate-400">الباقي</span>
-                  <span className="font-mono font-bold text-rose-600">{formatQty(kpi.remaining)}</span>
-                </div>
-              </div>
-              <div className="mb-2 h-2 w-full rounded-full bg-slate-100">
-                <div className="h-2 rounded-full bg-[#ff7900] transition-all" style={{ width: `${visual}%` }} />
-              </div>
-              <div className="flex items-center justify-between text-[11px] font-medium text-slate-500">
-                <span>المفروض تكون عند <strong className="font-bold text-slate-700">{formatQty(kpi.expectedToDate)} {kpi.unitAr}</strong> دلوقتي</span>
-                <span className="font-bold text-amber-600">مساهمة: {formatPercent(kpi.contribution)}%</span>
-              </div>
-              {kpi.overTarget ? <p className="mt-1 text-[10px] font-bold text-[#e06600]">🎉 عدّيت التارجت! الشريط واقف عند 100% بس الرقم الحقيقي ظاهر فوق.</p> : null}
-            </article>
-          );
-        })}
+              </article>
+            );
+          })}
+        </div>
       </section>
 
       {/* زرار التسجيل العايم */}
