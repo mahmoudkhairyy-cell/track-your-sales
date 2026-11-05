@@ -142,9 +142,9 @@ export default function HomePage() {
       ) : null}
 
       {/* الهيرو */}
-      <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#B94700] via-[#D95B00] to-[#8A3400] p-5 text-white shadow-[0_14px_30px_-10px_rgba(138,52,0,0.55)]">
+      <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#B94700] via-[#D95B00] to-[#8A3400] p-4 text-white shadow-[0_14px_30px_-10px_rgba(138,52,0,0.55)]">
         
-        <div className="relative z-10 flex flex-col gap-4">
+        <div className="relative z-10 flex flex-col gap-3">
           <div className="flex items-center justify-between">
             <span className="flex items-center gap-2 text-xs font-bold text-white/90">
               <span
@@ -158,8 +158,8 @@ export default function HomePage() {
               Live Run
             </span>
           </div>
-          <div className="flex items-center gap-4">
-            <div className="relative h-28 w-28 shrink-0">
+          <div className="flex items-center gap-3">
+            <div className="relative h-24 w-24 shrink-0">
               <svg viewBox="0 0 120 120" className="h-full w-full -rotate-90">
                 <circle cx="60" cy="60" r="50" fill="none" stroke="rgba(255,255,255,0.28)" strokeWidth="10" />
                 <circle
