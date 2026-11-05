@@ -96,7 +96,7 @@ type MonthRow = {
   quality?: QualityScores;
 };
 
-type Profile = { name: string; branch: string; role: string };
+type Profile = { name: string; branch: string; role: string; areaManager?: string };
 
 type State = {
   profile: Profile;
@@ -131,7 +131,7 @@ function fail(status: number, message: string): never {
 
 function emptyState(): State {
   return {
-    profile: { name: "", branch: "", role: "" },
+    profile: { name: "", branch: "", role: "", areaManager: "" },
     entries: [],
     months: {},
     articles: [],
@@ -181,10 +181,10 @@ function newId(): string {
 
 /* ---------- قراءة الملف الشخصي (بيستخدمه الشريط الجانبي) ---------- */
 
-export function readProfile(): { name: string; branch: string; role: Role | "" } {
+export function readProfile(): { name: string; branch: string; role: Role | ""; areaManager: string } {
   const state = loadState();
   const role = state.profile.role;
-  return { name: state.profile.name, branch: state.profile.branch, role: role === "manager" || role === "agent" || role === "team_leader" ? role : "" };
+  return { name: state.profile.name, branch: state.profile.branch, areaManager: state.profile.areaManager ?? "", role: role === "manager" || role === "agent" || role === "team_leader" ? role : "" };
 }
 
 /* ---------- تحقق من المدخلات ---------- */
@@ -538,8 +538,9 @@ function updateProfile(state: State, data: Record<string, unknown>) {
   const name = trimText(data.name, "اسم الموظف", 2, 80);
   const branch = typeof data.branch === "string" ? data.branch.trim().slice(0, 80) : "";
   const role = data.role === "manager" || data.role === "agent" || data.role === "team_leader" ? data.role : state.profile.role;
-  state.profile = { ...state.profile, name, branch, role };
-  return { user: { id: "local", name, branch, role }, message: "✅ بياناتك اتحدثت" };
+  const areaManager = typeof data.areaManager === "string" ? data.areaManager.trim().slice(0, 80) : (state.profile.areaManager ?? "");
+  state.profile = { ...state.profile, name, branch, role, areaManager };
+  return { user: { id: "local", name, branch, role, areaManager }, message: "✅ بياناتك اتحدثت" };
 }
 
 function getDashboard(state: State, params: URLSearchParams) {
@@ -604,7 +605,7 @@ function getDashboard(state: State, params: URLSearchParams) {
   });
 
   return {
-    profile: { name: state.profile.name, branch: state.profile.branch, role: state.profile.role },
+    profile: { name: state.profile.name, branch: state.profile.branch, role: state.profile.role, areaManager: state.profile.areaManager ?? "" },
     yearMonth,
     monthLabel: monthLabelAr(yearMonth),
     today,

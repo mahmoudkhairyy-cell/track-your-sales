@@ -198,7 +198,7 @@ export default function ManagerPage() {
     if (newPw.length < 6) return setPwMsg("الباسورد الجديد لازم يكون 6 حروف على الأقل.");
     if (newPw !== newPw2) return setPwMsg("الباسورد الجديد مش متطابق.");
     try {
-      await cloudRpc("change_manager_password", { p_old: oldPw, p_new: newPw });
+      await cloudRpc("change_password_any", { p_old: oldPw, p_new: newPw });
       sessionStorage.setItem("tys.mgrPass", newPw);
       setPassword(newPw);
       setOldPw("");
@@ -235,7 +235,7 @@ export default function ManagerPage() {
     setPending(true);
     setError("");
     try {
-      const data = await cloudRpc<ReportRow[]>("get_all_reports", { p_password: pw });
+      const data = await cloudRpc<ReportRow[]>("get_reports_for_password", { p_password: pw });
       // الباسورد بيفضل في الجلسة عشان الريفريش ما يطلبوش تاني.
       try {
         sessionStorage.setItem("tys.mgrPass", pw);

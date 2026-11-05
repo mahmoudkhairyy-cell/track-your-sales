@@ -6,7 +6,7 @@ import { createContext, useContext, useEffect, useState, type FormEvent, type Re
 import { readProfile } from "@/lib/local-api";
 import { pushReport } from "@/lib/sync";
 import { api } from "@/lib/client";
-import { APP_DISCLAIMER, APP_NAME, BRAND_BY, BRANCHES, OUTSIDE_BRANCHES } from "@/lib/constants";
+import { APP_DISCLAIMER, APP_NAME, AREA_MANAGERS, BRAND_BY, BRANCHES, OUTSIDE_BRANCHES } from "@/lib/constants";
 import { cairoYearMonth, isValidYearMonth, monthLabelAr, shiftYearMonth } from "@/lib/dates";
 import { BookIcon, ChevronIcon, HomeIcon, MoreIcon, PlusIcon, TargetIcon } from "@/components/icons";
 import { ToastProvider, useToast } from "@/components/ui";
@@ -99,6 +99,7 @@ type GateStatus = "checking" | "profile" | "target" | "ready";
 function FirstRunProfile({ onDone }: { onDone: () => void }) {
   const [name, setName] = useState("");
   const [branch, setBranch] = useState("");
+  const [areaManager, setAreaManager] = useState("");
   const [error, setError] = useState("");
   const [pending, setPending] = useState(false);
   const [role, setRole] = useState<"agent" | "team_leader" | "manager" | "">("");
@@ -117,9 +118,13 @@ function FirstRunProfile({ onDone }: { onDone: () => void }) {
       setError("اختار الفرع بتاعك");
       return;
     }
+    if (!areaManager.trim()) {
+      setError("اختار مدير المنطقة بتاعك");
+      return;
+    }
     setPending(true);
     try {
-      await api("/api/profile", { method: "PATCH", body: JSON.stringify({ name: name.trim(), branch: branch.trim(), role }) });
+      await api("/api/profile", { method: "PATCH", body: JSON.stringify({ name: name.trim(), branch: branch.trim(), role, areaManager: areaManager.trim() }) });
       onDone();
     } catch (err) {
       setError(err instanceof Error ? err.message : "تعذر الحفظ");
@@ -167,6 +172,15 @@ function FirstRunProfile({ onDone }: { onDone: () => void }) {
               <option key={item} value={item}>{item}</option>
             ))}
             <option value={OUTSIDE_BRANCHES}>{OUTSIDE_BRANCHES}</option>
+          </select>
+        </label>
+        <label className="mb-4 block text-sm font-bold text-neutral-700">
+          مدير المنطقة (الأريا مانجر)
+          <select value={areaManager} onChange={(e) => setAreaManager(e.target.value)} className="mt-1 w-full rounded-2xl border border-orange-200 bg-white px-4 py-3 outline-none focus:border-[#e06600]">
+            <option value="">— اختار مديرك —</option>
+            {AREA_MANAGERS.map((item) => (
+              <option key={item} value={item}>{item}</option>
+            ))}
           </select>
         </label>
         {error ? <p className="mb-3 text-sm font-bold text-red-600">{error}</p> : null}
@@ -291,7 +305,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   useEffect(() => {
     let cancelled = false;
     const profile = readProfile();
-    if (!profile.name.trim() || (profile.role !== "agent" && profile.role !== "team_leader" && profile.role !== "manager")) {
+    if (!profile.name.trim() || !profile.areaManager || (profile.role !== "agent" && profile.role !== "team_leader" && profile.role !== "manager")) {
       setStatus("profile");
       return;
     }

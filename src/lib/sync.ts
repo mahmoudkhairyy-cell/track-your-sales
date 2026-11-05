@@ -100,6 +100,7 @@ export async function pushReport(): Promise<boolean> {
       p_branch: profile.branch,
       p_payload: {
         role: profile.role,
+        areaManager: profile.areaManager,
         monthLabel: data.monthLabel,
         overall: data.overall,
         estimatedCommission: data.estimatedCommission,
