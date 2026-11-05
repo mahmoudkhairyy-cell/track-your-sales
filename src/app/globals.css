@@ -45,3 +45,19 @@ textarea {
   #report-print, #report-print * { visibility: visible !important; }
   #report-print { position: absolute; inset: 0; box-shadow: none !important; }
 }
+
+/* هياكل التحميل */
+.skeleton-bone {
+  background: linear-gradient(90deg, #eef2f7 0%, #f7f9fc 50%, #eef2f7 100%);
+  background-size: 200% 100%;
+  animation: tys-shimmer 1.4s ease-in-out infinite;
+}
+@keyframes tys-shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .skeleton-bone,
+  .transition-all,
+  * { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+}

@@ -2,7 +2,9 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { Banner, Spinner } from "@/components/ui";
+import { Banner } from "@/components/ui";
+import { HomeSkeleton } from "@/components/Skeleton";
+import { buildBadges, buildForecast, buildInsights } from "@/lib/insights";
 import { ApiError, api } from "@/lib/client";
 import { formatMoney, formatPercent, formatQty, linesWord } from "@/lib/calculations";
 import { useMonth } from "@/components/AppShell";
@@ -108,7 +110,7 @@ export default function HomePage() {
     return () => { cancelled = true; };
   }, [month]);
 
-  if (loading) return <Spinner label="ثواني… بنحمّل لوحة الأداء" />;
+  if (loading) return <HomeSkeleton />;
   if (error) return <Banner tone="error">{error}</Banner>;
   if (!data) return <Banner tone="error">مفيش بيانات نعرضها</Banner>;
 
@@ -225,6 +227,57 @@ export default function HomePage() {
           <span className="text-[11px] font-semibold leading-relaxed text-slate-600">{data.pace.message}</span>
         </div>
       </section>
+
+      {/* ملاحظات ذكية + توقع + أوسمة (محسوبة محليًا من البيانات الحالية) */}
+      {(() => {
+        const insights = buildInsights(data.kpis);
+        const forecast = buildForecast(data.overall, data.work.elapsed, data.work.total);
+        const badges = buildBadges(data.overall, data.entriesCount);
+        const toneClass = { good: "text-emerald-700", warn: "text-[#B94700]", neutral: "text-[#172033]" };
+        return (
+          <section className="grid gap-3">
+            {insights.length > 0 ? (
+              <div className="rounded-[24px] border border-[#E8EDF4] bg-white p-4 shadow-sm">
+                <p className="mb-2 text-sm font-black text-[#172033]">💡 ملاحظات ذكية <span className="text-[10px] font-bold text-[#556070]">(حساب محلي)</span></p>
+                <ul className="grid gap-2 text-xs">
+                  {insights.map((item) => (
+                    <li key={item.label} className="flex items-center justify-between gap-2">
+                      <span className="font-bold text-[#556070]">{item.label}</span>
+                      <span className={`font-extrabold ${toneClass[item.tone]}`}>{item.value}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ) : null}
+
+            <div className="rounded-[24px] border border-[#E8EDF4] bg-white p-4 shadow-sm">
+              <p className="text-sm font-black text-[#172033]">🔮 توقع نهاية الشهر <span className="text-[10px] font-bold text-[#556070]">(تقدير)</span></p>
+              {forecast ? (
+                <>
+                  <p className="mt-2 text-2xl font-black tabular-nums text-[#B94700]">{formatPercent(forecast.estimate)}%</p>
+                  <p className="mt-1 text-[11px] text-[#556070]">
+                    متوسط {formatPercent(forecast.perDay)}% كل يوم شغل · عدّى {forecast.elapsed} يوم · فاضل {forecast.remaining} يوم
+                  </p>
+                  <p className="mt-1 text-[10px] text-[#778398]">التقدير مبني على أيام الشغل من إعدادات الشهر، ومش بيغيّر حساب التارجت الفعلي.</p>
+                </>
+              ) : (
+                <p className="mt-2 text-xs text-[#556070]">التوقع بيظهر أول ما يبدأ الشهر ويتسجل أول يوم شغل.</p>
+              )}
+            </div>
+
+            <div className="rounded-[24px] border border-[#E8EDF4] bg-white p-4 shadow-sm">
+              <p className="mb-2 text-sm font-black text-[#172033]">🏅 الأوسمة</p>
+              <div className="grid grid-cols-2 gap-2">
+                {badges.map((b) => (
+                  <div key={b.id} className={`rounded-2xl px-3 py-2.5 text-xs font-extrabold ${b.unlocked ? "bg-[#FCEBDD] text-[#B94700]" : "bg-[#F5F8FC] text-[#778398]"}`}>
+                    {b.unlocked ? "✅" : "🔒"} {b.title}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+        );
+      })()}
 
       {/* نسبة الإنجاز بالمحاور */}
       <section className="flex flex-col gap-2">
