@@ -136,10 +136,6 @@ function FirstRunProfile({ onDone }: { onDone: () => void }) {
     setPending(true);
     try {
       await api("/api/profile", { method: "PATCH", body: JSON.stringify({ name: name.trim(), branch: branch.trim(), role, areaManager: areaManager.trim() }) });
-      if (role === "area_manager") {
-        window.location.assign("/track-your-sales/manager/");
-        return;
-      }
       onDone();
     } catch (err) {
       setError(err instanceof Error ? err.message : "تعذر الحفظ");
