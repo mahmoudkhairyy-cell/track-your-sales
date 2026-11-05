@@ -149,7 +149,7 @@ export default function HomePage() {
       </section>
 
       {/* الهيرو */}
-      <section className="relative overflow-hidden rounded-3xl border border-[#c2410c]/45 bg-[radial-gradient(120%_90%_at_100%_0%,rgba(194,65,12,0.35),transparent_60%),#1c1310] p-5 text-white shadow-[0_20px_40px_-20px_rgba(194,65,12,0.35)]">
+      <section style={{ background: "radial-gradient(120% 90% at 100% 0%, rgba(194,65,12,0.35), transparent 60%), #1c1310" }} className="relative overflow-hidden rounded-3xl border border-[#c2410c]/45 p-5 text-white shadow-[0_20px_40px_-20px_rgba(194,65,12,0.35)]">
         
         <div className="relative z-10 flex flex-col gap-3">
           <div className="flex items-center justify-between">
