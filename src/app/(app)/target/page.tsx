@@ -176,11 +176,11 @@ export default function TargetPage() {
       </section>
 
       {!saved ? (
-        <section className="rounded-[24px] border-2 border-[#e06600] bg-orange-50 p-4 text-[#8f4300]">
+        <section className="rounded-[24px] border-2 border-[#B94700] bg-[#FCEBDD] p-4 text-[#B94700]">
           <p className="text-sm font-black">📅 الخطوة الأولى: اختار إجازاتك لهذا الشهر</p>
           <p className="mt-1 text-xs leading-6">اضغط على الأيام اللي هتاخد فيها إجازة في التقويم تحت. لو مش هتاخد إجازة، فعّل التأكيد بس.</p>
           <label className="mt-3 flex items-center gap-2 text-sm font-extrabold">
-            <input type="checkbox" checked={holidaysConfirmed} onChange={(e) => setHolidaysConfirmed(e.target.checked)} className="h-5 w-5 accent-[#e06600]" />
+            <input type="checkbox" checked={holidaysConfirmed} onChange={(e) => setHolidaysConfirmed(e.target.checked)} className="h-5 w-5 accent-[#B94700]" />
             {holidays.length > 0 ? `أكدت إن عندي ${holidays.length} إجازة` : "مفيش عندي إجازات الشهر ده"}
           </label>
         </section>
@@ -188,9 +188,9 @@ export default function TargetPage() {
 
       <section className="overflow-hidden rounded-[28px] border border-[#E8EDF4] bg-white p-4 shadow-sm">
         <div className="grid grid-cols-3 gap-2 text-center">
-          <div className="rounded-2xl bg-[#FFF3E8] px-2 py-3"><p className="text-2xl font-black tabular-nums text-[#172033]">{monthDays.length}</p><p className="text-[11px] text-[#778398]">أيام الشهر</p></div>
-          <div className="rounded-2xl bg-[#FFF3E8] px-2 py-3"><p className="text-2xl font-black tabular-nums text-[#172033]">{holidays.length}</p><p className="text-[11px] text-[#778398]">إجازات</p></div>
-          <div className="rounded-2xl bg-[#FFF3E8] px-2 py-3"><p className="text-2xl font-black tabular-nums text-[#172033]">{workingDatesInMonth(month, workingDays, holidays.map((item) => item.date)).length}</p><p className="text-[11px] text-[#778398]">أيام شغل</p></div>
+          <div className="rounded-2xl bg-[#FCEBDD] px-2 py-3"><p className="text-2xl font-black tabular-nums text-[#172033]">{monthDays.length}</p><p className="text-[11px] text-[#778398]">أيام الشهر</p></div>
+          <div className="rounded-2xl bg-[#FCEBDD] px-2 py-3"><p className="text-2xl font-black tabular-nums text-[#172033]">{holidays.length}</p><p className="text-[11px] text-[#778398]">إجازات</p></div>
+          <div className="rounded-2xl bg-[#FCEBDD] px-2 py-3"><p className="text-2xl font-black tabular-nums text-[#172033]">{workingDatesInMonth(month, workingDays, holidays.map((item) => item.date)).length}</p><p className="text-[11px] text-[#778398]">أيام شغل</p></div>
         </div>
       </section>
 
@@ -218,7 +218,7 @@ export default function TargetPage() {
                   )
                 }
                 className={`flex aspect-square items-center justify-center rounded-2xl text-sm font-extrabold transition ${
-                  isHoliday ? "bg-gradient-to-br from-[#FF7900] to-[#FF9D38] text-white shadow-sm" : "bg-[#F5F8FC] text-[#172033]"
+                  isHoliday ? "bg-gradient-to-br from-[#D95B00] to-[#E87518] text-white shadow-sm" : "bg-[#F5F8FC] text-[#172033]"
                 }`}
               >
                 {Number(date.slice(8, 10))}
@@ -236,7 +236,7 @@ export default function TargetPage() {
       </p>
 
       {daily ? (
-        <section className="rounded-[24px] bg-orange-100 p-4 text-sm leading-7 text-[#8f4300]">
+        <section className="rounded-[24px] bg-[#FCEBDD] p-4 text-sm leading-7 text-[#B94700]">
           <p className="font-extrabold">⚡ المطلوب منك النهارده عشان تفضل ON TRACK:</p>
           {behindKpis.length === 0 ? (
             <p className="mt-1 font-bold">كل المؤشرات تمام. مفيش حاجة ضاغطة النهارده 👌</p>
@@ -259,7 +259,7 @@ export default function TargetPage() {
         </section>
       ) : null}
 
-      <section className="rounded-[32px] border border-orange-200/70 bg-white p-5 shadow-sm">
+      <section className="rounded-[32px] border border-[#F3D2B5]/70 bg-white p-5 shadow-sm">
         <Field label="💰 الكوميشن الكامل (جنيه)">
           <input
             className={`${inputClass} text-xl font-black`}
@@ -273,14 +273,14 @@ export default function TargetPage() {
         </Field>
       </section>
 
-      <section className="rounded-[24px] border border-orange-200/70 bg-white p-4 shadow-sm">
+      <section className="rounded-[24px] border border-[#F3D2B5]/70 bg-white p-4 shadow-sm">
         <div className="mb-1 flex items-center justify-between">
           <h2 className="text-lg font-black">الإيتمز والأوزان</h2>
         </div>
-        <p className="mb-2 rounded-xl bg-orange-50 px-3 py-2 text-[11px] font-bold leading-5 text-[#8f4300]">
+        <p className="mb-2 rounded-xl bg-[#FCEBDD] px-3 py-2 text-[11px] font-bold leading-5 text-[#B94700]">
           📌 الأوزان مختلفة للموظف والمدير. ده وزن {kpis.some((k) => k.kpiKey === "productivity" && k.weight > 0) ? "المدير" : "الموظف"}، وبيتحدد أوتوماتيك حسب اختيارك في أول مرة، ومش بيتعدل من التطبيق.
         </p>
-        <div className="grid grid-cols-[1fr_74px_74px] gap-2 border-b border-dashed border-orange-200/70 pb-2 text-[11px] font-bold text-neutral-400">
+        <div className="grid grid-cols-[1fr_74px_74px] gap-2 border-b border-dashed border-[#F3D2B5]/70 pb-2 text-[11px] font-bold text-neutral-400">
           <span>الإيتم</span>
           <span className="text-center">التارجت</span>
           <span className="text-center">الوزن %</span>
@@ -292,13 +292,13 @@ export default function TargetPage() {
           if (kpi.kpiKey === "productivity" && kpi.weight === 0) return null;
           const catalog = KPI_CATALOG.find((item) => item.key === kpi.kpiKey);
           return (
-            <div key={kpi.kpiKey} className="grid grid-cols-[1fr_74px_74px] items-center gap-2 border-b border-dashed border-orange-200/70 py-2.5 last:border-0">
+            <div key={kpi.kpiKey} className="grid grid-cols-[1fr_74px_74px] items-center gap-2 border-b border-dashed border-[#F3D2B5]/70 py-2.5 last:border-0">
               <div className="flex min-w-0 items-center gap-2">
-                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-orange-100 text-[#e06600]"><KpiIcon kpiKey={kpi.kpiKey} className="h-4 w-4" /></span>
+                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[#FCEBDD] text-[#B94700]"><KpiIcon kpiKey={kpi.kpiKey} className="h-4 w-4" /></span>
                 <div className="min-w-0">
                   <p className="truncate text-sm font-extrabold" dir="ltr">{catalog?.nameEn}</p>
                   {kpi.kpiKey === "new_orange_cash" ? (
-                    <p className="text-[10px] font-bold text-[#8f4300]">= 90% من New Lines</p>
+                    <p className="text-[10px] font-bold text-[#B94700]">= 90% من New Lines</p>
                   ) : (
                     <p className="text-[10px] text-neutral-400">{kpi.unitAr}</p>
                   )}

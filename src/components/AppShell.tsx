@@ -51,7 +51,7 @@ function MonthSwitcher() {
       <button
         type="button"
         onClick={() => go(shiftYearMonth(month, -1))}
-        className="flex h-9 w-9 rotate-180 items-center justify-center rounded-full bg-white text-[#e06600] shadow-[0_2px_6px_rgba(40,20,0,0.12)] active:scale-95"
+        className="flex h-9 w-9 rotate-180 items-center justify-center rounded-full bg-white text-[#B94700] shadow-[0_2px_6px_rgba(40,20,0,0.12)] active:scale-95"
         aria-label="الشهر السابق"
       >
         <ChevronIcon width={18} height={18} strokeWidth={2.6} />
@@ -62,7 +62,7 @@ function MonthSwitcher() {
       <button
         type="button"
         onClick={() => go(shiftYearMonth(month, 1))}
-        className="flex h-9 w-9 items-center justify-center rounded-full bg-white text-[#e06600] shadow-[0_2px_6px_rgba(40,20,0,0.12)] active:scale-95"
+        className="flex h-9 w-9 items-center justify-center rounded-full bg-white text-[#B94700] shadow-[0_2px_6px_rgba(40,20,0,0.12)] active:scale-95"
         aria-label="الشهر التالي"
       >
         <ChevronIcon width={18} height={18} strokeWidth={2.6} />
@@ -82,7 +82,7 @@ function NavLinks({ pathname, month }: { pathname: string; month: string }) {
             key={item.href}
             href={`${item.href}?month=${month}`}
             className={`flex min-h-12 items-center gap-3 rounded-2xl px-3 text-sm font-bold transition ${
-              active ? "bg-orange-100 text-[#e06600]" : "text-neutral-500 hover:bg-neutral-50"
+              active ? "bg-[#FCEBDD] text-[#B94700]" : "text-neutral-500 hover:bg-neutral-50"
             }`}
           >
             <Icon />
@@ -154,7 +154,7 @@ function FirstRunProfile({ onDone }: { onDone: () => void }) {
         </div>
         <label className="mb-3 block text-sm font-bold text-neutral-700">
           الاسم
-          <input value={name} onChange={(e) => setName(e.target.value)} className="mt-1 w-full rounded-2xl border border-orange-200 px-4 py-3 outline-none focus:border-[#e06600]" maxLength={80} />
+          <input value={name} onChange={(e) => setName(e.target.value)} className="mt-1 w-full rounded-2xl border border-[#F3D2B5] px-4 py-3 outline-none focus:border-[#B94700]" maxLength={80} />
         </label>
         <div className="mb-4">
           <p className="mb-2 text-sm font-bold text-neutral-700">إنت إيه؟</p>
@@ -169,7 +169,7 @@ function FirstRunProfile({ onDone }: { onDone: () => void }) {
                 key={option.key}
                 type="button"
                 onClick={() => setRole(option.key)}
-                className={`rounded-2xl border px-3 py-3 text-sm font-extrabold ${role === option.key ? "border-[#e06600] bg-orange-100 text-[#8f4300]" : "border-orange-200 bg-white text-neutral-600"}`}
+                className={`rounded-2xl border px-3 py-3 text-sm font-extrabold ${role === option.key ? "border-[#B94700] bg-[#FCEBDD] text-[#B94700]" : "border-[#F3D2B5] bg-white text-neutral-600"}`}
               >
                 {option.label}
               </button>
@@ -179,7 +179,7 @@ function FirstRunProfile({ onDone }: { onDone: () => void }) {
         {role !== "area_manager" ? (
         <label className="mb-4 block text-sm font-bold text-neutral-700">
           اسم الفرع
-          <select value={branch} onChange={(e) => setBranch(e.target.value)} className="mt-1 w-full rounded-2xl border border-orange-200 bg-white px-4 py-3 outline-none focus:border-[#e06600]">
+          <select value={branch} onChange={(e) => setBranch(e.target.value)} className="mt-1 w-full rounded-2xl border border-[#F3D2B5] bg-white px-4 py-3 outline-none focus:border-[#B94700]">
             <option value="">— اختار الفرع —</option>
             {BRANCHES.map((item) => (
               <option key={item} value={item}>{item}</option>
@@ -191,7 +191,7 @@ function FirstRunProfile({ onDone }: { onDone: () => void }) {
         {role !== "area_manager" ? (
         <label className="mb-4 block text-sm font-bold text-neutral-700">
           مدير المنطقة (الأريا مانجر)
-          <select value={areaManager} onChange={(e) => setAreaManager(e.target.value)} className="mt-1 w-full rounded-2xl border border-orange-200 bg-white px-4 py-3 outline-none focus:border-[#e06600]">
+          <select value={areaManager} onChange={(e) => setAreaManager(e.target.value)} className="mt-1 w-full rounded-2xl border border-[#F3D2B5] bg-white px-4 py-3 outline-none focus:border-[#B94700]">
             <option value="">— اختار مديرك —</option>
             {AREA_MANAGERS.map((item) => (
               <option key={item} value={item}>{item}</option>
@@ -200,7 +200,7 @@ function FirstRunProfile({ onDone }: { onDone: () => void }) {
         </label>
         ) : null}
         {error ? <p className="mb-3 text-sm font-bold text-red-600">{error}</p> : null}
-        <button type="submit" disabled={pending} className="w-full rounded-2xl bg-gradient-to-br from-[#FF7900] to-[#FF9D38] py-3 font-extrabold text-white shadow-sm disabled:opacity-60">
+        <button type="submit" disabled={pending} className="w-full rounded-2xl bg-gradient-to-br from-[#D95B00] to-[#E87518] py-3 font-extrabold text-white shadow-sm disabled:opacity-60">
           كمّل
         </button>
       </form>
@@ -214,7 +214,7 @@ function TargetGate({ month }: { month: string }) {
       <div className="text-4xl">🎯</div>
       <h2 className="mt-2 text-lg font-black">لازم تدخل تارجت الشهر الأول</h2>
       <p className="mt-1 text-sm text-neutral-500">ادخل التارجت والأوزان واحفظها، وبعدها التطبيق هيفتح عادي.</p>
-      <Link href={`/target?month=${month}`} className="mt-5 inline-block rounded-2xl bg-gradient-to-br from-[#FF7900] to-[#FF9D38] px-6 py-3 font-extrabold text-white shadow-sm">
+      <Link href={`/target?month=${month}`} className="mt-5 inline-block rounded-2xl bg-gradient-to-br from-[#D95B00] to-[#E87518] px-6 py-3 font-extrabold text-white shadow-sm">
         ادخل التارجت
       </Link>
     </div>
@@ -228,9 +228,9 @@ function SplashScreen({ name }: { name: string }) {
       dir="rtl"
     >
       <img src="/track-your-sales/logo-full.png" alt="Track Your Sales" className="h-32 w-auto object-contain" />
-      <div className="h-px w-24 bg-gradient-to-r from-transparent via-[#e06600] to-transparent" />
-      {name.trim() ? <p className="text-base font-bold text-[#e06600]">أهلاً يا {name.trim().split(" ")[0]}</p> : null}
-      <p className="text-xs font-semibold text-[#e06600]/80" dir="ltr">{BRAND_BY}</p>
+      <div className="h-px w-24 bg-gradient-to-r from-transparent via-[#B94700] to-transparent" />
+      {name.trim() ? <p className="text-base font-bold text-[#B94700]">أهلاً يا {name.trim().split(" ")[0]}</p> : null}
+      <p className="text-xs font-semibold text-[#B94700]/80" dir="ltr">{BRAND_BY}</p>
     </div>
   );
 }
@@ -373,16 +373,16 @@ function AppFrame({ children, blocked, month }: { children: ReactNode; blocked: 
       <StorageErrorListener />
       <MonthContext.Provider value={month}>
         <div className={`min-h-screen text-neutral-900 bg-[#F5F8FC]`}>
-          <div className="h-1.5 bg-[#FF7900]" />
+          <div className="h-1.5 bg-[#D95B00]" />
           <div className="mx-auto flex min-h-screen max-w-7xl">
-            <aside className="hidden w-72 shrink-0 flex-col border-l border-orange-200 bg-white p-5 lg:flex">
+            <aside className="hidden w-72 shrink-0 flex-col border-l border-[#F3D2B5] bg-white p-5 lg:flex">
               <div className="flex items-center gap-3">
                 <div>
                   <p className="text-base font-black text-neutral-900" dir="ltr">{APP_NAME}</p>
                   <p className="text-xs text-neutral-400" dir="ltr">{BRAND_BY}</p>
                 </div>
               </div>
-              <div className="mt-6 rounded-3xl bg-[#FF7900] p-4 text-white">
+              <div className="mt-6 rounded-3xl bg-[#D95B00] p-4 text-white">
                 <p className="text-sm font-extrabold">{user.name}</p>
                 <p className="text-xs text-white/80">📍 {user.branch}</p>
               </div>
@@ -421,12 +421,12 @@ function AppFrame({ children, blocked, month }: { children: ReactNode; blocked: 
                     key={item.href}
                     href={`${item.href}?month=${month}`}
                     className={`flex min-h-16 flex-col items-center justify-center gap-1 text-[11px] font-extrabold ${
-                      active ? "text-[#FF7900]" : "text-[#778398]"
+                      active ? "text-[#D95B00]" : "text-[#778398]"
                     }`}
                   >
                     <span
                       className={`flex h-10 w-16 items-center justify-center rounded-full transition ${
-                        item.emphasize ? "h-11 w-11 bg-gradient-to-br from-[#FF7900] to-[#FF9D38] text-white shadow-sm" : active ? "bg-[#FFF3E8] text-[#FF7900]" : ""
+                        item.emphasize ? "h-11 w-11 bg-gradient-to-br from-[#D95B00] to-[#E87518] text-white shadow-sm" : active ? "bg-[#FCEBDD] text-[#D95B00]" : ""
                       }`}
                     >
                       <Icon />

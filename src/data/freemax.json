@@ -11,7 +11,7 @@
       "icon": "shopping-cart",
       "label": "خصومات كازيون",
       "detail": "خصومات لحد 100 جنيه على كل منتجات كازيون ماركت.",
-      "color": "#FF7900"
+      "color": "#D95B00"
     },
     {
       "icon": "music",
@@ -29,7 +29,7 @@
       "icon": "wallet",
       "label": "اورنچ كاش",
       "detail": "50% وحدات زيادة هدية لما تجدد من اورنچ كاش.",
-      "color": "#FF7900"
+      "color": "#D95B00"
     }
   ],
   "simPrice": 84,
@@ -47,7 +47,7 @@
       "whatsapp": "50 MB",
       "hasPerks": false,
       "perks": [],
-      "color": "#FF7900"
+      "color": "#D95B00"
     },
     {
       "name": "FREEmax 80",
@@ -65,7 +65,7 @@
         "خصم 50ج كازيون",
         "3 شهور Spotify"
       ],
-      "color": "#FF7900"
+      "color": "#D95B00"
     },
     {
       "name": "FREEmax 115",

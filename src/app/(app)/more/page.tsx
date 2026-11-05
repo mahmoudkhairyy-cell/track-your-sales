@@ -290,7 +290,7 @@ export default function MorePage() {
 
   return (
     <div className="space-y-5">
-      <section className="relative overflow-hidden rounded-[24px] bg-gradient-to-br from-[#FF7900] to-[#FF9D38] p-5 text-white shadow-sm">
+      <section className="relative overflow-hidden rounded-[24px] bg-gradient-to-br from-[#D95B00] to-[#E87518] p-5 text-white shadow-sm">
         <img src="/track-your-sales/logo-full.png" alt="Track Your Sales" className="h-16 w-auto object-contain" />
         <p className="mt-1 text-xs text-white/85">أداة مساعدة مستقلة وغير رسمية، وليست تطبيقًا رسميًا تابعًا لشركة Orange.</p>
         <p className="mt-3 text-xs text-white/80">ملخص النهارده، سجل الشهر، النسخة الاحتياطية، والمساعد.</p>
@@ -328,7 +328,7 @@ export default function MorePage() {
               onClick={() => setView(item.key as typeof view)}
               className="flex w-full items-center gap-4 rounded-[24px] border border-[#E8EDF4] bg-white p-4 text-right shadow-sm"
             >
-              <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#FFF3E8] text-2xl">{item.icon}</span>
+              <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#FCEBDD] text-2xl">{item.icon}</span>
               <span className="flex-1">
                 <span className="block font-black text-[#172033]">{item.title}</span>
                 <span className="block text-xs text-[#778398]">{item.desc}</span>
@@ -341,7 +341,7 @@ export default function MorePage() {
 
       {view === "report" ? (
         <section className="space-y-4">
-          <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[#e06600]">← رجوع للقائمة</button>
+          <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[#B94700]">← رجوع للقائمة</button>
           <div id="report-print" className="rounded-[24px] border border-[#E8EDF4] bg-white p-5 shadow-sm">
             <p className="text-xs font-bold text-[#778398]">تقرير الشهر · {monthLabelAr(month)}</p>
             <h2 className="mt-1 text-xl font-black">{profile.name || "—"}</h2>
@@ -349,10 +349,10 @@ export default function MorePage() {
             {reportData ? (
               <>
                 <div className="mt-4 grid grid-cols-2 gap-3">
-                  <div className="rounded-2xl bg-[#FFF3E8] p-3"><p className="text-[11px] font-bold text-[#778398]">التوتال</p><p className="text-2xl font-black text-[#b84700]">{reportData.overall.toFixed(1)}%</p></div>
-                  <div className="rounded-2xl bg-[#FFF3E8] p-3"><p className="text-[11px] font-bold text-[#778398]">الكوميشن المتوقع</p><p className="text-2xl font-black text-[#b84700]">{Math.round(reportData.estimatedCommission)} ج</p><p className="text-[10px] text-[#778398]">من {Math.round(reportData.fullCommission)} ج</p></div>
+                  <div className="rounded-2xl bg-[#FCEBDD] p-3"><p className="text-[11px] font-bold text-[#778398]">التوتال</p><p className="text-2xl font-black text-[#b84700]">{reportData.overall.toFixed(1)}%</p></div>
+                  <div className="rounded-2xl bg-[#FCEBDD] p-3"><p className="text-[11px] font-bold text-[#778398]">الكوميشن المتوقع</p><p className="text-2xl font-black text-[#b84700]">{Math.round(reportData.estimatedCommission)} ج</p><p className="text-[10px] text-[#778398]">من {Math.round(reportData.fullCommission)} ج</p></div>
                 </div>
-                <div className="mt-4 divide-y divide-dashed divide-orange-200">
+                <div className="mt-4 divide-y divide-dashed divide-[#F3D2B5]">
                   {reportData.kpis.map((kpi) => (
                     <div key={kpi.kpiKey} className="flex items-center justify-between py-2.5 text-sm">
                       <span className="font-extrabold" dir="ltr">{kpi.nameEn}</span>
@@ -365,7 +365,7 @@ export default function MorePage() {
               <p className="mt-4 text-sm text-[#778398]">بنحمّل التقرير...</p>
             )}
           </div>
-          <button type="button" onClick={() => window.print()} className="w-full rounded-2xl bg-gradient-to-br from-[#FF7900] to-[#FF9D38] py-3 font-extrabold text-white shadow-sm">
+          <button type="button" onClick={() => window.print()} className="w-full rounded-2xl bg-gradient-to-br from-[#D95B00] to-[#E87518] py-3 font-extrabold text-white shadow-sm">
             🖨️ اطبع / احفظ PDF
           </button>
         </section>
@@ -373,7 +373,7 @@ export default function MorePage() {
 
       {view === "about" ? (
         <div className="space-y-4">
-          <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[#e06600]">← رجوع للقائمة</button>
+          <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[#B94700]">← رجوع للقائمة</button>
           <section className="rounded-[24px] border border-[#E8EDF4] bg-white p-5 shadow-sm">
             <p className="font-black">Target Tracker</p>
             <p className="mt-2 text-sm leading-7 text-[#778398]">أداة مساعدة مستقلة وغير رسمية، وليست تطبيقًا رسميًا تابعًا لشركة Orange.</p>
@@ -383,7 +383,7 @@ export default function MorePage() {
 
       {view === "today" ? (
         <div className="space-y-4">
-          <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[#e06600]">← رجوع للقائمة</button>
+          <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[#B94700]">← رجوع للقائمة</button>
       <section className="rounded-[24px] border border-[#E8EDF4] bg-white p-5 shadow-sm">
         <h2 className="text-lg font-black tracking-tight">📊 اللي عملته النهارده</h2>
         {todayItems.length === 0 ? (
@@ -391,9 +391,9 @@ export default function MorePage() {
         ) : (
           <ul className="mt-3 space-y-2">
             {todayItems.map((item) => (
-              <li key={item.kpiKey} className="flex items-center justify-between rounded-2xl bg-[#FFF3E8] px-3 py-2 text-sm">
+              <li key={item.kpiKey} className="flex items-center justify-between rounded-2xl bg-[#FCEBDD] px-3 py-2 text-sm">
                 <span className="flex items-center gap-2">
-                  <span className="flex h-7 w-7 items-center justify-center text-[#e06600]"><KpiIcon kpiKey={item.kpiKey} className="h-5 w-5" /></span>
+                  <span className="flex h-7 w-7 items-center justify-center text-[#B94700]"><KpiIcon kpiKey={item.kpiKey} className="h-5 w-5" /></span>
                   <span>
                     <span dir="ltr" className="font-extrabold">{item.nameEn}</span>
                     <span className="block text-xs text-[#778398]">{item.count} عملية</span>
@@ -411,7 +411,7 @@ export default function MorePage() {
       ) : null}
       {view === "history" ? (
         <div className="space-y-4">
-          <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[#e06600]">← رجوع للقائمة</button>
+          <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[#B94700]">← رجوع للقائمة</button>
       <section className="rounded-[24px] border border-[#E8EDF4] bg-white p-5 shadow-sm">
         <div className="flex items-center justify-between gap-3">
           <h2 className="text-lg font-black tracking-tight">🗂️ سجل عمليات {monthLabelAr(month)}</h2>
@@ -428,7 +428,7 @@ export default function MorePage() {
                 <div className="flex items-start justify-between gap-3">
                   <div>
                     <p className="font-extrabold">
-                      <span className="ml-1 inline-flex align-middle text-[#e06600]"><KpiIcon kpiKey={entry.kpiKey} className="h-4 w-4" /></span>
+                      <span className="ml-1 inline-flex align-middle text-[#B94700]"><KpiIcon kpiKey={entry.kpiKey} className="h-4 w-4" /></span>
                       <span dir="ltr">{entry.nameEn}</span>
                     </p>
                     <p className="text-xs text-[#778398]">
@@ -438,7 +438,7 @@ export default function MorePage() {
                     <p className="mt-1 text-[11px] text-[#778398]">اتسجل {formatTimeCairo(entry.createdAt)}</p>
                   </div>
                   <div className="flex shrink-0 items-center gap-3">
-                    <button type="button" className="min-h-10 font-extrabold text-[#e06600]" onClick={() => openEdit(entry)}>
+                    <button type="button" className="min-h-10 font-extrabold text-[#B94700]" onClick={() => openEdit(entry)}>
                       ✏️ عدّل
                     </button>
                     <button type="button" className="min-h-10 font-extrabold text-red-600" onClick={() => setDeleteId(entry.id)}>
@@ -462,7 +462,7 @@ export default function MorePage() {
       ) : null}
       {view === "profile" ? (
         <div className="space-y-4">
-          <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[#e06600]">← رجوع للقائمة</button>
+          <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[#B94700]">← رجوع للقائمة</button>
       <section className="rounded-[24px] border border-red-200 bg-white p-5">
         <h2 className="text-lg font-black tracking-tight">🚪 تسجيل خروج (نقل لفرع تاني)</h2>
         <p className="mt-1 text-xs leading-5 text-[#778398]">
@@ -507,7 +507,7 @@ export default function MorePage() {
       ) : null}
       {view === "backup" ? (
         <div className="space-y-4">
-          <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[#e06600]">← رجوع للقائمة</button>
+          <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[#B94700]">← رجوع للقائمة</button>
       <section className="rounded-[24px] border border-[#E8EDF4] bg-white p-5 shadow-sm">
         <h2 className="text-lg font-black tracking-tight">💾 نسخة احتياطية واستعادة</h2>
         <p className="mt-2 text-sm leading-7 text-[#778398]">التصدير بينزّل ملف JSON فيه بياناتك وإعدادات الشهور والسجلات والملاحظات. من غير أي مفاتيح أو أسرار.</p>
@@ -551,10 +551,10 @@ export default function MorePage() {
                     type="button"
                     onClick={() => setEditKpi(kpi.key)}
                     className={`flex min-h-12 items-center gap-2 rounded-2xl border px-3 text-right text-xs font-extrabold transition ${
-                      active ? "border-[#e06600] bg-[#FFF3E8] text-[#b84700]" : "border-neutral-200 bg-white text-[#778398]"
+                      active ? "border-[#B94700] bg-[#FCEBDD] text-[#b84700]" : "border-neutral-200 bg-white text-[#778398]"
                     }`}
                   >
-                    <span className="text-[#e06600]"><KpiIcon kpiKey={kpi.key} className="h-5 w-5" /></span>
+                    <span className="text-[#B94700]"><KpiIcon kpiKey={kpi.key} className="h-5 w-5" /></span>
                     <span dir="ltr" className="leading-4">
                       {kpi.nameEn}
                     </span>

@@ -162,7 +162,7 @@ export default function LogPage() {
       {error ? <Banner tone="error">❌ {error}</Banner> : null}
 
       {dash ? (
-        <section className="relative overflow-hidden rounded-[28px] bg-gradient-to-br from-[#FF7900] to-[#FF9D38] p-5 text-white shadow-sm ring-1 ring-white/30">
+        <section className="relative overflow-hidden rounded-[28px] bg-gradient-to-br from-[#D95B00] to-[#E87518] p-5 text-white shadow-sm ring-1 ring-white/30">
           <div className="grid grid-cols-3 gap-2 text-center">
             <div className="rounded-2xl bg-white/15 px-2 py-3 ring-1 ring-white/25">
               <p className="text-xl font-black tabular-nums">{formatQty(Math.round(dash.overall))}%</p>
@@ -181,11 +181,11 @@ export default function LogPage() {
       ) : null}
 
       {onTrack.length > 0 ? (
-        <section className="rounded-[24px] bg-orange-100 p-4 text-[#8f4300]">
+        <section className="rounded-[24px] bg-[#FCEBDD] p-4 text-[#B94700]">
           <p className="text-sm font-extrabold">⚡ المطلوب منك النهارده عشان تفضل ON TRACK</p>
           <div className="mt-2 flex flex-wrap gap-2">
             {onTrack.map((k) => (
-              <span key={k.kpiKey} className="rounded-full bg-white px-3 py-1 text-xs font-extrabold text-[#8f4300] shadow-sm">
+              <span key={k.kpiKey} className="rounded-full bg-white px-3 py-1 text-xs font-extrabold text-[#B94700] shadow-sm">
                 {kpiEmoji(k.kpiKey)} {formatQty(workLeft > 0 ? Math.ceil(k.remaining / workLeft) : k.remaining)} · {KPI_CATALOG.find((i) => i.key === k.kpiKey)?.nameEn}
               </span>
             ))}
@@ -207,10 +207,10 @@ export default function LogPage() {
           <article key={item.key} className="rounded-[24px] border border-[#E8EDF4] bg-white p-4 shadow-sm">
             <div className="flex items-center justify-between gap-3">
               <div className="flex items-center gap-3">
-                <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#FFF3E8] text-[#FF7900]"><KpiIcon kpiKey={item.key} className="h-5 w-5" /></span>
+                <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#FCEBDD] text-[#D95B00]"><KpiIcon kpiKey={item.key} className="h-5 w-5" /></span>
                 <div>
                   <p className="font-extrabold" dir="ltr">{item.nameEn}</p>
-                  <p className="text-[11px] font-bold text-[#8f4300]">
+                  <p className="text-[11px] font-bold text-[#B94700]">
                     {excluded ? "متتحسبش" : commission > 0 ? `كوميشن ${commission} ج` : " "}
                   </p>
                 </div>
@@ -256,7 +256,7 @@ export default function LogPage() {
         <section className="rounded-[24px] border border-[#E8EDF4] bg-white p-4 shadow-sm">
           <div className="mb-2 flex items-center justify-between">
             <p className="text-sm font-black">✅ الكواليتي (15%)</p>
-            <p className="text-xs font-extrabold text-[#8f4300]">{qualityScore}% من 15%</p>
+            <p className="text-xs font-extrabold text-[#B94700]">{qualityScore}% من 15%</p>
           </div>
           <p className="mb-3 text-[11px] text-[#778398]">علّم البند لو اتحقق بالكامل، والتغيير بيتحفظ فوراً.</p>
           <div className="space-y-2">
@@ -271,7 +271,7 @@ export default function LogPage() {
                   className="flex w-full items-center justify-between rounded-2xl border border-[#E8EDF4] bg-white px-3 py-2.5 text-right disabled:opacity-60"
                 >
                   <span className="flex items-center gap-3">
-                    <span className={`flex h-6 w-6 items-center justify-center rounded-full border-2 text-xs font-black ${on ? "border-emerald-500 bg-emerald-500 text-white" : "border-orange-200 text-transparent"}`}>✓</span>
+                    <span className={`flex h-6 w-6 items-center justify-center rounded-full border-2 text-xs font-black ${on ? "border-emerald-500 bg-emerald-500 text-white" : "border-[#F3D2B5] text-transparent"}`}>✓</span>
                     <span className="flex flex-col items-start gap-0.5">
                       <span className="text-sm font-extrabold" dir="ltr">{item.label}</span>
                     </span>

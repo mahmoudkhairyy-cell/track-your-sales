@@ -82,7 +82,7 @@ const BRANDS: Record<string, Brand> = {
     svg: <text x="12" y="15" textAnchor="middle" fontSize="6.5" fontWeight="900" fill="#000" fontFamily="Arial, sans-serif">PUBG</text>,
   },
   kazeon: {
-    bg: "#FF7900",
+    bg: "#D95B00",
     svg: <text x="12" y="16.5" textAnchor="middle" fontSize="11" fontWeight="900" fill={W} fontFamily="Arial, sans-serif">K</text>,
   },
   netflix: {

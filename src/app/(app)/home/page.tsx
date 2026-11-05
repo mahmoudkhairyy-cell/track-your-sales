@@ -149,7 +149,7 @@ export default function HomePage() {
       </section>
 
       {/* الهيرو */}
-      <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#FF7900] via-[#FF9D38] to-[#E05300] p-5 text-white shadow-[0_12px_28px_-10px_rgba(255,121,0,0.45)]">
+      <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#D95B00] via-[#E87518] to-[#B94700] p-5 text-white shadow-[0_12px_28px_-10px_rgba(255,121,0,0.45)]">
         
         <div className="relative z-10 flex flex-col gap-4">
           <div className="flex items-center justify-between">
@@ -210,14 +210,14 @@ export default function HomePage() {
       </section>
 
       {/* المطلوب انهاردة */}
-      <section className="flex items-stretch overflow-hidden rounded-2xl border border-orange-200/80 bg-white shadow-sm">
-        <div className="flex w-24 shrink-0 flex-col items-center justify-center bg-gradient-to-br from-[#FF7900] to-[#E05300] px-2 py-3 text-white">
+      <section className="flex items-stretch overflow-hidden rounded-2xl border border-[#F3D2B5]/80 bg-white shadow-sm">
+        <div className="flex w-24 shrink-0 flex-col items-center justify-center bg-gradient-to-br from-[#D95B00] to-[#B94700] px-2 py-3 text-white">
           <span className="font-mono text-3xl font-black leading-none">{data.pace.perDay === null ? "—" : formatQty(Math.ceil(data.pace.perDay))}</span>
-          <span className="mt-1 text-[10px] font-bold text-orange-100">{data.pace.perDay === null ? "" : linesWord(Math.ceil(data.pace.perDay)) + " / يوم"}</span>
+          <span className="mt-1 text-[10px] font-bold text-[#FCEBDD]">{data.pace.perDay === null ? "" : linesWord(Math.ceil(data.pace.perDay)) + " / يوم"}</span>
         </div>
         <div className="flex min-w-0 flex-1 flex-col justify-center gap-1 p-3.5">
           <span className="flex items-center gap-1.5 text-xs font-black text-slate-900">
-            <span className="h-1.5 w-1.5 rounded-full bg-[#FF7900]" />
+            <span className="h-1.5 w-1.5 rounded-full bg-[#D95B00]" />
             المطلوب انهاردة عشان تفضل On Track
           </span>
           <span className="text-[11px] font-semibold leading-relaxed text-slate-600">{data.pace.message}</span>
@@ -229,7 +229,7 @@ export default function HomePage() {
         <div className="flex items-center justify-between">
           <h2 className="flex items-center gap-1.5 text-xs font-black uppercase tracking-wide text-slate-800">
             <span>نسبة الإنجاز بالمحاور</span>
-            <span className="rounded border border-orange-200 bg-orange-50 px-1.5 text-[11px] font-bold text-[#e06600]">{data.kpis.length} مؤشرات</span>
+            <span className="rounded border border-[#F3D2B5] bg-[#FCEBDD] px-1.5 text-[11px] font-bold text-[#B94700]">{data.kpis.length} مؤشرات</span>
           </h2>
           <span className="text-[11px] font-bold text-slate-400">اسحب ←</span>
         </div>
@@ -238,7 +238,7 @@ export default function HomePage() {
             const ok = kpi.achieved >= kpi.expectedToDate;
             return (
               <div key={kpi.kpiKey} className="flex w-24 shrink-0 flex-col items-center rounded-2xl border border-slate-200/80 bg-white p-2.5 text-center shadow-sm">
-                <div className={`flex h-10 w-10 items-center justify-center rounded-full border-2 font-mono text-xs font-black ${ok ? "border-emerald-500 text-emerald-700" : "border-[#ff7900] text-[#9a4600]"}`}>
+                <div className={`flex h-10 w-10 items-center justify-center rounded-full border-2 font-mono text-xs font-black ${ok ? "border-emerald-500 text-emerald-700" : "border-[#D95B00] text-[#9a4600]"}`}>
                   {Math.round(kpi.percent)}%
                 </div>
                 <span className="mt-1.5 w-full truncate text-[11px] font-bold text-slate-800" dir="ltr">{shortKpiName(kpi.nameEn)}</span>
@@ -283,7 +283,7 @@ export default function HomePage() {
                       cy="22"
                       r="18"
                       fill="none"
-                      stroke={onTrackKpi ? "#16B981" : "#FF7900"}
+                      stroke={onTrackKpi ? "#16B981" : "#D95B00"}
                       strokeWidth="5"
                       strokeLinecap="round"
                       strokeDasharray={ringLen}
@@ -296,7 +296,7 @@ export default function HomePage() {
                 <div className="flex min-w-0 flex-1 flex-col gap-1">
                   <div className="flex items-center justify-between gap-2">
                     <span className="flex min-w-0 items-center gap-1.5">
-                      <KpiIcon kpiKey={kpi.kpiKey} className="h-3.5 w-3.5 shrink-0 text-[#FF7900]" />
+                      <KpiIcon kpiKey={kpi.kpiKey} className="h-3.5 w-3.5 shrink-0 text-[#D95B00]" />
                       <span className="truncate text-xs font-black text-[#172033]" dir="ltr">{kpi.nameEn}</span>
                     </span>
                     <span className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-extrabold ${onTrackKpi ? "bg-emerald-50 text-emerald-700" : "bg-red-50 text-red-600"}`}>
@@ -310,9 +310,9 @@ export default function HomePage() {
                     <span>المتبقي <strong className="font-mono text-[#172033]">{formatQty(kpi.remaining)}</strong></span>
                   </div>
                   <div className="h-1.5 w-full overflow-hidden rounded-full bg-[#F1F4F9]">
-                    <div className="h-full rounded-full bg-gradient-to-r from-[#FF7900] to-[#FF9D38] transition-all duration-700" style={{ width: `${pct}%` }} />
+                    <div className="h-full rounded-full bg-gradient-to-r from-[#D95B00] to-[#E87518] transition-all duration-700" style={{ width: `${pct}%` }} />
                   </div>
-                  {kpi.overTarget ? <p className="text-[10px] font-bold text-[#FF7900]">عدّيت التارجت 🎉</p> : null}
+                  {kpi.overTarget ? <p className="text-[10px] font-bold text-[#D95B00]">عدّيت التارجت 🎉</p> : null}
                 </div>
               </article>
             );
@@ -322,7 +322,7 @@ export default function HomePage() {
 
       {/* زرار التسجيل العايم */}
       <div className="pointer-events-none fixed bottom-20 left-1/2 z-40 flex w-full max-w-[440px] -translate-x-1/2 justify-center px-4">
-        <Link href="/log/" className="pointer-events-auto flex items-center gap-2 rounded-full border-2 border-white bg-gradient-to-r from-[#ff7900] to-[#FF9100] px-6 py-2.5 text-sm font-black text-white shadow-[0_10px_25px_-5px_rgba(255,121,0,0.3)] transition-transform active:scale-95">
+        <Link href="/log/" className="pointer-events-auto flex items-center gap-2 rounded-full border-2 border-white bg-gradient-to-r from-[#D95B00] to-[#E87518] px-6 py-2.5 text-sm font-black text-white shadow-[0_10px_25px_-5px_rgba(255,121,0,0.3)] transition-transform active:scale-95">
           <span className="text-lg">＋</span>
           <span>تسجيل بيعة جديدة</span>
         </Link>
