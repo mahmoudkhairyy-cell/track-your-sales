@@ -382,15 +382,15 @@ export default function ManagerPage() {
       <div className="mx-auto max-w-3xl space-y-4">
         <h1 className="text-2xl font-black">لوحة المدير</h1>
         {rows !== null ? (
-          <div className="flex items-center justify-between rounded-[24px] bg-gradient-to-br from-[#D95B00] to-[#E87518] p-4 text-white shadow-[0_12px_32px_rgba(190,90,0,0.25)]">
+          <div className="flex items-center justify-between rounded-[24px] border border-[#E8EDF4] border-t-4 border-t-[#D95B00] bg-white p-4 text-[#172033] shadow-sm">
             <div className="flex items-center gap-3">
               <img src="/track-your-sales/logo-mark.png" alt="" className="h-10 w-10 object-contain" />
               <div>
-                <p className="text-sm font-black tracking-tight" dir="ltr">Track Your Sales</p>
-                <p className="text-[11px] text-white/85" dir="ltr">Manager Dashboard</p>
+                <p className="text-sm font-black tracking-tight text-[#172033]" dir="ltr">Track Your Sales</p>
+                <p className="text-[11px] text-[#778398]" dir="ltr">Manager Dashboard</p>
               </div>
             </div>
-            <p className="rounded-full bg-white/20 px-3 py-1 text-[11px] font-extrabold ring-1 ring-white/30" dir="ltr">👑 {managerName || "المدير"}</p>
+            <p className="rounded-full bg-[#FCEBDD] px-3 py-1 text-[11px] font-extrabold text-[#B94700]" dir="ltr">👑 {managerName || "المدير"}</p>
           </div>
         ) : null}
 
