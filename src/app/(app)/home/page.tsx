@@ -141,15 +141,8 @@ export default function HomePage() {
         </p>
       ) : null}
 
-      <section className="flex flex-col gap-1">
-        <h1 className="text-lg font-black text-[#1a1b1e]">
-          {greeting()} {data.profile.name.split(" ")[0]} 👋
-        </h1>
-        <p className="text-[11px] text-[#584235]">📍 {data.profile.branch}</p>
-      </section>
-
       {/* الهيرو */}
-      <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#D95B00] via-[#E87518] to-[#B94700] p-5 text-white shadow-[0_12px_28px_-10px_rgba(255,121,0,0.45)]">
+      <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#B94700] via-[#D95B00] to-[#8A3400] p-5 text-white shadow-[0_14px_30px_-10px_rgba(138,52,0,0.55)]">
         
         <div className="relative z-10 flex flex-col gap-4">
           <div className="flex items-center justify-between">
@@ -207,6 +200,14 @@ export default function HomePage() {
           </div>
           {sarcastic ? <p className="text-xs font-bold text-white/85">{sarcastic}</p> : null}
         </div>
+      </section>
+
+
+      <section className="flex flex-col gap-1">
+        <h1 className="text-lg font-black text-[#1a1b1e]">
+          {greeting()} {data.profile.name.split(" ")[0]} 👋
+        </h1>
+        <p className="text-[11px] text-[#584235]">📍 {data.profile.branch}</p>
       </section>
 
       {/* المطلوب انهاردة */}
