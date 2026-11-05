@@ -321,11 +321,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   useEffect(() => {
     let cancelled = false;
     const profile = readProfile();
-    if (profile.role === "area_manager") {
-      window.location.replace("/track-your-sales/manager/");
-      return;
-    }
-    if (!profile.name.trim() || !profile.areaManager || (profile.role !== "agent" && profile.role !== "team_leader" && profile.role !== "manager")) {
+    if (!profile.name.trim() || (!profile.areaManager && profile.role !== "area_manager") || (profile.role !== "agent" && profile.role !== "team_leader" && profile.role !== "manager" && profile.role !== "area_manager")) {
       setStatus("profile");
       return;
     }
