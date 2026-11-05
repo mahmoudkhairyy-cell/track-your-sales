@@ -2,13 +2,13 @@
 
 html {
   direction: rtl;
-  --font-cairo: "Cairo Variable";
+  --font-cairo: "Tajawal";
 }
 
 body {
   margin: 0;
-  background: #fbe9da;
-  color: #171717;
+  background: #F5F8FC;
+  color: #172033;
   font-family: var(--font-cairo), Tahoma, "Segoe UI", Arial, sans-serif;
   text-rendering: optimizeLegibility;
 }

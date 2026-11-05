@@ -132,7 +132,7 @@ export default function HomePage() {
   const sarcastic = sarcasticLine(data.overall);
 
   return (
-    <div className="flex min-h-screen flex-col gap-4 bg-[#faf5e8] pb-28">
+    <div className="flex min-h-screen flex-col gap-4 bg-[#F5F8FC] pb-28">
       {sync ? (
         <p className={`text-[11px] font-bold ${sync.ok ? "text-emerald-700" : "text-red-600"}`} dir="rtl">
           {sync.ok
@@ -149,7 +149,7 @@ export default function HomePage() {
       </section>
 
       {/* الهيرو */}
-      <section style={{ background: "radial-gradient(120% 90% at 100% 0%, rgba(194,65,12,0.35), transparent 60%), #1c1310" }} className="relative overflow-hidden rounded-3xl border border-[#c2410c]/45 p-5 text-white shadow-[0_20px_40px_-20px_rgba(194,65,12,0.35)]">
+      <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#FF7900] via-[#FF9D38] to-[#E05300] p-5 text-white shadow-[0_12px_28px_-10px_rgba(255,121,0,0.45)]">
         
         <div className="relative z-10 flex flex-col gap-3">
           <div className="flex items-center justify-between">
