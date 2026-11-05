@@ -146,11 +146,11 @@ function FirstRunProfile({ onDone }: { onDone: () => void }) {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-[#F5F8FC] p-4 text-neutral-900">
-      <form onSubmit={submit} className="w-full max-w-sm rounded-3xl bg-white p-6 shadow-[0_20px_50px_rgba(190,90,0,0.15)]" dir="rtl">
+      <form onSubmit={submit} className="w-full max-w-sm rounded-[28px] border border-[#E8EDF4] border-t-4 border-t-[#D95B00] bg-white p-6 shadow-[0_20px_50px_rgba(23,32,51,0.08)]" dir="rtl">
         <div className="mb-5 text-center">
           <img src="/track-your-sales/logo-mark.png" alt="" className="mx-auto h-16 w-16 object-contain" />
-          <h1 className="mt-2 text-xl font-black">أهلاً بيك في {APP_NAME}</h1>
-          <p className="mt-1 text-sm text-neutral-500">عشان نبدأ، اكتب اسمك (واسم الفرع لو حابب)</p>
+          <h1 className="mt-2 text-xl font-black text-[#172033]">أهلاً بيك في {APP_NAME}</h1>
+          <p className="mt-1 text-sm text-[#778398]">عشان نبدأ، اكتب اسمك (واسم الفرع لو حابب)</p>
         </div>
         <label className="mb-3 block text-sm font-bold text-neutral-700">
           الاسم
