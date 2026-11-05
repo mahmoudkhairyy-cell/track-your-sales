@@ -149,8 +149,8 @@ export default function HomePage() {
       </section>
 
       {/* الهيرو */}
-      <section className="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-[#0f172a] to-[#1e293b] p-5 text-white shadow-[0_18px_40px_-18px_rgba(0,0,0,0.6)]">
-        <div className="pointer-events-none absolute -left-16 -top-16 h-40 w-40 rounded-full bg-[#ff7900]/15 blur-2xl" />
+      <section className="relative overflow-hidden rounded-3xl border border-[#c2410c]/45 bg-[radial-gradient(120%_90%_at_100%_0%,rgba(194,65,12,0.35),transparent_60%),#1c1310] p-5 text-white shadow-[0_20px_40px_-20px_rgba(194,65,12,0.35)]">
+        
         <div className="relative z-10 flex flex-col gap-3">
           <div className="flex items-center justify-between">
             <span className="flex items-center gap-2 text-xs font-bold text-orange-100">
@@ -167,18 +167,18 @@ export default function HomePage() {
           </div>
           <div className="flex items-end justify-between">
             <div className="flex items-baseline gap-1">
-              <span className="font-mono text-5xl font-black tracking-tight">{formatPercent(data.overall)}</span>
-              <span className="text-2xl font-bold text-[#ff7900]">%</span>
+              <span className="font-mono text-5xl font-black tracking-tight text-[#ffb36b]">{formatPercent(data.overall)}</span>
+              <span className="text-2xl font-bold text-white">%</span>
             </div>
             <div className="max-w-[210px] text-right">
               <div className="inline-block rounded-xl border border-[#ff7900]/40 bg-[#ff7900]/15 px-3 py-1 text-[11px] font-bold text-[#ffb273]">{statusTextEgy}</div>
               <p className="mt-1 text-[10px] font-medium text-slate-400">{timeText}</p>
             </div>
           </div>
-          <div className="h-3.5 w-full rounded-full bg-white/10 p-0.5">
-            <div className="relative h-full rounded-full bg-[#ff7900] transition-all duration-700" style={{ width: `${Math.min(100, Math.max(0, data.overall))}%` }} />
+          <div className="h-3.5 w-full rounded-full bg-[#3a2418] p-0.5">
+            <div className="relative h-full rounded-full bg-gradient-to-r from-[#c2410c] to-[#fb923c] transition-all duration-700" style={{ width: `${Math.min(100, Math.max(0, data.overall))}%` }} />
           </div>
-          <div className="grid grid-cols-2 gap-2 border-t border-white/10 pt-2.5">
+          <div className="grid grid-cols-2 gap-2 border-t border-[#3a2418] pt-2.5">
             <div className="flex flex-col justify-between rounded-xl border border-white/10 bg-white/[0.04] p-2.5">
               <span className="text-[11px] font-medium text-slate-400">{gap > 0 ? "فاضل" : "الحالة"}</span>
               <span className="mt-0.5 text-base font-black font-mono">{gap > 0 ? `${formatPercent(gap)}%` : "قفلت الشهر ✅"}</span>
