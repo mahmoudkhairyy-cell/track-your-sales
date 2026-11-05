@@ -186,15 +186,15 @@ export default function TargetPage() {
         </section>
       ) : null}
 
-      <section className="overflow-hidden rounded-[32px] bg-gradient-to-br from-[#f0802a] via-[#e06600] to-[#b84700] p-5 text-white shadow-[0_20px_50px_rgba(190,90,0,0.35)]">
+      <section className="overflow-hidden rounded-[28px] border border-[#E8EDF4] bg-white p-4 shadow-sm">
         <div className="grid grid-cols-3 gap-2 text-center">
-          <div className="rounded-2xl bg-white/15 px-2 py-3 ring-1 ring-white/25"><p className="text-2xl font-black tabular-nums">{monthDays.length}</p><p className="text-[11px] text-white/85">أيام الشهر</p></div>
-          <div className="rounded-2xl bg-white/15 px-2 py-3 ring-1 ring-white/25"><p className="text-2xl font-black tabular-nums">{holidays.length}</p><p className="text-[11px] text-white/85">إجازات</p></div>
-          <div className="rounded-2xl bg-white/15 px-2 py-3 ring-1 ring-white/25"><p className="text-2xl font-black tabular-nums">{workingDatesInMonth(month, workingDays, holidays.map((item) => item.date)).length}</p><p className="text-[11px] text-white/85">أيام شغل</p></div>
+          <div className="rounded-2xl bg-[#FFF3E8] px-2 py-3"><p className="text-2xl font-black tabular-nums text-[#172033]">{monthDays.length}</p><p className="text-[11px] text-[#778398]">أيام الشهر</p></div>
+          <div className="rounded-2xl bg-[#FFF3E8] px-2 py-3"><p className="text-2xl font-black tabular-nums text-[#172033]">{holidays.length}</p><p className="text-[11px] text-[#778398]">إجازات</p></div>
+          <div className="rounded-2xl bg-[#FFF3E8] px-2 py-3"><p className="text-2xl font-black tabular-nums text-[#172033]">{workingDatesInMonth(month, workingDays, holidays.map((item) => item.date)).length}</p><p className="text-[11px] text-[#778398]">أيام شغل</p></div>
         </div>
       </section>
 
-      <section className="rounded-[32px] border border-orange-200/70 bg-white p-4 shadow-[0_1px_2px_rgba(40,20,0,0.04),0_12px_32px_rgba(40,20,0,0.07)]">
+      <section className="rounded-[28px] border border-[#E8EDF4] bg-white p-4 shadow-sm">
         <div className="grid grid-cols-7 gap-1 text-center text-[11px] font-bold text-neutral-400">
           {["سبت", "أحد", "اتنين", "تلات", "أربع", "خميس", "جمعة"].map((d) => (
             <span key={d} className="py-1">{d}</span>
@@ -218,7 +218,7 @@ export default function TargetPage() {
                   )
                 }
                 className={`flex aspect-square items-center justify-center rounded-2xl text-sm font-extrabold transition ${
-                  isHoliday ? "bg-gradient-to-br from-[#f0802a] to-[#b84700] text-white shadow-[0_6px_16px_rgba(190,90,0,0.3)]" : "bg-neutral-50 text-neutral-700"
+                  isHoliday ? "bg-gradient-to-br from-[#FF7900] to-[#FF9D38] text-white shadow-sm" : "bg-[#F5F8FC] text-[#172033]"
                 }`}
               >
                 {Number(date.slice(8, 10))}
