@@ -149,8 +149,8 @@ export default function HomePage() {
       </section>
 
       {/* الهيرو */}
-      <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#FF7900] via-[#FF8510] to-[#E05300] p-5 text-white shadow-[0_10px_25px_-5px_rgba(255,121,0,0.3)]">
-        <div className="pointer-events-none absolute -left-16 -top-16 h-40 w-40 rounded-full bg-white/15 blur-2xl" />
+      <section className="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-[#0f172a] to-[#1e293b] p-5 text-white shadow-[0_18px_40px_-18px_rgba(0,0,0,0.6)]">
+        <div className="pointer-events-none absolute -left-16 -top-16 h-40 w-40 rounded-full bg-[#ff7900]/15 blur-2xl" />
         <div className="relative z-10 flex flex-col gap-3">
           <div className="flex items-center justify-between">
             <span className="flex items-center gap-2 text-xs font-bold text-orange-100">
@@ -160,7 +160,7 @@ export default function HomePage() {
               />
               إجمالي التارجت الشهري
             </span>
-            <span className="flex items-center gap-1.5 rounded-full border border-white/10 bg-black/20 px-2.5 py-0.5 text-[11px] font-bold backdrop-blur-md">
+            <span className="flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-2.5 py-0.5 text-[11px] font-bold backdrop-blur-md">
               <span className="h-2 w-2 rounded-full bg-emerald-400 shadow-sm" />
               Live Run
             </span>
@@ -168,30 +168,30 @@ export default function HomePage() {
           <div className="flex items-end justify-between">
             <div className="flex items-baseline gap-1">
               <span className="font-mono text-5xl font-black tracking-tight">{formatPercent(data.overall)}</span>
-              <span className="text-2xl font-bold text-orange-200">%</span>
+              <span className="text-2xl font-bold text-[#ff7900]">%</span>
             </div>
             <div className="max-w-[210px] text-right">
-              <div className="inline-block rounded-xl border border-white/25 bg-white/20 px-3 py-1 text-[11px] font-bold">{statusTextEgy}</div>
-              <p className="mt-1 text-[10px] font-medium text-orange-100">{timeText}</p>
+              <div className="inline-block rounded-xl border border-[#ff7900]/40 bg-[#ff7900]/15 px-3 py-1 text-[11px] font-bold text-[#ffb273]">{statusTextEgy}</div>
+              <p className="mt-1 text-[10px] font-medium text-slate-400">{timeText}</p>
             </div>
           </div>
-          <div className="h-3.5 w-full rounded-full bg-black/25 p-0.5 shadow-inner">
-            <div className="relative h-full rounded-full bg-gradient-to-r from-amber-200 to-white transition-all duration-700" style={{ width: `${Math.min(100, Math.max(0, data.overall))}%` }} />
+          <div className="h-3.5 w-full rounded-full bg-white/10 p-0.5">
+            <div className="relative h-full rounded-full bg-[#ff7900] transition-all duration-700" style={{ width: `${Math.min(100, Math.max(0, data.overall))}%` }} />
           </div>
-          <div className="grid grid-cols-2 gap-2 border-t border-white/15 pt-2.5">
-            <div className="flex flex-col justify-between rounded-xl border border-white/10 bg-black/15 p-2.5">
-              <span className="text-[11px] font-medium text-orange-100">{gap > 0 ? "فاضل" : "الحالة"}</span>
+          <div className="grid grid-cols-2 gap-2 border-t border-white/10 pt-2.5">
+            <div className="flex flex-col justify-between rounded-xl border border-white/10 bg-white/[0.04] p-2.5">
+              <span className="text-[11px] font-medium text-slate-400">{gap > 0 ? "فاضل" : "الحالة"}</span>
               <span className="mt-0.5 text-base font-black font-mono">{gap > 0 ? `${formatPercent(gap)}%` : "قفلت الشهر ✅"}</span>
             </div>
-            <div className="flex flex-col justify-between rounded-xl border border-white/10 bg-black/15 p-2.5">
-              <span className="text-[11px] font-medium text-orange-100">الكوميشن المتوقع</span>
+            <div className="flex flex-col justify-between rounded-xl border border-white/10 bg-white/[0.04] p-2.5">
+              <span className="text-[11px] font-medium text-slate-400">الكوميشن المتوقع</span>
               <span className="mt-0.5 text-base font-black font-mono">
-                {formatMoney(data.estimatedCommission)} <span className="text-[10px] text-orange-200">من {formatMoney(data.fullCommission)} ج.م</span>
+                {formatMoney(data.estimatedCommission)} <span className="text-[10px] text-slate-400">من {formatMoney(data.fullCommission)} ج.م</span>
               </span>
             </div>
           </div>
-          <p className="text-xs font-bold text-orange-100">{overallLine()}</p>
-          {sarcastic ? <p className="text-xs font-bold text-orange-100/80">{sarcastic}</p> : null}
+          <p className="text-xs font-bold text-slate-300">{overallLine()}</p>
+          {sarcastic ? <p className="text-xs font-bold text-slate-400">{sarcastic}</p> : null}
         </div>
       </section>
 
