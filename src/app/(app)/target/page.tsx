@@ -194,6 +194,26 @@ export default function TargetPage() {
         </div>
       </section>
 
+      {kpis.some((k) => k.weight > 0) ? (
+        <section className="rounded-[28px] border border-[#E8EDF4] bg-white p-4 shadow-sm">
+          <p className="text-sm font-black text-[#172033]">توزيع الأوزان</p>
+          <div className="mt-3 flex h-3 w-full overflow-hidden rounded-full bg-[#F5F8FC]">
+            {kpis.filter((k) => k.weight > 0).map((k, i) => (
+              <span key={k.kpiKey} style={{ width: `${k.weight}%`, background: ["#D95B00", "#E87518", "#B94700", "#55B8F5", "#F3A96B"][i % 5] }} />
+            ))}
+          </div>
+          <ul className="mt-3 grid grid-cols-2 gap-2 text-xs font-bold text-[#778398]">
+            {kpis.filter((k) => k.weight > 0).map((k, i) => (
+              <li key={k.kpiKey} className="flex items-center gap-2">
+                <span className="h-2.5 w-2.5 rounded-full" style={{ background: ["#D95B00", "#E87518", "#B94700", "#55B8F5", "#F3A96B"][i % 5] }} />
+                <span className="truncate">{kpiEmoji(k.kpiKey)} {KPI_CATALOG.find((c) => c.key === k.kpiKey)?.nameEn ?? k.kpiKey}</span>
+                <span className="mr-auto tabular-nums text-[#172033]">{k.weight}%</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
+
       <section className="rounded-[28px] border border-[#E8EDF4] bg-white p-4 shadow-sm">
         <div className="grid grid-cols-7 gap-1 text-center text-[11px] font-bold text-neutral-400">
           {["سبت", "أحد", "اتنين", "تلات", "أربع", "خميس", "جمعة"].map((d) => (
