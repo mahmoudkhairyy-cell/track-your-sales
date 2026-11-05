@@ -1,5 +1,5 @@
-import { UiSettings } from "@/components/UiSettings";
 "use client";
+import { UiSettings } from "@/components/UiSettings";
 
 import { FormEvent, useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
