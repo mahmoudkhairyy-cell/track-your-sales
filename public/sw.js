@@ -1,4 +1,4 @@
-const CACHE = "tys-v72";
+const CACHE = "tys-v73";
 self.addEventListener("install", (event) => {
   event.waitUntil(self.skipWaiting());
 });
