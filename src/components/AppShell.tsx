@@ -102,7 +102,7 @@ function FirstRunProfile({ onDone }: { onDone: () => void }) {
   const [areaManager, setAreaManager] = useState("");
   const [error, setError] = useState("");
   const [pending, setPending] = useState(false);
-  const [role, setRole] = useState<"agent" | "team_leader" | "manager" | "">("");
+  const [role, setRole] = useState<"agent" | "team_leader" | "manager" | "area_manager" | "">("");
 
   async function submit(event: FormEvent) {
     event.preventDefault();
@@ -125,6 +125,10 @@ function FirstRunProfile({ onDone }: { onDone: () => void }) {
     setPending(true);
     try {
       await api("/api/profile", { method: "PATCH", body: JSON.stringify({ name: name.trim(), branch: branch.trim(), role, areaManager: areaManager.trim() }) });
+      if (role === "area_manager") {
+        window.location.assign("/track-your-sales/manager/");
+        return;
+      }
       onDone();
     } catch (err) {
       setError(err instanceof Error ? err.message : "تعذر الحفظ");
@@ -147,11 +151,12 @@ function FirstRunProfile({ onDone }: { onDone: () => void }) {
         </label>
         <div className="mb-4">
           <p className="mb-2 text-sm font-bold text-neutral-700">إنت إيه؟</p>
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-2 gap-2">
             {([
-              { key: "agent", label: "👤 موظف" },
-              { key: "team_leader", label: "🧑‍🏫 تيم ليدر" },
-              { key: "manager", label: "🧑‍💼 مدير" },
+              { key: "agent", label: "👤 Agent" },
+              { key: "team_leader", label: "🧑‍🏫 Team Leader" },
+              { key: "manager", label: "🧑‍💼 Manager" },
+              { key: "area_manager", label: "🗺️ Area Manager" },
             ] as const).map((option) => (
               <button
                 key={option.key}
@@ -305,6 +310,10 @@ export function AppShell({ children }: { children: ReactNode }) {
   useEffect(() => {
     let cancelled = false;
     const profile = readProfile();
+    if (profile.role === "area_manager") {
+      window.location.replace("/track-your-sales/manager/");
+      return;
+    }
     if (!profile.name.trim() || !profile.areaManager || (profile.role !== "agent" && profile.role !== "team_leader" && profile.role !== "manager")) {
       setStatus("profile");
       return;

@@ -184,7 +184,7 @@ function newId(): string {
 export function readProfile(): { name: string; branch: string; role: Role | ""; areaManager: string } {
   const state = loadState();
   const role = state.profile.role;
-  return { name: state.profile.name, branch: state.profile.branch, areaManager: state.profile.areaManager ?? "", role: role === "manager" || role === "agent" || role === "team_leader" ? role : "" };
+  return { name: state.profile.name, branch: state.profile.branch, areaManager: state.profile.areaManager ?? "", role: role === "manager" || role === "agent" || role === "team_leader" || role === "area_manager" ? role : "" };
 }
 
 /* ---------- تحقق من المدخلات ---------- */
@@ -537,7 +537,7 @@ function deleteArticle(state: State, id: string) {
 function updateProfile(state: State, data: Record<string, unknown>) {
   const name = trimText(data.name, "اسم الموظف", 2, 80);
   const branch = typeof data.branch === "string" ? data.branch.trim().slice(0, 80) : "";
-  const role = data.role === "manager" || data.role === "agent" || data.role === "team_leader" ? data.role : state.profile.role;
+  const role = data.role === "manager" || data.role === "agent" || data.role === "team_leader" || data.role === "area_manager" ? data.role : state.profile.role;
   const areaManager = typeof data.areaManager === "string" ? data.areaManager.trim().slice(0, 80) : (state.profile.areaManager ?? "");
   state.profile = { ...state.profile, name, branch, role, areaManager };
   return { user: { id: "local", name, branch, role, areaManager }, message: "✅ بياناتك اتحدثت" };

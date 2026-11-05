@@ -172,7 +172,7 @@ export function kpiEmoji(key: string): string {
 
 export type KpiKey = (typeof KPI_CATALOG)[number]["key"];
 
-export type Role = "agent" | "team_leader" | "manager";
+export type Role = "agent" | "team_leader" | "manager" | "area_manager";
 
 // أوزان المدير من شيت الـ KPIs (Agent & Store Manager). المدير مش بيتحسب عليه الـ Existing ولا الـ New Orange Cash كبنود مستقلة بوزن مختلف.
 const MANAGER_WEIGHTS: Partial<Record<KpiKey, number>> = {
