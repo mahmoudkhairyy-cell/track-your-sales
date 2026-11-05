@@ -191,6 +191,7 @@ export default function ManagerPage() {
   const [newPw, setNewPw] = useState("");
   const [newPw2, setNewPw2] = useState("");
   const [pwMsg, setPwMsg] = useState("");
+  const [managerName, setManagerName] = useState("");
 
   async function changePassword(event: FormEvent) {
     event.preventDefault();
@@ -244,6 +245,7 @@ export default function ManagerPage() {
       }
       setRows(data ?? []);
       setLastLoaded(new Date());
+      cloudRpc<string>("get_manager_name", { p_password: pw }).then((name) => setManagerName(name ?? "")).catch(() => setManagerName(""));
     } catch (err) {
       const raw = err instanceof Error ? err.message : "";
       if (raw.includes("wrong password")) {
@@ -388,7 +390,7 @@ export default function ManagerPage() {
                 <p className="text-[11px] text-white/85" dir="ltr">Manager Dashboard</p>
               </div>
             </div>
-            <p className="rounded-full bg-white/20 px-3 py-1 text-[11px] font-extrabold ring-1 ring-white/30" dir="ltr">👑 Mr. Abdelrahman Mahmoud</p>
+            <p className="rounded-full bg-white/20 px-3 py-1 text-[11px] font-extrabold ring-1 ring-white/30" dir="ltr">👑 {managerName || "المدير"}</p>
           </div>
         ) : null}
 
@@ -417,7 +419,7 @@ export default function ManagerPage() {
               <img src="/track-your-sales/logo-mark.png" alt="" className="mx-auto h-14 w-14 object-contain" />
               <p className="mt-2 text-lg font-black tracking-tight" dir="ltr">Track Your Sales</p>
               <p className="mt-2 inline-block rounded-full bg-white/20 px-3 py-1 text-xs font-extrabold ring-1 ring-white/30" dir="ltr">
-                👑 Mr. Abdelrahman Mahmoud
+                👑 {managerName || "المدير"}
               </p>
               <p className="mt-1 text-[11px] text-white/80" dir="ltr">Manager Dashboard</p>
             </div>
