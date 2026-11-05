@@ -232,6 +232,9 @@ export default function WikiPage() {
           {globalHits ? (
             <div className="space-y-3">
               <p className="text-sm font-bold text-[#556070]">نتائج البحث</p>
+              {globalHits.sr.length + globalHits.hunts.length + globalHits.emails.length + globalHits.fm.length + globalHits.plans.length + globalHits.dsl.length + globalHits.docs.length === 0 ? (
+                <p className="rounded-[24px] border border-[#E8EDF4] bg-white p-4 text-center text-sm font-bold text-[#556070]">مفيش نتايج للبحث ده. جرّب كود SR أو اسم باقة أو رقم.</p>
+              ) : null}
               {globalHits.sr.length > 0 ? <p className="text-xs font-black text-[#b84700]">أكواد SR</p> : null}
               {globalHits.sr.map((item) => (
                 <button key={item.id + item.title} type="button" onClick={() => setOpenSr(item)} className="w-full rounded-[24px] border border-[#E8EDF4] bg-white p-4 text-right shadow-sm">

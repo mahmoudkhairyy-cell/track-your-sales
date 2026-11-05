@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { DEFAULT_PREFS, haptic, readPrefs, writePrefs, type HomeOptionalId, type UiPrefs } from "@/lib/prefs";
+import { DEFAULT_PREFS, readPrefs, writePrefs, type HomeOptionalId, type UiPrefs } from "@/lib/prefs";
 
 const LABELS: Record<HomeOptionalId, string> = {
   timeline: "🕒 إنجاز النهارده",
@@ -51,7 +51,6 @@ export function UiSettings() {
           checked={prefs.haptics}
           onChange={(e) => {
             update({ ...prefs, haptics: e.target.checked });
-            if (e.target.checked) haptic(18);
           }}
           className="h-5 w-5 accent-[#B94700]"
         />
