@@ -3,6 +3,7 @@
 import { FormEvent, useEffect, useState } from "react";
 import { KPI_CATALOG, kpiEmoji, type KpiKey } from "@/lib/constants";
 import { cairoISODate } from "@/lib/dates";
+import { haptic } from "@/lib/prefs";
 import { Banner, PrimaryButton, inputClass, useToast } from "@/components/ui";
 import { ApiError, api } from "@/lib/client";
 import { useMonth } from "@/components/AppShell";
@@ -138,6 +139,7 @@ export default function LogPage() {
         saved += 1;
       }
       if (typeof navigator !== "undefined" && "vibrate" in navigator) navigator.vibrate?.(30);
+      haptic(18);
       toast.push("success", `تم تسجيل الإنجاز (${saved})`);
       window.dispatchEvent(new Event("tys-data-changed"));
       setQuantities({});
