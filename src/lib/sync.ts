@@ -5,6 +5,7 @@ import { readProfile } from "@/lib/local-api";
 import { OUTSIDE_BRANCHES } from "@/lib/constants";
 
 const BRANCH_KEY = "tys.branchId";
+const INSTALL_SECRET_KEY = "tys.installSecret.v1";
 
 type EntrySnapshot = {
   id: string;
@@ -34,20 +35,36 @@ type DashboardSnapshot = {
   todaySummary: { kpiKey: string; quantity: number; count: number }[];
 };
 
-/** معرّف ثابت للجهاز/الفرع، بيتولّد مرة واحدة ويتخزن. */
-function branchId(): string {
+function newInstallId(): string {
+  return typeof crypto !== "undefined" && typeof crypto.randomUUID === "function"
+    ? crypto.randomUUID()
+    : `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 12)}`;
+}
+
+function newInstallSecret(): string {
+  const bytes = new Uint8Array(32);
+  crypto.getRandomValues(bytes);
+  return Array.from(bytes, (b) => b.toString(16).padStart(2, "0")).join("");
+}
+
+/**
+ * هوية التثبيت: معرّف + سر مستقل لكل تثبيت.
+ * لو السر مش موجود (تثبيت قديم أو مسح)، بنولّد المعرّف والسر مع بعض،
+ * والتقرير القديم بيفضل مجمّد ومايتسجلش عليه سر جديد.
+ */
+function installIdentity(): { id: string; secret: string } | null {
   try {
+    let secret = localStorage.getItem(INSTALL_SECRET_KEY);
     let id = localStorage.getItem(BRANCH_KEY);
-    if (!id) {
-      id =
-        typeof crypto !== "undefined" && typeof crypto.randomUUID === "function"
-          ? crypto.randomUUID()
-          : `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 12)}`;
+    if (!secret || secret.length < 32 || !id) {
+      secret = newInstallSecret();
+      id = newInstallId();
+      localStorage.setItem(INSTALL_SECRET_KEY, secret);
       localStorage.setItem(BRANCH_KEY, id);
     }
-    return id;
+    return { id, secret };
   } catch {
-    return "";
+    return null;
   }
 }
 
@@ -80,11 +97,11 @@ export async function pushReport(): Promise<boolean> {
     saveStatus({ ok: false, at: new Date().toISOString(), error: "مفيش نت" });
     return false;
   }
-  const id = branchId();
+  const identity = installIdentity();
   const profile = readProfile();
   // الموظف "خارج الفروع" مش بيظهر في لوحة المدير، فمايبعتش ملخصه.
   if (profile.branch === OUTSIDE_BRANCHES) return false;
-  if (!id || !profile.name.trim() || running) return false;
+  if (!identity || !profile.name.trim() || running) return false;
 
   running = true;
   try {
@@ -94,8 +111,9 @@ export async function pushReport(): Promise<boolean> {
       api<{ settings: SettingsSnapshot }>(`/api/months/${month}`),
       api<{ entries: EntrySnapshot[] }>(`/api/entries?month=${month}`),
     ]);
-    await cloudRpc("submit_report", {
-      p_branch_id: id,
+    await cloudRpc("submit_report_v2", {
+      p_branch_id: identity.id,
+      p_device_secret: identity.secret,
       p_employee: profile.name,
       p_branch: profile.branch,
       p_payload: {
