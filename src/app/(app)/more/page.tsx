@@ -479,7 +479,6 @@ export default function MorePage() {
               localStorage.removeItem("trackYourSales.local.v1");
               localStorage.removeItem("trackYourSales.local.v1.beforeRestore");
               localStorage.removeItem("tys.branchId");
-              localStorage.removeItem("tys.installSecret.v1");
               localStorage.removeItem("tys.lastSync");
             } catch {
               // لو التخزين مش متاح، نكمّل ونعمل ريلود.

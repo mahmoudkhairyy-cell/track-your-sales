@@ -76,12 +76,6 @@ const FORBIDDEN = [
   "token",
   "secret",
   "credentials",
-  "branchId",
-  "installSecret",
-  "installSecretV1",
-  "deviceSecret",
-  "device_secret",
-  "device_secret_hash",
 ];
 
 function isRecord(value: unknown): value is Record<string, unknown> {
