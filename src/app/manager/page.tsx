@@ -2,7 +2,7 @@
 
 import { FormEvent, useEffect, useState } from "react";
 import { useHistoryView } from "@/lib/use-history-view";
-import { cloudRpc } from "@/lib/cloud";
+import { managerApi } from "@/lib/cloud";
 import { KPI_CATALOG } from "@/lib/constants";
 import { cairoISODate } from "@/lib/dates";
 
@@ -199,7 +199,7 @@ export default function ManagerPage() {
     if (newPw.length < 6) return setPwMsg("الباسورد الجديد لازم يكون 6 حروف على الأقل.");
     if (newPw !== newPw2) return setPwMsg("الباسورد الجديد مش متطابق.");
     try {
-      await cloudRpc("change_password_any", { p_old: oldPw, p_new: newPw });
+      await managerApi("change_password", { password: oldPw, newPassword: newPw });
       sessionStorage.setItem("tys.mgrPass", newPw);
       setPassword(newPw);
       setOldPw("");
@@ -236,7 +236,7 @@ export default function ManagerPage() {
     setPending(true);
     setError("");
     try {
-      const data = await cloudRpc<ReportRow[]>("get_reports_for_password", { p_password: pw });
+      const data = await managerApi<ReportRow[]>("reports", { password: pw });
       // الباسورد بيفضل في الجلسة عشان الريفريش ما يطلبوش تاني.
       try {
         sessionStorage.setItem("tys.mgrPass", pw);
@@ -245,7 +245,7 @@ export default function ManagerPage() {
       }
       setRows(data ?? []);
       setLastLoaded(new Date());
-      cloudRpc<string>("get_manager_name", { p_password: pw }).then((name) => setManagerName(name ?? "")).catch(() => setManagerName(""));
+      managerApi<string>("manager_name", { password: pw }).then((name) => setManagerName(name ?? "")).catch(() => setManagerName(""));
     } catch (err) {
       const raw = err instanceof Error ? err.message : "";
       if (raw.includes("wrong password")) {
@@ -286,7 +286,7 @@ export default function ManagerPage() {
     setError("");
     try {
       const pw = password || sessionStorage.getItem("tys.mgrPass") || "";
-      await cloudRpc("delete_report", { p_password: pw, p_branch_id: row.branch_id });
+      await managerApi("delete", { password: pw, branchId: row.branch_id });
       setRows((cur) => (cur ?? []).filter((r) => r.branch_id !== row.branch_id));
       setOpenId(null);
     } catch (err) {

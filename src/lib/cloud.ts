@@ -24,3 +24,26 @@ export async function cloudRpc<T>(name: string, body: Record<string, unknown>): 
   }
   return (text ? JSON.parse(text) : null) as T | null;
 }
+
+/** شاشة المدير بتكلم دالة الخادم بدل الدوال المفتوحة. الدالة بتتحقق من كلمة المرور وبتحد المحاولات الفاشلة. */
+export async function managerApi<T>(action: string, body: Record<string, unknown>): Promise<T | null> {
+  const response = await fetch(`${CLOUD_URL}/functions/v1/manager-api`, {
+    method: "POST",
+    headers: {
+      apikey: CLOUD_KEY,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ action, ...body }),
+  });
+  const text = await response.text();
+  if (!response.ok) {
+    let message = text;
+    try {
+      message = (JSON.parse(text) as { error?: string }).error ?? text;
+    } catch {
+      // الرد مش JSON، نعرض النص كده.
+    }
+    throw new Error(message || "حصل خطأ في الاتصال بالسيرفر");
+  }
+  return (text ? JSON.parse(text) : null) as T | null;
+}
