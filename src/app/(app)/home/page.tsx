@@ -277,7 +277,7 @@ export default function HomePage() {
             const ringLen = 2 * Math.PI * 18;
             const pct = Math.min(100, Math.max(0, kpi.percent));
             return (
-              <article key={kpi.kpiKey} className="flex items-center gap-3 rounded-2xl border border-[#E8EDF4] bg-white p-4 shadow-sm">
+              <article key={kpi.kpiKey} className={`flex items-center gap-3 rounded-2xl border bg-white p-4 transition-shadow duration-700 ${onTrackKpi ? "border-emerald-300 shadow-[0_0_18px_rgba(16,185,129,0.45)]" : "border-red-300 shadow-[0_0_18px_rgba(220,38,38,0.45)]"}`}>
                 <div className="relative h-14 w-14 shrink-0">
                   <svg viewBox="0 0 44 44" className="h-full w-full -rotate-90">
                     <circle cx="22" cy="22" r="18" fill="none" stroke="#F1F4F9" strokeWidth="5" />
