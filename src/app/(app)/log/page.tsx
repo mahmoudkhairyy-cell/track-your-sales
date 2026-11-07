@@ -137,8 +137,13 @@ export default function LogPage() {
           body: JSON.stringify({ kpiKey: item.key, quantity: check.value, entryDate, note }),
         });
         saved += 1;
+        // نشيل البند اللي اتحفظ من الحقول، عشان لو حصل خطأ بعده الإعادة ماتكررهوش.
+        setQuantities((cur) => {
+          const next = { ...cur };
+          delete next[item.key];
+          return next;
+        });
       }
-      if (typeof navigator !== "undefined" && "vibrate" in navigator) navigator.vibrate?.(30);
       haptic(18);
       toast.push("success", `تم تسجيل الإنجاز (${saved})`);
       window.dispatchEvent(new Event("tys-data-changed"));
