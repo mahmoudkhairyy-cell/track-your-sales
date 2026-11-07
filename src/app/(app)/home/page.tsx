@@ -277,8 +277,8 @@ export default function HomePage() {
             const ringLen = 2 * Math.PI * 18;
             const pct = Math.min(100, Math.max(0, kpi.percent));
             return (
-              <article key={kpi.kpiKey} className="flex items-center gap-3 rounded-2xl border border-[#E8EDF4] bg-white p-3 shadow-sm">
-                <div className="relative h-11 w-11 shrink-0">
+              <article key={kpi.kpiKey} className="flex items-center gap-3 rounded-2xl border border-[#E8EDF4] bg-white p-4 shadow-sm">
+                <div className="relative h-14 w-14 shrink-0">
                   <svg viewBox="0 0 44 44" className="h-full w-full -rotate-90">
                     <circle cx="22" cy="22" r="18" fill="none" stroke="#F1F4F9" strokeWidth="5" />
                     <circle
@@ -294,7 +294,7 @@ export default function HomePage() {
                       className="transition-all duration-700"
                     />
                   </svg>
-                  <span className="absolute inset-0 flex items-center justify-center font-mono text-[10px] font-black text-[#172033]">{Math.round(kpi.percent)}%</span>
+                  <span className="absolute inset-0 flex items-center justify-center font-mono text-xs font-black text-[#172033]">{Math.round(kpi.percent)}%</span>
                 </div>
                 <div className="flex min-w-0 flex-1 flex-col gap-1">
                   <div className="flex items-center justify-between gap-2">
