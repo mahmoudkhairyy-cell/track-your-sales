@@ -41,10 +41,9 @@ export function writePrefs(next: UiPrefs) {
   }
 }
 
-// اهتزاز اختياري: بيشتغل بس لو المستخدم فعّله والجهاز والمتصفح بيدعموا الاهتزاز.
+// اهتزاز دايمًا شغال: بيشتغل لو الجهاز والمتصفح بيدعموا الاهتزاز، من غير إعداد.
 export function haptic(pattern: number | number[] = 20) {
   try {
-    if (!readPrefs().haptics) return;
     if (typeof navigator === "undefined" || typeof navigator.vibrate !== "function") return;
     navigator.vibrate(pattern);
   } catch {

@@ -1,5 +1,4 @@
 "use client";
-import { UiSettings } from "@/components/UiSettings";
 
 import { FormEvent, useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -385,8 +384,6 @@ export default function MorePage() {
       {view === "today" ? (
         <div className="space-y-4">
           <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[#B94700]">← رجوع للقائمة</button>
-      <UiSettings />
-
       <section className="rounded-[24px] border border-[#E8EDF4] bg-white p-5 shadow-sm">
         <h2 className="text-lg font-black tracking-tight">📊 اللي عملته النهارده</h2>
         {todayItems.length === 0 ? (
