@@ -63,7 +63,7 @@ export function PrimaryButton({
   return (
     <button
       {...props}
-      className={`inline-flex min-h-12 w-full items-center justify-center rounded-full bg-gradient-to-br from-[#bd4b0a] to-[#e96812] px-4 text-base font-extrabold text-white shadow-[0_12px_28px_rgba(190,90,0,0.35)] transition enabled:active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60 ${className}`}
+      className={`inline-flex min-h-12 w-full items-center justify-center rounded-full bg-gradient-to-br from-[#bd4b0a] to-[#e96812] px-4 text-base font-extrabold text-white shadow-[0_12px_28px_rgba(190,90,0,0.35)] transition duration-200 hover:-translate-y-0.5 hover:shadow-[0_15px_32px_rgba(190,90,0,0.28)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#e96812] enabled:active:translate-y-0 enabled:active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60 ${className}`}
     >
       {children}
     </button>
@@ -78,7 +78,7 @@ export function SecondaryButton({
   return (
     <button
       {...props}
-      className={`inline-flex min-h-12 items-center justify-center rounded-full border border-neutral-200 bg-white px-4 text-base font-bold text-neutral-800 disabled:opacity-60 ${className}`}
+      className={`inline-flex min-h-12 items-center justify-center rounded-full border border-[#f0dfd2] bg-white px-4 text-base font-bold text-[#514238] shadow-[0_4px_12px_rgba(115,58,20,0.04)] transition duration-200 hover:-translate-y-0.5 hover:border-[#e8b48e] hover:bg-[#fffaf5] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#e96812] disabled:opacity-60 ${className}`}
     >
       {children}
     </button>
@@ -119,7 +119,7 @@ export function Field({
 }
 
 export const inputClass =
-  "min-h-12 w-full rounded-2xl border border-[#f2e4d8] bg-white px-4 text-base text-neutral-900 shadow-[inset_0_1px_2px_rgba(0,0,0,0.03)] outline-none ring-[#bd4b0a] focus:border-[#ff9d38] focus:ring-2";
+  "min-h-12 w-full rounded-2xl border border-[#f2e4d8] bg-white px-4 text-base text-[#241f1b] shadow-[0_2px_8px_rgba(115,58,20,0.025)] outline-none ring-[#bd4b0a] transition duration-150 placeholder:text-[#b5a69b] focus:border-[#e96812] focus:ring-2 focus:ring-[#e96812]/15";
 
 type Toast = { id: number; type: "success" | "error" | "info"; text: string };
 

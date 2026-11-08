@@ -5,11 +5,11 @@ export function Bone({ className = "" }: { className?: string }) {
 
 export function HomeSkeleton({ label = "بنحمّل لوحة الأداء" }: { label?: string }) {
   return (
-    <div className="flex flex-col gap-4" role="status" aria-label={label}>
-      <Bone className="h-40 rounded-3xl" />
-      <Bone className="h-20" />
-      <div className="grid grid-cols-2 gap-2">
-        <Bone className="h-24" />
+    <div className="flex flex-col gap-4 pb-5" role="status" aria-label={label}>
+      <Bone className="h-36 rounded-[28px] sm:h-40" />
+      <Bone className="h-16 rounded-[22px]" />
+      <div className="grid grid-cols-2 gap-3">
+        <Bone className="h-28 rounded-[22px]" />
         <Bone className="h-24" />
       </div>
       <Bone className="h-24" />

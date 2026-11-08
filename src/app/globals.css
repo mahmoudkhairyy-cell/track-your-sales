@@ -79,3 +79,12 @@ textarea { resize: vertical; }
   0% { background-position: 200% 0; }
   100% { background-position: -200% 0; }
 }
+
+
+/* Shared interaction polish */
+:where(a, button, [role="button"]) { touch-action: manipulation; }
+:where(input, select, textarea) { color-scheme: light; }
+::placeholder { opacity: 1; }
+@media (hover: hover) and (pointer: fine) {
+  a:not([class*="no-hover"]), button:not(:disabled) { -webkit-tap-highlight-color: transparent; }
+}
