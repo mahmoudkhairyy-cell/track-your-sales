@@ -198,3 +198,7 @@ textarea { resize: vertical; }
 .tys-app-main {
   overflow-x: clip;
 }
+
+@media (min-width: 1024px) {
+  .tys-app-main { scrollbar-gutter: stable; }
+}
