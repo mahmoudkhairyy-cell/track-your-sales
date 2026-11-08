@@ -322,13 +322,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* زرار التسجيل العايم */}
-      <div className="pointer-events-none fixed bottom-[76px] left-1/2 z-40 flex w-full max-w-[520px] -translate-x-1/2 justify-center px-4">
-        <Link href={`/log/?month=${month}`} className="pointer-events-auto flex items-center gap-2 rounded-full border-2 border-white bg-gradient-to-r from-[#a94308] to-[#ed741d] px-7 py-3 text-sm font-black text-white shadow-[0_14px_32px_-8px_rgba(145,61,13,0.42)] transition-transform active:scale-95">
-          <span className="text-lg">＋</span>
-          <span>تسجيل بيعة جديدة</span>
-        </Link>
-      </div>
     </div>
   );
 }
