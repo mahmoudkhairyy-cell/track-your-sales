@@ -242,7 +242,7 @@ export default function LogPage() {
           <article key={item.key} className="rounded-[24px] border border-[#f2e4d8] bg-white p-4 shadow-sm">
             <div className="flex items-center justify-between gap-3">
               <div className="flex items-center gap-3">
-                <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#fff0e2] text-[#D95B00]"><KpiIcon kpiKey={item.key} className="h-5 w-5" /></span>
+                <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#fff0e2] text-[#e96812]"><KpiIcon kpiKey={item.key} className="h-5 w-5" /></span>
                 <div>
                   <p className="font-extrabold" dir="ltr">{item.nameEn}</p>
                   <p className="text-[11px] font-bold text-[#bd4b0a]">
@@ -262,7 +262,7 @@ export default function LogPage() {
               </div>
               <div>
                 <p className="text-[10px] text-[#88796e]">الباقي</p>
-                <p className="text-sm font-black tabular-nums text-[#b84700]">{d ? formatQty(Math.max(0, d.remaining)) : "—"}</p>
+                <p className="text-sm font-black tabular-nums text-[#bd4b0a]">{d ? formatQty(Math.max(0, d.remaining)) : "—"}</p>
               </div>
             </div>
             <div className="mt-3 flex items-center gap-2">
