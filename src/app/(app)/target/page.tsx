@@ -245,7 +245,7 @@ export default function TargetPage() {
             );
           })}
         </div>
-        <p className="mt-3 text-center text-xs text-neutral-500">اضغط أي يوم لإضافته أو إلغائه كإجازة</p>
+        <p className="mt-3 text-center text-xs text-[#927b69]">اضغط أي يوم لإضافته أو إلغائه كإجازة</p>
       </section>
 
       {error ? <Banner tone="error">❌ {error}</Banner> : null}
@@ -299,7 +299,7 @@ export default function TargetPage() {
         <p className="mb-2 rounded-xl bg-[#fff0e2] px-3 py-2 text-[11px] font-bold leading-5 text-[#bd4b0a]">
           📌 الأوزان مختلفة للموظف والمدير. ده وزن {kpis.some((k) => k.kpiKey === "productivity" && k.weight > 0) ? "المدير" : "الموظف"}، وبيتحدد أوتوماتيك حسب اختيارك في أول مرة، ومش بيتعدل من التطبيق.
         </p>
-        <div className="grid grid-cols-[1fr_74px_74px] gap-2 border-b border-dashed border-[#f2e4d8]/70 pb-2 text-[11px] font-bold text-neutral-500">
+        <div className="grid grid-cols-[1fr_74px_74px] gap-2 border-b border-dashed border-[#f2e4d8]/70 pb-2 text-[11px] font-bold text-[#927b69]">
           <span>الإيتم</span>
           <span className="text-center">التارجت</span>
           <span className="text-center">الوزن %</span>
@@ -319,7 +319,7 @@ export default function TargetPage() {
                   {kpi.kpiKey === "new_orange_cash" ? (
                     <p className="text-[10px] font-bold text-[#bd4b0a]">= 90% من New Lines</p>
                   ) : (
-                    <p className="text-[10px] text-neutral-500">{kpi.unitAr}</p>
+                    <p className="text-[10px] text-[#927b69]">{kpi.unitAr}</p>
                   )}
                 </div>
               </div>
@@ -336,7 +336,7 @@ export default function TargetPage() {
                   setKpis((current) => current.map((row, rowIndex) => (rowIndex === index ? { ...row, target } : row)));
                 }}
               />
-              <p aria-label={`وزن ${catalog?.nameEn}`} className="py-2 text-center text-sm font-black text-neutral-600">{kpi.weight}%</p>
+              <p aria-label={`وزن ${catalog?.nameEn}`} className="py-2 text-center text-sm font-black text-[#927b69]">{kpi.weight}%</p>
             </div>
           );
         })}
