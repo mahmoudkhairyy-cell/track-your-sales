@@ -46,7 +46,7 @@ function ScoreRing({ value }: { value: number }) {
   const circ = 2 * Math.PI * radius;
   const offset = circ - (visual / 100) * circ;
   return (
-    <svg viewBox="0 0 130 130" className="h-32 w-32 shrink-0">
+    <svg viewBox="0 0 130 130" role="img" aria-label={`نسبة الإنجاز ${formatPercent(value)} بالمئة`} className="h-32 w-32 shrink-0">
       <circle cx="65" cy="65" r={radius} fill="none" stroke="rgba(255,255,255,0.28)" strokeWidth="12" />
       <circle
         cx="65"
