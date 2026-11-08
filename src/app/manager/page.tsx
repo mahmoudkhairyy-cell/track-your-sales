@@ -352,14 +352,14 @@ export default function ManagerPage() {
                 <div>
                   <p className="mb-1 font-black">التارجت والأوزان</p>
                   {(row.payload.settings?.kpis ?? []).map((k) => (
-                    <div key={k.kpiKey} className="flex justify-between">
-                      <span dir="ltr">{kpiLabel(k.kpiKey)}</span>
-                      <span className="tabular-nums">تارجت {k.target} · وزن {k.weight}%</span>
+                    <div key={k.kpiKey} className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 rounded-xl border border-[#f4e5d9] bg-[#fffaf6] px-3 py-2">
+                      <span className="min-w-0 font-extrabold text-[#5b4030]">{kpiLabel(k.kpiKey)}</span>
+                      <span className="whitespace-nowrap text-[10px] font-bold tabular-nums text-[#927b69] sm:text-xs">تارجت {k.target} · وزن {k.weight}%</span>
                     </div>
                   ))}
                 </div>
                 <div>
-                  <p className="mb-1 font-black">كل الإنجازات</p>
+                  <p className="mb-2 flex items-center justify-between font-black"><span>كل الإنجازات</span><span className="rounded-full bg-[#fff0e2] px-2 py-0.5 text-[10px] font-black text-[#bd4b0a]">{row.payload.entries?.length ?? 0}</span></p>
                   {(row.payload.entries ?? []).length === 0 ? <p className="text-[#927b69]">لا يوجد</p> : null}
                   {(row.payload.entries ?? []).map((e, i) => (
                     <div key={`${e.date}-${i}`} className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] items-center gap-2 rounded-xl border border-[#f4e5d9] bg-[#fffaf6] px-3 py-2.5 text-[11px] sm:text-xs">
@@ -526,7 +526,7 @@ export default function ManagerPage() {
                   )));
                   return (
                     <section className="rounded-[26px] border border-white/90 bg-white/95 p-4 shadow-[0_12px_30px_rgba(126,65,24,0.06)] ring-1 ring-[#f1dfd0]/70 sm:p-5">
-                      <p className="mb-3 text-sm font-black">📅 النهارده ({today})</p>
+                      <div className="mb-3 flex flex-wrap items-center justify-between gap-2"><p className="text-sm font-black">📅 متابعة تسجيلات النهارده</p><span className="rounded-full bg-[#fff0e2] px-3 py-1 text-[10px] font-extrabold text-[#bd4b0a]" dir="ltr">{today}</span></div>
                       <div className="grid grid-cols-3 gap-2 text-center text-xs font-extrabold">
                         <div className="rounded-2xl bg-emerald-50 p-2 text-emerald-800">✅ سجّل<br /><span className="text-lg tabular-nums">{logged.length}</span></div>
                         <div className="rounded-2xl bg-red-50 p-2 text-red-700">❌ مسجلش<br /><span className="text-lg tabular-nums">{missing.length}</span></div>
