@@ -104,9 +104,34 @@ function FirstRunProfile({ onDone }: { onDone: () => void }) {
   const [error, setError] = useState("");
   const [pending, setPending] = useState(false);
   const [role, setRole] = useState<"agent" | "team_leader" | "manager" | "area_manager" | "">("");
+  const [review, setReview] = useState(false);
 
   async function submit(event: FormEvent) {
     event.preventDefault();
+    // الخطوة الأولى: التحقق من البيانات وعرض المراجعة قبل الحفظ.
+    if (!review) {
+      if (!role) {
+        setError("اختار إنت موظف ولا مدير");
+        return;
+      }
+      if (role !== "area_manager") {
+        if (name.trim().length < 2) {
+          setError("اكتب اسمك (حرفين على الأقل)");
+          return;
+        }
+        if (!branch.trim()) {
+          setError("اختار الفرع بتاعك");
+          return;
+        }
+        if (!areaManager.trim()) {
+          setError("اختار مدير المنطقة بتاعك");
+          return;
+        }
+      }
+      setError("");
+      setReview(true);
+      return;
+    }
     if (!role) {
       setError("اختار إنت موظف ولا مدير");
       return;
@@ -153,6 +178,17 @@ function FirstRunProfile({ onDone }: { onDone: () => void }) {
           <h1 className="mt-2 text-xl font-black text-[#241f1b]">أهلاً بيك في {APP_NAME}</h1>
           <p className="mt-1 text-sm leading-6 text-[#88796e]">خلّينا نجهّز مساحة شغلك ببياناتك الأساسية</p>
         </div>
+        {review ? (
+          <div className="mb-4 space-y-2 rounded-2xl border border-[#f2e4d8] bg-[#fffdfb] p-4 text-sm text-[#514238]">
+            <p className="font-black text-[#241f1b]">راجع بياناتك قبل ما تكمّل:</p>
+            <p>👤 الاسم: <b>{name.trim()}</b></p>
+            <p>🏷️ الوظيفة: <b>{role === "agent" ? "Agent" : role === "team_leader" ? "Team Leader" : role === "manager" ? "Manager" : "Area Manager"}</b></p>
+            {role !== "area_manager" ? <p>🏢 الفرع: <b>{branch}</b></p> : null}
+            {role !== "area_manager" ? <p>🗺️ مدير المنطقة: <b>{areaManager}</b></p> : null}
+            <p className="pt-2 text-xs leading-5 text-[#88796e]">بعد الموافقة مينفعش تغيّر الاسم أو الفرع أو الوظيفة.</p>
+          </div>
+        ) : (
+          <>
         <label className="mb-3 block text-sm font-bold text-[#514238]">
           الاسم
           <input value={name} onChange={(e) => setName(e.target.value)} className="mt-1 w-full rounded-2xl border border-[#f2e4d8] bg-[#fffdfb] px-4 py-3 outline-none transition focus:border-[#e96812] focus:ring-2 focus:ring-[#e96812]/10" maxLength={80} />
@@ -200,10 +236,23 @@ function FirstRunProfile({ onDone }: { onDone: () => void }) {
           </select>
         </label>
         ) : null}
+          </>
+        )}
         {error ? <p className="mb-3 text-sm font-bold text-red-600">{error}</p> : null}
-        <button type="submit" disabled={pending} className="w-full rounded-2xl bg-gradient-to-br from-[#e96812] to-[#ff9d38] py-3 font-extrabold text-white shadow-sm disabled:opacity-60">
-          كمّل
-        </button>
+        {review ? (
+          <div className="grid grid-cols-2 gap-2">
+            <button type="button" onClick={() => setReview(false)} disabled={pending} className="rounded-2xl border border-[#f2e4d8] bg-white py-3 font-extrabold text-[#6e5543] disabled:opacity-60">
+              ✏️ تعديل
+            </button>
+            <button type="submit" disabled={pending} className="rounded-2xl bg-gradient-to-br from-[#e96812] to-[#ff9d38] py-3 font-extrabold text-white shadow-sm disabled:opacity-60">
+              ✅ موافق
+            </button>
+          </div>
+        ) : (
+          <button type="submit" className="w-full rounded-2xl bg-gradient-to-br from-[#e96812] to-[#ff9d38] py-3 font-extrabold text-white shadow-sm">
+            كمّل
+          </button>
+        )}
       </form>
     </div>
   );

@@ -552,6 +552,10 @@ function deleteArticle(state: State, id: string) {
 }
 
 function updateProfile(state: State, data: Record<string, unknown>) {
+  // بعد أول تسجيل البيانات بتتقفل: الاسم والفرع والوظيفة مش بيتعدلوا.
+  if (state.profile.name && state.profile.role) {
+    throw new Error("بياناتك اتسجلت قبل كده ومينفعش تتغير");
+  }
   const name = trimText(data.name, "اسم الموظف", 2, 80);
   const branch = typeof data.branch === "string" ? data.branch.trim().slice(0, 80) : "";
   const role = data.role === "manager" || data.role === "agent" || data.role === "team_leader" || data.role === "area_manager" ? data.role : state.profile.role;

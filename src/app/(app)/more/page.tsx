@@ -501,18 +501,15 @@ export default function MorePage() {
 
       <section className="rounded-[24px] border border-[#f2e4d8] bg-white p-5 shadow-sm">
         <h2 className="text-lg font-black tracking-tight">👤 بياناتك</h2>
-        <form className="mt-4 space-y-3" onSubmit={saveProfile}>
+        <div className="mt-4 space-y-3">
           <Field label="اسم الموظف">
-            <input className={inputClass} value={name} onChange={(e) => setName(e.target.value)} required />
+            <input className={`${inputClass} bg-[#fdf6f0]`} value={name} readOnly />
           </Field>
           <Field label="الفرع">
-            <input className={inputClass} value={branch} onChange={(e) => setBranch(e.target.value)} required />
+            <input className={`${inputClass} bg-[#fdf6f0]`} value={branch} readOnly />
           </Field>
-          <PrimaryButton type="submit" disabled={pending}>
-            {pending ? "⏳ بنحفظ..." : "💾 احفظ الاسم والفرع"}
-          </PrimaryButton>
-        </form>
-        <p className="mt-3 text-xs leading-6 text-[#88796e]">تقدر تغيّر اسمك والفرع في أي وقت من هنا.</p>
+        </div>
+        <p className="mt-3 text-xs leading-6 text-[#88796e]">بياناتك اتسجلت أول مرة، ومينفعش تتغير من التطبيق.</p>
       </section>
         </div>
       ) : null}
