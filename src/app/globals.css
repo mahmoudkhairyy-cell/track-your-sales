@@ -192,3 +192,9 @@ textarea { resize: vertical; }
     scroll-margin-top: 88px;
   }
 }
+
+
+/* Prevent sideways page overflow while preserving horizontal KPI carousels. */
+.tys-app-main {
+  overflow-x: clip;
+}
