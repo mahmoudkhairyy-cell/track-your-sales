@@ -45,12 +45,15 @@ export default function TargetPage() {
 
   useEffect(() => {
     let cancelled = false;
-    setLoading(true);
-    setError("");
-    api<{ settings: { saved: boolean; fullCommission: number; allowCommissionOver100: boolean; workingDays: WorkingDays; kpis: KpiForm[]; holidays: Holiday[] } }>(
-      `/api/months/${month}`,
-    )
-      .then((result) => {
+    async function loadSettings() {
+      await Promise.resolve();
+      if (cancelled) return;
+      setLoading(true);
+      setError("");
+      try {
+        const result = await api<{ settings: { saved: boolean; fullCommission: number; allowCommissionOver100: boolean; workingDays: WorkingDays; kpis: KpiForm[]; holidays: Holiday[] } }>(
+          `/api/months/${month}`,
+        );
         if (cancelled) return;
         setSaved(result.settings.saved);
         setFullCommission(result.settings.fullCommission);
@@ -59,13 +62,13 @@ export default function TargetPage() {
         setKpis(result.settings.kpis);
         setHolidays(result.settings.holidays);
         setHolidayDate(`${month}-01`);
-      })
-      .catch((err) => {
+      } catch (err) {
         if (!cancelled) setError(err instanceof ApiError || err instanceof Error ? err.message : "مقدرناش نحمّل الإعدادات");
-      })
-      .finally(() => {
+      } finally {
         if (!cancelled) setLoading(false);
-      });
+      }
+    }
+    void loadSettings();
     return () => {
       cancelled = true;
     };
