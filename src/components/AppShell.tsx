@@ -297,7 +297,9 @@ export function AppShell({ children }: { children: ReactNode }) {
       alreadyShown = true;
     }
     if (alreadyShown) return () => { cancelled = true; };
-    setSplash(true);
+    queueMicrotask(() => {
+      if (!cancelled) setSplash(true);
+    });
     const timer = setTimeout(() => setSplash(false), 4000);
     return () => {
       cancelled = true;
