@@ -202,3 +202,69 @@ textarea { resize: vertical; }
 @media (min-width: 1024px) {
   .tys-app-main { scrollbar-gutter: stable; }
 }
+
+
+/* Final surface and interaction pass across every workspace section. */
+.tys-page-wiki article,
+.tys-page-manager article {
+  border: 1px solid var(--brand-border);
+  border-radius: 22px;
+  background-color: #fff;
+  box-shadow: 0 8px 24px rgba(126, 65, 24, 0.045);
+  transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+}
+.tys-page-wiki article h2,
+.tys-page-wiki article h3,
+.tys-page-manager article h2,
+.tys-page-manager article h3 {
+  color: var(--brand-text);
+}
+.tys-page-wiki article p,
+.tys-page-manager article p {
+  overflow-wrap: anywhere;
+}
+.tys-page-manager form {
+  border: 1px solid var(--brand-border);
+  border-radius: 26px;
+  box-shadow: 0 14px 34px rgba(126, 65, 24, 0.065);
+}
+.tys-page-manager label {
+  color: var(--brand-muted);
+}
+.tys-page-manager button:not(:disabled),
+.tys-page-wiki button:not(:disabled),
+.tys-page-wiki a {
+  transition: color 160ms ease, background-color 160ms ease, border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+}
+.tys-page-manager button:focus-visible,
+.tys-page-wiki button:focus-visible,
+.tys-page-wiki a:focus-visible {
+  outline: 3px solid rgba(233, 104, 18, 0.28);
+  outline-offset: 3px;
+}
+.tys-page-wiki article:focus-within,
+.tys-page-manager article:focus-within {
+  border-color: #edc4a4;
+}
+::selection {
+  color: #7b3107;
+  background: #ffe0c5;
+}
+@media (hover: hover) and (pointer: fine) {
+  .tys-page-wiki article:hover,
+  .tys-page-manager article:hover {
+    border-color: #edc4a4;
+    box-shadow: 0 13px 30px rgba(126, 65, 24, 0.075);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tys-page,
+  .tys-page *,
+  .tys-page *::before,
+  .tys-page *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
