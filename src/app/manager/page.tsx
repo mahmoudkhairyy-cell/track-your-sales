@@ -302,7 +302,7 @@ export default function ManagerPage() {
     const staleClass = days >= 3 ? "bg-red-100 text-red-700" : days >= 1 ? "bg-amber-100 text-amber-800" : "";
     const percent = Math.round(row.payload.overall ?? 0);
     return (
-      <article key={row.branch_id} className="rounded-[24px] bg-white p-4 shadow-sm ring-1 ring-[#f1dfd0]/70">
+      <article key={row.branch_id} className="rounded-[26px] bg-white/95 p-4 shadow-[0_10px_28px_rgba(126,65,24,0.06)] ring-1 ring-[#f1dfd0]/70">
         <button type="button" onClick={() => setOpenId(open ? null : row.branch_id)} className="flex w-full items-center justify-between gap-3 text-right">
           <div>
             <h3 className="font-black">{row.employee_name}</h3>
@@ -377,16 +377,38 @@ export default function ManagerPage() {
     );
   }
 
+  const branchGroups = groupByBranch(allRows);
+  const dashboardAverage = branchGroups.length
+    ? branchGroups.reduce((sum, [, group]) => sum + groupAverage(group), 0) / branchGroups.length
+    : 0;
+  const activeToday = allRows.filter((r) => (r.payload.entries ?? []).some((e) => e.date === cairoISODate())).length;
+
   return (
-    <main className="tys-page tys-page-manager min-h-screen bg-[#fffaf5] p-4 text-[#2d2119]" dir="rtl">
-      <div className="mx-auto max-w-6xl space-y-4">
-        <div className="relative overflow-hidden rounded-[26px] border border-[#f1dfd0] bg-gradient-to-l from-white via-[#fffaf5] to-[#fff0e2] px-5 py-4 shadow-[0_12px_28px_rgba(126,65,24,0.055)]">
-          <p className="text-[10px] font-black tracking-[0.2em] text-[#bd6b39]" dir="ltr">MANAGEMENT OVERVIEW</p>
-          <h1 className="mt-1 text-2xl font-black tracking-tight text-[#2d2119]">لوحة المدير</h1>
-          <p className="mt-1 text-xs text-[#927b69]">متابعة أداء الفروع والموظفين في مكان واحد</p>
+    <main className="tys-page tys-page-manager min-h-screen bg-[radial-gradient(ellipse_at_top_right,_#ffe8d4_0%,_transparent_38%),linear-gradient(180deg,#fffaf5_0%,#fff6ed_48%,#fffaf7_100%)] px-3 py-4 text-[#38251a] sm:px-5 sm:py-6" dir="rtl">
+      <div className="mx-auto max-w-6xl space-y-5">
+        <div className="relative isolate overflow-hidden rounded-[30px] bg-gradient-to-br from-[#9e3d08] via-[#d95b0c] to-[#ff9d38] px-5 py-6 text-white shadow-[0_20px_48px_rgba(173,75,13,0.22)] sm:px-7 sm:py-8">
+          <div className="pointer-events-none absolute -left-12 -top-16 h-56 w-56 rounded-full border-[28px] border-white/10" />
+          <div className="pointer-events-none absolute -bottom-24 right-1/3 h-64 w-64 rounded-full bg-white/10 blur-2xl" />
+          <div className="relative flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <p className="text-[10px] font-black tracking-[0.24em] text-white/70" dir="ltr">MANAGEMENT CENTER</p>
+              <h1 className="mt-2 text-3xl font-black tracking-tight sm:text-4xl">لوحة المدير</h1>
+              <p className="mt-2 max-w-xl text-sm leading-6 text-white/80">نظرة شاملة على أداء الفروع، متابعة الفريق، ومؤشرات الإنجاز من مكان واحد.</p>
+            </div>
+            <div className="flex h-16 w-16 items-center justify-center rounded-[22px] border border-white/20 bg-white/15 shadow-inner backdrop-blur-sm">
+              <img src="/track-your-sales/logo-mark.png" alt="" className="h-12 w-12 object-contain" />
+            </div>
+          </div>
+          {rows !== null ? (
+            <div className="relative mt-6 grid grid-cols-3 gap-2 sm:gap-3">
+              <div className="rounded-2xl border border-white/15 bg-white/10 px-3 py-3 backdrop-blur-sm"><p className="text-[10px] font-bold text-white/70">الفروع</p><p className="mt-1 text-2xl font-black tabular-nums">{branchGroups.length}</p></div>
+              <div className="rounded-2xl border border-white/15 bg-white/10 px-3 py-3 backdrop-blur-sm"><p className="text-[10px] font-bold text-white/70">الموظفين</p><p className="mt-1 text-2xl font-black tabular-nums">{allRows.length}</p></div>
+              <div className="rounded-2xl border border-white/15 bg-white/10 px-3 py-3 backdrop-blur-sm"><p className="text-[10px] font-bold text-white/70">متوسط الأداء</p><p className="mt-1 text-2xl font-black tabular-nums">{Math.round(dashboardAverage)}%</p></div>
+            </div>
+          ) : null}
         </div>
         {rows !== null ? (
-          <div className="flex items-center justify-between rounded-[24px] border border-[#f1dfd0] border-t-4 border-t-[#e96812] bg-white p-4 text-[#2d2119] shadow-sm">
+          <div className="flex items-center justify-between rounded-[26px] border border-white/80 bg-white/90 p-4 text-[#2d2119] shadow-[0_10px_28px_rgba(126,65,24,0.07)] ring-1 ring-[#f1dfd0]/70 backdrop-blur-sm">
             <div className="flex items-center gap-3">
               <img src="/track-your-sales/logo-mark.png" alt="" className="h-10 w-10 object-contain" />
               <div>
@@ -552,10 +574,10 @@ export default function ManagerPage() {
                             key={branchName}
                             type="button"
                             onClick={() => setView(`b:${branchName}`)}
-                            className="group flex w-full items-center justify-between gap-3 rounded-[24px] border border-[#f1dfd0] bg-white p-4 text-right shadow-[0_8px_22px_rgba(126,65,24,0.045)] transition duration-200 hover:-translate-y-0.5 hover:border-[#edc4a4] hover:shadow-[0_14px_28px_rgba(126,65,24,0.08)]"
+                            className="group relative flex w-full items-center justify-between gap-3 overflow-hidden rounded-[26px] border border-white bg-white/95 p-5 text-right shadow-[0_12px_30px_rgba(126,65,24,0.07)] ring-1 ring-[#f1dfd0]/70 transition duration-200 hover:-translate-y-1 hover:ring-[#edb184] hover:shadow-[0_18px_36px_rgba(126,65,24,0.12)]"
                           >
                             <div>
-                              <p className="font-black" dir="ltr">{branchName}</p>
+                              <p className="font-black text-base text-[#38251a]" dir="ltr">{branchName}</p>
                               <p className="text-xs text-[#927b69]">{group.length} موظف</p>
                               <div className="mt-1"><TrackBadge percent={avg} expected={groupExpected(group)} /></div>
                             </div>
