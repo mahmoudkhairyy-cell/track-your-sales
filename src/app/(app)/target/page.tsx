@@ -342,7 +342,7 @@ export default function TargetPage() {
         })}
       </section>
 
-      <div className="sticky bottom-[76px] z-20 rounded-[24px] border border-[#f0dfd2] bg-[#fffaf5]/95 p-2 shadow-[0_12px_30px_rgba(100,55,25,0.12)] backdrop-blur-xl lg:bottom-4">
+      <div className="sticky bottom-[calc(76px+env(safe-area-inset-bottom))] z-20 rounded-[24px] border border-[#f0dfd2] bg-[#fffaf5]/95 p-2 shadow-[0_12px_30px_rgba(100,55,25,0.12)] backdrop-blur-xl lg:bottom-4">
       <PrimaryButton type="submit" disabled={saving}>
         {saving ? "⏳ بنحفظ على السيرفر..." : "💾 احفظ إعدادات الشهر"}
       </PrimaryButton>
