@@ -85,15 +85,16 @@ export default function WikiPage() {
   const [pending, setPending] = useState(false);
   const [confirmId, setConfirmId] = useState<string | null>(null);
 
-  async function loadNotes() {
+  async function loadNotes(isActive: () => boolean = () => true) {
+    if (!isActive()) return;
     setLoadingNotes(true);
     try {
       const result = await api<{ articles: Article[] }>("/api/wiki");
-      setArticles(result.articles);
+      if (isActive()) setArticles(result.articles);
     } catch {
-      setArticles([]);
+      if (isActive()) setArticles([]);
     } finally {
-      setLoadingNotes(false);
+      if (isActive()) setLoadingNotes(false);
     }
   }
 
@@ -102,7 +103,7 @@ export default function WikiPage() {
     let cancelled = false;
     async function run() {
       await Promise.resolve();
-      if (!cancelled) await loadNotes();
+      if (!cancelled) await loadNotes(() => !cancelled);
     }
     void run();
     return () => {
