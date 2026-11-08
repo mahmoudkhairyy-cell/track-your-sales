@@ -262,7 +262,7 @@ export default function WikiPage() {
   const homePlans = PLAN_GROUPS.find((g) => g.category === "Home Wireless");
 
   return (
-    <div className="tys-page tys-page-wiki space-y-5">
+    <div className="tys-page tys-page-wiki mx-auto max-w-6xl space-y-5">
       {section === "hub" ? (
         <>
           <section className="relative isolate overflow-hidden rounded-[30px] border border-[#f0d8c4] bg-[linear-gradient(118deg,#fff7ef_0%,#fff_48%,#ffead8_100%)] p-5 shadow-[0_16px_38px_rgba(126,65,24,0.07)] sm:p-6">
@@ -363,7 +363,7 @@ export default function WikiPage() {
             </div>
           ) : (
             <>
-              <div className="grid gap-3 sm:grid-cols-2">
+              <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
                 {HUB.map((card, index) => (
                   <button key={card.id} type="button" onClick={() => { setSection(card.id); setQuery(""); }} className="group flex min-h-[88px] w-full items-center gap-3 rounded-[24px] border border-[#f1dfd0] bg-white p-3.5 text-right shadow-[0_8px_22px_rgba(126,65,24,0.045)] transition duration-200 hover:-translate-y-0.5 hover:border-[#edc4a4] hover:shadow-[0_14px_28px_rgba(126,65,24,0.08)]">
                     <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-[#f6e5d7] bg-gradient-to-br from-[#fffaf5] to-[#fff0e2]">{card.icon}</span>
@@ -399,7 +399,7 @@ export default function WikiPage() {
             ))}
           </div>
           <p className="mt-2 text-xs text-[#88796e]">{filteredSr.length} نتيجة</p>
-          <div className="mt-3 space-y-2">
+          <div className="mt-3 grid gap-2 sm:grid-cols-2">
             {filteredSr.map((item) => (
               <button key={`${item.id}-${item.title}`} type="button" onClick={() => setOpenSr(item)} className="w-full rounded-[24px] border border-[#f2e4d8] bg-white p-4 text-right shadow-sm">
                 <p className="text-xs font-extrabold text-[#bd4b0a]">{item.id}</p>

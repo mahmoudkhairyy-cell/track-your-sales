@@ -150,7 +150,7 @@ export default function TargetPage() {
   if (loading) return <Spinner label="ثواني… بنحمّل إعدادات التارجت" />;
 
   return (
-    <form className="tys-page tys-page-target mx-auto max-w-5xl space-y-5 pb-4" onSubmit={onSave}>
+    <form className="tys-page tys-page-target mx-auto max-w-6xl space-y-5 pb-4" onSubmit={onSave}>
       <section className="relative isolate overflow-hidden rounded-[30px] border border-[#f0d7c4] bg-[linear-gradient(120deg,#fff7ef_0%,#fff_52%,#ffead8_100%)] p-5 shadow-[0_16px_38px_rgba(126,65,24,0.07)] sm:p-6">
         <div className="pointer-events-none absolute -left-10 -top-12 h-36 w-36 rounded-full border-[22px] border-[#e96812]/[0.06]" />
         <div className="relative flex items-start justify-between gap-3">

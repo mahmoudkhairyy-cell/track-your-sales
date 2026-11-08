@@ -406,3 +406,48 @@ textarea { resize: vertical; }
     animation-duration: .01ms !important;
   }
 }
+
+
+/* Responsive workspace refinement — shared by manager, knowledge base and daily tools. */
+.tys-page-home,
+.tys-page-target,
+.tys-page-log,
+.tys-page-more,
+.tys-page-wiki {
+  width: 100%;
+  min-width: 0;
+}
+.tys-page-wiki article,
+.tys-page-manager article,
+.tys-page-more section,
+.tys-page-target section,
+.tys-page-log section {
+  min-width: 0;
+}
+.tys-page-wiki button,
+.tys-page-manager button,
+.tys-page-more button {
+  -webkit-tap-highlight-color: transparent;
+}
+.tys-page-wiki button:focus-visible,
+.tys-page-manager button:focus-visible,
+.tys-page-more button:focus-visible {
+  outline: 3px solid rgba(233, 104, 18, .24);
+  outline-offset: 3px;
+}
+@media (min-width: 1280px) {
+  .tys-page-manager { padding-inline: 1.25rem; }
+  .tys-page-wiki article,
+  .tys-page-more section {
+    box-shadow: 0 10px 28px rgba(126, 65, 24, .055);
+  }
+}
+@media (max-width: 640px) {
+  .tys-page-manager { padding-inline: .75rem; }
+  .tys-page-manager article { border-radius: 20px; }
+  .tys-page-wiki,
+  .tys-page-more,
+  .tys-page-home,
+  .tys-page-target,
+  .tys-page-log { padding-inline: 0; }
+}

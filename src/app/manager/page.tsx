@@ -379,7 +379,7 @@ export default function ManagerPage() {
 
   return (
     <main className="tys-page tys-page-manager min-h-screen bg-[#fffaf5] p-4 text-[#2d2119]" dir="rtl">
-      <div className="mx-auto max-w-3xl space-y-4">
+      <div className="mx-auto max-w-6xl space-y-4">
         <div className="relative overflow-hidden rounded-[26px] border border-[#f1dfd0] bg-gradient-to-l from-white via-[#fffaf5] to-[#fff0e2] px-5 py-4 shadow-[0_12px_28px_rgba(126,65,24,0.055)]">
           <p className="text-[10px] font-black tracking-[0.2em] text-[#bd6b39]" dir="ltr">MANAGEMENT OVERVIEW</p>
           <h1 className="mt-1 text-2xl font-black tracking-tight text-[#2d2119]">لوحة المدير</h1>
@@ -542,7 +542,7 @@ export default function ManagerPage() {
                   );
                 })() : null}
                 {branch === null ? (
-                  <div className="space-y-3">
+                  <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
                     {groupByBranch(allRows)
                       .sort((a, b) => groupAverage(b[1]) - groupAverage(a[1]))
                       .map(([branchName, group]) => {
@@ -552,7 +552,7 @@ export default function ManagerPage() {
                             key={branchName}
                             type="button"
                             onClick={() => setView(`b:${branchName}`)}
-                            className="flex w-full items-center justify-between rounded-[24px] bg-white p-4 text-right shadow-sm ring-1 ring-[#f1dfd0]/70"
+                            className="group flex w-full items-center justify-between gap-3 rounded-[24px] border border-[#f1dfd0] bg-white p-4 text-right shadow-[0_8px_22px_rgba(126,65,24,0.045)] transition duration-200 hover:-translate-y-0.5 hover:border-[#edc4a4] hover:shadow-[0_14px_28px_rgba(126,65,24,0.08)]"
                           >
                             <div>
                               <p className="font-black" dir="ltr">{branchName}</p>
