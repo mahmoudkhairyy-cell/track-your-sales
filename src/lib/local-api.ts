@@ -32,7 +32,7 @@ import type { WorkingDays } from "@/lib/types";
 const STORAGE_KEY = "trackYourSales.local.v1";
 
 // مسح لمرة واحدة لكل جهاز: بيفضي البيانات المحلية وبيرجع التطبيق من الأول.
-const WIPE_FLAG = "tys.wipe.2026-11-09";
+const WIPE_FLAG = "tys.wipe.2026-11-09b";
 try {
   if (typeof window !== "undefined" && !localStorage.getItem(WIPE_FLAG)) {
     localStorage.removeItem(STORAGE_KEY);

@@ -1,4 +1,4 @@
-const CACHE = "tys-v88";
+const CACHE = "tys-v89";
 const APP_HOME = "/track-your-sales/home/";
 
 self.addEventListener("install", (event) => {
