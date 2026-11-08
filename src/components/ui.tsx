@@ -15,7 +15,7 @@ import {
 export function Spinner({ label = "بيحمّل..." }: { label?: string }) {
   return (
     <div className="flex items-center justify-center gap-3 py-10 text-neutral-500">
-      <span className="h-5 w-5 animate-spin rounded-full border-2 border-[#B94700] border-t-transparent" />
+      <span className="h-5 w-5 animate-spin rounded-full border-2 border-[#bd4b0a] border-t-transparent" />
       <span>{label}</span>
     </div>
   );
@@ -31,7 +31,7 @@ export function EmptyState({
   action?: ReactNode;
 }) {
   return (
-    <div className="rounded-[28px] border border-dashed border-[#E87518] bg-white px-5 py-10 text-center">
+    <div className="rounded-[28px] border border-dashed border-[#ff9d38] bg-white px-5 py-10 text-center">
       <p className="text-lg font-extrabold text-neutral-900">{title}</p>
       <p className="mx-auto mt-2 max-w-md text-sm leading-7 text-neutral-500">{text}</p>
       {action ? <div className="mt-5">{action}</div> : null}
@@ -47,7 +47,7 @@ export function Banner({
   children: ReactNode;
 }) {
   const tones = {
-    info: "bg-[#FCEBDD] text-[#B94700] border-[#F3D2B5]",
+    info: "bg-[#fff0e2] text-[#bd4b0a] border-[#f2e4d8]",
     error: "bg-red-50 text-red-900 border-red-200",
     success: "bg-emerald-50 text-emerald-950 border-emerald-200",
     warn: "bg-amber-50 text-amber-950 border-amber-200",
@@ -63,7 +63,7 @@ export function PrimaryButton({
   return (
     <button
       {...props}
-      className={`inline-flex min-h-12 w-full items-center justify-center rounded-full bg-gradient-to-br from-[#B94700] to-[#D95B00] px-4 text-base font-extrabold text-white shadow-[0_12px_28px_rgba(190,90,0,0.35)] transition enabled:active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60 ${className}`}
+      className={`inline-flex min-h-12 w-full items-center justify-center rounded-full bg-gradient-to-br from-[#bd4b0a] to-[#e96812] px-4 text-base font-extrabold text-white shadow-[0_12px_28px_rgba(190,90,0,0.35)] transition enabled:active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60 ${className}`}
     >
       {children}
     </button>
@@ -119,7 +119,7 @@ export function Field({
 }
 
 export const inputClass =
-  "min-h-12 w-full rounded-2xl border border-[#F3D2B5] bg-white px-4 text-base text-neutral-900 shadow-[inset_0_1px_2px_rgba(0,0,0,0.03)] outline-none ring-[#B94700] focus:border-[#E87518] focus:ring-2";
+  "min-h-12 w-full rounded-2xl border border-[#f2e4d8] bg-white px-4 text-base text-neutral-900 shadow-[inset_0_1px_2px_rgba(0,0,0,0.03)] outline-none ring-[#bd4b0a] focus:border-[#ff9d38] focus:ring-2";
 
 type Toast = { id: number; type: "success" | "error" | "info"; text: string };
 
@@ -147,7 +147,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
             key={toast.id}
             className={`rounded-2xl px-4 py-3 text-sm font-bold shadow-lg ${
               toast.type === "success"
-                ? "bg-[#B94700] text-white"
+                ? "bg-[#bd4b0a] text-white"
                 : toast.type === "error"
                   ? "bg-red-600 text-white"
                   : "bg-neutral-900 text-white"
