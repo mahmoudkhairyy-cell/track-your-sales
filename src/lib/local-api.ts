@@ -579,6 +579,7 @@ function getDashboard(state: State, params: URLSearchParams) {
   const work = buildWorkdayStats(yearMonth, bundle.workingDays, holidayDates, today);
   const rules = applyCompanyRules(
     bundle.kpis.map((kpi) => ({ ...kpi, achieved: achievedTyped[kpi.kpiKey] ?? 0 })),
+    { newLinesNeedWallets: roleOf(state) !== "manager" },
   );
   const overall = rules.total; // سقف 200% على الإجمالي بس، والمؤشرات الفردية بدون سقف
   // المحافظ الجديدة وزنها صفر، لكنها شرط استحقاق مستقل بجانب حد الـ80% للإجمالي.

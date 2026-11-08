@@ -138,11 +138,12 @@ export const OVERALL_MAX_PERCENT = 200;
 
 export type RulesKpi = KpiSettingInput & { achieved: number };
 
-export function applyCompanyRules(kpis: RulesKpi[]) {
+export function applyCompanyRules(kpis: RulesKpi[], options: { newLinesNeedWallets?: boolean } = {}) {
+  const newLinesNeedWallets = options.newLinesNeedWallets ?? true;
   const newWallets = kpis.find((kpi) => kpi.kpiKey === "new_orange_cash");
   const walletDone = Boolean(newWallets && newWallets.target > 0 && newWallets.achieved >= newWallets.target);
   // الخطوط الجديدة (40%) ماتتحسبش غير لما بند المحافظ يكمل 100%. المدير مالوش بند محافظ مستقل فمابيتأثرش.
-  const walletRequired = Boolean(newWallets && newWallets.weight > 0);
+  const walletRequired = Boolean(newWallets && newLinesNeedWallets);
   const newLinesOpen = !walletRequired || walletDone;
 
   const counted: { kpiKey: KpiKey; contribution: number; percent: number; gated: boolean }[] = kpis.map((kpi) => {
