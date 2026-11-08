@@ -1,33 +1,52 @@
 @import "tailwindcss";
 
+:root {
+  color-scheme: light;
+  --tx-orange: #e96812;
+  --tx-orange-deep: #bd4b0a;
+  --tx-orange-soft: #fff0e4;
+  --tx-cream: #fff9f4;
+  --tx-ink: #24180f;
+  --tx-muted: #8c7b6e;
+  --tx-line: #f1e2d6;
+}
+
 html {
   direction: rtl;
   --font-cairo: "Cairo Variable";
+  background: var(--tx-cream);
+  scroll-behavior: smooth;
 }
 
 body {
   margin: 0;
-  background: #fff7f0;
-  color: #171717;
+  background:
+    radial-gradient(ellipse at 92% 0%, rgba(255, 191, 137, .20), transparent 34rem),
+    linear-gradient(180deg, #fffaf6 0%, #fff6ee 52%, #fffaf6 100%);
+  color: var(--tx-ink);
   font-family: var(--font-cairo), Tahoma, "Segoe UI", Arial, sans-serif;
   text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
 }
 
-* {
-  box-sizing: border-box;
+* { box-sizing: border-box; }
+
+input, select, textarea, button { font-family: inherit; }
+textarea { resize: vertical; }
+::selection { background: #ffd8bd; color: #612b0c; }
+
+button, a { -webkit-tap-highlight-color: transparent; }
+a { text-decoration: none; }
+
+:focus-visible {
+  outline: 3px solid rgba(233, 104, 18, .38);
+  outline-offset: 3px;
 }
 
-input,
-select,
-textarea,
-button {
-  font-family: inherit;
-}
-
-textarea {
-  resize: vertical;
-}
-
-::selection {
-  background: #ffd7b8;
+@media (prefers-reduced-motion: no-preference) {
+  main { animation: tx-enter .32s ease-out both; }
+  @keyframes tx-enter {
+    from { opacity: 0; transform: translateY(7px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
 }
