@@ -51,7 +51,8 @@ function branchId(): string {
   }
 }
 
-let running = false;
+let activeSync: Promise<boolean> | null = null;
+let syncRequestedAgain = false;
 
 export type SyncStatus = { ok: boolean; at: string; error?: string };
 export const SYNC_STATUS_KEY = "tys.lastSync";
@@ -74,19 +75,19 @@ export function readSyncStatus(): SyncStatus | null {
   }
 }
 
-/** بيبعت ملخص الشهر الحالي للسيرفر. بيرجّع false لو ماتبعتش (مفيش نت أو خطأ). */
-export async function pushReport(): Promise<boolean> {
+/** محاولة واحدة لرفع أحدث ملخص محفوظ. */
+async function pushReportOnce(): Promise<boolean> {
   if (typeof navigator !== "undefined" && !navigator.onLine) {
     saveStatus({ ok: false, at: new Date().toISOString(), error: "مفيش نت" });
     return false;
   }
+
   const id = branchId();
   const profile = readProfile();
   // الموظف "خارج الفروع" مش بيظهر في لوحة المدير، فمايبعتش ملخصه.
   if (profile.branch === OUTSIDE_BRANCHES) return false;
-  if (!id || !profile.name.trim() || running) return false;
+  if (!id || !profile.name.trim()) return false;
 
-  running = true;
   try {
     const month = cairoYearMonth();
     const [data, settings, entriesResult] = await Promise.all([
@@ -137,7 +138,31 @@ export async function pushReport(): Promise<boolean> {
   } catch (err) {
     saveStatus({ ok: false, at: new Date().toISOString(), error: err instanceof Error ? err.message.slice(0, 160) : "خطأ" });
     return false;
-  } finally {
-    running = false;
   }
+}
+
+/**
+ * لو حصل طلب مزامنة أثناء رفع سابق، بنعلّم إن فيه تحديث أحدث ونرفع لقطة جديدة بعد انتهاء الحالي.
+ * كده الضغطات/الحفظات المتتابعة مش بتضيع بسبب تجاهل الطلب أثناء running.
+ */
+export function pushReport(): Promise<boolean> {
+  if (activeSync) {
+    syncRequestedAgain = true;
+    return activeSync;
+  }
+
+  activeSync = (async () => {
+    let result = false;
+    do {
+      syncRequestedAgain = false;
+      result = await pushReportOnce();
+    } while (syncRequestedAgain);
+    return result;
+  })().finally(() => {
+    activeSync = null;
+    // يغطي طلبًا وصل في آخر لحظة بعد انتهاء دورة العامل وقبل تنظيف الوعد.
+    if (syncRequestedAgain) void pushReport();
+  });
+
+  return activeSync;
 }

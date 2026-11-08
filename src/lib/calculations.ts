@@ -126,20 +126,20 @@ export function buildWorkdayStats(
 }
 
 // قواعد حساب الكوميشن من نظام الشركة (موظف الفرع):
-// - كل مؤشر (ليه تارجت ووزن) لازم يوصل 90% عشان يتحسب في التوتال، والزيادة فوق 100% بتتحسب عادي.
-// - المؤشر اللي تحت 90% بيتشال من التوتال.
+// - كل مؤشر له وزن وتارجت لازم يوصل 90% عشان يتحسب في التوتال، والزيادة فوق 100% بتتحسب عادي.
+// - New Orange Cash وزنه صفر، لكنه شرط مستقل: عدد المحافظ الجديدة لا يقل عن 90% من عدد New Lines.
+// - المؤشرات الفردية بلا سقف، بينما الإجمالي الشهري فقط سقفه 200%.
 // - لو التوتال النهائي أقل من 80% مفيش حافز.
-// - ملحوظة: مفيش خصم إضافي (clawback) للـ Postpaid أو DSL. الكود ده اتكتب كده عمداً في نفس الـ commit
-//   اللي أضاف الحساب (af48a1a)، والتعليق القديم اللي كان بيذكر خصم 5 نقاط اتشال لأنه مش متطبق.
+// - لا يوجد خصم إضافي للـ Postpaid أو DSL.
 export const KPI_MIN_PERCENT = 90;
 export const OVERALL_MIN_PERCENT = 80;
 /** سقف الإجمالي الشهري بس (200%). المؤشرات الفردية ماليهاش سقف. */
 export const OVERALL_MAX_PERCENT = 200;
+export const NEW_WALLET_TO_LINES_MIN_RATIO = 0.9;
 
 export type RulesKpi = KpiSettingInput & { achieved: number };
 
 export function applyCompanyRules(kpis: RulesKpi[]) {
-  // كل مؤشر لازم يوصل 90% عشان يتحسب، ومفيش خصم للـ Postpaid أو DSL، ومفيش ربط للـ New Lines بالمحافظ.
   const counted: { kpiKey: KpiKey; contribution: number; percent: number; gated: boolean }[] = kpis.map((kpi) => {
     const percent = achievementPercent(kpi.achieved, kpi.target);
     const eligible = kpi.weight > 0 && kpi.target > 0;
@@ -148,9 +148,19 @@ export function applyCompanyRules(kpis: RulesKpi[]) {
     return { kpiKey: kpi.kpiKey, contribution, percent, gated };
   });
 
+  const newLines = kpis.find((kpi) => kpi.kpiKey === "new_lines");
+  const newWallets = kpis.find((kpi) => kpi.kpiKey === "new_orange_cash");
+  const walletDone = Boolean(
+    newLines &&
+      newWallets &&
+      newLines.target > 0 &&
+      newWallets.target > 0 &&
+      newWallets.achieved >= newLines.achieved * NEW_WALLET_TO_LINES_MIN_RATIO,
+  );
+
   const rawTotal = counted.reduce((sum, row) => sum + row.contribution, 0);
   const total = Math.min(OVERALL_MAX_PERCENT, Math.max(0, rawTotal));
   const belowKpis = counted.filter((row) => row.gated).map((row) => row.kpiKey);
   const belowOverall = total < OVERALL_MIN_PERCENT;
-  return { counted, total, rawTotal, belowKpis, clawBacks: [] as string[], belowOverall, walletDone: true };
+  return { counted, total, rawTotal, belowKpis, clawBacks: [] as string[], belowOverall, walletDone };
 }
