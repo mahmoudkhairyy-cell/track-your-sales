@@ -32,7 +32,7 @@ import type { WorkingDays } from "@/lib/types";
 const STORAGE_KEY = "trackYourSales.local.v1";
 
 // مسح لمرة واحدة لكل جهاز: بيفضي البيانات المحلية وبيرجع التطبيق من الأول.
-const WIPE_FLAG = "tys.wipe.2026-11-08";
+const WIPE_FLAG = "tys.wipe.2026-11-09";
 try {
   if (typeof window !== "undefined" && !localStorage.getItem(WIPE_FLAG)) {
     localStorage.removeItem(STORAGE_KEY);
@@ -336,14 +336,10 @@ function loadBundle(state: State, yearMonth: string): Bundle {
   if (!row) return prefillBundle(state, yearMonth, role);
 
   const savedMap = new Map(row.kpis.map((item) => [item.kpiKey, item]));
-  const newLinesTarget = savedMap.get("new_lines")?.target ?? 0;
   const kpis = KPI_CATALOG.map((kpi, index) => {
     const saved = savedMap.get(kpi.key);
-    // تارجت المحافظ الجديدة = 90% من تارجت الـ New Lines تلقائيًا.
-    const target =
-      kpi.key === "new_orange_cash"
-        ? Math.ceil(newLinesTarget * 0.9)
-        : saved?.target ?? 0;
+    // تارجت المحافظ الجديدة بيدخله الموظف بإيده.
+    const target = saved?.target ?? 0;
     return {
       kpiKey: kpi.key,
       target,

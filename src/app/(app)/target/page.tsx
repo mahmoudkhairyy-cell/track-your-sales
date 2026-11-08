@@ -321,7 +321,7 @@ export default function TargetPage() {
                 <div className="min-w-0">
                   <p className="truncate text-sm font-extrabold" dir="ltr">{catalog?.nameEn}</p>
                   {kpi.kpiKey === "new_orange_cash" ? (
-                    <p className="text-[10px] font-bold text-[#bd4b0a]">= 90% من New Lines</p>
+                    <p className="text-[10px] font-bold text-[#bd4b0a]">تارجت بتدخله بإيدك</p>
                   ) : (
                     <p className="text-[10px] text-[#927b69]">{kpi.unitAr}</p>
                   )}
