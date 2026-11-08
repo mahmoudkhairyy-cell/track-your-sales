@@ -98,7 +98,16 @@ export default function WikiPage() {
   }
 
   useEffect(() => {
-    if (section === "notes") void loadNotes();
+    if (section !== "notes") return;
+    let cancelled = false;
+    async function run() {
+      await Promise.resolve();
+      if (!cancelled) await loadNotes();
+    }
+    void run();
+    return () => {
+      cancelled = true;
+    };
   }, [section]);
 
   const q = query.trim().toLowerCase();
