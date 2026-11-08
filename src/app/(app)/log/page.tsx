@@ -231,6 +231,7 @@ export default function LogPage() {
         <input id="entry-date" className={`${inputClass} mt-2`} type="date" value={entryDate} min={monthDateRange(month).start} max={monthDateRange(month).end} onChange={(e) => setEntryDate(e.target.value)} required />
       </section>
 
+      <section className="grid grid-cols-1 gap-3 sm:grid-cols-2">
       {KPI_CATALOG.filter((item) => item.key !== "quality" && !(item.key === "productivity" && (dashByKey.get("productivity")?.weight ?? 0) === 0)).map((item) => {
         const d = dashByKey.get(item.key);
         // لو الإجمالي اتقص عند 200%، توزيع الكوميشن على المؤشرات بيتقص بنفس النسبة عشان الأرقام تتجمع صح.
@@ -286,6 +287,7 @@ export default function LogPage() {
           </article>
         );
       })}
+      </section>
 
       {quality ? (
         <section className="rounded-[22px] border border-[#f2e4d8] bg-white p-3 shadow-sm sm:rounded-[24px] sm:p-4">
