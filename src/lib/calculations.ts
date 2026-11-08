@@ -139,16 +139,20 @@ export const OVERALL_MAX_PERCENT = 200;
 export type RulesKpi = KpiSettingInput & { achieved: number };
 
 export function applyCompanyRules(kpis: RulesKpi[]) {
+  const newWallets = kpis.find((kpi) => kpi.kpiKey === "new_orange_cash");
+  const walletDone = Boolean(newWallets && newWallets.target > 0 && newWallets.achieved >= newWallets.target);
+  // الخطوط الجديدة (40%) ماتتحسبش غير لما بند المحافظ يكمل 100%. المدير مالوش بند محافظ مستقل فمابيتأثرش.
+  const walletRequired = Boolean(newWallets && newWallets.weight > 0);
+  const newLinesOpen = !walletRequired || walletDone;
+
   const counted: { kpiKey: KpiKey; contribution: number; percent: number; gated: boolean }[] = kpis.map((kpi) => {
     const percent = achievementPercent(kpi.achieved, kpi.target);
-    const eligible = kpi.weight > 0 && kpi.target > 0;
+    const eligible = kpi.weight > 0 && kpi.target > 0 && (kpi.kpiKey !== "new_lines" || newLinesOpen);
     const gated = eligible && percent < KPI_MIN_PERCENT;
     const contribution = eligible && !gated ? kpiContribution(kpi.achieved, kpi.target, kpi.weight) : 0;
     return { kpiKey: kpi.kpiKey, contribution, percent, gated };
   });
 
-  const newWallets = kpis.find((kpi) => kpi.kpiKey === "new_orange_cash");
-  const walletDone = Boolean(newWallets && newWallets.target > 0 && newWallets.achieved >= newWallets.target);
 
   const rawTotal = counted.reduce((sum, row) => sum + row.contribution, 0);
   const total = Math.min(OVERALL_MAX_PERCENT, Math.max(0, rawTotal));
