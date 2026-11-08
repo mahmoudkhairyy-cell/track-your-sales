@@ -1,43 +1,66 @@
 @import "tailwindcss";
 
+:root {
+  color-scheme: light;
+  --font-cairo: "Tajawal";
+  --brand-primary: #e96812;
+  --brand-deep: #bd4b0a;
+  --brand-warm: #ff9d38;
+  --brand-soft: #fff0e2;
+  --brand-cream: #fff8f1;
+  --brand-tech: #e9a16d;
+  --brand-bg: #fffaf5;
+  --brand-card: #ffffff;
+  --brand-text: #241f1b;
+  --brand-muted: #88796e;
+  --brand-border: #f2e4d8;
+  --app-shadow: 0 12px 34px rgba(115, 58, 20, 0.07);
+}
+
 html {
   direction: rtl;
-  --font-cairo: "Tajawal";
-  --brand-primary: #D95B00;
-  --brand-deep: #B94700;
-  --brand-warm: #E87518;
-  --brand-soft: #FCEBDD;
-  --brand-tech: #55B8F5;
-  --brand-bg: #F5F8FC;
-  --brand-card: #FFFFFF;
-  --brand-text: #172033;
+  scroll-behavior: smooth;
+  background: var(--brand-bg);
+  scrollbar-color: #e8a16f #fff5ec;
 }
 
 body {
   margin: 0;
-  background: #F5F8FC;
-  color: #172033;
+  min-height: 100vh;
+  background:
+    radial-gradient(ellipse at 100% 0%, rgba(255, 196, 143, 0.18), transparent 34rem),
+    linear-gradient(180deg, #fffaf5 0%, #fff 42%, #fff9f3 100%);
+  color: var(--brand-text);
   font-family: var(--font-cairo), Tahoma, "Segoe UI", Arial, sans-serif;
   text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
-input,
-select,
-textarea,
-button {
-  font-family: inherit;
+button, input, select, textarea { font: inherit; }
+button { -webkit-tap-highlight-color: transparent; }
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+  outline: 2px solid #e96812;
+  outline-offset: 3px;
 }
+a { -webkit-tap-highlight-color: transparent; }
+textarea { resize: vertical; }
 
-textarea {
-  resize: vertical;
-}
+::selection { background: #ffd5b5; color: #7c3207; }
 
-::selection {
-  background: #f5b98a;
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: #fff5ec; }
+::-webkit-scrollbar-thumb { background: #e8a16f; border: 2px solid #fff5ec; border-radius: 99px; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 @media print {
@@ -46,18 +69,13 @@ textarea {
   #report-print { position: absolute; inset: 0; box-shadow: none !important; }
 }
 
-/* هياكل التحميل */
+/* Loading skeletons */
 .skeleton-bone {
-  background: linear-gradient(90deg, #eef2f7 0%, #f7f9fc 50%, #eef2f7 100%);
+  background: linear-gradient(90deg, #f5e9df 0%, #fff8f2 50%, #f5e9df 100%);
   background-size: 200% 100%;
   animation: tys-shimmer 1.4s ease-in-out infinite;
 }
 @keyframes tys-shimmer {
   0% { background-position: 200% 0; }
   100% { background-position: -200% 0; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .skeleton-bone,
-  .transition-all,
-  * { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
 }
