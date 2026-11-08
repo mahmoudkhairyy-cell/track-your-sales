@@ -1,5 +1,5 @@
 import { api } from "@/lib/client";
-import { cloudRpc } from "@/lib/cloud";
+import { CLOUD_DISABLED, cloudRpc } from "@/lib/cloud";
 import { cairoYearMonth } from "@/lib/dates";
 import { readProfile } from "@/lib/local-api";
 import { OUTSIDE_BRANCHES } from "@/lib/constants";
@@ -76,6 +76,8 @@ export function readSyncStatus(): SyncStatus | null {
 
 /** بيبعت ملخص الشهر الحالي للسيرفر. بيرجّع false لو ماتبعتش (مفيش نت أو خطأ). */
 export async function pushReport(): Promise<boolean> {
+  // نسخة المعاينة: مفيش أي اتصال بالسحابة.
+  if (CLOUD_DISABLED) return false;
   if (typeof navigator !== "undefined" && !navigator.onLine) {
     saveStatus({ ok: false, at: new Date().toISOString(), error: "مفيش نت" });
     return false;
