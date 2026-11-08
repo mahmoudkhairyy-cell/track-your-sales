@@ -175,28 +175,39 @@ export default function LogPage() {
   }
 
   return (
-    <form className="space-y-4" onSubmit={onSubmit}>
-      <section>
-        <h1 className="text-3xl font-black">إنجاز اليوم</h1>
-        <p className="mt-1 text-sm text-[#88796e]">سجّل اللي بعته النهارده — هيتحفظ تلقائيًا.</p>
+    <form className="mx-auto max-w-4xl space-y-5 pb-8" onSubmit={onSubmit}>
+      <section className="flex items-end justify-between gap-3 rounded-[26px] border border-[#f0dfd1] bg-white/85 px-4 py-4 shadow-[0_10px_28px_rgba(100,55,25,0.045)] sm:px-5">
+        <div>
+          <p className="text-[10px] font-black tracking-[0.16em] text-[#c66b34]">DAILY SALES ENTRY</p>
+          <h1 className="mt-1 text-2xl font-black tracking-tight text-[#38291f]">إنجاز اليوم</h1>
+          <p className="mt-1 text-xs font-semibold text-[#927b69]">سجّل مبيعاتك وإنجازاتك بسهولة — هتتحفظ تلقائيًا.</p>
+        </div>
+        <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#fff0e2] text-2xl">✍️</span>
       </section>
 
       {error ? <Banner tone="error">❌ {error}</Banner> : null}
 
       {dash ? (
-        <section className="relative overflow-hidden rounded-[28px] bg-gradient-to-br from-[#D95B00] to-[#E87518] p-5 text-white shadow-sm ring-1 ring-white/30">
-          <div className="grid grid-cols-3 gap-2 text-center">
-            <div className="rounded-2xl bg-white/15 px-2 py-3 ring-1 ring-white/25">
-              <p className="text-xl font-black tabular-nums">{formatQty(Math.round(dash.overall))}%</p>
-              <p className="text-[11px] text-white/85">التوتال</p>
+        <section className="rounded-[26px] border border-[#f0dfd1] bg-gradient-to-br from-white via-[#fffaf5] to-[#fff0e2] p-4 shadow-[0_12px_30px_rgba(100,55,25,0.055)] sm:p-5">
+          <div className="mb-3 flex items-center justify-between gap-2">
+            <div>
+              <p className="text-[10px] font-black tracking-[0.14em] text-[#bd6a35]">MONTHLY SNAPSHOT</p>
+              <h2 className="mt-0.5 text-sm font-black text-[#38291f]">ملخص الشهر</h2>
             </div>
-            <div className="rounded-2xl bg-white/15 px-2 py-3 ring-1 ring-white/25">
-              <p className="text-xl font-black tabular-nums">{formatQty(workLeft)}</p>
-              <p className="text-[11px] text-white/85">أيام فاضلة</p>
+            <span className="rounded-full border border-[#f0ddcd] bg-white px-3 py-1 text-[10px] font-extrabold text-[#a56b43]">مباشر</span>
+          </div>
+          <div className="grid grid-cols-3 gap-2">
+            <div className="rounded-2xl border border-[#f1dfd0] bg-white/90 px-2 py-3 text-center">
+              <p className="font-mono text-xl font-black tabular-nums text-[#bd4b0a]">{formatQty(Math.round(dash.overall))}%</p>
+              <p className="mt-1 text-[10px] font-bold text-[#927b69]">تحقيق التارجت</p>
             </div>
-            <div className="rounded-2xl bg-white/15 px-2 py-3 ring-1 ring-white/25">
-              <p className="text-xl font-black tabular-nums">{formatQty(onTrack.length)}</p>
-              <p className="text-[11px] text-white/85">مؤشرات ناقصة</p>
+            <div className="rounded-2xl border border-[#f1dfd0] bg-white/90 px-2 py-3 text-center">
+              <p className="font-mono text-xl font-black tabular-nums text-[#38291f]">{formatQty(workLeft)}</p>
+              <p className="mt-1 text-[10px] font-bold text-[#927b69]">أيام شغل فاضلة</p>
+            </div>
+            <div className="rounded-2xl border border-[#f1dfd0] bg-white/90 px-2 py-3 text-center">
+              <p className="font-mono text-xl font-black tabular-nums text-[#38291f]">{formatQty(onTrack.length)}</p>
+              <p className="mt-1 text-[10px] font-bold text-[#927b69]">مؤشرات لسه ناقصة</p>
             </div>
           </div>
         </section>
