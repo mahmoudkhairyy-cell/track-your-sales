@@ -145,8 +145,8 @@ function FirstRunProfile({ onDone }: { onDone: () => void }) {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[radial-gradient(ellipse_at_top_right,_#fff0e2_0%,_#fffaf5_55%,_#fff_100%)] p-4 text-[#241f1b]">
-      <form onSubmit={submit} className="w-full max-w-sm rounded-[28px] border border-[#f2e4d8] border-t-4 border-t-[#e96812] bg-white p-6 shadow-[0_20px_50px_rgba(23,32,51,0.08)]" dir="rtl">
+    <div className="tys-login-screen flex min-h-screen items-center justify-center bg-[radial-gradient(ellipse_at_top_right,_#fff0e2_0%,_#fffaf5_55%,_#fff_100%)] p-4 text-[#241f1b]">
+      <form onSubmit={submit} className="tys-login-card w-full max-w-sm rounded-[28px] border border-[#f2e4d8] border-t-4 border-t-[#e96812] bg-white p-6 shadow-[0_20px_50px_rgba(23,32,51,0.08)]" dir="rtl">
         <div className="mb-5 text-center">
           <img src="/track-your-sales/logo-mark.png" alt="" className="mx-auto h-16 w-16 object-contain" />
           <h1 className="mt-2 text-xl font-black text-[#241f1b]">أهلاً بيك في {APP_NAME}</h1>
@@ -210,7 +210,7 @@ function FirstRunProfile({ onDone }: { onDone: () => void }) {
 
 function TargetGate({ month }: { month: string }) {
   return (
-    <div className="mx-auto mt-6 max-w-md rounded-3xl bg-white p-6 text-center shadow-[0_12px_30px_rgba(190,90,0,0.12)]" dir="rtl">
+    <div className="tys-target-gate mx-auto mt-6 max-w-md rounded-3xl border border-[#f1dfd0] bg-white p-6 text-center shadow-[0_12px_30px_rgba(126,65,24,0.06)]" dir="rtl">
       <div className="text-4xl">🎯</div>
       <h2 className="mt-2 text-lg font-black">لازم تدخل تارجت الشهر الأول</h2>
       <p className="mt-1 text-sm text-[#88796e]">ادخل التارجت والأوزان واحفظها، وبعدها التطبيق هيفتح عادي.</p>
