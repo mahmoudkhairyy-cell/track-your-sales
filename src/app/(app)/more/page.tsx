@@ -60,7 +60,8 @@ export default function MorePage() {
   const [restoreOpen, setRestoreOpen] = useState(false);
   const [replaceReady, setReplaceReady] = useState(false);
 
-  const load = useCallback(async () => {
+  const load = useCallback(async (isActive: () => boolean = () => true) => {
+    if (!isActive()) return;
     setLoading(true);
     setError("");
     try {
@@ -71,15 +72,16 @@ export default function MorePage() {
           todaySummary: TodayItem[];
         }>(`/api/dashboard?month=${month}`),
       ]);
+      if (!isActive()) return;
       setEntries(entryData.entries);
       setTodaySummary(dash.todaySummary);
       setProfile({ name: dash.profile.name, branch: dash.profile.branch, role: dash.profile.role });
       setName(dash.profile.name);
       setBranch(dash.profile.branch);
     } catch (err) {
-      setError(err instanceof ApiError || err instanceof Error ? err.message : "تعذر تحميل صفحة المزيد");
+      if (isActive()) setError(err instanceof ApiError || err instanceof Error ? err.message : "تعذر تحميل صفحة المزيد");
     } finally {
-      setLoading(false);
+      if (isActive()) setLoading(false);
     }
   }, [month]);
 
@@ -87,7 +89,7 @@ export default function MorePage() {
     let cancelled = false;
     async function run() {
       await Promise.resolve();
-      if (!cancelled) await load();
+      if (!cancelled) await load(() => !cancelled);
     }
     void run();
     return () => {
