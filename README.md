@@ -37,7 +37,7 @@ npm run lint
 npm run build
 ```
 
-- `selfcheck`: اختبارات مستقلة للحسابات الأساسية ولا تحتاج قاعدة بيانات.
+- `selfcheck`: اختبارات مستقلة للحسابات والكميات والتحقق من النسخ الاحتياطي ودمج السجلات، ولا تحتاج قاعدة بيانات.
 - `typecheck`: فحص TypeScript.
 - `lint`: فحص ESLint.
 - `build`: إنشاء نسخة Static Export داخل `out/`.

@@ -6,6 +6,8 @@ import {
   estimatedCommission,
   kpiContribution,
 } from "../src/lib/calculations";
+import { parseBackup, planEntryRestore, type BackupEntry } from "../src/lib/backup";
+import { validateQuantity } from "../src/lib/quantity";
 
 function check(name: string, run: () => void) {
   run();
@@ -94,4 +96,66 @@ check("الكوميشن لا يتجاوز 200% ولا يقل عن صفر", () =>
   assert.equal(estimatedCommission(6000, 80), 4800);
 });
 
-console.log("\nاكتملت اختبارات الحسابات الأساسية بنجاح.");
+check("النسخ الاحتياطي: قبول ملف سليم ورفض الحقول الحساسة", () => {
+  const valid = {
+    schemaVersion: 1,
+    exportedAt: "2026-11-08T12:00:00.000Z",
+    isEmpty: true,
+    emptyReason: "no data",
+    profile: { name: "Test User", branch: "Test Branch" },
+    months: [],
+    entries: [],
+    articles: [],
+  };
+  assert.equal(parseBackup(valid).schemaVersion, 1);
+  assert.throws(() => parseBackup({ ...valid, profile: { ...valid.profile, password: "should-not-be-here" } }));
+});
+
+check("النسخ الاحتياطي: رفض الشهر المكرر والتاريخ غير الحقيقي", () => {
+  const month = {
+    yearMonth: "2026-11",
+    fullCommission: 6000,
+    workingDays: { sat: true, sun: true, mon: true, tue: true, wed: true, thu: true, fri: true },
+    kpis: [],
+    holidays: [],
+  };
+  const base = {
+    schemaVersion: 1,
+    exportedAt: "2026-11-08T12:00:00.000Z",
+    isEmpty: false,
+    emptyReason: null,
+    profile: { name: "Test User", branch: "Test Branch" },
+    months: [month],
+    entries: [],
+    articles: [],
+  };
+  assert.throws(() => parseBackup({ ...base, months: [month, month] }));
+  assert.throws(() => parseBackup({
+    ...base,
+    months: [{ ...month, holidays: [{ date: "2026-02-30", note: null }] }],
+  }));
+});
+
+check("التحقق من الكميات: الكسور للـ Quality فقط", () => {
+  assert.deepEqual(validateQuantity("quality", 97.5), { ok: true, value: 97.5 });
+  assert.equal(validateQuantity("new_lines", 1.5).ok, false);
+  assert.equal(validateQuantity("quality", 101).ok, false);
+});
+
+check("الاستعادة بالدمج: إزالة التكرار مع الحفاظ على التكرار المشروع", () => {
+  const incoming: BackupEntry[] = [
+    { kpiKey: "new_lines", quantity: 2, entryDate: "2026-11-08", note: "shift", },
+    { kpiKey: "new_lines", quantity: 2, entryDate: "2026-11-08", note: "shift", },
+  ];
+  const existing = [
+    { id: "saved-1", kpiKey: "new_lines", quantity: 2, entryDate: "2026-11-08", note: "shift" },
+  ];
+  const plan = planEntryRestore(incoming, existing, "merge");
+  assert.equal(plan.entriesSkipped, 1);
+  assert.equal(plan.entriesInserted, 1);
+  assert.equal(plan.toInsert.length, 1);
+  assert.equal(plan.skipped.length, 1);
+  assert.equal(planEntryRestore(incoming, existing, "replace").entriesInserted, 2);
+});
+
+console.log("\nاكتملت اختبارات الحسابات والنسخ الاحتياطي والكميات بنجاح.");
