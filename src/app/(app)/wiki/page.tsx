@@ -96,10 +96,15 @@ function SearchBox({ value, onChange, placeholder }: { value: string; onChange: 
 
 function Back({ onClick, title }: { onClick: () => void; title: string }) {
   return (
-    <button type="button" onClick={onClick} className="mb-4 flex min-h-11 items-center gap-2 text-sm font-extrabold text-[#bd4b0a]">
-      ‹ رجوع
-      <span className="text-[#241f1b]">{title}</span>
-    </button>
+    <div className="mb-4 flex items-center justify-between gap-3 rounded-[24px] border border-[#f1dfd0] bg-gradient-to-l from-white via-white to-[#fff0e2] px-4 py-3 shadow-[0_10px_24px_rgba(126,65,24,0.045)]">
+      <div className="min-w-0">
+        <p className="text-[9px] font-black tracking-[0.18em] text-[#bd6b39]" dir="ltr">KNOWLEDGE CENTER</p>
+        <h1 className="mt-1 truncate text-lg font-black tracking-tight text-[#2d2119]">{title}</h1>
+      </div>
+      <button type="button" onClick={onClick} className="flex min-h-10 shrink-0 items-center gap-2 rounded-full border border-[#f0d9c7] bg-white px-3 text-xs font-extrabold text-[#bd4b0a] shadow-sm">
+        <span>رجوع</span><span aria-hidden="true">‹</span>
+      </button>
+    </div>
   );
 }
 
@@ -260,11 +265,35 @@ export default function WikiPage() {
     <div className="tys-page tys-page-wiki space-y-5">
       {section === "hub" ? (
         <>
-          <section className="text-center">
-            <h1 className="text-3xl font-black text-[#241f1b]">مرجع أورانج</h1>
-            <p className="mt-2 text-sm text-[#88796e]">بحث شامل في أكواد SR والباقات والأرقام والإيميلات</p>
+          <section className="relative isolate overflow-hidden rounded-[30px] border border-[#f0d8c4] bg-[linear-gradient(118deg,#fff7ef_0%,#fff_48%,#ffead8_100%)] p-5 shadow-[0_16px_38px_rgba(126,65,24,0.07)] sm:p-6">
+            <div className="pointer-events-none absolute -left-8 -top-10 h-36 w-36 rounded-full border-[22px] border-[#e96812]/[0.06]" />
+            <div className="relative flex items-start justify-between gap-3">
+              <div>
+                <p className="text-[10px] font-black tracking-[0.2em] text-[#bd6b39]" dir="ltr">KNOWLEDGE HUB</p>
+                <h1 className="mt-1 text-2xl font-black tracking-tight text-[#2d2119] sm:text-3xl">مرجع أورانج</h1>
+                <p className="mt-2 max-w-lg text-xs leading-6 text-[#88796e]">كل اللي تحتاجه في الشيفت: أكواد SR، الباقات، أرقام التواصل، والمستندات في مكان واحد.</p>
+              </div>
+              <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-white bg-white/90 text-2xl shadow-sm">📚</span>
+            </div>
+            <div className="relative mt-4 grid grid-cols-3 gap-2 text-center">
+              <div className="rounded-2xl border border-[#f3dfce] bg-white/90 px-2 py-2.5">
+                <p className="text-lg font-black tabular-nums text-[#bd4b0a]">{SR_ITEMS.length}</p>
+                <p className="text-[10px] font-bold text-[#9a7963]">كود SR</p>
+              </div>
+              <div className="rounded-2xl border border-[#f3dfce] bg-white/90 px-2 py-2.5">
+                <p className="text-lg font-black tabular-nums text-[#bd4b0a]">{HUB.length}</p>
+                <p className="text-[10px] font-bold text-[#9a7963]">قسم</p>
+              </div>
+              <div className="rounded-2xl border border-[#f3dfce] bg-white/90 px-2 py-2.5">
+                <p className="text-lg font-black tabular-nums text-[#bd4b0a]">{DOCS.length}</p>
+                <p className="text-[10px] font-bold text-[#9a7963]">مستند</p>
+              </div>
+            </div>
           </section>
-          <SearchBox value={query} onChange={setQuery} placeholder="ابحث بالكود أو الاسم أو الرقم..." />
+          <section className="rounded-[24px] border border-[#f1dfd0] bg-white p-3 shadow-[0_10px_24px_rgba(126,65,24,0.045)]">
+            <p className="mb-2 px-1 text-[10px] font-black tracking-[0.16em] text-[#bd6b39]" dir="ltr">SEARCH THE KNOWLEDGE BASE</p>
+            <SearchBox value={query} onChange={setQuery} placeholder="ابحث بالكود أو الاسم أو الرقم..." />
+          </section>
 
           {globalHits ? (
             <div className="space-y-3">
@@ -334,15 +363,16 @@ export default function WikiPage() {
             </div>
           ) : (
             <>
-              <div className="space-y-2">
-                {HUB.map((card) => (
-                  <button key={card.id} type="button" onClick={() => { setSection(card.id); setQuery(""); }} className="flex w-full items-center gap-3 rounded-[24px] bg-white p-3.5 text-right shadow-sm">
-                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#fff0e2]">{card.icon}</span>
+              <div className="grid gap-3 sm:grid-cols-2">
+                {HUB.map((card, index) => (
+                  <button key={card.id} type="button" onClick={() => { setSection(card.id); setQuery(""); }} className="group flex min-h-[88px] w-full items-center gap-3 rounded-[24px] border border-[#f1dfd0] bg-white p-3.5 text-right shadow-[0_8px_22px_rgba(126,65,24,0.045)] transition duration-200 hover:-translate-y-0.5 hover:border-[#edc4a4] hover:shadow-[0_14px_28px_rgba(126,65,24,0.08)]">
+                    <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-[#f6e5d7] bg-gradient-to-br from-[#fffaf5] to-[#fff0e2]">{card.icon}</span>
                     <span className="min-w-0 flex-1">
-                      <span className="block font-black">{card.title}</span>
-                      <span className="block truncate text-xs text-[#88796e]">{card.desc}</span>
+                      <span className="block font-black text-[#2d2119]">{card.title}</span>
+                      <span className="mt-0.5 block truncate text-xs text-[#88796e]">{card.desc}</span>
+                      <span className="mt-1 block text-[10px] font-extrabold text-[#bd6b39]">{card.count || "افتح القسم"}</span>
                     </span>
-                    <span className="shrink-0 text-[11px] font-bold text-[#bd4b0a]">{card.count}</span>
+                    <span className="shrink-0 text-lg text-[#d18a58] transition-transform group-hover:-translate-x-1" aria-hidden="true">‹</span>
                   </button>
                 ))}
               </div>
@@ -814,3 +844,6 @@ export default function WikiPage() {
     </div>
   );
 }
+
+
+/* Knowledge center responsive polish */
