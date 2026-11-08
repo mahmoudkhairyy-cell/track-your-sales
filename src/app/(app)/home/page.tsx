@@ -61,7 +61,7 @@ function ScoreRing({ value }: { value: number }) {
         transform="rotate(-90 65 65)"
       />
       <text x="65" y="62" textAnchor="middle" fill="#fff" fontSize="22" fontWeight="800">
-        {Math.round(visual)}%
+        {Math.round(Math.max(0, value))}%
       </text>
       <text x="65" y="80" textAnchor="middle" fill="rgba(255,255,255,0.8)" fontSize="10">
         الإنجاز
