@@ -150,10 +150,19 @@ export default function TargetPage() {
   if (loading) return <Spinner label="ثواني… بنحمّل إعدادات التارجت" />;
 
   return (
-    <form className="space-y-5" onSubmit={onSave}>
-      <section>
-        <h1 className="text-3xl font-black">التارجت 🎯</h1>
-        <p className="mt-1 text-xs text-neutral-500">{saved ? "✅ محفوظة لهذا الشهر" : "⚠️ لسه مش محفوظة، اضغط حفظ"}</p>
+    <form className="mx-auto max-w-5xl space-y-5 pb-4" onSubmit={onSave}>
+      <section className="relative isolate overflow-hidden rounded-[30px] border border-[#f0d7c4] bg-[linear-gradient(120deg,#fff7ef_0%,#fff_52%,#ffead8_100%)] p-5 shadow-[0_16px_38px_rgba(126,65,24,0.07)] sm:p-6">
+        <div className="pointer-events-none absolute -left-10 -top-12 h-36 w-36 rounded-full border-[22px] border-[#e96812]/[0.06]" />
+        <div className="relative flex items-start justify-between gap-3">
+          <div>
+            <p className="text-[10px] font-black tracking-[0.18em] text-[#c45a17]">MONTHLY CONFIGURATION</p>
+            <h1 className="mt-1 text-2xl font-black tracking-tight text-[#2d2119] sm:text-3xl">التارجت 🎯</h1>
+            <p className="mt-1.5 max-w-md text-xs leading-6 text-[#88796e]">ظبّط أهداف الشهر وأيام الشغل والأوزان من مكان واحد.</p>
+          </div>
+          <span className={`shrink-0 rounded-full px-3 py-1.5 text-[10px] font-extrabold ${saved ? "bg-emerald-50 text-emerald-700 ring-1 ring-emerald-100" : "bg-[#fff0e2] text-[#bd4b0a] ring-1 ring-[#f3d6c0]"}`}>
+            {saved ? "✓ محفوظة" : "● محتاجة حفظ"}
+          </span>
+        </div>
       </section>
 
       {!saved ? (
@@ -167,7 +176,7 @@ export default function TargetPage() {
         </section>
       ) : null}
 
-      <section className="overflow-hidden rounded-[28px] border border-[#f2e4d8] bg-white p-4 shadow-sm">
+      <section className="overflow-hidden rounded-[28px] border border-[#f0dfd2] bg-white p-4 shadow-[0_12px_30px_rgba(100,55,25,0.045)]">
         <div className="grid grid-cols-3 gap-2 text-center">
           <div className="rounded-2xl bg-[#fff0e2] px-2 py-3"><p className="text-2xl font-black tabular-nums text-[#241f1b]">{monthDays.length}</p><p className="text-[11px] text-[#88796e]">أيام الشهر</p></div>
           <div className="rounded-2xl bg-[#fff0e2] px-2 py-3"><p className="text-2xl font-black tabular-nums text-[#241f1b]">{holidays.length}</p><p className="text-[11px] text-[#88796e]">إجازات</p></div>
@@ -176,7 +185,7 @@ export default function TargetPage() {
       </section>
 
       {kpis.some((k) => k.weight > 0) ? (
-        <section className="rounded-[28px] border border-[#f2e4d8] bg-white p-4 shadow-sm">
+        <section className="rounded-[28px] border border-[#f0dfd2] bg-white p-4 shadow-[0_12px_30px_rgba(100,55,25,0.045)]">
           <p className="text-sm font-black text-[#241f1b]">توزيع الأوزان</p>
           <div className="mt-3 flex h-3 w-full overflow-hidden rounded-full bg-[#fffaf5]">
             {kpis.filter((k) => k.weight > 0).map((k, i) => (
@@ -195,8 +204,15 @@ export default function TargetPage() {
         </section>
       ) : null}
 
-      <section className="rounded-[28px] border border-[#f2e4d8] bg-white p-4 shadow-sm">
-        <div className="grid grid-cols-7 gap-1 text-center text-[11px] font-bold text-neutral-500">
+      <section className="rounded-[28px] border border-[#f0dfd2] bg-white p-4 shadow-[0_12px_30px_rgba(100,55,25,0.045)] sm:p-5">
+        <div className="mb-4 flex items-center justify-between gap-3">
+          <div>
+            <h2 className="text-sm font-black text-[#2d2119]">تقويم الإجازات</h2>
+            <p className="mt-1 text-[11px] text-[#9a8170]">اختار الأيام اللي مش هتشتغل فيها</p>
+          </div>
+          <span className="rounded-xl bg-[#fff0e2] px-3 py-2 text-xs font-black text-[#bd4b0a]">{month}</span>
+        </div>
+        <div className="grid grid-cols-7 gap-1 text-center text-[11px] font-bold text-[#9a8170]">
           {["سبت", "أحد", "اتنين", "تلات", "أربع", "خميس", "جمعة"].map((d) => (
             <span key={d} className="py-1">{d}</span>
           ))}
@@ -262,7 +278,7 @@ export default function TargetPage() {
         </section>
       ) : null}
 
-      <section className="rounded-[32px] border border-[#f2e4d8]/70 bg-white p-5 shadow-sm">
+      <section className="rounded-[28px] border border-[#f0dfd2] bg-white p-5 shadow-[0_12px_30px_rgba(100,55,25,0.045)]">
         <Field label="💰 الكوميشن الكامل (جنيه)">
           <input
             className={`${inputClass} text-xl font-black`}
@@ -276,7 +292,7 @@ export default function TargetPage() {
         </Field>
       </section>
 
-      <section className="rounded-[24px] border border-[#f2e4d8]/70 bg-white p-4 shadow-sm">
+      <section className="rounded-[28px] border border-[#f0dfd2] bg-white p-4 shadow-[0_12px_30px_rgba(100,55,25,0.045)]">
         <div className="mb-1 flex items-center justify-between">
           <h2 className="text-lg font-black">الإيتمز والأوزان</h2>
         </div>
@@ -326,9 +342,11 @@ export default function TargetPage() {
         })}
       </section>
 
+      <div className="sticky bottom-[76px] z-20 rounded-[24px] border border-[#f0dfd2] bg-[#fffaf5]/95 p-2 shadow-[0_12px_30px_rgba(100,55,25,0.12)] backdrop-blur-xl lg:bottom-4">
       <PrimaryButton type="submit" disabled={saving}>
         {saving ? "⏳ بنحفظ على السيرفر..." : "💾 احفظ إعدادات الشهر"}
       </PrimaryButton>
+      </div>
     </form>
   );
 }
