@@ -2,7 +2,7 @@
 
 import { FormEvent, useEffect, useState } from "react";
 import { KPI_CATALOG, kpiEmoji, type KpiKey } from "@/lib/constants";
-import { cairoISODate } from "@/lib/dates";
+import { cairoISODate, cairoYearMonth, monthDateRange } from "@/lib/dates";
 import { haptic } from "@/lib/prefs";
 import { Banner, PrimaryButton, inputClass, useToast } from "@/components/ui";
 import { ApiError, api } from "@/lib/client";
@@ -35,6 +35,11 @@ export default function LogPage() {
   const [note, setNote] = useState("");
   const [error, setError] = useState("");
   const [pending, setPending] = useState(false);
+
+  // لو الشهر اتغيّر، التاريخ يتظبط عشان يقع جوه الشهر المعروض (وإلا الإنجاز بيروح لشهر تاني بصمت).
+  useEffect(() => {
+    setEntryDate((cur) => (cur.startsWith(month) ? cur : month === cairoYearMonth() ? cairoISODate() : `${month}-01`));
+  }, [month]);
 
   // بنحدّث الأرقام لما نسجّل إنجاز جديد (tys-data-changed) عشان "الباقي" و"التوتال" ما يفضلوش قديمين.
   const [refreshTick, setRefreshTick] = useState(0);
@@ -201,8 +206,8 @@ export default function LogPage() {
       ) : null}
 
       <section className="rounded-[24px] border border-[#E8EDF4] bg-white p-4 shadow-sm">
-        <label className="block text-xs font-bold text-[#556070]">📅 تاريخ الإنجاز</label>
-        <input className={`${inputClass} mt-2`} type="date" value={entryDate} onChange={(e) => setEntryDate(e.target.value)} required />
+        <label htmlFor="entry-date" className="block text-xs font-bold text-[#556070]">📅 تاريخ الإنجاز</label>
+        <input id="entry-date" className={`${inputClass} mt-2`} type="date" value={entryDate} min={monthDateRange(month).start} max={monthDateRange(month).end} onChange={(e) => setEntryDate(e.target.value)} required />
       </section>
 
       {KPI_CATALOG.filter((item) => item.key !== "quality" && !(item.key === "productivity" && (dashByKey.get("productivity")?.weight ?? 0) === 0)).map((item) => {
@@ -274,6 +279,7 @@ export default function LogPage() {
                   key={item.key}
                   type="button"
                   disabled={qualityBusy}
+                  aria-pressed={on}
                   onClick={() => toggleQuality(item.key)}
                   className="flex w-full items-center justify-between rounded-2xl border border-[#E8EDF4] bg-white px-3 py-2.5 text-right disabled:opacity-60"
                 >
@@ -292,8 +298,9 @@ export default function LogPage() {
       ) : null}
 
       <section className="rounded-[24px] border border-[#E8EDF4] bg-white p-4">
-        <label className="block text-xs font-bold text-[#556070]">📝 ملاحظة (لو حابب)</label>
+        <label htmlFor="entry-note" className="block text-xs font-bold text-[#556070]">📝 ملاحظة (لو حابب)</label>
         <textarea
+          id="entry-note"
           className={`${inputClass} mt-2 min-h-20 py-3`}
           value={note}
           onChange={(e) => setNote(e.target.value)}

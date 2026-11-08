@@ -57,8 +57,6 @@ export default function TargetPage() {
   // أول مرة للشهر: لازم الموظف يأكد إجازاته (أو يأكد إنه مفيش) قبل الحفظ.
   const [holidaysConfirmed, setHolidaysConfirmed] = useState(false);
   const [quality, setQuality] = useState<Quality>(ZERO_QUALITY_FORM);
-  const [holidayDate, setHolidayDate] = useState(`${month}-01`);
-  const [holidayNote, setHolidayNote] = useState("");
   const [yy, mm] = month.split("-").map(Number);
   const monthDays = Array.from({ length: new Date(Date.UTC(yy, mm, 0)).getUTCDate() }, (_, i) => `${month}-${String(i + 1).padStart(2, "0")}`);
   const firstWeekdayOffset = (new Date(Date.UTC(yy, mm - 1, 1)).getUTCDay() + 1) % 7;
@@ -97,7 +95,6 @@ export default function TargetPage() {
         setKpis(result.settings.kpis);
         setHolidays(result.settings.holidays);
         setQuality(result.settings.quality ?? ZERO_QUALITY_FORM);
-        setHolidayDate(`${month}-01`);
       })
       .catch((err) => {
         if (!cancelled) setError(err instanceof ApiError || err instanceof Error ? err.message : "مقدرناش نحمّل الإعدادات");
@@ -152,27 +149,13 @@ export default function TargetPage() {
     }
   }
 
-  function addHoliday() {
-    if (!holidayDate.startsWith(month)) {
-      setError("تاريخ الإجازة لازم يكون جوه الشهر المختار");
-      return;
-    }
-    if (holidays.some((item) => item.date === holidayDate)) {
-      setError("التاريخ ده متسجل إجازة قبل كده");
-      return;
-    }
-    setHolidays((current) => [...current, { date: holidayDate, note: holidayNote.trim() || null }].sort((a, b) => a.date.localeCompare(b.date)));
-    setHolidayNote("");
-    setError("");
-  }
-
   if (loading) return <Spinner label="ثواني… بنحمّل إعدادات التارجت" />;
 
   return (
     <form className="space-y-5" onSubmit={onSave}>
       <section>
         <h1 className="text-3xl font-black">التارجت 🎯</h1>
-        <p className="mt-1 text-xs text-neutral-400">{saved ? "✅ محفوظة لهذا الشهر" : "⚠️ لسه مش محفوظة، اضغط حفظ"}</p>
+        <p className="mt-1 text-xs text-neutral-500">{saved ? "✅ محفوظة لهذا الشهر" : "⚠️ لسه مش محفوظة، اضغط حفظ"}</p>
       </section>
 
       {!saved ? (
@@ -215,7 +198,7 @@ export default function TargetPage() {
       ) : null}
 
       <section className="rounded-[28px] border border-[#E8EDF4] bg-white p-4 shadow-sm">
-        <div className="grid grid-cols-7 gap-1 text-center text-[11px] font-bold text-neutral-400">
+        <div className="grid grid-cols-7 gap-1 text-center text-[11px] font-bold text-neutral-500">
           {["سبت", "أحد", "اتنين", "تلات", "أربع", "خميس", "جمعة"].map((d) => (
             <span key={d} className="py-1">{d}</span>
           ))}
@@ -230,6 +213,8 @@ export default function TargetPage() {
               <button
                 key={date}
                 type="button"
+                aria-pressed={isHoliday}
+                aria-label={`${date}${isHoliday ? " — إجازة" : ""}`}
                 onClick={() =>
                   setHolidays((current) =>
                     current.some((item) => item.date === date)
@@ -246,7 +231,7 @@ export default function TargetPage() {
             );
           })}
         </div>
-        <p className="mt-3 text-center text-xs text-neutral-400">اضغط أي يوم لإضافته أو إلغائه كإجازة</p>
+        <p className="mt-3 text-center text-xs text-neutral-500">اضغط أي يوم لإضافته أو إلغائه كإجازة</p>
       </section>
 
       {error ? <Banner tone="error">❌ {error}</Banner> : null}
@@ -300,7 +285,7 @@ export default function TargetPage() {
         <p className="mb-2 rounded-xl bg-[#FCEBDD] px-3 py-2 text-[11px] font-bold leading-5 text-[#B94700]">
           📌 الأوزان مختلفة للموظف والمدير. ده وزن {kpis.some((k) => k.kpiKey === "productivity" && k.weight > 0) ? "المدير" : "الموظف"}، وبيتحدد أوتوماتيك حسب اختيارك في أول مرة، ومش بيتعدل من التطبيق.
         </p>
-        <div className="grid grid-cols-[1fr_74px_74px] gap-2 border-b border-dashed border-[#F3D2B5]/70 pb-2 text-[11px] font-bold text-neutral-400">
+        <div className="grid grid-cols-[1fr_74px_74px] gap-2 border-b border-dashed border-[#F3D2B5]/70 pb-2 text-[11px] font-bold text-neutral-500">
           <span>الإيتم</span>
           <span className="text-center">التارجت</span>
           <span className="text-center">الوزن %</span>
@@ -320,7 +305,7 @@ export default function TargetPage() {
                   {kpi.kpiKey === "new_orange_cash" ? (
                     <p className="text-[10px] font-bold text-[#B94700]">= 90% من New Lines</p>
                   ) : (
-                    <p className="text-[10px] text-neutral-400">{kpi.unitAr}</p>
+                    <p className="text-[10px] text-neutral-500">{kpi.unitAr}</p>
                   )}
                 </div>
               </div>

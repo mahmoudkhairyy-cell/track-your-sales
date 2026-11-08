@@ -107,7 +107,7 @@ function PlanBand({ title, big }: { title: string; big?: string }) {
   );
 }
 
-/** خانتين للسعر: قبل الضريبة (المكتوب) وبعد الضريبة (= قبل ÷ 0.7). */
+/** خانتين للسعر: الرقم المكتوب في الداتا بعد الضريبة، وقبل الضريبة = بعد × 0.7 (زي جدول FREEmax: NoTax = WithTax × 0.7). */
 function TwoPrice({ fees }: { fees: string }) {
   const after = parseFloat(fees);
   if (!Number.isFinite(after)) return <p className="font-extrabold text-[#B94700]">{fees}</p>;
@@ -134,6 +134,7 @@ export default function WikiPage() {
   const [openSr, setOpenSr] = useState<SrItem | null>(null);
   const [articles, setArticles] = useState<Article[]>([]);
   const [loadingNotes, setLoadingNotes] = useState(false);
+  const [notesError, setNotesError] = useState("");
   const [noteOpen, setNoteOpen] = useState(false);
   const [editing, setEditing] = useState<Article | null>(null);
   const [title, setTitle] = useState("");
@@ -143,11 +144,14 @@ export default function WikiPage() {
 
   async function loadNotes() {
     setLoadingNotes(true);
+    setNotesError("");
     try {
       const result = await api<{ articles: Article[] }>("/api/wiki");
       setArticles(result.articles);
-    } catch {
+    } catch (err) {
+      // لو الحمل فشل، منعرضش "مفيش ملاحظات" كأنها فاضية فعلاً.
       setArticles([]);
+      setNotesError(err instanceof Error ? err.message : "مقدرناش نحمّل الملاحظات");
     } finally {
       setLoadingNotes(false);
     }
@@ -696,7 +700,8 @@ export default function WikiPage() {
             إضافة ملاحظة
           </PrimaryButton>
           {loadingNotes ? <Spinner label="بيحمّل ملاحظاتك..." /> : null}
-          {!loadingNotes && articles.length === 0 ? <EmptyState title="مفيش ملاحظات" text="ضيف مرجع أو ملاحظة شغل من عندك." /> : null}
+          {!loadingNotes && notesError ? <Banner tone="error">❌ {notesError}</Banner> : null}
+          {!loadingNotes && !notesError && articles.length === 0 ? <EmptyState title="مفيش ملاحظات" text="ضيف مرجع أو ملاحظة شغل من عندك." /> : null}
           {articles.map((article) => (
             <article key={article.id} className="rounded-[24px] bg-white p-4 border border-[#E8EDF4] shadow-sm">
               <h2 className="text-base font-black">{article.title}</h2>

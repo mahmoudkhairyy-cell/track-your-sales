@@ -4,6 +4,8 @@ import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
+  useId,
   useMemo,
   useState,
   type ButtonHTMLAttributes,
@@ -61,7 +63,7 @@ export function PrimaryButton({
   return (
     <button
       {...props}
-      className={`inline-flex min-h-12 w-full items-center justify-center rounded-full bg-gradient-to-br from-[#D95B00] to-[#E87518] px-4 text-base font-extrabold text-white shadow-[0_12px_28px_rgba(190,90,0,0.35)] transition enabled:active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60 ${className}`}
+      className={`inline-flex min-h-12 w-full items-center justify-center rounded-full bg-gradient-to-br from-[#B94700] to-[#D95B00] px-4 text-base font-extrabold text-white shadow-[0_12px_28px_rgba(190,90,0,0.35)] transition enabled:active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60 ${className}`}
     >
       {children}
     </button>
@@ -145,7 +147,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
             key={toast.id}
             className={`rounded-2xl px-4 py-3 text-sm font-bold shadow-lg ${
               toast.type === "success"
-                ? "bg-[#D95B00] text-white"
+                ? "bg-[#B94700] text-white"
                 : toast.type === "error"
                   ? "bg-red-600 text-white"
                   : "bg-neutral-900 text-white"
@@ -176,14 +178,24 @@ export function Modal({
   children: ReactNode;
   onClose: () => void;
 }) {
+  const titleId = useId();
+  // Escape بيقفل النافذة، زي أي نافذة على الويب.
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open, onClose]);
   if (!open) return null;
   return (
     <div className="fixed inset-0 z-[80] flex items-end justify-center bg-black/40 p-3 sm:items-center">
-      <button className="absolute inset-0" aria-label="إغلاق" onClick={onClose} />
-      <div className="relative w-full max-w-lg rounded-[28px] bg-white p-5 shadow-2xl">
+      <button className="absolute inset-0" aria-label="إغلاق" tabIndex={-1} onClick={onClose} />
+      <div role="dialog" aria-modal="true" aria-labelledby={titleId} className="relative max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-[28px] bg-white p-5 shadow-2xl">
         <div className="mb-4 flex items-start justify-between gap-3">
-          <h2 className="text-lg font-extrabold text-neutral-900">{title}</h2>
-          <button onClick={onClose} className="min-h-10 min-w-10 rounded-full text-xl text-neutral-400">
+          <h2 id={titleId} className="text-lg font-extrabold text-neutral-900">{title}</h2>
+          <button type="button" onClick={onClose} aria-label="إغلاق" className="min-h-10 min-w-10 rounded-full text-xl text-neutral-500">
             ×
           </button>
         </div>

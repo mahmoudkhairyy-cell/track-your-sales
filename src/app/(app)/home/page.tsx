@@ -100,15 +100,6 @@ export default function HomePage() {
 
   const loading = state.month !== month;
   const { data, error } = state;
-  const [qChecks, setQChecks] = useState<Partial<Record<string, boolean>>>({});
-  useEffect(() => {
-    let cancelled = false;
-    api<{ settings?: { quality?: { checks?: Record<string, boolean> } } }>(`/api/months/${month}`)
-      .then((r) => { if (!cancelled) setQChecks(r.settings?.quality?.checks ?? {}); })
-      .catch(() => { if (!cancelled) setQChecks({}); });
-    return () => { cancelled = true; };
-  }, [month]);
-
   if (loading) return <HomeSkeleton />;
   if (error) return <Banner tone="error">{error}</Banner>;
   if (!data) return <Banner tone="error">مفيش بيانات نعرضها</Banner>;
@@ -156,6 +147,7 @@ export default function HomePage() {
           <div className="flex items-center justify-between">
             <span className="flex items-center gap-2 text-xs font-bold text-white/90">
               <span
+                role="img"
                 aria-label={onTrack === null ? "" : onTrack ? "على المسار" : "متأخر عن المسار"}
                 className={`inline-block h-2.5 w-2.5 rounded-full ring-2 ring-white/60 ${onTrack === null ? "hidden" : onTrack ? "bg-emerald-300" : "bg-red-200"}`}
               />
@@ -234,7 +226,7 @@ export default function HomePage() {
             <span>نسبة الإنجاز بالمحاور</span>
             <span className="rounded border border-[#F3D2B5] bg-[#FCEBDD] px-1.5 text-[11px] font-bold text-[#B94700]">{data.kpis.length} مؤشرات</span>
           </h2>
-          <span className="text-[11px] font-bold text-slate-400">اسحب ←</span>
+          <span className="text-[11px] font-bold text-slate-500">اسحب ←</span>
         </div>
         <div className="no-scrollbar flex gap-2.5 overflow-x-auto pb-1 pt-0.5">
           {data.kpis.map((kpi) => {
@@ -245,7 +237,7 @@ export default function HomePage() {
                   {Math.round(kpi.percent)}%
                 </div>
                 <span className="mt-1.5 w-full truncate text-[11px] font-bold text-slate-800" dir="ltr">{shortKpiName(kpi.nameEn)}</span>
-                <span className={`mt-0.5 text-[9px] font-extrabold ${ok ? "text-emerald-600" : "text-red-600"}`}>{ok ? "On Track" : "متأخر"}</span>
+                <span className={`mt-0.5 text-[10px] font-extrabold ${ok ? "text-emerald-600" : "text-red-600"}`}>{ok ? "On Track" : "متأخر"}</span>
               </div>
             );
           })}
@@ -259,7 +251,7 @@ export default function HomePage() {
           { href: "/target/", label: "التارجت" },
           { href: "/wiki/", label: "المرجع" },
         ].map((item) => (
-          <Link key={item.href} href={item.href} className="rounded-2xl border border-[#E8EDF4] bg-white px-3 py-3 text-center text-xs font-extrabold text-[#172033] shadow-sm transition-transform active:scale-95">
+          <Link key={item.href} href={`${item.href}?month=${month}`} className="rounded-2xl border border-[#E8EDF4] bg-white px-3 py-3 text-center text-xs font-extrabold text-[#172033] shadow-sm transition-transform active:scale-95">
             {item.label}
           </Link>
         ))}
@@ -325,7 +317,7 @@ export default function HomePage() {
 
       {/* زرار التسجيل العايم */}
       <div className="pointer-events-none fixed bottom-20 left-1/2 z-40 flex w-full max-w-[440px] -translate-x-1/2 justify-center px-4">
-        <Link href="/log/" className="pointer-events-auto flex items-center gap-2 rounded-full border-2 border-white bg-gradient-to-r from-[#D95B00] to-[#E87518] px-6 py-2.5 text-sm font-black text-white shadow-[0_10px_25px_-5px_rgba(255,121,0,0.3)] transition-transform active:scale-95">
+        <Link href={`/log/?month=${month}`} className="pointer-events-auto flex items-center gap-2 rounded-full border-2 border-white bg-gradient-to-r from-[#D95B00] to-[#E87518] px-6 py-2.5 text-sm font-black text-white shadow-[0_10px_25px_-5px_rgba(255,121,0,0.3)] transition-transform active:scale-95">
           <span className="text-lg">＋</span>
           <span>تسجيل بيعة جديدة</span>
         </Link>

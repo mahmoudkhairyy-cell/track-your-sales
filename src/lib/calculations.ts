@@ -129,11 +129,10 @@ export function buildWorkdayStats(
 // - كل مؤشر (ليه تارجت ووزن) لازم يوصل 90% عشان يتحسب في التوتال، والزيادة فوق 100% بتتحسب عادي.
 // - المؤشر اللي تحت 90% بيتشال من التوتال.
 // - لو التوتال النهائي أقل من 80% مفيش حافز.
-// - Postpaid أو DSL لو ما وصلوش 100%: وزنهم (10%) بيتشال + خصم 5 نقاط زيادة، يعني 15 نقطة.
+// - ملحوظة: مفيش خصم إضافي (clawback) للـ Postpaid أو DSL. الكود ده اتكتب كده عمداً في نفس الـ commit
+//   اللي أضاف الحساب (af48a1a)، والتعليق القديم اللي كان بيذكر خصم 5 نقاط اتشال لأنه مش متطبق.
 export const KPI_MIN_PERCENT = 90;
 export const OVERALL_MIN_PERCENT = 80;
-export const CLAW_BACK_POINTS = 5;
-export const CLAW_BACK_KEYS = ["postpaid_lines", "dsl"] as const;
 
 export type RulesKpi = KpiSettingInput & { achieved: number };
 

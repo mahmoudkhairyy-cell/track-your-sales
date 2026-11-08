@@ -7,7 +7,7 @@ import { ApiError, api, downloadJson } from "@/lib/client";
 import { cairoISODate, formatDateAr, formatTimeCairo, monthLabelAr } from "@/lib/dates";
 import { formatQty } from "@/lib/calculations";
 import { parseBackup, type BackupFile } from "@/lib/backup";
-import { KPI_CATALOG, kpiEmoji, type KpiKey } from "@/lib/constants";
+import { APP_NAME, KPI_CATALOG, kpiEmoji, type KpiKey } from "@/lib/constants";
 import { useMonth } from "@/components/AppShell";
 import { KpiIcon } from "@/components/KpiIcon";
 import { useHistoryView } from "@/lib/use-history-view";
@@ -41,12 +41,6 @@ export default function MorePage() {
   const toast = useToast();
   const router = useRouter();
   const month = useMonth();
-  useEffect(() => {
-    if (view !== "report") return;
-    api<{ overall: number; estimatedCommission: number; fullCommission: number; kpis: { kpiKey: string; nameEn: string; achieved: number; target: number; percent: number; contribution: number }[] }>(`/api/dashboard?month=${month}`)
-      .then((result) => setReportData(result))
-      .catch(() => setReportData(null));
-  }, [view, month]);
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -80,10 +74,15 @@ export default function MorePage() {
         api<{
           profile: { name: string; branch: string; role: string };
           todaySummary: TodayItem[];
+          overall: number;
+          estimatedCommission: number;
+          fullCommission: number;
+          kpis: { kpiKey: string; nameEn: string; achieved: number; target: number; percent: number; contribution: number }[];
         }>(`/api/dashboard?month=${month}`),
       ]);
       setEntries(entryData.entries);
       setTodaySummary(dash.todaySummary);
+      setReportData({ overall: dash.overall, estimatedCommission: dash.estimatedCommission, fullCommission: dash.fullCommission, kpis: dash.kpis });
       setProfile({ name: dash.profile.name, branch: dash.profile.branch, role: dash.profile.role });
       setName(dash.profile.name);
       setBranch(dash.profile.branch);
@@ -107,6 +106,7 @@ export default function MorePage() {
         body: JSON.stringify({ name, branch }),
       });
       toast.push("success", result.message);
+      window.dispatchEvent(new Event("tys-data-changed"));
       setProfile((current) => ({ ...current, name: result.user.name, branch: result.user.branch }));
       router.refresh();
     } catch (err) {
@@ -147,6 +147,7 @@ export default function MorePage() {
       toast.push("success", result.message);
       setEditing(null);
       await load();
+      window.dispatchEvent(new Event("tys-data-changed"));
     } catch (err) {
       const message = err instanceof ApiError || err instanceof Error ? err.message : "مقدرناش نعدّل السجل";
       setEditError(message);
@@ -164,6 +165,7 @@ export default function MorePage() {
       toast.push("success", result.message);
       setDeleteId(null);
       await load();
+      window.dispatchEvent(new Event("tys-data-changed"));
     } catch (err) {
       toast.push("error", err instanceof Error ? err.message : "فشل حذف السجل");
     } finally {
@@ -183,6 +185,7 @@ export default function MorePage() {
       setClearOpen(false);
       setClearConfirm("");
       await load();
+      window.dispatchEvent(new Event("tys-data-changed"));
     } catch (err) {
       toast.push("error", err instanceof Error ? err.message : "فشل مسح الشهر");
     } finally {
@@ -199,7 +202,7 @@ export default function MorePage() {
       if (!result.backup || !Array.isArray(result.backup.entries) || !Array.isArray(result.backup.months) || !result.backup.profile) {
         throw new Error("التصدير ناقص، الملف متنزلش");
       }
-      downloadJson(`targetx-backup-${cairoISODate()}.json`, result.backup);
+      downloadJson(`track-your-sales-backup-${cairoISODate()}.json`, result.backup);
       toast.push("info", result.message);
     } catch (err) {
       toast.push("error", err instanceof Error ? err.message : "فشل التصدير");
@@ -244,7 +247,7 @@ export default function MorePage() {
       if (!result.backup || !Array.isArray(result.backup.entries)) {
         throw new Error("النسخة الاحتياطية الحالية ناقصة، الاستبدال متوقف");
       }
-      downloadJson(`targetx-before-replace-${cairoISODate()}.json`, result.backup);
+      downloadJson(`track-your-sales-before-replace-${cairoISODate()}.json`, result.backup);
       setReplaceReady(true);
       toast.push("info", "اتنزّلت نسخة احتياطية من بياناتك الحالية. تقدر تكمل الاستبدال.");
     } catch (err) {
@@ -275,6 +278,7 @@ export default function MorePage() {
       setRestoreOpen(false);
       setRestoreBackup(null);
       await load();
+      window.dispatchEvent(new Event("tys-data-changed"));
       router.refresh();
     } catch (err) {
       toast.push("error", err instanceof Error ? err.message : "فشلت الاستعادة");
@@ -375,7 +379,7 @@ export default function MorePage() {
         <div className="space-y-4">
           <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[#B94700]">← رجوع للقائمة</button>
           <section className="rounded-[24px] border border-[#E8EDF4] bg-white p-5 shadow-sm">
-            <p className="font-black">Target Tracker</p>
+            <p className="font-black">{APP_NAME}</p>
             <p className="mt-2 text-sm leading-7 text-[#556070]">أداة مساعدة مستقلة وغير رسمية، وليست تطبيقًا رسميًا تابعًا لشركة Orange.</p>
           </section>
         </div>
@@ -594,7 +598,7 @@ export default function MorePage() {
       </Modal>
 
       <Modal open={Boolean(deleteId)} title="🗑️ تشيل السجل ده؟" onClose={() => setDeleteId(null)}>
-        <p className="text-sm leading-7 text-[#556070]">السجل هيتشال من قاعدة البيانات بعد ما السيرفر يأكد بس.</p>
+        <p className="text-sm leading-7 text-[#556070]">السجل هيتشال من الجهاز ده نهائيًا.</p>
         <div className="mt-4 flex gap-2">
           <SecondaryButton type="button" onClick={() => setDeleteId(null)}>
             لأ، خليه
@@ -607,7 +611,7 @@ export default function MorePage() {
 
       <Modal open={clearOpen} title="🚨 تمسح الشهر كله؟" onClose={() => setClearOpen(false)}>
         <p className="text-sm leading-7 text-[#556070]">
-          هتمسح كل سجلات <strong>{monthLabelAr(month)}</strong> وعددها <strong>{entries.length}</strong>. الإعدادات مش هتتمسح. ده مش بيترجع بعد ما السيرفر ينفذ.
+          هتمسح كل سجلات <strong>{monthLabelAr(month)}</strong> وعددها <strong>{entries.length}</strong>. الإعدادات مش هتتمسح. ده مش بيترجع بعد ما تأكده.
         </p>
         <Field label={`اكتب ${month} للتأكيد`}>
           <input className={inputClass} value={clearConfirm} onChange={(e) => setClearConfirm(e.target.value)} />
