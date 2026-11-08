@@ -362,10 +362,10 @@ export default function ManagerPage() {
                   <p className="mb-1 font-black">كل الإنجازات</p>
                   {(row.payload.entries ?? []).length === 0 ? <p className="text-[#927b69]">لا يوجد</p> : null}
                   {(row.payload.entries ?? []).map((e, i) => (
-                    <div key={`${e.date}-${i}`} className="flex justify-between border-b border-dashed border-[#f1dfd0] py-1">
-                      <span dir="ltr">{e.date}</span>
-                      <span dir="ltr">{kpiLabel(e.kpi)}</span>
-                      <span className="tabular-nums">{e.quantity} {e.unit}</span>
+                    <div key={`${e.date}-${i}`} className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] items-center gap-2 rounded-xl border border-[#f4e5d9] bg-[#fffaf6] px-3 py-2.5 text-[11px] sm:text-xs">
+                      <span className="font-bold text-[#806653]" dir="ltr">{e.date}</span>
+                      <span className="min-w-0 truncate font-extrabold text-[#5b4030]">{kpiLabel(e.kpi)}</span>
+                      <span className="whitespace-nowrap rounded-lg bg-[#fff0e2] px-2 py-1 font-black tabular-nums text-[#bd4b0a]">{e.quantity} {e.unit}</span>
                     </div>
                   ))}
                 </div>
@@ -426,12 +426,12 @@ export default function ManagerPage() {
               🔑 {pwOpen ? "إخفاء تغيير الباسورد" : "تغيير الباسورد"}
             </button>
             {pwOpen ? (
-              <form onSubmit={changePassword} className="space-y-3 rounded-[24px] bg-white p-4 shadow-sm ring-1 ring-[#f1dfd0]/70">
-                <input type="password" placeholder="الباسورد الحالي" value={oldPw} onChange={(e) => setOldPw(e.target.value)} className="w-full rounded-2xl border border-[#f1dfd0] px-4 py-3 outline-none focus:border-[#bd4b0a]" />
-                <input type="password" placeholder="الباسورد الجديد (6 حروف على الأقل)" value={newPw} onChange={(e) => setNewPw(e.target.value)} className="w-full rounded-2xl border border-[#f1dfd0] px-4 py-3 outline-none focus:border-[#bd4b0a]" />
-                <input type="password" placeholder="أكد الباسورد الجديد" value={newPw2} onChange={(e) => setNewPw2(e.target.value)} className="w-full rounded-2xl border border-[#f1dfd0] px-4 py-3 outline-none focus:border-[#bd4b0a]" />
+              <form onSubmit={changePassword} className="relative isolate overflow-hidden rounded-[26px] border border-white/90 bg-white/95 p-4 shadow-[0_16px_36px_rgba(151,72,17,0.09)] ring-1 ring-[#f1dfd0]/80 sm:p-5">
+                <label className="block text-xs font-extrabold text-[#806653]">الباسورد الحالي<input type="password" autoComplete="current-password" placeholder="اكتب الباسورد الحالي" value={oldPw} onChange={(e) => setOldPw(e.target.value)} className="mt-1.5 w-full rounded-2xl border border-[#ecd9c9] bg-[#fffaf6] px-4 py-3 text-sm text-[#38251a] outline-none transition placeholder:text-[#b59b88] focus:border-[#e96812] focus:bg-white focus:ring-4 focus:ring-[#e96812]/10" /></label>
+                <label className="block text-xs font-extrabold text-[#806653]">الباسورد الجديد<input type="password" autoComplete="new-password" placeholder="6 أحرف على الأقل" value={newPw} onChange={(e) => setNewPw(e.target.value)} className="mt-1.5 w-full rounded-2xl border border-[#ecd9c9] bg-[#fffaf6] px-4 py-3 text-sm text-[#38251a] outline-none transition placeholder:text-[#b59b88] focus:border-[#e96812] focus:bg-white focus:ring-4 focus:ring-[#e96812]/10" /></label>
+                <label className="block text-xs font-extrabold text-[#806653]">تأكيد الباسورد الجديد<input type="password" autoComplete="new-password" placeholder="اكتب الباسورد مرة تانية" value={newPw2} onChange={(e) => setNewPw2(e.target.value)} className="mt-1.5 w-full rounded-2xl border border-[#ecd9c9] bg-[#fffaf6] px-4 py-3 text-sm text-[#38251a] outline-none transition placeholder:text-[#b59b88] focus:border-[#e96812] focus:bg-white focus:ring-4 focus:ring-[#e96812]/10" /></label>
                 {pwMsg ? <p className="text-sm font-bold text-red-600">{pwMsg}</p> : null}
-                <button type="submit" disabled={!oldPw || !newPw || !newPw2} className="w-full rounded-2xl bg-gradient-to-br from-[#e96812] to-[#ff9d38] py-3 font-extrabold text-white disabled:opacity-60">
+                <button type="submit" disabled={!oldPw || !newPw || !newPw2} className="w-full rounded-2xl bg-gradient-to-r from-[#bd4b0a] via-[#e96812] to-[#ff9d38] py-3.5 font-extrabold text-white shadow-[0_10px_22px_rgba(217,91,12,0.18)] transition hover:brightness-105 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50">
                   حفظ الباسورد الجديد
                 </button>
               </form>
