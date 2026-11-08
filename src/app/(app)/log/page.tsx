@@ -178,7 +178,7 @@ export default function LogPage() {
     <form className="space-y-4" onSubmit={onSubmit}>
       <section>
         <h1 className="text-3xl font-black">إنجاز اليوم</h1>
-        <p className="mt-1 text-sm text-[#556070]">سجّل اللي بعته النهارده — هيتحفظ تلقائيًا.</p>
+        <p className="mt-1 text-sm text-[#88796e]">سجّل اللي بعته النهارده — هيتحفظ تلقائيًا.</p>
       </section>
 
       {error ? <Banner tone="error">❌ {error}</Banner> : null}
@@ -203,11 +203,11 @@ export default function LogPage() {
       ) : null}
 
       {onTrack.length > 0 ? (
-        <section className="rounded-[24px] bg-[#FCEBDD] p-4 text-[#B94700]">
+        <section className="rounded-[24px] bg-[#fff0e2] p-4 text-[#bd4b0a]">
           <p className="text-sm font-extrabold">⚡ المطلوب منك النهارده عشان تفضل ON TRACK</p>
           <div className="mt-2 flex flex-wrap gap-2">
             {onTrack.map((k) => (
-              <span key={k.kpiKey} className="rounded-full bg-white px-3 py-1 text-xs font-extrabold text-[#B94700] shadow-sm">
+              <span key={k.kpiKey} className="rounded-full bg-white px-3 py-1 text-xs font-extrabold text-[#bd4b0a] shadow-sm">
                 {kpiEmoji(k.kpiKey)} {formatQty(workLeft > 0 ? Math.ceil(k.remaining / workLeft) : k.remaining)} · {KPI_CATALOG.find((i) => i.key === k.kpiKey)?.nameEn}
               </span>
             ))}
@@ -215,8 +215,8 @@ export default function LogPage() {
         </section>
       ) : null}
 
-      <section className="rounded-[24px] border border-[#E8EDF4] bg-white p-4 shadow-sm">
-        <label htmlFor="entry-date" className="block text-xs font-bold text-[#556070]">📅 تاريخ الإنجاز</label>
+      <section className="rounded-[24px] border border-[#f2e4d8] bg-white p-4 shadow-sm">
+        <label htmlFor="entry-date" className="block text-xs font-bold text-[#88796e]">📅 تاريخ الإنجاز</label>
         <input id="entry-date" className={`${inputClass} mt-2`} type="date" value={entryDate} min={monthDateRange(month).start} max={monthDateRange(month).end} onChange={(e) => setEntryDate(e.target.value)} required />
       </section>
 
@@ -228,29 +228,29 @@ export default function LogPage() {
         const excluded = !!d && d.weight > 0 && d.gated;
         const needToday = d && workLeft > 0 ? Math.ceil(Math.max(0, d.remaining) / workLeft) : 0;
         return (
-          <article key={item.key} className="rounded-[24px] border border-[#E8EDF4] bg-white p-4 shadow-sm">
+          <article key={item.key} className="rounded-[24px] border border-[#f2e4d8] bg-white p-4 shadow-sm">
             <div className="flex items-center justify-between gap-3">
               <div className="flex items-center gap-3">
-                <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#FCEBDD] text-[#D95B00]"><KpiIcon kpiKey={item.key} className="h-5 w-5" /></span>
+                <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#fff0e2] text-[#D95B00]"><KpiIcon kpiKey={item.key} className="h-5 w-5" /></span>
                 <div>
                   <p className="font-extrabold" dir="ltr">{item.nameEn}</p>
-                  <p className="text-[11px] font-bold text-[#B94700]">
+                  <p className="text-[11px] font-bold text-[#bd4b0a]">
                     {excluded ? "متتحسبش" : commission > 0 ? `كوميشن ${commission} ج` : " "}
                   </p>
                 </div>
               </div>
             </div>
-            <div className="mt-3 grid grid-cols-3 gap-2 rounded-2xl bg-[#F5F8FC] p-2.5 text-center">
+            <div className="mt-3 grid grid-cols-3 gap-2 rounded-2xl bg-[#fffaf5] p-2.5 text-center">
               <div>
-                <p className="text-[10px] text-[#556070]">المستهدف</p>
+                <p className="text-[10px] text-[#88796e]">المستهدف</p>
                 <p className="text-sm font-black tabular-nums">{d ? formatQty(d.target) : "—"}</p>
               </div>
               <div>
-                <p className="text-[10px] text-[#556070]">الوزن</p>
+                <p className="text-[10px] text-[#88796e]">الوزن</p>
                 <p className="text-sm font-black tabular-nums">{d ? d.weight : 0}%</p>
               </div>
               <div>
-                <p className="text-[10px] text-[#556070]">الباقي</p>
+                <p className="text-[10px] text-[#88796e]">الباقي</p>
                 <p className="text-sm font-black tabular-nums text-[#b84700]">{d ? formatQty(Math.max(0, d.remaining)) : "—"}</p>
               </div>
             </div>
@@ -267,9 +267,9 @@ export default function LogPage() {
                 placeholder="0"
                 aria-label={`كمية ${item.nameEn}`}
               />
-              <span className="shrink-0 text-xs font-bold text-[#556070]">{d?.unitAr ?? ""}</span>
+              <span className="shrink-0 text-xs font-bold text-[#88796e]">{d?.unitAr ?? ""}</span>
             </div>
-            <p className="mt-2 text-[11px] text-[#556070]" title={quantityHint(item.key)}>
+            <p className="mt-2 text-[11px] text-[#88796e]" title={quantityHint(item.key)}>
               {needToday > 0 ? `المطلوب النهارده: ${formatQty(needToday)} ${d?.unitAr ?? ""}` : "مفيش مطلوب إضافي النهارده"}
             </p>
           </article>
@@ -277,12 +277,12 @@ export default function LogPage() {
       })}
 
       {quality ? (
-        <section className="rounded-[24px] border border-[#E8EDF4] bg-white p-4 shadow-sm">
+        <section className="rounded-[24px] border border-[#f2e4d8] bg-white p-4 shadow-sm">
           <div className="mb-2 flex items-center justify-between">
             <p className="text-sm font-black">✅ الكواليتي (15%)</p>
-            <p className="text-xs font-extrabold text-[#B94700]">{qualityScore}% من 15%</p>
+            <p className="text-xs font-extrabold text-[#bd4b0a]">{qualityScore}% من 15%</p>
           </div>
-          <p className="mb-3 text-[11px] text-[#556070]">{monthSaved ? "علّم البند لو اتحقق بالكامل، والتغيير بيتحفظ فوراً." : "⚠️ احفظ تارجت الشهر الأول من صفحة التارجت، وبعدين تقدر تعلّم الكواليتي."}</p>
+          <p className="mb-3 text-[11px] text-[#88796e]">{monthSaved ? "علّم البند لو اتحقق بالكامل، والتغيير بيتحفظ فوراً." : "⚠️ احفظ تارجت الشهر الأول من صفحة التارجت، وبعدين تقدر تعلّم الكواليتي."}</p>
           <div className="space-y-2">
             {QUALITY_ITEMS.map((item) => {
               const on = !!quality.checks?.[item.key];
@@ -293,15 +293,15 @@ export default function LogPage() {
                   disabled={qualityBusy || !monthSaved}
                   aria-pressed={on}
                   onClick={() => toggleQuality(item.key)}
-                  className="flex w-full items-center justify-between rounded-2xl border border-[#E8EDF4] bg-white px-3 py-2.5 text-right disabled:opacity-60"
+                  className="flex w-full items-center justify-between rounded-2xl border border-[#f2e4d8] bg-white px-3 py-2.5 text-right disabled:opacity-60"
                 >
                   <span className="flex items-center gap-3">
-                    <span className={`flex h-6 w-6 items-center justify-center rounded-full border-2 text-xs font-black ${on ? "border-emerald-500 bg-emerald-500 text-white" : "border-[#F3D2B5] text-transparent"}`}>✓</span>
+                    <span className={`flex h-6 w-6 items-center justify-center rounded-full border-2 text-xs font-black ${on ? "border-emerald-500 bg-emerald-500 text-white" : "border-[#f2e4d8] text-transparent"}`}>✓</span>
                     <span className="flex flex-col items-start gap-0.5">
                       <span className="text-sm font-extrabold" dir="ltr">{item.label}</span>
                     </span>
                   </span>
-                  <span className="text-xs font-black text-[#556070]">{item.weight}%</span>
+                  <span className="text-xs font-black text-[#88796e]">{item.weight}%</span>
                 </button>
               );
             })}
@@ -309,8 +309,8 @@ export default function LogPage() {
         </section>
       ) : null}
 
-      <section className="rounded-[24px] border border-[#E8EDF4] bg-white p-4">
-        <label htmlFor="entry-note" className="block text-xs font-bold text-[#556070]">📝 ملاحظة (لو حابب)</label>
+      <section className="rounded-[24px] border border-[#f2e4d8] bg-white p-4">
+        <label htmlFor="entry-note" className="block text-xs font-bold text-[#88796e]">📝 ملاحظة (لو حابب)</label>
         <textarea
           id="entry-note"
           className={`${inputClass} mt-2 min-h-20 py-3`}
@@ -324,7 +324,7 @@ export default function LogPage() {
       <PrimaryButton type="submit" disabled={pending}>
         {pending ? "⏳ بنحفظ..." : "💾 احفظ إنجاز اليوم"}
       </PrimaryButton>
-      <p className="text-center text-xs text-[#556070]">التاريخ اللي فوق هو اللي بيحدد الشهر · الشهر المعروض: {month}</p>
+      <p className="text-center text-xs text-[#88796e]">التاريخ اللي فوق هو اللي بيحدد الشهر · الشهر المعروض: {month}</p>
     </form>
   );
 }
