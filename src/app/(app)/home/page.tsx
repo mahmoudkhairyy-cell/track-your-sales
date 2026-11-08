@@ -207,14 +207,14 @@ export default function HomePage() {
       <section className="flex items-stretch overflow-hidden rounded-[26px] border border-[#f1dfd0] bg-white shadow-[0_12px_28px_rgba(100,55,25,0.05)]">
         <div className="flex w-28 shrink-0 flex-col items-center justify-center bg-gradient-to-br from-[#a94308] to-[#e96812] px-3 py-4 text-white">
           <span className="font-mono text-3xl font-black leading-none">{data.pace.perDay === null ? "—" : formatQty(Math.ceil(data.pace.perDay))}</span>
-          <span className="mt-1 text-[10px] font-bold text-[#FCEBDD]">{data.pace.perDay === null ? "" : linesWord(Math.ceil(data.pace.perDay)) + " / يوم"}</span>
+          <span className="mt-1 text-[10px] font-bold text-[#fff0e2]">{data.pace.perDay === null ? "" : linesWord(Math.ceil(data.pace.perDay)) + " / يوم"}</span>
         </div>
         <div className="flex min-w-0 flex-1 flex-col justify-center gap-1 p-3.5">
-          <span className="flex items-center gap-1.5 text-xs font-black text-slate-900">
-            <span className="h-1.5 w-1.5 rounded-full bg-[#D95B00]" />
+          <span className="flex items-center gap-1.5 text-xs font-black text-[#2d2119]">
+            <span className="h-1.5 w-1.5 rounded-full bg-[#e96812]" />
             المطلوب انهاردة عشان تفضل On Track
           </span>
-          <span className="text-[11px] font-semibold leading-relaxed text-slate-600">{data.pace.message}</span>
+          <span className="text-[11px] font-semibold leading-relaxed text-[#927b69]">{data.pace.message}</span>
         </div>
       </section>
 
@@ -223,9 +223,9 @@ export default function HomePage() {
         <div className="flex items-center justify-between">
           <h2 className="flex items-center gap-1.5 text-sm font-black tracking-tight text-[#38291f]">
             <span>نسبة الإنجاز بالمحاور</span>
-            <span className="rounded border border-[#F3D2B5] bg-[#fff0e2] px-1.5 text-[11px] font-bold text-[#bd4b0a]">{data.kpis.length} مؤشرات</span>
+            <span className="rounded border border-[#f1dfd0] bg-[#fff0e2] px-1.5 text-[11px] font-bold text-[#bd4b0a]">{data.kpis.length} مؤشرات</span>
           </h2>
-          <span className="text-[11px] font-bold text-slate-500">اسحب ←</span>
+          <span className="text-[11px] font-bold text-[#9a7963]">اسحب ←</span>
         </div>
         <div className="no-scrollbar flex gap-3 overflow-x-auto pb-1 pt-0.5">
           {data.kpis.map((kpi) => {
@@ -235,7 +235,7 @@ export default function HomePage() {
                 <div className={`flex h-10 w-10 items-center justify-center rounded-full border-2 font-mono text-xs font-black ${ok ? "border-emerald-500 text-emerald-700" : "border-red-500 text-red-700"}`}>
                   {Math.round(kpi.percent)}%
                 </div>
-                <span className="mt-1.5 w-full truncate text-[11px] font-bold text-slate-800" dir="ltr">{shortKpiName(kpi.nameEn)}</span>
+                <span className="mt-1.5 w-full truncate text-[11px] font-bold text-[#38291f]" dir="ltr">{shortKpiName(kpi.nameEn)}</span>
                 <span className={`mt-0.5 text-[10px] font-extrabold ${ok ? "text-emerald-600" : "text-red-600"}`}>{ok ? "On Track" : "متأخر"}</span>
               </div>
             );
@@ -260,7 +260,7 @@ export default function HomePage() {
       <section className="flex flex-col gap-3 rounded-[28px] border border-[#f1dfd0] bg-white/75 p-4 shadow-[0_12px_30px_rgba(100,55,25,0.04)] sm:p-5">
         <div className="flex items-center justify-between">
           <h2 className="text-base font-black tracking-tight text-[#38291f]">مؤشرات الأداء (KPIs)</h2>
-          <span className="text-[11px] font-bold text-[#556070]">{data.kpis.length} مؤشر</span>
+          <span className="text-[11px] font-bold text-[#927b69]">{data.kpis.length} مؤشر</span>
         </div>
         <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
           {data.kpis.map((kpi) => {
@@ -271,7 +271,7 @@ export default function HomePage() {
               <article key={kpi.kpiKey} className={`flex min-w-0 items-center gap-3 rounded-[22px] border bg-white p-3.5 transition-all duration-300 ${onTrackKpi ? "border-emerald-200 shadow-[0_8px_22px_rgba(16,185,129,0.07)]" : "border-[#f0d8c8] shadow-[0_8px_22px_rgba(145,61,13,0.055)]"}`}>
                 <div className="relative h-14 w-14 shrink-0">
                   <svg viewBox="0 0 44 44" className="h-full w-full -rotate-90">
-                    <circle cx="22" cy="22" r="18" fill="none" stroke="#F1F4F9" strokeWidth="5" />
+                    <circle cx="22" cy="22" r="18" fill="none" stroke="#f6e9df" strokeWidth="5" />
                     <circle
                       cx="22"
                       cy="22"
@@ -285,28 +285,28 @@ export default function HomePage() {
                       className="transition-all duration-700"
                     />
                   </svg>
-                  <span className="absolute inset-0 flex items-center justify-center font-mono text-xs font-black text-[#172033]">{Math.round(kpi.percent)}%</span>
+                  <span className="absolute inset-0 flex items-center justify-center font-mono text-xs font-black text-[#2d2119]">{Math.round(kpi.percent)}%</span>
                 </div>
                 <div className="flex min-w-0 flex-1 flex-col gap-1">
                   <div className="flex items-center justify-between gap-2">
                     <span className="flex min-w-0 items-center gap-1.5">
-                      <KpiIcon kpiKey={kpi.kpiKey} className="h-3.5 w-3.5 shrink-0 text-[#D95B00]" />
-                      <span className="truncate text-xs font-black text-[#172033]" dir="ltr">{kpi.nameEn}</span>
+                      <KpiIcon kpiKey={kpi.kpiKey} className="h-3.5 w-3.5 shrink-0 text-[#e96812]" />
+                      <span className="truncate text-xs font-black text-[#2d2119]" dir="ltr">{kpi.nameEn}</span>
                     </span>
                     <span className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-extrabold ${onTrackKpi ? "bg-emerald-50 text-emerald-700" : "bg-red-50 text-red-600"}`}>
                       {onTrackKpi ? "On Track" : `ناقص ${formatQty(Math.max(0, Math.ceil(kpi.expectedToDate - kpi.achieved)))}`}
                     </span>
                   </div>
-                  <div className="flex items-center justify-between text-[11px] font-semibold text-[#556070]">
+                  <div className="flex items-center justify-between text-[11px] font-semibold text-[#927b69]">
                     <span>
-                      <strong className="font-mono text-[#172033]">{formatQty(kpi.achieved)}</strong> / {formatQty(kpi.target)}
+                      <strong className="font-mono text-[#2d2119]">{formatQty(kpi.achieved)}</strong> / {formatQty(kpi.target)}
                     </span>
-                    <span>المتبقي <strong className="font-mono text-[#172033]">{formatQty(kpi.remaining)}</strong></span>
+                    <span>المتبقي <strong className="font-mono text-[#2d2119]">{formatQty(kpi.remaining)}</strong></span>
                   </div>
-                  <div className="h-1.5 w-full overflow-hidden rounded-full bg-[#F1F4F9]">
-                    <div className="h-full rounded-full bg-gradient-to-r from-[#D95B00] to-[#E87518] transition-all duration-700" style={{ width: `${pct}%` }} />
+                  <div className="h-1.5 w-full overflow-hidden rounded-full bg-[#f6e9df]">
+                    <div className="h-full rounded-full bg-gradient-to-r from-[#e96812] to-[#ff9d38] transition-all duration-700" style={{ width: `${pct}%` }} />
                   </div>
-                  {kpi.overTarget ? <p className="text-[10px] font-bold text-[#D95B00]">عدّيت التارجت 🎉</p> : null}
+                  {kpi.overTarget ? <p className="text-[10px] font-bold text-[#e96812]">عدّيت التارجت 🎉</p> : null}
                 </div>
               </article>
             );
