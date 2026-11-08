@@ -313,7 +313,7 @@ export default function MorePage() {
       </section>
 
       {view === "menu" ? (
-        <div className="space-y-3">
+        <div className="divide-y divide-[#F1E4D8] overflow-hidden rounded-[24px] border border-[#F1E4D8] bg-white shadow-[0_10px_30px_-18px_rgba(23,32,51,0.28)]">
           {[
             { key: "today", icon: "📊", title: "اللي عملته النهارده", desc: "ملخص إنجازات اليوم" },
             { key: "history", icon: "🗂️", title: "سجل العمليات", desc: "كل الإنجازات الشهر ده" },
@@ -326,14 +326,14 @@ export default function MorePage() {
               key={item.key}
               type="button"
               onClick={() => setView(item.key as typeof view)}
-              className="flex w-full items-center gap-4 rounded-[24px] border border-[#F1E4D8] bg-white p-4 text-right shadow-[0_10px_30px_-18px_rgba(23,32,51,0.28)]"
+              className="flex w-full items-center gap-3 px-4 py-3.5 text-right transition active:bg-[#FCEBDD]/50"
             >
-              <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#FCEBDD] text-2xl">{item.icon}</span>
-              <span className="flex-1">
-                <span className="block font-black text-[#172033]">{item.title}</span>
-                <span className="block text-xs text-[#556070]">{item.desc}</span>
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#FCEBDD] text-xl">{item.icon}</span>
+              <span className="min-w-0 flex-1">
+                <span className="block text-sm font-black text-[#172033]">{item.title}</span>
+                <span className="block truncate text-[11px] text-[#556070]">{item.desc}</span>
               </span>
-              <span className="text-neutral-300">‹</span>
+              <span className="text-lg font-black text-[#B94700]/60">‹</span>
             </button>
           ))}
         </div>
@@ -341,7 +341,7 @@ export default function MorePage() {
 
       {view === "report" ? (
         <section className="space-y-4">
-          <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[#B94700]">← رجوع للقائمة</button>
+          <button type="button" onClick={() => setView("menu")} className="flex min-h-10 w-fit items-center gap-1 rounded-full bg-white px-3.5 text-xs font-extrabold text-[#B94700] shadow-sm ring-1 ring-[#F1E4D8] active:scale-95">‹ رجوع للقائمة</button>
           <div id="report-print" className="rounded-[24px] border border-[#F1E4D8] bg-white p-5 shadow-[0_10px_30px_-18px_rgba(23,32,51,0.28)]">
             <p className="text-xs font-bold text-[#556070]">تقرير الشهر · {monthLabelAr(month)}</p>
             <h2 className="mt-1 text-xl font-black">{profile.name || "—"}</h2>
@@ -373,7 +373,7 @@ export default function MorePage() {
 
       {view === "about" ? (
         <div className="space-y-4">
-          <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[#B94700]">← رجوع للقائمة</button>
+          <button type="button" onClick={() => setView("menu")} className="flex min-h-10 w-fit items-center gap-1 rounded-full bg-white px-3.5 text-xs font-extrabold text-[#B94700] shadow-sm ring-1 ring-[#F1E4D8] active:scale-95">‹ رجوع للقائمة</button>
           <section className="rounded-[24px] border border-[#F1E4D8] bg-white p-5 shadow-[0_10px_30px_-18px_rgba(23,32,51,0.28)]">
             <p className="font-black">Target Tracker</p>
             <p className="mt-2 text-sm leading-7 text-[#556070]">أداة مساعدة مستقلة وغير رسمية، وليست تطبيقًا رسميًا تابعًا لشركة Orange.</p>
@@ -383,7 +383,7 @@ export default function MorePage() {
 
       {view === "today" ? (
         <div className="space-y-4">
-          <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[#B94700]">← رجوع للقائمة</button>
+          <button type="button" onClick={() => setView("menu")} className="flex min-h-10 w-fit items-center gap-1 rounded-full bg-white px-3.5 text-xs font-extrabold text-[#B94700] shadow-sm ring-1 ring-[#F1E4D8] active:scale-95">‹ رجوع للقائمة</button>
       <section className="rounded-[24px] border border-[#F1E4D8] bg-white p-5 shadow-[0_10px_30px_-18px_rgba(23,32,51,0.28)]">
         <h2 className="text-lg font-black tracking-tight">📊 اللي عملته النهارده</h2>
         {todayItems.length === 0 ? (
@@ -411,7 +411,7 @@ export default function MorePage() {
       ) : null}
       {view === "history" ? (
         <div className="space-y-4">
-          <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[#B94700]">← رجوع للقائمة</button>
+          <button type="button" onClick={() => setView("menu")} className="flex min-h-10 w-fit items-center gap-1 rounded-full bg-white px-3.5 text-xs font-extrabold text-[#B94700] shadow-sm ring-1 ring-[#F1E4D8] active:scale-95">‹ رجوع للقائمة</button>
       <section className="rounded-[24px] border border-[#F1E4D8] bg-white p-5 shadow-[0_10px_30px_-18px_rgba(23,32,51,0.28)]">
         <div className="flex items-center justify-between gap-3">
           <h2 className="text-lg font-black tracking-tight">🗂️ سجل عمليات {monthLabelAr(month)}</h2>
@@ -462,7 +462,7 @@ export default function MorePage() {
       ) : null}
       {view === "profile" ? (
         <div className="space-y-4">
-          <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[#B94700]">← رجوع للقائمة</button>
+          <button type="button" onClick={() => setView("menu")} className="flex min-h-10 w-fit items-center gap-1 rounded-full bg-white px-3.5 text-xs font-extrabold text-[#B94700] shadow-sm ring-1 ring-[#F1E4D8] active:scale-95">‹ رجوع للقائمة</button>
       <section className="rounded-[24px] border border-red-200 bg-white p-5">
         <h2 className="text-lg font-black tracking-tight">🚪 تسجيل خروج (نقل لفرع تاني)</h2>
         <p className="mt-1 text-xs leading-5 text-[#556070]">
@@ -507,7 +507,7 @@ export default function MorePage() {
       ) : null}
       {view === "backup" ? (
         <div className="space-y-4">
-          <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[#B94700]">← رجوع للقائمة</button>
+          <button type="button" onClick={() => setView("menu")} className="flex min-h-10 w-fit items-center gap-1 rounded-full bg-white px-3.5 text-xs font-extrabold text-[#B94700] shadow-sm ring-1 ring-[#F1E4D8] active:scale-95">‹ رجوع للقائمة</button>
       <section className="rounded-[24px] border border-[#F1E4D8] bg-white p-5 shadow-[0_10px_30px_-18px_rgba(23,32,51,0.28)]">
         <h2 className="text-lg font-black tracking-tight">💾 نسخة احتياطية واستعادة</h2>
         <p className="mt-2 text-sm leading-7 text-[#556070]">التصدير بينزّل ملف JSON فيه بياناتك وإعدادات الشهور والسجلات والملاحظات. من غير أي مفاتيح أو أسرار.</p>
