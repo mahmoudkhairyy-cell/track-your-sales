@@ -12,7 +12,7 @@ import {
 
 export function Spinner({ label = "بيحمّل..." }: { label?: string }) {
   return (
-    <div className="flex items-center justify-center gap-3 py-10 text-neutral-500">
+    <div role="status" aria-live="polite" className="flex items-center justify-center gap-3 py-10 text-[#8c7b6e]">
       <span className="h-5 w-5 animate-spin rounded-full border-2 border-[#ff7900] border-t-transparent" />
       <span>{label}</span>
     </div>
@@ -50,7 +50,7 @@ export function Banner({
     success: "bg-emerald-50 text-emerald-950 border-emerald-200",
     warn: "bg-amber-50 text-amber-950 border-amber-200",
   };
-  return <div className={`rounded-2xl border px-4 py-3 text-sm leading-7 ${tones[tone]}`}>{children}</div>;
+  return <div role={tone === "error" ? "alert" : "status"} aria-live={tone === "error" ? "assertive" : "polite"} className={`rounded-2xl border px-4 py-3 text-sm leading-7 ${tones[tone]}`}>{children}</div>;
 }
 
 export function PrimaryButton({
@@ -61,7 +61,7 @@ export function PrimaryButton({
   return (
     <button
       {...props}
-      className={`inline-flex min-h-12 w-full items-center justify-center rounded-full bg-[#ff7900] px-4 text-base font-extrabold text-white shadow-[0_8px_20px_rgba(255,121,0,0.28)] transition enabled:active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60 ${className}`}
+      className={`inline-flex min-h-12 w-full items-center justify-center rounded-full bg-gradient-to-l from-[#bd4b0a] via-[#e96812] to-[#f58a3c] px-4 text-base font-extrabold text-white shadow-[0_9px_22px_rgba(189,75,10,0.23)] transition hover:brightness-[1.04] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#e96812]/20 enabled:active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60 ${className}`}
     >
       {children}
     </button>
@@ -76,7 +76,7 @@ export function SecondaryButton({
   return (
     <button
       {...props}
-      className={`inline-flex min-h-12 items-center justify-center rounded-full border border-neutral-200 bg-white px-4 text-base font-bold text-neutral-800 disabled:opacity-60 ${className}`}
+      className={`inline-flex min-h-12 items-center justify-center rounded-full border border-[#ead8ca] bg-white px-4 text-base font-bold text-[#5c4030] shadow-sm transition hover:border-[#e7b990] hover:bg-[#fffaf6] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#e96812]/15 disabled:opacity-60 ${className}`}
     >
       {children}
     </button>
@@ -91,7 +91,7 @@ export function DangerButton({
   return (
     <button
       {...props}
-      className={`inline-flex min-h-12 items-center justify-center rounded-full bg-red-600 px-4 text-base font-extrabold text-white disabled:opacity-60 ${className}`}
+      className={`inline-flex min-h-12 items-center justify-center rounded-full bg-gradient-to-l from-red-700 to-red-500 px-4 text-base font-extrabold text-white shadow-sm transition hover:brightness-105 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-red-500/20 disabled:opacity-60 ${className}`}
     >
       {children}
     </button>
@@ -117,7 +117,7 @@ export function Field({
 }
 
 export const inputClass =
-  "min-h-12 w-full rounded-2xl border border-neutral-200 bg-[#fafafa] px-3 text-base text-neutral-900 outline-none ring-[#ff7900] focus:bg-white focus:ring-2";
+  "min-h-12 w-full rounded-2xl border border-[#ead8ca] bg-white px-3 text-base text-[#2b1c12] outline-none transition placeholder:text-[#aa998d] focus:border-[#e9782c] focus:bg-white focus:ring-4 focus:ring-[#e96812]/10";
 
 type Toast = { id: number; type: "success" | "error" | "info"; text: string };
 
@@ -139,7 +139,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
   return (
     <ToastContext.Provider value={value}>
       {children}
-      <div className="pointer-events-none fixed top-4 left-1/2 z-[70] flex w-[min(92vw,420px)] -translate-x-1/2 flex-col gap-2">
+      <div aria-live="polite" aria-relevant="additions" className="pointer-events-none fixed top-4 left-1/2 z-[70] flex w-[min(92vw,420px)] -translate-x-1/2 flex-col gap-2">
         {toasts.map((toast) => (
           <div
             key={toast.id}
@@ -180,10 +180,10 @@ export function Modal({
   return (
     <div className="fixed inset-0 z-[80] flex items-end justify-center bg-black/40 p-3 sm:items-center">
       <button className="absolute inset-0" aria-label="إغلاق" onClick={onClose} />
-      <div className="relative w-full max-w-lg rounded-[28px] bg-white p-5 shadow-2xl">
+      <div role="dialog" aria-modal="true" aria-labelledby="tx-modal-title" className="relative w-full max-w-lg rounded-[28px] border border-[#f1e2d6] bg-[#fffdfb] p-5 shadow-2xl">
         <div className="mb-4 flex items-start justify-between gap-3">
-          <h2 className="text-lg font-extrabold text-neutral-900">{title}</h2>
-          <button onClick={onClose} className="min-h-10 min-w-10 rounded-full text-xl text-neutral-400">
+          <h2 id="tx-modal-title" className="text-lg font-extrabold text-[#2d1d13]">{title}</h2>
+          <button type="button" onClick={onClose} aria-label="إغلاق النافذة" className="min-h-10 min-w-10 rounded-full text-xl text-neutral-500 transition hover:bg-[#fff0e4] hover:text-[#bd4b0a] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#e96812]/20">
             ×
           </button>
         </div>
