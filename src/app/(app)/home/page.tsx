@@ -105,9 +105,8 @@ export default function HomePage() {
   if (!data) return <Banner tone="error">مفيش بيانات نعرضها</Banner>;
 
   const gap = Math.max(0, 100 - data.overall);
-  const newLinesKpi = data.kpis.find((kpi) => kpi.kpiKey === "new_lines");
   const newWalletKpi = data.kpis.find((kpi) => kpi.kpiKey === "new_orange_cash");
-  const requiredWallets = Math.ceil((newLinesKpi?.achieved ?? 0) * 0.9);
+  const requiredWallets = newWalletKpi?.target ?? 0;
   const missingWallets = Math.max(0, requiredWallets - (newWalletKpi?.achieved ?? 0));
   // اون تراك: الإجمالي وصل لنسبة الأيام اللي عدّت من الشهر (أيام الشغل). لو مفيش أيام، مبنحكمش.
   // النهارده مش محسوب في الأيام اللي عدّت.
@@ -241,8 +240,8 @@ export default function HomePage() {
           <p className={`text-xs font-black ${data.rules.walletDone ? "text-emerald-800" : "text-[#9a4b12]"}`}>شرط المحافظ الجديدة</p>
           <p className={`mt-0.5 text-[11px] leading-5 ${data.rules.walletDone ? "text-emerald-700" : "text-[#8c6548]"}`}>
             {data.rules.walletDone
-              ? "محقق — وصلت لـ90% من عدد خطوطك الجديدة."
-              : `محتاج ${formatQty(missingWallets)} محفظة كمان عشان تكمل شرط 90% من New Lines. الشرط لازم يتحقق لاستحقاق الكوميشن.`}
+              ? "محقق — وصلت للتارجت بتاع المحافظ الجديدة."
+              : `محتاج ${formatQty(missingWallets)} محفظة كمان عشان تكمل تارجت المحافظ الجديدة 100%. الشرط لازم يتحقق لاستحقاق الكوميشن.`}
           </p>
         </div>
         <span className={`shrink-0 rounded-full px-2 py-1 text-[10px] font-black ${data.rules.walletDone ? "bg-emerald-100 text-emerald-800" : "bg-[#ffe4c9] text-[#9a4b12]"}`}>

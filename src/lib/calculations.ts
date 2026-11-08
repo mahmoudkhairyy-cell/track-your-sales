@@ -127,7 +127,7 @@ export function buildWorkdayStats(
 
 // قواعد حساب الكوميشن من نظام الشركة (موظف الفرع):
 // - كل مؤشر له وزن وتارجت لازم يوصل 90% عشان يتحسب في التوتال، والزيادة فوق 100% بتتحسب عادي.
-// - New Orange Cash وزنه صفر، لكنه شرط مستقل: عدد المحافظ الجديدة لا يقل عن 90% من عدد New Lines.
+// - New Orange Cash وزنه صفر، لكنه شرط مستقل: لازم يتقفل 100% من التارجت اللي الموظف دخله.
 // - المؤشرات الفردية بلا سقف، بينما الإجمالي الشهري فقط سقفه 200%.
 // - لو التوتال النهائي أقل من 80% مفيش حافز.
 // - لا يوجد خصم إضافي للـ Postpaid أو DSL.
@@ -135,7 +135,6 @@ export const KPI_MIN_PERCENT = 90;
 export const OVERALL_MIN_PERCENT = 80;
 /** سقف الإجمالي الشهري بس (200%). المؤشرات الفردية ماليهاش سقف. */
 export const OVERALL_MAX_PERCENT = 200;
-export const NEW_WALLET_TO_LINES_MIN_RATIO = 0.9;
 
 export type RulesKpi = KpiSettingInput & { achieved: number };
 
@@ -148,15 +147,8 @@ export function applyCompanyRules(kpis: RulesKpi[]) {
     return { kpiKey: kpi.kpiKey, contribution, percent, gated };
   });
 
-  const newLines = kpis.find((kpi) => kpi.kpiKey === "new_lines");
   const newWallets = kpis.find((kpi) => kpi.kpiKey === "new_orange_cash");
-  const walletDone = Boolean(
-    newLines &&
-      newWallets &&
-      newLines.target > 0 &&
-      newWallets.target > 0 &&
-      newWallets.achieved >= newLines.achieved * NEW_WALLET_TO_LINES_MIN_RATIO,
-  );
+  const walletDone = Boolean(newWallets && newWallets.target > 0 && newWallets.achieved >= newWallets.target);
 
   const rawTotal = counted.reduce((sum, row) => sum + row.contribution, 0);
   const total = Math.min(OVERALL_MAX_PERCENT, Math.max(0, rawTotal));
