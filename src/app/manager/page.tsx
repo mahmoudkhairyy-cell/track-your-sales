@@ -325,7 +325,7 @@ export default function ManagerPage() {
             <p className="mt-1 text-[10px] text-[#927b69]" dir="ltr">
               {new Date(row.updated_at).toLocaleString("en-US", { timeZone: "Africa/Cairo", hour12: false })}
             </p>
-            <div className="mt-3 grid grid-cols-2 gap-2">
+            <div className="mt-4 grid grid-cols-2 gap-2 sm:gap-3">
               {(row.payload.kpis ?? []).map((kpi) => (
                 <div key={kpi.name}>
                   <KpiTile kpi={kpi} />
@@ -477,7 +477,7 @@ export default function ManagerPage() {
                   </div>
                 </div>
                 {topRows.map((row) => (
-                  <div key={`${row.branch}-${row.name}-${row.rank}`} className="flex items-center justify-between rounded-[22px] bg-white p-3.5 shadow-sm ring-1 ring-[#f1dfd0]/70">
+                  <div key={`${row.branch}-${row.name}-${row.rank}`} className="flex items-center justify-between rounded-[22px] border border-white bg-white/95 p-3.5 shadow-[0_8px_22px_rgba(126,65,24,0.06)] ring-1 ring-[#f1dfd0]/70 transition hover:ring-[#edb184]">
                     <div className="flex items-center gap-3">
                       <span className={`flex h-10 w-10 items-center justify-center rounded-full text-sm font-black ${row.rank <= 3 ? "bg-gradient-to-br from-[#f5c542] to-[#e8a400] text-white" : "bg-[#fff0e2] text-[#bd4b0a]"}`}>
                         {row.rank}
@@ -525,7 +525,7 @@ export default function ManagerPage() {
                     </p>
                   )));
                   return (
-                    <section className="rounded-[24px] bg-white p-4 shadow-sm ring-1 ring-[#f1dfd0]/70">
+                    <section className="rounded-[26px] border border-white/90 bg-white/95 p-4 shadow-[0_12px_30px_rgba(126,65,24,0.06)] ring-1 ring-[#f1dfd0]/70 sm:p-5">
                       <p className="mb-3 text-sm font-black">📅 النهارده ({today})</p>
                       <div className="grid grid-cols-3 gap-2 text-center text-xs font-extrabold">
                         <div className="rounded-2xl bg-emerald-50 p-2 text-emerald-800">✅ سجّل<br /><span className="text-lg tabular-nums">{logged.length}</span></div>
@@ -575,14 +575,14 @@ export default function ManagerPage() {
                             key={branchName}
                             type="button"
                             onClick={() => setView(`b:${branchName}`)}
-                            className="group relative flex w-full items-center justify-between gap-3 overflow-hidden rounded-[26px] border border-white bg-white/95 p-5 text-right shadow-[0_12px_30px_rgba(126,65,24,0.07)] ring-1 ring-[#f1dfd0]/70 transition duration-200 hover:-translate-y-1 hover:ring-[#edb184] hover:shadow-[0_18px_36px_rgba(126,65,24,0.12)]"
+                            className="group relative flex w-full items-center justify-between gap-4 overflow-hidden rounded-[26px] border border-white/90 bg-white/95 p-4 text-right shadow-[0_12px_30px_rgba(126,65,24,0.07)] ring-1 ring-[#f1dfd0]/70 transition duration-200 hover:-translate-y-1 hover:ring-[#edb184] hover:shadow-[0_18px_36px_rgba(126,65,24,0.12)] sm:p-5"
                           >
                             <div>
                               <p className="font-black text-base text-[#38251a]" dir="ltr">{branchName}</p>
                               <p className="text-xs text-[#927b69]">{group.length} موظف</p>
                               <div className="mt-1"><TrackBadge percent={avg} expected={groupExpected(group)} /></div>
                             </div>
-                            <p className="text-xl font-black text-[#bd4b0a] tabular-nums">{Math.round(avg)}%</p>
+                            <div className="w-20 shrink-0 sm:w-24"><p className="text-left text-xl font-black text-[#bd4b0a] tabular-nums">{Math.round(avg)}%</p><div className="mt-2 h-1.5 overflow-hidden rounded-full bg-[#fff0e2]"><div className="h-full rounded-full bg-gradient-to-r from-[#e96812] to-[#ffb15c]" style={{ width: `${Math.min(100, Math.max(0, avg))}%` }} /></div></div>
                           </button>
                         );
                       })}
@@ -590,7 +590,7 @@ export default function ManagerPage() {
                 ) : (
                   <div className="space-y-3">
                     <button type="button" onClick={() => setView("list")} className="text-sm font-extrabold text-[#bd4b0a]">← كل الفروع</button>
-                    <div className="rounded-[24px] bg-[#e96812] p-4 text-white">
+                    <div className="relative isolate overflow-hidden rounded-[26px] bg-gradient-to-br from-[#a84208] via-[#d95b0c] to-[#ff9d38] p-5 text-white shadow-[0_14px_32px_rgba(173,75,13,0.16)] before:pointer-events-none before:absolute before:-left-8 before:-top-12 before:h-40 before:w-40 before:rounded-full before:border-[20px] before:border-white/10">
                       <p className="text-xs text-white/80">الفرع</p>
                       <h2 className="font-black" dir="ltr">{branch}</h2>
                       <button
