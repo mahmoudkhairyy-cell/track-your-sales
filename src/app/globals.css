@@ -2643,3 +2643,59 @@ body {
     scroll-behavior: auto !important;
   }
 }
+
+
+/* Shared components and overlays: final consistency pass. */
+.tys-page button[class*="bg-gradient-to-br"],
+.tys-page button[class*="bg-[#c6530d]"],
+.tys-page button[class*="bg-[#bd4b0a]"] {
+  box-shadow: 0 7px 17px rgba(150,59,8,.15);
+  transition: background-color .18s ease, border-color .18s ease, box-shadow .18s ease, transform .18s ease;
+}
+.tys-page button[class*="bg-gradient-to-br"] {
+  background-image: linear-gradient(135deg,#d96a20 0%,#b84a0b 100%);
+}
+.tys-page button[class*="bg-gradient-to-br"]:hover,
+.tys-page button[class*="bg-[#c6530d]"]:hover,
+.tys-page button[class*="bg-[#bd4b0a]"]:hover {
+  box-shadow: 0 9px 22px rgba(150,59,8,.2);
+}
+.tys-page button[class*="border-[#f0dfd2]"],
+.tys-page button[class*="border-[#f2e4d8]"] {
+  border-color: #efdfd2;
+}
+.tys-page-manager .tys-manager-header {
+  gap: 1rem;
+}
+.tys-page-manager .tys-manager-branch-card:focus-visible,
+.tys-page-manager .tys-manager-employee-card button:focus-visible {
+  outline: 3px solid rgba(217,95,18,.25);
+  outline-offset: 3px;
+}
+.tys-target-gate {
+  border-radius: 24px;
+  background: linear-gradient(145deg,#fff 0%,#fff8f1 100%);
+  box-shadow: 0 16px 42px rgba(91,49,23,.07);
+}
+[role="dialog"] {
+  border-color: #efdfd2;
+  border-radius: 24px;
+  box-shadow: 0 24px 70px rgba(77,44,25,.17);
+}
+[role="dialog"] :is(input,select,textarea) {
+  min-height: 48px;
+  border-color: #ead9cb;
+  border-radius: 14px;
+}
+[role="dialog"] :is(input,select,textarea):focus {
+  border-color: #d97836;
+  outline: 0;
+  box-shadow: 0 0 0 3px rgba(217,95,18,.12);
+}
+@media (max-width: 640px) {
+  [role="dialog"] {
+    max-height: calc(100dvh - 1.25rem);
+    padding: 1rem;
+    border-radius: 22px 22px 18px 18px;
+  }
+}
