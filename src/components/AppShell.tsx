@@ -375,7 +375,7 @@ function AppFrame({ children, blocked, month }: { children: ReactNode; blocked: 
         <div className="min-h-screen bg-[#fffaf5] text-[#2d2119]">
           <div className="h-1.5 bg-gradient-to-l from-[#bd4b0a] via-[#e96812] to-[#ffb15f]" />
           <div className="mx-auto flex min-h-screen max-w-7xl">
-            <aside className="sticky top-0 hidden h-screen w-[292px] shrink-0 flex-col border-l border-[#f1dfd0] bg-[#fff8f1] p-5 lg:flex">
+            <aside className="sticky top-0 hidden h-screen w-[276px] shrink-0 flex-col border-l border-[#f1dfd0] bg-[#fffaf5] p-5 lg:flex">
               <div className="flex items-center gap-3 rounded-[24px] border border-[#f4dfcd] bg-white p-3 shadow-[0_12px_28px_rgba(126,65,24,0.06)]">
                 <img src="/track-your-sales/logo-mark.png" alt="" className="h-12 w-12 shrink-0 object-contain" />
                 <div className="min-w-0">
@@ -383,16 +383,19 @@ function AppFrame({ children, blocked, month }: { children: ReactNode; blocked: 
                   <p className="mt-1 text-[10px] font-bold text-[#b76a3b]" dir="ltr">SALES PERFORMANCE SPACE</p>
                 </div>
               </div>
-              <div className="relative mt-5 overflow-hidden rounded-[26px] bg-[#2d2119] p-4 text-white shadow-[0_16px_34px_rgba(75,42,20,0.13)]">
-                <div className="absolute -left-7 -top-8 h-24 w-24 rounded-full bg-[#e96812]/30 blur-xl" />
-                <p className="relative text-[10px] font-bold tracking-wider text-[#ffc18f]">مساحة العمل</p>
-                <p className="relative mt-2 text-base font-black">{user.name || "أهلاً بيك"}</p>
-                <p className="relative mt-1 text-xs text-white/65">📍 {user.branch || "فرعك"}</p>
+              <div className="relative mt-5 overflow-hidden rounded-[24px] border border-[#f3dfce] bg-gradient-to-br from-white via-[#fff8f1] to-[#fff0e2] p-4 shadow-[0_10px_26px_rgba(126,65,24,0.06)]">
+                <div className="absolute -left-8 -top-9 h-24 w-24 rounded-full bg-[#ffb36e]/25 blur-2xl" />
+                <div className="relative flex items-center gap-2">
+                  <span className="h-2 w-2 rounded-full bg-[#e96812] shadow-[0_0_0_4px_rgba(233,104,18,0.10)]" />
+                  <p className="text-[10px] font-extrabold tracking-wider text-[#b76a3b]">مساحة العمل</p>
+                </div>
+                <p className="relative mt-3 truncate text-base font-black text-[#2d2119]">{user.name || "أهلاً بيك"}</p>
+                <p className="relative mt-1 truncate text-xs font-semibold text-[#9a7963]">📍 {user.branch || "فرعك"}</p>
               </div>
-              <nav className="mt-6 flex flex-col gap-1">
+              <nav className="mt-6 flex flex-col gap-1.5">
                 <NavLinks pathname={pathname} month={month} />
               </nav>
-              <p className="mt-auto pt-6 text-xs leading-6 text-neutral-400">{APP_DISCLAIMER}</p>
+              <p className="mt-auto border-t border-[#f1dfd0] pt-5 text-[11px] leading-6 text-[#ad9888]">{APP_DISCLAIMER}</p>
             </aside>
 
             <div className="flex min-w-0 flex-1 flex-col">
@@ -419,7 +422,7 @@ function AppFrame({ children, blocked, month }: { children: ReactNode; blocked: 
             </div>
           </div>
 
-          <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-[#f2e4d8] bg-[#fffdfb]/95 pb-[env(safe-area-inset-bottom)] shadow-[0_-10px_30px_rgba(115,58,20,0.09)] backdrop-blur-xl lg:hidden">
+          <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-[#f2e4d8] bg-white/95 pb-[env(safe-area-inset-bottom)] shadow-[0_-8px_28px_rgba(115,58,20,0.07)] backdrop-blur-2xl lg:hidden">
             <div className="grid grid-cols-5">
               {NAV.map((item) => {
                 const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
@@ -428,13 +431,13 @@ function AppFrame({ children, blocked, month }: { children: ReactNode; blocked: 
                   <Link
                     key={item.href}
                     href={`${item.href}?month=${month}`}
-                    className={`flex min-h-16 flex-col items-center justify-center gap-1 text-[11px] font-extrabold ${
+                    className={`flex min-h-[68px] flex-col items-center justify-center gap-1.5 px-1 pt-1 text-[10px] font-extrabold transition-colors ${
                       active ? "text-[#bd4b0a]" : "text-[#9b8b7f] hover:text-[#bd4b0a]"
                     }`}
                   >
                     <span
-                      className={`flex h-10 w-16 items-center justify-center rounded-full transition ${
-                        item.emphasize ? "h-11 w-11 bg-gradient-to-br from-[#bd4b0a] to-[#ff9d38] text-white shadow-[0_7px_18px_rgba(217,104,18,0.28)] ring-4 ring-[#fff0e2]" : active ? "bg-[#fff0e2] text-[#bd4b0a] ring-1 ring-[#f6dfcb]" : ""
+                      className={`flex h-9 w-12 items-center justify-center rounded-2xl transition-all ${
+                        item.emphasize ? "h-11 w-11 -translate-y-1 rounded-[18px] bg-gradient-to-br from-[#e96812] to-[#ff9d38] text-white shadow-[0_7px_18px_rgba(217,104,18,0.24)] ring-4 ring-[#fff0e2]" : active ? "bg-[#fff0e2] text-[#bd4b0a]" : "text-[#a99687]"
                       }`}
                     >
                       <Icon />
