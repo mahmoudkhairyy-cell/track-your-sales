@@ -15,7 +15,10 @@ html {
 
 body {
   margin: 0;
-  background: #F5F8FC;
+  background:
+    radial-gradient(1100px 420px at 50% -120px, rgba(252, 235, 221, 0.9), rgba(252, 235, 221, 0) 70%),
+    #F5F8FC;
+  background-attachment: fixed;
   color: #172033;
   font-family: var(--font-cairo), Tahoma, "Segoe UI", Arial, sans-serif;
   text-rendering: optimizeLegibility;
@@ -38,6 +41,12 @@ textarea {
 
 ::selection {
   background: #f5b98a;
+}
+
+:focus-visible {
+  outline: 2px solid #E87518;
+  outline-offset: 2px;
+  border-radius: 12px;
 }
 
 @media print {

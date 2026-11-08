@@ -29,9 +29,9 @@ export function EmptyState({
   action?: ReactNode;
 }) {
   return (
-    <div className="rounded-[28px] border border-dashed border-[#E87518] bg-white px-5 py-10 text-center">
-      <p className="text-lg font-extrabold text-neutral-900">{title}</p>
-      <p className="mx-auto mt-2 max-w-md text-sm leading-7 text-neutral-500">{text}</p>
+    <div className="rounded-[28px] border border-dashed border-[#F3D2B5] bg-white/80 px-5 py-10 text-center shadow-[0_8px_24px_-16px_rgba(23,32,51,0.18)]">
+      <p className="text-lg font-black text-[#172033]">{title}</p>
+      <p className="mx-auto mt-2 max-w-md text-sm leading-7 text-[#556070]">{text}</p>
       {action ? <div className="mt-5">{action}</div> : null}
     </div>
   );
@@ -61,7 +61,7 @@ export function PrimaryButton({
   return (
     <button
       {...props}
-      className={`inline-flex min-h-12 w-full items-center justify-center rounded-full bg-gradient-to-br from-[#D95B00] to-[#E87518] px-4 text-base font-extrabold text-white shadow-[0_12px_28px_rgba(190,90,0,0.35)] transition enabled:active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60 ${className}`}
+      className={`inline-flex min-h-12 w-full items-center justify-center rounded-full bg-gradient-to-br from-[#D95B00] to-[#E87518] px-4 text-base font-extrabold text-white shadow-[0_14px_28px_-10px_rgba(217,91,0,0.55)] transition enabled:active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60 ${className}`}
     >
       {children}
     </button>
@@ -76,7 +76,7 @@ export function SecondaryButton({
   return (
     <button
       {...props}
-      className={`inline-flex min-h-12 items-center justify-center rounded-full border border-neutral-200 bg-white px-4 text-base font-bold text-neutral-800 disabled:opacity-60 ${className}`}
+      className={`inline-flex min-h-12 items-center justify-center rounded-full border border-[#E8EDF4] bg-white px-4 text-base font-bold text-[#172033] shadow-[0_6px_16px_-12px_rgba(23,32,51,0.25)] transition enabled:active:scale-[0.98] disabled:opacity-60 ${className}`}
     >
       {children}
     </button>
@@ -143,9 +143,9 @@ export function ToastProvider({ children }: { children: ReactNode }) {
         {toasts.map((toast) => (
           <div
             key={toast.id}
-            className={`rounded-2xl px-4 py-3 text-sm font-bold shadow-lg ${
+            className={`rounded-2xl px-4 py-3 text-sm font-bold shadow-[0_12px_30px_-10px_rgba(23,32,51,0.45)] ${
               toast.type === "success"
-                ? "bg-[#D95B00] text-white"
+                ? "bg-gradient-to-br from-[#D95B00] to-[#E87518] text-white"
                 : toast.type === "error"
                   ? "bg-red-600 text-white"
                   : "bg-neutral-900 text-white"
@@ -178,12 +178,12 @@ export function Modal({
 }) {
   if (!open) return null;
   return (
-    <div className="fixed inset-0 z-[80] flex items-end justify-center bg-black/40 p-3 sm:items-center">
+    <div className="fixed inset-0 z-[80] flex items-end justify-center bg-[#172033]/40 p-3 backdrop-blur-sm sm:items-center">
       <button className="absolute inset-0" aria-label="إغلاق" onClick={onClose} />
-      <div className="relative w-full max-w-lg rounded-[28px] bg-white p-5 shadow-2xl">
+      <div className="relative w-full max-w-lg rounded-[28px] border border-[#F3D2B5]/50 bg-white p-5 shadow-[0_24px_60px_-20px_rgba(23,32,51,0.35)]">
         <div className="mb-4 flex items-start justify-between gap-3">
-          <h2 className="text-lg font-extrabold text-neutral-900">{title}</h2>
-          <button onClick={onClose} className="min-h-10 min-w-10 rounded-full text-xl text-neutral-400">
+          <h2 className="text-lg font-black text-[#172033]">{title}</h2>
+          <button onClick={onClose} className="flex min-h-10 min-w-10 items-center justify-center rounded-full bg-[#FCEBDD] text-xl text-[#B94700]">
             ×
           </button>
         </div>
