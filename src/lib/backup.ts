@@ -16,19 +16,16 @@ export type BackupHoliday = {
   note: string | null;
 };
 
+/** الكواليتي = الـchecks بس. الحقول الرقمية القديمة لو موجودة في ملف قديم بتتجاهل. */
 export type BackupQuality = {
-  kyc: number;
-  visits: number;
-  training: number;
-  pos: number;
-  csat: number;
   checks?: Record<string, boolean>;
 };
 
 export type BackupMonth = {
   yearMonth: string;
   fullCommission: number;
-  allowCommissionOver100: boolean;
+  /** قديم: كان خيار كوميشن فوق 100%، اتشال. الملفات القديمة بتفضل شغالة والحقل بيتجاهل. */
+  allowCommissionOver100?: boolean;
   workingDays: WorkingDays;
   kpis: BackupKpi[];
   holidays: BackupHoliday[];
@@ -104,13 +101,6 @@ function asNumber(value: unknown, field: string): number {
   return value;
 }
 
-function asBoolean(value: unknown, field: string): boolean {
-  if (typeof value !== "boolean") {
-    throw new Error(`حقل ${field} لازم يكون true أو false`);
-  }
-  return value;
-}
-
 /** بيفحص الملف كله (كل المستويات) عشان ما يدخلش أي حقل حساس. */
 function assertNoSecrets(value: unknown, path: string) {
   if (Array.isArray(value)) {
@@ -172,25 +162,17 @@ function parseHoliday(value: unknown, index: number): BackupHoliday {
   return { date, note: asOptionalString(value.note, `holidays[${index}].note`) };
 }
 
-const QUALITY_NUM_KEYS = ["kyc", "visits", "training", "pos", "csat"] as const;
-
+/** بيقرا الـchecks بس. أي درجات رقمية قديمة (kyc/visits...) بتتجاهل من غير ما توقف الاستعادة. */
 function parseQuality(value: unknown, index: number): BackupQuality | undefined {
   if (value === undefined || value === null) return undefined;
   if (!isRecord(value)) throw new Error(`تشيك Quality لشهر رقم ${index + 1} شكله غلط`);
-  const result: BackupQuality = { kyc: 0, visits: 0, training: 0, pos: 0, csat: 0 };
-  for (const key of QUALITY_NUM_KEYS) {
-    const raw = value[key] === undefined ? 0 : asNumber(value[key], `months[${index}].quality.${key}`);
-    if (raw < 0) throw new Error(`قيمة Quality ${key} مش ممكن تكون سالبة`);
-    result[key] = raw;
-  }
+  const checks: Record<string, boolean> = {};
   if (isRecord(value.checks)) {
-    const checks: Record<string, boolean> = {};
     for (const [k, v] of Object.entries(value.checks)) {
       if (typeof v === "boolean") checks[k] = v;
     }
-    result.checks = checks;
   }
-  return result;
+  return { checks };
 }
 
 function parseMonth(value: unknown, index: number): BackupMonth {
@@ -208,10 +190,6 @@ function parseMonth(value: unknown, index: number): BackupMonth {
   return {
     yearMonth,
     fullCommission: asNumber(value.fullCommission, `months[${index}].fullCommission`),
-    allowCommissionOver100: asBoolean(
-      value.allowCommissionOver100,
-      `months[${index}].allowCommissionOver100`,
-    ),
     workingDays: parseWorkingDays(value.workingDays),
     kpis: value.kpis.map((item, kpiIndex) => parseKpi(item, kpiIndex)),
     holidays: value.holidays.map((item, holidayIndex) => parseHoliday(item, holidayIndex)),

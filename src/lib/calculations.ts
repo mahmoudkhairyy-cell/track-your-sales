@@ -133,6 +133,8 @@ export function buildWorkdayStats(
 //   اللي أضاف الحساب (af48a1a)، والتعليق القديم اللي كان بيذكر خصم 5 نقاط اتشال لأنه مش متطبق.
 export const KPI_MIN_PERCENT = 90;
 export const OVERALL_MIN_PERCENT = 80;
+/** سقف الإجمالي الشهري بس (200%). المؤشرات الفردية ماليهاش سقف. */
+export const OVERALL_MAX_PERCENT = 200;
 
 export type RulesKpi = KpiSettingInput & { achieved: number };
 
@@ -147,7 +149,7 @@ export function applyCompanyRules(kpis: RulesKpi[]) {
   });
 
   const rawTotal = counted.reduce((sum, row) => sum + row.contribution, 0);
-  const total = Math.max(0, rawTotal);
+  const total = Math.min(OVERALL_MAX_PERCENT, Math.max(0, rawTotal));
   const belowKpis = counted.filter((row) => row.gated).map((row) => row.kpiKey);
   const belowOverall = total < OVERALL_MIN_PERCENT;
   return { counted, total, rawTotal, belowKpis, clawBacks: [] as string[], belowOverall, walletDone: true };

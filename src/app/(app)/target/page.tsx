@@ -21,7 +21,8 @@ type KpiForm = {
 
 type Holiday = { date: string; note: string | null };
 type QualityKey = "kyc" | "visits" | "training" | "pos" | "csat";
-type Quality = { kyc: number; visits: number; training: number; pos: number; csat: number; checks?: Partial<Record<QualityKey, boolean>> };
+/** الكواليتي = الـChecklist بس، بأوزانه المعتمدة. */
+type Quality = { checks?: Partial<Record<QualityKey, boolean>> };
 const QUALITY_ITEMS: { key: QualityKey; label: string; weight: number }[] = [
   { key: "kyc", label: "KYC & Compliance", weight: 5 },
   { key: "visits", label: "Quality Visits", weight: 5 },
@@ -29,7 +30,7 @@ const QUALITY_ITEMS: { key: QualityKey; label: string; weight: number }[] = [
   { key: "pos", label: "POS machines", weight: 1 },
   { key: "csat", label: "CSAT / Complaints", weight: 2 },
 ];
-const ZERO_QUALITY_FORM: Quality = { kyc: 0, visits: 0, training: 0, pos: 0, csat: 0, checks: {} };
+const ZERO_QUALITY_FORM: Quality = { checks: {} };
 
 type DailyRow = { kpiKey: string; nameEn: string; unitAr: string; weight: number; percent: number; remaining: number; achieved: number; target: number };
 type DailyData = { kpis: DailyRow[]; work: { remaining: number } };
@@ -42,7 +43,6 @@ export default function TargetPage() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [fullCommission, setFullCommission] = useState(6000);
-  const [allowOver, setAllowOver] = useState(false);
   const [workingDays, setWorkingDays] = useState<WorkingDays>({
     sat: true,
     sun: true,
@@ -83,14 +83,13 @@ export default function TargetPage() {
     let cancelled = false;
     setLoading(true);
     setError("");
-    api<{ settings: { saved: boolean; fullCommission: number; allowCommissionOver100: boolean; workingDays: WorkingDays; kpis: KpiForm[]; holidays: Holiday[]; quality: Quality } }>(
+    api<{ settings: { saved: boolean; fullCommission: number; workingDays: WorkingDays; kpis: KpiForm[]; holidays: Holiday[]; quality: Quality } }>(
       `/api/months/${month}`,
     )
       .then((result) => {
         if (cancelled) return;
         setSaved(result.settings.saved);
         setFullCommission(result.settings.fullCommission);
-        setAllowOver(result.settings.allowCommissionOver100);
         setWorkingDays(result.settings.workingDays);
         setKpis(result.settings.kpis);
         setHolidays(result.settings.holidays);
@@ -130,7 +129,6 @@ export default function TargetPage() {
         method: "PUT",
         body: JSON.stringify({
           fullCommission,
-          allowCommissionOver100: allowOver,
           workingDays,
           kpis,
           holidays,

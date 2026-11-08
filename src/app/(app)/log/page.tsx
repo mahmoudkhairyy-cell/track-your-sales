@@ -13,7 +13,8 @@ import { quantityHint, quantityMax, quantityMin, quantityStep, validateQuantity 
 
 
 type QualityKey = "kyc" | "visits" | "training" | "pos" | "csat";
-type Quality = { kyc: number; visits: number; training: number; pos: number; csat: number; checks?: Partial<Record<QualityKey, boolean>> };
+/** الكواليتي = الـChecklist بس. */
+type Quality = { checks?: Partial<Record<QualityKey, boolean>> };
 const QUALITY_ITEMS: { key: QualityKey; label: string; weight: number }[] = [
   { key: "kyc", label: "KYC & Compliance", weight: 5 },
   { key: "visits", label: "Quality Visits", weight: 5 },
@@ -23,7 +24,8 @@ const QUALITY_ITEMS: { key: QualityKey; label: string; weight: number }[] = [
 ];
 
 type DashKpi = { kpiKey: KpiKey; target: number; weight: number; remaining: number; unitAr: string; contribution: number; gated: boolean };
-type DashData = { kpis: DashKpi[]; fullCommission: number; overall: number; work: { remaining: number } };
+/** rawOverall = الإجمالي قبل سقف 200%. بنستخدمه عشان نوزّع الكوميشن على المؤشرات بنفس النسبة المعروضة. */
+type DashData = { kpis: DashKpi[]; fullCommission: number; overall: number; rawOverall?: number; work: { remaining: number } };
 
 export default function LogPage() {
   const toast = useToast();
@@ -67,6 +69,8 @@ export default function LogPage() {
   const [settingsFull, setSettingsFull] = useState<Record<string, unknown> | null>(null);
   const [quality, setQuality] = useState<Quality | null>(null);
   const [qualityBusy, setQualityBusy] = useState(false);
+  // الكواليتي ماتتحفظش غير بعد ما التارجت الشهري يتحفظ أول مرة.
+  const [monthSaved, setMonthSaved] = useState(false);
   useEffect(() => {
     let cancelled = false;
     api<Record<string, unknown> & { quality: Quality }>(`/api/months/${month}`)
@@ -74,7 +78,8 @@ export default function LogPage() {
         if (cancelled) return;
         const { quality: q, ...rest } = result.settings as unknown as Record<string, unknown> & { quality: Quality };
         setSettingsFull(rest);
-        setQuality(q ?? { kyc: 0, visits: 0, training: 0, pos: 0, csat: 0, checks: {} });
+        setMonthSaved(Boolean((result.settings as unknown as { saved?: boolean }).saved));
+        setQuality(q ?? { checks: {} });
       })
       .catch(() => {
         if (!cancelled) setQuality(null);
@@ -86,6 +91,10 @@ export default function LogPage() {
 
   async function toggleQuality(key: QualityKey) {
     if (!quality || !settingsFull || qualityBusy) return;
+    if (!monthSaved) {
+      setError("احفظ تارجت الشهر الأول قبل ما تعلّم الكواليتي");
+      return;
+    }
     const nextQuality: Quality = { ...quality, checks: { ...quality.checks, [key]: !quality.checks?.[key] } };
     setQuality(nextQuality);
     setQualityBusy(true);
@@ -94,6 +103,7 @@ export default function LogPage() {
         method: "PUT",
         body: JSON.stringify({ ...settingsFull, quality: nextQuality }),
       });
+      setMonthSaved(true);
       window.dispatchEvent(new Event("tys-data-changed"));
     } catch (err) {
       setQuality(quality);
@@ -212,7 +222,9 @@ export default function LogPage() {
 
       {KPI_CATALOG.filter((item) => item.key !== "quality" && !(item.key === "productivity" && (dashByKey.get("productivity")?.weight ?? 0) === 0)).map((item) => {
         const d = dashByKey.get(item.key);
-        const commission = d ? Math.round((d.contribution / 100) * (dash?.fullCommission ?? 0)) : 0;
+        // لو الإجمالي اتقص عند 200%، توزيع الكوميشن على المؤشرات بيتقص بنفس النسبة عشان الأرقام تتجمع صح.
+        const commissionScale = dash && dash.rawOverall && dash.rawOverall > dash.overall ? dash.overall / dash.rawOverall : 1;
+        const commission = d ? Math.round((d.contribution / 100) * (dash?.fullCommission ?? 0) * commissionScale) : 0;
         const excluded = !!d && d.weight > 0 && d.gated;
         const needToday = d && workLeft > 0 ? Math.ceil(Math.max(0, d.remaining) / workLeft) : 0;
         return (
@@ -270,7 +282,7 @@ export default function LogPage() {
             <p className="text-sm font-black">✅ الكواليتي (15%)</p>
             <p className="text-xs font-extrabold text-[#B94700]">{qualityScore}% من 15%</p>
           </div>
-          <p className="mb-3 text-[11px] text-[#556070]">علّم البند لو اتحقق بالكامل، والتغيير بيتحفظ فوراً.</p>
+          <p className="mb-3 text-[11px] text-[#556070]">{monthSaved ? "علّم البند لو اتحقق بالكامل، والتغيير بيتحفظ فوراً." : "⚠️ احفظ تارجت الشهر الأول من صفحة التارجت، وبعدين تقدر تعلّم الكواليتي."}</p>
           <div className="space-y-2">
             {QUALITY_ITEMS.map((item) => {
               const on = !!quality.checks?.[item.key];
@@ -278,7 +290,7 @@ export default function LogPage() {
                 <button
                   key={item.key}
                   type="button"
-                  disabled={qualityBusy}
+                  disabled={qualityBusy || !monthSaved}
                   aria-pressed={on}
                   onClick={() => toggleQuality(item.key)}
                   className="flex w-full items-center justify-between rounded-2xl border border-[#E8EDF4] bg-white px-3 py-2.5 text-right disabled:opacity-60"

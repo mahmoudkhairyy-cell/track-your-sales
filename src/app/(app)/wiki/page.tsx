@@ -107,21 +107,27 @@ function PlanBand({ title, big }: { title: string; big?: string }) {
   );
 }
 
-/** خانتين للسعر: الرقم المكتوب في الداتا بعد الضريبة، وقبل الضريبة = بعد × 0.7 (زي جدول FREEmax: NoTax = WithTax × 0.7). */
+/**
+ * السعر المكتوب في الداتا هو السعر بعد الضريبة (زي جدول FREEmax: NoTax = WithTax × 0.7).
+ * الرقم قبل الضريبة ده تقدير محسوب بالمعادلة دي، مش رقم رسمي من أورانج.
+ */
 function TwoPrice({ fees }: { fees: string }) {
   const after = parseFloat(fees);
   if (!Number.isFinite(after)) return <p className="font-extrabold text-[#B94700]">{fees}</p>;
   const before = Math.round(after * 0.7 * 100) / 100;
   return (
-    <div className="flex gap-2 text-center">
-      <div className="rounded-xl bg-[#FCEBDD] px-2.5 py-1.5">
-        <p className="text-[10px] font-bold text-[#556070]">قبل الضريبة</p>
-        <p className="font-extrabold text-[#B94700]">{before.toFixed(2)} جنيه</p>
+    <div className="space-y-1.5">
+      <div className="flex gap-2 text-center">
+        <div className="flex-1 rounded-xl bg-[#FCEBDD] px-2.5 py-1.5">
+          <p className="text-[11px] font-bold text-[#556070]">السعر المكتوب (بعد الضريبة)</p>
+          <p className="font-extrabold text-[#b84700]">{after.toFixed(2)} جنيه</p>
+        </div>
+        <div className="flex-1 rounded-xl bg-neutral-50 px-2.5 py-1.5">
+          <p className="text-[11px] font-bold text-[#556070]">تقدير قبل الضريبة</p>
+          <p className="font-extrabold text-neutral-700">{before.toFixed(2)} جنيه</p>
+        </div>
       </div>
-      <div className="rounded-xl bg-[#FCEBDD] px-2.5 py-1.5">
-        <p className="text-[10px] font-bold text-[#556070]">بعد الضريبة</p>
-        <p className="font-extrabold text-[#b84700]">{after.toFixed(2)} جنيه</p>
-      </div>
+      <p className="text-[11px] leading-5 text-[#556070]">التقدير = المكتوب × 0.7. ده حساب تقريبي مش رقم رسمي، والمرجع هو الأسعار المعتمدة من أورانج.</p>
     </div>
   );
 }

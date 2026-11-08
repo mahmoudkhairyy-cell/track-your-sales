@@ -58,11 +58,12 @@ type KpiRow = {
 
 type Holiday = { date: string; note: string | null };
 
-type QualityScores = { kyc: number; visits: number; training: number; pos: number; csat: number; checks?: Record<string, boolean> };
+/** الكواليتي = الـChecklist بس. الدرجات الرقمية القديمة بتتجاهل. */
+type QualityScores = { checks: Record<QualityNumKey, boolean> };
 
 type QualityNumKey = "kyc" | "visits" | "training" | "pos" | "csat";
 const QUALITY_WEIGHTS: Record<QualityNumKey, number> = { kyc: 5, visits: 5, training: 2, pos: 1, csat: 2 };
-const ZERO_QUALITY: QualityScores = { kyc: 0, visits: 0, training: 0, pos: 0, csat: 0 };
+const ZERO_QUALITY: QualityScores = { checks: { kyc: false, visits: false, training: false, pos: false, csat: false } };
 
 // نسبة تحقيق الكواليتي (0-100) = مجموع (نسبة كل بند × وزنه) ÷ مجموع الأوزان (15)
 function qualityPercent(q: QualityScores): number {
@@ -74,22 +75,23 @@ function qualityPercent(q: QualityScores): number {
   return (total / 15) * 100;
 }
 
+/** بيقبل الـchecks بس، والدرجات الرقمية القديمة (لو موجودة في بيانات محفوظة أو نسخة قديمة) بتتجاهل من غير خطأ. */
+function qualityFromChecks(checks: unknown): QualityScores {
+  const source = checks && typeof checks === "object" ? (checks as Record<string, unknown>) : {};
+  return {
+    checks: Object.fromEntries(
+      (Object.keys(QUALITY_WEIGHTS) as QualityNumKey[]).map((key) => [key, source[key] === true]),
+    ) as Record<QualityNumKey, boolean>,
+  };
+}
+
 function requireQuality(value: unknown): QualityScores {
   const row = (value && typeof value === "object" ? value : {}) as Record<string, unknown>;
-  const out: QualityScores = { ...ZERO_QUALITY };
-  for (const key of Object.keys(QUALITY_WEIGHTS) as QualityNumKey[]) {
-    const n = Number(row[key] ?? 0);
-    if (!Number.isFinite(n) || n < 0 || n > 100) fail(400, "نسب الكواليتي لازم تكون من 0 لـ 100");
-    out[key] = n;
-  }
-  const checks = row.checks && typeof row.checks === "object" ? (row.checks as Record<string, unknown>) : {};
-  out.checks = Object.fromEntries(Object.keys(QUALITY_WEIGHTS).map((key) => [key, checks[key] === true]));
-  return out;
+  return qualityFromChecks(row.checks);
 }
 
 type MonthRow = {
   fullCommission: number;
-  allowCommissionOver100: boolean;
   workingDays: WorkingDays;
   kpis: KpiRow[];
   holidays: Holiday[];
@@ -109,7 +111,6 @@ type Bundle = {
   saved: boolean;
   yearMonth: string;
   fullCommission: number;
-  allowCommissionOver100: boolean;
   workingDays: WorkingDays;
   kpis: KpiRow[];
   holidays: Holiday[];
@@ -266,7 +267,6 @@ function defaultBundle(yearMonth: string, role: Role): Bundle {
     saved: false,
     yearMonth,
     fullCommission: 0,
-    allowCommissionOver100: false,
     workingDays: { ...DEFAULT_WORKING_DAYS },
     kpis: KPI_CATALOG.map((kpi, index) => ({
       kpiKey: kpi.key,
@@ -276,7 +276,7 @@ function defaultBundle(yearMonth: string, role: Role): Bundle {
       sortOrder: index,
     })),
     holidays: [],
-    quality: { ...ZERO_QUALITY },
+    quality: { checks: { ...ZERO_QUALITY.checks } },
     monthSettingsId: null,
   };
 }
@@ -309,7 +309,6 @@ function prefillBundle(state: State, yearMonth: string, role: Role): Bundle {
     ...base,
     holidays,
     fullCommission: prev.fullCommission,
-    allowCommissionOver100: prev.allowCommissionOver100,
     kpis: base.kpis.map((kpi) => {
       const old = prevMap.get(kpi.kpiKey);
       return old && kpi.kpiKey !== "new_orange_cash" ? { ...kpi, target: old.target } : kpi;
@@ -345,11 +344,10 @@ function loadBundle(state: State, yearMonth: string): Bundle {
     saved: true,
     yearMonth,
     fullCommission: row.fullCommission,
-    allowCommissionOver100: row.allowCommissionOver100,
     workingDays: { ...DEFAULT_WORKING_DAYS },
     kpis,
     holidays: [...row.holidays].sort((a, b) => a.date.localeCompare(b.date)),
-    quality: row.quality ? { ...row.quality } : { ...ZERO_QUALITY },
+    quality: row.quality ? qualityFromChecks(row.quality.checks) : { checks: { ...ZERO_QUALITY.checks } },
     monthSettingsId: null,
   };
 }
@@ -437,7 +435,6 @@ function putMonth(state: State, yearMonth: string, data: Record<string, unknown>
   if (!Number.isFinite(fullCommission) || fullCommission < 0) {
     fail(400, "الكوميشن الكامل لازم يكون رقم صفر أو أكبر");
   }
-  const allowCommissionOver100 = Boolean(data.allowCommissionOver100);
   const workingDays = requireWorkingDays(data.workingDays);
   if (!Array.isArray(data.kpis)) fail(400, "الإيتمز ناقصة");
   if (!Array.isArray(data.holidays)) fail(400, "قائمة الإجازات ناقصة");
@@ -478,8 +475,18 @@ function putMonth(state: State, yearMonth: string, data: Record<string, unknown>
     fail(400, "فيه تاريخ إجازة متكرر");
   }
 
-  const quality = requireQuality(data.quality);
-  state.months[yearMonth] = { fullCommission, allowCommissionOver100, workingDays, kpis, holidays, quality };
+  // لو الطلب ما بعتش كواليتي، بنحتفظ بالقديم. ولو بعت، بنقبل الـchecks بس.
+  const quality =
+    data.quality === undefined
+      ? state.months[yearMonth]?.quality ?? qualityFromChecks(undefined)
+      : requireQuality(data.quality);
+  // قفل الترتيب: الكواليتي ماتتعلمش قبل ما التارجت الشهري يتحفظ أول مرة.
+  // حفظ التارجت نفسه (من غير أي بند متعلّم) مسموح، وده اللي بيعمل الحفظ الأول.
+  const hasChecks = Object.values(quality.checks).some(Boolean);
+  if (!state.months[yearMonth] && hasChecks) {
+    fail(409, "احفظ تارجت الشهر الأول قبل ما تعلّم بنود الكواليتي");
+  }
+  state.months[yearMonth] = { fullCommission, workingDays, kpis, holidays, quality };
   const bundle = loadBundle(state, yearMonth);
   return {
     message: "✅ إعدادات الشهر اتحفظت",
@@ -563,7 +570,7 @@ function getDashboard(state: State, params: URLSearchParams) {
   const rules = applyCompanyRules(
     bundle.kpis.map((kpi) => ({ ...kpi, achieved: achievedTyped[kpi.kpiKey] ?? 0 })),
   );
-  const overall = rules.total;
+  const overall = rules.total; // سقف 200% على الإجمالي بس، والمؤشرات الفردية بدون سقف
   const commission = rules.belowOverall
     ? 0
     : estimatedCommission(bundle.fullCommission, overall);
@@ -605,13 +612,13 @@ function getDashboard(state: State, params: URLSearchParams) {
   });
 
   return {
+    rawOverall: rules.rawTotal,
     profile: { name: state.profile.name, branch: state.profile.branch, role: state.profile.role, areaManager: state.profile.areaManager ?? "" },
     yearMonth,
     monthLabel: monthLabelAr(yearMonth),
     today,
     settingsSaved: bundle.saved,
     fullCommission: bundle.fullCommission,
-    allowCommissionOver100: bundle.allowCommissionOver100,
     workingDays: bundle.workingDays,
     holidays: bundle.holidays,
     quality: bundle.quality,
@@ -635,11 +642,10 @@ function exportBackup(state: State) {
   const months = Object.entries(state.months).map(([yearMonth, row]) => ({
     yearMonth,
     fullCommission: row.fullCommission,
-    allowCommissionOver100: row.allowCommissionOver100,
     workingDays: { ...(row.workingDays ?? DEFAULT_WORKING_DAYS) },
     kpis: loadBundle(state, yearMonth).kpis,
     holidays: row.holidays.map((item) => ({ date: item.date, note: item.note })),
-    quality: row.quality ? { ...row.quality } : undefined,
+    quality: row.quality ? { checks: { ...row.quality.checks } } : undefined,
   }));
   const isEmpty = months.length === 0 && state.entries.length === 0 && state.articles.length === 0;
   const backup = {
@@ -712,11 +718,10 @@ function restoreBackup(state: State, data: Record<string, unknown>) {
   for (const month of backup.months) {
     state.months[month.yearMonth] = {
       fullCommission: month.fullCommission,
-      allowCommissionOver100: month.allowCommissionOver100,
       workingDays: month.workingDays,
       kpis: month.kpis.map((kpi, index) => ({ ...kpi, sortOrder: kpi.sortOrder ?? index })),
       holidays: month.holidays.map((item) => ({ date: item.date, note: item.note })),
-      quality: month.quality ? { ...month.quality } : state.months[month.yearMonth]?.quality,
+      quality: month.quality ? qualityFromChecks(month.quality.checks) : state.months[month.yearMonth]?.quality,
     };
   }
 
