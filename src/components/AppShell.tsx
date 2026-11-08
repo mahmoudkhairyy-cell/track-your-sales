@@ -171,12 +171,20 @@ function FirstRunProfile({ onDone }: { onDone: () => void }) {
   }
 
   return (
-    <div className="tys-login-screen flex min-h-screen items-center justify-center bg-[radial-gradient(ellipse_at_top_right,_#fff0e2_0%,_#fffaf5_55%,_#fff_100%)] p-4 text-[#241f1b]">
-      <form onSubmit={submit} className="tys-login-card w-full max-w-sm rounded-[28px] border border-[#f2e4d8] border-t-4 border-t-[#e96812] bg-white p-6 shadow-[0_20px_50px_rgba(23,32,51,0.08)]" dir="rtl">
-        <div className="mb-5 text-center">
-          <img src="/track-your-sales/logo-mark.png" alt="" className="mx-auto h-16 w-16 object-contain" />
-          <h1 className="mt-2 text-xl font-black text-[#241f1b]">أهلاً بيك في {APP_NAME}</h1>
-          <p className="mt-1 text-sm leading-6 text-[#88796e]">خلّينا نجهّز مساحة شغلك ببياناتك الأساسية</p>
+    <div className="tys-login-screen flex min-h-screen items-center justify-center p-4 text-[#241f1b]">
+      <div className="tys-login-layout" dir="rtl">
+        <aside className="tys-login-intro">
+          <span className="tys-login-kicker">YOUR SALES WORKSPACE</span>
+          <img src="/track-your-sales/logo-full.png" alt="Track Your Sales" className="tys-login-brand" />
+          <h2>كل إنجازاتك،<br/><span>في مكان واحد.</span></h2>
+          <p>مساحة شغلك لمتابعة التارجت وتسجيل الإنجازات ومراجعة أدائك بشكل أوضح.</p>
+          <div className="tys-login-intro-foot"><span></span> TRACK YOUR SALES · ORANGE</div>
+        </aside>
+        <form onSubmit={submit} className="tys-login-card" dir="rtl">
+        <div className="tys-login-heading">
+          <span className="tys-login-step">{review ? "الخطوة الأخيرة" : "إعداد حسابك"}</span>
+          <h1>{review ? "راجع بياناتك" : "ابدأ رحلتك"}</h1>
+          <p>{review ? "اتأكد إن كل البيانات صحيحة قبل التأكيد." : "بيانات بسيطة ونجهّز لك مساحة العمل."}</p>
         </div>
         {review ? (
           <div className="mb-4 space-y-2 rounded-2xl border border-[#f2e4d8] bg-[#fffdfb] p-4 text-sm text-[#514238]">
@@ -253,7 +261,8 @@ function FirstRunProfile({ onDone }: { onDone: () => void }) {
             كمّل
           </button>
         )}
-      </form>
+        </form>
+      </div>
     </div>
   );
 }
