@@ -47,11 +47,11 @@ function MonthSwitcher() {
   }
 
   return (
-    <div className="flex items-center gap-1 rounded-full bg-neutral-100 p-1">
+    <div className="flex items-center gap-1 rounded-full border border-[#f2e4d8] bg-[#fff6ed] p-1 shadow-sm">
       <button
         type="button"
         onClick={() => go(shiftYearMonth(month, -1))}
-        className="flex h-9 w-9 rotate-180 items-center justify-center rounded-full bg-white text-[#B94700] shadow-[0_2px_6px_rgba(40,20,0,0.12)] active:scale-95"
+        className="flex h-9 w-9 rotate-180 items-center justify-center rounded-full bg-white text-[#bd4b0a] shadow-[0_2px_8px_rgba(115,58,20,0.10)] ring-1 ring-[#f2e4d8] transition active:scale-95"
         aria-label="الشهر السابق"
       >
         <ChevronIcon width={18} height={18} strokeWidth={2.6} />
@@ -62,7 +62,7 @@ function MonthSwitcher() {
       <button
         type="button"
         onClick={() => go(shiftYearMonth(month, 1))}
-        className="flex h-9 w-9 items-center justify-center rounded-full bg-white text-[#B94700] shadow-[0_2px_6px_rgba(40,20,0,0.12)] active:scale-95"
+        className="flex h-9 w-9 items-center justify-center rounded-full bg-white text-[#bd4b0a] shadow-[0_2px_8px_rgba(115,58,20,0.10)] ring-1 ring-[#f2e4d8] transition active:scale-95"
         aria-label="الشهر التالي"
       >
         <ChevronIcon width={18} height={18} strokeWidth={2.6} />
@@ -372,17 +372,17 @@ function AppFrame({ children, blocked, month }: { children: ReactNode; blocked: 
     <ToastProvider>
       <StorageErrorListener />
       <MonthContext.Provider value={month}>
-        <div className={`min-h-screen text-neutral-900 bg-[#F5F8FC]`}>
-          <div className="h-1.5 bg-[#D95B00]" />
+        <div className="min-h-screen bg-[#fffaf5] text-[#241f1b]">
+          <div className="h-1.5 bg-gradient-to-l from-[#bd4b0a] via-[#e96812] to-[#ffb15f]" />
           <div className="mx-auto flex min-h-screen max-w-7xl">
-            <aside className="hidden w-72 shrink-0 flex-col border-l border-[#F3D2B5] bg-white p-5 lg:flex">
+            <aside className="hidden w-72 shrink-0 flex-col border-l border-[#f2e4d8] bg-[#fffdfb] p-5 shadow-[8px_0_36px_rgba(115,58,20,0.035)] lg:flex">
               <div className="flex items-center gap-3">
                 <div>
                   <p className="text-base font-black text-neutral-900" dir="ltr">{APP_NAME}</p>
                   <p className="text-xs text-neutral-400" dir="ltr">{BRAND_BY}</p>
                 </div>
               </div>
-              <div className="mt-6 rounded-3xl bg-[#D95B00] p-4 text-white">
+              <div className="relative mt-6 overflow-hidden rounded-[26px] bg-gradient-to-br from-[#bd4b0a] via-[#e96812] to-[#ff9d38] p-5 text-white shadow-[0_16px_34px_rgba(189,75,10,0.22)]">
                 <p className="text-sm font-extrabold">{user.name}</p>
                 <p className="text-xs text-white/80">📍 {user.branch}</p>
               </div>
@@ -393,7 +393,7 @@ function AppFrame({ children, blocked, month }: { children: ReactNode; blocked: 
             </aside>
 
             <div className="flex min-w-0 flex-1 flex-col">
-              <header className="sticky top-0 z-30 border-b border-[#E8EDF4] bg-white/95 px-4 py-3 backdrop-blur">
+              <header className="sticky top-0 z-30 border-b border-[#f2e4d8] bg-[#fffdfb]/90 px-4 py-3 shadow-[0_4px_20px_rgba(115,58,20,0.035)] backdrop-blur-xl">
                 <div className="flex items-center justify-between gap-2">
                   <MonthSwitcher />
                   <div className="flex min-w-0 items-center gap-2">
@@ -404,14 +404,14 @@ function AppFrame({ children, blocked, month }: { children: ReactNode; blocked: 
                   </div>
                 </div>
               </header>
-              <main className="flex-1 px-4 py-5 pb-28 lg:px-8 lg:pb-10">
+              <main className="flex-1 px-4 py-5 pb-28 lg:px-8 lg:py-7 lg:pb-10">
                 {blocked ? <TargetGate month={month} /> : children}
               </main>
               <footer className="hidden px-8 pb-6 text-xs leading-6 text-neutral-400 lg:block">{APP_DISCLAIMER}</footer>
             </div>
           </div>
 
-          <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-[#E8EDF4] bg-white/95 pb-[env(safe-area-inset-bottom)] shadow-[0_-4px_16px_rgba(23,32,51,0.04)] backdrop-blur lg:hidden">
+          <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-[#f2e4d8] bg-[#fffdfb]/95 pb-[env(safe-area-inset-bottom)] shadow-[0_-10px_30px_rgba(115,58,20,0.09)] backdrop-blur-xl lg:hidden">
             <div className="grid grid-cols-5">
               {NAV.map((item) => {
                 const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
@@ -426,7 +426,7 @@ function AppFrame({ children, blocked, month }: { children: ReactNode; blocked: 
                   >
                     <span
                       className={`flex h-10 w-16 items-center justify-center rounded-full transition ${
-                        item.emphasize ? "h-11 w-11 bg-gradient-to-br from-[#D95B00] to-[#E87518] text-white shadow-sm" : active ? "bg-[#FCEBDD] text-[#D95B00]" : ""
+                        item.emphasize ? "h-11 w-11 bg-gradient-to-br from-[#bd4b0a] to-[#ff9d38] text-white shadow-[0_7px_18px_rgba(217,104,18,0.28)] ring-4 ring-[#fff0e2]" : active ? "bg-[#fff0e2] text-[#bd4b0a]" : ""
                       }`}
                     >
                       <Icon />
