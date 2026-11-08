@@ -142,17 +142,26 @@ export default function HomePage() {
         </p>
       ) : null}
 
-      <section className="flex flex-col gap-1">
-        <h1 className="text-lg font-black text-[#1a1b1e]">
-          {greeting()} {data.profile.name.split(" ")[0]} 👋
-        </h1>
-        <p className="text-[11px] text-[#584235]">📍 {data.profile.branch}</p>
+      <section className="flex items-center justify-between gap-3">
+        <div className="flex min-w-0 items-center gap-3">
+          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-[#D95B00] to-[#B94700] text-base font-black text-white shadow-[0_10px_20px_-10px_rgba(217,91,0,0.7)]">
+            {data.profile.name.trim().charAt(0) || "؟"}
+          </div>
+          <div className="min-w-0">
+            <h1 className="truncate text-lg font-black text-[#172033]">
+              {greeting()} {data.profile.name.split(" ")[0]} 👋
+            </h1>
+            <p className="truncate text-[11px] font-bold text-[#556070]">📍 {data.profile.branch}</p>
+          </div>
+        </div>
+        <span className="shrink-0 rounded-full bg-white px-2.5 py-1 text-[10px] font-black text-[#B94700] shadow-sm ring-1 ring-[#F1E4D8]">{data.monthLabel}</span>
       </section>
 
-      {/* الهيرو */}
-      <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#B94700] via-[#D95B00] to-[#8A3400] p-3 text-white shadow-[0_14px_30px_-10px_rgba(138,52,0,0.55)]">
-        
-        <div className="relative z-10 flex flex-col gap-2">
+      {/* الهيرو: داشبورد الشهر */}
+      <section className="relative overflow-hidden rounded-[28px] bg-gradient-to-br from-[#B94700] via-[#D95B00] to-[#8A3400] p-4 text-white shadow-[0_20px_40px_-18px_rgba(138,52,0,0.6)]">
+        <div className="pointer-events-none absolute -left-12 -top-12 h-44 w-44 rounded-full bg-white/10" />
+        <div className="pointer-events-none absolute -bottom-14 -right-10 h-40 w-40 rounded-full bg-[#55B8F5]/20" />
+        <div className="relative z-10 flex flex-col gap-4">
           <div className="flex items-center justify-between">
             <span className="flex items-center gap-2 text-xs font-bold text-white/90">
               <span
@@ -166,8 +175,8 @@ export default function HomePage() {
               Live Run
             </span>
           </div>
-          <div className="flex items-center gap-3">
-            <div className="relative h-20 w-20 shrink-0">
+          <div className="flex items-center gap-4">
+            <div className="relative h-24 w-24 shrink-0">
               <svg viewBox="0 0 120 120" className="h-full w-full -rotate-90">
                 <circle cx="60" cy="60" r="50" fill="none" stroke="rgba(255,255,255,0.28)" strokeWidth="10" />
                 <circle
@@ -194,36 +203,27 @@ export default function HomePage() {
               <p className="text-xs font-bold leading-5">{overallLine()}</p>
             </div>
           </div>
-          <div className="grid grid-cols-2 gap-2 border-t border-white/25 pt-3">
-            <div className="flex flex-col rounded-2xl bg-white/15 p-3">
-              <span className="text-[11px] font-medium text-white/85">{gap > 0 ? "المتبقي للهدف" : "الحالة"}</span>
-              <span className="mt-1 font-mono text-base font-black">{gap > 0 ? `${formatPercent(gap)}%` : "قفلت الشهر ✅"}</span>
+          <div className="grid grid-cols-3 gap-2 border-t border-white/25 pt-3">
+            <div className="flex flex-col rounded-2xl bg-white/15 p-2.5 ring-1 ring-white/20">
+              <span className="text-[10px] font-medium text-white/85">{gap > 0 ? "المتبقي للهدف" : "الحالة"}</span>
+              <span className="mt-1 font-mono text-sm font-black">{gap > 0 ? `${formatPercent(gap)}%` : "قفلت ✅"}</span>
             </div>
-            <div className="flex flex-col rounded-2xl bg-white/15 p-3">
-              <span className="text-[11px] font-medium text-white/85">الكوميشن المتوقع</span>
-              <span className="mt-1 font-mono text-base font-black">
-                {formatMoney(data.estimatedCommission)} <span className="text-[10px] font-bold text-white/80">من {formatMoney(data.fullCommission)} ج.م</span>
-              </span>
+            <div className="flex flex-col rounded-2xl bg-white/15 p-2.5 ring-1 ring-white/20">
+              <span className="text-[10px] font-medium text-white/85">الكوميشن المتوقع</span>
+              <span className="mt-1 font-mono text-sm font-black">{formatMoney(data.estimatedCommission)}</span>
+              <span className="text-[9px] font-bold text-white/75">من {formatMoney(data.fullCommission)} ج.م</span>
+            </div>
+            <div className="flex flex-col rounded-2xl bg-white/15 p-2.5 ring-1 ring-white/20">
+              <span className="text-[10px] font-medium text-white/85">المطلوب يوميًا</span>
+              <span className="mt-1 font-mono text-sm font-black">{data.pace.perDay === null ? "—" : formatQty(Math.ceil(data.pace.perDay))}</span>
+              <span className="text-[9px] font-bold text-white/75">{data.pace.perDay === null ? "" : linesWord(Math.ceil(data.pace.perDay)) + " / يوم"}</span>
             </div>
           </div>
+          <div className="rounded-2xl bg-black/10 px-3 py-2">
+            <p className="text-[11px] font-black text-white">المطلوب انهاردة عشان تفضل On Track</p>
+            <p className="mt-0.5 text-[11px] font-medium leading-5 text-white/85">{data.pace.message}</p>
+          </div>
           {sarcastic ? <p className="text-xs font-bold text-white/85">{sarcastic}</p> : null}
-        </div>
-      </section>
-
-
-
-      {/* المطلوب انهاردة */}
-      <section className="flex items-stretch overflow-hidden rounded-2xl border border-[#F3D2B5]/80 bg-white shadow-[0_10px_30px_-18px_rgba(23,32,51,0.28)]">
-        <div className="flex w-24 shrink-0 flex-col items-center justify-center bg-gradient-to-br from-[#D95B00] to-[#B94700] px-2 py-3 text-white">
-          <span className="font-mono text-3xl font-black leading-none">{data.pace.perDay === null ? "—" : formatQty(Math.ceil(data.pace.perDay))}</span>
-          <span className="mt-1 text-[10px] font-bold text-[#FCEBDD]">{data.pace.perDay === null ? "" : linesWord(Math.ceil(data.pace.perDay)) + " / يوم"}</span>
-        </div>
-        <div className="flex min-w-0 flex-1 flex-col justify-center gap-1 p-3.5">
-          <span className="flex items-center gap-1.5 text-xs font-black text-slate-900">
-            <span className="h-1.5 w-1.5 rounded-full bg-[#D95B00]" />
-            المطلوب انهاردة عشان تفضل On Track
-          </span>
-          <span className="text-[11px] font-semibold leading-relaxed text-slate-600">{data.pace.message}</span>
         </div>
       </section>
 
