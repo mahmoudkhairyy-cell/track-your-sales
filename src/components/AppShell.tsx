@@ -372,19 +372,22 @@ function AppFrame({ children, blocked, month }: { children: ReactNode; blocked: 
     <ToastProvider>
       <StorageErrorListener />
       <MonthContext.Provider value={month}>
-        <div className="min-h-screen bg-[#fffaf5] text-[#241f1b]">
+        <div className="min-h-screen bg-[#fffaf5] text-[#2d2119]">
           <div className="h-1.5 bg-gradient-to-l from-[#bd4b0a] via-[#e96812] to-[#ffb15f]" />
           <div className="mx-auto flex min-h-screen max-w-7xl">
-            <aside className="hidden w-72 shrink-0 flex-col border-l border-[#f2e4d8] bg-[#fffdfb] p-5 shadow-[8px_0_36px_rgba(115,58,20,0.035)] lg:flex">
-              <div className="flex items-center gap-3">
-                <div>
-                  <p className="text-base font-black text-neutral-900" dir="ltr">{APP_NAME}</p>
-                  <p className="text-xs text-neutral-400" dir="ltr">{BRAND_BY}</p>
+            <aside className="sticky top-0 hidden h-screen w-[292px] shrink-0 flex-col border-l border-[#f1dfd0] bg-[#fff8f1] p-5 lg:flex">
+              <div className="flex items-center gap-3 rounded-[24px] border border-[#f4dfcd] bg-white p-3 shadow-[0_12px_28px_rgba(126,65,24,0.06)]">
+                <img src="/track-your-sales/logo-mark.png" alt="" className="h-12 w-12 shrink-0 object-contain" />
+                <div className="min-w-0">
+                  <p className="truncate text-[15px] font-black tracking-tight text-[#2d2119]" dir="ltr">{APP_NAME}</p>
+                  <p className="mt-1 text-[10px] font-bold text-[#b76a3b]" dir="ltr">SALES PERFORMANCE SPACE</p>
                 </div>
               </div>
-              <div className="relative mt-6 overflow-hidden rounded-[26px] bg-gradient-to-br from-[#bd4b0a] via-[#e96812] to-[#ff9d38] p-5 text-white shadow-[0_16px_34px_rgba(189,75,10,0.22)]">
-                <p className="text-sm font-extrabold">{user.name}</p>
-                <p className="text-xs text-white/80">📍 {user.branch}</p>
+              <div className="relative mt-5 overflow-hidden rounded-[26px] bg-[#2d2119] p-4 text-white shadow-[0_16px_34px_rgba(75,42,20,0.13)]">
+                <div className="absolute -left-7 -top-8 h-24 w-24 rounded-full bg-[#e96812]/30 blur-xl" />
+                <p className="relative text-[10px] font-bold tracking-wider text-[#ffc18f]">مساحة العمل</p>
+                <p className="relative mt-2 text-base font-black">{user.name || "أهلاً بيك"}</p>
+                <p className="relative mt-1 text-xs text-white/65">📍 {user.branch || "فرعك"}</p>
               </div>
               <nav className="mt-6 flex flex-col gap-1">
                 <NavLinks pathname={pathname} month={month} />
@@ -393,18 +396,23 @@ function AppFrame({ children, blocked, month }: { children: ReactNode; blocked: 
             </aside>
 
             <div className="flex min-w-0 flex-1 flex-col">
-              <header className="sticky top-0 z-30 border-b border-[#f2e4d8] bg-[#fffdfb]/90 px-4 py-3 shadow-[0_4px_20px_rgba(115,58,20,0.035)] backdrop-blur-xl">
-                <div className="flex items-center justify-between gap-2">
-                  <MonthSwitcher />
-                  <div className="flex min-w-0 items-center gap-2">
-                    <div className="min-w-0 text-left">
-                      <p className="truncate text-sm font-black leading-none text-[#241f1b]" dir="ltr">{APP_NAME}</p>
-                      <p className="mt-1 truncate text-[11px] text-[#88796e]" dir="ltr">{BRAND_BY}</p>
+              <header className="sticky top-0 z-30 border-b border-[#f1dfd0]/80 bg-[#fffaf5]/90 px-4 py-3 backdrop-blur-2xl lg:px-8">
+                <div className="mx-auto flex max-w-6xl items-center justify-between gap-3">
+                  <div className="flex min-w-0 items-center gap-2.5 lg:hidden">
+                    <img src="/track-your-sales/logo-mark.png" alt="" className="h-9 w-9 shrink-0 object-contain" />
+                    <div className="min-w-0">
+                      <p className="truncate text-xs font-black text-[#2d2119]" dir="ltr">{APP_NAME}</p>
+                      <p className="truncate text-[9px] font-semibold text-[#a17d65]">{user.name || "مساحة متابعة المبيعات"}</p>
                     </div>
                   </div>
+                  <div className="hidden min-w-0 lg:block">
+                    <p className="text-sm font-black text-[#2d2119]">{pathname === "/home" ? "لوحة الأداء" : NAV.find((item) => pathname.startsWith(item.href))?.label || "مساحة العمل"}</p>
+                    <p className="mt-1 text-[11px] text-[#a17d65]">تابع إنجازك وخطتك الشهرية من مكان واحد</p>
+                  </div>
+                  <MonthSwitcher />
                 </div>
               </header>
-              <main className="flex-1 px-4 py-5 pb-28 lg:px-8 lg:py-7 lg:pb-10">
+              <main className="flex-1 bg-[radial-gradient(ellipse_at_top_right,_rgba(255,220,190,0.22),_transparent_34rem)] px-4 py-5 pb-28 lg:px-8 lg:py-8 lg:pb-10">
                 {blocked ? <TargetGate month={month} /> : children}
               </main>
               <footer className="hidden px-8 pb-6 text-xs leading-6 text-neutral-400 lg:block">{APP_DISCLAIMER}</footer>

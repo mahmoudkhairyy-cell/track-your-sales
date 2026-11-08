@@ -124,7 +124,7 @@ export default function HomePage() {
   const sarcastic = sarcasticLine(data.overall);
 
   return (
-    <div className="flex min-h-screen flex-col gap-4 bg-[#fffaf5] pb-28">
+    <div className="mx-auto flex min-h-screen w-full max-w-6xl flex-col gap-5 pb-28">
       {sync ? (
         <p className={`text-[11px] font-bold ${sync.ok ? "text-emerald-700" : "text-red-600"}`} dir="rtl">
           {sync.ok
@@ -133,17 +133,23 @@ export default function HomePage() {
         </p>
       ) : null}
 
-      <section className="flex flex-col gap-1">
-        <h1 className="text-lg font-black text-[#241f1b]">
-          {greeting()} {data.profile.name.split(" ")[0]} 👋
-        </h1>
-        <p className="text-[11px] text-[#88796e]">📍 {data.profile.branch}</p>
+      <section className="flex items-end justify-between gap-3 rounded-[26px] border border-[#f2e2d4] bg-white/80 px-4 py-4 shadow-[0_10px_30px_rgba(100,55,25,0.045)] sm:px-5">
+        <div className="min-w-0">
+          <p className="text-[10px] font-black tracking-[0.16em] text-[#d66a27]">YOUR SALES OVERVIEW</p>
+          <h1 className="mt-1 text-xl font-black tracking-tight text-[#2d2119] sm:text-2xl">
+            {greeting()} {data.profile.name.split(" ")[0]} 👋
+          </h1>
+          <p className="mt-1 text-xs font-semibold text-[#9a7e6b]">📍 {data.profile.branch}</p>
+        </div>
+        <div className="hidden h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#fff0e2] text-2xl sm:flex">📈</div>
       </section>
 
       {/* الهيرو */}
-      <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#a94308] via-[#e96812] to-[#bd4b0a] p-3 text-white shadow-[0_14px_30px_-10px_rgba(189,75,10,0.24)]">
+      <section className="relative isolate overflow-hidden rounded-[30px] bg-gradient-to-br from-[#9f3f08] via-[#d95b0b] to-[#f28a32] p-4 text-white shadow-[0_24px_55px_-24px_rgba(145,61,13,0.55)] sm:p-6">
         
-        <div className="relative z-10 flex flex-col gap-2">
+        <div className="pointer-events-none absolute -left-12 -top-16 h-52 w-52 rounded-full border-[28px] border-white/5" />
+        <div className="pointer-events-none absolute -bottom-24 right-1/3 h-52 w-52 rounded-full bg-[#ffb66f]/15 blur-3xl" />
+        <div className="relative z-10 flex flex-col gap-4">
           <div className="flex items-center justify-between">
             <span className="flex items-center gap-2 text-xs font-bold text-white/90">
               <span
@@ -159,7 +165,7 @@ export default function HomePage() {
             </span>
           </div>
           <div className="flex items-center gap-3">
-            <div className="relative h-20 w-20 shrink-0">
+            <div className="relative h-24 w-24 shrink-0 sm:h-28 sm:w-28">
               <svg viewBox="0 0 120 120" className="h-full w-full -rotate-90">
                 <circle cx="60" cy="60" r="50" fill="none" stroke="rgba(255,255,255,0.28)" strokeWidth="10" />
                 <circle
@@ -186,7 +192,7 @@ export default function HomePage() {
               <p className="text-xs font-bold leading-5">{overallLine()}</p>
             </div>
           </div>
-          <div className="grid grid-cols-2 gap-2 border-t border-white/25 pt-3">
+          <div className="grid grid-cols-2 gap-2.5 border-t border-white/20 pt-4 sm:gap-3">
             <div className="flex flex-col rounded-2xl bg-[#fffdfb]/15 p-3">
               <span className="text-[11px] font-medium text-white/85">{gap > 0 ? "المتبقي للهدف" : "الحالة"}</span>
               <span className="mt-1 font-mono text-base font-black">{gap > 0 ? `${formatPercent(gap)}%` : "قفلت الشهر ✅"}</span>
@@ -205,8 +211,8 @@ export default function HomePage() {
 
 
       {/* المطلوب انهاردة */}
-      <section className="flex items-stretch overflow-hidden rounded-2xl border border-[#F3D2B5]/80 bg-[#fffdfb] shadow-sm">
-        <div className="flex w-24 shrink-0 flex-col items-center justify-center bg-gradient-to-br from-[#D95B00] to-[#B94700] px-2 py-3 text-white">
+      <section className="flex items-stretch overflow-hidden rounded-[26px] border border-[#f1dfd0] bg-white shadow-[0_12px_28px_rgba(100,55,25,0.05)]">
+        <div className="flex w-28 shrink-0 flex-col items-center justify-center bg-gradient-to-br from-[#a94308] to-[#e96812] px-3 py-4 text-white">
           <span className="font-mono text-3xl font-black leading-none">{data.pace.perDay === null ? "—" : formatQty(Math.ceil(data.pace.perDay))}</span>
           <span className="mt-1 text-[10px] font-bold text-[#FCEBDD]">{data.pace.perDay === null ? "" : linesWord(Math.ceil(data.pace.perDay)) + " / يوم"}</span>
         </div>
@@ -220,19 +226,19 @@ export default function HomePage() {
       </section>
 
       {/* نسبة الإنجاز بالمحاور */}
-      <section className="flex flex-col gap-2">
+      <section className="flex flex-col gap-3 rounded-[26px] border border-[#f1dfd0] bg-white/70 p-4 shadow-[0_12px_28px_rgba(100,55,25,0.04)]">
         <div className="flex items-center justify-between">
-          <h2 className="flex items-center gap-1.5 text-xs font-black uppercase tracking-wide text-slate-800">
+          <h2 className="flex items-center gap-1.5 text-sm font-black tracking-tight text-[#38291f]">
             <span>نسبة الإنجاز بالمحاور</span>
             <span className="rounded border border-[#F3D2B5] bg-[#fff0e2] px-1.5 text-[11px] font-bold text-[#bd4b0a]">{data.kpis.length} مؤشرات</span>
           </h2>
           <span className="text-[11px] font-bold text-slate-500">اسحب ←</span>
         </div>
-        <div className="no-scrollbar flex gap-2.5 overflow-x-auto pb-1 pt-0.5">
+        <div className="no-scrollbar flex gap-3 overflow-x-auto pb-1 pt-0.5">
           {data.kpis.map((kpi) => {
             const ok = kpi.achieved >= kpi.expectedToDate;
             return (
-              <div key={kpi.kpiKey} className="flex w-24 shrink-0 flex-col items-center rounded-2xl border border-slate-200/80 bg-[#fffdfb] p-2.5 text-center shadow-sm">
+              <div key={kpi.kpiKey} className="flex w-[104px] shrink-0 flex-col items-center rounded-[22px] border border-[#f1dfd0] bg-[#fffaf5] p-3 text-center shadow-[0_5px_16px_rgba(100,55,25,0.045)]">
                 <div className={`flex h-10 w-10 items-center justify-center rounded-full border-2 font-mono text-xs font-black ${ok ? "border-emerald-500 text-emerald-700" : "border-red-500 text-red-700"}`}>
                   {Math.round(kpi.percent)}%
                 </div>
@@ -245,31 +251,31 @@ export default function HomePage() {
       </section>
 
       {/* إجراءات سريعة (صفحات موجودة بس) */}
-      <section className="grid grid-cols-3 gap-2">
+      <section className="grid grid-cols-3 gap-2.5">
         {[
           { href: "/log/", label: "تسجيل بيعة" },
           { href: "/target/", label: "التارجت" },
           { href: "/wiki/", label: "المرجع" },
         ].map((item) => (
-          <Link key={item.href} href={`${item.href}?month=${month}`} className="rounded-2xl border border-[#f2e4d8] bg-[#fffdfb] px-3 py-3 text-center text-xs font-extrabold text-[#172033] shadow-sm transition-transform active:scale-95">
+          <Link key={item.href} href={`${item.href}?month=${month}`} className="rounded-[20px] border border-[#f1dfd0] bg-white px-2 py-4 text-center text-xs font-extrabold text-[#63391f] shadow-[0_8px_20px_rgba(100,55,25,0.05)] transition-all hover:-translate-y-0.5 hover:border-[#e8b58f] active:scale-95">
             {item.label}
           </Link>
         ))}
       </section>
 
       {/* المؤشرات */}
-      <section className="flex flex-col gap-2">
+      <section className="flex flex-col gap-3 rounded-[28px] border border-[#f1dfd0] bg-white/75 p-4 shadow-[0_12px_30px_rgba(100,55,25,0.04)] sm:p-5">
         <div className="flex items-center justify-between">
-          <h2 className="text-sm font-black text-[#172033]">مؤشرات الأداء (KPIs)</h2>
+          <h2 className="text-base font-black tracking-tight text-[#38291f]">مؤشرات الأداء (KPIs)</h2>
           <span className="text-[11px] font-bold text-[#556070]">{data.kpis.length} مؤشر</span>
         </div>
-        <div className="flex flex-col gap-2">
-          {data.kpis.map((kpi) => {
+        <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
+          {data.kpis.map((kpi) => {}
             const onTrackKpi = kpi.achieved >= kpi.expectedToDate;
             const ringLen = 2 * Math.PI * 18;
             const pct = Math.min(100, Math.max(0, kpi.percent));
             return (
-              <article key={kpi.kpiKey} className={`flex items-center gap-3 rounded-2xl border bg-[#fffdfb] p-4 transition-shadow duration-700 ${onTrackKpi ? "border-emerald-300 shadow-[0_0_18px_rgba(16,185,129,0.45)]" : "border-red-300 shadow-[0_0_18px_rgba(220,38,38,0.45)]"}`}>
+              <article key={kpi.kpiKey} className={`flex min-w-0 items-center gap-3 rounded-[22px] border bg-white p-3.5 transition-all duration-300 ${onTrackKpi ? "border-emerald-200 shadow-[0_8px_22px_rgba(16,185,129,0.07)]" : "border-[#f0d8c8] shadow-[0_8px_22px_rgba(145,61,13,0.055)]"}`}>
                 <div className="relative h-14 w-14 shrink-0">
                   <svg viewBox="0 0 44 44" className="h-full w-full -rotate-90">
                     <circle cx="22" cy="22" r="18" fill="none" stroke="#F1F4F9" strokeWidth="5" />
@@ -316,8 +322,8 @@ export default function HomePage() {
       </section>
 
       {/* زرار التسجيل العايم */}
-      <div className="pointer-events-none fixed bottom-20 left-1/2 z-40 flex w-full max-w-[440px] -translate-x-1/2 justify-center px-4">
-        <Link href={`/log/?month=${month}`} className="pointer-events-auto flex items-center gap-2 rounded-full border-2 border-white bg-gradient-to-r from-[#D95B00] to-[#E87518] px-6 py-2.5 text-sm font-black text-white shadow-[0_10px_25px_-5px_rgba(255,121,0,0.3)] transition-transform active:scale-95">
+      <div className="pointer-events-none fixed bottom-[76px] left-1/2 z-40 flex w-full max-w-[520px] -translate-x-1/2 justify-center px-4">
+        <Link href={`/log/?month=${month}`} className="pointer-events-auto flex items-center gap-2 rounded-full border-2 border-white bg-gradient-to-r from-[#a94308] to-[#ed741d] px-7 py-3 text-sm font-black text-white shadow-[0_14px_32px_-8px_rgba(145,61,13,0.42)] transition-transform active:scale-95">
           <span className="text-lg">＋</span>
           <span>تسجيل بيعة جديدة</span>
         </Link>
