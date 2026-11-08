@@ -84,7 +84,15 @@ export default function MorePage() {
   }, [month]);
 
   useEffect(() => {
-    void load();
+    let cancelled = false;
+    async function run() {
+      await Promise.resolve();
+      if (!cancelled) await load();
+    }
+    void run();
+    return () => {
+      cancelled = true;
+    };
   }, [load]);
 
   async function saveProfile(event: FormEvent) {
