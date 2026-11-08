@@ -396,7 +396,7 @@ export default function ManagerPage() {
   return (
     <main className="tys-page tys-page-manager min-h-screen bg-[radial-gradient(ellipse_at_top_right,_#ffe8d4_0%,_transparent_38%),linear-gradient(180deg,#fffaf5_0%,#fff6ed_48%,#fffaf7_100%)] px-3 py-4 text-[#38251a] sm:px-5 sm:py-6" dir="rtl">
       <div className="mx-auto max-w-6xl space-y-5">
-        <div className="relative isolate overflow-hidden rounded-[30px] bg-gradient-to-br from-[#9e3d08] via-[#d95b0c] to-[#ff9d38] px-5 py-6 text-white shadow-[0_20px_48px_rgba(173,75,13,0.22)] sm:px-7 sm:py-8">
+        <div className={`tys-manager-hero relative isolate overflow-hidden rounded-[30px] bg-gradient-to-br from-[#9e3d08] via-[#d95b0c] to-[#ff9d38] px-5 py-6 text-white shadow-[0_20px_48px_rgba(173,75,13,0.22)] sm:px-7 sm:py-8 ${rows === null ? "tys-manager-hero-login" : ""}`}>
           <div className="pointer-events-none absolute -left-12 -top-16 h-56 w-56 rounded-full border-[28px] border-white/10" />
           <div className="pointer-events-none absolute -bottom-24 right-1/3 h-64 w-64 rounded-full bg-white/10 blur-2xl" />
           <div className="relative flex flex-wrap items-center justify-between gap-4">
@@ -450,7 +450,7 @@ export default function ManagerPage() {
         ) : null}
 
         {rows === null ? (
-          <form onSubmit={load} className="mx-auto w-full max-w-md overflow-hidden rounded-[30px] border border-white/90 bg-white p-6 shadow-[0_24px_60px_rgba(151,72,17,0.13)] ring-1 ring-[#f1dfd0]/80 sm:p-7">
+          <form onSubmit={load} className="tys-manager-login mx-auto w-full max-w-md overflow-hidden rounded-[30px] border border-white/90 bg-white p-6 shadow-[0_24px_60px_rgba(151,72,17,0.13)] ring-1 ring-[#f1dfd0]/80 sm:p-7">
             <div className="-mx-6 -mt-6 mb-5 bg-[linear-gradient(125deg,#bd4b0a_0%,#e96812_52%,#ff9d38_100%)] px-6 py-7 text-center text-white">
               <img src="/track-your-sales/logo-mark.png" alt="" className="mx-auto h-14 w-14 object-contain" />
               <p className="mt-2 text-lg font-black tracking-tight" dir="ltr">Track Your Sales</p>
