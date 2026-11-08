@@ -144,71 +144,64 @@ export default function HomePage() {
         <div className="hidden h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#fff0e2] text-2xl sm:flex">📈</div>
       </section>
 
-      {/* الهيرو */}
-      <section className="relative isolate overflow-hidden rounded-[30px] bg-gradient-to-br from-[#9f3f08] via-[#d95b0b] to-[#f28a32] p-4 text-white shadow-[0_24px_55px_-24px_rgba(145,61,13,0.55)] sm:p-6">
-        
-        <div className="pointer-events-none absolute -left-12 -top-16 h-52 w-52 rounded-full border-[28px] border-white/5" />
-        <div className="pointer-events-none absolute -bottom-24 right-1/3 h-52 w-52 rounded-full bg-[#ffb66f]/15 blur-3xl" />
+      {/* الهيرو الرئيسي — بطاقة أداء فاتحة ومركزة */}
+      <section className="relative isolate overflow-hidden rounded-[30px] border border-[#f0d9c5] bg-gradient-to-br from-white via-[#fffaf5] to-[#fff0e2] p-4 shadow-[0_18px_42px_rgba(145,75,30,0.09)] sm:p-6">
+        <div className="pointer-events-none absolute -left-16 -top-20 h-56 w-56 rounded-full bg-[#ffb15f]/15 blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-24 right-1/3 h-48 w-48 rounded-full bg-[#e96812]/[0.07] blur-3xl" />
         <div className="relative z-10 flex flex-col gap-4">
-          <div className="flex items-center justify-between">
-            <span className="flex items-center gap-2 text-xs font-bold text-white/90">
-              <span
-                role="img"
-                aria-label={onTrack === null ? "" : onTrack ? "على المسار" : "متأخر عن المسار"}
-                className={`inline-block h-2.5 w-2.5 rounded-full ring-2 ring-white/60 ${onTrack === null ? "hidden" : onTrack ? "bg-emerald-300" : "bg-red-200"}`}
-              />
-              إجمالي التارجت الشهري
-            </span>
-            <span className="flex items-center gap-1.5 rounded-full bg-[#fffdfb]/20 px-2.5 py-0.5 text-[11px] font-bold">
-              <span className="h-2 w-2 rounded-full bg-[#55B8F5]" />
-              Live Run
-            </span>
-          </div>
-          <div className="flex items-center gap-3">
-            <div className="relative h-24 w-24 shrink-0 sm:h-28 sm:w-28">
-              <svg viewBox="0 0 120 120" className="h-full w-full -rotate-90">
-                <circle cx="60" cy="60" r="50" fill="none" stroke="rgba(255,255,255,0.28)" strokeWidth="10" />
-                <circle
-                  cx="60"
-                  cy="60"
-                  r="50"
-                  fill="none"
-                  stroke="#ffffff"
-                  strokeWidth="10"
-                  strokeLinecap="round"
-                  strokeDasharray={2 * Math.PI * 50}
-                  strokeDashoffset={2 * Math.PI * 50 * (1 - Math.min(100, Math.max(0, data.overall)) / 100)}
-                  className="transition-all duration-700"
-                />
-              </svg>
-              <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <span className="font-mono text-xl font-black leading-none">{formatPercent(data.overall)}<span className="text-sm">%</span></span>
-                <span className="mt-1 text-[10px] font-bold text-white/85">من التارجت</span>
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex min-w-0 items-center gap-2.5">
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#fff0e2] text-lg text-[#bd4b0a]">◎</span>
+              <div className="min-w-0">
+                <p className="text-[10px] font-black tracking-[0.12em] text-[#bd6a35]">MONTHLY PERFORMANCE</p>
+                <p className="mt-0.5 text-sm font-black text-[#38291f]">إجمالي التارجت الشهري</p>
               </div>
             </div>
-            <div className="flex min-w-0 flex-1 flex-col gap-2">
-              <span className="inline-block w-fit rounded-xl bg-[#fffdfb]/30 px-3 py-1 text-[12px] font-extrabold text-white shadow-sm">{statusTextEgy}</span>
-              <p className="text-[11px] font-medium text-white/85">{timeText}</p>
-              <p className="text-xs font-bold leading-5">{overallLine()}</p>
+            <span className={`shrink-0 rounded-full border px-3 py-1.5 text-[10px] font-extrabold ${onTrack === null ? "border-[#ead8c9] bg-white text-[#8b7565]" : onTrack ? "border-emerald-200 bg-emerald-50 text-emerald-700" : "border-orange-200 bg-orange-50 text-[#bd4b0a]"}`}>
+              <span className={`ml-1.5 inline-block h-1.5 w-1.5 rounded-full ${onTrack === null ? "bg-[#b9a494]" : onTrack ? "bg-emerald-500" : "bg-[#e96812]"}`} />
+              {onTrack === null ? "بانتظار البيانات" : onTrack ? "على المسار" : "محتاج تسرّع"}
+            </span>
+          </div>
+
+          <div className="flex items-end justify-between gap-3">
+            <div className="min-w-0 flex-1">
+              <div className="flex items-baseline gap-1.5">
+                <span className="font-mono text-[48px] font-black leading-none tracking-[-0.06em] text-[#c6530b] sm:text-[58px]">{formatPercent(data.overall)}</span>
+                <span className="text-xl font-black text-[#e58a4a]">%</span>
+              </div>
+              <p className="mt-1 text-[11px] font-bold text-[#927763]">نسبة تحقيقك للتارجت</p>
+            </div>
+            <div className="mb-0.5 flex min-w-[112px] flex-col items-end rounded-2xl border border-[#f1ddcc] bg-white/85 px-3 py-2.5 shadow-[0_5px_14px_rgba(145,75,30,0.045)]">
+              <span className="text-[10px] font-bold text-[#9a806c]">{gap > 0 ? "فاضلك على الهدف" : "حالة التارجت"}</span>
+              <strong className="mt-1 font-mono text-lg font-black text-[#38291f]">{gap > 0 ? `${formatPercent(gap)}%` : "محقق الهدف ✓"}</strong>
             </div>
           </div>
-          <div className="grid grid-cols-2 gap-2.5 border-t border-white/20 pt-4 sm:gap-3">
-            <div className="flex flex-col rounded-2xl bg-[#fffdfb]/15 p-3">
-              <span className="text-[11px] font-medium text-white/85">{gap > 0 ? "المتبقي للهدف" : "الحالة"}</span>
-              <span className="mt-1 font-mono text-base font-black">{gap > 0 ? `${formatPercent(gap)}%` : "قفلت الشهر ✅"}</span>
+
+          <div className="h-2.5 overflow-hidden rounded-full bg-[#f5e6da]">
+            <div className="h-full rounded-full bg-gradient-to-l from-[#ffad58] via-[#ed741d] to-[#bd4b0a] shadow-[0_1px_5px_rgba(189,75,10,0.22)] transition-all duration-700" style={{ width: `${Math.min(100, Math.max(0, data.overall))}%` }} />
+          </div>
+
+          <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] font-semibold text-[#8c725f]">
+            <span className="font-extrabold text-[#bd4b0a]">{statusTextEgy}</span>
+            <span className="text-[#d9bda7]">•</span>
+            <span>{timeText}</span>
+          </div>
+
+          <div className="grid grid-cols-2 gap-2.5 border-t border-[#f0dfd1] pt-3">
+            <div className="rounded-2xl bg-white/85 px-3 py-3 shadow-[0_4px_14px_rgba(145,75,30,0.04)]">
+              <span className="block text-[10px] font-bold text-[#9a806c]">الكوميشن المتوقع</span>
+              <strong className="mt-1 block truncate font-mono text-lg font-black text-[#bd4b0a]">{formatMoney(data.estimatedCommission)} <span className="text-[10px] font-bold text-[#9a806c]">ج.م</span></strong>
+              <span className="mt-0.5 block text-[10px] font-semibold text-[#a18a78]">من {formatMoney(data.fullCommission)} ج.م</span>
             </div>
-            <div className="flex flex-col rounded-2xl bg-[#fffdfb]/15 p-3">
-              <span className="text-[11px] font-medium text-white/85">الكوميشن المتوقع</span>
-              <span className="mt-1 font-mono text-base font-black">
-                {formatMoney(data.estimatedCommission)} <span className="text-[10px] font-bold text-white/80">من {formatMoney(data.fullCommission)} ج.م</span>
-              </span>
+            <div className="rounded-2xl bg-white/85 px-3 py-3 shadow-[0_4px_14px_rgba(145,75,30,0.04)]">
+              <span className="block text-[10px] font-bold text-[#9a806c]">ملخص الأداء</span>
+              <strong className="mt-1 block truncate text-sm font-black text-[#38291f]">{onTrack === null ? "جاري حساب الأداء" : onTrack ? "ماشي بشكل ممتاز" : "لسه في فرصة تعوّض"}</strong>
+              <span className="mt-0.5 block text-[10px] font-semibold text-[#a18a78]">{overallLine()}</span>
             </div>
           </div>
-          {sarcastic ? <p className="text-xs font-bold text-white/85">{sarcastic}</p> : null}
+          {sarcastic ? <p className="text-[11px] font-bold text-[#a75b2c]">{sarcastic}</p> : null}
         </div>
       </section>
-
-
 
       {/* المطلوب انهاردة */}
       <section className="flex items-stretch overflow-hidden rounded-[26px] border border-[#f1dfd0] bg-white shadow-[0_12px_28px_rgba(100,55,25,0.05)]">
