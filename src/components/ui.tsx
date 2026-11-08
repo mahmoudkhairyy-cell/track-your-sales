@@ -179,7 +179,7 @@ export function Modal({
   if (!open) return null;
   return (
     <div className="fixed inset-0 z-[80] flex items-end justify-center bg-black/40 p-3 sm:items-center">
-      <button className="absolute inset-0" aria-label="إغلاق" onClick={onClose} />
+      <button type="button" className="absolute inset-0" aria-label="إغلاق النافذة" onClick={onClose} />
       <div role="dialog" aria-modal="true" aria-labelledby="tx-modal-title" className="relative w-full max-w-lg rounded-[28px] border border-[#f1e2d6] bg-[#fffdfb] p-5 shadow-2xl">
         <div className="mb-4 flex items-start justify-between gap-3">
           <h2 id="tx-modal-title" className="text-lg font-extrabold text-[#2d1d13]">{title}</h2>
