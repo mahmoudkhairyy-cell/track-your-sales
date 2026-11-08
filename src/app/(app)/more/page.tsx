@@ -294,23 +294,30 @@ export default function MorePage() {
 
   return (
     <div className="space-y-5">
-      <section className="relative overflow-hidden rounded-[24px] bg-gradient-to-br from-[#D95B00] to-[#E87518] p-5 text-white shadow-sm">
-        <img src="/track-your-sales/logo-full.png" alt="Track Your Sales" className="h-16 w-auto object-contain" />
-        <p className="mt-1 text-xs text-white/85">أداة مساعدة مستقلة وغير رسمية، وليست تطبيقًا رسميًا تابعًا لشركة Orange.</p>
-        <p className="mt-3 text-xs text-white/80">ملخص النهارده، سجل الشهر، النسخة الاحتياطية، والمساعد.</p>
+      <section className="relative overflow-hidden rounded-[26px] border border-[#f2dfce] bg-gradient-to-br from-white via-[#fffaf5] to-[#fff0e2] p-5 shadow-[0_12px_30px_rgba(126,65,24,0.06)]">
+        <div className="absolute -left-10 -top-12 h-36 w-36 rounded-full bg-[#ffb36e]/20 blur-3xl" />
+        <div className="relative flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <p className="text-[10px] font-black tracking-[0.18em] text-[#bd6b39]" dir="ltr">YOUR WORKSPACE</p>
+            <h1 className="mt-1 text-xl font-black tracking-tight text-[#2d2119]">كل أدواتك في مكان واحد</h1>
+            <p className="mt-1 text-xs text-[#9a7963]">إدارة سجلاتك وبياناتك ومراجعة أدائك</p>
+          </div>
+          <img src="/track-your-sales/logo-mark.png" alt="Track Your Sales" className="h-14 w-14 object-contain" />
+        </div>
+        <p className="relative mt-3 text-[11px] leading-6 text-[#9a7963]">أداة مساعدة مستقلة وغير رسمية، وليست تطبيقًا رسميًا تابعًا لشركة Orange.</p>
         {reportData ? (
-          <div className="mt-4 grid grid-cols-3 gap-2 text-center">
-            <div className="rounded-2xl bg-white/15 px-2 py-3 ring-1 ring-white/25">
-              <p className="text-xl font-black tabular-nums">{Math.round(reportData.overall)}%</p>
-              <p className="text-[11px] text-white/85">التوتال</p>
+          <div className="relative mt-4 grid grid-cols-3 gap-2 text-center">
+            <div className="rounded-2xl border border-[#f3dfce] bg-white/90 px-2 py-3">
+              <p className="text-xl font-black tabular-nums text-[#bd4b0a]">{Math.round(reportData.overall)}%</p>
+              <p className="text-[10px] font-bold text-[#9a7963]">التوتال</p>
             </div>
-            <div className="rounded-2xl bg-white/15 px-2 py-3 ring-1 ring-white/25">
-              <p className="text-xl font-black tabular-nums">{Math.round(reportData.estimatedCommission)}</p>
-              <p className="text-[11px] text-white/85">الكوميشن (ج)</p>
+            <div className="rounded-2xl border border-[#f3dfce] bg-white/90 px-2 py-3">
+              <p className="text-xl font-black tabular-nums text-[#bd4b0a]">{Math.round(reportData.estimatedCommission)}</p>
+              <p className="text-[10px] font-bold text-[#9a7963]">الكوميشن (ج)</p>
             </div>
-            <div className="rounded-2xl bg-white/15 px-2 py-3 ring-1 ring-white/25">
-              <p className="text-xl font-black tabular-nums">{entries.length}</p>
-              <p className="text-[11px] text-white/85">سجلات الشهر</p>
+            <div className="rounded-2xl border border-[#f3dfce] bg-white/90 px-2 py-3">
+              <p className="text-xl font-black tabular-nums text-[#bd4b0a]">{entries.length}</p>
+              <p className="text-[10px] font-bold text-[#9a7963]">سجلات الشهر</p>
             </div>
           </div>
         ) : null}
