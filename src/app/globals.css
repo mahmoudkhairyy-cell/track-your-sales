@@ -268,3 +268,40 @@ textarea { resize: vertical; }
     transition-duration: 0.01ms !important;
   }
 }
+
+
+/* Onboarding and target setup screens share the same premium shell. */
+.tys-login-screen {
+  background:
+    radial-gradient(ellipse at 12% 8%, rgba(255, 157, 56, .16), transparent 24rem),
+    radial-gradient(ellipse at 92% 90%, rgba(233, 104, 18, .09), transparent 28rem),
+    linear-gradient(145deg, #fff7ef 0%, #fff 48%, #fffaf5 100%);
+}
+.tys-login-card {
+  border-color: #f1dfd0;
+  border-top-color: #e96812;
+  box-shadow: 0 24px 68px rgba(126, 65, 24, 0.105);
+}
+.tys-login-card h1 {
+  color: var(--brand-text);
+  letter-spacing: -0.035em;
+}
+.tys-login-card label {
+  color: #6e5543;
+}
+.tys-login-card input,
+.tys-login-card select {
+  min-height: 48px;
+  border-color: #ead8c9;
+  background: #fffdfb;
+}
+.tys-login-card button:focus-visible,
+.tys-login-card input:focus-visible,
+.tys-login-card select:focus-visible {
+  outline: 3px solid rgba(233, 104, 18, .22);
+  outline-offset: 2px;
+}
+.tys-target-gate {
+  border-color: var(--brand-border);
+  box-shadow: 0 16px 38px rgba(126, 65, 24, .07);
+}
