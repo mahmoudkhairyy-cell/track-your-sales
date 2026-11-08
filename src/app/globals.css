@@ -989,3 +989,157 @@ body {
     border-color: #e7c3a8;
   }
 }
+
+
+/* Final presentation pass — entry screen, data density and small-screen consistency. */
+.tys-landing {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+.tys-landing::before,
+.tys-landing::after {
+  position: absolute;
+  z-index: -1;
+  content: "";
+  pointer-events: none;
+  border-radius: 999px;
+  filter: blur(2px);
+}
+.tys-landing::before {
+  width: 25rem;
+  height: 25rem;
+  inset-inline-start: -12rem;
+  top: 12%;
+  background: radial-gradient(circle, rgba(255, 157, 56, .16), transparent 68%);
+}
+.tys-landing::after {
+  width: 22rem;
+  height: 22rem;
+  inset-inline-end: -10rem;
+  bottom: 5%;
+  background: radial-gradient(circle, rgba(233, 104, 18, .10), transparent 70%);
+}
+.tys-landing > section {
+  position: relative;
+  border-color: #f0ddce;
+  box-shadow: 0 28px 80px rgba(126, 65, 24, .12);
+}
+.tys-landing > section > div:first-child {
+  box-shadow: 0 14px 34px rgba(189, 75, 10, .12);
+}
+.tys-landing h1 {
+  letter-spacing: -.04em;
+}
+.tys-landing a {
+  min-height: 52px;
+  box-shadow: 0 12px 26px rgba(189, 75, 10, .22);
+}
+.tys-landing a:hover {
+  box-shadow: 0 16px 32px rgba(189, 75, 10, .28);
+}
+
+.tys-page :is(table, [role="table"]) {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+.tys-page :is(th, [role="columnheader"]) {
+  color: #80624d;
+  font-weight: 800;
+}
+.tys-page :is(td, th) {
+  font-variant-numeric: tabular-nums;
+}
+.tys-page :is(ul, ol) > li {
+  min-width: 0;
+}
+.tys-page :is(p, label, span, strong) {
+  overflow-wrap: anywhere;
+}
+.tys-page :is(button, a) {
+  -webkit-touch-callout: none;
+}
+.tys-page :is(button, input, select, textarea) {
+  accent-color: #df6410;
+}
+.tys-page [class*="overflow-x-auto"] {
+  overscroll-behavior-inline: contain;
+  scrollbar-width: thin;
+  scrollbar-color: #e8b18a transparent;
+}
+.tys-page [class*="sticky"] {
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+}
+.tys-page :is(.text-\[10px\], .text-\[11px\]) {
+  line-height: 1.55;
+}
+.tys-page :is(.text-xs, .text-sm) {
+  text-wrap: pretty;
+}
+.tys-page :is(input, select, textarea):disabled {
+  background: #faf5f0;
+  color: #9b8979;
+  cursor: not-allowed;
+}
+.tys-page :is(button, a):focus-visible {
+  outline-color: rgba(223, 100, 16, .55);
+}
+
+@media (max-width: 640px) {
+  .tys-landing {
+    min-height: 100svh;
+    padding-inline: 1rem;
+    padding-block: max(1.25rem, env(safe-area-inset-top)) max(1.25rem, env(safe-area-inset-bottom));
+  }
+  .tys-landing > section {
+    max-width: 25rem;
+    padding: 1.35rem;
+    border-radius: 26px;
+  }
+  .tys-landing > section > div:first-child {
+    width: 4.5rem;
+    height: 4.5rem;
+    border-radius: 21px;
+  }
+  .tys-page :is(h1, h2) {
+    text-wrap: balance;
+  }
+  .tys-page :is(input, select, textarea) {
+    min-height: 46px;
+    font-size: 16px;
+  }
+  .tys-page [class*="overflow-x-auto"] table {
+    min-width: 34rem;
+  }
+  .tys-page-manager [class*="grid-cols-"] {
+    min-width: 0;
+  }
+  .tys-page-manager :is(button, a) {
+    min-height: 44px;
+  }
+  .tys-page-home,
+  .tys-page-log,
+  .tys-page-target,
+  .tys-page-more,
+  .tys-page-wiki {
+    scroll-padding-bottom: calc(6rem + env(safe-area-inset-bottom));
+  }
+}
+@media (min-width: 641px) and (max-width: 1023px) {
+  .tys-page {
+    gap: 1rem;
+  }
+  .tys-page :is(section, article)[class*="rounded-"] {
+    border-radius: 22px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tys-landing::before,
+  .tys-landing::after {
+    filter: none;
+  }
+  .tys-landing a {
+    transition: none !important;
+  }
+}
