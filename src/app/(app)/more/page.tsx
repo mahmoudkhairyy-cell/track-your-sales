@@ -337,7 +337,7 @@ export default function MorePage() {
               key={item.key}
               type="button"
               onClick={() => setView(item.key as typeof view)}
-              className="group flex min-h-[84px] w-full items-center gap-4 rounded-[24px] border border-[#f1dfd0] bg-white p-4 text-right shadow-[0_8px_22px_rgba(126,65,24,0.045)] transition-all duration-200 hover:-translate-y-0.5 hover:border-[#edc4a4] hover:shadow-[0_14px_28px_rgba(126,65,24,0.08)] active:scale-[0.99]"
+              className="group flex min-h-[76px] w-full items-center gap-3 rounded-[22px] border border-[#f1dfd0] bg-white p-3.5 text-right shadow-[0_8px_22px_rgba(126,65,24,0.045)] transition-all duration-200 hover:-translate-y-0.5 hover:border-[#edc4a4] hover:shadow-[0_14px_28px_rgba(126,65,24,0.08)] active:scale-[0.99] sm:min-h-[84px] sm:gap-4 sm:p-4"
             >
               <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#fff0e2] text-2xl">{item.icon}</span>
               <span className="flex-1">

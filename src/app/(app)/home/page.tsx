@@ -213,8 +213,8 @@ export default function HomePage() {
 
       {/* المطلوب انهاردة */}
       <section className="flex items-stretch overflow-hidden rounded-[26px] border border-[#f1dfd0] bg-white shadow-[0_12px_28px_rgba(100,55,25,0.05)]">
-        <div className="flex w-28 shrink-0 flex-col items-center justify-center bg-gradient-to-br from-[#a94308] to-[#e96812] px-3 py-4 text-white">
-          <span className="font-mono text-3xl font-black leading-none">{data.pace.perDay === null ? "—" : formatQty(Math.ceil(data.pace.perDay))}</span>
+        <div className="flex w-24 shrink-0 flex-col items-center justify-center bg-gradient-to-br from-[#a94308] to-[#e96812] px-2.5 py-3.5 text-white sm:w-28 sm:px-3 sm:py-4">
+          <span className="font-mono text-2xl font-black leading-none sm:text-3xl">{data.pace.perDay === null ? "—" : formatQty(Math.ceil(data.pace.perDay))}</span>
           <span className="mt-1 text-[10px] font-bold text-[#fff0e2]">{data.pace.perDay === null ? "" : linesWord(Math.ceil(data.pace.perDay)) + " / يوم"}</span>
         </div>
         <div className="flex min-w-0 flex-1 flex-col justify-center gap-1 p-3.5">
@@ -276,8 +276,8 @@ export default function HomePage() {
             const ringLen = 2 * Math.PI * 18;
             const pct = Math.min(100, Math.max(0, kpi.percent));
             return (
-              <article key={kpi.kpiKey} className={`flex min-w-0 items-center gap-3 rounded-[22px] border bg-white p-3.5 transition-all duration-300 ${onTrackKpi ? "border-emerald-200 shadow-[0_8px_22px_rgba(16,185,129,0.07)]" : "border-[#f0d8c8] shadow-[0_8px_22px_rgba(145,61,13,0.055)]"}`}>
-                <div className="relative h-14 w-14 shrink-0">
+              <article key={kpi.kpiKey} className={`flex min-w-0 items-center gap-2.5 rounded-[20px] border bg-white p-3 transition-all duration-300 sm:gap-3 sm:p-3.5 ${onTrackKpi ? "border-emerald-200 shadow-[0_8px_22px_rgba(16,185,129,0.07)]" : "border-[#f0d8c8] shadow-[0_8px_22px_rgba(145,61,13,0.055)]"}`}>
+                <div className="relative h-12 w-12 shrink-0 sm:h-14 sm:w-14">
                   <svg viewBox="0 0 44 44" className="h-full w-full -rotate-90">
                     <circle cx="22" cy="22" r="18" fill="none" stroke="#f6e9df" strokeWidth="5" />
                     <circle
