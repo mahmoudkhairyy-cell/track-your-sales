@@ -169,10 +169,15 @@ export default function TargetPage() {
   if (loading) return <Spinner label="ثواني… بنحمّل إعدادات التارجت" />;
 
   return (
-    <form className="space-y-5" onSubmit={onSave}>
-      <section>
-        <h1 className="text-2xl font-black tracking-tight text-[#172033]">التارجت 🎯</h1>
-        <p className="mt-1 text-xs font-bold text-[#556070]">{saved ? "✅ محفوظة لهذا الشهر" : "⚠️ لسه مش محفوظة، اضغط حفظ"}</p>
+    <form className="flex flex-col gap-4 pb-6" onSubmit={onSave}>
+      <section className="flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <h1 className="text-2xl font-black tracking-tight text-[#172033]">التارجت 🎯</h1>
+          <p className="mt-0.5 text-xs font-bold text-[#556070]">تخطيط الشهر: إجازات، أوزان، وتارجت كل إيتم</p>
+        </div>
+        <span className={`mt-1 shrink-0 rounded-full px-3 py-1 text-[11px] font-black ${saved ? "bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200" : "bg-amber-50 text-amber-700 ring-1 ring-amber-200"}`}>
+          {saved ? "✅ محفوظة" : "⚠️ لسه مش محفوظة"}
+        </span>
       </section>
 
       {!saved ? (
@@ -185,75 +190,6 @@ export default function TargetPage() {
           </label>
         </section>
       ) : null}
-
-      <section className="overflow-hidden rounded-[28px] border border-[#F1E4D8] bg-white p-4 shadow-[0_10px_30px_-18px_rgba(23,32,51,0.28)]">
-        <div className="grid grid-cols-3 gap-2 text-center">
-          <div className="rounded-2xl bg-[#FCEBDD] px-2 py-3"><p className="text-2xl font-black tabular-nums text-[#172033]">{monthDays.length}</p><p className="text-[11px] text-[#556070]">أيام الشهر</p></div>
-          <div className="rounded-2xl bg-[#FCEBDD] px-2 py-3"><p className="text-2xl font-black tabular-nums text-[#172033]">{holidays.length}</p><p className="text-[11px] text-[#556070]">إجازات</p></div>
-          <div className="rounded-2xl bg-[#FCEBDD] px-2 py-3"><p className="text-2xl font-black tabular-nums text-[#172033]">{workingDatesInMonth(month, workingDays, holidays.map((item) => item.date)).length}</p><p className="text-[11px] text-[#556070]">أيام شغل</p></div>
-        </div>
-      </section>
-
-      {kpis.some((k) => k.weight > 0) ? (
-        <section className="rounded-[28px] border border-[#F1E4D8] bg-white p-4 shadow-[0_10px_30px_-18px_rgba(23,32,51,0.28)]">
-          <p className="text-sm font-black text-[#172033]">توزيع الأوزان</p>
-          <div className="mt-3 flex h-3 w-full overflow-hidden rounded-full bg-[#F5F8FC]">
-            {kpis.filter((k) => k.weight > 0).map((k, i) => (
-              <span key={k.kpiKey} style={{ width: `${k.weight}%`, background: ["#D95B00", "#E87518", "#B94700", "#55B8F5", "#F3A96B"][i % 5] }} />
-            ))}
-          </div>
-          <ul className="mt-3 grid grid-cols-2 gap-2 text-xs font-bold text-[#556070]">
-            {kpis.filter((k) => k.weight > 0).map((k, i) => (
-              <li key={k.kpiKey} className="flex items-center gap-2">
-                <span className="h-2.5 w-2.5 rounded-full" style={{ background: ["#D95B00", "#E87518", "#B94700", "#55B8F5", "#F3A96B"][i % 5] }} />
-                <span className="truncate">{kpiEmoji(k.kpiKey)} {KPI_CATALOG.find((c) => c.key === k.kpiKey)?.nameEn ?? k.kpiKey}</span>
-                <span className="mr-auto tabular-nums text-[#172033]">{k.weight}%</span>
-              </li>
-            ))}
-          </ul>
-        </section>
-      ) : null}
-
-      <section className="rounded-[28px] border border-[#F1E4D8] bg-white p-4 shadow-[0_10px_30px_-18px_rgba(23,32,51,0.28)]">
-        <div className="grid grid-cols-7 gap-1 text-center text-[11px] font-bold text-neutral-400">
-          {["سبت", "أحد", "اتنين", "تلات", "أربع", "خميس", "جمعة"].map((d) => (
-            <span key={d} className="py-1">{d}</span>
-          ))}
-        </div>
-        <div className="mt-1 grid grid-cols-7 gap-1">
-          {Array.from({ length: firstWeekdayOffset }).map((_, i) => (
-            <span key={`pad-${i}`} />
-          ))}
-          {monthDays.map((date) => {
-            const isHoliday = holidays.some((item) => item.date === date);
-            return (
-              <button
-                key={date}
-                type="button"
-                onClick={() =>
-                  setHolidays((current) =>
-                    current.some((item) => item.date === date)
-                      ? current.filter((row) => row.date !== date)
-                      : [...current, { date, note: null }].sort((a, b) => a.date.localeCompare(b.date)),
-                  )
-                }
-                className={`flex aspect-square items-center justify-center rounded-2xl text-sm font-extrabold transition ${
-                  isHoliday ? "bg-gradient-to-br from-[#D95B00] to-[#E87518] text-white shadow-[0_10px_30px_-18px_rgba(23,32,51,0.28)]" : "bg-[#F5F8FC] text-[#172033]"
-                }`}
-              >
-                {Number(date.slice(8, 10))}
-              </button>
-            );
-          })}
-        </div>
-        <p className="mt-3 text-center text-xs text-neutral-400">اضغط أي يوم لإضافته أو إلغائه كإجازة</p>
-      </section>
-
-      {error ? <Banner tone="error">❌ {error}</Banner> : null}
-
-      <p className={`px-1 text-xs font-bold ${Math.abs(weightSum - 100) > 0.01 ? "text-amber-700" : "text-emerald-700"}`}>
-        {Math.abs(weightSum - 100) > 0.01 ? `⚠️ الأوزان ${weightSum}%: ${weightSum < 100 ? `ناقص ${Math.round((100 - weightSum) * 100) / 100}%` : `زيادة ${Math.round((weightSum - 100) * 100) / 100}%`} (لازم 100% عشان تتحفظ)` : "✓ الأوزان 100%"}
-      </p>
 
       {daily ? (
         <section className="rounded-[24px] bg-[#FCEBDD] p-4 text-sm leading-7 text-[#B94700]">
@@ -279,7 +215,86 @@ export default function TargetPage() {
         </section>
       ) : null}
 
-      <section className="rounded-[32px] border border-[#F3D2B5]/70 bg-white p-5 shadow-[0_10px_30px_-18px_rgba(23,32,51,0.28)]">
+      <section className="overflow-hidden rounded-[28px] bg-gradient-to-br from-[#B94700] via-[#D95B00] to-[#8A3400] p-4 text-white shadow-[0_20px_40px_-18px_rgba(138,52,0,0.6)]">
+        <div className="grid grid-cols-3 gap-2 text-center">
+          <div className="rounded-2xl bg-white/15 px-2 py-3 ring-1 ring-white/20"><p className="font-mono text-2xl font-black tabular-nums">{monthDays.length}</p><p className="mt-0.5 text-[11px] font-medium text-white/85">أيام الشهر</p></div>
+          <div className="rounded-2xl bg-white/15 px-2 py-3 ring-1 ring-white/20"><p className="font-mono text-2xl font-black tabular-nums">{holidays.length}</p><p className="mt-0.5 text-[11px] font-medium text-white/85">إجازات</p></div>
+          <div className="rounded-2xl bg-white/15 px-2 py-3 ring-1 ring-white/20"><p className="font-mono text-2xl font-black tabular-nums">{workingDatesInMonth(month, workingDays, holidays.map((item) => item.date)).length}</p><p className="mt-0.5 text-[11px] font-medium text-white/85">أيام شغل</p></div>
+        </div>
+        <div className="mt-3 flex items-center justify-between rounded-2xl bg-black/10 px-3 py-2 text-xs font-extrabold">
+          <span>مجموع الأوزان</span>
+          <span className="font-mono text-base font-black">{weightSum}%</span>
+        </div>
+      </section>
+
+      <section className="rounded-[28px] border border-[#F1E4D8] bg-white p-4 shadow-[0_10px_30px_-18px_rgba(23,32,51,0.28)]">
+        <div className="mb-3 flex items-center justify-between">
+          <h2 className="text-sm font-black text-[#172033]">تقويم الإجازات</h2>
+          <span className="text-[11px] font-bold text-[#556070]">اضغط أي يوم للإضافة أو الإلغاء</span>
+        </div>
+        <div className="grid grid-cols-7 gap-1 text-center text-[11px] font-bold text-neutral-400">
+          {["سبت", "أحد", "اتنين", "تلات", "أربع", "خميس", "جمعة"].map((d) => (
+            <span key={d} className="py-1">{d}</span>
+          ))}
+        </div>
+        <div className="mt-1 grid grid-cols-7 gap-1">
+          {Array.from({ length: firstWeekdayOffset }).map((_, i) => (
+            <span key={`pad-${i}`} />
+          ))}
+          {monthDays.map((date) => {
+            const isHoliday = holidays.some((item) => item.date === date);
+            return (
+              <button
+                key={date}
+                type="button"
+                onClick={() =>
+                  setHolidays((current) =>
+                    current.some((item) => item.date === date)
+                      ? current.filter((row) => row.date !== date)
+                      : [...current, { date, note: null }].sort((a, b) => a.date.localeCompare(b.date)),
+                  )
+                }
+                className={`flex aspect-square items-center justify-center rounded-xl text-sm font-extrabold transition active:scale-95 ${
+                  isHoliday ? "bg-gradient-to-br from-[#D95B00] to-[#E87518] text-white shadow-[0_8px_18px_-10px_rgba(217,91,0,0.8)]" : "bg-[#F5F8FC] text-[#172033]"
+                }`}
+              >
+                {Number(date.slice(8, 10))}
+              </button>
+            );
+          })}
+        </div>
+      </section>
+
+      {error ? <Banner tone="error">❌ {error}</Banner> : null}
+
+      <section className="rounded-[28px] border border-[#F1E4D8] bg-white p-4 shadow-[0_10px_30px_-18px_rgba(23,32,51,0.28)]">
+        <div className="flex items-center justify-between">
+          <h2 className="text-sm font-black text-[#172033]">توزيع الأوزان</h2>
+          <span className={`rounded-full px-2.5 py-0.5 text-[11px] font-extrabold ${Math.abs(weightSum - 100) > 0.01 ? "bg-amber-50 text-amber-700" : "bg-emerald-50 text-emerald-700"}`}>
+            {Math.abs(weightSum - 100) > 0.01 ? `${weightSum < 100 ? `ناقص ${Math.round((100 - weightSum) * 100) / 100}%` : `زيادة ${Math.round((weightSum - 100) * 100) / 100}%`}` : "✓ 100%"}
+          </span>
+        </div>
+        {kpis.some((k) => k.weight > 0) ? (
+          <>
+            <div className="mt-3 flex h-3 w-full overflow-hidden rounded-full bg-[#F5F8FC]">
+              {kpis.filter((k) => k.weight > 0).map((k, i) => (
+                <span key={k.kpiKey} style={{ width: `${k.weight}%`, background: ["#D95B00", "#E87518", "#B94700", "#55B8F5", "#F3A96B"][i % 5] }} />
+              ))}
+            </div>
+            <ul className="mt-3 grid grid-cols-2 gap-x-3 gap-y-2 text-xs font-bold text-[#556070]">
+              {kpis.filter((k) => k.weight > 0).map((k, i) => (
+                <li key={k.kpiKey} className="flex items-center gap-2">
+                  <span className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ background: ["#D95B00", "#E87518", "#B94700", "#55B8F5", "#F3A96B"][i % 5] }} />
+                  <span className="truncate">{kpiEmoji(k.kpiKey)} {KPI_CATALOG.find((c) => c.key === k.kpiKey)?.nameEn ?? k.kpiKey}</span>
+                  <span className="mr-auto font-mono tabular-nums text-[#172033]">{k.weight}%</span>
+                </li>
+              ))}
+            </ul>
+          </>
+        ) : null}
+      </section>
+
+      <section className="rounded-[28px] border border-[#F1E4D8] bg-white p-4 shadow-[0_10px_30px_-18px_rgba(23,32,51,0.28)]">
         <Field label="💰 الكوميشن الكامل (جنيه)">
           <input
             className={`${inputClass} text-xl font-black`}
@@ -293,14 +308,14 @@ export default function TargetPage() {
         </Field>
       </section>
 
-      <section className="rounded-[24px] border border-[#F3D2B5]/70 bg-white p-4 shadow-[0_10px_30px_-18px_rgba(23,32,51,0.28)]">
-        <div className="mb-1 flex items-center justify-between">
-          <h2 className="text-lg font-black">الإيتمز والأوزان</h2>
+      <section className="rounded-[28px] border border-[#F1E4D8] bg-white p-4 shadow-[0_10px_30px_-18px_rgba(23,32,51,0.28)]">
+        <div className="mb-2 flex items-center justify-between">
+          <h2 className="text-sm font-black text-[#172033]">الإيتمز والأوزان</h2>
         </div>
-        <p className="mb-2 rounded-xl bg-[#FCEBDD] px-3 py-2 text-[11px] font-bold leading-5 text-[#B94700]">
+        <p className="mb-3 rounded-2xl bg-[#FCEBDD] px-3 py-2 text-[11px] font-bold leading-5 text-[#B94700]">
           📌 الأوزان مختلفة للموظف والمدير. ده وزن {kpis.some((k) => k.kpiKey === "productivity" && k.weight > 0) ? "المدير" : "الموظف"}، وبيتحدد أوتوماتيك حسب اختيارك في أول مرة، ومش بيتعدل من التطبيق.
         </p>
-        <div className="grid grid-cols-[1fr_74px_74px] gap-2 border-b border-dashed border-[#F3D2B5]/70 pb-2 text-[11px] font-bold text-neutral-400">
+        <div className="grid grid-cols-[1fr_74px_74px] gap-2 rounded-xl bg-[#F5F8FC] px-2 py-1.5 text-[11px] font-black text-[#556070]">
           <span>الإيتم</span>
           <span className="text-center">التارجت</span>
           <span className="text-center">الوزن %</span>
@@ -312,11 +327,11 @@ export default function TargetPage() {
           if (kpi.kpiKey === "productivity" && kpi.weight === 0) return null;
           const catalog = KPI_CATALOG.find((item) => item.key === kpi.kpiKey);
           return (
-            <div key={kpi.kpiKey} className="grid grid-cols-[1fr_74px_74px] items-center gap-2 border-b border-dashed border-[#F3D2B5]/70 py-2.5 last:border-0">
-              <div className="flex min-w-0 items-center gap-2">
-                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[#FCEBDD] text-[#B94700]"><KpiIcon kpiKey={kpi.kpiKey} className="h-4 w-4" /></span>
+            <div key={kpi.kpiKey} className="grid grid-cols-[1fr_74px_74px] items-center gap-2 border-b border-[#F1E4D8] py-3 last:border-0">
+              <div className="flex min-w-0 items-center gap-2.5">
+                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-[#FCEBDD] text-[#B94700]"><KpiIcon kpiKey={kpi.kpiKey} className="h-4 w-4" /></span>
                 <div className="min-w-0">
-                  <p className="truncate text-sm font-extrabold" dir="ltr">{catalog?.nameEn}</p>
+                  <p className="truncate text-sm font-extrabold text-[#172033]" dir="ltr">{catalog?.nameEn}</p>
                   {kpi.kpiKey === "new_orange_cash" ? (
                     <p className="text-[10px] font-bold text-[#B94700]">= 90% من New Lines</p>
                   ) : (
@@ -326,7 +341,7 @@ export default function TargetPage() {
               </div>
               <input
                 aria-label={`تارجت ${catalog?.nameEn}`}
-                className={`${inputClass} px-2 py-2 text-center text-sm font-black`}
+                className={`${inputClass} px-2 py-2 text-center font-mono text-sm font-black`}
                 type="number"
                 min={0}
                 step="0.01"
@@ -337,15 +352,17 @@ export default function TargetPage() {
                   setKpis((current) => current.map((row, rowIndex) => (rowIndex === index ? { ...row, target } : row)));
                 }}
               />
-              <p aria-label={`وزن ${catalog?.nameEn}`} className="py-2 text-center text-sm font-black text-neutral-600">{kpi.weight}%</p>
+              <p aria-label={`وزن ${catalog?.nameEn}`} className="py-2 text-center font-mono text-sm font-black text-[#172033]">{kpi.weight}%</p>
             </div>
           );
         })}
       </section>
 
-      <PrimaryButton type="submit" disabled={saving}>
-        {saving ? "⏳ بنحفظ على السيرفر..." : "💾 احفظ إعدادات الشهر"}
-      </PrimaryButton>
+      <div className="sticky bottom-24 z-30 -mx-1 rounded-[24px] bg-white/90 p-2 shadow-[0_-8px_24px_-12px_rgba(23,32,51,0.18)] backdrop-blur-md">
+        <PrimaryButton type="submit" disabled={saving}>
+          {saving ? "⏳ بنحفظ على السيرفر..." : "💾 احفظ إعدادات الشهر"}
+        </PrimaryButton>
+      </div>
     </form>
   );
 }
