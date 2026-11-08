@@ -270,7 +270,7 @@ export default function HomePage() {
           <span className="text-[11px] font-bold text-[#556070]">{data.kpis.length} مؤشر</span>
         </div>
         <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
-          {data.kpis.map((kpi) => {}
+          {data.kpis.map((kpi) => {
             const onTrackKpi = kpi.achieved >= kpi.expectedToDate;
             const ringLen = 2 * Math.PI * 18;
             const pct = Math.min(100, Math.max(0, kpi.percent));
