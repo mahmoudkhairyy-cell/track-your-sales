@@ -81,8 +81,12 @@ export default function TargetPage() {
 
   useEffect(() => {
     let cancelled = false;
-    setLoading(true);
-    setError("");
+    queueMicrotask(() => {
+      if (!cancelled) {
+        setLoading(true);
+        setError("");
+      }
+    });
     api<{ settings: { saved: boolean; fullCommission: number; workingDays: WorkingDays; kpis: KpiForm[]; holidays: Holiday[]; quality: Quality } }>(
       `/api/months/${month}`,
     )

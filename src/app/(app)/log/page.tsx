@@ -40,7 +40,11 @@ export default function LogPage() {
 
   // لو الشهر اتغيّر، التاريخ يتظبط عشان يقع جوه الشهر المعروض (وإلا الإنجاز بيروح لشهر تاني بصمت).
   useEffect(() => {
-    setEntryDate((cur) => (cur.startsWith(month) ? cur : month === cairoYearMonth() ? cairoISODate() : `${month}-01`));
+    let cancelled = false;
+    queueMicrotask(() => {
+      if (!cancelled) setEntryDate((cur) => (cur.startsWith(month) ? cur : month === cairoYearMonth() ? cairoISODate() : `${month}-01`));
+    });
+    return () => { cancelled = true; };
   }, [month]);
 
   // بنحدّث الأرقام لما نسجّل إنجاز جديد (tys-data-changed) عشان "الباقي" و"التوتال" ما يفضلوش قديمين.

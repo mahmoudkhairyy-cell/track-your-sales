@@ -27,7 +27,10 @@ check("المحافظ الجديدة شرط مستقل بنسبة 90% من New L
     { kpiKey: "new_orange_cash" as const, target: 158, achieved: 90, weight: 0, unitAr: "محفظة" },
   ];
   assert.equal(applyCompanyRules(base).walletDone, true);
-  assert.equal(applyCompanyRules(base.map((item) => item.kpiKey === "new_orange_cash" ? { ...item, achieved: 89 } : item)).walletDone, false);
+  assert.equal(applyCompanyRules(base).commissionEligible, false);
+  const shortWallets = applyCompanyRules(base.map((item) => item.kpiKey === "new_orange_cash" ? { ...item, achieved: 89 } : item));
+  assert.equal(shortWallets.walletDone, false);
+  assert.equal(shortWallets.commissionEligible, false);
 });
 
 check("المحافظ لا تضيف وزنًا إلى إجمالي الإنجاز", () => {
@@ -37,6 +40,7 @@ check("المحافظ لا تضيف وزنًا إلى إجمالي الإنجا�
   ]);
   assert.equal(result.total, 40);
   assert.equal(result.walletDone, true);
+  assert.equal(result.commissionEligible, false);
 });
 
 check("بوابة 90% للمؤشرات الموزونة", () => {

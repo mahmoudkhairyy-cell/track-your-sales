@@ -196,7 +196,7 @@ export default function WikiPage() {
   }
 
   useEffect(() => {
-    if (section === "notes") void loadNotes();
+    if (section === "notes") queueMicrotask(() => { void loadNotes(); });
   }, [section]);
 
   const q = query.trim();

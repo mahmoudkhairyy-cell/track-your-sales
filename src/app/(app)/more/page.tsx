@@ -94,7 +94,7 @@ export default function MorePage() {
   }, [month]);
 
   useEffect(() => {
-    void load();
+    queueMicrotask(() => { void load(); });
   }, [load]);
 
   async function saveProfile(event: FormEvent) {

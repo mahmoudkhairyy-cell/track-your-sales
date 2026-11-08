@@ -284,7 +284,10 @@ export function AppShell({ children }: { children: ReactNode }) {
   const [who, setWho] = useState({ name: "", branch: "" });
 
   useEffect(() => {
-    setWho(readProfile());
+    let cancelled = false;
+    queueMicrotask(() => {
+      if (!cancelled) setWho(readProfile());
+    });
     // بيظهر بس أول ما التطبيق يتفتح في الجلسة، والريفريش مايعيدهوش.
     let alreadyShown = false;
     try {
@@ -293,10 +296,13 @@ export function AppShell({ children }: { children: ReactNode }) {
     } catch {
       alreadyShown = true;
     }
-    if (alreadyShown) return;
+    if (alreadyShown) return () => { cancelled = true; };
     setSplash(true);
     const timer = setTimeout(() => setSplash(false), 4000);
-    return () => clearTimeout(timer);
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+    };
   }, []);
 
   useEffect(() => {
@@ -323,8 +329,10 @@ export function AppShell({ children }: { children: ReactNode }) {
     let cancelled = false;
     const profile = readProfile();
     if (!profile.name.trim() || (!profile.areaManager && profile.role !== "area_manager") || (profile.role !== "agent" && profile.role !== "team_leader" && profile.role !== "manager" && profile.role !== "area_manager")) {
-      setStatus("profile");
-      return;
+      queueMicrotask(() => {
+        if (!cancelled) setStatus("profile");
+      });
+      return () => { cancelled = true; };
     }
     api<{ settings: { saved: boolean; kpis: { target: number }[] } }>(`/api/months/${month}`)
       .then((result) => {
@@ -366,7 +374,11 @@ function AppFrame({ children, blocked, month }: { children: ReactNode; blocked: 
   const pathname = usePathname();
   const [user, setUser] = useState({ name: "", branch: "" });
   useEffect(() => {
-    setUser(readProfile());
+    let cancelled = false;
+    queueMicrotask(() => {
+      if (!cancelled) setUser(readProfile());
+    });
+    return () => { cancelled = true; };
   }, [pathname]);
 
   return (

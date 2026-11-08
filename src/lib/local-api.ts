@@ -571,9 +571,10 @@ function getDashboard(state: State, params: URLSearchParams) {
     bundle.kpis.map((kpi) => ({ ...kpi, achieved: achievedTyped[kpi.kpiKey] ?? 0 })),
   );
   const overall = rules.total; // سقف 200% على الإجمالي بس، والمؤشرات الفردية بدون سقف
-  const commission = rules.belowOverall
-    ? 0
-    : estimatedCommission(bundle.fullCommission, overall);
+  // المحافظ الجديدة وزنها صفر، لكنها شرط استحقاق مستقل بجانب حد الـ80% للإجمالي.
+  const commission = rules.commissionEligible
+    ? estimatedCommission(bundle.fullCommission, overall)
+    : 0;
   const weightSum = sumWeights(bundle.kpis);
   const newLines = bundle.kpis.find((kpi) => kpi.kpiKey === "new_lines");
   const pace = newLinesDailyNeed(newLines?.target ?? 175, achieved.new_lines ?? 0, work.remaining);

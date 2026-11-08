@@ -162,5 +162,6 @@ export function applyCompanyRules(kpis: RulesKpi[]) {
   const total = Math.min(OVERALL_MAX_PERCENT, Math.max(0, rawTotal));
   const belowKpis = counted.filter((row) => row.gated).map((row) => row.kpiKey);
   const belowOverall = total < OVERALL_MIN_PERCENT;
-  return { counted, total, rawTotal, belowKpis, clawBacks: [] as string[], belowOverall, walletDone };
+  const commissionEligible = !belowOverall && walletDone;
+  return { counted, total, rawTotal, belowKpis, clawBacks: [] as string[], belowOverall, walletDone, commissionEligible };
 }

@@ -168,10 +168,11 @@ function groupByBranch(rows: ReportRow[]): [string, ReportRow[]][] {
 export default function ManagerPage() {
   const [password, setPassword] = useState("");
   const [detailsId, setDetailsId] = useState<string | null>(null);
-  const [branchOpen, setBranchOpen] = useState(false);
+  const [branchOpenFor, setBranchOpenFor] = useState<string | null>(null);
   // "list" = الفروع، "b:<فرع>" = صفحة فرع، "b:<فرع>|e:<id>" = موظف مفتوح. كل خطوة بتتسجل في تاريخ المتصفح.
   const [view, setView] = useHistoryView<string>("list");
   const branch = view.startsWith("b:") ? view.slice(2).split("|e:")[0] : null;
+  const branchOpen = branch !== null && branchOpenFor === branch;
   const openId = view.includes("|e:") ? view.split("|e:")[1] : null;
   const setOpenId = (id: string | null) => {
     if (!branch) return;
@@ -186,6 +187,7 @@ export default function ManagerPage() {
   const [error, setError] = useState("");
   const [pending, setPending] = useState(false);
   const [lastLoaded, setLastLoaded] = useState<Date | null>(null);
+  const [yesterday, setYesterday] = useState("");
   const [pwOpen, setPwOpen] = useState(false);
   const [oldPw, setOldPw] = useState("");
   const [newPw, setNewPw] = useState("");
@@ -215,10 +217,12 @@ export default function ManagerPage() {
     }
   }
 
-  // إجمالي الفرع المفتوح بيتقفل لما تغيّر الفرع
-  useEffect(() => {
-    setBranchOpen(false);
-  }, [branch]);
+   useEffect(() => {
+    const timer = window.setTimeout(() => {
+      setYesterday(cairoISODate(new Date(Date.now() - 24 * 60 * 60 * 1000)));
+    }, 0);
+    return () => window.clearTimeout(timer);
+  }, []);
 
   const allRows = rows ?? [];
   const branchRows = branch ? allRows.filter((r) => (r.branch_name || NO_BRANCH) === branch) : [];
@@ -267,6 +271,7 @@ export default function ManagerPage() {
   }
 
   useEffect(() => {
+    let cancelled = false;
     let saved: string | null = null;
     try {
       saved = sessionStorage.getItem("tys.mgrPass");
@@ -274,9 +279,13 @@ export default function ManagerPage() {
       saved = null;
     }
     if (saved) {
-      setPassword(saved);
-      void load(undefined, saved);
+      queueMicrotask(() => {
+        if (cancelled) return;
+        setPassword(saved);
+        void load(undefined, saved);
+      });
     }
+    return () => { cancelled = true; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -508,7 +517,7 @@ export default function ManagerPage() {
                 {allRows.length === 0 ? (
                   <p className="rounded-2xl bg-white p-4 text-sm font-bold text-[#927b69]">مفيش فروع بعتت بيانات لحد دلوقتي.</p>
                 ) : null}
-                {branch === null && allRows.length > 0 ? (() => {
+                {branch === null && allRows.length > 0 && yesterday ? (() => {
                   const today = cairoISODate();
                   const logged: ReportRow[] = [];
                   const missing: ReportRow[] = [];
@@ -543,7 +552,6 @@ export default function ManagerPage() {
                 })() : null}
                 {branch === null && allRows.length > 0 ? (() => {
                   // تنبيه: الموظفين اللي ما سجلوش إنجاز امبارح (ومش في إجازة امبارح).
-                  const yesterday = cairoISODate(new Date(Date.now() - 24 * 60 * 60 * 1000));
                   const missedYesterday = allRows.filter(
                     (r) =>
                       !(r.payload.settings?.holidays ?? []).some((h) => h.date === yesterday) &&
@@ -607,7 +615,7 @@ export default function ManagerPage() {
                     <article className="rounded-[24px] bg-white p-4 shadow-sm ring-1 ring-[#f1dfd0]/70">
                       <button
                         type="button"
-                        onClick={() => setBranchOpen(!branchOpen)}
+                        onClick={() => setBranchOpenFor(branchOpen ? null : branch)}
                         className="flex w-full items-center justify-between gap-3 text-right"
                       >
                         <div>

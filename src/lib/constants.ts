@@ -107,8 +107,8 @@ export const KPI_CATALOG = [
   },
   {
     key: "existing_wallets",
-    nameEn: "Existing OC Wallets",
-    nameAr: "Existing OC Wallets",
+    nameEn: "Excite",
+    nameAr: "Excite",
     emoji: "💳",
     unitAr: "محفظة",
     defaultTarget: 74,
