@@ -324,7 +324,7 @@ export default function MorePage() {
       </section>
 
       {view === "menu" ? (
-        <div className="grid gap-3 sm:grid-cols-2">
+        <div className="grid grid-cols-2 gap-2.5 sm:gap-3">
           {[
             { key: "today", icon: "📊", title: "اللي عملته النهارده", desc: "ملخص إنجازات اليوم" },
             { key: "history", icon: "🗂️", title: "سجل العمليات", desc: "كل الإنجازات الشهر ده" },
@@ -337,14 +337,14 @@ export default function MorePage() {
               key={item.key}
               type="button"
               onClick={() => setView(item.key as typeof view)}
-              className="group flex min-h-[76px] w-full items-center gap-3 rounded-[22px] border border-[#f1dfd0] bg-white p-3.5 text-right shadow-[0_8px_22px_rgba(126,65,24,0.045)] transition-all duration-200 hover:-translate-y-0.5 hover:border-[#edc4a4] hover:shadow-[0_14px_28px_rgba(126,65,24,0.08)] active:scale-[0.99] sm:min-h-[84px] sm:gap-4 sm:p-4"
+              className="group relative flex min-h-[142px] w-full flex-col items-start justify-start gap-2.5 rounded-[22px] border border-[#f1dfd0] bg-gradient-to-br from-white to-[#fffaf5] p-3.5 text-right shadow-[0_8px_22px_rgba(126,65,24,0.045)] transition-all duration-200 hover:-translate-y-0.5 hover:border-[#edc4a4] hover:shadow-[0_14px_28px_rgba(126,65,24,0.08)] active:scale-[0.99] sm:min-h-[156px] sm:p-4"
             >
-              <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#fff0e2] text-2xl">{item.icon}</span>
-              <span className="flex-1">
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-[#fff0e2] to-[#ffe1c8] text-2xl shadow-sm">{item.icon}</span>
+              <span className="w-full pr-0">
                 <span className="block font-black text-[#241f1b]">{item.title}</span>
                 <span className="block text-xs text-[#88796e]">{item.desc}</span>
               </span>
-              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#fff8f1] text-lg text-[#bd6b39] transition-transform group-hover:-translate-x-0.5">‹</span>
+              <span className="absolute left-3 top-3 flex h-7 w-7 items-center justify-center rounded-full bg-[#fff0e2] text-lg text-[#bd6b39] transition-transform group-hover:-translate-x-0.5">‹</span>
             </button>
           ))}
         </div>
