@@ -681,3 +681,184 @@ body {
     transition: none !important;
   }
 }
+
+
+/* Dashboard, manager console and knowledge hub — presentation-only refinement. */
+.tys-page-home {
+  gap: 1rem;
+}
+.tys-page-home > section:first-of-type {
+  min-height: 82px;
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at 8% 50%, rgba(255, 157, 56, .12), transparent 7rem),
+    linear-gradient(110deg, #fff 0%, #fffaf5 100%);
+  box-shadow: 0 8px 24px rgba(104, 53, 19, .045);
+}
+.tys-page-home > section:nth-of-type(2) {
+  isolation: isolate;
+  border-radius: 28px;
+  box-shadow: 0 18px 44px rgba(129, 65, 22, .09);
+}
+.tys-page-home > section:nth-of-type(2) > div.relative > div:first-child {
+  border-color: rgba(189, 75, 10, .13);
+}
+.tys-page-home > section:nth-of-type(2) [class*="rounded-2xl"][class*="bg-white"] {
+  border-color: #f3e4d8;
+}
+.tys-page-home > section:nth-of-type(3) {
+  border-color: #f0dfd1;
+  box-shadow: 0 8px 22px rgba(104, 53, 19, .045);
+}
+.tys-page-home > section:nth-of-type(4) {
+  box-shadow: 0 8px 22px rgba(104, 53, 19, .04);
+}
+.tys-page-home > section:nth-of-type(5) {
+  background: linear-gradient(145deg, #fff 0%, #fffaf5 100%);
+}
+.tys-page-home > section:nth-of-type(6) a {
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 16px;
+  background: linear-gradient(145deg, #fff 0%, #fff8f1 100%);
+}
+.tys-page-home > section:last-of-type article {
+  border-radius: 17px;
+  box-shadow: 0 5px 16px rgba(104, 53, 19, .045);
+}
+.tys-page-home > section:last-of-type article > div:first-child {
+  background: linear-gradient(145deg, #fffaf6, #fff);
+}
+.tys-page-home > section:last-of-type article > div:last-child {
+  min-width: 0;
+}
+.tys-page-home > section:last-of-type article [class*="rounded-full"] {
+  letter-spacing: -.02em;
+}
+
+.tys-page-manager > div > div:first-child {
+  border: 1px solid rgba(255, 255, 255, .18);
+  box-shadow: 0 22px 52px rgba(157, 64, 8, .20);
+}
+.tys-page-manager > div > div:first-child h1 {
+  letter-spacing: -.045em;
+  text-shadow: 0 2px 16px rgba(87, 32, 0, .12);
+}
+.tys-page-manager > div > div:first-child [class*="bg-white/10"] {
+  border-color: rgba(255,255,255,.2);
+  background: linear-gradient(145deg, rgba(255,255,255,.17), rgba(255,255,255,.08));
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.12);
+}
+.tys-page-manager article {
+  border-radius: 22px;
+  box-shadow: 0 8px 24px rgba(104, 53, 19, .05);
+}
+.tys-page-manager article > button {
+  min-height: 48px;
+}
+.tys-page-manager article [class*="grid-cols-2"] > div {
+  min-width: 0;
+}
+.tys-page-manager article [class*="rounded-xl"][class*="border"] {
+  border-color: #f0e2d7;
+  background: #fffaf6;
+}
+.tys-page-manager section {
+  scroll-margin-top: 1rem;
+}
+
+.tys-page-wiki > section:first-child {
+  box-shadow: 0 18px 42px rgba(126, 65, 24, .075);
+}
+.tys-page-wiki > section:first-child > div.relative > div > span {
+  box-shadow: 0 8px 18px rgba(126, 65, 24, .06);
+}
+.tys-page-wiki > section:not(:first-child) {
+  border-color: #efdfd2;
+}
+.tys-page-wiki article {
+  box-shadow: 0 7px 20px rgba(104, 53, 19, .045);
+}
+.tys-page-wiki article details summary {
+  padding-block: .35rem;
+}
+.tys-page-wiki button,
+.tys-page-wiki a {
+  transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease, background-color 160ms ease;
+}
+
+@media (max-width: 640px) {
+  .tys-page-home {
+    gap: .8rem;
+    padding-bottom: calc(5.5rem + env(safe-area-inset-bottom));
+  }
+  .tys-page-home > section:first-of-type {
+    min-height: 72px;
+    padding-block: .8rem;
+  }
+  .tys-page-home > section:nth-of-type(2) {
+    border-radius: 23px;
+    padding: .9rem;
+  }
+  .tys-page-home > section:nth-of-type(2) .font-mono.text-\\[52px\\] {
+    font-size: clamp(2.65rem, 12vw, 3.25rem);
+  }
+  .tys-page-home > section:nth-of-type(3) {
+    border-radius: 18px;
+  }
+  .tys-page-home > section:nth-of-type(5),
+  .tys-page-home > section:last-of-type {
+    padding: .8rem;
+  }
+  .tys-page-home > section:last-of-type article {
+    gap: .55rem;
+    padding: .65rem;
+  }
+  .tys-page-home > section:last-of-type article > div:first-child {
+    width: 2.65rem;
+    height: 2.65rem;
+  }
+  .tys-page-manager {
+    padding-inline: .65rem;
+    padding-top: .75rem;
+  }
+  .tys-page-manager > div {
+    gap: .85rem;
+  }
+  .tys-page-manager > div > div:first-child {
+    border-radius: 24px;
+    padding: 1.1rem;
+  }
+  .tys-page-manager article {
+    padding: .85rem;
+  }
+  .tys-page-wiki {
+    gap: .85rem;
+  }
+  .tys-page-wiki > section:first-child {
+    padding: 1rem;
+  }
+  .tys-page-wiki > section:not(:first-child) {
+    border-radius: 18px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .tys-page-home > section:last-of-type > div.grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .tys-page-manager article:hover,
+  .tys-page-wiki article:hover {
+    transform: translateY(-1px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tys-page-manager article,
+  .tys-page-wiki button,
+  .tys-page-wiki a {
+    transition: none !important;
+  }
+}
