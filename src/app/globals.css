@@ -1308,3 +1308,75 @@ body {
     transition: none !important;
   }
 }
+
+
+/* Manager workspace — clearer hierarchy and calmer responsive cards. */
+.tys-page-manager {
+  color: #38251a;
+  scroll-padding-bottom: calc(6.5rem + env(safe-area-inset-bottom));
+}
+.tys-page-manager > div {
+  gap: 1.15rem;
+}
+.tys-page-manager > div > section,
+.tys-page-manager article {
+  transition: border-color .18s ease, box-shadow .18s ease, transform .18s ease;
+}
+.tys-page-manager article {
+  border: 1px solid rgba(241, 223, 208, .9);
+  box-shadow: 0 8px 24px rgba(126, 65, 24, .045);
+}
+.tys-page-manager article :is(button, a) {
+  transition: background-color .18s ease, box-shadow .18s ease, transform .18s ease;
+}
+.tys-page-manager :is(input, select, textarea) {
+  min-height: 46px;
+  border-radius: 15px;
+}
+.tys-page-manager :is(button, a):focus-visible,
+.tys-page-manager :is(input, select, textarea):focus-visible {
+  outline: 3px solid rgba(233, 104, 18, .22);
+  outline-offset: 2px;
+}
+.tys-page-manager [class*="grid-cols-"] > * {
+  min-width: 0;
+}
+.tys-page-manager :is(.tabular-nums, [class*="text-2xl"], [class*="text-3xl"]) {
+  font-variant-numeric: tabular-nums;
+}
+@media (hover: hover) and (min-width: 768px) {
+  .tys-page-manager article:hover {
+    border-color: #e9c7ad;
+    box-shadow: 0 13px 30px rgba(126, 65, 24, .075);
+    transform: translateY(-1px);
+  }
+}
+@media (max-width: 640px) {
+  .tys-page-manager {
+    padding: .85rem .65rem calc(6rem + env(safe-area-inset-bottom));
+  }
+  .tys-page-manager > div {
+    gap: .9rem;
+  }
+  .tys-page-manager > div > section,
+  .tys-page-manager article {
+    border-radius: 20px;
+  }
+  .tys-page-manager article {
+    padding: .9rem;
+  }
+  .tys-page-manager :is(input, select, textarea) {
+    font-size: 16px;
+  }
+  .tys-page-manager [class*="grid-cols-"] {
+    gap: .55rem;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tys-page-manager,
+  .tys-page-manager * {
+    scroll-behavior: auto !important;
+    transition-duration: .01ms !important;
+    animation-duration: .01ms !important;
+  }
+}
