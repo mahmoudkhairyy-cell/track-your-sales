@@ -422,7 +422,7 @@ function AppFrame({ children, blocked, month }: { children: ReactNode; blocked: 
             </div>
           </div>
 
-          <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-[#f2e4d8] bg-white/95 pb-[env(safe-area-inset-bottom)] shadow-[0_-8px_28px_rgba(115,58,20,0.07)] backdrop-blur-2xl lg:hidden">
+          <nav className="tys-mobile-nav fixed inset-x-0 bottom-0 z-40 border-t border-[#f2e4d8] bg-white/95 pb-[env(safe-area-inset-bottom)] shadow-[0_-8px_28px_rgba(115,58,20,0.07)] backdrop-blur-2xl lg:hidden" aria-label="التنقل الرئيسي">
             <div className="grid grid-cols-5">
               {NAV.map((item) => {
                 const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
@@ -431,13 +431,14 @@ function AppFrame({ children, blocked, month }: { children: ReactNode; blocked: 
                   <Link
                     key={item.href}
                     href={`${item.href}?month=${month}`}
-                    className={`flex min-h-[68px] flex-col items-center justify-center gap-1.5 px-1 pt-1 text-[10px] font-extrabold transition-colors ${
-                      active ? "text-[#bd4b0a]" : "text-[#9b8b7f] hover:text-[#bd4b0a]"
+                    aria-current={active ? "page" : undefined}
+                    className={`tys-mobile-nav-link flex min-h-[68px] flex-col items-center justify-center gap-1.5 px-1 pt-1 text-[10px] font-extrabold transition-colors ${
+                      active ? "tys-mobile-nav-link-active text-[#bd4b0a]" : "text-[#9b8b7f] hover:text-[#bd4b0a]"
                     }`}
                   >
                     <span
-                      className={`flex h-9 w-12 items-center justify-center rounded-2xl transition-all ${
-                        item.emphasize ? "h-11 w-11 -translate-y-1 rounded-[18px] bg-gradient-to-br from-[#e96812] to-[#ff9d38] text-white shadow-[0_7px_18px_rgba(217,104,18,0.24)] ring-4 ring-[#fff0e2]" : active ? "bg-[#fff0e2] text-[#bd4b0a]" : "text-[#a99687]"
+                      className={`tys-mobile-nav-icon flex h-9 w-12 items-center justify-center rounded-2xl transition-all ${
+                        item.emphasize ? "tys-mobile-nav-primary h-11 w-11 -translate-y-1 rounded-[18px] bg-gradient-to-br from-[#e96812] to-[#ff9d38] text-white shadow-[0_7px_18px_rgba(217,104,18,0.24)] ring-4 ring-[#fff0e2]" : active ? "bg-[#fff0e2] text-[#bd4b0a]" : "text-[#a99687]"
                       }`}
                     >
                       <Icon />
