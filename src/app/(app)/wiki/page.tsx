@@ -69,10 +69,12 @@ function SearchBox({ value, onChange, placeholder }: { value: string; onChange: 
 
 function Back({ onClick, title }: { onClick: () => void; title: string }) {
   return (
-    <button type="button" onClick={onClick} className="mb-4 flex min-h-11 items-center gap-2 text-sm font-extrabold text-[#B94700]">
-      ‹ رجوع
-      <span className="text-[#172033]">{title}</span>
-    </button>
+    <div className="mb-4 flex items-center gap-2">
+      <button type="button" onClick={onClick} className="flex min-h-10 items-center gap-1 rounded-full bg-white px-3 text-xs font-extrabold text-[#B94700] shadow-sm ring-1 ring-[#F1E4D8] active:scale-95">
+        ‹ رجوع
+      </button>
+      <span className="truncate text-base font-black text-[#172033]">{title}</span>
+    </div>
   );
 }
 
@@ -223,9 +225,9 @@ export default function WikiPage() {
     <div className="space-y-5">
       {section === "hub" ? (
         <>
-          <section className="text-center">
-            <h1 className="text-2xl font-black tracking-tight text-[#172033]">مرجع أورانج</h1>
-            <p className="mt-2 text-sm text-[#556070]">بحث شامل في أكواد SR والباقات والأرقام والإيميلات</p>
+          <section className="overflow-hidden rounded-[28px] bg-gradient-to-br from-[#B94700] via-[#D95B00] to-[#E87518] p-5 text-white shadow-[0_20px_40px_-18px_rgba(138,52,0,0.6)]">
+            <h1 className="text-2xl font-black tracking-tight">مرجع أورانج</h1>
+            <p className="mt-1 text-xs font-medium leading-6 text-white/85">بحث شامل في أكواد SR والباقات والأرقام والإيميلات</p>
           </section>
           <SearchBox value={query} onChange={setQuery} placeholder="ابحث بالكود أو الاسم أو الرقم..." />
 
@@ -297,15 +299,15 @@ export default function WikiPage() {
             </div>
           ) : (
             <>
-              <div className="space-y-2">
+              <div className="grid grid-cols-2 gap-2.5">
                 {HUB.map((card) => (
-                  <button key={card.id} type="button" onClick={() => { setSection(card.id); setQuery(""); }} className="flex w-full items-center gap-3 rounded-[24px] bg-white p-3.5 text-right shadow-[0_10px_30px_-18px_rgba(23,32,51,0.28)]">
-                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#FCEBDD]">{card.icon}</span>
-                    <span className="min-w-0 flex-1">
-                      <span className="block font-black">{card.title}</span>
-                      <span className="block truncate text-xs text-[#556070]">{card.desc}</span>
+                  <button key={card.id} type="button" onClick={() => { setSection(card.id); setQuery(""); }} className="flex min-h-[148px] flex-col items-start gap-2 rounded-[22px] bg-white p-3.5 text-right shadow-[0_10px_30px_-18px_rgba(23,32,51,0.28)] ring-1 ring-[#F1E4D8] transition active:scale-[0.97]">
+                    <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-[#FCEBDD] to-[#FFF6EE]">{card.icon}</span>
+                    <span className="mt-auto block w-full">
+                      <span className="block text-sm font-black text-[#172033]">{card.title}</span>
+                      <span className="mt-0.5 block line-clamp-2 text-[11px] leading-4 text-[#556070]">{card.desc}</span>
                     </span>
-                    <span className="shrink-0 text-[11px] font-bold text-[#B94700]">{card.count}</span>
+                    {card.count ? <span className="rounded-full bg-[#FCEBDD] px-2 py-0.5 text-[10px] font-black text-[#B94700]">{card.count}</span> : null}
                   </button>
                 ))}
               </div>
@@ -334,10 +336,12 @@ export default function WikiPage() {
           <p className="mt-2 text-xs text-[#556070]">{filteredSr.length} نتيجة</p>
           <div className="mt-3 space-y-2">
             {filteredSr.map((item) => (
-              <button key={`${item.id}-${item.title}`} type="button" onClick={() => setOpenSr(item)} className="w-full rounded-[24px] border border-[#F1E4D8] bg-white p-4 text-right shadow-[0_10px_30px_-18px_rgba(23,32,51,0.28)]">
-                <p className="text-xs font-extrabold text-[#B94700]">{item.id}</p>
-                <p className="font-extrabold">{item.titleAr || item.title}</p>
-                <p className="mt-1 line-clamp-2 text-xs leading-6 text-[#556070]">{item.description}</p>
+              <button key={`${item.id}-${item.title}`} type="button" onClick={() => setOpenSr(item)} className="flex w-full items-start gap-3 rounded-[22px] border border-[#F1E4D8] bg-white p-3.5 text-right shadow-[0_10px_30px_-18px_rgba(23,32,51,0.28)] transition active:scale-[0.99]">
+                <span className="shrink-0 rounded-xl bg-[#FCEBDD] px-2 py-1.5 font-mono text-[11px] font-black text-[#B94700]" dir="ltr">{item.id}</span>
+                <span className="min-w-0 flex-1">
+                  <span className="block font-extrabold text-[#172033]">{item.titleAr || item.title}</span>
+                  <span className="mt-1 line-clamp-2 block text-xs leading-6 text-[#556070]">{item.description}</span>
+                </span>
               </button>
             ))}
           </div>
