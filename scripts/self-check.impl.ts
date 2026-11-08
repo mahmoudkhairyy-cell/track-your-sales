@@ -23,19 +23,19 @@ check("المؤشر الفردي لا يتوقف عند 200%", () => {
   assert.equal(kpiContribution(300, 100, 40), 120);
 });
 
-check("المحافظ الجديدة شرط مستقل بنسبة 90% من New Lines", () => {
+check("المحافظ الجديدة شرط مستقل بنسبة 100% من تارجتها", () => {
   const base = [
     { kpiKey: "new_lines" as const, target: 175, achieved: 100, weight: 40, unitAr: "خط" },
-    { kpiKey: "new_orange_cash" as const, target: 158, achieved: 90, weight: 0, unitAr: "محفظة" },
+    { kpiKey: "new_orange_cash" as const, target: 158, achieved: 158, weight: 0, unitAr: "محفظة" },
   ];
   assert.equal(applyCompanyRules(base).walletDone, true);
   assert.equal(applyCompanyRules(base).commissionEligible, false);
-  const shortWallets = applyCompanyRules(base.map((item) => item.kpiKey === "new_orange_cash" ? { ...item, achieved: 89 } : item));
+  const shortWallets = applyCompanyRules(base.map((item) => item.kpiKey === "new_orange_cash" ? { ...item, achieved: 157 } : item));
   assert.equal(shortWallets.walletDone, false);
   assert.equal(shortWallets.commissionEligible, false);
 });
 
-check("شرط المحافظ يمنع الكوميشن حتى مع اكتمال المؤشرات الموزونة", () => {
+check("شرط المحافظ يمنع الكوميشن والخطوط الجديدة حتى مع اكتمال باقي المؤشرات", () => {
   const completeWeightedTargets = [
     { kpiKey: "new_lines" as const, target: 100, achieved: 100, weight: 40, unitAr: "خط" },
     { kpiKey: "new_orange_cash" as const, target: 90, achieved: 89, weight: 0, unitAr: "محفظة" },
@@ -46,7 +46,7 @@ check("شرط المحافظ يمنع الكوميشن حتى مع اكتمال 
     { kpiKey: "quality" as const, target: 100, achieved: 100, weight: 15, unitAr: "%" },
   ];
   const blocked = applyCompanyRules(completeWeightedTargets);
-  assert.equal(blocked.total, 100);
+  assert.equal(blocked.total, 60);
   assert.equal(blocked.walletDone, false);
   assert.equal(blocked.commissionEligible, false);
   const eligible = applyCompanyRules(completeWeightedTargets.map((item) =>
