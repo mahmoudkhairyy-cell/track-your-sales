@@ -70,7 +70,7 @@ function NavLinks({ pathname, month }: { pathname: string; month: string }) {
             key={item.href}
             href={`${item.href}?month=${month}`}
             className={`flex min-h-12 items-center gap-3 rounded-2xl px-3 text-sm font-bold transition ${
-              active ? "bg-orange-50 text-[#ff7900]" : "text-neutral-500 hover:bg-neutral-50"
+              active ? "bg-[#fff0e4] text-[#bd4b0a] shadow-sm" : "text-[#8c7b6e] hover:bg-[#fff7f0] hover:text-[#bd4b0a]"
             }`}
           >
             <Icon />
@@ -91,10 +91,10 @@ export function AppShell({ user, children }: { user: SafeUser; children: ReactNo
   return (
     <ToastProvider>
       <MonthContext.Provider value={month}>
-        <div className="min-h-screen bg-[#fff7f0] text-neutral-900">
-          <div className="h-1.5 bg-[#ff7900]" />
+        <div className="min-h-screen bg-transparent text-[#24180f]">
+          <div className="h-1.5 bg-gradient-to-l from-[#bd4b0a] via-[#e96812] to-[#ffb36e]" />
           <div className="mx-auto flex min-h-screen max-w-7xl">
-            <aside className="hidden w-72 shrink-0 flex-col border-l border-orange-100 bg-white p-5 lg:flex">
+            <aside className="sticky top-0 hidden h-screen w-72 shrink-0 flex-col border-l border-[#f1e2d6] bg-white/85 p-5 shadow-[8px_0_36px_rgba(116,63,26,0.035)] backdrop-blur-xl lg:flex">
               <div className="flex items-center gap-3">
                 <LogoMark />
                 <div>
@@ -102,7 +102,7 @@ export function AppShell({ user, children }: { user: SafeUser; children: ReactNo
                   <p className="text-xs text-neutral-400" dir="ltr">{BRAND_BY}</p>
                 </div>
               </div>
-              <div className="mt-6 rounded-3xl bg-[#ff7900] p-4 text-white">
+              <div className="mt-6 overflow-hidden rounded-[26px] bg-gradient-to-br from-[#f47b27] via-[#e96812] to-[#bd4b0a] p-4 text-white shadow-[0_14px_28px_rgba(189,75,10,0.20)]">
                 <p className="text-sm font-extrabold">{user.name}</p>
                 <p className="text-xs text-white/80">📍 {user.branch}</p>
               </div>
@@ -113,7 +113,7 @@ export function AppShell({ user, children }: { user: SafeUser; children: ReactNo
             </aside>
 
             <div className="flex min-w-0 flex-1 flex-col">
-              <header className="sticky top-0 z-30 border-b border-orange-100 bg-white/95 px-4 py-3 backdrop-blur">
+              <header className="sticky top-0 z-30 border-b border-[#f1e2d6]/80 bg-[#fffaf6]/90 px-4 py-3 shadow-[0_5px_24px_rgba(116,63,26,0.035)] backdrop-blur-xl">
                 <div className="flex items-center justify-between gap-3">
                   <div className="flex items-center gap-2">
                     <LogoMark />
@@ -125,12 +125,12 @@ export function AppShell({ user, children }: { user: SafeUser; children: ReactNo
                   <MonthSwitcher />
                 </div>
               </header>
-              <main className="flex-1 px-4 py-5 pb-28 lg:px-8 lg:pb-10">{children}</main>
+              <main className="mx-auto w-full max-w-[1440px] flex-1 px-4 py-5 pb-28 sm:px-5 lg:px-8 lg:py-7 lg:pb-10">{children}</main>
               <footer className="hidden px-8 pb-6 text-xs leading-6 text-neutral-400 lg:block">{APP_DISCLAIMER}</footer>
             </div>
           </div>
 
-          <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-orange-100 bg-white/95 pb-[env(safe-area-inset-bottom)] backdrop-blur lg:hidden">
+          <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-[#f1e2d6] bg-[#fffaf6]/95 pb-[env(safe-area-inset-bottom)] shadow-[0_-8px_30px_rgba(116,63,26,0.07)] backdrop-blur-xl lg:hidden">
             <div className="grid grid-cols-5">
               {NAV.map((item) => {
                 const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
@@ -140,12 +140,12 @@ export function AppShell({ user, children }: { user: SafeUser; children: ReactNo
                     key={item.href}
                     href={`${item.href}?month=${month}`}
                     className={`flex min-h-16 flex-col items-center justify-center gap-1 text-[11px] font-extrabold ${
-                      active ? "text-[#ff7900]" : "text-neutral-400"
+                      active ? "text-[#bd4b0a]" : "text-[#a99586]"
                     }`}
                   >
                     <span
                       className={`flex h-9 w-9 items-center justify-center rounded-2xl ${
-                        item.emphasize ? "bg-[#ff7900] text-white" : active ? "bg-orange-50" : ""
+                        item.emphasize ? "bg-gradient-to-br from-[#f47b27] to-[#bd4b0a] text-white shadow-[0_5px_14px_rgba(189,75,10,0.25)]" : active ? "bg-[#fff0e4]" : ""
                       }`}
                     >
                       <Icon />
