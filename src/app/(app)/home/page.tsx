@@ -124,7 +124,7 @@ export default function HomePage() {
   const sarcastic = sarcasticLine(data.overall);
 
   return (
-    <div className="flex min-h-screen flex-col gap-4 bg-[#F5F8FC] pb-28">
+    <div className="flex min-h-screen flex-col gap-4 bg-[#fffaf5] pb-28">
       {sync ? (
         <p className={`text-[11px] font-bold ${sync.ok ? "text-emerald-700" : "text-red-600"}`} dir="rtl">
           {sync.ok
@@ -134,14 +134,14 @@ export default function HomePage() {
       ) : null}
 
       <section className="flex flex-col gap-1">
-        <h1 className="text-lg font-black text-[#1a1b1e]">
+        <h1 className="text-lg font-black text-[#241f1b]">
           {greeting()} {data.profile.name.split(" ")[0]} 👋
         </h1>
-        <p className="text-[11px] text-[#584235]">📍 {data.profile.branch}</p>
+        <p className="text-[11px] text-[#88796e]">📍 {data.profile.branch}</p>
       </section>
 
       {/* الهيرو */}
-      <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#B94700] via-[#D95B00] to-[#8A3400] p-3 text-white shadow-[0_14px_30px_-10px_rgba(138,52,0,0.55)]">
+      <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#a94308] via-[#e96812] to-[#bd4b0a] p-3 text-white shadow-[0_14px_30px_-10px_rgba(189,75,10,0.24)]">
         
         <div className="relative z-10 flex flex-col gap-2">
           <div className="flex items-center justify-between">
@@ -153,7 +153,7 @@ export default function HomePage() {
               />
               إجمالي التارجت الشهري
             </span>
-            <span className="flex items-center gap-1.5 rounded-full bg-white/20 px-2.5 py-0.5 text-[11px] font-bold">
+            <span className="flex items-center gap-1.5 rounded-full bg-[#fffdfb]/20 px-2.5 py-0.5 text-[11px] font-bold">
               <span className="h-2 w-2 rounded-full bg-[#55B8F5]" />
               Live Run
             </span>
@@ -181,17 +181,17 @@ export default function HomePage() {
               </div>
             </div>
             <div className="flex min-w-0 flex-1 flex-col gap-2">
-              <span className="inline-block w-fit rounded-xl bg-white/30 px-3 py-1 text-[12px] font-extrabold text-white shadow-sm">{statusTextEgy}</span>
+              <span className="inline-block w-fit rounded-xl bg-[#fffdfb]/30 px-3 py-1 text-[12px] font-extrabold text-white shadow-sm">{statusTextEgy}</span>
               <p className="text-[11px] font-medium text-white/85">{timeText}</p>
               <p className="text-xs font-bold leading-5">{overallLine()}</p>
             </div>
           </div>
           <div className="grid grid-cols-2 gap-2 border-t border-white/25 pt-3">
-            <div className="flex flex-col rounded-2xl bg-white/15 p-3">
+            <div className="flex flex-col rounded-2xl bg-[#fffdfb]/15 p-3">
               <span className="text-[11px] font-medium text-white/85">{gap > 0 ? "المتبقي للهدف" : "الحالة"}</span>
               <span className="mt-1 font-mono text-base font-black">{gap > 0 ? `${formatPercent(gap)}%` : "قفلت الشهر ✅"}</span>
             </div>
-            <div className="flex flex-col rounded-2xl bg-white/15 p-3">
+            <div className="flex flex-col rounded-2xl bg-[#fffdfb]/15 p-3">
               <span className="text-[11px] font-medium text-white/85">الكوميشن المتوقع</span>
               <span className="mt-1 font-mono text-base font-black">
                 {formatMoney(data.estimatedCommission)} <span className="text-[10px] font-bold text-white/80">من {formatMoney(data.fullCommission)} ج.م</span>
@@ -205,7 +205,7 @@ export default function HomePage() {
 
 
       {/* المطلوب انهاردة */}
-      <section className="flex items-stretch overflow-hidden rounded-2xl border border-[#F3D2B5]/80 bg-white shadow-sm">
+      <section className="flex items-stretch overflow-hidden rounded-2xl border border-[#F3D2B5]/80 bg-[#fffdfb] shadow-sm">
         <div className="flex w-24 shrink-0 flex-col items-center justify-center bg-gradient-to-br from-[#D95B00] to-[#B94700] px-2 py-3 text-white">
           <span className="font-mono text-3xl font-black leading-none">{data.pace.perDay === null ? "—" : formatQty(Math.ceil(data.pace.perDay))}</span>
           <span className="mt-1 text-[10px] font-bold text-[#FCEBDD]">{data.pace.perDay === null ? "" : linesWord(Math.ceil(data.pace.perDay)) + " / يوم"}</span>
@@ -224,7 +224,7 @@ export default function HomePage() {
         <div className="flex items-center justify-between">
           <h2 className="flex items-center gap-1.5 text-xs font-black uppercase tracking-wide text-slate-800">
             <span>نسبة الإنجاز بالمحاور</span>
-            <span className="rounded border border-[#F3D2B5] bg-[#FCEBDD] px-1.5 text-[11px] font-bold text-[#B94700]">{data.kpis.length} مؤشرات</span>
+            <span className="rounded border border-[#F3D2B5] bg-[#fff0e2] px-1.5 text-[11px] font-bold text-[#bd4b0a]">{data.kpis.length} مؤشرات</span>
           </h2>
           <span className="text-[11px] font-bold text-slate-500">اسحب ←</span>
         </div>
@@ -232,7 +232,7 @@ export default function HomePage() {
           {data.kpis.map((kpi) => {
             const ok = kpi.achieved >= kpi.expectedToDate;
             return (
-              <div key={kpi.kpiKey} className="flex w-24 shrink-0 flex-col items-center rounded-2xl border border-slate-200/80 bg-white p-2.5 text-center shadow-sm">
+              <div key={kpi.kpiKey} className="flex w-24 shrink-0 flex-col items-center rounded-2xl border border-slate-200/80 bg-[#fffdfb] p-2.5 text-center shadow-sm">
                 <div className={`flex h-10 w-10 items-center justify-center rounded-full border-2 font-mono text-xs font-black ${ok ? "border-emerald-500 text-emerald-700" : "border-red-500 text-red-700"}`}>
                   {Math.round(kpi.percent)}%
                 </div>
@@ -251,7 +251,7 @@ export default function HomePage() {
           { href: "/target/", label: "التارجت" },
           { href: "/wiki/", label: "المرجع" },
         ].map((item) => (
-          <Link key={item.href} href={`${item.href}?month=${month}`} className="rounded-2xl border border-[#E8EDF4] bg-white px-3 py-3 text-center text-xs font-extrabold text-[#172033] shadow-sm transition-transform active:scale-95">
+          <Link key={item.href} href={`${item.href}?month=${month}`} className="rounded-2xl border border-[#f2e4d8] bg-[#fffdfb] px-3 py-3 text-center text-xs font-extrabold text-[#172033] shadow-sm transition-transform active:scale-95">
             {item.label}
           </Link>
         ))}
@@ -269,7 +269,7 @@ export default function HomePage() {
             const ringLen = 2 * Math.PI * 18;
             const pct = Math.min(100, Math.max(0, kpi.percent));
             return (
-              <article key={kpi.kpiKey} className={`flex items-center gap-3 rounded-2xl border bg-white p-4 transition-shadow duration-700 ${onTrackKpi ? "border-emerald-300 shadow-[0_0_18px_rgba(16,185,129,0.45)]" : "border-red-300 shadow-[0_0_18px_rgba(220,38,38,0.45)]"}`}>
+              <article key={kpi.kpiKey} className={`flex items-center gap-3 rounded-2xl border bg-[#fffdfb] p-4 transition-shadow duration-700 ${onTrackKpi ? "border-emerald-300 shadow-[0_0_18px_rgba(16,185,129,0.45)]" : "border-red-300 shadow-[0_0_18px_rgba(220,38,38,0.45)]"}`}>
                 <div className="relative h-14 w-14 shrink-0">
                   <svg viewBox="0 0 44 44" className="h-full w-full -rotate-90">
                     <circle cx="22" cy="22" r="18" fill="none" stroke="#F1F4F9" strokeWidth="5" />
