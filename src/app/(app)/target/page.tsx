@@ -171,8 +171,8 @@ export default function TargetPage() {
   return (
     <form className="space-y-5" onSubmit={onSave}>
       <section>
-        <h1 className="text-3xl font-black">التارجت 🎯</h1>
-        <p className="mt-1 text-xs text-neutral-400">{saved ? "✅ محفوظة لهذا الشهر" : "⚠️ لسه مش محفوظة، اضغط حفظ"}</p>
+        <h1 className="text-2xl font-black tracking-tight text-[#172033]">التارجت 🎯</h1>
+        <p className="mt-1 text-xs font-bold text-[#556070]">{saved ? "✅ محفوظة لهذا الشهر" : "⚠️ لسه مش محفوظة، اضغط حفظ"}</p>
       </section>
 
       {!saved ? (
@@ -186,7 +186,7 @@ export default function TargetPage() {
         </section>
       ) : null}
 
-      <section className="overflow-hidden rounded-[28px] border border-[#E8EDF4] bg-white p-4 shadow-sm">
+      <section className="overflow-hidden rounded-[28px] border border-[#F1E4D8] bg-white p-4 shadow-[0_10px_30px_-18px_rgba(23,32,51,0.28)]">
         <div className="grid grid-cols-3 gap-2 text-center">
           <div className="rounded-2xl bg-[#FCEBDD] px-2 py-3"><p className="text-2xl font-black tabular-nums text-[#172033]">{monthDays.length}</p><p className="text-[11px] text-[#556070]">أيام الشهر</p></div>
           <div className="rounded-2xl bg-[#FCEBDD] px-2 py-3"><p className="text-2xl font-black tabular-nums text-[#172033]">{holidays.length}</p><p className="text-[11px] text-[#556070]">إجازات</p></div>
@@ -195,7 +195,7 @@ export default function TargetPage() {
       </section>
 
       {kpis.some((k) => k.weight > 0) ? (
-        <section className="rounded-[28px] border border-[#E8EDF4] bg-white p-4 shadow-sm">
+        <section className="rounded-[28px] border border-[#F1E4D8] bg-white p-4 shadow-[0_10px_30px_-18px_rgba(23,32,51,0.28)]">
           <p className="text-sm font-black text-[#172033]">توزيع الأوزان</p>
           <div className="mt-3 flex h-3 w-full overflow-hidden rounded-full bg-[#F5F8FC]">
             {kpis.filter((k) => k.weight > 0).map((k, i) => (
@@ -214,7 +214,7 @@ export default function TargetPage() {
         </section>
       ) : null}
 
-      <section className="rounded-[28px] border border-[#E8EDF4] bg-white p-4 shadow-sm">
+      <section className="rounded-[28px] border border-[#F1E4D8] bg-white p-4 shadow-[0_10px_30px_-18px_rgba(23,32,51,0.28)]">
         <div className="grid grid-cols-7 gap-1 text-center text-[11px] font-bold text-neutral-400">
           {["سبت", "أحد", "اتنين", "تلات", "أربع", "خميس", "جمعة"].map((d) => (
             <span key={d} className="py-1">{d}</span>
@@ -238,7 +238,7 @@ export default function TargetPage() {
                   )
                 }
                 className={`flex aspect-square items-center justify-center rounded-2xl text-sm font-extrabold transition ${
-                  isHoliday ? "bg-gradient-to-br from-[#D95B00] to-[#E87518] text-white shadow-sm" : "bg-[#F5F8FC] text-[#172033]"
+                  isHoliday ? "bg-gradient-to-br from-[#D95B00] to-[#E87518] text-white shadow-[0_10px_30px_-18px_rgba(23,32,51,0.28)]" : "bg-[#F5F8FC] text-[#172033]"
                 }`}
               >
                 {Number(date.slice(8, 10))}
@@ -279,7 +279,7 @@ export default function TargetPage() {
         </section>
       ) : null}
 
-      <section className="rounded-[32px] border border-[#F3D2B5]/70 bg-white p-5 shadow-sm">
+      <section className="rounded-[32px] border border-[#F3D2B5]/70 bg-white p-5 shadow-[0_10px_30px_-18px_rgba(23,32,51,0.28)]">
         <Field label="💰 الكوميشن الكامل (جنيه)">
           <input
             className={`${inputClass} text-xl font-black`}
@@ -293,7 +293,7 @@ export default function TargetPage() {
         </Field>
       </section>
 
-      <section className="rounded-[24px] border border-[#F3D2B5]/70 bg-white p-4 shadow-sm">
+      <section className="rounded-[24px] border border-[#F3D2B5]/70 bg-white p-4 shadow-[0_10px_30px_-18px_rgba(23,32,51,0.28)]">
         <div className="mb-1 flex items-center justify-between">
           <h2 className="text-lg font-black">الإيتمز والأوزان</h2>
         </div>

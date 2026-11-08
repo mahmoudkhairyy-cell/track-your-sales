@@ -189,7 +189,7 @@ export default function HomePage() {
               </div>
             </div>
             <div className="flex min-w-0 flex-1 flex-col gap-2">
-              <span className="inline-block w-fit rounded-xl bg-white/30 px-3 py-1 text-[12px] font-extrabold text-white shadow-sm">{statusTextEgy}</span>
+              <span className="inline-block w-fit rounded-xl bg-white/30 px-3 py-1 text-[12px] font-extrabold text-white shadow-[0_10px_30px_-18px_rgba(23,32,51,0.28)]">{statusTextEgy}</span>
               <p className="text-[11px] font-medium text-white/85">{timeText}</p>
               <p className="text-xs font-bold leading-5">{overallLine()}</p>
             </div>
@@ -213,7 +213,7 @@ export default function HomePage() {
 
 
       {/* المطلوب انهاردة */}
-      <section className="flex items-stretch overflow-hidden rounded-2xl border border-[#F3D2B5]/80 bg-white shadow-sm">
+      <section className="flex items-stretch overflow-hidden rounded-2xl border border-[#F3D2B5]/80 bg-white shadow-[0_10px_30px_-18px_rgba(23,32,51,0.28)]">
         <div className="flex w-24 shrink-0 flex-col items-center justify-center bg-gradient-to-br from-[#D95B00] to-[#B94700] px-2 py-3 text-white">
           <span className="font-mono text-3xl font-black leading-none">{data.pace.perDay === null ? "—" : formatQty(Math.ceil(data.pace.perDay))}</span>
           <span className="mt-1 text-[10px] font-bold text-[#FCEBDD]">{data.pace.perDay === null ? "" : linesWord(Math.ceil(data.pace.perDay)) + " / يوم"}</span>
@@ -240,7 +240,7 @@ export default function HomePage() {
           {data.kpis.map((kpi) => {
             const ok = kpi.achieved >= kpi.expectedToDate;
             return (
-              <div key={kpi.kpiKey} className="flex w-24 shrink-0 flex-col items-center rounded-2xl border border-slate-200/80 bg-white p-2.5 text-center shadow-sm">
+              <div key={kpi.kpiKey} className="flex w-24 shrink-0 flex-col items-center rounded-2xl border border-slate-200/80 bg-white p-2.5 text-center shadow-[0_10px_30px_-18px_rgba(23,32,51,0.28)]">
                 <div className={`flex h-10 w-10 items-center justify-center rounded-full border-2 font-mono text-xs font-black ${ok ? "border-emerald-500 text-emerald-700" : "border-red-500 text-red-700"}`}>
                   {Math.round(kpi.percent)}%
                 </div>
@@ -259,7 +259,7 @@ export default function HomePage() {
           { href: "/target/", label: "التارجت" },
           { href: "/wiki/", label: "المرجع" },
         ].map((item) => (
-          <Link key={item.href} href={item.href} className="rounded-2xl border border-[#E8EDF4] bg-white px-3 py-3 text-center text-xs font-extrabold text-[#172033] shadow-sm transition-transform active:scale-95">
+          <Link key={item.href} href={item.href} className="rounded-2xl border border-[#F1E4D8] bg-white px-3 py-3 text-center text-xs font-extrabold text-[#172033] shadow-[0_10px_30px_-18px_rgba(23,32,51,0.28)] transition-transform active:scale-95">
             {item.label}
           </Link>
         ))}

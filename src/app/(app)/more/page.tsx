@@ -290,7 +290,7 @@ export default function MorePage() {
 
   return (
     <div className="space-y-5">
-      <section className="relative overflow-hidden rounded-[24px] bg-gradient-to-br from-[#D95B00] to-[#E87518] p-5 text-white shadow-sm">
+      <section className="relative overflow-hidden rounded-[24px] bg-gradient-to-br from-[#D95B00] to-[#E87518] p-5 text-white shadow-[0_10px_30px_-18px_rgba(23,32,51,0.28)]">
         <img src="/track-your-sales/logo-full.png" alt="Track Your Sales" className="h-16 w-auto object-contain" />
         <p className="mt-1 text-xs text-white/85">أداة مساعدة مستقلة وغير رسمية، وليست تطبيقًا رسميًا تابعًا لشركة Orange.</p>
         <p className="mt-3 text-xs text-white/80">ملخص النهارده، سجل الشهر، النسخة الاحتياطية، والمساعد.</p>
@@ -326,7 +326,7 @@ export default function MorePage() {
               key={item.key}
               type="button"
               onClick={() => setView(item.key as typeof view)}
-              className="flex w-full items-center gap-4 rounded-[24px] border border-[#E8EDF4] bg-white p-4 text-right shadow-sm"
+              className="flex w-full items-center gap-4 rounded-[24px] border border-[#F1E4D8] bg-white p-4 text-right shadow-[0_10px_30px_-18px_rgba(23,32,51,0.28)]"
             >
               <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#FCEBDD] text-2xl">{item.icon}</span>
               <span className="flex-1">
@@ -342,7 +342,7 @@ export default function MorePage() {
       {view === "report" ? (
         <section className="space-y-4">
           <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[#B94700]">← رجوع للقائمة</button>
-          <div id="report-print" className="rounded-[24px] border border-[#E8EDF4] bg-white p-5 shadow-sm">
+          <div id="report-print" className="rounded-[24px] border border-[#F1E4D8] bg-white p-5 shadow-[0_10px_30px_-18px_rgba(23,32,51,0.28)]">
             <p className="text-xs font-bold text-[#556070]">تقرير الشهر · {monthLabelAr(month)}</p>
             <h2 className="mt-1 text-xl font-black">{profile.name || "—"}</h2>
             <p className="text-sm text-[#556070]">📍 {profile.branch || "—"}</p>
@@ -365,7 +365,7 @@ export default function MorePage() {
               <p className="mt-4 text-sm text-[#556070]">بنحمّل التقرير...</p>
             )}
           </div>
-          <button type="button" onClick={() => window.print()} className="w-full rounded-2xl bg-gradient-to-br from-[#D95B00] to-[#E87518] py-3 font-extrabold text-white shadow-sm">
+          <button type="button" onClick={() => window.print()} className="w-full rounded-2xl bg-gradient-to-br from-[#D95B00] to-[#E87518] py-3 font-extrabold text-white shadow-[0_10px_30px_-18px_rgba(23,32,51,0.28)]">
             🖨️ اطبع / احفظ PDF
           </button>
         </section>
@@ -374,7 +374,7 @@ export default function MorePage() {
       {view === "about" ? (
         <div className="space-y-4">
           <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[#B94700]">← رجوع للقائمة</button>
-          <section className="rounded-[24px] border border-[#E8EDF4] bg-white p-5 shadow-sm">
+          <section className="rounded-[24px] border border-[#F1E4D8] bg-white p-5 shadow-[0_10px_30px_-18px_rgba(23,32,51,0.28)]">
             <p className="font-black">Target Tracker</p>
             <p className="mt-2 text-sm leading-7 text-[#556070]">أداة مساعدة مستقلة وغير رسمية، وليست تطبيقًا رسميًا تابعًا لشركة Orange.</p>
           </section>
@@ -384,7 +384,7 @@ export default function MorePage() {
       {view === "today" ? (
         <div className="space-y-4">
           <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[#B94700]">← رجوع للقائمة</button>
-      <section className="rounded-[24px] border border-[#E8EDF4] bg-white p-5 shadow-sm">
+      <section className="rounded-[24px] border border-[#F1E4D8] bg-white p-5 shadow-[0_10px_30px_-18px_rgba(23,32,51,0.28)]">
         <h2 className="text-lg font-black tracking-tight">📊 اللي عملته النهارده</h2>
         {todayItems.length === 0 ? (
           <p className="mt-3 text-sm text-[#556070]">لسه مسجلتش حاجة النهارده. يلا نبدأ! 💪</p>
@@ -412,7 +412,7 @@ export default function MorePage() {
       {view === "history" ? (
         <div className="space-y-4">
           <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[#B94700]">← رجوع للقائمة</button>
-      <section className="rounded-[24px] border border-[#E8EDF4] bg-white p-5 shadow-sm">
+      <section className="rounded-[24px] border border-[#F1E4D8] bg-white p-5 shadow-[0_10px_30px_-18px_rgba(23,32,51,0.28)]">
         <div className="flex items-center justify-between gap-3">
           <h2 className="text-lg font-black tracking-tight">🗂️ سجل عمليات {monthLabelAr(month)}</h2>
           <span className="text-sm text-[#556070]">{entries.length} سجل</span>
@@ -424,7 +424,7 @@ export default function MorePage() {
         ) : (
           <ul className="mt-4 space-y-2">
             {entries.map((entry) => (
-              <li key={entry.id} className="rounded-2xl border border-[#E8EDF4] p-3">
+              <li key={entry.id} className="rounded-2xl border border-[#F1E4D8] p-3">
                 <div className="flex items-start justify-between gap-3">
                   <div>
                     <p className="font-extrabold">
@@ -488,7 +488,7 @@ export default function MorePage() {
         </button>
       </section>
 
-      <section className="rounded-[24px] border border-[#E8EDF4] bg-white p-5 shadow-sm">
+      <section className="rounded-[24px] border border-[#F1E4D8] bg-white p-5 shadow-[0_10px_30px_-18px_rgba(23,32,51,0.28)]">
         <h2 className="text-lg font-black tracking-tight">👤 بياناتك</h2>
         <form className="mt-4 space-y-3" onSubmit={saveProfile}>
           <Field label="اسم الموظف">
@@ -508,7 +508,7 @@ export default function MorePage() {
       {view === "backup" ? (
         <div className="space-y-4">
           <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[#B94700]">← رجوع للقائمة</button>
-      <section className="rounded-[24px] border border-[#E8EDF4] bg-white p-5 shadow-sm">
+      <section className="rounded-[24px] border border-[#F1E4D8] bg-white p-5 shadow-[0_10px_30px_-18px_rgba(23,32,51,0.28)]">
         <h2 className="text-lg font-black tracking-tight">💾 نسخة احتياطية واستعادة</h2>
         <p className="mt-2 text-sm leading-7 text-[#556070]">التصدير بينزّل ملف JSON فيه بياناتك وإعدادات الشهور والسجلات والملاحظات. من غير أي مفاتيح أو أسرار.</p>
         <div className="mt-4 grid gap-3 sm:grid-cols-2">

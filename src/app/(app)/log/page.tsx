@@ -162,14 +162,14 @@ export default function LogPage() {
   return (
     <form className="space-y-4" onSubmit={onSubmit}>
       <section>
-        <h1 className="text-3xl font-black">إنجاز اليوم</h1>
+        <h1 className="text-2xl font-black tracking-tight text-[#172033]">إنجاز اليوم</h1>
         <p className="mt-1 text-sm text-[#556070]">سجّل اللي بعته النهارده — هيتحفظ تلقائيًا.</p>
       </section>
 
       {error ? <Banner tone="error">❌ {error}</Banner> : null}
 
       {dash ? (
-        <section className="relative overflow-hidden rounded-[28px] bg-gradient-to-br from-[#D95B00] to-[#E87518] p-5 text-white shadow-sm ring-1 ring-white/30">
+        <section className="relative overflow-hidden rounded-[28px] bg-gradient-to-br from-[#D95B00] to-[#E87518] p-5 text-white shadow-[0_10px_30px_-18px_rgba(23,32,51,0.28)] ring-1 ring-white/30">
           <div className="grid grid-cols-3 gap-2 text-center">
             <div className="rounded-2xl bg-white/15 px-2 py-3 ring-1 ring-white/25">
               <p className="text-xl font-black tabular-nums">{formatQty(Math.round(dash.overall))}%</p>
@@ -192,7 +192,7 @@ export default function LogPage() {
           <p className="text-sm font-extrabold">⚡ المطلوب منك النهارده عشان تفضل ON TRACK</p>
           <div className="mt-2 flex flex-wrap gap-2">
             {onTrack.map((k) => (
-              <span key={k.kpiKey} className="rounded-full bg-white px-3 py-1 text-xs font-extrabold text-[#B94700] shadow-sm">
+              <span key={k.kpiKey} className="rounded-full bg-white px-3 py-1 text-xs font-extrabold text-[#B94700] shadow-[0_10px_30px_-18px_rgba(23,32,51,0.28)]">
                 {kpiEmoji(k.kpiKey)} {formatQty(workLeft > 0 ? Math.ceil(k.remaining / workLeft) : k.remaining)} · {KPI_CATALOG.find((i) => i.key === k.kpiKey)?.nameEn}
               </span>
             ))}
@@ -200,7 +200,7 @@ export default function LogPage() {
         </section>
       ) : null}
 
-      <section className="rounded-[24px] border border-[#E8EDF4] bg-white p-4 shadow-sm">
+      <section className="rounded-[24px] border border-[#F1E4D8] bg-white p-4 shadow-[0_10px_30px_-18px_rgba(23,32,51,0.28)]">
         <label className="block text-xs font-bold text-[#556070]">📅 تاريخ الإنجاز</label>
         <input className={`${inputClass} mt-2`} type="date" value={entryDate} onChange={(e) => setEntryDate(e.target.value)} required />
       </section>
@@ -211,7 +211,7 @@ export default function LogPage() {
         const excluded = !!d && d.weight > 0 && d.gated;
         const needToday = d && workLeft > 0 ? Math.ceil(Math.max(0, d.remaining) / workLeft) : 0;
         return (
-          <article key={item.key} className="rounded-[24px] border border-[#E8EDF4] bg-white p-4 shadow-sm">
+          <article key={item.key} className="rounded-[24px] border border-[#F1E4D8] bg-white p-4 shadow-[0_10px_30px_-18px_rgba(23,32,51,0.28)]">
             <div className="flex items-center justify-between gap-3">
               <div className="flex items-center gap-3">
                 <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#FCEBDD] text-[#D95B00]"><KpiIcon kpiKey={item.key} className="h-5 w-5" /></span>
@@ -260,7 +260,7 @@ export default function LogPage() {
       })}
 
       {quality ? (
-        <section className="rounded-[24px] border border-[#E8EDF4] bg-white p-4 shadow-sm">
+        <section className="rounded-[24px] border border-[#F1E4D8] bg-white p-4 shadow-[0_10px_30px_-18px_rgba(23,32,51,0.28)]">
           <div className="mb-2 flex items-center justify-between">
             <p className="text-sm font-black">✅ الكواليتي (15%)</p>
             <p className="text-xs font-extrabold text-[#B94700]">{qualityScore}% من 15%</p>
@@ -275,7 +275,7 @@ export default function LogPage() {
                   type="button"
                   disabled={qualityBusy}
                   onClick={() => toggleQuality(item.key)}
-                  className="flex w-full items-center justify-between rounded-2xl border border-[#E8EDF4] bg-white px-3 py-2.5 text-right disabled:opacity-60"
+                  className="flex w-full items-center justify-between rounded-2xl border border-[#F1E4D8] bg-white px-3 py-2.5 text-right disabled:opacity-60"
                 >
                   <span className="flex items-center gap-3">
                     <span className={`flex h-6 w-6 items-center justify-center rounded-full border-2 text-xs font-black ${on ? "border-emerald-500 bg-emerald-500 text-white" : "border-[#F3D2B5] text-transparent"}`}>✓</span>
@@ -291,7 +291,7 @@ export default function LogPage() {
         </section>
       ) : null}
 
-      <section className="rounded-[24px] border border-[#E8EDF4] bg-white p-4">
+      <section className="rounded-[24px] border border-[#F1E4D8] bg-white p-4">
         <label className="block text-xs font-bold text-[#556070]">📝 ملاحظة (لو حابب)</label>
         <textarea
           className={`${inputClass} mt-2 min-h-20 py-3`}

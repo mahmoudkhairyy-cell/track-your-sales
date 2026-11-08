@@ -128,7 +128,7 @@ function KpiTile({ kpi }: { kpi: AggKpi }) {
       ? { text: "text-emerald-700", bar: "from-emerald-400 to-emerald-600", ring: "ring-emerald-200" }
       : { text: "text-red-600", bar: "from-red-400 to-red-600", ring: "ring-red-200" };
   return (
-    <div className={`relative overflow-hidden rounded-2xl bg-gradient-to-br from-white to-[#FCEBDD]/60 p-3 shadow-sm ring-1 ${tone.ring}`}>
+    <div className={`relative overflow-hidden rounded-2xl bg-gradient-to-br from-white to-[#FCEBDD]/60 p-3 shadow-[0_10px_30px_-18px_rgba(23,32,51,0.28)] ring-1 ${tone.ring}`}>
       <p className="truncate text-[10px] font-extrabold text-[#556070]" dir="ltr">{kpi.name}</p>
       <p className={`mt-1 text-2xl font-black tabular-nums tracking-tight ${tone.text}`}>
         {Math.round(kpi.percent)}<span className="text-sm">%</span>
@@ -302,7 +302,7 @@ export default function ManagerPage() {
     const staleClass = days >= 3 ? "bg-red-100 text-red-700" : days >= 1 ? "bg-amber-100 text-amber-800" : "";
     const percent = Math.round(row.payload.overall ?? 0);
     return (
-      <article key={row.branch_id} className="rounded-[24px] bg-white p-4 shadow-sm ring-1 ring-[#F3D2B5]/70">
+      <article key={row.branch_id} className="rounded-[24px] bg-white p-4 shadow-[0_10px_30px_-18px_rgba(23,32,51,0.28)] ring-1 ring-[#F3D2B5]/70">
         <button type="button" onClick={() => setOpenId(open ? null : row.branch_id)} className="flex w-full items-center justify-between gap-3 text-right">
           <div>
             <h3 className="font-black">{row.employee_name}</h3>
@@ -362,7 +362,7 @@ export default function ManagerPage() {
                   <p className="mb-1 font-black">كل الإنجازات</p>
                   {(row.payload.entries ?? []).length === 0 ? <p className="text-[#556070]">لا يوجد</p> : null}
                   {(row.payload.entries ?? []).map((e, i) => (
-                    <div key={`${e.date}-${i}`} className="flex justify-between border-b border-dashed border-[#E8EDF4] py-1">
+                    <div key={`${e.date}-${i}`} className="flex justify-between border-b border-dashed border-[#F1E4D8] py-1">
                       <span dir="ltr">{e.date}</span>
                       <span dir="ltr">{kpiLabel(e.kpi)}</span>
                       <span className="tabular-nums">{e.quantity} {e.unit}</span>
@@ -382,7 +382,7 @@ export default function ManagerPage() {
       <div className="mx-auto max-w-3xl space-y-4">
         <h1 className="text-2xl font-black">لوحة المدير</h1>
         {rows !== null ? (
-          <div className="flex items-center justify-between rounded-[24px] border border-[#E8EDF4] border-t-4 border-t-[#D95B00] bg-white p-4 text-[#172033] shadow-sm">
+          <div className="flex items-center justify-between rounded-[24px] border border-[#F1E4D8] border-t-4 border-t-[#D95B00] bg-white p-4 text-[#172033] shadow-[0_10px_30px_-18px_rgba(23,32,51,0.28)]">
             <div className="flex items-center gap-3">
               <img src="/track-your-sales/logo-mark.png" alt="" className="h-10 w-10 object-contain" />
               <div>
@@ -400,7 +400,7 @@ export default function ManagerPage() {
               🔑 {pwOpen ? "إخفاء تغيير الباسورد" : "تغيير الباسورد"}
             </button>
             {pwOpen ? (
-              <form onSubmit={changePassword} className="space-y-3 rounded-[24px] bg-white p-4 shadow-sm ring-1 ring-[#F3D2B5]/70">
+              <form onSubmit={changePassword} className="space-y-3 rounded-[24px] bg-white p-4 shadow-[0_10px_30px_-18px_rgba(23,32,51,0.28)] ring-1 ring-[#F3D2B5]/70">
                 <input type="password" placeholder="الباسورد الحالي" value={oldPw} onChange={(e) => setOldPw(e.target.value)} className="w-full rounded-2xl border border-[#F3D2B5] px-4 py-3 outline-none focus:border-[#B94700]" />
                 <input type="password" placeholder="الباسورد الجديد (6 حروف على الأقل)" value={newPw} onChange={(e) => setNewPw(e.target.value)} className="w-full rounded-2xl border border-[#F3D2B5] px-4 py-3 outline-none focus:border-[#B94700]" />
                 <input type="password" placeholder="أكد الباسورد الجديد" value={newPw2} onChange={(e) => setNewPw2(e.target.value)} className="w-full rounded-2xl border border-[#F3D2B5] px-4 py-3 outline-none focus:border-[#B94700]" />
@@ -450,7 +450,7 @@ export default function ManagerPage() {
                   </div>
                 </div>
                 {topRows.map((row) => (
-                  <div key={`${row.branch}-${row.name}-${row.rank}`} className="flex items-center justify-between rounded-[22px] bg-white p-3.5 shadow-sm ring-1 ring-[#F3D2B5]/70">
+                  <div key={`${row.branch}-${row.name}-${row.rank}`} className="flex items-center justify-between rounded-[22px] bg-white p-3.5 shadow-[0_10px_30px_-18px_rgba(23,32,51,0.28)] ring-1 ring-[#F3D2B5]/70">
                     <div className="flex items-center gap-3">
                       <span className={`flex h-10 w-10 items-center justify-center rounded-full text-sm font-black ${row.rank <= 3 ? "bg-gradient-to-br from-[#f5c542] to-[#e8a400] text-white" : "bg-[#FCEBDD] text-[#b84700]"}`}>
                         {row.rank}
@@ -498,7 +498,7 @@ export default function ManagerPage() {
                     </p>
                   )));
                   return (
-                    <section className="rounded-[24px] bg-white p-4 shadow-sm ring-1 ring-[#F3D2B5]/70">
+                    <section className="rounded-[24px] bg-white p-4 shadow-[0_10px_30px_-18px_rgba(23,32,51,0.28)] ring-1 ring-[#F3D2B5]/70">
                       <p className="mb-3 text-sm font-black">📅 النهارده ({today})</p>
                       <div className="grid grid-cols-3 gap-2 text-center text-xs font-extrabold">
                         <div className="rounded-2xl bg-emerald-50 p-2 text-emerald-800">✅ سجّل<br /><span className="text-lg tabular-nums">{logged.length}</span></div>
@@ -548,7 +548,7 @@ export default function ManagerPage() {
                             key={branchName}
                             type="button"
                             onClick={() => setView(`b:${branchName}`)}
-                            className="flex w-full items-center justify-between rounded-[24px] bg-white p-4 text-right shadow-sm ring-1 ring-[#F3D2B5]/70"
+                            className="flex w-full items-center justify-between rounded-[24px] bg-white p-4 text-right shadow-[0_10px_30px_-18px_rgba(23,32,51,0.28)] ring-1 ring-[#F3D2B5]/70"
                           >
                             <div>
                               <p className="font-black" dir="ltr">{branchName}</p>
@@ -577,7 +577,7 @@ export default function ManagerPage() {
                         <TrackBadge percent={branchAvg} expected={branchExpected} />
                       </div>
                     </div>
-                    <article className="rounded-[24px] bg-white p-4 shadow-sm ring-1 ring-[#F3D2B5]/70">
+                    <article className="rounded-[24px] bg-white p-4 shadow-[0_10px_30px_-18px_rgba(23,32,51,0.28)] ring-1 ring-[#F3D2B5]/70">
                       <button
                         type="button"
                         onClick={() => setBranchOpen(!branchOpen)}
