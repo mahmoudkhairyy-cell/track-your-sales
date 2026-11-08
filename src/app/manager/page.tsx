@@ -319,6 +319,9 @@ export default function ManagerPage() {
             <span className="text-[#556070]">{open ? "▲" : "▼"}</span>
           </div>
         </button>
+        <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-[#FCEBDD]">
+          <div className="h-full rounded-full bg-gradient-to-r from-[#D95B00] to-[#E87518]" style={{ width: `${Math.min(100, Math.max(0, percent))}%` }} />
+        </div>
 
         {open ? (
           <>
@@ -450,8 +453,8 @@ export default function ManagerPage() {
                   </div>
                 </div>
                 {topRows.map((row) => (
-                  <div key={`${row.branch}-${row.name}-${row.rank}`} className="flex items-center justify-between rounded-[22px] bg-white p-3.5 shadow-[0_10px_30px_-18px_rgba(23,32,51,0.28)] ring-1 ring-[#F3D2B5]/70">
-                    <div className="flex items-center gap-3">
+                  <div key={`${row.branch}-${row.name}-${row.rank}`} className="flex items-center justify-between gap-3 rounded-[22px] bg-white p-3.5 shadow-[0_10px_30px_-18px_rgba(23,32,51,0.28)] ring-1 ring-[#F3D2B5]/70">
+                    <div className="flex min-w-0 items-center gap-3">
                       <span className={`flex h-10 w-10 items-center justify-center rounded-full text-sm font-black ${row.rank <= 3 ? "bg-gradient-to-br from-[#f5c542] to-[#e8a400] text-white" : "bg-[#FCEBDD] text-[#b84700]"}`}>
                         {row.rank}
                       </span>
@@ -460,14 +463,19 @@ export default function ManagerPage() {
                         <p className="text-[11px] text-[#556070]" dir="ltr">{row.branch}</p>
                       </div>
                     </div>
-                    <p className="text-xl font-black tabular-nums text-[#B94700]">{Math.round(row.percent)}%</p>
+                    <div className="flex shrink-0 flex-col items-end gap-1.5">
+                      <p className="text-xl font-black tabular-nums text-[#B94700]">{Math.round(row.percent)}%</p>
+                      <div className="h-1.5 w-20 overflow-hidden rounded-full bg-[#FCEBDD]">
+                        <div className="h-full rounded-full bg-gradient-to-r from-[#D95B00] to-[#E87518]" style={{ width: `${Math.min(100, Math.max(0, row.percent))}%` }} />
+                      </div>
+                    </div>
                   </div>
                 ))}
               </div>
             ) : (
               <>
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <p className="text-sm font-bold text-[#556070]">
+                <div className="flex flex-wrap items-center justify-between gap-2 rounded-[24px] bg-white/70 p-3 ring-1 ring-[#F3D2B5]/50">
+                  <p className="text-sm font-black text-[#172033]">
                     {allRows.length} موظف
                     {lastLoaded ? <span className="block text-[10px] font-semibold text-[#556070]" dir="ltr">آخر تحديث {lastLoaded.toLocaleTimeString("en-US", { timeZone: "Africa/Cairo", hour: "2-digit", minute: "2-digit", hour12: false })}</span> : null}
                   </p>
@@ -548,14 +556,19 @@ export default function ManagerPage() {
                             key={branchName}
                             type="button"
                             onClick={() => setView(`b:${branchName}`)}
-                            className="flex w-full items-center justify-between rounded-[24px] bg-white p-4 text-right shadow-[0_10px_30px_-18px_rgba(23,32,51,0.28)] ring-1 ring-[#F3D2B5]/70"
+                            className="flex w-full flex-col gap-3 rounded-[24px] bg-white p-4 text-right shadow-[0_10px_30px_-18px_rgba(23,32,51,0.28)] ring-1 ring-[#F3D2B5]/70 transition active:scale-[0.99]"
                           >
-                            <div>
-                              <p className="font-black" dir="ltr">{branchName}</p>
-                              <p className="text-xs text-[#556070]">{group.length} موظف</p>
-                              <div className="mt-1"><TrackBadge percent={avg} expected={groupExpected(group)} /></div>
+                            <div className="flex w-full items-center justify-between gap-3">
+                              <div className="min-w-0">
+                                <p className="truncate font-black" dir="ltr">{branchName}</p>
+                                <p className="text-xs text-[#556070]">{group.length} موظف</p>
+                                <div className="mt-1"><TrackBadge percent={avg} expected={groupExpected(group)} /></div>
+                              </div>
+                              <p className="shrink-0 text-2xl font-black text-[#B94700] tabular-nums">{Math.round(avg)}%</p>
                             </div>
-                            <p className="text-xl font-black text-[#B94700] tabular-nums">{Math.round(avg)}%</p>
+                            <div className="h-2 w-full overflow-hidden rounded-full bg-[#FCEBDD]">
+                              <div className="h-full rounded-full bg-gradient-to-r from-[#D95B00] to-[#E87518]" style={{ width: `${Math.min(100, Math.max(0, avg))}%` }} />
+                            </div>
                           </button>
                         );
                       })}
@@ -563,9 +576,10 @@ export default function ManagerPage() {
                 ) : (
                   <div className="space-y-3">
                     <button type="button" onClick={() => setView("list")} className="text-sm font-extrabold text-[#B94700]">← كل الفروع</button>
-                    <div className="rounded-[24px] bg-[#D95B00] p-4 text-white">
-                      <p className="text-xs text-white/80">الفرع</p>
-                      <h2 className="font-black" dir="ltr">{branch}</h2>
+                    <div className="rounded-[28px] bg-gradient-to-br from-[#B94700] via-[#D95B00] to-[#E87518] p-5 text-white shadow-[0_20px_40px_-18px_rgba(138,52,0,0.6)]">
+                      <p className="text-[11px] font-bold text-white/80">الفرع</p>
+                      <h2 className="text-xl font-black tracking-tight" dir="ltr">{branch}</h2>
+                      <p className="mt-1 text-xs font-bold text-white/85">{branchRows.length} موظف · إجمالي {Math.round(branchAvg)}%</p>
                       <button
                         type="button"
                         onClick={() => downloadBranchCsv(branch, branchRows)}
