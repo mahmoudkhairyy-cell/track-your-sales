@@ -123,20 +123,20 @@ function KpiTile({ kpi }: { kpi: AggKpi }) {
   const ok = kpi.expectedPercent === undefined || kpi.percent >= kpi.expectedPercent;
   const neutral = kpi.weight === 0;
   const tone = neutral
-    ? { text: "text-[#556070]", bar: "from-neutral-300 to-neutral-400", ring: "ring-neutral-200" }
+    ? { text: "text-[#927b69]", bar: "from-neutral-300 to-neutral-400", ring: "ring-neutral-200" }
     : ok
       ? { text: "text-emerald-700", bar: "from-emerald-400 to-emerald-600", ring: "ring-emerald-200" }
       : { text: "text-red-600", bar: "from-red-400 to-red-600", ring: "ring-red-200" };
   return (
-    <div className={`relative overflow-hidden rounded-2xl bg-gradient-to-br from-white to-[#FCEBDD]/60 p-3 shadow-sm ring-1 ${tone.ring}`}>
-      <p className="truncate text-[10px] font-extrabold text-[#556070]" dir="ltr">{kpi.name}</p>
+    <div className={`relative overflow-hidden rounded-2xl bg-gradient-to-br from-white to-[#fff0e2]/60 p-3 shadow-sm ring-1 ${tone.ring}`}>
+      <p className="truncate text-[10px] font-extrabold text-[#927b69]" dir="ltr">{kpi.name}</p>
       <p className={`mt-1 text-2xl font-black tabular-nums tracking-tight ${tone.text}`}>
         {Math.round(kpi.percent)}<span className="text-sm">%</span>
       </p>
       <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-white/80">
         <div className={`h-full rounded-full bg-gradient-to-r ${tone.bar}`} style={{ width: `${Math.min(100, Math.max(0, kpi.percent))}%` }} />
       </div>
-      <p className="mt-1.5 text-[10px] tabular-nums text-[#556070]" dir="ltr">{Math.round(kpi.achieved)} / {kpi.target}</p>
+      <p className="mt-1.5 text-[10px] tabular-nums text-[#927b69]" dir="ltr">{Math.round(kpi.achieved)} / {kpi.target}</p>
     </div>
   );
 }
@@ -302,12 +302,12 @@ export default function ManagerPage() {
     const staleClass = days >= 3 ? "bg-red-100 text-red-700" : days >= 1 ? "bg-amber-100 text-amber-800" : "";
     const percent = Math.round(row.payload.overall ?? 0);
     return (
-      <article key={row.branch_id} className="rounded-[24px] bg-white p-4 shadow-sm ring-1 ring-[#F3D2B5]/70">
+      <article key={row.branch_id} className="rounded-[24px] bg-white p-4 shadow-sm ring-1 ring-[#f1dfd0]/70">
         <button type="button" onClick={() => setOpenId(open ? null : row.branch_id)} className="flex w-full items-center justify-between gap-3 text-right">
           <div>
             <h3 className="font-black">{row.employee_name}</h3>
             <div className="mt-1 flex flex-wrap items-center gap-1">
-              {row.payload.role === "team_leader" ? <span className="rounded-full bg-[#FCEBDD] px-2 py-0.5 text-[10px] font-black text-[#b84700]">🧑‍🏫 تيم ليدر</span> : null}
+              {row.payload.role === "team_leader" ? <span className="rounded-full bg-[#fff0e2] px-2 py-0.5 text-[10px] font-black text-[#bd4b0a]">🧑‍🏫 تيم ليدر</span> : null}
               <TrackBadge percent={row.payload.overall} expected={row.payload.expectedPercent} />
               {staleClass ? (
                 <span className={`rounded-full px-2 py-0.5 text-[10px] font-black ${staleClass}`}>آخر تحديث من {Math.floor(days)} يوم</span>
@@ -315,14 +315,14 @@ export default function ManagerPage() {
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <p className="text-2xl font-black text-[#B94700] tabular-nums">{percent}%</p>
-            <span className="text-[#556070]">{open ? "▲" : "▼"}</span>
+            <p className="text-2xl font-black text-[#bd4b0a] tabular-nums">{percent}%</p>
+            <span className="text-[#927b69]">{open ? "▲" : "▼"}</span>
           </div>
         </button>
 
         {open ? (
           <>
-            <p className="mt-1 text-[10px] text-[#556070]" dir="ltr">
+            <p className="mt-1 text-[10px] text-[#927b69]" dir="ltr">
               {new Date(row.updated_at).toLocaleString("en-US", { timeZone: "Africa/Cairo", hour12: false })}
             </p>
             <div className="mt-3 grid grid-cols-2 gap-2">
@@ -335,7 +335,7 @@ export default function ManagerPage() {
             <button
               type="button"
               onClick={() => setDetailsId(detailsId === row.branch_id ? null : row.branch_id)}
-              className="mt-3 w-full rounded-2xl bg-[#FCEBDD] py-2 text-xs font-extrabold text-[#b84700]"
+              className="mt-3 w-full rounded-2xl bg-[#fff0e2] py-2 text-xs font-extrabold text-[#bd4b0a]"
             >
               {detailsId === row.branch_id ? "إخفاء التفاصيل" : `عرض كل التفاصيل (${row.payload.entries?.length ?? 0} إنجاز)`}
             </button>
@@ -360,9 +360,9 @@ export default function ManagerPage() {
                 </div>
                 <div>
                   <p className="mb-1 font-black">كل الإنجازات</p>
-                  {(row.payload.entries ?? []).length === 0 ? <p className="text-[#556070]">لا يوجد</p> : null}
+                  {(row.payload.entries ?? []).length === 0 ? <p className="text-[#927b69]">لا يوجد</p> : null}
                   {(row.payload.entries ?? []).map((e, i) => (
-                    <div key={`${e.date}-${i}`} className="flex justify-between border-b border-dashed border-[#E8EDF4] py-1">
+                    <div key={`${e.date}-${i}`} className="flex justify-between border-b border-dashed border-[#f1dfd0] py-1">
                       <span dir="ltr">{e.date}</span>
                       <span dir="ltr">{kpiLabel(e.kpi)}</span>
                       <span className="tabular-nums">{e.quantity} {e.unit}</span>
@@ -380,32 +380,36 @@ export default function ManagerPage() {
   return (
     <main className="tys-page tys-page-manager min-h-screen bg-[#fffaf5] p-4 text-[#2d2119]" dir="rtl">
       <div className="mx-auto max-w-3xl space-y-4">
-        <h1 className="text-2xl font-black">لوحة المدير</h1>
+        <div className="relative overflow-hidden rounded-[26px] border border-[#f1dfd0] bg-gradient-to-l from-white via-[#fffaf5] to-[#fff0e2] px-5 py-4 shadow-[0_12px_28px_rgba(126,65,24,0.055)]">
+          <p className="text-[10px] font-black tracking-[0.2em] text-[#bd6b39]" dir="ltr">MANAGEMENT OVERVIEW</p>
+          <h1 className="mt-1 text-2xl font-black tracking-tight text-[#2d2119]">لوحة المدير</h1>
+          <p className="mt-1 text-xs text-[#927b69]">متابعة أداء الفروع والموظفين في مكان واحد</p>
+        </div>
         {rows !== null ? (
-          <div className="flex items-center justify-between rounded-[24px] border border-[#E8EDF4] border-t-4 border-t-[#D95B00] bg-white p-4 text-[#172033] shadow-sm">
+          <div className="flex items-center justify-between rounded-[24px] border border-[#f1dfd0] border-t-4 border-t-[#e96812] bg-white p-4 text-[#2d2119] shadow-sm">
             <div className="flex items-center gap-3">
               <img src="/track-your-sales/logo-mark.png" alt="" className="h-10 w-10 object-contain" />
               <div>
-                <p className="text-sm font-black tracking-tight text-[#172033]" dir="ltr">Track Your Sales</p>
-                <p className="text-[11px] text-[#556070]" dir="ltr">Manager Dashboard</p>
+                <p className="text-sm font-black tracking-tight text-[#2d2119]" dir="ltr">Track Your Sales</p>
+                <p className="text-[11px] text-[#927b69]" dir="ltr">Manager Dashboard</p>
               </div>
             </div>
-            <p className="rounded-full bg-[#FCEBDD] px-3 py-1 text-[11px] font-extrabold text-[#B94700]" dir="ltr">👑 {managerName || "المدير"}</p>
+            <p className="rounded-full bg-[#fff0e2] px-3 py-1 text-[11px] font-extrabold text-[#bd4b0a]" dir="ltr">👑 {managerName || "المدير"}</p>
           </div>
         ) : null}
 
         {rows !== null ? (
           <div className="space-y-3">
-            <button type="button" onClick={() => { setPwOpen((v) => !v); setPwMsg(""); }} className="text-sm font-extrabold text-[#B94700]">
+            <button type="button" onClick={() => { setPwOpen((v) => !v); setPwMsg(""); }} className="text-sm font-extrabold text-[#bd4b0a]">
               🔑 {pwOpen ? "إخفاء تغيير الباسورد" : "تغيير الباسورد"}
             </button>
             {pwOpen ? (
-              <form onSubmit={changePassword} className="space-y-3 rounded-[24px] bg-white p-4 shadow-sm ring-1 ring-[#F3D2B5]/70">
-                <input type="password" placeholder="الباسورد الحالي" value={oldPw} onChange={(e) => setOldPw(e.target.value)} className="w-full rounded-2xl border border-[#F3D2B5] px-4 py-3 outline-none focus:border-[#B94700]" />
-                <input type="password" placeholder="الباسورد الجديد (6 حروف على الأقل)" value={newPw} onChange={(e) => setNewPw(e.target.value)} className="w-full rounded-2xl border border-[#F3D2B5] px-4 py-3 outline-none focus:border-[#B94700]" />
-                <input type="password" placeholder="أكد الباسورد الجديد" value={newPw2} onChange={(e) => setNewPw2(e.target.value)} className="w-full rounded-2xl border border-[#F3D2B5] px-4 py-3 outline-none focus:border-[#B94700]" />
+              <form onSubmit={changePassword} className="space-y-3 rounded-[24px] bg-white p-4 shadow-sm ring-1 ring-[#f1dfd0]/70">
+                <input type="password" placeholder="الباسورد الحالي" value={oldPw} onChange={(e) => setOldPw(e.target.value)} className="w-full rounded-2xl border border-[#f1dfd0] px-4 py-3 outline-none focus:border-[#bd4b0a]" />
+                <input type="password" placeholder="الباسورد الجديد (6 حروف على الأقل)" value={newPw} onChange={(e) => setNewPw(e.target.value)} className="w-full rounded-2xl border border-[#f1dfd0] px-4 py-3 outline-none focus:border-[#bd4b0a]" />
+                <input type="password" placeholder="أكد الباسورد الجديد" value={newPw2} onChange={(e) => setNewPw2(e.target.value)} className="w-full rounded-2xl border border-[#f1dfd0] px-4 py-3 outline-none focus:border-[#bd4b0a]" />
                 {pwMsg ? <p className="text-sm font-bold text-red-600">{pwMsg}</p> : null}
-                <button type="submit" disabled={!oldPw || !newPw || !newPw2} className="w-full rounded-2xl bg-gradient-to-br from-[#D95B00] to-[#E87518] py-3 font-extrabold text-white disabled:opacity-60">
+                <button type="submit" disabled={!oldPw || !newPw || !newPw2} className="w-full rounded-2xl bg-gradient-to-br from-[#e96812] to-[#ff9d38] py-3 font-extrabold text-white disabled:opacity-60">
                   حفظ الباسورد الجديد
                 </button>
               </form>
@@ -414,8 +418,8 @@ export default function ManagerPage() {
         ) : null}
 
         {rows === null ? (
-          <form onSubmit={load} className="overflow-hidden rounded-[28px] bg-white p-6 shadow-[0_20px_50px_rgba(190,90,0,0.15)] ring-1 ring-[#F3D2B5]/70">
-            <div className="-mx-6 -mt-6 mb-5 bg-gradient-to-br from-[#D95B00] to-[#E87518] px-6 py-6 text-center text-white">
+          <form onSubmit={load} className="overflow-hidden rounded-[28px] bg-white p-6 shadow-[0_20px_50px_rgba(190,90,0,0.15)] ring-1 ring-[#f1dfd0]/70">
+            <div className="-mx-6 -mt-6 mb-5 bg-[linear-gradient(125deg,#bd4b0a_0%,#e96812_52%,#ff9d38_100%)] px-6 py-7 text-center text-white">
               <img src="/track-your-sales/logo-mark.png" alt="" className="mx-auto h-14 w-14 object-contain" />
               <p className="mt-2 text-lg font-black tracking-tight" dir="ltr">Track Your Sales</p>
               <p className="mt-2 inline-block rounded-full bg-white/20 px-3 py-1 text-xs font-extrabold ring-1 ring-white/30" dir="ltr">
@@ -423,17 +427,17 @@ export default function ManagerPage() {
               </p>
               <p className="mt-1 text-[11px] text-white/80" dir="ltr">Manager Dashboard</p>
             </div>
-            <label className="block text-sm font-bold text-[#556070]">
+            <label className="block text-sm font-bold text-[#927b69]">
               كلمة السر
               <input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="mt-2 w-full rounded-2xl border border-[#F3D2B5] px-4 py-3 outline-none focus:border-[#B94700]"
+                className="mt-2 w-full rounded-2xl border border-[#f1dfd0] px-4 py-3 outline-none focus:border-[#bd4b0a]"
               />
             </label>
             {error ? <p className="mt-3 text-sm font-bold text-red-600">{error}</p> : null}
-            <button type="submit" disabled={pending || !password} className="mt-4 w-full rounded-2xl bg-gradient-to-br from-[#D95B00] to-[#E87518] py-3 font-extrabold text-white disabled:opacity-60">
+            <button type="submit" disabled={pending || !password} className="mt-4 w-full rounded-2xl bg-gradient-to-br from-[#e96812] to-[#ff9d38] py-3 font-extrabold text-white disabled:opacity-60">
               {pending ? "⏳ بنجيب البيانات..." : "دخول"}
             </button>
           </form>
@@ -442,44 +446,44 @@ export default function ManagerPage() {
             {error ? <p className="rounded-2xl bg-red-50 p-3 text-xs font-bold text-red-600">{error}</p> : null}
             {view === "top" ? (
               <div className="space-y-3">
-                <button type="button" onClick={() => setView("list")} className="text-sm font-extrabold text-[#B94700]">← رجوع</button>
-                <div className="flex items-center justify-between rounded-[24px] bg-gradient-to-br from-[#D95B00] to-[#E87518] p-4 text-white">
+                <button type="button" onClick={() => setView("list")} className="text-sm font-extrabold text-[#bd4b0a]">← رجوع</button>
+                <div className="flex items-center justify-between rounded-[24px] bg-gradient-to-br from-[#e96812] to-[#ff9d38] p-4 text-white">
                   <div>
                     <p className="text-3xl font-black tracking-tight">TOP</p>
                     <p className="text-[11px] text-white/85">كل الموظفين مرتبين حسب نسبة التحقيق</p>
                   </div>
                 </div>
                 {topRows.map((row) => (
-                  <div key={`${row.branch}-${row.name}-${row.rank}`} className="flex items-center justify-between rounded-[22px] bg-white p-3.5 shadow-sm ring-1 ring-[#F3D2B5]/70">
+                  <div key={`${row.branch}-${row.name}-${row.rank}`} className="flex items-center justify-between rounded-[22px] bg-white p-3.5 shadow-sm ring-1 ring-[#f1dfd0]/70">
                     <div className="flex items-center gap-3">
-                      <span className={`flex h-10 w-10 items-center justify-center rounded-full text-sm font-black ${row.rank <= 3 ? "bg-gradient-to-br from-[#f5c542] to-[#e8a400] text-white" : "bg-[#FCEBDD] text-[#b84700]"}`}>
+                      <span className={`flex h-10 w-10 items-center justify-center rounded-full text-sm font-black ${row.rank <= 3 ? "bg-gradient-to-br from-[#f5c542] to-[#e8a400] text-white" : "bg-[#fff0e2] text-[#bd4b0a]"}`}>
                         {row.rank}
                       </span>
                       <div>
                         <p className="font-black">{row.name}</p>
-                        <p className="text-[11px] text-[#556070]" dir="ltr">{row.branch}</p>
+                        <p className="text-[11px] text-[#927b69]" dir="ltr">{row.branch}</p>
                       </div>
                     </div>
-                    <p className="text-xl font-black tabular-nums text-[#B94700]">{Math.round(row.percent)}%</p>
+                    <p className="text-xl font-black tabular-nums text-[#bd4b0a]">{Math.round(row.percent)}%</p>
                   </div>
                 ))}
               </div>
             ) : (
               <>
                 <div className="flex flex-wrap items-center justify-between gap-2">
-                  <p className="text-sm font-bold text-[#556070]">
+                  <p className="text-sm font-bold text-[#927b69]">
                     {allRows.length} موظف
-                    {lastLoaded ? <span className="block text-[10px] font-semibold text-[#556070]" dir="ltr">آخر تحديث {lastLoaded.toLocaleTimeString("en-US", { timeZone: "Africa/Cairo", hour: "2-digit", minute: "2-digit", hour12: false })}</span> : null}
+                    {lastLoaded ? <span className="block text-[10px] font-semibold text-[#927b69]" dir="ltr">آخر تحديث {lastLoaded.toLocaleTimeString("en-US", { timeZone: "Africa/Cairo", hour: "2-digit", minute: "2-digit", hour12: false })}</span> : null}
                   </p>
                   <div className="flex gap-2">
-                    <button type="button" onClick={() => setView("top")} className="rounded-full bg-gradient-to-br from-[#D95B00] to-[#E87518] px-3 py-1.5 text-xs font-black text-white">🏆 TOP</button>
-                    <button type="button" disabled={pending} onClick={() => load()} className="rounded-full bg-white px-3 py-1.5 text-xs font-extrabold text-[#b84700] ring-1 ring-[#F3D2B5]/70 disabled:opacity-60">
+                    <button type="button" onClick={() => setView("top")} className="rounded-full bg-gradient-to-br from-[#e96812] to-[#ff9d38] px-3 py-1.5 text-xs font-black text-white">🏆 TOP</button>
+                    <button type="button" disabled={pending} onClick={() => load()} className="rounded-full bg-white px-3 py-1.5 text-xs font-extrabold text-[#bd4b0a] ring-1 ring-[#f1dfd0]/70 disabled:opacity-60">
                       {pending ? "⏳ بنحدّث..." : "🔄 تحديث"}
                     </button>
                   </div>
                 </div>
                 {allRows.length === 0 ? (
-                  <p className="rounded-2xl bg-white p-4 text-sm font-bold text-[#556070]">مفيش فروع بعتت بيانات لحد دلوقتي.</p>
+                  <p className="rounded-2xl bg-white p-4 text-sm font-bold text-[#927b69]">مفيش فروع بعتت بيانات لحد دلوقتي.</p>
                 ) : null}
                 {branch === null && allRows.length > 0 ? (() => {
                   const today = cairoISODate();
@@ -491,26 +495,26 @@ export default function ManagerPage() {
                     else if ((r.payload.entries ?? []).some((e) => e.date === today)) logged.push(r);
                     else missing.push(r);
                   }
-                  const names = (list: ReportRow[]) => (list.length === 0 ? <p className="text-xs text-[#556070]">لا يوجد</p> : list.map((r) => (
+                  const names = (list: ReportRow[]) => (list.length === 0 ? <p className="text-xs text-[#927b69]">لا يوجد</p> : list.map((r) => (
                     <p key={r.branch_id} className="flex justify-between text-sm font-bold">
                       <span>{r.employee_name}</span>
-                      <span className="text-[11px] font-semibold text-[#556070]" dir="ltr">{r.branch_name || NO_BRANCH}</span>
+                      <span className="text-[11px] font-semibold text-[#927b69]" dir="ltr">{r.branch_name || NO_BRANCH}</span>
                     </p>
                   )));
                   return (
-                    <section className="rounded-[24px] bg-white p-4 shadow-sm ring-1 ring-[#F3D2B5]/70">
+                    <section className="rounded-[24px] bg-white p-4 shadow-sm ring-1 ring-[#f1dfd0]/70">
                       <p className="mb-3 text-sm font-black">📅 النهارده ({today})</p>
                       <div className="grid grid-cols-3 gap-2 text-center text-xs font-extrabold">
                         <div className="rounded-2xl bg-emerald-50 p-2 text-emerald-800">✅ سجّل<br /><span className="text-lg tabular-nums">{logged.length}</span></div>
                         <div className="rounded-2xl bg-red-50 p-2 text-red-700">❌ مسجلش<br /><span className="text-lg tabular-nums">{missing.length}</span></div>
-                        <div className="rounded-2xl bg-neutral-100 p-2 text-[#556070]">🏖️ إجازة<br /><span className="text-lg tabular-nums">{leave.length}</span></div>
+                        <div className="rounded-2xl bg-neutral-100 p-2 text-[#927b69]">🏖️ إجازة<br /><span className="text-lg tabular-nums">{leave.length}</span></div>
                       </div>
                       <div className="mt-3 space-y-3">
                         <div><p className="mb-1 text-xs font-black text-emerald-800">سجّلوا</p>{names(logged)}</div>
                         <div><p className="mb-1 text-xs font-black text-red-700">مسجلوش لسه</p>{names(missing)}</div>
-                        <div><p className="mb-1 text-xs font-black text-[#556070]">في إجازة</p>{names(leave)}</div>
+                        <div><p className="mb-1 text-xs font-black text-[#927b69]">في إجازة</p>{names(leave)}</div>
                       </div>
-                      <p className="mt-3 text-[10px] text-[#556070]">* بيعتمد على آخر مزامنة من كل موظف.</p>
+                      <p className="mt-3 text-[10px] text-[#927b69]">* بيعتمد على آخر مزامنة من كل موظف.</p>
                     </section>
                   );
                 })() : null}
@@ -548,28 +552,28 @@ export default function ManagerPage() {
                             key={branchName}
                             type="button"
                             onClick={() => setView(`b:${branchName}`)}
-                            className="flex w-full items-center justify-between rounded-[24px] bg-white p-4 text-right shadow-sm ring-1 ring-[#F3D2B5]/70"
+                            className="flex w-full items-center justify-between rounded-[24px] bg-white p-4 text-right shadow-sm ring-1 ring-[#f1dfd0]/70"
                           >
                             <div>
                               <p className="font-black" dir="ltr">{branchName}</p>
-                              <p className="text-xs text-[#556070]">{group.length} موظف</p>
+                              <p className="text-xs text-[#927b69]">{group.length} موظف</p>
                               <div className="mt-1"><TrackBadge percent={avg} expected={groupExpected(group)} /></div>
                             </div>
-                            <p className="text-xl font-black text-[#B94700] tabular-nums">{Math.round(avg)}%</p>
+                            <p className="text-xl font-black text-[#bd4b0a] tabular-nums">{Math.round(avg)}%</p>
                           </button>
                         );
                       })}
                   </div>
                 ) : (
                   <div className="space-y-3">
-                    <button type="button" onClick={() => setView("list")} className="text-sm font-extrabold text-[#B94700]">← كل الفروع</button>
-                    <div className="rounded-[24px] bg-[#D95B00] p-4 text-white">
+                    <button type="button" onClick={() => setView("list")} className="text-sm font-extrabold text-[#bd4b0a]">← كل الفروع</button>
+                    <div className="rounded-[24px] bg-[#e96812] p-4 text-white">
                       <p className="text-xs text-white/80">الفرع</p>
                       <h2 className="font-black" dir="ltr">{branch}</h2>
                       <button
                         type="button"
                         onClick={() => downloadBranchCsv(branch, branchRows)}
-                        className="mt-3 rounded-full bg-white px-3 py-1.5 text-xs font-extrabold text-[#b84700]"
+                        className="mt-3 rounded-full bg-white px-3 py-1.5 text-xs font-extrabold text-[#bd4b0a]"
                       >
                         📥 تحميل الفرع (Excel)
                       </button>
@@ -577,7 +581,7 @@ export default function ManagerPage() {
                         <TrackBadge percent={branchAvg} expected={branchExpected} />
                       </div>
                     </div>
-                    <article className="rounded-[24px] bg-white p-4 shadow-sm ring-1 ring-[#F3D2B5]/70">
+                    <article className="rounded-[24px] bg-white p-4 shadow-sm ring-1 ring-[#f1dfd0]/70">
                       <button
                         type="button"
                         onClick={() => setBranchOpen(!branchOpen)}
@@ -590,8 +594,8 @@ export default function ManagerPage() {
                           </div>
                         </div>
                         <div className="flex items-center gap-2">
-                          <p className="text-2xl font-black text-[#B94700] tabular-nums">{Math.round(branchAvg)}%</p>
-                          <span className="text-[#556070]">{branchOpen ? "▲" : "▼"}</span>
+                          <p className="text-2xl font-black text-[#bd4b0a] tabular-nums">{Math.round(branchAvg)}%</p>
+                          <span className="text-[#927b69]">{branchOpen ? "▲" : "▼"}</span>
                         </div>
                       </button>
                       {branchOpen ? (
@@ -608,7 +612,7 @@ export default function ManagerPage() {
                       .sort((a, b) => (b.payload.overall ?? 0) - (a.payload.overall ?? 0))
                       .map((row, index) => (
                         <div key={row.branch_id} className="relative">
-                          <span className="absolute -top-2 right-4 z-10 rounded-full bg-[#B94700] px-2.5 py-0.5 text-[11px] font-black text-white">
+                          <span className="absolute -top-2 right-4 z-10 rounded-full bg-[#bd4b0a] px-2.5 py-0.5 text-[11px] font-black text-white">
                             المركز {index + 1}
                           </span>
                           {renderRow(row)}
