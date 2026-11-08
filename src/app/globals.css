@@ -375,3 +375,34 @@ textarea { resize: vertical; }
 .tys-desktop-nav-link-active {
   box-shadow: inset 0 0 0 1px rgba(233, 104, 18, .09), 0 5px 14px rgba(189, 75, 10, .045);
 }
+
+
+/* Consistent keyboard focus and motion behavior across the complete app shell. */
+.tys-page :is(a, button, input, select, textarea, [tabindex]):focus-visible,
+.tys-desktop-nav :is(a, button):focus-visible,
+.tys-mobile-nav :is(a, button):focus-visible {
+  outline: 3px solid rgba(233, 104, 18, .32);
+  outline-offset: 3px;
+}
+
+.tys-page :is(input, select, textarea):disabled {
+  cursor: not-allowed;
+  opacity: .62;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .tys-desktop-nav-link:not(.tys-desktop-nav-link-active):hover {
+    background: linear-gradient(90deg, rgba(255, 240, 226, .72), rgba(255, 248, 241, .92));
+    color: #8f3d0a;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tys-desktop-nav-link,
+  .tys-mobile-nav-link,
+  .tys-mobile-nav-icon {
+    scroll-behavior: auto !important;
+    transition-duration: .01ms !important;
+    animation-duration: .01ms !important;
+  }
+}
