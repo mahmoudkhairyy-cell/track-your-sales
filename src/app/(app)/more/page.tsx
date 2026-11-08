@@ -344,7 +344,7 @@ export default function MorePage() {
                 <span className="block font-black text-[#241f1b]">{item.title}</span>
                 <span className="block text-xs text-[#88796e]">{item.desc}</span>
               </span>
-              <span className="text-neutral-300">‹</span>
+              <span className="text-[#c8ad98]">‹</span>
             </button>
           ))}
         </div>
@@ -360,14 +360,14 @@ export default function MorePage() {
             {reportData ? (
               <>
                 <div className="mt-4 grid grid-cols-2 gap-3">
-                  <div className="rounded-2xl bg-[#fff0e2] p-3"><p className="text-[11px] font-bold text-[#88796e]">التوتال</p><p className="text-2xl font-black text-[#b84700]">{reportData.overall.toFixed(1)}%</p></div>
-                  <div className="rounded-2xl bg-[#fff0e2] p-3"><p className="text-[11px] font-bold text-[#88796e]">الكوميشن المتوقع</p><p className="text-2xl font-black text-[#b84700]">{Math.round(reportData.estimatedCommission)} ج</p><p className="text-[10px] text-[#88796e]">من {Math.round(reportData.fullCommission)} ج</p></div>
+                  <div className="rounded-2xl bg-[#fff0e2] p-3"><p className="text-[11px] font-bold text-[#88796e]">التوتال</p><p className="text-2xl font-black text-[#bd4b0a]">{reportData.overall.toFixed(1)}%</p></div>
+                  <div className="rounded-2xl bg-[#fff0e2] p-3"><p className="text-[11px] font-bold text-[#88796e]">الكوميشن المتوقع</p><p className="text-2xl font-black text-[#bd4b0a]">{Math.round(reportData.estimatedCommission)} ج</p><p className="text-[10px] text-[#88796e]">من {Math.round(reportData.fullCommission)} ج</p></div>
                 </div>
                 <div className="mt-4 divide-y divide-dashed divide-[#F3D2B5]">
                   {reportData.kpis.map((kpi) => (
                     <div key={kpi.kpiKey} className="flex items-center justify-between py-2.5 text-sm">
                       <span className="font-extrabold" dir="ltr">{kpi.nameEn}</span>
-                      <span className="text-[#88796e]">{formatQty(kpi.achieved)} / {formatQty(kpi.target)} · <b className="text-[#b84700]">{kpi.percent.toFixed(0)}%</b></span>
+                      <span className="text-[#88796e]">{formatQty(kpi.achieved)} / {formatQty(kpi.target)} · <b className="text-[#bd4b0a]">{kpi.percent.toFixed(0)}%</b></span>
                     </div>
                   ))}
                 </div>
@@ -376,7 +376,7 @@ export default function MorePage() {
               <p className="mt-4 text-sm text-[#88796e]">بنحمّل التقرير...</p>
             )}
           </div>
-          <button type="button" onClick={() => window.print()} className="w-full rounded-2xl bg-gradient-to-br from-[#D95B00] to-[#E87518] py-3 font-extrabold text-white shadow-sm">
+          <button type="button" onClick={() => window.print()} className="w-full rounded-2xl bg-gradient-to-br from-[#e96812] to-[#ff9d38] py-3 font-extrabold text-white shadow-sm">
             🖨️ اطبع / احفظ PDF
           </button>
         </section>
@@ -562,7 +562,7 @@ export default function MorePage() {
                     type="button"
                     onClick={() => setEditKpi(kpi.key)}
                     className={`flex min-h-12 items-center gap-2 rounded-2xl border px-3 text-right text-xs font-extrabold transition ${
-                      active ? "border-[#bd4b0a] bg-[#fff0e2] text-[#b84700]" : "border-neutral-200 bg-white text-[#88796e]"
+                      active ? "border-[#bd4b0a] bg-[#fff0e2] text-[#bd4b0a]" : "border-neutral-200 bg-white text-[#88796e]"
                     }`}
                   >
                     <span className="text-[#bd4b0a]"><KpiIcon kpiKey={kpi.key} className="h-5 w-5" /></span>
