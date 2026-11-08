@@ -71,13 +71,13 @@ export default function LogPage() {
   return (
     <form className="space-y-5" onSubmit={onSubmit}>
       <section>
-        <h1 className="text-2xl font-black">إنجاز اليوم ✍️</h1>
-        <p className="mt-1 text-sm leading-7 text-neutral-500">سجّل اللي بعته النهارده — كل حفظة بتتسجل لوحدها وبتتجمع في الرئيسية.</p>
+        <div className="rounded-[26px] border border-[#f2d8c3] bg-gradient-to-br from-[#fff2e6] via-white to-[#fff9f4] p-5 shadow-[0_10px_28px_rgba(105,54,20,0.045)]"><h1 className="text-2xl font-black tracking-tight text-[#2d1d13]">إنجاز اليوم ✍️</h1>
+        <p className="mt-2 text-sm leading-6 text-neutral-600">سجّل اللي بعته النهارده — كل حفظة بتتسجل لوحدها وبتتجمع في الرئيسية.</p></div>
       </section>
 
       {error ? <Banner tone="error">❌ {error}</Banner> : null}
 
-      <section className="space-y-4 rounded-[28px] bg-white p-5 shadow-[0_8px_24px_rgba(255,121,0,0.06)]">
+      <section className="space-y-4 rounded-[26px] border border-[#f1e3d8] bg-white p-5 shadow-[0_8px_24px_rgba(105,54,20,0.045)]">
         <div>
           <p className="mb-2 block text-sm font-bold text-neutral-800">اختار الإيتم</p>
           <div className="grid grid-cols-2 gap-2">

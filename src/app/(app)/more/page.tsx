@@ -60,7 +60,8 @@ export default function MorePage() {
   const [restoreOpen, setRestoreOpen] = useState(false);
   const [replaceReady, setReplaceReady] = useState(false);
 
-  const load = useCallback(async () => {
+  const load = useCallback(async (isActive: () => boolean = () => true) => {
+    if (!isActive()) return;
     setLoading(true);
     setError("");
     try {
@@ -71,20 +72,29 @@ export default function MorePage() {
           todaySummary: TodayItem[];
         }>(`/api/dashboard?month=${month}`),
       ]);
+      if (!isActive()) return;
       setEntries(entryData.entries);
       setTodaySummary(dash.todaySummary);
       setProfile({ name: dash.profile.name, branch: dash.profile.branch, role: dash.profile.role });
       setName(dash.profile.name);
       setBranch(dash.profile.branch);
     } catch (err) {
-      setError(err instanceof ApiError || err instanceof Error ? err.message : "تعذر تحميل صفحة المزيد");
+      if (isActive()) setError(err instanceof ApiError || err instanceof Error ? err.message : "تعذر تحميل صفحة المزيد");
     } finally {
-      setLoading(false);
+      if (isActive()) setLoading(false);
     }
   }, [month]);
 
   useEffect(() => {
-    void load();
+    let cancelled = false;
+    async function run() {
+      await Promise.resolve();
+      if (!cancelled) await load(() => !cancelled);
+    }
+    void run();
+    return () => {
+      cancelled = true;
+    };
   }, [load]);
 
   async function saveProfile(event: FormEvent) {
@@ -284,7 +294,7 @@ export default function MorePage() {
         <p className="mt-1 text-sm text-neutral-500">ملخص النهارده، سجل الشهر، النسخة الاحتياطية، والمساعد.</p>
       </section>
 
-      <section className="rounded-[28px] bg-white p-5 shadow-[0_8px_24px_rgba(255,121,0,0.06)]">
+      <section className="rounded-[26px] border border-[#f1e3d8] bg-white p-5 shadow-[0_8px_24px_rgba(105,54,20,0.045)]">
         <h2 className="text-lg font-black">📊 اللي عملته النهارده</h2>
         {todayItems.length === 0 ? (
           <p className="mt-3 text-sm text-neutral-400">لسه مسجلتش حاجة النهارده. يلا نبدأ! 💪</p>
@@ -308,7 +318,7 @@ export default function MorePage() {
         )}
       </section>
 
-      <section className="rounded-[28px] bg-white p-5 shadow-[0_8px_24px_rgba(255,121,0,0.06)]">
+      <section className="rounded-[26px] border border-[#f1e3d8] bg-white p-5 shadow-[0_8px_24px_rgba(105,54,20,0.045)]">
         <div className="flex items-center justify-between gap-3">
           <h2 className="text-lg font-black">🗂️ سجل عمليات {monthLabelAr(month)}</h2>
           <span className="text-sm text-neutral-400">{entries.length} سجل</span>
@@ -355,7 +365,7 @@ export default function MorePage() {
         </button>
       </section>
 
-      <section className="rounded-[28px] bg-white p-5 shadow-[0_8px_24px_rgba(255,121,0,0.06)]">
+      <section className="rounded-[26px] border border-[#f1e3d8] bg-white p-5 shadow-[0_8px_24px_rgba(105,54,20,0.045)]">
         <h2 className="text-lg font-black">👤 بياناتك</h2>
         <form className="mt-4 space-y-3" onSubmit={saveProfile}>
           <Field label="اسم الموظف">
@@ -371,7 +381,7 @@ export default function MorePage() {
         <p className="mt-3 text-xs leading-6 text-neutral-400">تقدر تغيّر اسمك والفرع في أي وقت من هنا.</p>
       </section>
 
-      <section className="rounded-[28px] bg-white p-5 shadow-[0_8px_24px_rgba(255,121,0,0.06)]">
+      <section className="rounded-[26px] border border-[#f1e3d8] bg-white p-5 shadow-[0_8px_24px_rgba(105,54,20,0.045)]">
         <h2 className="text-lg font-black">💾 نسخة احتياطية واستعادة</h2>
         <p className="mt-2 text-sm leading-7 text-neutral-500">التصدير بينزّل ملف JSON فيه بياناتك وإعدادات الشهور والسجلات والملاحظات. من غير أي مفاتيح أو أسرار.</p>
         <div className="mt-4 grid gap-3 sm:grid-cols-2">

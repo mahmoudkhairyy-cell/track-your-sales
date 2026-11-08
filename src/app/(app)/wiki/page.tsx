@@ -85,20 +85,30 @@ export default function WikiPage() {
   const [pending, setPending] = useState(false);
   const [confirmId, setConfirmId] = useState<string | null>(null);
 
-  async function loadNotes() {
+  async function loadNotes(isActive: () => boolean = () => true) {
+    if (!isActive()) return;
     setLoadingNotes(true);
     try {
       const result = await api<{ articles: Article[] }>("/api/wiki");
-      setArticles(result.articles);
+      if (isActive()) setArticles(result.articles);
     } catch {
-      setArticles([]);
+      if (isActive()) setArticles([]);
     } finally {
-      setLoadingNotes(false);
+      if (isActive()) setLoadingNotes(false);
     }
   }
 
   useEffect(() => {
-    if (section === "notes") void loadNotes();
+    if (section !== "notes") return;
+    let cancelled = false;
+    async function run() {
+      await Promise.resolve();
+      if (!cancelled) await loadNotes(() => !cancelled);
+    }
+    void run();
+    return () => {
+      cancelled = true;
+    };
   }, [section]);
 
   const q = query.trim().toLowerCase();
@@ -167,9 +177,11 @@ export default function WikiPage() {
     <div className="space-y-5">
       {section === "hub" ? (
         <>
-          <section className="text-center">
-            <h1 className="text-3xl font-black text-neutral-900">موسوعة أورانج 🍊</h1>
-            <p className="mt-2 text-sm text-neutral-400">بحث شامل في أكواد SR والباقات والأرقام والإيميلات</p>
+          <section className="relative isolate overflow-hidden rounded-[28px] border border-[#f4d8c2] bg-gradient-to-br from-[#fff3e8] via-white to-[#fff8f2] px-5 py-6 text-center shadow-[0_12px_32px_rgba(105,54,20,0.055)] before:absolute before:-left-10 before:-top-14 before:-z-10 before:h-40 before:w-40 before:rounded-full before:bg-[#ff7900]/10">
+            <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-[20px] bg-gradient-to-br from-[#f58a3c] to-[#bd4b0a] text-2xl text-white shadow-[0_8px_20px_rgba(189,75,10,0.22)]">🍊</span>
+            <h1 className="mt-3 text-2xl font-black text-neutral-900">موسوعة أورانج</h1>
+            <p className="mt-2 text-sm leading-6 text-neutral-500">كل اللي تحتاجه في الشغل… في مكان واحد</p>
+            <p className="mt-1 text-xs text-neutral-400">أكواد SR · الباقات · الأرقام · الإيميلات</p>
           </section>
           <SearchBox value={query} onChange={setQuery} placeholder="ابحث بالكود أو الاسم أو الرقم..." />
 
@@ -227,8 +239,8 @@ export default function WikiPage() {
             <>
               <div className="grid grid-cols-2 gap-3">
                 {HUB.map((card) => (
-                  <button key={card.id} type="button" onClick={() => { setSection(card.id); setQuery(""); }} className="rounded-[24px] bg-white p-4 text-right shadow-[0_8px_24px_rgba(255,121,0,0.06)]">
-                    <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-orange-50">{card.icon}</span>
+                  <button key={card.id} type="button" onClick={() => { setSection(card.id); setQuery(""); }} className="group rounded-[24px] border border-[#f1e2d6] bg-white/95 p-4 text-right shadow-[0_8px_24px_rgba(105,54,20,0.045)] transition duration-200 hover:-translate-y-1 hover:border-[#edc8aa] hover:shadow-[0_14px_30px_rgba(105,54,20,0.09)] active:scale-[.985]">
+                    <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-[#fff0e4] to-[#ffe1c9] text-[#bd4b0a] shadow-inner">{card.icon}</span>
                     <p className="mt-3 font-black">{card.title}</p>
                     <p className="mt-1 text-xs leading-5 text-neutral-400">{card.desc}</p>
                     <p className="mt-2 text-[11px] font-bold text-[#ff7900]">{card.count}</p>
@@ -236,7 +248,7 @@ export default function WikiPage() {
                 ))}
               </div>
               <div className="grid grid-cols-2 gap-3">
-                <button type="button" onClick={() => setSection("dsl")} className="rounded-[24px] bg-white p-4 text-right shadow-[0_8px_24px_rgba(255,121,0,0.06)]">
+                <button type="button" onClick={() => setSection("dsl")} className="group rounded-[24px] border border-[#f1e2d6] bg-white/95 p-4 text-right shadow-[0_8px_24px_rgba(105,54,20,0.045)] transition duration-200 hover:-translate-y-1 hover:border-[#edc8aa] hover:shadow-[0_14px_30px_rgba(105,54,20,0.09)] active:scale-[.985]">
                   <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-orange-50">
                     <WifiIcon className="text-[#ff7900]" />
                   </span>

@@ -46,7 +46,7 @@ function ScoreRing({ value }: { value: number }) {
   const circ = 2 * Math.PI * radius;
   const offset = circ - (visual / 100) * circ;
   return (
-    <svg viewBox="0 0 130 130" className="h-32 w-32 shrink-0">
+    <svg viewBox="0 0 130 130" role="img" aria-label={`نسبة الإنجاز ${formatPercent(value)} بالمئة`} className="h-32 w-32 shrink-0">
       <circle cx="65" cy="65" r={radius} fill="none" stroke="rgba(255,255,255,0.28)" strokeWidth="12" />
       <circle
         cx="65"
@@ -61,7 +61,7 @@ function ScoreRing({ value }: { value: number }) {
         transform="rotate(-90 65 65)"
       />
       <text x="65" y="62" textAnchor="middle" fill="#fff" fontSize="22" fontWeight="800">
-        {Math.round(visual)}%
+        {Math.round(Math.max(0, value))}%
       </text>
       <text x="65" y="80" textAnchor="middle" fill="rgba(255,255,255,0.8)" fontSize="10">
         الإنجاز
@@ -151,25 +151,25 @@ export default function HomePage() {
         </p>
       </section>
 
-      <section className="flex items-center gap-4 rounded-[18px] bg-white p-4 shadow-[0_8px_24px_rgba(255,121,0,0.06)]">
+      <section className="relative isolate flex items-center gap-4 overflow-hidden rounded-[28px] border border-white/20 bg-gradient-to-br from-[#f58a3c] via-[#e96812] to-[#b94a0b] p-4 text-white shadow-[0_18px_38px_rgba(189,75,10,0.20)] sm:gap-6 sm:p-6 before:absolute before:-left-12 before:-top-16 before:-z-10 before:h-52 before:w-52 before:rounded-full before:bg-white/10">
         <ScoreRing value={data.overall} />
         <div className="flex-1">
-          <p className="text-sm font-bold text-neutral-500">إجمالي التارجت الشهري</p>
-          <p className="mt-1 text-3xl font-black text-neutral-900">{formatPercent(data.overall)}%</p>
-          <p className="text-sm text-neutral-500">{gap > 0 ? `فاضل ${formatPercent(gap)}%` : "مفيش فاضل، قفلت الشهر"}</p>
-          <p className="mt-2 text-xs font-bold text-[#ff7900]">
+          <p className="text-sm font-bold text-white/80">إجمالي التارجت الشهري</p>
+          <p className="mt-1 text-3xl font-black tracking-tight text-white">{formatPercent(data.overall)}%</p>
+          <p className="text-sm text-white/85">{gap > 0 ? `فاضل ${formatPercent(gap)}%` : "مفيش فاضل، قفلت الشهر"}</p>
+          <p className="mt-2 text-xs font-extrabold text-white">
             💰 كوميشنك: {formatMoney(data.estimatedCommission)} من {formatMoney(data.fullCommission)} جنيه
           </p>
         </div>
       </section>
 
-      <section className={`rounded-[24px] border p-4 ${moodStyle.box}`}>
+      <section className={`rounded-[26px] border p-4 shadow-[0_10px_28px_rgba(116,63,26,0.045)] ${moodStyle.box}`}>
         <p className={`text-base font-black ${moodStyle.title}`}>
           {mood.emoji} {mood.headline}
         </p>
         <p className={`mt-1 text-sm leading-7 ${moodStyle.text}`}>{mood.detail}</p>
         <div className="mt-3 grid grid-cols-3 gap-2 text-center">
-          <div className="rounded-2xl bg-white/70 p-2">
+          <div className="rounded-2xl border border-white/70 bg-white/75 p-2 shadow-sm">
             <p className="text-lg font-black text-neutral-900">{data.work.total}</p>
             <p className="text-[11px] text-neutral-500">أيام الشغل</p>
           </div>
@@ -186,7 +186,7 @@ export default function HomePage() {
       </section>
 
       <div className="grid grid-cols-2 gap-3">
-        <article className="rounded-[24px] bg-white p-4 shadow-[0_8px_24px_rgba(255,121,0,0.06)]">
+        <article className="rounded-[22px] border border-[#f1e2d6] bg-white/90 p-3 shadow-[0_8px_24px_rgba(116,63,26,0.045)]">
           <p className="text-sm font-bold text-neutral-500">📱 الخطوط اللي عملتها</p>
           <p className="mt-2 text-3xl font-black">{formatQty(newLines?.achieved ?? 0)}</p>
           <p className="text-xs text-neutral-400">من {formatQty(newLines?.target ?? 0)}</p>
@@ -247,7 +247,7 @@ export default function HomePage() {
           const moodColor =
             m.tone === "good" ? "text-emerald-700" : m.tone === "warn" ? "text-yellow-700" : m.tone === "bad" ? "text-red-600" : "text-neutral-400";
           return (
-            <article key={kpi.kpiKey} className="rounded-[18px] bg-white p-3 shadow-[0_8px_24px_rgba(255,121,0,0.06)]">
+            <article key={kpi.kpiKey} className="rounded-[20px] border border-[#f1e2d6] bg-white/95 p-3 shadow-[0_8px_22px_rgba(116,63,26,0.045)] transition-transform duration-200 hover:-translate-y-0.5">
               <div className="flex items-center justify-between">
                 <span className="text-xl">{kpiEmoji(kpi.kpiKey)}</span>
                 <p className="text-sm font-black text-[#ff7900]">{formatPercent(kpi.percent)}%</p>
@@ -259,8 +259,8 @@ export default function HomePage() {
                 {formatQty(kpi.achieved)}
                 <span className="text-xs font-normal text-neutral-400"> / {formatQty(kpi.target)}</span>
               </p>
-              <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-neutral-100">
-                <div className="h-full rounded-full bg-[#ff7900]" style={{ width: `${visual}%` }} />
+              <div className="mt-2 h-2 overflow-hidden rounded-full bg-[#f5eae1]">
+                <div className="h-full rounded-full bg-gradient-to-l from-[#f6a05f] to-[#d95d0b]" style={{ width: `${visual}%` }} />
               </div>
               <p className={`mt-2 text-[11px] font-bold ${moodColor}`}>
                 {m.emoji} {m.text}
