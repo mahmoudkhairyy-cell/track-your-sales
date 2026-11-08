@@ -2325,3 +2325,321 @@ body {
     animation-iteration-count: 1 !important;
   }
 }
+
+
+/* =========================================================
+   TRACK YOUR SALES — unified premium interface system
+   Visual-only release: no data, calculations or workflows changed.
+   ========================================================= */
+:root {
+  color-scheme: light;
+  --brand-primary: #d95f12;
+  --brand-deep: #963b08;
+  --brand-warm: #ff9b45;
+  --brand-soft: #fff0e3;
+  --brand-cream: #fff8f1;
+  --brand-bg: #fffaf6;
+  --brand-card: #ffffff;
+  --brand-text: #2b211b;
+  --brand-muted: #88796e;
+  --brand-border: #efdfd2;
+  --app-shadow: 0 12px 32px rgba(91, 49, 23, .055);
+  --tys-radius-xl: 26px;
+  --tys-radius-lg: 20px;
+  --tys-radius-md: 15px;
+}
+html, body { background-color: var(--brand-bg); }
+body {
+  color: var(--brand-text);
+  background:
+    radial-gradient(ellipse at 100% 0%, rgba(255, 177, 112, .16), transparent 34rem),
+    radial-gradient(ellipse at 0% 55%, rgba(255, 224, 198, .13), transparent 28rem),
+    #fffaf6;
+}
+.tys-app-main {
+  min-width: 0;
+  background:
+    radial-gradient(ellipse at 100% 0%, rgba(255, 226, 205, .22), transparent 34rem),
+    linear-gradient(180deg, #fffaf6 0%, #fff 42%, #fffaf6 100%);
+}
+.tys-app-header {
+  border-color: rgba(239, 223, 210, .9);
+  background: rgba(255, 251, 247, .9);
+  box-shadow: 0 5px 24px rgba(91, 49, 23, .045);
+  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(18px);
+}
+.tys-sidebar {
+  border-color: #f0dfd2;
+  background:
+    radial-gradient(ellipse at 0 0, rgba(255, 188, 137, .16), transparent 20rem),
+    linear-gradient(180deg, #fffdfa, #fff7ef);
+}
+.tys-desktop-nav {
+  padding: 6px;
+  border: 1px solid rgba(239, 223, 210, .8);
+  border-radius: 20px;
+  background: rgba(255,255,255,.72);
+}
+.tys-desktop-nav-link { border: 1px solid transparent; border-radius: 14px; }
+.tys-desktop-nav-link-active {
+  border-color: rgba(217,95,18,.13);
+  background: linear-gradient(110deg,#fff0e3,#fff8f1);
+  color: var(--brand-deep);
+  box-shadow: 0 5px 15px rgba(150,59,8,.055);
+}
+.tys-mobile-nav {
+  border-top: 1px solid #efdfd2;
+  background: rgba(255,253,250,.96);
+  box-shadow: 0 -8px 28px rgba(91,49,23,.08);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+}
+.tys-mobile-nav-primary {
+  background: linear-gradient(145deg,#f58b3a,#bd4b0a);
+  box-shadow: 0 8px 18px rgba(150,59,8,.22), 0 0 0 4px #fff0e3;
+}
+.tys-page {
+  width: 100%;
+  min-width: 0;
+  gap: 1rem;
+  color: var(--brand-text);
+}
+.tys-page :is(h1,h2,h3) { color: var(--brand-text); text-wrap: balance; }
+.tys-page h1 { font-weight: 900; letter-spacing: -.04em; }
+.tys-page h2 { font-weight: 850; letter-spacing: -.025em; }
+.tys-page :is(section,article) { min-width: 0; }
+.tys-page :is(section,article)[class*="rounded-"] {
+  border-color: var(--brand-border);
+  box-shadow: 0 8px 24px rgba(91,49,23,.042);
+}
+.tys-page :is(input,select,textarea) {
+  max-width: 100%;
+  min-height: 46px;
+  border-color: #ead9cb;
+  border-radius: 14px;
+  background: #fffdfa;
+  color: var(--brand-text);
+}
+.tys-page :is(input,select,textarea):focus {
+  border-color: #d97836;
+  outline: 0;
+  box-shadow: 0 0 0 3px rgba(217,95,18,.12);
+}
+.tys-page :is(button,a) { -webkit-tap-highlight-color: transparent; }
+.tys-page :is(button,a):focus-visible {
+  outline: 3px solid rgba(217,95,18,.27);
+  outline-offset: 3px;
+}
+.tys-page button:disabled { cursor: not-allowed; opacity: .55; }
+.tys-page :is(p,span,div) { overflow-wrap: break-word; }
+
+/* Home: compact welcome, focused progress hero and balanced KPI grid. */
+.tys-page-home { gap: 1rem; }
+.tys-page-home > section:first-of-type {
+  min-height: 74px;
+  border: 1px solid #f0dfd2;
+  border-radius: 20px;
+  background: linear-gradient(110deg,#fff 0%,#fff8f1 100%);
+  box-shadow: 0 6px 20px rgba(91,49,23,.035);
+}
+.tys-page-home > section:nth-of-type(2) {
+  border: 1px solid rgba(217,95,18,.16);
+  border-radius: 27px;
+  background:
+    radial-gradient(circle at 100% 0%,rgba(255,255,255,.3),transparent 15rem),
+    linear-gradient(125deg,#fff8f1 0%,#fff 58%,#fff2e6 100%);
+  box-shadow: 0 16px 38px rgba(145,75,30,.075);
+}
+.tys-page-home > section:nth-of-type(n+3) {
+  border-radius: 22px;
+  background: rgba(255,255,255,.94);
+}
+.tys-page-home article {
+  min-width: 0;
+  border-color: #f0e1d5;
+  border-radius: 17px;
+  background: linear-gradient(145deg,#fff,#fffdfa);
+  box-shadow: 0 5px 15px rgba(91,49,23,.035);
+}
+.tys-page-home article > * { min-width: 0; }
+
+/* Target and daily entry: reduce visual noise, clarify field groups. */
+.tys-page-target, .tys-page-log { gap: 1rem; }
+.tys-page-target > section, .tys-page-log > section {
+  border-radius: 22px;
+  background: rgba(255,255,255,.96);
+}
+.tys-page-target article, .tys-page-log article {
+  border: 1px solid #f0e1d5;
+  border-radius: 17px;
+  background: #fff;
+  box-shadow: 0 5px 16px rgba(91,49,23,.035);
+}
+.tys-page-log article input[type="number"] {
+  min-height: 48px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+.tys-page-target button, .tys-page-log button { min-height: 40px; }
+.tys-page-target [class*="sticky"] {
+  background: rgba(255,253,250,.96);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+}
+
+/* More: consistent compact action tiles and clear section separation. */
+.tys-page-more { gap: 1rem; }
+.tys-page-more > section {
+  border-radius: 22px;
+  background: rgba(255,255,255,.96);
+}
+.tys-page-more > div.grid { gap: .75rem; }
+.tys-page-more > div.grid button {
+  min-width: 0;
+  min-height: 112px;
+  border: 1px solid #efdfd2;
+  border-radius: 19px;
+  background: linear-gradient(145deg,#fff 0%,#fff9f3 100%);
+  box-shadow: 0 6px 17px rgba(91,49,23,.04);
+}
+.tys-page-more > div.grid button > span:first-child {
+  flex: 0 0 auto;
+  border: 1px solid rgba(217,95,18,.08);
+  background: #fff0e3;
+}
+
+/* Knowledge hub: readable article cards, quieter controls and search. */
+.tys-page-wiki { gap: 1rem; }
+.tys-page-wiki > section:first-child {
+  border-radius: 24px;
+  background: linear-gradient(125deg,#fff 0%,#fff5eb 100%);
+}
+.tys-page-wiki article {
+  min-width: 0;
+  border: 1px solid #efdfd2;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 6px 18px rgba(91,49,23,.035);
+}
+.tys-page-wiki article :is(h2,h3) { line-height: 1.45; }
+.tys-page-wiki :is(button,[role="tab"]) { border-radius: 13px; }
+
+/* Manager: one clear hierarchy from summary to branches to employee detail. */
+.tys-page-manager {
+  width: 100%;
+  max-width: 1440px;
+  margin-inline: auto;
+  gap: 1rem;
+}
+.tys-page-manager .tys-manager-header {
+  padding: .25rem 0 .9rem;
+  border-bottom: 1px solid #efdfd2;
+}
+.tys-page-manager .tys-manager-hero {
+  border: 1px solid rgba(255,255,255,.2);
+  border-radius: 25px;
+  background: linear-gradient(125deg,#963b08 0%,#c6530d 55%,#ed8430 100%);
+  box-shadow: 0 18px 42px rgba(150,59,8,.17);
+}
+.tys-page-manager > div > section.grid:first-of-type > div {
+  min-width: 0;
+  border: 1px solid #efdfd2;
+  border-radius: 17px;
+  background: #fff;
+  box-shadow: 0 5px 16px rgba(91,49,23,.035);
+}
+.tys-page-manager .tys-manager-branch-card {
+  min-height: 174px;
+  border: 1px solid #efdfd2;
+  border-radius: 19px;
+  background: linear-gradient(145deg,#fff,#fffaf6);
+  box-shadow: 0 6px 18px rgba(91,49,23,.04);
+}
+.tys-page-manager .tys-manager-employee-card {
+  border: 1px solid #efdfd2;
+  border-radius: 17px;
+  background: #fff;
+  box-shadow: 0 5px 15px rgba(91,49,23,.035);
+}
+.tys-page-manager .tys-manager-disclosure {
+  border: 1px solid #efdfd2;
+  border-radius: 17px;
+  background: #fff;
+}
+.tys-page-manager .tys-manager-disclosure > summary {
+  min-height: 58px;
+  cursor: pointer;
+}
+.tys-page-manager .tys-manager-login {
+  border: 1px solid #efdfd2;
+  border-top: 3px solid var(--brand-primary);
+  border-radius: 24px;
+  background: #fff;
+  box-shadow: 0 20px 55px rgba(91,49,23,.09);
+}
+.tys-page-manager footer {
+  color: var(--brand-muted);
+}
+
+/* Setup and first-run views. */
+.tys-login-screen {
+  background:
+    radial-gradient(ellipse at 12% 8%,rgba(255,157,69,.17),transparent 24rem),
+    linear-gradient(145deg,#fff7ef,#fff 54%,#fffaf6);
+}
+.tys-login-card {
+  border: 1px solid #efdfd2;
+  border-top: 3px solid var(--brand-primary);
+  border-radius: 26px;
+  background: rgba(255,255,255,.97);
+  box-shadow: 0 22px 62px rgba(91,49,23,.09);
+}
+
+/* Consistent responsive rhythm; avoid tiny controls and horizontal overflow. */
+@media (min-width: 1024px) {
+  .tys-page { gap: 1.15rem; }
+  .tys-page-manager { padding-inline: 1rem; }
+}
+@media (max-width: 640px) {
+  .tys-app-main { padding-inline: .85rem; }
+  .tys-page { gap: .85rem; padding-bottom: 1.2rem; }
+  .tys-page :is(section,article)[class*="rounded-"] { border-radius: 18px; }
+  .tys-page-home > section:nth-of-type(2) { border-radius: 22px; }
+  .tys-page-home > section:first-of-type { padding: .85rem .95rem; }
+  .tys-page-more > div.grid { gap: .55rem; }
+  .tys-page-more > div.grid button {
+    min-height: 106px;
+    padding: .7rem;
+    border-radius: 16px;
+  }
+  .tys-page-manager { padding-inline: 0; }
+  .tys-page-manager .tys-manager-branch-card { min-height: 158px; padding: .85rem; }
+  .tys-page-manager .tys-manager-employee-card { padding: .8rem; }
+  .tys-page-manager .tys-manager-header { align-items: flex-start; }
+  .tys-page :is(input,select,textarea) { font-size: 16px; }
+  .tys-mobile-nav-link { min-height: 62px; }
+}
+@media (max-width: 370px) {
+  .tys-app-main { padding-inline: .65rem; }
+  .tys-page-manager .tys-manager-header h1 { font-size: 1.55rem; }
+  .tys-page-more > div.grid button { min-height: 98px; }
+}
+@media (hover:hover) and (pointer:fine) {
+  .tys-page :is(article, .tys-manager-branch-card):hover {
+    border-color: #e5bd9e;
+    box-shadow: 0 12px 28px rgba(91,49,23,.065);
+  }
+  .tys-page-more > div.grid button:hover {
+    border-color: #e5bd9e;
+    transform: translateY(-2px);
+  }
+}
+@media (prefers-reduced-motion:reduce) {
+  .tys-page, .tys-page *, .tys-page *::before, .tys-page *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
