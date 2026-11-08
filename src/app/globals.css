@@ -1143,3 +1143,168 @@ body {
     transition: none !important;
   }
 }
+
+
+/* Onboarding, target gate and loading states — visual-only finish. */
+.tys-login-screen {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse at 92% 8%, rgba(255, 171, 103, .24), transparent 23rem),
+    radial-gradient(ellipse at 5% 92%, rgba(255, 214, 184, .34), transparent 24rem),
+    linear-gradient(145deg, #fff8f1 0%, #fff 52%, #fff3e8 100%);
+}
+.tys-login-screen::before,
+.tys-login-screen::after {
+  position: absolute;
+  z-index: -1;
+  content: "";
+  width: 18rem;
+  height: 18rem;
+  border-radius: 50%;
+  pointer-events: none;
+}
+.tys-login-screen::before {
+  top: -10rem;
+  inset-inline-start: -7rem;
+  border: 1px solid rgba(223, 100, 16, .10);
+  box-shadow: 0 0 0 22px rgba(223, 100, 16, .025), 0 0 0 46px rgba(223, 100, 16, .018);
+}
+.tys-login-screen::after {
+  bottom: -12rem;
+  inset-inline-end: -7rem;
+  background: radial-gradient(circle, rgba(255, 157, 56, .13), transparent 70%);
+}
+.tys-login-card {
+  position: relative;
+  border-top-width: 4px;
+  border-top-color: #df6410;
+  border-radius: 30px;
+  padding: clamp(1.25rem, 5vw, 1.75rem);
+  background: rgba(255, 255, 255, .94);
+  box-shadow: 0 28px 76px rgba(104, 53, 19, .13);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+.tys-login-card > div:first-child img {
+  width: 4.5rem;
+  height: 4.5rem;
+  padding: .35rem;
+  border: 1px solid #f3e2d5;
+  border-radius: 20px;
+  background: linear-gradient(145deg, #fff, #fff2e6);
+  box-shadow: 0 10px 24px rgba(189, 75, 10, .10);
+}
+.tys-login-card h1 {
+  letter-spacing: -.035em;
+}
+.tys-login-card label {
+  display: block;
+  line-height: 1.8;
+}
+.tys-login-card input,
+.tys-login-card select {
+  min-height: 48px;
+  border-radius: 14px;
+  border-color: #ead9ca;
+  background: #fffdfa;
+  color: #2d2119;
+}
+.tys-login-card input:focus,
+.tys-login-card select:focus {
+  border-color: #df6410;
+  box-shadow: 0 0 0 4px rgba(223, 100, 16, .10);
+}
+.tys-login-card button[type="button"] {
+  min-height: 48px;
+  border-radius: 15px;
+  transition: background-color 160ms ease, border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+}
+.tys-login-card button[type="button"]:focus-visible {
+  outline: 3px solid rgba(223, 100, 16, .24);
+  outline-offset: 2px;
+}
+.tys-login-card button[type="button"][class*="border-[#bd4b0a]"] {
+  background: linear-gradient(145deg, #fff5eb, #ffe9d7);
+  box-shadow: inset 0 0 0 1px rgba(189, 75, 10, .06), 0 5px 14px rgba(189, 75, 10, .07);
+}
+.tys-login-card button[type="submit"] {
+  min-height: 50px;
+  border-radius: 15px;
+  background: linear-gradient(110deg, #b94a0b 0%, #e96812 52%, #ff9d38 100%);
+  box-shadow: 0 11px 24px rgba(189, 75, 10, .22);
+  transition: box-shadow 160ms ease, filter 160ms ease, transform 160ms ease;
+}
+.tys-login-card button[type="submit"]:not(:disabled):active {
+  transform: translateY(1px);
+}
+.tys-login-card button[type="submit"]:disabled {
+  opacity: .62;
+  box-shadow: none;
+}
+.tys-target-gate {
+  border-color: #efddce;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255, 157, 56, .12), transparent 12rem),
+    linear-gradient(145deg, #fff 0%, #fffaf5 100%);
+  box-shadow: 0 16px 38px rgba(104, 53, 19, .075);
+}
+.tys-target-gate > div:first-child {
+  display: inline-flex;
+  width: 3.75rem;
+  height: 3.75rem;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #f2dfcf;
+  border-radius: 21px;
+  background: linear-gradient(145deg, #fff, #fff0e2);
+  box-shadow: 0 8px 20px rgba(189, 75, 10, .09);
+}
+.tys-target-gate a {
+  min-height: 48px;
+  border-radius: 15px;
+  background: linear-gradient(110deg, #bd4b0a, #e96812 58%, #ff9d38);
+  box-shadow: 0 10px 22px rgba(189, 75, 10, .20);
+}
+.tys-page [role="status"] .skeleton-bone {
+  border: 1px solid rgba(239, 221, 206, .72);
+  background: linear-gradient(105deg, #f5e9df 15%, #fffaf6 38%, #f5e9df 62%);
+  background-size: 220% 100%;
+}
+@media (max-width: 640px) {
+  .tys-login-screen {
+    min-height: 100svh;
+    padding: max(1rem, env(safe-area-inset-top)) 1rem max(1rem, env(safe-area-inset-bottom));
+  }
+  .tys-login-card {
+    max-width: 27rem;
+    border-radius: 25px;
+    padding: 1.2rem;
+  }
+  .tys-login-card > div:first-child {
+    margin-bottom: 1.1rem;
+  }
+  .tys-login-card > div:first-child img {
+    width: 4rem;
+    height: 4rem;
+  }
+  .tys-login-card .grid {
+    gap: .55rem;
+  }
+  .tys-login-card button[type="button"] {
+    padding-inline: .55rem;
+    font-size: .82rem;
+  }
+  .tys-target-gate {
+    margin-inline: .75rem;
+    padding: 1.2rem;
+    border-radius: 22px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tys-login-card button,
+  .tys-target-gate a {
+    transition: none !important;
+  }
+}
