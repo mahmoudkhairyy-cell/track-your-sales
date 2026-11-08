@@ -1794,3 +1794,135 @@ body {
     padding-bottom: max(5px, env(safe-area-inset-bottom));
   }
 }
+
+
+/* Neo-Tech refinement pass: page rhythm, surfaces, and touch-first controls. */
+:root {
+  --tys-ink: #302219;
+  --tys-muted: #8d7665;
+  --tys-line: #f0dfd1;
+  --tys-orange: #c6530d;
+  --tys-orange-soft: #fff0e2;
+}
+.tys-page {
+  color: var(--tys-ink);
+  isolation: isolate;
+}
+.tys-page :is(section, article) {
+  scroll-margin-top: 5rem;
+}
+.tys-page :is(h1,h2,h3) {
+  text-wrap: balance;
+}
+.tys-page-home > section:first-of-type {
+  background: linear-gradient(115deg, rgba(255,255,255,.96), rgba(255,248,241,.9));
+  box-shadow: 0 10px 30px rgba(96,52,25,.045), inset 0 1px 0 rgba(255,255,255,.9);
+}
+.tys-page-home > section:nth-of-type(2) {
+  border-color: rgba(221,145,91,.32);
+  box-shadow: 0 22px 54px rgba(145,75,30,.10), inset 0 1px 0 rgba(255,255,255,.8);
+}
+.tys-page-home > section:nth-of-type(n+3) {
+  box-shadow: 0 12px 30px rgba(83,48,27,.045), inset 0 1px 0 rgba(255,255,255,.85);
+}
+.tys-page-home article {
+  min-width: 0;
+  transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+}
+.tys-page-home article:focus-within {
+  border-color: #e7b48f;
+  box-shadow: 0 0 0 3px rgba(230,126,61,.10);
+}
+.tys-page-log > section,
+.tys-page-target > section,
+.tys-page-wiki > section,
+.tys-page-more > section {
+  box-shadow: 0 10px 28px rgba(91,52,29,.045), inset 0 1px 0 rgba(255,255,255,.85);
+}
+.tys-page-log > section:first-of-type,
+.tys-page-target > section:first-of-type,
+.tys-page-wiki > section:first-of-type,
+.tys-page-more > section:first-of-type {
+  border-color: rgba(222,173,139,.55);
+}
+.tys-page-log form,
+.tys-page-target form {
+  gap: 1rem;
+}
+.tys-page-log :is(input,textarea),
+.tys-page-target :is(input,textarea),
+.tys-page-more :is(input,textarea) {
+  border-color: #ead8ca;
+  background: #fffdfa;
+  color: var(--tys-ink);
+  box-shadow: inset 0 1px 2px rgba(82,48,28,.025);
+  transition: border-color .18s ease, box-shadow .18s ease, background .18s ease;
+}
+.tys-page-log :is(input,textarea):focus,
+.tys-page-target :is(input,textarea):focus,
+.tys-page-more :is(input,textarea):focus {
+  border-color: #d97836;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(217,120,54,.13);
+  outline: none;
+}
+.tys-page-log button[aria-pressed],
+.tys-page-more button[aria-pressed] {
+  transition: border-color .18s ease, background .18s ease, transform .18s ease;
+}
+.tys-page-log button[aria-pressed]:active,
+.tys-page-more button[aria-pressed]:active {
+  transform: scale(.985);
+}
+.tys-page-target > section:has(input[type="checkbox"]) {
+  border-color: #eddfd4;
+}
+.tys-page-wiki {
+  min-width: 0;
+}
+.tys-page-wiki :is(button,[role="tab"]) {
+  transition: background .18s ease, border-color .18s ease, color .18s ease, transform .18s ease;
+}
+.tys-page-wiki :is(button,[role="tab"]):active {
+  transform: scale(.985);
+}
+.tys-page-manager .tys-manager-hero {
+  box-shadow: 0 22px 52px rgba(154,62,10,.20), inset 0 1px 0 rgba(255,255,255,.16);
+}
+.tys-page-manager :is(section,article):not(.tys-manager-hero) {
+  box-shadow: 0 10px 28px rgba(89,50,27,.045);
+}
+.tys-page-manager button {
+  -webkit-tap-highlight-color: transparent;
+}
+@media (hover:hover) and (min-width:768px) {
+  .tys-page-home article:hover,
+  .tys-page-manager button:hover {
+    transform: translateY(-2px);
+  }
+  .tys-page-log button[aria-pressed]:hover,
+  .tys-page-wiki button:hover {
+    border-color: #e6b18a;
+  }
+}
+@media (max-width:640px) {
+  .tys-page-home,
+  .tys-page-log,
+  .tys-page-target,
+  .tys-page-wiki,
+  .tys-page-more {
+    max-width: 100%;
+  }
+  .tys-page-home > section:nth-of-type(2) {
+    border-radius: 24px;
+  }
+  .tys-page-log > section,
+  .tys-page-target > section,
+  .tys-page-wiki > section,
+  .tys-page-more > section {
+    box-shadow: 0 7px 20px rgba(91,52,29,.04);
+  }
+  .tys-page-manager {
+    padding-inline: .75rem;
+  }
+}
