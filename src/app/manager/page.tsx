@@ -440,7 +440,7 @@ export default function ManagerPage() {
         ) : null}
 
         {rows === null ? (
-          <form onSubmit={load} className="overflow-hidden rounded-[28px] bg-white p-6 shadow-[0_20px_50px_rgba(190,90,0,0.15)] ring-1 ring-[#f1dfd0]/70">
+          <form onSubmit={load} className="mx-auto w-full max-w-md overflow-hidden rounded-[30px] border border-white/90 bg-white p-6 shadow-[0_24px_60px_rgba(151,72,17,0.13)] ring-1 ring-[#f1dfd0]/80 sm:p-7">
             <div className="-mx-6 -mt-6 mb-5 bg-[linear-gradient(125deg,#bd4b0a_0%,#e96812_52%,#ff9d38_100%)] px-6 py-7 text-center text-white">
               <img src="/track-your-sales/logo-mark.png" alt="" className="mx-auto h-14 w-14 object-contain" />
               <p className="mt-2 text-lg font-black tracking-tight" dir="ltr">Track Your Sales</p>
@@ -448,6 +448,7 @@ export default function ManagerPage() {
                 👑 {managerName || "المدير"}
               </p>
               <p className="mt-1 text-[11px] text-white/80" dir="ltr">Manager Dashboard</p>
+              <p className="mt-3 text-xs leading-5 text-white/85">سجّل دخولك لمتابعة أداء الفروع والموظفين.</p>
             </div>
             <label className="block text-sm font-bold text-[#927b69]">
               كلمة السر
@@ -455,11 +456,11 @@ export default function ManagerPage() {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="mt-2 w-full rounded-2xl border border-[#f1dfd0] px-4 py-3 outline-none focus:border-[#bd4b0a]"
+                className="mt-2 w-full rounded-2xl border border-[#ecd9c9] bg-[#fffaf6] px-4 py-3.5 text-[#38251a] shadow-inner shadow-[#f5e5d8]/40 outline-none transition placeholder:text-[#b59b88] focus:border-[#e96812] focus:bg-white focus:ring-4 focus:ring-[#e96812]/10"
               />
             </label>
             {error ? <p className="mt-3 text-sm font-bold text-red-600">{error}</p> : null}
-            <button type="submit" disabled={pending || !password} className="mt-4 w-full rounded-2xl bg-gradient-to-br from-[#e96812] to-[#ff9d38] py-3 font-extrabold text-white disabled:opacity-60">
+            <button type="submit" disabled={pending || !password} className="mt-4 w-full rounded-2xl bg-gradient-to-r from-[#bd4b0a] via-[#e96812] to-[#ff9d38] py-3.5 font-extrabold text-white shadow-[0_10px_22px_rgba(217,91,12,0.22)] transition hover:brightness-105 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60">
               {pending ? "⏳ بنجيب البيانات..." : "دخول"}
             </button>
           </form>
