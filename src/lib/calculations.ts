@@ -30,18 +30,7 @@ export function kpiContribution(achieved: number, target: number, weight: number
   return (achieved / target) * weight;
 }
 
-export function computeOverall(kpis: KpiSettingInput[], achieved: AchievedMap): number {
-  return kpis.reduce((sum, kpi) => {
-    const value = achieved[kpi.kpiKey] ?? 0;
-    return sum + kpiContribution(value, kpi.target, kpi.weight);
-  }, 0);
-}
-
-export function estimatedCommission(
-  fullCommission: number,
-  overallPercent: number,
-  allowOver100: boolean,
-): number {
+export function estimatedCommission(fullCommission: number, overallPercent: number): number {
   // الكوميشن بيزيد مع الإنجاز لحد 200% بس، من غير ما يحتاج اختيار.
   const ratio = overallPercent / 100;
   const used = Math.min(Math.max(ratio, 0), 2);
