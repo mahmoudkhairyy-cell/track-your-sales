@@ -299,7 +299,7 @@ export default function TargetPage() {
         <p className="mb-2 rounded-xl bg-[#fff0e2] px-3 py-2 text-[11px] font-bold leading-5 text-[#bd4b0a]">
           📌 الأوزان مختلفة للموظف والمدير. ده وزن {kpis.some((k) => k.kpiKey === "productivity" && k.weight > 0) ? "المدير" : "الموظف"}، وبيتحدد أوتوماتيك حسب اختيارك في أول مرة، ومش بيتعدل من التطبيق.
         </p>
-        <div className="grid grid-cols-[1fr_74px_74px] gap-2 border-b border-dashed border-[#f2e4d8]/70 pb-2 text-[11px] font-bold text-[#927b69]">
+        <div className="grid grid-cols-[minmax(0,1fr)_68px_60px] gap-1.5 border-b sm:grid-cols-[minmax(0,1fr)_74px_74px] sm:gap-2 border-dashed border-[#f2e4d8]/70 pb-2 text-[11px] font-bold text-[#927b69]">
           <span>الإيتم</span>
           <span className="text-center">التارجت</span>
           <span className="text-center">الوزن %</span>
@@ -311,7 +311,7 @@ export default function TargetPage() {
           if (kpi.kpiKey === "productivity" && kpi.weight === 0) return null;
           const catalog = KPI_CATALOG.find((item) => item.key === kpi.kpiKey);
           return (
-            <div key={kpi.kpiKey} className="grid grid-cols-[1fr_74px_74px] items-center gap-2 border-b border-dashed border-[#f2e4d8]/70 py-2.5 last:border-0">
+            <div key={kpi.kpiKey} className="grid grid-cols-[minmax(0,1fr)_68px_60px] items-center gap-1.5 border-b sm:grid-cols-[minmax(0,1fr)_74px_74px] sm:gap-2 border-dashed border-[#f2e4d8]/70 py-2.5 last:border-0">
               <div className="flex min-w-0 items-center gap-2">
                 <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[#fff0e2] text-[#bd4b0a]"><KpiIcon kpiKey={kpi.kpiKey} className="h-4 w-4" /></span>
                 <div className="min-w-0">

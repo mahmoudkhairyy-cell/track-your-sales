@@ -226,7 +226,7 @@ export default function LogPage() {
         </section>
       ) : null}
 
-      <section className="rounded-[24px] border border-[#f2e4d8] bg-white p-4 shadow-sm">
+      <section className="rounded-[22px] border border-[#f2e4d8] bg-white p-3 shadow-sm sm:rounded-[24px] sm:p-4">
         <label htmlFor="entry-date" className="block text-xs font-bold text-[#88796e]">📅 تاريخ الإنجاز</label>
         <input id="entry-date" className={`${inputClass} mt-2`} type="date" value={entryDate} min={monthDateRange(month).start} max={monthDateRange(month).end} onChange={(e) => setEntryDate(e.target.value)} required />
       </section>
@@ -239,7 +239,7 @@ export default function LogPage() {
         const excluded = !!d && d.weight > 0 && d.gated;
         const needToday = d && workLeft > 0 ? Math.ceil(Math.max(0, d.remaining) / workLeft) : 0;
         return (
-          <article key={item.key} className="rounded-[24px] border border-[#f2e4d8] bg-white p-4 shadow-sm">
+          <article key={item.key} className="rounded-[22px] border border-[#f2e4d8] bg-white p-3 shadow-sm sm:rounded-[24px] sm:p-4">
             <div className="flex items-center justify-between gap-3">
               <div className="flex items-center gap-3">
                 <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#fff0e2] text-[#e96812]"><KpiIcon kpiKey={item.key} className="h-5 w-5" /></span>
@@ -288,7 +288,7 @@ export default function LogPage() {
       })}
 
       {quality ? (
-        <section className="rounded-[24px] border border-[#f2e4d8] bg-white p-4 shadow-sm">
+        <section className="rounded-[22px] border border-[#f2e4d8] bg-white p-3 shadow-sm sm:rounded-[24px] sm:p-4">
           <div className="mb-2 flex items-center justify-between">
             <p className="text-sm font-black">✅ الكواليتي (15%)</p>
             <p className="text-xs font-extrabold text-[#bd4b0a]">{qualityScore}% من 15%</p>
@@ -320,7 +320,7 @@ export default function LogPage() {
         </section>
       ) : null}
 
-      <section className="rounded-[24px] border border-[#f2e4d8] bg-white p-4">
+      <section className="rounded-[22px] border border-[#f2e4d8] bg-white p-3 sm:rounded-[24px] sm:p-4">
         <label htmlFor="entry-note" className="block text-xs font-bold text-[#88796e]">📝 ملاحظة (لو حابب)</label>
         <textarea
           id="entry-note"
