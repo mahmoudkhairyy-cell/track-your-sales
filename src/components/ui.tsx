@@ -14,7 +14,7 @@ import {
 
 export function Spinner({ label = "بيحمّل..." }: { label?: string }) {
   return (
-    <div className="flex items-center justify-center gap-3 py-10 text-neutral-500">
+    <div className="flex items-center justify-center gap-3 py-10 text-[#927b69]">
       <span className="h-5 w-5 animate-spin rounded-full border-2 border-[#bd4b0a] border-t-transparent" />
       <span>{label}</span>
     </div>
@@ -31,9 +31,9 @@ export function EmptyState({
   action?: ReactNode;
 }) {
   return (
-    <div className="rounded-[28px] border border-dashed border-[#ff9d38] bg-white px-5 py-10 text-center">
-      <p className="text-lg font-extrabold text-neutral-900">{title}</p>
-      <p className="mx-auto mt-2 max-w-md text-sm leading-7 text-neutral-500">{text}</p>
+    <div className="rounded-[28px] border border-dashed border-[#edc6a8] bg-gradient-to-br from-white to-[#fff8f1] px-5 py-10 text-center shadow-[0_12px_30px_rgba(126,65,24,0.05)]">
+      <p className="text-lg font-extrabold text-[#2d2119]">{title}</p>
+      <p className="mx-auto mt-2 max-w-md text-sm leading-7 text-[#927b69]">{text}</p>
       {action ? <div className="mt-5">{action}</div> : null}
     </div>
   );
@@ -111,7 +111,7 @@ export function Field({
 }) {
   return (
     <label className="block">
-      <span className="mb-2 block text-sm font-bold text-neutral-800">{label}</span>
+      <span className="mb-2 block text-sm font-bold text-[#5f4939]">{label}</span>
       {children}
       {hint ? <span className="mt-1 block text-xs leading-6 text-neutral-500">{hint}</span> : null}
     </label>
@@ -150,7 +150,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
                 ? "bg-[#bd4b0a] text-white"
                 : toast.type === "error"
                   ? "bg-red-600 text-white"
-                  : "bg-neutral-900 text-white"
+                  : "bg-[#fff0e2] text-[#8b3d0a] ring-1 ring-[#f1d7c2]"
             }`}
           >
             {toast.text}
@@ -190,9 +190,9 @@ export function Modal({
   }, [open, onClose]);
   if (!open) return null;
   return (
-    <div className="fixed inset-0 z-[80] flex items-end justify-center bg-black/40 p-3 sm:items-center">
+    <div className="fixed inset-0 z-[80] flex items-end justify-center bg-[#4b3024]/35 p-3 backdrop-blur-[3px] sm:items-center">
       <button className="absolute inset-0" aria-label="إغلاق" tabIndex={-1} onClick={onClose} />
-      <div role="dialog" aria-modal="true" aria-labelledby={titleId} className="relative max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-[28px] bg-white p-5 shadow-2xl">
+      <div role="dialog" aria-modal="true" aria-labelledby={titleId} className="relative max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-[28px] border border-[#f1dfd0] bg-white p-5 shadow-[0_24px_70px_rgba(77,44,25,0.20)]">
         <div className="mb-4 flex items-start justify-between gap-3">
           <h2 id={titleId} className="text-lg font-extrabold text-neutral-900">{title}</h2>
           <button type="button" onClick={onClose} aria-label="إغلاق" className="min-h-10 min-w-10 rounded-full text-xl text-neutral-500">

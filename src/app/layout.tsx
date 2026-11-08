@@ -13,7 +13,7 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
-  themeColor: "#B94700",
+  themeColor: "#e96812",
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
@@ -29,7 +29,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-title" content="Track Sales" />
       </head>
-      <body className="min-h-screen bg-[#F5F8FC] antialiased">
+      <body className="min-h-screen bg-[#fffaf5] antialiased">
         {children}
         <PwaRegister />
       </body>
