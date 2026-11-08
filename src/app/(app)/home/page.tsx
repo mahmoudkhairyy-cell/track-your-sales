@@ -177,8 +177,16 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="h-2.5 overflow-hidden rounded-full bg-[#f5e6da]">
-            <div className="h-full rounded-full bg-gradient-to-l from-[#ffad58] via-[#ed741d] to-[#bd4b0a] shadow-[0_1px_5px_rgba(189,75,10,0.22)] transition-all duration-700" style={{ width: `${Math.min(100, Math.max(0, data.overall))}%` }} />
+          <div>
+            <div className="relative h-3 overflow-hidden rounded-full bg-[#f5e6da]">
+              <div className="absolute inset-y-0 right-1/2 z-10 w-px bg-[#8d6040]/45" />
+              <div className="h-full rounded-full bg-gradient-to-l from-[#ffad58] via-[#ed741d] to-[#bd4b0a] shadow-[0_1px_5px_rgba(189,75,10,0.22)] transition-all duration-700" style={{ width: `${Math.min(200, Math.max(0, data.overall)) / 2}%` }} />
+            </div>
+            <div className="mt-1 flex justify-between text-[9px] font-bold text-[#a18a78]" dir="ltr">
+              <span>200%</span>
+              <span className="translate-x-1/2">100% target</span>
+              <span>0%</span>
+            </div>
           </div>
 
           <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] font-semibold text-[#8c725f]">
