@@ -173,14 +173,11 @@ function FirstRunProfile({ onDone }: { onDone: () => void }) {
   return (
     <div className="tys-login-screen flex min-h-screen items-center justify-center p-4 text-[#241f1b]">
       <div className="tys-login-layout" dir="rtl">
-        <aside className="tys-login-intro">
-          <span className="tys-login-kicker">YOUR SALES WORKSPACE</span>
-          <img src="/track-your-sales/logo-full.png" alt="Track Your Sales" className="tys-login-brand" />
-          <h2>كل إنجازاتك،<br/><span>في مكان واحد.</span></h2>
-          <p>مساحة شغلك لمتابعة التارجت وتسجيل الإنجازات ومراجعة أدائك بشكل أوضح.</p>
-          <div className="tys-login-intro-foot"><span></span> TRACK YOUR SALES · ORANGE</div>
-        </aside>
         <form onSubmit={submit} className="tys-login-card" dir="rtl">
+        <div className="tys-login-brandline">
+          <img src="/track-your-sales/logo-full.png" alt="Track Your Sales" />
+          <span>مساحة عملك لمتابعة الأداء</span>
+        </div>
         <div className="tys-login-heading">
           <span className="tys-login-step">{review ? "الخطوة الأخيرة" : "إعداد حسابك"}</span>
           <h1>{review ? "راجع بياناتك" : "ابدأ رحلتك"}</h1>
