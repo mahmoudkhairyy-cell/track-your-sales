@@ -2182,3 +2182,146 @@ body {
     border-radius: 17px;
   }
 }
+
+
+/* Final mobile-first visual pass: consistent spacing, quieter surfaces, clearer hierarchy. */
+.tys-app-main {
+  min-width: 0;
+}
+.tys-page {
+  width: 100%;
+  gap: 1rem;
+}
+.tys-page :is(section, article) {
+  min-width: 0;
+}
+.tys-page :is(button, a) {
+  -webkit-tap-highlight-color: transparent;
+}
+.tys-page :is(section, article) {
+  box-shadow: 0 7px 22px rgba(91, 49, 23, .035);
+}
+.tys-page :is(h1, h2) {
+  letter-spacing: -.035em;
+}
+.tys-page-home > section:first-of-type {
+  border-radius: 22px;
+}
+.tys-page-home > section:nth-of-type(2) {
+  box-shadow: 0 16px 38px rgba(145, 75, 30, .075), inset 0 1px 0 rgba(255,255,255,.85);
+}
+.tys-page-more > div.grid button {
+  min-height: 122px;
+  border-radius: 19px;
+  box-shadow: 0 5px 16px rgba(91,49,23,.04);
+}
+.tys-page-more > div.grid button > span:first-child {
+  width: 2.65rem;
+  height: 2.65rem;
+  border-radius: 15px;
+}
+.tys-page-wiki > section:first-child {
+  box-shadow: 0 14px 32px rgba(126,65,24,.055);
+}
+.tys-page-wiki button,
+.tys-page-more button {
+  -webkit-tap-highlight-color: transparent;
+}
+.tys-page-target > section {
+  border-radius: 22px;
+}
+.tys-page-target > section:first-of-type {
+  box-shadow: 0 12px 28px rgba(145,75,30,.055);
+}
+.tys-page-log > section:first-of-type {
+  border-radius: 22px;
+}
+.tys-page-log article {
+  box-shadow: 0 5px 16px rgba(92,52,29,.035);
+}
+.tys-page :is(input, textarea, select) {
+  max-width: 100%;
+}
+@media (max-width: 640px) {
+  .tys-page {
+    gap: .85rem;
+    padding-bottom: 1.25rem;
+  }
+  .tys-page-home > section:first-of-type,
+  .tys-page-log > section:first-of-type,
+  .tys-page-target > section:first-of-type,
+  .tys-page-more > section:first-of-type {
+    padding: .9rem 1rem;
+  }
+  .tys-page-home > section:nth-of-type(2) {
+    padding: .95rem;
+    border-radius: 23px;
+  }
+  .tys-page-home > section:nth-of-type(2) > div.relative > div.grid {
+    gap: .65rem;
+  }
+  .tys-page-home > section:nth-of-type(2) > div.relative > div.grid > div:first-child > div:first-of-type {
+    font-size: 2.8rem;
+  }
+  .tys-page-home > section:nth-of-type(2) > div.relative > div.grid > div:last-child {
+    width: 100px;
+    height: 100px;
+  }
+  .tys-page-more > div.grid {
+    gap: .6rem;
+  }
+  .tys-page-more > div.grid button {
+    min-height: 116px;
+    padding: .8rem;
+    gap: .55rem;
+    border-radius: 18px;
+  }
+  .tys-page-more > div.grid button > span:nth-child(2) > span:first-child {
+    font-size: .82rem;
+    line-height: 1.45;
+  }
+  .tys-page-more > div.grid button > span:nth-child(2) > span:last-child {
+    margin-top: .15rem;
+    font-size: .68rem;
+    line-height: 1.5;
+  }
+  .tys-page-target > section,
+  .tys-page-log > section,
+  .tys-page-wiki > section,
+  .tys-page-more > section {
+    border-radius: 20px;
+  }
+  .tys-page-target > section:has(input[type="number"]) {
+    padding: .9rem .75rem;
+  }
+  .tys-page-target > section:has(input[type="number"]) > div.grid {
+    grid-template-columns: minmax(0,1fr) 64px 54px;
+    gap: .35rem;
+  }
+  .tys-page-target > section:has(input[type="number"]) > div.grid input {
+    min-width: 0;
+    padding-inline: .25rem;
+    font-size: .82rem;
+  }
+  .tys-page-log article {
+    padding: .8rem;
+    border-radius: 18px;
+  }
+  .tys-page-log article > div.mt-3.grid {
+    padding: .55rem;
+    gap: .35rem;
+  }
+  .tys-page-wiki > section:first-child {
+    padding: 1rem;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tys-page *,
+  .tys-page *::before,
+  .tys-page *::after {
+    scroll-behavior: auto !important;
+    transition-duration: .01ms !important;
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
