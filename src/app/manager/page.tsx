@@ -123,7 +123,7 @@ function KpiTile({ kpi }: { kpi: AggKpi }) {
   const ok = kpi.expectedPercent === undefined || kpi.percent >= kpi.expectedPercent;
   const neutral = kpi.weight === 0;
   const tone = neutral
-    ? { text: "text-[#927b69]", bar: "from-neutral-300 to-neutral-400", ring: "ring-neutral-200" }
+    ? { text: "text-[#927b69]", bar: "from-[#f1dfd0] to-[#e8b88f]", ring: "ring-[#f1dfd0]" }
     : ok
       ? { text: "text-emerald-700", bar: "from-emerald-400 to-emerald-600", ring: "ring-emerald-200" }
       : { text: "text-red-600", bar: "from-red-400 to-red-600", ring: "ring-red-200" };
@@ -507,7 +507,7 @@ export default function ManagerPage() {
                       <div className="grid grid-cols-3 gap-2 text-center text-xs font-extrabold">
                         <div className="rounded-2xl bg-emerald-50 p-2 text-emerald-800">✅ سجّل<br /><span className="text-lg tabular-nums">{logged.length}</span></div>
                         <div className="rounded-2xl bg-red-50 p-2 text-red-700">❌ مسجلش<br /><span className="text-lg tabular-nums">{missing.length}</span></div>
-                        <div className="rounded-2xl bg-neutral-100 p-2 text-[#927b69]">🏖️ إجازة<br /><span className="text-lg tabular-nums">{leave.length}</span></div>
+                        <div className="rounded-2xl border border-[#f1dfd0] bg-[#fff6ed] p-2 text-[#927b69]">🏖️ إجازة<br /><span className="text-lg tabular-nums">{leave.length}</span></div>
                       </div>
                       <div className="mt-3 space-y-3">
                         <div><p className="mb-1 text-xs font-black text-emerald-800">سجّلوا</p>{names(logged)}</div>
@@ -575,7 +575,7 @@ export default function ManagerPage() {
                         onClick={() => downloadBranchCsv(branch, branchRows)}
                         className="mt-3 rounded-full bg-white px-3 py-1.5 text-xs font-extrabold text-[#bd4b0a]"
                       >
-                        📥 تحميل الفرع (Excel)
+                        📥 تحميل الفرع (CSV)
                       </button>
                       <div className="mt-2">
                         <TrackBadge percent={branchAvg} expected={branchExpected} />
