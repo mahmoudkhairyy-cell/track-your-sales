@@ -2699,3 +2699,142 @@ body {
     border-radius: 22px 22px 18px 18px;
   }
 }
+
+
+/* Final coverage pass for secondary states and nested page sections. */
+.tys-landing {
+  background:
+    radial-gradient(ellipse at 92% 8%,rgba(255,157,69,.18),transparent 25rem),
+    radial-gradient(ellipse at 8% 90%,rgba(255,222,195,.2),transparent 26rem),
+    linear-gradient(145deg,#fff7ef 0%,#fff 52%,#fffaf6 100%);
+}
+.tys-landing > section {
+  border-color: #efdfd2;
+  border-top: 3px solid #d95f12;
+  border-radius: 26px;
+  box-shadow: 0 24px 65px rgba(91,49,23,.09);
+}
+.tys-page-manager > div > header {
+  padding: .25rem 0 1rem;
+  border-bottom: 1px solid #efdfd2;
+}
+.tys-page-manager > div > section.grid:first-of-type > div {
+  min-height: 92px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: .15rem;
+}
+.tys-page-manager > div > section.grid:first-of-type > div p:last-child {
+  font-size: clamp(1.25rem,3vw,1.7rem);
+  line-height: 1.2;
+}
+.tys-page-manager > div > section > div.overflow-hidden.rounded-2xl {
+  border-color: #efdfd2;
+  border-radius: 18px;
+  box-shadow: 0 7px 20px rgba(91,49,23,.04);
+}
+.tys-page-manager details {
+  overflow: clip;
+  border-color: #efdfd2;
+  border-radius: 17px;
+  background: #fff;
+}
+.tys-page-manager details > summary {
+  min-height: 58px;
+  padding: .9rem 1rem;
+  color: #38291f;
+  font-weight: 800;
+  list-style: none;
+}
+.tys-page-manager details > summary::-webkit-details-marker { display: none; }
+.tys-page-manager details[open] > summary {
+  background: #fffaf6;
+  border-bottom: 1px solid #f2e5da;
+}
+.tys-page-manager details > :not(summary) { min-width: 0; }
+.tys-page-manager .tys-manager-branch-card {
+  text-align: right;
+  transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+}
+.tys-page-manager .tys-manager-branch-card:active { transform: scale(.99); }
+.tys-page-manager .tys-manager-employee-card > button {
+  min-height: 54px;
+}
+.tys-page-manager .tys-manager-employee-card > div {
+  border-color: #f0e2d7;
+}
+.tys-page-manager > div > section.space-y-4 > article {
+  border-color: #efdfd2;
+  border-radius: 19px;
+  box-shadow: 0 7px 20px rgba(91,49,23,.04);
+}
+.tys-page-manager :is(button,a) { -webkit-tap-highlight-color: transparent; }
+.tys-page-manager :is(button,a):focus-visible {
+  outline: 3px solid rgba(217,95,18,.25);
+  outline-offset: 3px;
+}
+.tys-page-more .grid.grid-cols-2 > button {
+  min-height: 116px;
+  border-radius: 18px;
+  padding: .9rem;
+}
+.tys-page-more .grid.grid-cols-2 > button > span:first-child {
+  width: 42px;
+  height: 42px;
+  border-radius: 14px;
+}
+.tys-page-more > section.space-y-4 > section,
+.tys-page-more > div.space-y-4 > section {
+  border-color: #efdfd2;
+  border-radius: 20px;
+  box-shadow: 0 7px 20px rgba(91,49,23,.04);
+}
+.tys-page-wiki > section:first-child {
+  box-shadow: 0 14px 34px rgba(91,49,23,.055);
+}
+.tys-page-wiki .grid > button,
+.tys-page-wiki .grid > article {
+  min-width: 0;
+}
+.tys-page-target > section > label,
+.tys-page-target > section > div > label {
+  line-height: 1.65;
+}
+.tys-page-target > section :is(input,select,textarea) {
+  border-radius: 13px;
+}
+.tys-page-log > section article {
+  min-width: 0;
+  border-color: #efdfd2;
+  box-shadow: 0 5px 16px rgba(91,49,23,.035);
+}
+.tys-page-log > section :is(input,textarea) {
+  border-color: #ead9cb;
+}
+.tys-page-log > section :is(input,textarea):focus {
+  border-color: #d97836;
+  box-shadow: 0 0 0 3px rgba(217,95,18,.1);
+}
+@media (max-width: 640px) {
+  .tys-page-manager > div > section.grid:first-of-type > div {
+    min-height: 82px;
+    padding: .7rem .55rem;
+  }
+  .tys-page-manager details > summary {
+    align-items: flex-start;
+    gap: .5rem;
+    padding: .85rem .8rem;
+  }
+  .tys-page-manager details > summary > span:last-child {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+  .tys-page-more .grid.grid-cols-2 > button {
+    min-height: 108px;
+    padding: .75rem;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tys-page-manager .tys-manager-branch-card { transition: none; }
+}
