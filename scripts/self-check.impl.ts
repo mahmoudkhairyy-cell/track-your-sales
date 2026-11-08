@@ -33,6 +33,27 @@ check("المحافظ الجديدة شرط مستقل بنسبة 90% من New L
   assert.equal(shortWallets.commissionEligible, false);
 });
 
+check("شرط المحافظ يمنع الكوميشن حتى مع اكتمال المؤشرات الموزونة", () => {
+  const completeWeightedTargets = [
+    { kpiKey: "new_lines" as const, target: 100, achieved: 100, weight: 40, unitAr: "خط" },
+    { kpiKey: "new_orange_cash" as const, target: 90, achieved: 89, weight: 0, unitAr: "محفظة" },
+    { kpiKey: "existing_wallets" as const, target: 100, achieved: 100, weight: 15, unitAr: "محفظة" },
+    { kpiKey: "points" as const, target: 100, achieved: 100, weight: 10, unitAr: "نقطة" },
+    { kpiKey: "postpaid_lines" as const, target: 100, achieved: 100, weight: 10, unitAr: "خط" },
+    { kpiKey: "dsl" as const, target: 100, achieved: 100, weight: 10, unitAr: "خط" },
+    { kpiKey: "quality" as const, target: 100, achieved: 100, weight: 15, unitAr: "%" },
+  ];
+  const blocked = applyCompanyRules(completeWeightedTargets);
+  assert.equal(blocked.total, 100);
+  assert.equal(blocked.walletDone, false);
+  assert.equal(blocked.commissionEligible, false);
+  const eligible = applyCompanyRules(completeWeightedTargets.map((item) =>
+    item.kpiKey === "new_orange_cash" ? { ...item, achieved: 90 } : item,
+  ));
+  assert.equal(eligible.walletDone, true);
+  assert.equal(eligible.commissionEligible, true);
+});
+
 check("المحافظ لا تضيف وزنًا إلى إجمالي الإنجاز", () => {
   const result = applyCompanyRules([
     { kpiKey: "new_lines", target: 100, achieved: 100, weight: 40, unitAr: "خط" },

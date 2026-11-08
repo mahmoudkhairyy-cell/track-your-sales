@@ -87,7 +87,8 @@ const LEGACY_KPI_NAMES: Record<string, string> = {
   "New Lines": "GAs",
   "Postpaid Lines": "Postpaid",
   DSL: "Home ADSL",
-  Exist: "Existing OC Wallets",
+  Exist: "Excite",
+  "Existing OC Wallets": "Excite",
   Quality: "KYC & Compliance",
 };
 
