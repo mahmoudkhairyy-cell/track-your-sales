@@ -516,3 +516,168 @@ textarea { resize: vertical; }
     transition: none !important;
   }
 }
+
+
+/* Visual-only refinement pass — stronger hierarchy, calmer surfaces, tighter mobile rhythm. */
+:root {
+  --brand-primary: #df6410;
+  --brand-deep: #a94308;
+  --brand-warm: #ffad62;
+  --brand-soft: #fff0e2;
+  --brand-cream: #fff8f1;
+  --brand-bg: #fffaf6;
+  --brand-text: #281b13;
+  --brand-muted: #887565;
+  --brand-border: #efddce;
+  --app-shadow: 0 14px 36px rgba(104, 53, 19, .075);
+}
+
+body {
+  background:
+    radial-gradient(ellipse at 92% -8%, rgba(255, 174, 112, .22), transparent 32rem),
+    radial-gradient(ellipse at 0% 42%, rgba(255, 221, 194, .16), transparent 28rem),
+    linear-gradient(180deg, #fffaf6 0%, #fff 48%, #fff8f1 100%);
+}
+
+.tys-page {
+  gap: 1.15rem;
+}
+
+.tys-page h1 {
+  color: #281b13;
+  font-weight: 900;
+}
+
+.tys-page h2 {
+  color: #352317;
+  font-weight: 850;
+}
+
+.tys-page section[class*="rounded-"],
+.tys-page article[class*="rounded-"] {
+  border-color: #efddce;
+  box-shadow: 0 9px 28px rgba(104, 53, 19, .055);
+}
+
+.tys-page section[class*="rounded-"]:focus-within,
+.tys-page article[class*="rounded-"]:focus-within {
+  border-color: #e9b88f;
+  box-shadow: 0 12px 30px rgba(104, 53, 19, .085);
+}
+
+.tys-page :is(button, a)[class*="rounded-"] {
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    border-color 180ms ease,
+    background-color 180ms ease,
+    filter 180ms ease;
+}
+
+.tys-page button:disabled {
+  filter: saturate(.65);
+}
+
+.tys-page :is(input, select, textarea) {
+  accent-color: #df6410;
+}
+
+.tys-page :is(input, select, textarea)::placeholder {
+  color: #ad9a89;
+}
+
+.tys-app-header {
+  background: rgba(255, 250, 246, .92);
+  border-color: rgba(239, 221, 206, .88);
+  backdrop-filter: blur(18px);
+}
+
+.tys-sidebar {
+  border-color: #efddce;
+  background:
+    radial-gradient(ellipse at 10% 0%, rgba(255, 188, 137, .13), transparent 19rem),
+    linear-gradient(180deg, #fffdfb 0%, #fff8f1 100%);
+}
+
+.tys-desktop-nav-link-active {
+  background: linear-gradient(105deg, #fff5eb 0%, #ffead8 100%);
+  color: #a94308;
+}
+
+.tys-mobile-nav {
+  background: rgba(255, 253, 250, .96);
+  border-top-color: rgba(223, 100, 16, .16);
+  box-shadow: 0 -12px 34px rgba(104, 53, 19, .09);
+}
+
+.tys-mobile-nav-link-active .tys-mobile-nav-icon:not(.tys-mobile-nav-primary) {
+  background: linear-gradient(145deg, #fff1e4, #ffe4cf);
+  border-color: rgba(223, 100, 16, .14);
+}
+
+.tys-page-home > section:first-of-type {
+  background: linear-gradient(115deg, rgba(255,255,255,.98), rgba(255,247,239,.96));
+  border-color: #efd8c5;
+}
+
+.tys-page-home > section:nth-of-type(2) {
+  border-color: #e9c3a2;
+  box-shadow: 0 18px 42px rgba(129, 65, 22, .105);
+}
+
+.tys-page-manager article,
+.tys-page-wiki article {
+  border-color: #efddce;
+  background: linear-gradient(150deg, #fff 0%, #fffdfa 100%);
+}
+
+.tys-page-manager form {
+  border-color: #efddce;
+  background: rgba(255, 255, 255, .96);
+}
+
+.tys-page-log article {
+  border-color: #efddce;
+  background: linear-gradient(145deg, #fff 0%, #fffdfa 100%);
+}
+
+.tys-login-card {
+  border-color: #efddce;
+  border-top-color: #df6410;
+  box-shadow: 0 28px 72px rgba(104, 53, 19, .13);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .tys-page article[class*="rounded-"]:hover {
+    border-color: #e8bd9b;
+    box-shadow: 0 14px 34px rgba(104, 53, 19, .085);
+  }
+  .tys-page :is(button, a)[class*="rounded-"]:hover {
+    filter: saturate(1.04);
+  }
+}
+
+@media (max-width: 640px) {
+  .tys-page {
+    gap: .9rem;
+  }
+  .tys-page section[class*="rounded-"],
+  .tys-page article[class*="rounded-"] {
+    border-radius: 20px;
+  }
+  .tys-page-home > section:nth-of-type(2) {
+    border-radius: 24px;
+  }
+  .tys-page :is(input, select, textarea) {
+    border-radius: 13px;
+  }
+  .tys-mobile-nav-link {
+    min-height: 64px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tys-page :is(button, a)[class*="rounded-"] {
+    transition: none !important;
+  }
+}
