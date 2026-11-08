@@ -12,7 +12,7 @@ export default function RootPage() {
   return (
     <main
       dir="rtl"
-      className="flex min-h-[100svh] items-center justify-center bg-[radial-gradient(ellipse_at_top_right,_#fff7ed_0%,_#fff_42%,_#fff1e6_100%)] px-5 py-10"
+      className="tys-landing flex min-h-[100svh] items-center justify-center bg-[radial-gradient(ellipse_at_top_right,_#fff7ed_0%,_#fff_42%,_#fff1e6_100%)] px-5 py-10"
     >
       <section className="w-full max-w-sm rounded-[30px] border border-orange-100 bg-white/90 p-7 text-center shadow-[0_24px_70px_rgba(157,65,10,0.12)] backdrop-blur">
         <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-[22px] bg-gradient-to-br from-[#ff9d38] to-[#d95b00] text-3xl text-white shadow-lg shadow-orange-200">

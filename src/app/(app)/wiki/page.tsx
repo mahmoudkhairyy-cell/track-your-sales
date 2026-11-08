@@ -257,7 +257,7 @@ export default function WikiPage() {
   const homePlans = PLAN_GROUPS.find((g) => g.category === "Home Wireless");
 
   return (
-    <div className="space-y-5">
+    <div className="tys-page tys-page-wiki space-y-5">
       {section === "hub" ? (
         <>
           <section className="text-center">

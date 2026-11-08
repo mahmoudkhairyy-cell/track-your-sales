@@ -378,7 +378,7 @@ export default function ManagerPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#F5F8FC] p-4 text-[#172033]" dir="rtl">
+    <main className="tys-page tys-page-manager min-h-screen bg-[#fffaf5] p-4 text-[#2d2119]" dir="rtl">
       <div className="mx-auto max-w-3xl space-y-4">
         <h1 className="text-2xl font-black">لوحة المدير</h1>
         {rows !== null ? (

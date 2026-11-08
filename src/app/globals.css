@@ -88,3 +88,107 @@ textarea { resize: vertical; }
 @media (hover: hover) and (pointer: fine) {
   a:not([class*="no-hover"]), button:not(:disabled) { -webkit-tap-highlight-color: transparent; }
 }
+
+
+/* Track Your Sales — unified Neo-Tech visual system */
+:root {
+  --brand-primary: #e96812;
+  --brand-deep: #bd4b0a;
+  --brand-warm: #ff9d38;
+  --brand-soft: #fff0e2;
+  --brand-cream: #fff8f1;
+  --brand-bg: #fffaf5;
+  --brand-card: #ffffff;
+  --brand-text: #2d2119;
+  --brand-muted: #927b69;
+  --brand-border: #f1dfd0;
+  --app-shadow: 0 12px 30px rgba(126, 65, 24, 0.065);
+}
+
+.tys-page {
+  width: 100%;
+  color: var(--brand-text);
+  animation: tys-page-enter 260ms ease-out both;
+}
+@keyframes tys-page-enter {
+  from { opacity: .72; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.tys-page h1 {
+  color: var(--brand-text);
+  letter-spacing: -0.035em;
+}
+.tys-page section[class*="rounded-"],
+.tys-page article[class*="rounded-"] {
+  border-radius: 24px;
+}
+.tys-page section[class*="border-[#f"],
+.tys-page article[class*="border-[#f"] {
+  border-color: var(--brand-border);
+}
+.tys-page section[class*="shadow"],
+.tys-page article[class*="shadow"] {
+  box-shadow: 0 9px 26px rgba(126, 65, 24, 0.055);
+}
+.tys-page input:not([type="checkbox"]):not([type="radio"]),
+.tys-page select,
+.tys-page textarea {
+  border-color: #ead8c9;
+  border-radius: 15px;
+  background-color: #fff;
+  color: #2d2119;
+  transition: border-color 160ms ease, box-shadow 160ms ease, background-color 160ms ease;
+}
+.tys-page input:not([type="checkbox"]):not([type="radio"]):focus,
+.tys-page select:focus,
+.tys-page textarea:focus {
+  border-color: #e96812;
+  box-shadow: 0 0 0 4px rgba(233, 104, 18, 0.10);
+  outline: none;
+}
+.tys-page button:not(:disabled),
+.tys-page a {
+  -webkit-tap-highlight-color: transparent;
+}
+@media (hover: hover) and (pointer: fine) {
+  .tys-page button:not(:disabled):not([type="submit"]):hover,
+  .tys-page a:hover {
+    border-color: #edc4a4;
+  }
+}
+.tys-page button:active,
+.tys-page a:active {
+  transform: scale(.99);
+}
+.tys-app-header {
+  box-shadow: 0 5px 22px rgba(126, 65, 24, 0.035);
+}
+.tys-app-main {
+  min-width: 0;
+}
+.tys-sidebar {
+  background: linear-gradient(180deg, #fffaf5 0%, #fff7ef 100%);
+}
+.tys-page-manager {
+  background:
+    radial-gradient(ellipse at 100% 0%, rgba(255, 196, 143, .18), transparent 32rem),
+    linear-gradient(180deg, #fffaf5 0%, #fff 55%, #fff8f1 100%);
+}
+.tys-page-manager > div > section,
+.tys-page-manager form,
+.tys-page-manager article {
+  border-color: #f1dfd0;
+}
+.tys-landing section {
+  border-color: #f1dfd0;
+  box-shadow: 0 22px 64px rgba(126, 65, 24, 0.10);
+}
+@media (max-width: 640px) {
+  .tys-page {
+    padding-bottom: max(0px, env(safe-area-inset-bottom));
+  }
+  .tys-page section[class*="rounded-"],
+  .tys-page article[class*="rounded-"] {
+    scroll-margin-top: 88px;
+  }
+}

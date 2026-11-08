@@ -293,7 +293,7 @@ export default function MorePage() {
   const todayItems = todaySummary.filter((item) => item.quantity > 0 || item.count > 0);
 
   return (
-    <div className="space-y-5">
+    <div className="tys-page tys-page-more space-y-5">
       <section className="relative overflow-hidden rounded-[26px] border border-[#f2dfce] bg-gradient-to-br from-white via-[#fffaf5] to-[#fff0e2] p-5 shadow-[0_12px_30px_rgba(126,65,24,0.06)]">
         <div className="absolute -left-10 -top-12 h-36 w-36 rounded-full bg-[#ffb36e]/20 blur-3xl" />
         <div className="relative flex flex-wrap items-center justify-between gap-3">

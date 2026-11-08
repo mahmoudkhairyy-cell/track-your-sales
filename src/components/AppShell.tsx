@@ -375,7 +375,7 @@ function AppFrame({ children, blocked, month }: { children: ReactNode; blocked: 
         <div className="min-h-screen bg-[#fffaf5] text-[#2d2119]">
           <div className="h-1.5 bg-gradient-to-l from-[#bd4b0a] via-[#e96812] to-[#ffb15f]" />
           <div className="mx-auto flex min-h-screen max-w-7xl">
-            <aside className="sticky top-0 hidden h-screen w-[276px] shrink-0 flex-col border-l border-[#f1dfd0] bg-[#fffaf5] p-5 lg:flex">
+            <aside className="tys-sidebar sticky top-0 hidden h-screen w-[276px] shrink-0 flex-col border-l border-[#f1dfd0] bg-[#fffaf5] p-5 lg:flex">
               <div className="flex items-center gap-3 rounded-[24px] border border-[#f4dfcd] bg-white p-3 shadow-[0_12px_28px_rgba(126,65,24,0.06)]">
                 <img src="/track-your-sales/logo-mark.png" alt="" className="h-12 w-12 shrink-0 object-contain" />
                 <div className="min-w-0">
@@ -399,7 +399,7 @@ function AppFrame({ children, blocked, month }: { children: ReactNode; blocked: 
             </aside>
 
             <div className="flex min-w-0 flex-1 flex-col">
-              <header className="sticky top-0 z-30 border-b border-[#f1dfd0]/80 bg-[#fffaf5]/90 px-4 py-3 backdrop-blur-2xl lg:px-8">
+              <header className="tys-app-header sticky top-0 z-30 border-b border-[#f1dfd0]/80 bg-[#fffaf5]/90 px-4 py-3 backdrop-blur-2xl lg:px-8">
                 <div className="mx-auto flex max-w-6xl items-center justify-between gap-3">
                   <div className="flex min-w-0 items-center gap-2.5 lg:hidden">
                     <img src="/track-your-sales/logo-mark.png" alt="" className="h-9 w-9 shrink-0 object-contain" />
@@ -415,7 +415,7 @@ function AppFrame({ children, blocked, month }: { children: ReactNode; blocked: 
                   <MonthSwitcher />
                 </div>
               </header>
-              <main className="flex-1 bg-[radial-gradient(ellipse_at_top_right,_rgba(255,220,190,0.22),_transparent_34rem)] px-4 py-5 pb-28 lg:px-8 lg:py-8 lg:pb-10">
+              <main className="tys-app-main flex-1 bg-[radial-gradient(ellipse_at_top_right,_rgba(255,220,190,0.22),_transparent_34rem)] px-4 py-5 pb-28 lg:px-8 lg:py-8 lg:pb-10">
                 {blocked ? <TargetGate month={month} /> : children}
               </main>
               <footer className="hidden px-8 pb-6 text-xs leading-6 text-neutral-400 lg:block">{APP_DISCLAIMER}</footer>

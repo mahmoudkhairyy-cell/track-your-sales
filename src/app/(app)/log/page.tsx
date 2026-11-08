@@ -175,7 +175,7 @@ export default function LogPage() {
   }
 
   return (
-    <form className="mx-auto max-w-4xl space-y-5 pb-8" onSubmit={onSubmit}>
+    <form className="tys-page tys-page-log mx-auto max-w-4xl space-y-5 pb-8" onSubmit={onSubmit}>
       <section className="flex items-end justify-between gap-3 rounded-[26px] border border-[#f0dfd1] bg-white/85 px-4 py-4 shadow-[0_10px_28px_rgba(100,55,25,0.045)] sm:px-5">
         <div>
           <p className="text-[10px] font-black tracking-[0.16em] text-[#c66b34]">DAILY SALES ENTRY</p>
