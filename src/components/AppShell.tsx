@@ -57,7 +57,7 @@ function MonthSwitcher() {
         <ChevronIcon width={18} height={18} strokeWidth={2.6} />
       </button>
       <div className="min-w-24 px-1 text-center">
-        <p className="text-xs font-extrabold text-neutral-900">{monthLabelAr(month)}</p>
+        <p className="text-xs font-extrabold text-[#2d2119]">{monthLabelAr(month)}</p>
       </div>
       <button
         type="button"
@@ -151,14 +151,14 @@ function FirstRunProfile({ onDone }: { onDone: () => void }) {
         <div className="mb-5 text-center">
           <img src="/track-your-sales/logo-mark.png" alt="" className="mx-auto h-16 w-16 object-contain" />
           <h1 className="mt-2 text-xl font-black text-[#241f1b]">أهلاً بيك في {APP_NAME}</h1>
-          <p className="mt-1 text-sm text-[#88796e]">عشان نبدأ، اكتب اسمك (واسم الفرع لو حابب)</p>
+          <p className="mt-1 text-sm leading-6 text-[#88796e]">خلّينا نجهّز مساحة شغلك ببياناتك الأساسية</p>
         </div>
         <label className="mb-3 block text-sm font-bold text-[#514238]">
           الاسم
           <input value={name} onChange={(e) => setName(e.target.value)} className="mt-1 w-full rounded-2xl border border-[#f2e4d8] bg-[#fffdfb] px-4 py-3 outline-none transition focus:border-[#e96812] focus:ring-2 focus:ring-[#e96812]/10" maxLength={80} />
         </label>
         <div className="mb-4">
-          <p className="mb-2 text-sm font-bold text-neutral-700">إنت إيه؟</p>
+          <p className="mb-2 text-sm font-bold text-[#6e5543]">إنت إيه؟</p>
           <div className="grid grid-cols-2 gap-2">
             {([
               { key: "agent", label: "👤 Agent" },
@@ -178,7 +178,7 @@ function FirstRunProfile({ onDone }: { onDone: () => void }) {
           </div>
         </div>
         {role !== "area_manager" ? (
-        <label className="mb-4 block text-sm font-bold text-neutral-700">
+        <label className="mb-4 block text-sm font-bold text-[#6e5543]">
           اسم الفرع
           <select value={branch} onChange={(e) => setBranch(e.target.value)} className="mt-1 w-full rounded-2xl border border-[#f2e4d8] bg-[#fffdfb] px-4 py-3 outline-none transition focus:border-[#e96812] focus:ring-2 focus:ring-[#e96812]/10">
             <option value="">— اختار الفرع —</option>
@@ -190,7 +190,7 @@ function FirstRunProfile({ onDone }: { onDone: () => void }) {
         </label>
         ) : null}
         {role !== "area_manager" ? (
-        <label className="mb-4 block text-sm font-bold text-neutral-700">
+        <label className="mb-4 block text-sm font-bold text-[#6e5543]">
           مدير المنطقة (الأريا مانجر)
           <select value={areaManager} onChange={(e) => setAreaManager(e.target.value)} className="mt-1 w-full rounded-2xl border border-[#f2e4d8] bg-white px-4 py-3 outline-none focus:border-[#bd4b0a]">
             <option value="">— اختار مديرك —</option>
@@ -396,7 +396,7 @@ function AppFrame({ children, blocked, month }: { children: ReactNode; blocked: 
               <nav aria-label="التنقل الرئيسي" className="tys-desktop-nav mt-6 flex flex-col gap-1.5">
                 <NavLinks pathname={pathname} month={month} />
               </nav>
-              <p className="mt-auto border-t border-[#f1dfd0] pt-5 text-[11px] leading-6 text-[#ad9888]">{APP_DISCLAIMER}</p>
+              <p className="mt-auto border-t border-[#f1dfd0] pt-5 text-[11px] leading-6 text-[#ad9888]">{APP_DISCLAIMER}<span className="mt-1 block font-bold text-[#bd6b39]">تم تطوير Track Your Sales بواسطة {BRAND_BY}</span></p>
             </aside>
 
             <div className="flex min-w-0 flex-1 flex-col">
@@ -419,7 +419,7 @@ function AppFrame({ children, blocked, month }: { children: ReactNode; blocked: 
               <main className="tys-app-main flex-1 bg-[radial-gradient(ellipse_at_top_right,_rgba(255,220,190,0.22),_transparent_34rem)] px-4 py-5 pb-28 lg:px-8 lg:py-8 lg:pb-10">
                 {blocked ? <TargetGate month={month} /> : children}
               </main>
-              <footer className="hidden px-8 pb-6 text-xs leading-6 text-neutral-400 lg:block">{APP_DISCLAIMER}</footer>
+              <footer className="hidden px-8 pb-6 text-xs leading-6 text-[#ad9888] lg:block">{APP_DISCLAIMER}<span className="mr-2 font-bold text-[#bd6b39]">· تم تطوير Track Your Sales بواسطة {BRAND_BY}</span></footer>
             </div>
           </div>
 

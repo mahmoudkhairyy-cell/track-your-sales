@@ -15,8 +15,8 @@ export default function RootPage() {
       className="tys-landing flex min-h-[100svh] items-center justify-center bg-[radial-gradient(ellipse_at_top_right,_#fff7ed_0%,_#fff_42%,_#fff1e6_100%)] px-5 py-10"
     >
       <section className="w-full max-w-sm rounded-[30px] border border-orange-100 bg-white/90 p-7 text-center shadow-[0_24px_70px_rgba(157,65,10,0.12)] backdrop-blur">
-        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-[22px] bg-gradient-to-br from-[#ff9d38] to-[#d95b00] text-3xl text-white shadow-lg shadow-orange-200">
-          ↗
+        <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-[26px] border border-[#f6e2d1] bg-gradient-to-br from-white to-[#fff0e2] p-2 shadow-[0_12px_28px_rgba(189,75,10,0.10)]">
+          <img src="/track-your-sales/logo-mark.png" alt="شعار Track Your Sales" className="h-full w-full object-contain" />
         </div>
         <p className="mt-5 text-xs font-extrabold tracking-[0.18em] text-[#c45a16]">TRACK YOUR SALES</p>
         <h1 className="mt-2 text-xl font-black text-[#25201c]">تراك يور سيلز</h1>
@@ -27,7 +27,8 @@ export default function RootPage() {
         >
           افتح التطبيق
         </a>
-        <p className="mt-4 text-[11px] font-medium text-[#a18d7d]">لو التحميل التلقائي متأخر، اضغط هنا للمتابعة</p>
+        <p className="mt-4 text-[11px] font-medium leading-6 text-[#a18d7d]">لو التحميل التلقائي اتأخر، استخدم الزر للمتابعة</p>
+        <p className="mt-5 border-t border-[#f2e4d8] pt-4 text-[10px] leading-5 text-[#b49d8c]">مساحة مستقلة لمتابعة الأداء وتنظيم المبيعات</p>
       </section>
     </main>
   );
