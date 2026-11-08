@@ -1926,3 +1926,104 @@ body {
     padding-inline: .75rem;
   }
 }
+
+
+/* Page-level finishing details: clearer hierarchy and accessible touch states. */
+.tys-page :is(button,a,input,select,textarea):focus-visible {
+  outline: 3px solid rgba(217,120,54,.28);
+  outline-offset: 2px;
+}
+.tys-page-log article {
+  border-color: #f0dfd1;
+  box-shadow: 0 8px 22px rgba(92,52,29,.045);
+  transition: border-color .18s ease, box-shadow .18s ease, transform .18s ease;
+}
+.tys-page-log article:focus-within {
+  border-color: #dfa77f;
+  box-shadow: 0 0 0 3px rgba(217,120,54,.09), 0 12px 28px rgba(92,52,29,.07);
+}
+.tys-page-log input[type="number"] {
+  min-height: 48px;
+  border-radius: 15px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+.tys-page-target > section:has(button[aria-pressed]) button {
+  min-height: 42px;
+}
+.tys-page-target > section:has(input[type="number"]) input[type="number"] {
+  min-height: 46px;
+  font-variant-numeric: tabular-nums;
+}
+.tys-page-target > section:has(input[type="number"]) > div:last-child > div {
+  border-radius: 16px;
+}
+.tys-page-wiki article {
+  border-color: #f0dfd1;
+  box-shadow: 0 7px 20px rgba(92,52,29,.04);
+  transition: border-color .18s ease, box-shadow .18s ease, transform .18s ease;
+}
+.tys-page-wiki article:focus-within {
+  border-color: #e1ad86;
+  box-shadow: 0 0 0 3px rgba(217,120,54,.09);
+}
+.tys-page-more > section {
+  border-radius: 25px;
+}
+.tys-page-more > section h2 {
+  letter-spacing: -.02em;
+}
+.tys-page-manager .tys-manager-hero {
+  border: 1px solid rgba(255,255,255,.22);
+  background-image: radial-gradient(circle at 12% 0%, rgba(255,255,255,.18), transparent 34%), linear-gradient(125deg,#963806 0%,#c94e0a 52%,#f18a2e 100%);
+}
+.tys-page-manager .tys-manager-login {
+  box-shadow: 0 26px 70px rgba(117,54,17,.14), 0 2px 8px rgba(117,54,17,.04);
+}
+.tys-page-manager button:focus-visible {
+  outline: 3px solid rgba(217,120,54,.34);
+  outline-offset: 3px;
+}
+.tys-page-manager button:active {
+  transform: scale(.99);
+}
+@media (hover:hover) and (min-width:768px) {
+  .tys-page-log article:hover,
+  .tys-page-wiki article:hover {
+    transform: translateY(-2px);
+    border-color: #e6b18a;
+    box-shadow: 0 14px 30px rgba(92,52,29,.075);
+  }
+}
+@media (max-width:640px) {
+  .tys-page-log article {
+    border-radius: 20px;
+  }
+  .tys-page-log input[type="number"] {
+    min-height: 50px;
+  }
+  .tys-page-target > section:has(input[type="number"]) {
+    padding-inline: .85rem;
+  }
+  .tys-page-manager .tys-manager-hero {
+    border-radius: 24px;
+    padding: 1.15rem;
+  }
+  .tys-page-manager .tys-manager-hero h1 {
+    font-size: 1.75rem;
+    line-height: 1.2;
+  }
+  .tys-page-manager .tys-manager-hero > div.relative > div.grid > div {
+    min-width: 0;
+    padding: .65rem .5rem;
+  }
+  .tys-page-manager .tys-manager-hero > div.relative > div.grid > div p:last-child {
+    font-size: 1.25rem;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tys-page-log article,
+  .tys-page-wiki article {
+    transition: none;
+  }
+}
