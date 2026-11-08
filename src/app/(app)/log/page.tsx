@@ -160,39 +160,40 @@ export default function LogPage() {
   }
 
   return (
-    <form className="space-y-4" onSubmit={onSubmit}>
-      <section>
-        <h1 className="text-2xl font-black tracking-tight text-[#172033]">إنجاز اليوم</h1>
-        <p className="mt-1 text-sm text-[#556070]">سجّل اللي بعته النهارده — هيتحفظ تلقائيًا.</p>
+    <form className="flex flex-col gap-4 pb-28" onSubmit={onSubmit}>
+      <section className="flex items-end justify-between gap-3">
+        <div>
+          <h1 className="text-2xl font-black tracking-tight text-[#172033]">إنجاز اليوم</h1>
+          <p className="mt-0.5 text-xs font-bold text-[#556070]">سجّل اللي بعته النهارده — هيتحفظ تلقائيًا.</p>
+        </div>
+        <span className="shrink-0 rounded-full bg-white px-2.5 py-1 text-[11px] font-black text-[#B94700] shadow-sm ring-1 ring-[#F1E4D8]" dir="ltr">{month}</span>
       </section>
 
       {error ? <Banner tone="error">❌ {error}</Banner> : null}
 
       {dash ? (
-        <section className="relative overflow-hidden rounded-[28px] bg-gradient-to-br from-[#D95B00] to-[#E87518] p-5 text-white shadow-[0_10px_30px_-18px_rgba(23,32,51,0.28)] ring-1 ring-white/30">
-          <div className="grid grid-cols-3 gap-2 text-center">
-            <div className="rounded-2xl bg-white/15 px-2 py-3 ring-1 ring-white/25">
-              <p className="text-xl font-black tabular-nums">{formatQty(Math.round(dash.overall))}%</p>
-              <p className="text-[11px] text-white/85">التوتال</p>
-            </div>
-            <div className="rounded-2xl bg-white/15 px-2 py-3 ring-1 ring-white/25">
-              <p className="text-xl font-black tabular-nums">{formatQty(workLeft)}</p>
-              <p className="text-[11px] text-white/85">أيام فاضلة</p>
-            </div>
-            <div className="rounded-2xl bg-white/15 px-2 py-3 ring-1 ring-white/25">
-              <p className="text-xl font-black tabular-nums">{formatQty(onTrack.length)}</p>
-              <p className="text-[11px] text-white/85">مؤشرات ناقصة</p>
-            </div>
+        <section className="grid grid-cols-3 gap-2 rounded-[24px] bg-gradient-to-br from-[#D95B00] to-[#E87518] p-2.5 text-white shadow-[0_16px_30px_-18px_rgba(217,91,0,0.7)]">
+          <div className="flex flex-col items-center rounded-2xl bg-white/15 px-1 py-2.5 ring-1 ring-white/25">
+            <p className="font-mono text-lg font-black tabular-nums">{formatQty(Math.round(dash.overall))}%</p>
+            <p className="text-[10px] font-medium text-white/85">التوتال</p>
+          </div>
+          <div className="flex flex-col items-center rounded-2xl bg-white/15 px-1 py-2.5 ring-1 ring-white/25">
+            <p className="font-mono text-lg font-black tabular-nums">{formatQty(workLeft)}</p>
+            <p className="text-[10px] font-medium text-white/85">أيام فاضلة</p>
+          </div>
+          <div className="flex flex-col items-center rounded-2xl bg-white/15 px-1 py-2.5 ring-1 ring-white/25">
+            <p className="font-mono text-lg font-black tabular-nums">{formatQty(onTrack.length)}</p>
+            <p className="text-[10px] font-medium text-white/85">مؤشرات ناقصة</p>
           </div>
         </section>
       ) : null}
 
       {onTrack.length > 0 ? (
-        <section className="rounded-[24px] bg-[#FCEBDD] p-4 text-[#B94700]">
-          <p className="text-sm font-extrabold">⚡ المطلوب منك النهارده عشان تفضل ON TRACK</p>
-          <div className="mt-2 flex flex-wrap gap-2">
+        <section className="rounded-[20px] bg-[#FCEBDD] p-3.5 text-[#B94700]">
+          <p className="text-xs font-black">⚡ المطلوب منك النهارده عشان تفضل ON TRACK</p>
+          <div className="mt-2 flex flex-wrap gap-1.5">
             {onTrack.map((k) => (
-              <span key={k.kpiKey} className="rounded-full bg-white px-3 py-1 text-xs font-extrabold text-[#B94700] shadow-[0_10px_30px_-18px_rgba(23,32,51,0.28)]">
+              <span key={k.kpiKey} className="rounded-full bg-white px-2.5 py-1 text-[11px] font-extrabold text-[#B94700] shadow-sm">
                 {kpiEmoji(k.kpiKey)} {formatQty(workLeft > 0 ? Math.ceil(k.remaining / workLeft) : k.remaining)} · {KPI_CATALOG.find((i) => i.key === k.kpiKey)?.nameEn}
               </span>
             ))}
@@ -200,73 +201,73 @@ export default function LogPage() {
         </section>
       ) : null}
 
-      <section className="rounded-[24px] border border-[#F1E4D8] bg-white p-4 shadow-[0_10px_30px_-18px_rgba(23,32,51,0.28)]">
-        <label className="block text-xs font-bold text-[#556070]">📅 تاريخ الإنجاز</label>
-        <input className={`${inputClass} mt-2`} type="date" value={entryDate} onChange={(e) => setEntryDate(e.target.value)} required />
+      <section className="flex items-center justify-between gap-3 rounded-[20px] border border-[#F1E4D8] bg-white px-3.5 py-3 shadow-[0_10px_30px_-18px_rgba(23,32,51,0.28)]">
+        <label className="text-xs font-black text-[#172033]">📅 تاريخ الإنجاز</label>
+        <input className={`${inputClass} max-w-[170px] py-2`} type="date" value={entryDate} onChange={(e) => setEntryDate(e.target.value)} required />
       </section>
 
-      {KPI_CATALOG.filter((item) => item.key !== "quality" && !(item.key === "productivity" && (dashByKey.get("productivity")?.weight ?? 0) === 0)).map((item) => {
-        const d = dashByKey.get(item.key);
-        const commission = d ? Math.round((d.contribution / 100) * (dash?.fullCommission ?? 0)) : 0;
-        const excluded = !!d && d.weight > 0 && d.gated;
-        const needToday = d && workLeft > 0 ? Math.ceil(Math.max(0, d.remaining) / workLeft) : 0;
-        return (
-          <article key={item.key} className="rounded-[24px] border border-[#F1E4D8] bg-white p-4 shadow-[0_10px_30px_-18px_rgba(23,32,51,0.28)]">
-            <div className="flex items-center justify-between gap-3">
+      <div className="flex flex-col gap-2.5">
+        {KPI_CATALOG.filter((item) => item.key !== "quality" && !(item.key === "productivity" && (dashByKey.get("productivity")?.weight ?? 0) === 0)).map((item) => {
+          const d = dashByKey.get(item.key);
+          const commission = d ? Math.round((d.contribution / 100) * (dash?.fullCommission ?? 0)) : 0;
+          const excluded = !!d && d.weight > 0 && d.gated;
+          const needToday = d && workLeft > 0 ? Math.ceil(Math.max(0, d.remaining) / workLeft) : 0;
+          return (
+            <article key={item.key} className="rounded-[22px] border border-[#F1E4D8] bg-white p-3.5 shadow-[0_10px_30px_-18px_rgba(23,32,51,0.28)]">
               <div className="flex items-center gap-3">
-                <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#FCEBDD] text-[#D95B00]"><KpiIcon kpiKey={item.key} className="h-5 w-5" /></span>
-                <div>
-                  <p className="font-extrabold" dir="ltr">{item.nameEn}</p>
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#FCEBDD] text-[#D95B00]"><KpiIcon kpiKey={item.key} className="h-5 w-5" /></span>
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-sm font-extrabold text-[#172033]" dir="ltr">{item.nameEn}</p>
                   <p className="text-[11px] font-bold text-[#B94700]">
-                    {excluded ? "متتحسبش" : commission > 0 ? `كوميشن ${commission} ج` : " "}
+                    {excluded ? "متتحسبش" : commission > 0 ? `كوميشن ${commission} ج` : " "}
                   </p>
                 </div>
+                <div className="flex shrink-0 items-center gap-1.5">
+                  <input
+                    className="h-12 w-24 rounded-2xl border border-[#F3D2B5] bg-[#FFFDFA] px-2 text-center font-mono text-lg font-black text-[#172033] outline-none transition focus:border-[#E87518] focus:ring-4 focus:ring-[#E87518]/15"
+                    type="number"
+                    inputMode="numeric"
+                    step={quantityStep(item.key)}
+                    min={quantityMin(item.key)}
+                    max={quantityMax(item.key)}
+                    value={quantities[item.key] ?? ""}
+                    onChange={(e) => setQuantities((cur) => ({ ...cur, [item.key]: e.target.value }))}
+                    placeholder="0"
+                    aria-label={`كمية ${item.nameEn}`}
+                  />
+                  <span className="w-8 text-[10px] font-bold leading-3 text-[#556070]">{d?.unitAr ?? ""}</span>
+                </div>
               </div>
-            </div>
-            <div className="mt-3 grid grid-cols-3 gap-2 rounded-2xl bg-[#F5F8FC] p-2.5 text-center">
-              <div>
-                <p className="text-[10px] text-[#556070]">المستهدف</p>
-                <p className="text-sm font-black tabular-nums">{d ? formatQty(d.target) : "—"}</p>
+              <div className="mt-3 grid grid-cols-3 gap-px overflow-hidden rounded-xl bg-[#F1E4D8] text-center text-[10px]">
+                <div className="bg-[#F5F8FC] py-1.5">
+                  <p className="text-[#556070]">المستهدف</p>
+                  <p className="font-mono text-xs font-black tabular-nums text-[#172033]">{d ? formatQty(d.target) : "—"}</p>
+                </div>
+                <div className="bg-[#F5F8FC] py-1.5">
+                  <p className="text-[#556070]">الوزن</p>
+                  <p className="font-mono text-xs font-black tabular-nums text-[#172033]">{d ? d.weight : 0}%</p>
+                </div>
+                <div className="bg-[#F5F8FC] py-1.5">
+                  <p className="text-[#556070]">الباقي</p>
+                  <p className="font-mono text-xs font-black tabular-nums text-[#B84700]">{d ? formatQty(Math.max(0, d.remaining)) : "—"}</p>
+                </div>
               </div>
-              <div>
-                <p className="text-[10px] text-[#556070]">الوزن</p>
-                <p className="text-sm font-black tabular-nums">{d ? d.weight : 0}%</p>
-              </div>
-              <div>
-                <p className="text-[10px] text-[#556070]">الباقي</p>
-                <p className="text-sm font-black tabular-nums text-[#b84700]">{d ? formatQty(Math.max(0, d.remaining)) : "—"}</p>
-              </div>
-            </div>
-            <div className="mt-3 flex items-center gap-2">
-              <input
-                className={`${inputClass} text-lg font-black`}
-                type="number"
-                inputMode="numeric"
-                step={quantityStep(item.key)}
-                min={quantityMin(item.key)}
-                max={quantityMax(item.key)}
-                value={quantities[item.key] ?? ""}
-                onChange={(e) => setQuantities((cur) => ({ ...cur, [item.key]: e.target.value }))}
-                placeholder="0"
-                aria-label={`كمية ${item.nameEn}`}
-              />
-              <span className="shrink-0 text-xs font-bold text-[#556070]">{d?.unitAr ?? ""}</span>
-            </div>
-            <p className="mt-2 text-[11px] text-[#556070]" title={quantityHint(item.key)}>
-              {needToday > 0 ? `المطلوب النهارده: ${formatQty(needToday)} ${d?.unitAr ?? ""}` : "مفيش مطلوب إضافي النهارده"}
-            </p>
-          </article>
-        );
-      })}
+              <p className="mt-2 text-[11px] font-semibold text-[#556070]" title={quantityHint(item.key)}>
+                {needToday > 0 ? `المطلوب النهارده: ${formatQty(needToday)} ${d?.unitAr ?? ""}` : "مفيش مطلوب إضافي النهارده"}
+              </p>
+            </article>
+          );
+        })}
+      </div>
 
       {quality ? (
-        <section className="rounded-[24px] border border-[#F1E4D8] bg-white p-4 shadow-[0_10px_30px_-18px_rgba(23,32,51,0.28)]">
-          <div className="mb-2 flex items-center justify-between">
-            <p className="text-sm font-black">✅ الكواليتي (15%)</p>
-            <p className="text-xs font-extrabold text-[#B94700]">{qualityScore}% من 15%</p>
+        <section className="rounded-[22px] border border-[#F1E4D8] bg-white p-3.5 shadow-[0_10px_30px_-18px_rgba(23,32,51,0.28)]">
+          <div className="mb-1 flex items-center justify-between">
+            <p className="text-sm font-black text-[#172033]">✅ الكواليتي (15%)</p>
+            <p className="font-mono text-xs font-black text-[#B94700]">{qualityScore}% من 15%</p>
           </div>
           <p className="mb-3 text-[11px] text-[#556070]">علّم البند لو اتحقق بالكامل، والتغيير بيتحفظ فوراً.</p>
-          <div className="space-y-2">
+          <div className="grid grid-cols-2 gap-2">
             {QUALITY_ITEMS.map((item) => {
               const on = !!quality.checks?.[item.key];
               return (
@@ -275,15 +276,13 @@ export default function LogPage() {
                   type="button"
                   disabled={qualityBusy}
                   onClick={() => toggleQuality(item.key)}
-                  className="flex w-full items-center justify-between rounded-2xl border border-[#F1E4D8] bg-white px-3 py-2.5 text-right disabled:opacity-60"
+                  className={`flex items-center justify-between gap-2 rounded-2xl border px-2.5 py-2.5 text-right transition active:scale-[0.98] disabled:opacity-60 ${on ? "border-emerald-300 bg-emerald-50" : "border-[#F1E4D8] bg-white"}`}
                 >
-                  <span className="flex items-center gap-3">
-                    <span className={`flex h-6 w-6 items-center justify-center rounded-full border-2 text-xs font-black ${on ? "border-emerald-500 bg-emerald-500 text-white" : "border-[#F3D2B5] text-transparent"}`}>✓</span>
-                    <span className="flex flex-col items-start gap-0.5">
-                      <span className="text-sm font-extrabold" dir="ltr">{item.label}</span>
-                    </span>
+                  <span className="flex min-w-0 items-center gap-2">
+                    <span className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-black ${on ? "bg-emerald-500 text-white" : "border-2 border-[#F3D2B5] text-transparent"}`}>✓</span>
+                    <span className="truncate text-xs font-extrabold text-[#172033]" dir="ltr">{item.label}</span>
                   </span>
-                  <span className="text-xs font-black text-[#556070]">{item.weight}%</span>
+                  <span className="shrink-0 font-mono text-[11px] font-black text-[#556070]">{item.weight}%</span>
                 </button>
               );
             })}
@@ -291,10 +290,10 @@ export default function LogPage() {
         </section>
       ) : null}
 
-      <section className="rounded-[24px] border border-[#F1E4D8] bg-white p-4">
-        <label className="block text-xs font-bold text-[#556070]">📝 ملاحظة (لو حابب)</label>
+      <section className="rounded-[22px] border border-[#F1E4D8] bg-white p-3.5">
+        <label className="block text-xs font-black text-[#172033]">📝 ملاحظة (لو حابب)</label>
         <textarea
-          className={`${inputClass} mt-2 min-h-20 py-3`}
+          className={`${inputClass} mt-2 min-h-16 py-3`}
           value={note}
           onChange={(e) => setNote(e.target.value)}
           maxLength={500}
@@ -302,9 +301,13 @@ export default function LogPage() {
         />
       </section>
 
-      <PrimaryButton type="submit" disabled={pending}>
-        {pending ? "⏳ بنحفظ..." : "💾 احفظ إنجاز اليوم"}
-      </PrimaryButton>
+      <div className="fixed bottom-20 left-0 right-0 z-30 mx-auto w-full max-w-[440px] px-4">
+        <div className="rounded-[24px] border border-white/70 bg-white/95 p-2 shadow-[0_-8px_30px_-12px_rgba(23,32,51,0.25)] backdrop-blur-md">
+          <PrimaryButton type="submit" disabled={pending}>
+            {pending ? "⏳ بنحفظ..." : "💾 احفظ إنجاز اليوم"}
+          </PrimaryButton>
+        </div>
+      </div>
       <p className="text-center text-xs text-[#556070]">التاريخ اللي فوق هو اللي بيحدد الشهر · الشهر المعروض: {month}</p>
     </form>
   );
