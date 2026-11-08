@@ -82,7 +82,7 @@ function NavLinks({ pathname, month }: { pathname: string; month: string }) {
             key={item.href}
             href={`${item.href}?month=${month}`}
             className={`flex min-h-12 items-center gap-3 rounded-2xl px-3 text-sm font-bold transition ${
-              active ? "bg-[#fff0e2] text-[#bd4b0a]" : "text-neutral-500 hover:bg-neutral-50"
+              active ? "bg-gradient-to-l from-[#fff0e2] to-[#fff8f1] text-[#bd4b0a] shadow-[inset_0_0_0_1px_rgba(233,104,18,0.08)]" : "text-[#88796e] hover:bg-[#fff8f1] hover:text-[#bd4b0a]"
             }`}
           >
             <Icon />
@@ -145,16 +145,16 @@ function FirstRunProfile({ onDone }: { onDone: () => void }) {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#fffaf5] p-4 text-neutral-900">
+    <div className="flex min-h-screen items-center justify-center bg-[radial-gradient(ellipse_at_top_right,_#fff0e2_0%,_#fffaf5_55%,_#fff_100%)] p-4 text-[#241f1b]">
       <form onSubmit={submit} className="w-full max-w-sm rounded-[28px] border border-[#f2e4d8] border-t-4 border-t-[#e96812] bg-white p-6 shadow-[0_20px_50px_rgba(23,32,51,0.08)]" dir="rtl">
         <div className="mb-5 text-center">
           <img src="/track-your-sales/logo-mark.png" alt="" className="mx-auto h-16 w-16 object-contain" />
           <h1 className="mt-2 text-xl font-black text-[#241f1b]">أهلاً بيك في {APP_NAME}</h1>
           <p className="mt-1 text-sm text-[#88796e]">عشان نبدأ، اكتب اسمك (واسم الفرع لو حابب)</p>
         </div>
-        <label className="mb-3 block text-sm font-bold text-neutral-700">
+        <label className="mb-3 block text-sm font-bold text-[#514238]">
           الاسم
-          <input value={name} onChange={(e) => setName(e.target.value)} className="mt-1 w-full rounded-2xl border border-[#f2e4d8] px-4 py-3 outline-none focus:border-[#bd4b0a]" maxLength={80} />
+          <input value={name} onChange={(e) => setName(e.target.value)} className="mt-1 w-full rounded-2xl border border-[#f2e4d8] bg-[#fffdfb] px-4 py-3 outline-none transition focus:border-[#e96812] focus:ring-2 focus:ring-[#e96812]/10" maxLength={80} />
         </label>
         <div className="mb-4">
           <p className="mb-2 text-sm font-bold text-neutral-700">إنت إيه؟</p>
@@ -169,7 +169,7 @@ function FirstRunProfile({ onDone }: { onDone: () => void }) {
                 key={option.key}
                 type="button"
                 onClick={() => setRole(option.key)}
-                className={`rounded-2xl border px-3 py-3 text-sm font-extrabold ${role === option.key ? "border-[#bd4b0a] bg-[#fff0e2] text-[#bd4b0a]" : "border-[#f2e4d8] bg-white text-neutral-600"}`}
+                className={`rounded-2xl border px-3 py-3 text-sm font-extrabold ${role === option.key ? "border-[#bd4b0a] bg-[#fff0e2] text-[#bd4b0a]" : "border-[#f2e4d8] bg-white text-[#88796e]"}`}
               >
                 {option.label}
               </button>
@@ -179,7 +179,7 @@ function FirstRunProfile({ onDone }: { onDone: () => void }) {
         {role !== "area_manager" ? (
         <label className="mb-4 block text-sm font-bold text-neutral-700">
           اسم الفرع
-          <select value={branch} onChange={(e) => setBranch(e.target.value)} className="mt-1 w-full rounded-2xl border border-[#f2e4d8] bg-white px-4 py-3 outline-none focus:border-[#bd4b0a]">
+          <select value={branch} onChange={(e) => setBranch(e.target.value)} className="mt-1 w-full rounded-2xl border border-[#f2e4d8] bg-[#fffdfb] px-4 py-3 outline-none transition focus:border-[#e96812] focus:ring-2 focus:ring-[#e96812]/10">
             <option value="">— اختار الفرع —</option>
             {BRANCHES.map((item) => (
               <option key={item} value={item}>{item}</option>
@@ -213,7 +213,7 @@ function TargetGate({ month }: { month: string }) {
     <div className="mx-auto mt-6 max-w-md rounded-3xl bg-white p-6 text-center shadow-[0_12px_30px_rgba(190,90,0,0.12)]" dir="rtl">
       <div className="text-4xl">🎯</div>
       <h2 className="mt-2 text-lg font-black">لازم تدخل تارجت الشهر الأول</h2>
-      <p className="mt-1 text-sm text-neutral-500">ادخل التارجت والأوزان واحفظها، وبعدها التطبيق هيفتح عادي.</p>
+      <p className="mt-1 text-sm text-[#88796e]">ادخل التارجت والأوزان واحفظها، وبعدها التطبيق هيفتح عادي.</p>
       <Link href={`/target?month=${month}`} className="mt-5 inline-block rounded-2xl bg-gradient-to-br from-[#e96812] to-[#ff9d38] px-6 py-3 font-extrabold text-white shadow-sm">
         ادخل التارجت
       </Link>
@@ -224,7 +224,7 @@ function TargetGate({ month }: { month: string }) {
 function SplashScreen({ name }: { name: string }) {
   return (
     <div
-      className="flex min-h-screen flex-col items-center justify-center gap-5 bg-white px-6 text-center"
+      className="flex min-h-screen flex-col items-center justify-center gap-5 bg-[radial-gradient(ellipse_at_top,_#fff0e2_0%,_#fffaf5_58%,_#fff_100%)] px-6 text-center"
       dir="rtl"
     >
       <img src="/track-your-sales/logo-full.png" alt="Track Your Sales" className="h-32 w-auto object-contain" />
@@ -421,12 +421,12 @@ function AppFrame({ children, blocked, month }: { children: ReactNode; blocked: 
                     key={item.href}
                     href={`${item.href}?month=${month}`}
                     className={`flex min-h-16 flex-col items-center justify-center gap-1 text-[11px] font-extrabold ${
-                      active ? "text-[#e96812]" : "text-[#88796e]"
+                      active ? "text-[#bd4b0a]" : "text-[#9b8b7f] hover:text-[#bd4b0a]"
                     }`}
                   >
                     <span
                       className={`flex h-10 w-16 items-center justify-center rounded-full transition ${
-                        item.emphasize ? "h-11 w-11 bg-gradient-to-br from-[#bd4b0a] to-[#ff9d38] text-white shadow-[0_7px_18px_rgba(217,104,18,0.28)] ring-4 ring-[#fff0e2]" : active ? "bg-[#fff0e2] text-[#bd4b0a]" : ""
+                        item.emphasize ? "h-11 w-11 bg-gradient-to-br from-[#bd4b0a] to-[#ff9d38] text-white shadow-[0_7px_18px_rgba(217,104,18,0.28)] ring-4 ring-[#fff0e2]" : active ? "bg-[#fff0e2] text-[#bd4b0a] ring-1 ring-[#f6dfcb]" : ""
                       }`}
                     >
                       <Icon />
