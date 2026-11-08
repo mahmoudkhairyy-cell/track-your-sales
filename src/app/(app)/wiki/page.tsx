@@ -32,10 +32,37 @@ import { BookIcon, CallIcon, CardIcon, CheckIcon, PhoneIcon, StarIcon, WalletIco
 import { matchesQuery } from "@/lib/search";
 
 type Article = { id: string; title: string; content: string; updatedAt: string };
-type SectionId = "hub" | "sr" | "premier" | "freemax" | "go" | "hunts" | "home" | "dsl" | "docs" | "emails" | "notes";
+type SectionId = "hub" | "capsule" | "sr" | "premier" | "freemax" | "go" | "hunts" | "home" | "dsl" | "docs" | "emails" | "notes";
+
+const CAPSULE: { title: string; body: string }[] = [
+  { title: "Qmatic & Facade", body: "الياقطة منورة + ضبط التاريخ والوقت والشاشة" },
+  { title: "المظهر", body: "Uniform + Name tag" },
+  { title: "Scripts (Welcome / Upsell)", body: "صباح/مساء الخير، أقدر أساعد حضرتك أزاي؟ + Mandatory Scripts للـ upselling (MNP / DSL / OC / My Orange)" },
+  { title: "Free Max", body: "New Free Max chit chat متاح في كل الفروع، اشرح للعميل اللي محتاجه" },
+  { title: "Postpaid Premier", body: "New Postpaid chitchat وعروض في كل فرع، اشرح للعميل اللي محتاجه (Wtour، YouTube Premium، Egypt Air)" },
+  { title: "Super Max 290", body: "باقة Postpaid جديدة 14500 وحدة (مكالمات ونت)" },
+  { title: "Max IT", body: "نزّل تطبيق الـ app، ولينك حياتي للعميل SR 60619" },
+  { title: "Kazyon", body: "قسيطة شراء عن طريق Max it، بداية من 50 جنيه لحد 150 جنيه، وعن طريق كود الخصم" },
+  { title: "OC Offer", body: "5000 وحدة لمدة 3 أيام" },
+  { title: "H4G و 5G", body: "عملاء جداد: خصم 50% من سعر الجهاز (كاش يبدأ من 140) ما عدا باقة 1000 GB. تقسيط: 105 جنيه/شهر لمدة 24 شهر (Premier وOgold). نت زيادة بلاش 50% لعملاء 4G وَ 5G على باقة 140 فما فوق، وللعملاء الحاليين عند التجديد أو الترقية من Max it" },
+  { title: "DSL", body: "Router High End: العملاء الجداد خصم 50% (855 جنيه)، والحاليين 1710 جنيه. نت زيادة بلاش 50%. قسط 57 جنيه للعملاء الحاليين والجداد" },
+  { title: "Data (GO)", body: "تجديد GO وFreemax: 100% وحدات زيادة من أورنج كاش. تجديد GO وOC: 70% ميجابايتس زيادة من أورنج كاش" },
+  { title: "Cash Out", body: "اسأل العميل على المبلغ المطلوب، ولو عايز يدفع كاش: فلوس الإيداعات، ولو ATM: وجّه العميل لأقرب فرع بعد التأكد من وجود المبلغ" },
+  { title: "Visa", body: "لازم تستخدم Visa، ولو عميل عايز يدفع بـ Visa + الـ visa في مكان متشاف للعميل" },
+  { title: "ESIM", body: "دايماً موجود، لو stock zero اعمل له طلب عن طريق Max it" },
+  { title: "Sim Swap", body: "أول مرة من 3G لـ 4G مجاناً، ومن 4G لـ 4G بـ 20 جنيه" },
+  { title: "Wi-Fi Calling / شكاوى الشبكة", body: "لو العميل عنده ضعف أو شكوى من الشبكة: استخدم #0123# وفعّل Wi-Fi calling، وانشئ SR 31001 لشكاوى الشبكة" },
+  { title: "CNAM", body: "لو العميل مستلم رسالة تسويقية: نضيف الخدمة ونعمل Unbar بـ SR 11309، ولو الخط عليه barring نعمل SR 11102" },
+  { title: "VAS", body: "الغاء Gameloft وTPAY من خلال Siebel، ومش طالب إن يفضل لينكات زي دي" },
+  { title: "E-Shop", body: "اعرض أجهزة من E-Shop لو مش عنده جهاز، بسعر SR 1160" },
+  { title: "Closing Script", body: "أقدر أساعد حضرتك بحاجة تانية؟" },
+  { title: "CSAT Script", body: "حياتك مكالمة من 400 دي تقييم ليا، ولو قدرت أساعد حضرتك تدوس 5 شرفت" },
+  { title: "Display", body: "اعرض كل المخزون مع المواصفات الصح" },
+];
 
 const HUB: { id: SectionId; title: string; desc: string; count: string; icon: ReactNode }[] = [
   { id: "freemax", title: "FREEmax", desc: "باقات فري ماكس والأسعار", count: `${FREEMAX.plans.length} باقة`, icon: <StarIcon className="text-[#B94700]" /> },
+  { id: "capsule", title: "الكبسولة", desc: "سكربتات وعروض الشيفت", count: `${CAPSULE.length} بند`, icon: <BookIcon className="text-[#B94700]" /> },
   { id: "sr", title: "مرجع الـ SR", desc: "أكواد Service Request", count: `${SR_ITEMS.length} كود`, icon: <BookIcon className="text-[#B94700]" /> },
   { id: "go", title: "Go", desc: "باقات Go Monthly و Extra", count: "باقات شهرية", icon: <PhoneIcon className="text-[#B94700]" /> },
   { id: "premier", title: "Premier", desc: "Premier و Super Max", count: "باقات بوست بايد", icon: <StarIcon className="text-[#B94700]" /> },
@@ -663,6 +690,18 @@ export default function WikiPage() {
                 </button>
               </div>
             </article>
+          ))}
+        </div>
+      ) : null}
+
+      {section === "capsule" ? (
+        <div className="space-y-2">
+          <Back onClick={() => setSection("hub")} title="الكبسولة" />
+          {CAPSULE.map((item) => (
+            <div key={item.title} className="rounded-[22px] border border-[#E8EDF4] bg-white p-4 shadow-sm">
+              <p className="text-sm font-black text-[#172033]">{item.title}</p>
+              <p className="mt-1 text-sm leading-7 text-[#556070]">{item.body}</p>
+            </div>
           ))}
         </div>
       ) : null}
