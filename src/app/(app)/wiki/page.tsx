@@ -63,10 +63,10 @@ const CAPSULE: { title: string; body: string }[] = [
 const HUB: { id: SectionId; title: string; desc: string; count: string; icon: ReactNode }[] = [
   { id: "sr", title: "مرجع الـ SR", desc: "أكواد Service Request", count: `${SR_ITEMS.length} كود`, icon: <BookIcon className="text-[#bd4b0a]" /> },
   { id: "freemax", title: "FREEmax", desc: "باقات فري ماكس والأسعار", count: `${FREEMAX.plans.length} باقة`, icon: <StarIcon className="text-[#bd4b0a]" /> },
+  { id: "go", title: "Go", desc: "باقات Go Monthly و Extra", count: "باقات شهرية", icon: <PhoneIcon className="text-[#bd4b0a]" /> },
   { id: "premier", title: "Premier", desc: "Premier و Super Max", count: "باقات بوست بايد", icon: <StarIcon className="text-[#bd4b0a]" /> },
   { id: "home", title: "Home Wireless", desc: "باقات الإنترنت اللاسلكي", count: `${PLAN_GROUPS.find((g) => g.category === "Home Wireless")?.plans.length ?? 0} باقة`, icon: <WifiIcon className="text-[#bd4b0a]" /> },
   { id: "dsl", title: "Home Internet", desc: "باقات DSL والراوتر", count: `${DSL.plans.length} باقة`, icon: <WifiIcon className="text-[#bd4b0a]" /> },
-  { id: "go", title: "Go", desc: "باقات Go Monthly و Extra", count: "باقات شهرية", icon: <PhoneIcon className="text-[#bd4b0a]" /> },
   { id: "capsule", title: "الكبسولة", desc: "سكربتات وعروض الشيفت", count: `${CAPSULE.length} بند`, icon: <BookIcon className="text-[#bd4b0a]" /> },
   { id: "hunts", title: "أرقام Hunts", desc: "جهات للتواصل السريع", count: `${HUNTS.length} جهة`, icon: <CallIcon className="text-[#bd4b0a]" /> },
   { id: "notes", title: "ملاحظاتي", desc: "مرجع شخصي بتضيفه بنفسك", count: "", icon: <CheckIcon className="text-[#bd4b0a]" /> },
