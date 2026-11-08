@@ -356,3 +356,22 @@ textarea { resize: vertical; }
   .tys-mobile-nav-link,
   .tys-mobile-nav-icon { transition: none !important; }
 }
+
+
+/* Desktop sidebar navigation refinement. */
+.tys-desktop-nav-link {
+  min-height: 48px;
+  overflow: hidden;
+}
+.tys-desktop-nav-link-active::before {
+  position: absolute;
+  inset-block: 10px;
+  inset-inline-start: 0;
+  width: 3px;
+  border-radius: 99px;
+  background: linear-gradient(180deg, #ffad61, #bd4b0a);
+  content: "";
+}
+.tys-desktop-nav-link-active {
+  box-shadow: inset 0 0 0 1px rgba(233, 104, 18, .09), 0 5px 14px rgba(189, 75, 10, .045);
+}

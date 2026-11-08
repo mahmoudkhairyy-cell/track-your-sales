@@ -81,8 +81,9 @@ function NavLinks({ pathname, month }: { pathname: string; month: string }) {
           <Link
             key={item.href}
             href={`${item.href}?month=${month}`}
-            className={`flex min-h-12 items-center gap-3 rounded-2xl px-3 text-sm font-bold transition ${
-              active ? "bg-gradient-to-l from-[#fff0e2] to-[#fff8f1] text-[#bd4b0a] shadow-[inset_0_0_0_1px_rgba(233,104,18,0.08)]" : "text-[#88796e] hover:bg-[#fff8f1] hover:text-[#bd4b0a]"
+            aria-current={active ? "page" : undefined}
+            className={`tys-desktop-nav-link relative flex min-h-12 items-center gap-3 rounded-2xl px-3 text-sm font-bold transition ${
+              active ? "tys-desktop-nav-link-active bg-gradient-to-l from-[#fff0e2] to-[#fff8f1] text-[#bd4b0a] shadow-[inset_0_0_0_1px_rgba(233,104,18,0.08)]" : "text-[#88796e] hover:bg-[#fff8f1] hover:text-[#bd4b0a]"
             }`}
           >
             <Icon />
@@ -392,7 +393,7 @@ function AppFrame({ children, blocked, month }: { children: ReactNode; blocked: 
                 <p className="relative mt-3 truncate text-base font-black text-[#2d2119]">{user.name || "أهلاً بيك"}</p>
                 <p className="relative mt-1 truncate text-xs font-semibold text-[#9a7963]">📍 {user.branch || "فرعك"}</p>
               </div>
-              <nav className="mt-6 flex flex-col gap-1.5">
+              <nav aria-label="التنقل الرئيسي" className="tys-desktop-nav mt-6 flex flex-col gap-1.5">
                 <NavLinks pathname={pathname} month={month} />
               </nav>
               <p className="mt-auto border-t border-[#f1dfd0] pt-5 text-[11px] leading-6 text-[#ad9888]">{APP_DISCLAIMER}</p>
