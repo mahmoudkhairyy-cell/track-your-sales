@@ -178,26 +178,26 @@ export default function TargetPage() {
 
       <section className="overflow-hidden rounded-[28px] border border-[#f0dfd2] bg-white p-4 shadow-[0_12px_30px_rgba(100,55,25,0.045)]">
         <div className="grid grid-cols-3 gap-2 text-center">
-          <div className="rounded-2xl bg-[#fff0e2] px-2 py-3"><p className="text-2xl font-black tabular-nums text-[#241f1b]">{monthDays.length}</p><p className="text-[11px] text-[#88796e]">أيام الشهر</p></div>
-          <div className="rounded-2xl bg-[#fff0e2] px-2 py-3"><p className="text-2xl font-black tabular-nums text-[#241f1b]">{holidays.length}</p><p className="text-[11px] text-[#88796e]">إجازات</p></div>
-          <div className="rounded-2xl bg-[#fff0e2] px-2 py-3"><p className="text-2xl font-black tabular-nums text-[#241f1b]">{workingDatesInMonth(month, workingDays, holidays.map((item) => item.date)).length}</p><p className="text-[11px] text-[#88796e]">أيام شغل</p></div>
+          <div className="rounded-2xl bg-[#fff0e2] px-2 py-3"><p className="text-2xl font-black tabular-nums text-[#2d2119]">{monthDays.length}</p><p className="text-[11px] text-[#88796e]">أيام الشهر</p></div>
+          <div className="rounded-2xl bg-[#fff0e2] px-2 py-3"><p className="text-2xl font-black tabular-nums text-[#2d2119]">{holidays.length}</p><p className="text-[11px] text-[#88796e]">إجازات</p></div>
+          <div className="rounded-2xl bg-[#fff0e2] px-2 py-3"><p className="text-2xl font-black tabular-nums text-[#2d2119]">{workingDatesInMonth(month, workingDays, holidays.map((item) => item.date)).length}</p><p className="text-[11px] text-[#88796e]">أيام شغل</p></div>
         </div>
       </section>
 
       {kpis.some((k) => k.weight > 0) ? (
         <section className="rounded-[28px] border border-[#f0dfd2] bg-white p-4 shadow-[0_12px_30px_rgba(100,55,25,0.045)]">
-          <p className="text-sm font-black text-[#241f1b]">توزيع الأوزان</p>
+          <p className="text-sm font-black text-[#2d2119]">توزيع الأوزان</p>
           <div className="mt-3 flex h-3 w-full overflow-hidden rounded-full bg-[#fffaf5]">
             {kpis.filter((k) => k.weight > 0).map((k, i) => (
-              <span key={k.kpiKey} style={{ width: `${k.weight}%`, background: ["#D95B00", "#E87518", "#B94700", "#55B8F5", "#F3A96B"][i % 5] }} />
+              <span key={k.kpiKey} style={{ width: `${k.weight}%`, background: ["#e96812", "#ff9d38", "#bd4b0a", "#e7a06a", "#f2c49f"][i % 5] }} />
             ))}
           </div>
           <ul className="mt-3 grid grid-cols-2 gap-2 text-xs font-bold text-[#88796e]">
             {kpis.filter((k) => k.weight > 0).map((k, i) => (
               <li key={k.kpiKey} className="flex items-center gap-2">
-                <span className="h-2.5 w-2.5 rounded-full" style={{ background: ["#D95B00", "#E87518", "#B94700", "#55B8F5", "#F3A96B"][i % 5] }} />
+                <span className="h-2.5 w-2.5 rounded-full" style={{ background: ["#e96812", "#ff9d38", "#bd4b0a", "#e7a06a", "#f2c49f"][i % 5] }} />
                 <span className="truncate">{kpiEmoji(k.kpiKey)} {KPI_CATALOG.find((c) => c.key === k.kpiKey)?.nameEn ?? k.kpiKey}</span>
-                <span className="mr-auto tabular-nums text-[#241f1b]">{k.weight}%</span>
+                <span className="mr-auto tabular-nums text-[#2d2119]">{k.weight}%</span>
               </li>
             ))}
           </ul>
@@ -237,7 +237,7 @@ export default function TargetPage() {
                   )
                 }
                 className={`flex aspect-square items-center justify-center rounded-2xl text-sm font-extrabold transition ${
-                  isHoliday ? "bg-gradient-to-br from-[#D95B00] to-[#E87518] text-white shadow-sm" : "bg-[#fffaf5] text-[#241f1b]"
+                  isHoliday ? "bg-gradient-to-br from-[#e96812] to-[#ff9d38] text-white shadow-sm" : "bg-[#fffaf5] text-[#2d2119]"
                 }`}
               >
                 {Number(date.slice(8, 10))}
