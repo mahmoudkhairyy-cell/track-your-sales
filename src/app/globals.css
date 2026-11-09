@@ -3461,3 +3461,61 @@ body {
     animation-duration: .01ms !important;
   }
 }
+
+
+/* Manager navigation and touch targets — presentation-only refinement. */
+.tx-manager aside nav {
+  display: grid;
+  gap: .4rem !important;
+}
+.tx-manager aside nav button {
+  min-height: 52px;
+  border: 1px solid transparent;
+  border-radius: 15px;
+  padding-inline: .75rem;
+  transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease, transform 160ms ease;
+}
+.tx-manager aside nav button:focus-visible {
+  outline: 3px solid rgba(217, 95, 18, .24);
+  outline-offset: 2px;
+}
+.tx-manager aside nav button span:first-child {
+  flex: 0 0 2.25rem;
+}
+.tx-manager aside nav button:has(span.mr-auto) {
+  border-color: #f2ddcb;
+  background: linear-gradient(110deg, #fff3e8 0%, #fffaf6 100%);
+  box-shadow: 0 3px 10px rgba(145, 75, 30, .055);
+}
+.tx-manager aside > div:last-child {
+  border-color: #efddce;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.8);
+}
+.tx-manager header button,
+.tx-manager button {
+  -webkit-tap-highlight-color: transparent;
+}
+.tx-manager button:disabled {
+  cursor: not-allowed;
+}
+@media (max-width: 640px) {
+  .tx-manager aside {
+    padding-top: max(1rem, env(safe-area-inset-top)) !important;
+    padding-bottom: max(1rem, env(safe-area-inset-bottom)) !important;
+  }
+  .tx-manager aside nav button {
+    min-height: 54px;
+    padding-inline: .85rem;
+  }
+  .tx-manager aside nav button span:first-child {
+    width: 2.4rem;
+    height: 2.4rem;
+    border-radius: .85rem;
+  }
+  .tx-manager header button[aria-label="فتح القائمة"] {
+    box-shadow: 0 3px 9px rgba(189, 75, 10, .08);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tx-manager aside nav button { transition: none !important; }
+}
