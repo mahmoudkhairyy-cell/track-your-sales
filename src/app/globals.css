@@ -3587,3 +3587,92 @@ body {
     gap: .7rem;
   }
 }
+
+
+/* Manager activity and branch reports — compact, readable presentation only. */
+.tx-manager section.space-y-4 > div.grid > article {
+  border-color: #efdfd2;
+  background: linear-gradient(155deg, #fff 0%, #fffaf6 100%);
+  box-shadow: 0 9px 24px rgba(126,65,24,.055);
+}
+.tx-manager section.space-y-4 > div.grid > article > div:first-child {
+  background: linear-gradient(100deg, rgba(255,243,232,.72), rgba(255,255,255,.5));
+}
+.tx-manager section.space-y-4 > div.grid > article > div:last-child > div {
+  border: 1px solid #f2e5da;
+  background: #fffdfb;
+  min-height: 42px;
+  transition: border-color 160ms ease, background-color 160ms ease;
+}
+.tx-manager section.space-y-4 > div.grid > article > div:last-child > div b {
+  color: #493326;
+}
+.tx-manager section.overflow-hidden:has(> div > div > button[ type="button" ]) > div.divide-y > div {
+  min-height: 76px;
+  border-radius: 15px;
+  margin-block: 3px;
+  transition: background-color 160ms ease, border-color 160ms ease;
+}
+.tx-manager section.overflow-hidden:has(> div > div > button[ type="button" ]) > div.divide-y > div > button {
+  min-height: 42px;
+  border-radius: 12px;
+  box-shadow: 0 3px 9px rgba(189,75,10,.07);
+}
+@media (hover: hover) and (pointer: fine) {
+  .tx-manager section.space-y-4 > div.grid > article > div:last-child > div:hover {
+    border-color: #edc8aa;
+    background: #fff7f0;
+  }
+  .tx-manager section.overflow-hidden:has(> div > div > button[ type="button" ]) > div.divide-y > div:hover {
+    background: #fff8f1;
+  }
+}
+@media (max-width: 640px) {
+  .tx-manager section.space-y-4 { gap: .8rem !important; }
+  .tx-manager section.space-y-4 > div:first-child {
+    align-items: flex-start;
+    padding-inline: .15rem;
+  }
+  .tx-manager section.space-y-4 > div.grid {
+    gap: .65rem !important;
+    grid-template-columns: 1fr !important;
+  }
+  .tx-manager section.space-y-4 > div.grid > article {
+    border-radius: 18px !important;
+  }
+  .tx-manager section.space-y-4 > div.grid > article > div:first-child {
+    padding: .7rem .85rem !important;
+  }
+  .tx-manager section.space-y-4 > div.grid > article > div:last-child {
+    display: grid;
+    grid-template-columns: repeat(2,minmax(0,1fr));
+    gap: .45rem !important;
+    padding: .65rem !important;
+  }
+  .tx-manager section.space-y-4 > div.grid > article > div:last-child > div {
+    min-width: 0;
+    padding: .55rem .65rem !important;
+  }
+  .tx-manager section.overflow-hidden:has(> div > div > button[ type="button" ]) > div.divide-y > div {
+    min-height: 68px;
+    margin-inline: .35rem;
+    padding: .65rem .55rem !important;
+    gap: .55rem !important;
+  }
+  .tx-manager section.overflow-hidden:has(> div > div > button[ type="button" ]) > div.divide-y > div > span:first-child {
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: .8rem;
+  }
+  .tx-manager section.overflow-hidden:has(> div > div > button[ type="button" ]) > div.divide-y > div > button {
+    min-height: 40px;
+    padding-inline: .7rem !important;
+    white-space: nowrap;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tx-manager section.space-y-4 > div.grid > article > div:last-child > div,
+  .tx-manager section.overflow-hidden:has(> div > div > button[ type="button" ]) > div.divide-y > div {
+    transition: none !important;
+  }
+}
