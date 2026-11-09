@@ -517,38 +517,7 @@ export default function ManagerPage() {
 
             {view === "overview" ? (
               <div className="space-y-5">
-                <section className="relative isolate overflow-hidden rounded-[30px] border border-[#e9c9ad] bg-[linear-gradient(120deg,#8f3508_0%,#bd4b0a_48%,#e97824_100%)] p-5 text-white shadow-[0_18px_48px_rgba(143,53,8,.20)] sm:p-7">
-                  <div className="pointer-events-none absolute -left-10 -top-16 h-56 w-56 rounded-full border border-white/10 bg-white/[0.06] blur-[1px]" />
-                  <div className="pointer-events-none absolute -bottom-24 right-1/3 h-64 w-64 rounded-full bg-[#ffbd80]/15 blur-3xl" />
-                  <div className="relative flex items-start justify-between gap-4">
-                    <div className="min-w-0">
-                      <p className="text-[10px] font-black tracking-[.2em] text-orange-100/80" dir="ltr">AREA COMMAND CENTER</p>
-                      <h2 className="mt-2 text-2xl font-black tracking-tight sm:text-3xl">نظرة عامة على الأريا</h2>
-                      <p className="mt-1 text-xs text-orange-50/80 sm:text-sm">متابعة الفروع واتخاذ القرار من مكان واحد</p>
-                    </div>
-                    <div className="shrink-0 rounded-2xl border border-white/20 bg-white/10 px-3 py-2 text-center backdrop-blur-md">
-                      <p className="text-[10px] font-bold text-orange-100/80">حالة الأريا</p>
-                      <p className="mt-1 text-sm font-black">{behindBranches.length ? "تحتاج متابعة" : branchGroups.length > 0 && unclassifiedBranches.length === branchGroups.length ? "بانتظار البيانات" : branchGroups.length ? "على المسار" : "بانتظار البيانات"}</p>
-                    </div>
-                  </div>
-                  <div className="relative mt-6 flex flex-wrap items-end justify-between gap-4">
-                    <div>
-                      <p className="text-xs font-bold text-orange-100/80">الفروع المتأخرة</p>
-                      <div className="mt-1 flex items-baseline gap-2">
-                        <strong className="text-5xl font-black tabular-nums tracking-tight">{behindBranches.length}</strong>
-                        <span className="text-xs text-orange-50/80">من {branchGroups.length} فرع</span>
-                      </div>
-                    </div>
-                    <button type="button" onClick={() => changeView("list")} className="rounded-xl border border-white/25 bg-white/12 px-4 py-2.5 text-xs font-extrabold text-white backdrop-blur-md transition hover:bg-white/20">مراجعة الفروع <span aria-hidden="true">←</span></button>
-                  </div>
-                  {behindBranches.length ? (
-                    <div className="relative mt-5 flex flex-wrap gap-2">
-                      {behindBranches.slice(0,4).map((b) => <button key={b.name} type="button" onClick={() => setBranchPreview(b.name)} className="rounded-full border border-white/20 bg-[#7f2d0b]/30 px-3 py-1.5 text-[11px] font-bold text-white">{b.name} · متأخر</button>)}
-                      {behindBranches.length > 4 ? <span className="self-center text-[10px] text-orange-50/80">+{behindBranches.length - 4} فروع أخرى</span> : null}
-                    </div>
-                  ) : null}
-                </section>
-
+                
                 <section className="grid grid-cols-3 gap-2.5 sm:grid-cols-4 sm:gap-3">
                   {[
                     {label:"إجمالي الفروع",value:branchGroups.length,sub:"كل فروع الأريا",tone:"orange",icon:"▦"},
