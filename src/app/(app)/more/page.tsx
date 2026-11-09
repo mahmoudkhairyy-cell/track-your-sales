@@ -352,32 +352,64 @@ export default function MorePage() {
 
       {view === "report" ? (
         <section className="space-y-4">
-          <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[#bd4b0a]">← رجوع للقائمة</button>
-          <div id="report-print" className="rounded-[24px] border border-[#f2e4d8] bg-white p-5 shadow-sm">
-            <p className="text-xs font-bold text-[#88796e]">تقرير الشهر · {monthLabelAr(month)}</p>
-            <h2 className="mt-1 text-xl font-black">{profile.name || "—"}</h2>
-            <p className="text-sm text-[#88796e]">📍 {profile.branch || "—"}</p>
-            {reportData ? (
-              <>
-                <div className="mt-4 grid grid-cols-2 gap-3">
-                  <div className="rounded-2xl bg-[#fff0e2] p-3"><p className="text-[11px] font-bold text-[#88796e]">التوتال</p><p className="text-2xl font-black text-[#bd4b0a]">{reportData.overall.toFixed(1)}%</p></div>
-                  <div className="rounded-2xl bg-[#fff0e2] p-3"><p className="text-[11px] font-bold text-[#88796e]">الكوميشن المتوقع</p><p className="text-2xl font-black text-[#bd4b0a]">{Math.round(reportData.estimatedCommission)} ج</p><p className="text-[10px] text-[#88796e]">من {Math.round(reportData.fullCommission)} ج</p></div>
+          <button type="button" onClick={() => setView("menu")} className="inline-flex min-h-10 items-center gap-2 rounded-full border border-[#efddce] bg-white px-4 text-sm font-extrabold text-[#a94308] shadow-sm transition hover:bg-[#fff8f1]">→ رجوع للأدوات</button>
+          <div id="report-print" className="overflow-hidden rounded-[28px] border border-[#efddce] bg-white shadow-[0_18px_44px_rgba(104,53,19,.09)]">
+            <div className="relative overflow-hidden bg-[linear-gradient(125deg,#8f3507_0%,#c6530d_58%,#ef812e_100%)] px-5 py-6 text-white sm:px-7">
+              <div className="pointer-events-none absolute -left-10 -top-16 h-48 w-48 rounded-full border-[22px] border-white/10" />
+              <div className="relative flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <p className="text-[10px] font-black tracking-[.18em] text-orange-100">MONTHLY PERFORMANCE</p>
+                  <h2 className="mt-2 text-2xl font-black tracking-tight">تقرير الأداء الشهري</h2>
+                  <p className="mt-1 text-xs font-semibold text-orange-100">{monthLabelAr(month)}</p>
+                  <p className="mt-4 text-sm font-extrabold">{profile.name || "—"}</p>
+                  <p className="mt-1 text-xs text-orange-100">📍 {profile.branch || "—"}</p>
                 </div>
-                <div className="mt-4 divide-y divide-dashed divide-[#F3D2B5]">
-                  {reportData.kpis.map((kpi) => (
-                    <div key={kpi.kpiKey} className="flex items-center justify-between py-2.5 text-sm">
-                      <span className="font-extrabold" dir="ltr">{kpi.nameEn}</span>
-                      <span className="text-[#88796e]">{formatQty(kpi.achieved)} / {formatQty(kpi.target)} · <b className="text-[#bd4b0a]">{kpi.percent.toFixed(0)}%</b></span>
+                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-white/20 bg-white/10 text-2xl">▤</span>
+              </div>
+            </div>
+            <div className="space-y-5 p-4 sm:p-6">
+              {reportData ? (
+                <>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="rounded-2xl border border-[#f1dfd0] bg-[#fff8f1] p-4">
+                      <p className="text-[11px] font-bold text-[#927b69]">إجمالي تحقيق التارجت</p>
+                      <p className="mt-1 font-mono text-3xl font-black tracking-tight text-[#a94308]">{reportData.overall.toFixed(1)}<span className="text-lg">%</span></p>
                     </div>
-                  ))}
-                </div>
-              </>
-            ) : (
-              <p className="mt-4 text-sm text-[#88796e]">بنحمّل التقرير...</p>
-            )}
+                    <div className="rounded-2xl border border-[#f1dfd0] bg-[#fff8f1] p-4">
+                      <p className="text-[11px] font-bold text-[#927b69]">الكوميشن المتوقع</p>
+                      <p className="mt-1 font-mono text-3xl font-black tracking-tight text-[#a94308]">{Math.round(reportData.estimatedCommission)} <span className="text-sm">ج</span></p>
+                      <p className="mt-1 text-[10px] font-semibold text-[#927b69]">من إجمالي {Math.round(reportData.fullCommission)} ج</p>
+                    </div>
+                  </div>
+                  <div>
+                    <div className="mb-3 flex items-center justify-between gap-2">
+                      <h3 className="text-sm font-black text-[#2d2119]">تفاصيل مؤشرات الأداء</h3>
+                      <span className="rounded-full bg-[#fff0e2] px-2.5 py-1 text-[10px] font-extrabold text-[#a94308]">{reportData.kpis.length} مؤشرات</span>
+                    </div>
+                    <div className="space-y-2.5">
+                      {reportData.kpis.map((kpi) => (
+                        <div key={kpi.kpiKey} className="rounded-2xl border border-[#f1e5da] bg-white p-3.5">
+                          <div className="flex items-center justify-between gap-3">
+                            <span className="min-w-0 truncate text-xs font-black text-[#38291f]" dir="ltr">{kpi.nameEn}</span>
+                            <span className="shrink-0 font-mono text-sm font-black text-[#a94308]">{kpi.percent.toFixed(0)}%</span>
+                          </div>
+                          <div className="mt-2.5 h-2 overflow-hidden rounded-full bg-[#f6e9df]" dir="rtl">
+                            <div className="h-full rounded-full bg-gradient-to-l from-[#ffad62] to-[#bd4b0a]" style={{ width: `${Math.max(0, Math.min(100, kpi.percent))}%` }} />
+                          </div>
+                          <p className="mt-2 text-[10px] font-semibold text-[#927b69]">{formatQty(kpi.achieved)} من {formatQty(kpi.target)} · المحقق / المستهدف</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <p className="rounded-2xl bg-[#fff8f1] p-4 text-sm font-semibold text-[#927b69]">بنحمّل التقرير...</p>
+              )}
+              <p className="border-t border-dashed border-[#efddce] pt-4 text-center text-[10px] font-semibold text-[#a18a78]">Track Your Sales · أداة مساعدة مستقلة وغير رسمية</p>
+            </div>
           </div>
-          <button type="button" onClick={() => window.print()} className="w-full rounded-2xl bg-gradient-to-br from-[#e96812] to-[#ff9d38] py-3 font-extrabold text-white shadow-sm">
-            🖨️ اطبع / احفظ PDF
+          <button type="button" onClick={() => window.print()} className="flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-l from-[#a94308] to-[#e96812] py-3 font-extrabold text-white shadow-[0_10px_22px_rgba(169,67,8,.18)] transition hover:brightness-105">
+            🖨️ اطبع التقرير / احفظ PDF
           </button>
         </section>
       ) : null}
