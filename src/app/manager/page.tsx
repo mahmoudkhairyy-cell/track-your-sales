@@ -554,10 +554,10 @@ export default function ManagerPage() {
                     <div><p className="text-[10px] font-black tracking-[.15em] text-[#c45b18]" dir="ltr">DAILY ACTIVITY</p><h2 className="mt-1 text-base font-black">نشاط التسجيل اليومي</h2><p className="mt-1 text-[10px] text-[#927b69]">عدد الموظفين الذين سجلوا إنجازًا كل يوم</p></div>
                     <div className="mt-5 flex h-36 items-end justify-between gap-2">
                       {Array.from({length:7},(_,i)=>{
-                        const date=new Date(Date.now()-(6-i)*86400000);
+                        const date=new Date(Date.parse(today+"T12:00:00+02:00")-(6-i)*86400000);
                         const key=new Intl.DateTimeFormat("en-CA",{timeZone:"Africa/Cairo",year:"numeric",month:"2-digit",day:"2-digit"}).format(date);
                         const count=allRows.filter(r=>(r.payload.entries??[]).some(e=>e.date===key)).length;
-                        const max=Math.max(1,...Array.from({length:7},(_,j)=>{const d=new Date(Date.now()-(6-j)*86400000);const k=new Intl.DateTimeFormat("en-CA",{timeZone:"Africa/Cairo",year:"numeric",month:"2-digit",day:"2-digit"}).format(d);return allRows.filter(r=>(r.payload.entries??[]).some(e=>e.date===k)).length;}));
+                        const max=Math.max(1,...Array.from({length:7},(_,j)=>{const d=new Date(Date.parse(today+"T12:00:00+02:00")-(6-j)*86400000);const k=new Intl.DateTimeFormat("en-CA",{timeZone:"Africa/Cairo",year:"numeric",month:"2-digit",day:"2-digit"}).format(d);return allRows.filter(r=>(r.payload.entries??[]).some(e=>e.date===k)).length;}));
                         return <div key={key} className="flex h-full flex-1 flex-col items-center justify-end gap-2"><span className="text-[9px] font-black tabular-nums text-[#927b69]">{count}</span><div className="flex h-24 w-full items-end overflow-hidden rounded-t-lg bg-[#fff3e8]"><div className="w-full rounded-t-lg bg-gradient-to-t from-[#a94308] to-[#ffad62]" style={{height:Math.max(5,(count/max)*100)+"%"}} /></div><span className="text-[9px] font-bold text-[#927b69]">{new Intl.DateTimeFormat("ar-EG",{timeZone:"Africa/Cairo",weekday:"short"}).format(date)}</span></div>;
                       })}
                     </div>
