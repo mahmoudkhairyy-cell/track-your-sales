@@ -418,7 +418,7 @@ export default function ManagerPage() {
   ) : <p className="mt-3 text-xs text-[#927b69]">مفيش فروع في القائمة دي حاليًا.</p>;
 
   return (
-    <main className="tys-page tx-manager min-h-screen bg-[#faf8f5] px-3 py-4 text-[#30251e] sm:px-5 sm:py-6" dir="rtl">
+    <main className="tys-page tx-manager min-h-screen bg-[radial-gradient(ellipse_at_top_left,rgba(255,176,111,.13),transparent_38%),linear-gradient(145deg,#fffaf6_0%,#f8f4ef_55%,#fff8f1_100%)] px-3 py-4 text-[#30251e] sm:px-5 sm:py-6" dir="rtl">
       {rows === null ? (
         <div className="mx-auto max-w-md">
           <section className="mt-10 rounded-[28px] border border-[#f0dfd2] bg-white p-6 shadow-sm">
@@ -440,7 +440,7 @@ export default function ManagerPage() {
       ) : (
         <div className="mx-auto flex max-w-[1440px] gap-5">
           {mobileMenuOpen ? <button type="button" aria-label="إغلاق القائمة" onClick={() => setMobileMenuOpen(false)} className="fixed inset-0 z-40 bg-[#30251e]/30 backdrop-blur-[2px] lg:hidden" /> : null}
-          <aside className={"fixed inset-y-0 right-0 z-50 flex w-[min(82vw,300px)] flex-col border-l border-[#eee3d9] bg-white p-4 shadow-2xl transition-transform duration-200 lg:sticky lg:top-5 lg:z-auto lg:h-[calc(100vh-2.5rem)] lg:w-[248px] lg:shrink-0 lg:translate-x-0 lg:rounded-[28px] lg:border lg:shadow-sm " + (mobileMenuOpen ? "translate-x-0" : "translate-x-full lg:translate-x-0")}>
+          <aside className={"fixed inset-y-0 right-0 z-50 flex w-[min(82vw,300px)] flex-col border-l border-white/70 bg-white/90 p-4 shadow-2xl backdrop-blur-2xl transition-transform duration-200 lg:sticky lg:top-5 lg:z-auto lg:h-[calc(100vh-2.5rem)] lg:w-[248px] lg:shrink-0 lg:translate-x-0 lg:rounded-[28px] lg:border lg:shadow-[0_14px_42px_rgba(93,54,26,.08)] " + (mobileMenuOpen ? "translate-x-0" : "translate-x-full lg:translate-x-0")}>
             <div className="flex items-center gap-3 border-b border-[#f1e8e0] px-1 pb-5">
               <img src="/track-your-sales/logo-mark.png" alt="" className="h-10 w-10 object-contain" />
               <div className="min-w-0"><p className="text-[10px] font-black tracking-[.14em] text-[#c45b18]" dir="ltr">TRACK YOUR SALES</p><h2 className="mt-1 truncate text-sm font-black">لوحة المدير</h2></div>
@@ -455,14 +455,14 @@ export default function ManagerPage() {
                 </button>;
               })}
             </nav>
-            <div className="mt-auto rounded-2xl bg-[#fbf7f2] p-3">
+            <div className="mt-auto rounded-2xl border border-[#f1dfd0] bg-gradient-to-br from-[#fffaf6] to-[#fff0e2]/70 p-3">
               <p className="truncate text-xs font-extrabold">{managerName || "إدارة الفريق"}</p><p className="mt-1 text-[10px] text-[#9a8879]">متابعة الأداء اليومي</p>
               <button type="button" onClick={() => { setPwOpen((v) => !v); setPwMsg(""); setMobileMenuOpen(false); }} className="mt-3 w-full rounded-xl border border-[#eadbce] bg-white px-3 py-2 text-xs font-bold text-[#8f3d0a]">⚙ تغيير كلمة السر</button>
             </div>
           </aside>
 
           <div className="min-w-0 flex-1 space-y-5">
-            <header className="flex items-center justify-between gap-3 rounded-[24px] border border-[#eee5dc] bg-white px-4 py-3 shadow-sm sm:px-5">
+            <header className="flex items-center justify-between gap-3 rounded-[24px] border border-white/80 bg-white/80 px-4 py-3 shadow-[0_10px_30px_rgba(104,53,19,.055)] backdrop-blur-xl sm:px-5">
               <div className="flex min-w-0 items-center gap-3">
                 <button type="button" onClick={() => setMobileMenuOpen(true)} aria-label="فتح القائمة" className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#fff2e8] text-xl text-[#b94e0c] lg:hidden">☰</button>
                 <div className="min-w-0"><p className="text-[10px] font-black tracking-[.14em] text-[#c45b18]" dir="ltr">MANAGEMENT</p><h1 className="mt-0.5 truncate text-xl font-black sm:text-2xl">{activeLabel}</h1><p className="mt-0.5 truncate text-[11px] text-[#927b69]">متابعة أداء الفريق</p></div>
@@ -505,7 +505,7 @@ export default function ManagerPage() {
                   ) : null}
                 </section>
 
-                <section className="grid grid-cols-3 gap-2.5 sm:gap-3">
+                <section className="grid grid-cols-3 gap-2.5 sm:grid-cols-4 sm:gap-3">
                   {[
                     {label:"إجمالي الفروع",value:branchGroups.length,sub:"كل فروع الأريا",tone:"orange",icon:"▦"},
                     {label:"فروع متقدمة",value:branchStatus.filter(b=>b.expected!==undefined && b.percent-b.expected>=5).length,sub:"أعلى من المتوقع",tone:"green",icon:"↗"},
@@ -530,7 +530,7 @@ export default function ManagerPage() {
                       <button type="button" onClick={()=>changeView("list")} className="text-[11px] font-extrabold text-[#a94308]">كل الفروع ←</button>
                     </div>
                     {branchStatus.length ? <div className="mt-5 space-y-4">{[...branchStatus].sort((a,b)=>b.percent-a.percent).slice(0,6).map((b,index)=>(
-                      <button key={b.name} type="button" onClick={()=>changeView("b:"+b.name)} className="block w-full text-right">
+                      <button key={b.name} type="button" onClick={()=>setBranchPreview(b.name)} className="block w-full text-right">
                         <div className="mb-1.5 flex items-center justify-between gap-3"><span className="min-w-0 truncate text-xs font-extrabold text-[#4d3829]">{index+1}. {b.name}</span><span className="shrink-0 text-xs font-black tabular-nums text-[#a94308]">{Math.round(b.percent)}%</span></div>
                         <div className="h-2.5 overflow-hidden rounded-full bg-[#f5eee8]"><div className={"h-full rounded-full "+(b.expected===undefined?"bg-[#d7c8ba]":b.percent<b.expected?"bg-gradient-to-l from-red-500 to-red-300":"bg-gradient-to-l from-[#bd4b0a] to-[#ffad62]")} style={{width:Math.min(100,Math.max(0,b.percent))+"%"}} /></div>
                       </button>
