@@ -170,6 +170,13 @@ function groupByBranch(rows: ReportRow[]): [string, ReportRow[]][] {
   return [...map.entries()];
 }
 
+const FEMALE_MANAGER_NAMES = ["نسمة", "nasma", "nesma", "رنا", "rana"];
+
+function managerTitle(name: string): string {
+  const n = name.trim().toLowerCase();
+  return n && FEMALE_MANAGER_NAMES.some((f) => n.includes(f.toLowerCase())) ? "MS." : "MR.";
+}
+
 export default function ManagerPage() {
   const [password, setPassword] = useState("");
   const [detailsId, setDetailsId] = useState<string | null>(null);
@@ -196,6 +203,7 @@ export default function ManagerPage() {
   const [newPw2, setNewPw2] = useState("");
   const [pwMsg, setPwMsg] = useState("");
   const [managerName, setManagerName] = useState("");
+  const [greeting, setGreeting] = useState("");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   async function changePassword(event: FormEvent) {
@@ -220,7 +228,12 @@ export default function ManagerPage() {
     }
   }
 
-   useEffect(() => {
+  useEffect(() => {
+    const hour = Number(new Intl.DateTimeFormat("en-GB", { timeZone: "Africa/Cairo", hour: "numeric", hour12: false }).format(new Date()));
+    setGreeting(hour < 12 ? "صباح الخير" : "مساء الخير");
+  }, []);
+
+  useEffect(() => {
     const timer = window.setTimeout(() => {
       setYesterday(cairoISODate(new Date(Date.now() - 24 * 60 * 60 * 1000)));
     }, 0);
@@ -491,6 +504,11 @@ export default function ManagerPage() {
 
             {view === "overview" ? (
               <div className="space-y-5">
+                {greeting && managerName ? (
+                  <p className="inline-flex items-center gap-2 rounded-full border border-[#f1dfd0] bg-[#fff8f2] px-3 py-1.5 text-xs font-extrabold text-[#8f3d0a]">
+                    <span aria-hidden="true">👋</span>{greeting}، {managerTitle(managerName)} {managerName}
+                  </p>
+                ) : null}
                 
                 <section className="grid grid-cols-3 gap-2.5 sm:grid-cols-4 sm:gap-3">
                   {[
