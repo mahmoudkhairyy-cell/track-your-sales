@@ -2,7 +2,8 @@
 
 import { FormEvent, useEffect, useState } from "react";
 import { managerApi } from "@/lib/cloud";
-import { KPI_CATALOG } from "@/lib/constants";
+import { applyCompanyRules } from "@/lib/calculations";
+import { KPI_CATALOG, type KpiKey } from "@/lib/constants";
 import { cairoISODate } from "@/lib/dates";
 
 type ReportRow = {
@@ -170,11 +171,15 @@ function KpiTile({ kpi }: { kpi: AggKpi }) {
 type TopRow = { rank: number; name: string; branch: string; percent: number };
 
 /** نسبة الفرع: كل بند نسبته الكلية للفرع (مجموع المحقق ÷ مجموع التارجت) × وزن البند من الشيت. */
+// نفس قواعد الموظف بالظبط (applyCompanyRules) على مجموع الفرع، عشان الفرع اللي فيه موظف واحد يطلع نفس رقم الموظف.
 function groupAverage(group: ReportRow[]): number {
-  const kpis = aggregateKpis(group);
-  const totalWeight = kpis.reduce((sum, k) => sum + k.weight, 0);
-  if (totalWeight <= 0) return 0;
-  return kpis.reduce((sum, k) => sum + k.percent * k.weight, 0) / totalWeight;
+  const rulesKpis = aggregateKpis(group).flatMap((k) => {
+    const catalog = KPI_CATALOG.find((item) => item.nameEn === k.name);
+    if (!catalog) return [];
+    return [{ kpiKey: catalog.key as KpiKey, target: k.target, weight: k.weight, unitAr: catalog.unitAr, achieved: k.achieved }];
+  });
+  if (!rulesKpis.length) return 0;
+  return applyCompanyRules(rulesKpis).total;
 }
 
 function groupExpected(group: ReportRow[]): number | undefined {
