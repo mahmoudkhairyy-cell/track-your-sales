@@ -42,7 +42,7 @@ const CAPSULE: { title: string; body: string }[] = [
   { title: "Postpaid Premier", body: "New Postpaid chitchat وعروض في كل فرع، اشرح للعميل اللي محتاجه (Wtour، YouTube Premium، Egypt Air)" },
   { title: "Super Max 290", body: "باقة Postpaid جديدة 14500 وحدة (مكالمات ونت)" },
   { title: "Max IT", body: "نزّل تطبيق الـ app، ولينك حياتي للعميل SR 60619" },
-  { title: "Kazyon", body: "بداية من Freemax 80، قسيطة شراء عن طريق Max it بداية من 50 جنيه لحد 150 جنيه، وعن طريق أكواد الخصم" },
+  { title: "Kazyon", body: "بداية من Freemax 80، قسيمة شراء عن طريق Max it بداية من 50 جنيه لحد 150 جنيه، وعن طريق أكواد الخصم" },
   { title: "OC Offer", body: "10000 وحدة لمدة 5 أيام" },
   { title: "H4G و 5G", body: "عملاء جداد: خصم 50% من سعر الجهاز (كاش يبدأ من 140) ما عدا باقة 1000 GB. تقسيط: 105 جنيه/شهر لمدة 24 شهر (Premier وOgold). نت زيادة بلاش 50% لعملاء 4G وَ 5G على باقة 140 فما فوق، وللعملاء الحاليين عند التجديد أو الترقية من Max it" },
   { title: "DSL", body: "Router High End: العملاء الجداد خصم 50% (855 جنيه)، والحاليين 1710 جنيه. نت زيادة بلاش 50%. قسط 57 جنيه للعملاء الحاليين والجداد" },
