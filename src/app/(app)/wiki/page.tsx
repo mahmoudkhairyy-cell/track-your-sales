@@ -230,15 +230,15 @@ const SR_FAMILY_LABELS: Record<string, string> = {
 };
 
 function srFamilyKey(item: SrItem) {
-  return item.title.split(/\\s+[–—-]\\s+/)[0].trim();
+  return item.title.split(/\s+[–—-]\s+/)[0].trim();
 }
 
 function srFamilyLabel(key: string) {
   if (SR_FAMILY_LABELS[key]) return SR_FAMILY_LABELS[key];
-  if (key.startsWith("DSL ")) return "الإنترنت الأرضي · " + key.replace(/^DSL\\s+/, "");
-  if (key.startsWith("Acc Mod ")) return "تعديلات · " + key.replace(/^Acc Mod For\\s+/, "");
-  if (key.startsWith("Fault For ")) return "أعطال · " + key.replace(/^Fault For\\s+/, "");
-  if (key.startsWith("Request For ")) return "استعلامات · " + key.replace(/^Request For Info?\\s+/, "");
+  if (key.startsWith("DSL ")) return "الإنترنت الأرضي · " + key.replace(/^DSL\s+/, "");
+  if (key.startsWith("Acc Mod ")) return "تعديلات · " + key.replace(/^Acc Mod For\s+/, "");
+  if (key.startsWith("Fault For ")) return "أعطال · " + key.replace(/^Fault For\s+/, "");
+  if (key.startsWith("Request For ")) return "استعلامات · " + key.replace(/^Request For Info?\s+/, "");
   return key;
 }
 
