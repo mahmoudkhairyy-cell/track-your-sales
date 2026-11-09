@@ -445,9 +445,15 @@ export default function ManagerPage() {
             <nav className="space-y-1">
               {navItems.map((item) => {
                 const active = view === item.id;
-                return <button key={item.id} type="button" onClick={() => changeView(item.id)} className={"flex w-full items-center gap-3 rounded-2xl px-3 py-3 text-right text-sm font-extrabold transition " + (active ? "bg-[#fff0e5] text-[#b94e0c] shadow-sm" : "text-[#766252] hover:bg-[#faf6f2]")}>
+                const className = "flex w-full items-center gap-3 rounded-2xl px-3 py-3 text-right text-sm font-extrabold transition " + (active ? "bg-[#fff0e5] text-[#b94e0c] shadow-sm" : "text-[#766252] hover:bg-[#faf6f2]");
+                const content = <>
                   <span className={"flex h-8 w-8 items-center justify-center rounded-xl text-lg " + (active ? "bg-white text-[#c45b18]" : "bg-[#f8f5f1] text-[#927b69]")}>{item.icon}</span>{item.label}{active ? <span className="mr-auto h-1.5 w-1.5 rounded-full bg-[#d96a20]" /> : null}
-                </button>;
+                </>;
+                // الرئيسية تعيد تحميل صفحة المدير مباشرة لضمان تصفير أي حالة داخلية عالقة
+                // (فرع/موظف/Drawer) حتى لو تعطّل تحديث حالة React في الجلسة الحالية.
+                return item.id === "overview"
+                  ? <a key={item.id} href="/track-your-sales/manager/" onClick={() => setMobileMenuOpen(false)} className={className}>{content}</a>
+                  : <button key={item.id} type="button" onClick={() => changeView(item.id)} className={className}>{content}</button>;
               })}
             </nav>
             <div className="mt-auto rounded-2xl border border-[#f1dfd0] bg-gradient-to-br from-[#fffaf6] to-[#fff0e2]/70 p-3">
