@@ -160,7 +160,6 @@ function TwoPrice({ fees }: { fees: string }) {
           <p className="font-extrabold text-neutral-700">{before.toFixed(2)} جنيه</p>
         </div>
       </div>
-      <p className="text-[11px] leading-5 text-[#88796e]">قبل الضريبة = المكتوب × 0.7. والمرجع هو الأسعار المعتمدة من أورانج.</p>
     </div>
   );
 }
