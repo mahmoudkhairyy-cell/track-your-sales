@@ -394,233 +394,127 @@ export default function ManagerPage() {
   const activeToday = allRows.filter((r) => (r.payload.entries ?? []).some((e) => e.date === cairoISODate())).length;
 
   return (
-    <main className="tys-page tys-page-manager min-h-screen px-3 py-5 text-[#2d2119] sm:px-5 sm:py-7" dir="rtl">
-      <div className="mx-auto max-w-6xl space-y-5">
+    <main className="tys-page tx-manager min-h-screen px-3 py-4 text-[#30251e] sm:px-5 sm:py-6" dir="rtl">
+      <div className="mx-auto max-w-5xl space-y-4">
         {rows === null ? (
-          <section className="tys-manager-login mx-auto mt-8 w-full max-w-md rounded-[28px] border border-[#efddce] bg-white p-6 shadow-[0_18px_50px_rgba(104,53,19,.08)] sm:p-8">
-            <div className="mb-7 text-center">
-              <img src="/track-your-sales/logo-mark.png" alt="" className="mx-auto h-14 w-14 object-contain" />
-              <p className="mt-3 text-xs font-black tracking-[.18em] text-[#bd4b0a]" dir="ltr">MANAGEMENT CENTER</p>
-              <h1 className="mt-2 text-2xl font-black">دخول المدير</h1>
-              <p className="mt-2 text-sm leading-6 text-[#887565]">سجّل دخولك لعرض تقارير الفروع ومتابعة أداء الفريق.</p>
+          <section className="mx-auto mt-10 max-w-sm rounded-3xl border border-[#f0dfd2] bg-white p-6 shadow-sm">
+            <div className="mb-6 text-center">
+              <img src="/track-your-sales/logo-mark.png" alt="" className="mx-auto h-12 w-12 object-contain" />
+              <p className="mt-3 text-[10px] font-black tracking-[.16em] text-[#bd4b0a]" dir="ltr">MANAGEMENT</p>
+              <h1 className="mt-1 text-2xl font-black">دخول المدير</h1>
+              <p className="mt-2 text-xs leading-6 text-[#887565]">ادخل كلمة السر لمتابعة تقارير الفريق.</p>
             </div>
-            <form onSubmit={load} className="space-y-4">
-              <label className="block text-sm font-extrabold text-[#514238]">
-                كلمة السر
-                <input
-                  type="password"
-                  autoComplete="current-password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="اكتب كلمة السر"
-                  className="mt-2 w-full rounded-2xl border border-[#ead8c9] bg-[#fffaf6] px-4 py-3.5 text-base outline-none transition focus:border-[#d9651b] focus:bg-white focus:ring-4 focus:ring-[#d9651b]/10"
-                />
+            <form onSubmit={load} className="space-y-3">
+              <label className="block text-sm font-bold">كلمة السر
+                <input type="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="اكتب كلمة السر" className="mt-2 w-full rounded-xl border border-[#ead8c9] bg-[#fffaf6] px-4 py-3 text-base outline-none focus:border-[#d9651b]" />
               </label>
               {error ? <p className="text-sm font-bold text-red-600">{error}</p> : null}
-              <button type="submit" disabled={pending || !password} className="w-full rounded-2xl bg-[#c6530d] py-3.5 font-extrabold text-white transition hover:bg-[#a94308] disabled:opacity-50">
-                {pending ? "بنحمّل التقارير..." : "دخول"}
-              </button>
+              <button type="submit" disabled={pending || !password} className="w-full rounded-xl bg-[#bd4b0a] py-3 font-extrabold text-white disabled:opacity-50">{pending ? "جاري الدخول..." : "دخول"}</button>
             </form>
           </section>
         ) : (
           <>
-            <header className="tys-manager-header flex flex-wrap items-end justify-between gap-4">
+            <header className="flex items-center justify-between gap-3 border-b border-[#efdfd2] pb-3">
               <div>
-                <p className="text-[11px] font-black tracking-[.18em] text-[#bd4b0a]" dir="ltr">MANAGEMENT CENTER</p>
-                <h1 className="mt-1 text-3xl font-black tracking-tight sm:text-4xl">لوحة المدير</h1>
-                <p className="mt-2 text-sm text-[#887565]">ملخص الفروع والموظفين في نظرة واحدة.</p>
+                <p className="text-[10px] font-black tracking-[.16em] text-[#bd4b0a]" dir="ltr">MANAGEMENT</p>
+                <h1 className="text-2xl font-black">لوحة المدير</h1>
+                <p className="mt-1 text-xs text-[#887565]">{managerName || "متابعة أداء الفريق"}</p>
               </div>
-              <div className="flex items-center gap-2 rounded-full border border-[#efddce] bg-white px-3 py-2">
-                <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#fff0e2] text-[#bd4b0a]">♙</span>
-                <span className="text-sm font-extrabold">{managerName || "المدير"}</span>
-              </div>
+              <button type="button" disabled={pending} onClick={() => load()} className="rounded-xl border border-[#efdfd2] bg-white px-3 py-2 text-xs font-extrabold text-[#8f3d0a] disabled:opacity-50">{pending ? "تحديث..." : "↻ تحديث"}</button>
             </header>
-
-            {error ? <p className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-bold text-red-700">{error}</p> : null}
+            {error ? <p className="rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-xs font-bold text-red-700">{error}</p> : null}
 
             {view === "top" ? (
-              <section className="space-y-4">
-                <div className="flex items-center justify-between gap-3">
-                  <div>
-                    <p className="text-xs font-black text-[#bd4b0a]">ترتيب الأداء</p>
-                    <h2 className="mt-1 text-xl font-black">أفضل الموظفين</h2>
-                  </div>
-                  <button type="button" onClick={() => setView("list")} className="rounded-xl border border-[#efddce] bg-white px-4 py-2 text-sm font-extrabold text-[#8f3d0a]">رجوع للفروع</button>
+              <section className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <div><h2 className="text-lg font-black">ترتيب الموظفين</h2><p className="text-xs text-[#887565]">من الأعلى إلى الأقل تحقيقًا</p></div>
+                  <button type="button" onClick={() => setView("list")} className="rounded-lg bg-[#fff0e2] px-3 py-2 text-xs font-bold text-[#9f430b]">كل الفروع</button>
                 </div>
-                <div className="overflow-hidden rounded-2xl border border-[#efddce] bg-white">
+                <div className="overflow-hidden rounded-2xl border border-[#efdfd2] bg-white">
                   {topRows.map((row) => (
-                    <div key={`${row.branch}-${row.name}-${row.rank}`} className="flex items-center justify-between gap-3 border-b border-[#f4e9df] px-4 py-3 last:border-0">
+                    <div key={`${row.branch}-${row.name}-${row.rank}`} className="flex items-center justify-between gap-3 border-b border-[#f4e9df] px-3 py-3 last:border-0">
                       <div className="flex min-w-0 items-center gap-3">
-                        <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-sm font-black ${row.rank <= 3 ? "bg-[#fff0e2] text-[#a94308]" : "bg-[#f8f5f1] text-[#887565]"}`}>{row.rank}</span>
-                        <div className="min-w-0">
-                          <p className="truncate text-sm font-extrabold">{row.name}</p>
-                          <p className="truncate text-xs text-[#887565]" dir="ltr">{row.branch}</p>
-                        </div>
+                        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#fff0e2] text-xs font-black text-[#a94308]">{row.rank}</span>
+                        <div className="min-w-0"><p className="truncate text-sm font-extrabold">{row.name}</p><p className="truncate text-[11px] text-[#887565]" dir="ltr">{row.branch}</p></div>
                       </div>
-                      <p className="shrink-0 text-lg font-black tabular-nums text-[#bd4b0a]">{Math.round(row.percent)}%</p>
+                      <strong className="text-lg tabular-nums text-[#bd4b0a]">{Math.round(row.percent)}%</strong>
                     </div>
                   ))}
                 </div>
               </section>
-            ) : (
+            ) : branch === null ? (
               <>
-                {branch === null ? (
-                  <>
-                    <section className="grid grid-cols-3 gap-2 sm:gap-3">
-                      <div className="rounded-2xl border border-[#efddce] bg-white p-3 sm:p-4">
-                        <p className="text-[11px] font-bold text-[#887565]">الفروع</p>
-                        <p className="mt-1 text-2xl font-black tabular-nums">{branchGroups.length}</p>
-                      </div>
-                      <div className="rounded-2xl border border-[#efddce] bg-white p-3 sm:p-4">
-                        <p className="text-[11px] font-bold text-[#887565]">الموظفين</p>
-                        <p className="mt-1 text-2xl font-black tabular-nums">{allRows.length}</p>
-                      </div>
-                      <div className="rounded-2xl border border-[#efddce] bg-white p-3 sm:p-4">
-                        <p className="text-[11px] font-bold text-[#887565]">متوسط الأداء</p>
-                        <p className="mt-1 text-2xl font-black tabular-nums text-[#bd4b0a]">{Math.round(dashboardAverage)}%</p>
-                      </div>
-                    </section>
+                <section className="grid grid-cols-3 gap-2">
+                  <div className="rounded-2xl bg-[#fff4eb] p-3"><p className="text-[11px] font-bold text-[#927b69]">الفروع</p><p className="mt-1 text-2xl font-black tabular-nums">{branchGroups.length}</p></div>
+                  <div className="rounded-2xl bg-[#f8f5f1] p-3"><p className="text-[11px] font-bold text-[#927b69]">الموظفين</p><p className="mt-1 text-2xl font-black tabular-nums">{allRows.length}</p></div>
+                  <div className="rounded-2xl bg-[#fff4eb] p-3"><p className="text-[11px] font-bold text-[#927b69]">متوسط الأداء</p><p className="mt-1 text-2xl font-black tabular-nums text-[#bd4b0a]">{Math.round(dashboardAverage)}%</p></div>
+                </section>
 
-                    <div className="flex flex-wrap items-center justify-between gap-3">
-                      <div>
-                        <h2 className="text-lg font-black">الفروع</h2>
-                        <p className="mt-0.5 text-xs text-[#887565]">{allRows.length} تقرير موظف · {lastLoaded ? `آخر تحديث ${lastLoaded.toLocaleTimeString("en-US", { timeZone: "Africa/Cairo", hour: "2-digit", minute: "2-digit", hour12: false })}` : "بانتظار التحديث"}</p>
-                      </div>
-                      <div className="flex gap-2">
-                        <button type="button" onClick={() => setView("top")} className="rounded-xl border border-[#efddce] bg-white px-3.5 py-2 text-xs font-extrabold text-[#8f3d0a]">🏆 ترتيب الموظفين</button>
-                        <button type="button" disabled={pending} onClick={() => load()} className="rounded-xl bg-[#c6530d] px-3.5 py-2 text-xs font-extrabold text-white disabled:opacity-50">{pending ? "جاري التحديث..." : "تحديث البيانات"}</button>
-                      </div>
-                    </div>
+                <section className="flex items-center justify-between gap-3">
+                  <div><h2 className="text-lg font-black">الفروع</h2><p className="text-[11px] text-[#887565]">{allRows.length} تقرير · {lastLoaded ? lastLoaded.toLocaleTimeString("en-US", { timeZone: "Africa/Cairo", hour: "2-digit", minute: "2-digit", hour12: false }) : "لم يتم التحديث بعد"}</p></div>
+                  <button type="button" onClick={() => setView("top")} className="rounded-xl border border-[#efdfd2] bg-white px-3 py-2 text-xs font-extrabold text-[#8f3d0a]">🏆 ترتيب الموظفين</button>
+                </section>
 
-                    {allRows.length === 0 ? (
-                      <div className="rounded-2xl border border-dashed border-[#e8d5c5] bg-white px-5 py-10 text-center">
-                        <p className="font-extrabold">لسه مفيش تقارير</p>
-                        <p className="mt-1 text-sm text-[#887565]">هتظهر الفروع هنا أول ما بيانات الموظفين تتزامن.</p>
-                      </div>
-                    ) : (
-                      <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-                        {branchGroups.sort((a, b) => groupAverage(b[1]) - groupAverage(a[1])).map(([branchName, group], index) => {
-                          const avg = groupAverage(group);
-                          const expected = groupExpected(group);
-                          return (
-                            <button key={branchName} type="button" onClick={() => setView(`b:${branchName}`)} className="tys-manager-branch-card group w-full rounded-2xl border border-[#efddce] bg-white p-4 text-right transition hover:border-[#e5b18a] hover:shadow-[0_10px_26px_rgba(104,53,19,.07)]">
-                              <div className="flex items-start justify-between gap-3">
-                                <div className="min-w-0">
-                                  <p className="truncate font-black text-[#2d2119]" dir="ltr">{branchName}</p>
-                                  <p className="mt-1 text-xs text-[#887565]">{group.length} موظف</p>
-                                </div>
-                                <span className="rounded-lg bg-[#f8f5f1] px-2 py-1 text-[10px] font-bold text-[#887565]">فرع {index + 1}</span>
-                              </div>
-                              <div className="mt-5 flex items-end justify-between gap-2">
-                                <div>
-                                  <p className="text-[10px] font-bold text-[#887565]">نسبة تحقيق الفرع</p>
-                                  <p className="mt-0.5 text-2xl font-black tabular-nums text-[#bd4b0a]">{Math.round(avg)}%</p>
-                                </div>
-                                <TrackBadge percent={avg} expected={expected} />
-                              </div>
-                              <div className="mt-3 h-2 overflow-hidden rounded-full bg-[#f5eee8]">
-                                <div className="h-full rounded-full bg-[#df741f] transition-all" style={{ width: `${Math.min(100, Math.max(0, avg))}%` }} />
-                              </div>
-                              <p className="mt-3 text-left text-xs font-extrabold text-[#bd4b0a]">عرض تفاصيل الفرع ←</p>
-                            </button>
-                          );
-                        })}
-                      </section>
-                    )}
-
-                    {allRows.length > 0 ? (() => {
-                      const today = cairoISODate();
-                      const logged: ReportRow[] = [];
-                      const missing: ReportRow[] = [];
-                      const leave: ReportRow[] = [];
-                      for (const r of allRows) {
-                        if ((r.payload.settings?.holidays ?? []).some((h) => h.date === today)) leave.push(r);
-                        else if ((r.payload.entries ?? []).some((e) => e.date === today)) logged.push(r);
-                        else missing.push(r);
-                      }
-                      const names = (list: ReportRow[]) => list.length === 0 ? <p className="text-xs text-[#887565]">لا يوجد</p> : (
-                        <div className="space-y-1.5">{list.map((r) => <p key={r.branch_id} className="flex items-center justify-between gap-3 text-xs"><span className="font-bold">{r.employee_name}</span><span className="truncate text-[#887565]" dir="ltr">{r.branch_name || NO_BRANCH}</span></p>)}</div>
-                      );
-                      return (
-                        <details className="tys-manager-disclosure rounded-2xl border border-[#efddce] bg-white">
-                          <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-3.5">
-                            <span><span className="block text-sm font-black">متابعة تسجيلات النهارده</span><span className="mt-0.5 block text-[11px] text-[#887565]" dir="ltr">{today}</span></span>
-                            <span className="flex gap-2 text-xs font-black"><span className="text-emerald-700">✓ {logged.length}</span><span className="text-red-600">• {missing.length}</span><span className="text-[#887565]">إجازة {leave.length}</span></span>
-                          </summary>
-                          <div className="grid gap-4 border-t border-[#f4e9df] px-4 py-4 sm:grid-cols-3">
-                            <div><p className="mb-2 text-xs font-black text-emerald-700">سجّلوا</p>{names(logged)}</div>
-                            <div><p className="mb-2 text-xs font-black text-red-700">مسجلوش</p>{names(missing)}</div>
-                            <div><p className="mb-2 text-xs font-black text-[#887565]">إجازة</p>{names(leave)}</div>
-                          </div>
-                          <p className="px-4 pb-3 text-[10px] text-[#887565]">* حسب آخر مزامنة من كل موظف.</p>
-                        </details>
-                      );
-                    })() : null}
-
-                    {allRows.length > 0 ? (() => {
-                      const missedYesterday = allRows.filter((r) => !(r.payload.settings?.holidays ?? []).some((h) => h.date === yesterday) && !(r.payload.entries ?? []).some((e) => e.date === yesterday) && !(r.payload.entries ?? []).some((e) => e.date === cairoISODate()));
-                      if (!missedYesterday.length) return null;
-                      return (
-                        <details className="rounded-2xl border border-red-200 bg-[#fffafa]">
-                          <summary className="cursor-pointer list-none px-4 py-3 text-sm font-extrabold text-red-700">تنبيه: {missedYesterday.length} موظف مسجلوش إنجاز امبارح · {yesterday}</summary>
-                          <div className="space-y-2 border-t border-red-100 px-4 py-3">
-                            {missedYesterday.map((r) => <p key={r.branch_id} className="flex justify-between gap-3 text-xs font-bold text-red-800"><span>{r.employee_name}</span><span dir="ltr">{r.branch_name || NO_BRANCH}</span></p>)}
-                          </div>
-                        </details>
-                      );
-                    })() : null}
-                  </>
+                {allRows.length === 0 ? (
+                  <div className="rounded-2xl border border-dashed border-[#e8d5c5] bg-white p-8 text-center"><p className="font-extrabold">لا توجد تقارير حتى الآن</p><p className="mt-1 text-xs text-[#887565]">ستظهر بيانات الفريق بعد المزامنة.</p></div>
                 ) : (
-                  <section className="space-y-4">
-                    <div className="flex flex-wrap items-center justify-between gap-3">
-                      <div>
-                        <button type="button" onClick={() => setView("list")} className="mb-2 text-xs font-extrabold text-[#bd4b0a]">← كل الفروع</button>
-                        <h2 className="text-2xl font-black" dir="ltr">{branch}</h2>
-                        <p className="mt-1 text-xs text-[#887565]">{branchRows.length} موظف في الفرع</p>
-                      </div>
-                      <button type="button" onClick={() => downloadBranchCsv(branch, branchRows)} className="rounded-xl border border-[#efddce] bg-white px-4 py-2.5 text-xs font-extrabold text-[#8f3d0a]">↓ تحميل تقرير CSV</button>
-                    </div>
-
-                    <article className="rounded-2xl border border-[#efddce] bg-white p-4">
-                      <button type="button" onClick={() => setBranchOpenFor(branchOpen ? null : branch)} className="flex w-full items-center justify-between gap-3 text-right">
-                        <div><p className="text-xs font-bold text-[#887565]">إجمالي أداء الفرع</p><TrackBadge percent={branchAvg} expected={branchExpected} /></div>
-                        <div className="flex items-center gap-2"><span className="text-3xl font-black tabular-nums text-[#bd4b0a]">{Math.round(branchAvg)}%</span><span className="text-[#887565]">{branchOpen ? "−" : "+"}</span></div>
-                      </button>
-                      {branchOpen ? <div className="mt-4 grid grid-cols-2 gap-2 border-t border-[#f4e9df] pt-4 sm:grid-cols-3">{aggregateKpis(branchRows).map((kpi) => <KpiTile key={kpi.name} kpi={kpi} />)}</div> : null}
-                    </article>
-
-                    <div className="flex items-center justify-between gap-3">
-                      <h3 className="text-base font-black">أداء الموظفين</h3>
-                      <span className="text-xs text-[#887565]">مرتّبين حسب نسبة التحقيق</span>
-                    </div>
-                    <div className="space-y-3">
-                      {[...branchRows].sort((a, b) => (b.payload.overall ?? 0) - (a.payload.overall ?? 0)).map((row, index) => (
-                        <div key={row.branch_id} className="relative">
-                          <span className="absolute -top-2 right-4 z-10 rounded-md bg-[#f7eee6] px-2 py-0.5 text-[10px] font-black text-[#8f3d0a]">#{index + 1}</span>
-                          {renderRow(row)}
-                        </div>
-                      ))}
-                    </div>
+                  <section className="space-y-2">
+                    {branchGroups.sort((a,b) => groupAverage(b[1])-groupAverage(a[1])).map(([branchName,group]) => {
+                      const avg=groupAverage(group);
+                      return (
+                        <button key={branchName} type="button" onClick={() => setView(`b:${branchName}`)} className="w-full rounded-2xl border border-[#efdfd2] bg-white p-3.5 text-right shadow-[0_2px_8px_rgba(91,49,23,.035)] transition hover:border-[#e5b18a]">
+                          <div className="flex items-center justify-between gap-3">
+                            <div className="min-w-0"><p className="truncate text-sm font-black" dir="ltr">{branchName}</p><p className="mt-1 text-[11px] text-[#887565]">{group.length} موظف</p></div>
+                            <div className="text-left"><p className="text-xl font-black tabular-nums text-[#bd4b0a]">{Math.round(avg)}%</p><TrackBadge percent={avg} expected={groupExpected(group)} /></div>
+                          </div>
+                          <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-[#f5eee8]"><div className="h-full rounded-full bg-[#d96a20]" style={{width:`${Math.min(100,Math.max(0,avg))}%`}} /></div>
+                        </button>
+                      );
+                    })}
                   </section>
                 )}
+
+                {allRows.length > 0 ? (() => {
+                  const today=cairoISODate();
+                  const logged:ReportRow[]=[]; const missing:ReportRow[]=[]; const leave:ReportRow[]=[];
+                  for (const r of allRows) {
+                    if ((r.payload.settings?.holidays ?? []).some(h=>h.date===today)) leave.push(r);
+                    else if ((r.payload.entries ?? []).some(e=>e.date===today)) logged.push(r);
+                    else missing.push(r);
+                  }
+                  const names=(list:ReportRow[])=>list.length ? <div className="space-y-2">{list.map(r=><p key={r.branch_id} className="flex justify-between gap-2 text-xs"><b>{r.employee_name}</b><span className="text-[#887565]" dir="ltr">{r.branch_name||NO_BRANCH}</span></p>)}</div> : <p className="text-xs text-[#887565]">لا يوجد</p>;
+                  return <details className="rounded-2xl border border-[#efdfd2] bg-white"><summary className="flex cursor-pointer list-none items-center justify-between gap-2 p-3"><span><b className="block text-sm">متابعة تسجيلات النهارده</b><small className="text-[#887565]" dir="ltr">{today}</small></span><span className="text-[11px] font-black"><span className="text-emerald-700">✓ {logged.length}</span> · <span className="text-red-600">{missing.length} لم يسجلوا</span> · {leave.length} إجازة</span></summary><div className="grid gap-4 border-t border-[#f4e9df] p-3 sm:grid-cols-3"><div><b className="mb-2 block text-xs text-emerald-700">سجّلوا</b>{names(logged)}</div><div><b className="mb-2 block text-xs text-red-700">لم يسجلوا</b>{names(missing)}</div><div><b className="mb-2 block text-xs text-[#887565]">إجازة</b>{names(leave)}</div></div></details>;
+                })() : null}
+                {allRows.length > 0 ? (() => {
+                  const missed=allRows.filter(r=>!(r.payload.settings?.holidays??[]).some(h=>h.date===yesterday)&&!(r.payload.entries??[]).some(e=>e.date===yesterday)&&!(r.payload.entries??[]).some(e=>e.date===cairoISODate()));
+                  return missed.length ? <details className="rounded-2xl border border-red-200 bg-white"><summary className="cursor-pointer p-3 text-xs font-bold text-red-700">تنبيه: {missed.length} موظف لم يسجلوا امبارح</summary><div className="space-y-2 border-t border-red-100 p-3">{missed.map(r=><p key={r.branch_id} className="flex justify-between gap-2 text-xs"><b>{r.employee_name}</b><span dir="ltr">{r.branch_name||NO_BRANCH}</span></p>)}</div></details> : null;
+                })() : null}
               </>
-            )}
-            <footer className="flex flex-wrap items-center justify-between gap-3 border-t border-[#efddce] pt-4">
-              <p className="text-[11px] text-[#9a8879]">Track Your Sales · لوحة متابعة الأداء</p>
-              <button type="button" onClick={() => { setPwOpen((v) => !v); setPwMsg(""); }} className="text-xs font-extrabold text-[#8f3d0a]">🔑 {pwOpen ? "إخفاء تغيير كلمة السر" : "تغيير كلمة السر"}</button>
-            </footer>
-            {pwOpen ? (
-              <form onSubmit={changePassword} className="rounded-2xl border border-[#efddce] bg-white p-4">
-                <h3 className="mb-4 text-sm font-black">تغيير كلمة السر</h3>
-                <div className="grid gap-3 sm:grid-cols-3">
-                  <label className="block text-xs font-bold">كلمة السر الحالية<input type="password" autoComplete="current-password" placeholder="الحالية" value={oldPw} onChange={(e) => setOldPw(e.target.value)} className="mt-1.5 w-full rounded-xl border border-[#ead8c9] px-3 py-2.5 text-sm" /></label>
-                  <label className="block text-xs font-bold">كلمة السر الجديدة<input type="password" autoComplete="new-password" placeholder="6 أحرف على الأقل" value={newPw} onChange={(e) => setNewPw(e.target.value)} className="mt-1.5 w-full rounded-xl border border-[#ead8c9] px-3 py-2.5 text-sm" /></label>
-                  <label className="block text-xs font-bold">تأكيد كلمة السر<input type="password" autoComplete="new-password" placeholder="أعد كتابة الجديدة" value={newPw2} onChange={(e) => setNewPw2(e.target.value)} className="mt-1.5 w-full rounded-xl border border-[#ead8c9] px-3 py-2.5 text-sm" /></label>
+            ) : (
+              <section className="space-y-3">
+                <div className="flex items-center justify-between gap-3">
+                  <div><button type="button" onClick={()=>setView("list")} className="mb-1 text-xs font-bold text-[#bd4b0a]">← كل الفروع</button><h2 className="text-xl font-black" dir="ltr">{branch}</h2><p className="text-xs text-[#887565]">{branchRows.length} موظف</p></div>
+                  <button type="button" onClick={()=>downloadBranchCsv(branch,branchRows)} className="rounded-xl border border-[#efdfd2] bg-white px-3 py-2 text-xs font-bold text-[#8f3d0a]">↓ CSV</button>
                 </div>
-                {pwMsg ? <p className="mt-3 text-xs font-bold text-red-600">{pwMsg}</p> : null}
-                <button type="submit" disabled={!oldPw || !newPw || !newPw2} className="mt-4 rounded-xl bg-[#c6530d] px-5 py-3 text-sm font-extrabold text-white disabled:opacity-50">حفظ كلمة السر</button>
-              </form>
-            ) : null}
+                <article className="rounded-2xl border border-[#efdfd2] bg-white p-3">
+                  <button type="button" onClick={()=>setBranchOpenFor(branchOpen?null:branch)} className="flex w-full items-center justify-between gap-3 text-right"><span className="text-xs font-bold text-[#887565]">إجمالي أداء الفرع</span><strong className="text-2xl text-[#bd4b0a]">{Math.round(branchAvg)}%　{branchOpen?"−":"+"}</strong></button>
+                  {branchOpen ? <div className="mt-3 grid grid-cols-2 gap-2 border-t border-[#f4e9df] pt-3 sm:grid-cols-3">{aggregateKpis(branchRows).map(k=><KpiTile key={k.name} kpi={k}/>)}</div> : null}
+                  <TrackBadge percent={branchAvg} expected={branchExpected}/>
+                </article>
+                <h3 className="text-sm font-black">الموظفون · مرتّبون حسب الأداء</h3>
+                <div className="space-y-2">{[...branchRows].sort((a,b)=>(b.payload.overall??0)-(a.payload.overall??0)).map((row,index)=><div key={row.branch_id} className="relative"><span className="absolute right-3 top-2 z-10 rounded-md bg-[#fff0e2] px-2 py-0.5 text-[10px] font-black text-[#8f3d0a]">#{index+1}</span>{renderRow(row)}</div>)}</div>
+              </section>
+            )}
+
+            <footer className="flex flex-wrap items-center justify-between gap-3 border-t border-[#efdfd2] pt-3">
+              <p className="text-[10px] text-[#9a8879]">Track Your Sales · لوحة متابعة الأداء</p>
+              <button type="button" onClick={()=>{setPwOpen(v=>!v);setPwMsg("");}} className="text-xs font-bold text-[#8f3d0a]">{pwOpen?"إخفاء تغيير كلمة السر":"🔑 تغيير كلمة السر"}</button>
+            </footer>
+            {pwOpen ? <form onSubmit={changePassword} className="rounded-2xl border border-[#efdfd2] bg-white p-4"><h3 className="mb-3 text-sm font-black">تغيير كلمة السر</h3><div className="grid gap-3 sm:grid-cols-3">
+              <label className="text-xs font-bold">كلمة السر الحالية<input type="password" autoComplete="current-password" value={oldPw} onChange={e=>setOldPw(e.target.value)} className="mt-1.5 w-full rounded-xl border border-[#ead8c9] px-3 py-2.5 text-sm"/></label>
+              <label className="text-xs font-bold">كلمة السر الجديدة<input type="password" autoComplete="new-password" value={newPw} onChange={e=>setNewPw(e.target.value)} className="mt-1.5 w-full rounded-xl border border-[#ead8c9] px-3 py-2.5 text-sm"/></label>
+              <label className="text-xs font-bold">تأكيد كلمة السر<input type="password" autoComplete="new-password" value={newPw2} onChange={e=>setNewPw2(e.target.value)} className="mt-1.5 w-full rounded-xl border border-[#ead8c9] px-3 py-2.5 text-sm"/></label>
+            </div>{pwMsg?<p className="mt-3 text-xs font-bold text-red-600">{pwMsg}</p>:null}<button type="submit" disabled={!oldPw||!newPw||!newPw2} className="mt-3 rounded-xl bg-[#bd4b0a] px-5 py-3 text-sm font-bold text-white disabled:opacity-50">حفظ كلمة السر</button></form>:null}
           </>
         )}
       </div>
