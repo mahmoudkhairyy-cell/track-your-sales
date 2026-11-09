@@ -242,12 +242,55 @@ function srFamilyLabel(key: string) {
   return key;
 }
 
+const SR_TOPIC_FILTERS = [
+  { id: "الكل", label: "كل الأكواد", icon: "▦" },
+  { id: "DSL", label: "DSL", icon: "🌐" },
+  { id: "Orange Cash", label: "Orange Cash", icon: "🟠" },
+  { id: "MNP", label: "MNP", icon: "🔁" },
+  { id: "FREEmax", label: "FREEmax", icon: "✨" },
+  { id: "Premier", label: "Premier", icon: "⭐" },
+  { id: "VAS", label: "VAS", icon: "🧩" },
+  { id: "Billing", label: "الفواتير", icon: "🧾" },
+  { id: "Network", label: "الشبكة", icon: "📶" },
+  { id: "New Line", label: "الخطوط الجديدة", icon: "📱" },
+] as const;
+
+function srTopicMatches(item: SrItem, topic: string) {
+  const value = `${item.title} ${item.titleAr} ${item.description} ${item.steps}`.toLowerCase();
+  const rules: Record<string, RegExp> = {
+    DSL: /\\bdsl\\b|landline|broadband/,
+    "Orange Cash": /orange cash|\\boc\\b|wallet/,
+    MNP: /\\bmnp\\b|mobile number portability|port.?in|port.?out/,
+    FREEmax: /free\\s*max|freemax/,
+    Premier: /premier|elite postpaid/,
+    VAS: /\\bvas\\b|value added|subscription service/,
+    Billing: /billing|invoice|payment|bill amount|charges/,
+    Network: /network|coverage|signal|connectivity/,
+    "New Line": /new line|line activation|new activation/,
+  };
+  return rules[topic]?.test(value) ?? false;
+}
+
+function srArabicSummary(item: SrItem) {
+  const value = `${item.title} ${item.description}`.toLowerCase();
+  if (/\\bmnp\\b|port.?in|port.?out|number portability/.test(value)) return "خاص بطلبات نقل الرقم ومتابعة إجراءات النقل";
+  if (/orange cash|\\boc\\b|wallet/.test(value)) return "خاص بمحفظة أورنج كاش: التفعيل أو المعاملات أو حل المشكلات";
+  if (/\\bdsl\\b|landline|broadband/.test(value)) return "خاص بخدمات الإنترنت الأرضي والخط والراوتر";
+  if (/free\\s*max|freemax/.test(value)) return "خاص بباقات Free Max ومميزاتها وطلباتها";
+  if (/premier|elite postpaid/.test(value)) return "خاص بخطوط وباقات Premier وخدمات عملائها";
+  if (/\\bvas\\b|value added/.test(value)) return "خاص بخدمات القيمة المضافة والاشتراكات";
+  if (/billing|invoice|payment|bill amount|charges/.test(value)) return "خاص بالفواتير والمدفوعات ومراجعة المبالغ";
+  if (/network|coverage|signal|connectivity/.test(value)) return "خاص بأعطال الشبكة والتغطية والاتصال";
+  if (/new line|line activation/.test(value)) return "خاص بطلبات الخطوط الجديدة والتفعيل";
+  const kind = item.category === "عطل" ? "عطل أو مشكلة" : item.category === "تعديل" ? "طلب تعديل" : "استعلام";
+  return `${kind} متعلق بالخدمة الموضحة في اسم الكود`;
+}
+
 export default function WikiPage() {
   const toast = useToast();
   const [section, setSection] = useHistoryView<SectionId>("hub");
   const [query, setQuery] = useState("");
-  const [srCategory, setSrCategory] = useState("الكل");
-  const [srFamily, setSrFamily] = useState("");
+  const [srTopic, setSrTopic] = useState("الكل");
   const [openSr, setOpenSr] = useState<SrItem | null>(null);
   const [articles, setArticles] = useState<Article[]>([]);
   const [loadingNotes, setLoadingNotes] = useState(false);
@@ -280,15 +323,11 @@ export default function WikiPage() {
 
   const q = query.trim();
 
-  const filteredSr = useMemo(() => {
-    return SR_ITEMS.filter((item) => {
-      const catOk = srCategory === "الكل" || item.category === srCategory;
-      if (!catOk) return false;
-      if (srFamily && srFamilyKey(item) !== srFamily) return false;
-      if (!q) return true;
-      return matchesQuery([item.id, item.title, item.titleAr, item.description, item.steps, item.category].join(" "), q);
-    });
-  }, [q, srCategory, srFamily]);
+  const filteredSr = useMemo(() => SR_ITEMS.filter((item) => {
+    if (srTopic !== "الكل" && !srTopicMatches(item, srTopic)) return false;
+    if (!q) return true;
+    return matchesQuery([item.id, item.title, item.titleAr, item.description, item.steps, item.category].join(" "), q);
+  }), [q, srTopic]);
 
   const globalHits = useMemo(() => {
     if (!q) return null;
@@ -464,89 +503,43 @@ export default function WikiPage() {
 
       {section === "sr" ? (
         <div className="space-y-3">
-          <Back onClick={() => {
-            if (srFamily) setSrFamily("");
-            else if (srCategory !== "الكل") setSrCategory("الكل");
-            else setSection("hub");
-          }} title={srFamily ? srFamilyLabel(srFamily) : srCategory === "الكل" ? "مرجع الـ SR" : SR_CATEGORY_INFO[srCategory]?.title ?? srCategory} />
+          <Back onClick={() => setSection("hub")} title="مرجع الـ SR" />
           <SearchBox value={query} onChange={setQuery} placeholder="ابحث بكود SR أو اسم الإجراء..." />
-
-          {q ? (
-            <>
-              <div className="flex items-center justify-between px-1">
-                <p className="text-sm font-black text-[#4d3829]">نتائج البحث</p>
-                <p className="text-xs text-[#88796e]">{filteredSr.length} نتيجة</p>
-              </div>
-              <div className="grid gap-2 sm:grid-cols-2">
-                {filteredSr.map((item) => (
-                  <button key={item.id + item.title} type="button" onClick={() => setOpenSr(item)} className="w-full rounded-2xl border border-[#f2e4d8] bg-white p-3.5 text-right shadow-sm">
-                    <div className="flex items-center justify-between gap-2">
-                      <p className="text-xs font-black text-[#bd4b0a]" dir="ltr">{item.id}</p>
-                      <span className="rounded-full bg-[#fff4e9] px-2 py-1 text-[10px] font-bold text-[#9b6038]">{item.category}</span>
-                    </div>
-                    <p className="mt-1 text-sm font-extrabold">{item.titleAr || item.title}</p>
-                    <p className="mt-1 line-clamp-2 text-xs leading-5 text-[#88796e]">{item.description}</p>
-                  </button>
-                ))}
-              </div>
-              {!filteredSr.length ? <EmptyState title="مفيش نتيجة" text="جرّب كود أو كلمة مختلفة." /> : null}
-            </>
-          ) : srCategory === "الكل" ? (
-            <div className="grid gap-3 sm:grid-cols-3">
-              {SR_CATEGORIES.map((cat) => {
-                const count = SR_ITEMS.filter((item) => item.category === cat).length;
-                const info = SR_CATEGORY_INFO[cat] ?? { title: cat, description: "تصفح الأكواد المرتبطة بالقسم", icon: "📁" };
+          <div className="-mx-1 overflow-x-auto px-1 pb-1">
+            <div className="flex w-max min-w-full gap-2">
+              {SR_TOPIC_FILTERS.map((filter) => {
+                const count = filter.id === "الكل" ? SR_ITEMS.length : SR_ITEMS.filter((item) => srTopicMatches(item, filter.id)).length;
+                const active = srTopic === filter.id;
                 return (
-                  <button key={cat} type="button" onClick={() => { setSrCategory(cat); setSrFamily(""); }} className="rounded-[24px] border border-[#f1dfd0] bg-white p-4 text-right shadow-sm transition hover:border-[#edc4a4]">
-                    <div className="flex items-center justify-between">
-                      <span className="text-2xl">{info.icon}</span>
-                      <span className="rounded-full bg-[#fff0e2] px-2.5 py-1 text-xs font-black text-[#bd4b0a]">{count} كود</span>
-                    </div>
-                    <p className="mt-3 font-black text-[#2d2119]">{info.title}</p>
-                    <p className="mt-1 text-xs leading-5 text-[#88796e]">{info.description}</p>
+                  <button key={filter.id} type="button" onClick={() => setSrTopic(filter.id)} aria-pressed={active}
+                    className={`shrink-0 rounded-full border px-3.5 py-2 text-xs font-extrabold transition ${active ? "border-[#df6b1b] bg-[#e96f1d] text-white shadow-sm" : "border-[#f0dfd1] bg-white text-[#70513c] hover:border-[#e7b58f]"}`}>
+                    <span className="ml-1">{filter.icon}</span>{filter.label}
+                    <span className={`mr-1.5 text-[10px] ${active ? "text-white/80" : "text-[#a18a78]"}`}>{count}</span>
                   </button>
                 );
               })}
             </div>
-          ) : !srFamily ? (
-            <div className="space-y-2">
-              <div className="flex items-center justify-between px-1">
-                <p className="text-sm font-black text-[#4d3829]">اختار نوع الطلب</p>
-                <p className="text-xs text-[#88796e]">{filteredSr.length} كود</p>
-              </div>
-              <div className="grid gap-2 sm:grid-cols-2">
-                {Array.from(new Set(SR_ITEMS.filter((item) => item.category === srCategory).map(srFamilyKey))).sort((a, b) => srFamilyLabel(a).localeCompare(srFamilyLabel(b), "ar")).map((family) => {
-                  const count = SR_ITEMS.filter((item) => item.category === srCategory && srFamilyKey(item) === family).length;
-                  return (
-                    <button key={family} type="button" onClick={() => setSrFamily(family)} className="flex items-center gap-3 rounded-2xl border border-[#f2e4d8] bg-white p-3.5 text-right shadow-sm">
-                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#fff0e2] text-lg">📂</span>
-                      <span className="min-w-0 flex-1">
-                        <span className="block text-sm font-extrabold text-[#38291f]">{srFamilyLabel(family)}</span>
-                        <span className="mt-0.5 block text-[10px] text-[#9a887b]" dir="ltr">{family}</span>
-                      </span>
-                      <span className="shrink-0 rounded-full bg-[#fff7ef] px-2 py-1 text-[10px] font-black text-[#bd4b0a]">{count}</span>
-                    </button>
-                  );
-                })}
-              </div>
+          </div>
+          <div className="flex items-center justify-between px-1">
+            <p className="text-sm font-black text-[#4d3829]">{q ? "نتائج البحث" : srTopic === "الكل" ? "كل أكواد الخدمة" : `أكواد ${srTopic}`}</p>
+            <p className="text-xs text-[#88796e]">{filteredSr.length} من {SR_ITEMS.length} كود</p>
+          </div>
+          {filteredSr.length ? (
+            <div className="grid gap-2 sm:grid-cols-2">
+              {filteredSr.map((item) => (
+                <button key={item.id + item.title} type="button" onClick={() => setOpenSr(item)}
+                  className="w-full rounded-2xl border border-[#f2e4d8] bg-white p-3.5 text-right shadow-sm transition hover:border-[#edc4a4] hover:shadow-md">
+                  <div className="flex items-center justify-between gap-2">
+                    <p className="text-xs font-black text-[#bd4b0a]" dir="ltr">SR {item.id}</p>
+                    <span className="rounded-full bg-[#fff4e9] px-2 py-1 text-[10px] font-bold text-[#9b6038]">{item.category}</span>
+                  </div>
+                  <p className="mt-1.5 text-sm font-extrabold text-[#38291f]">{item.titleAr || item.title}</p>
+                  <p className="mt-1.5 line-clamp-2 text-xs leading-5 text-[#88796e]">{srArabicSummary(item)}</p>
+                  <p className="mt-2 text-[10px] font-bold text-[#bd4b0a]">اضغط لعرض التفاصيل ←</p>
+                </button>
+              ))}
             </div>
-          ) : (
-            <>
-              <div className="flex items-center justify-between px-1">
-                <p className="text-sm font-black text-[#4d3829]">{srFamilyLabel(srFamily)}</p>
-                <p className="text-xs text-[#88796e]">{filteredSr.length} كود</p>
-              </div>
-              <div className="grid gap-2 sm:grid-cols-2">
-                {filteredSr.map((item) => (
-                  <button key={item.id + item.title} type="button" onClick={() => setOpenSr(item)} className="w-full rounded-2xl border border-[#f2e4d8] bg-white p-3.5 text-right shadow-sm">
-                    <p className="text-xs font-black text-[#bd4b0a]" dir="ltr">{item.id}</p>
-                    <p className="mt-1 text-sm font-extrabold">{item.titleAr || item.title}</p>
-                    <p className="mt-1 line-clamp-2 text-xs leading-5 text-[#88796e]">{item.description}</p>
-                  </button>
-                ))}
-              </div>
-            </>
-          )}
+          ) : <EmptyState title="مفيش أكواد في التصنيف ده" text="جرّب تصنيف تاني أو غيّر كلمة البحث." />}
         </div>
       ) : null}
 
@@ -1015,11 +1008,17 @@ export default function WikiPage() {
       <Modal open={Boolean(openSr)} title={openSr?.titleAr || openSr?.title || "تفاصيل SR"} onClose={() => setOpenSr(null)}>
         {openSr ? (
           <div className="space-y-3 text-sm leading-7">
-            <p className="font-extrabold text-[#bd4b0a]">{openSr.id}</p>
-            <p className="text-[#88796e]">{openSr.category}</p>
-            <p>{openSr.description}</p>
-            <p className="whitespace-pre-wrap text-[#88796e]">{openSr.steps}</p>
-            <SecondaryButton type="button" className="w-full" onClick={() => copyText(`${openSr.id} — ${openSr.titleAr}\n${openSr.steps}`, toast, "📋 تفاصيل الـ SR اتنسخت")}>
+            <div className="rounded-xl bg-[#fff4e9] px-3 py-2">
+              <p className="font-black text-[#bd4b0a]" dir="ltr">SR {openSr.id}</p>
+              <p className="mt-1 text-xs font-bold text-[#8b796b]">{openSr.category}</p>
+            </div>
+            <p className="font-bold text-[#4d3829]">{srArabicSummary(openSr)}</p>
+            <p className="text-[#665448]">{openSr.description || "لا يوجد وصف إضافي مسجل لهذا الكود."}</p>
+            <div className="rounded-xl border border-[#f2e4d8] bg-[#fffaf6] p-3">
+              <p className="mb-1 text-xs font-black text-[#bd4b0a]">تفاصيل الإجراء</p>
+              <p className="whitespace-pre-wrap text-[#88796e]">{openSr.steps || openSr.description || "لا توجد خطوات إضافية مسجلة."}</p>
+            </div>
+            <SecondaryButton type="button" className="w-full" onClick={() => copyText(`${openSr.id} — ${openSr.titleAr || openSr.title}\\n${openSr.steps || openSr.description || ""}`, toast, "📋 تفاصيل الـ SR اتنسخت")}>
               نسخ التفاصيل
             </SecondaryButton>
           </div>
