@@ -558,7 +558,7 @@ export default function ManagerPage() {
                     })() : null}
 
                     {allRows.length > 0 ? (() => {
-                      const missedYesterday = allRows.filter((r) => !(r.payload.settings?.holidays ?? []).some((h) => h.date === yesterday) && !(r.payload.entries ?? []).some((e) => e.date === yesterday));
+                      const missedYesterday = allRows.filter((r) => !(r.payload.settings?.holidays ?? []).some((h) => h.date === yesterday) && !(r.payload.entries ?? []).some((e) => e.date === yesterday) && !(r.payload.entries ?? []).some((e) => e.date === cairoISODate()));
                       if (!missedYesterday.length) return null;
                       return (
                         <details className="rounded-2xl border border-red-200 bg-[#fffafa]">
