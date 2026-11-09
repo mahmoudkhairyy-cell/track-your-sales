@@ -10,15 +10,9 @@ export function useHistoryView<T extends string>(defaultValue: T) {
   const setView = useCallback(
     (next: T) => {
       if (next === viewRef.current) return;
-      if (next === defaultValue) {
-        // رجوع للقايمة الرئيسية: لو فيه خطوة اتسجلت قبل كده نرجع لورا، غير كده نرجع للقيمة الافتراضية مباشرة.
-        if (viewRef.current !== defaultValue && window.history.state?.tysView) {
-          window.history.back();
-          return;
-        }
-      } else {
-        window.history.pushState({ tysView: next }, "");
-      }
+      // التنقل للرئيسية لازم يكون مباشرًا، وليس history.back()؛
+      // لأن آخر خطوة في السجل قد تكون صفحة فرع أو موظفًا آخر، وليس الرئيسية.
+      window.history.pushState({ tysView: next }, "");
       viewRef.current = next;
       setViewState(next);
     },
