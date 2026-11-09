@@ -3607,13 +3607,13 @@ body {
 .tx-manager section.space-y-4 > div.grid > article > div:last-child > div b {
   color: #493326;
 }
-.tx-manager section.overflow-hidden:has(> div > div > button[ type="button" ]) > div.divide-y > div {
+.tx-manager section.overflow-hidden:has(> div.divide-y > div > button[ type="button" ]) > div.divide-y > div {
   min-height: 76px;
   border-radius: 15px;
   margin-block: 3px;
   transition: background-color 160ms ease, border-color 160ms ease;
 }
-.tx-manager section.overflow-hidden:has(> div > div > button[ type="button" ]) > div.divide-y > div > button {
+.tx-manager section.overflow-hidden:has(> div.divide-y > div > button[ type="button" ]) > div.divide-y > div > button {
   min-height: 42px;
   border-radius: 12px;
   box-shadow: 0 3px 9px rgba(189,75,10,.07);
@@ -3623,7 +3623,7 @@ body {
     border-color: #edc8aa;
     background: #fff7f0;
   }
-  .tx-manager section.overflow-hidden:has(> div > div > button[ type="button" ]) > div.divide-y > div:hover {
+  .tx-manager section.overflow-hidden:has(> div.divide-y > div > button[ type="button" ]) > div.divide-y > div:hover {
     background: #fff8f1;
   }
 }
@@ -3653,18 +3653,18 @@ body {
     min-width: 0;
     padding: .55rem .65rem !important;
   }
-  .tx-manager section.overflow-hidden:has(> div > div > button[ type="button" ]) > div.divide-y > div {
+  .tx-manager section.overflow-hidden:has(> div.divide-y > div > button[ type="button" ]) > div.divide-y > div {
     min-height: 68px;
     margin-inline: .35rem;
     padding: .65rem .55rem !important;
     gap: .55rem !important;
   }
-  .tx-manager section.overflow-hidden:has(> div > div > button[ type="button" ]) > div.divide-y > div > span:first-child {
+  .tx-manager section.overflow-hidden:has(> div.divide-y > div > button[ type="button" ]) > div.divide-y > div > span:first-child {
     width: 2.25rem;
     height: 2.25rem;
     border-radius: .8rem;
   }
-  .tx-manager section.overflow-hidden:has(> div > div > button[ type="button" ]) > div.divide-y > div > button {
+  .tx-manager section.overflow-hidden:has(> div.divide-y > div > button[ type="button" ]) > div.divide-y > div > button {
     min-height: 40px;
     padding-inline: .7rem !important;
     white-space: nowrap;
@@ -3672,7 +3672,7 @@ body {
 }
 @media (prefers-reduced-motion: reduce) {
   .tx-manager section.space-y-4 > div.grid > article > div:last-child > div,
-  .tx-manager section.overflow-hidden:has(> div > div > button[ type="button" ]) > div.divide-y > div {
+  .tx-manager section.overflow-hidden:has(> div.divide-y > div > button[ type="button" ]) > div.divide-y > div {
     transition: none !important;
   }
 }
