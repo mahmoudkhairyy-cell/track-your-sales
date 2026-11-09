@@ -184,7 +184,13 @@ const EDU_WINCASH_LINES = [
   { code: "727623", name: "Document State Development Fees", price: "3.57", note: "خصم 100% = 0" },
 ];
 
-const SR_PRIORITY_IDS = ["31001", "11102", "1121", "1650", "1651", "1652", "5010", "5011", "1004", "1008", "1019", "1120"] as const;
+const SR_PRIORITY_IDS = [
+  "31001", "31005", "31006", "31007", "31014", "31319",
+  "14032", "19005", "60619", "1030", "10841",
+  "421002", "421003", "10758", "115",
+  "11102", "1121", "1650", "1651", "1652", "5010", "5011",
+  "1004", "1008", "1019", "1120",
+] as const;
 
 const SR_TOPIC_FILTERS = [
   { id: "الأكثر استخدامًا", label: "الأكثر استخدامًا", icon: "⭐" },
@@ -463,6 +469,14 @@ export default function WikiPage() {
               })}
             </div>
           </div>
+          {srTopic === "الأكثر استخدامًا" || srTopic === "الكل" ? (
+            <div className="grid gap-2 rounded-2xl border border-[#f1dfd0] bg-[#fffaf5] p-3 text-xs leading-6 text-[#70513c]">
+              <p className="font-black text-[#bd4b0a]">إجراءات مهمة في الفرع</p>
+              <div><b>ريالوكيشن:</b> افتح SR 1030، تواصل مع Activation Team واختار Option 2، ثم افتح SR 10841 واملأ العقد الفاضي ببيانات العميل وارفع البطاقة عبر Live Capture.</div>
+              <div><b>إلغاء الفاتورة:</b> افتح SR 10758، استخدم حاسبة إلغاء الفاتورة الموجودة في المستندات لمعرفة المبلغ المتبقي، وخلي العميل يسدده قبل استكمال الطلب. املأ عقدًا فاضيًا واكتب نوع الميجريشن (مثال: من X إلى FREEmax 115).</div>
+              <div><b>MNP:</b> 421002 لنقل الرقم، و421003 لإلغاء طلب MNP.</div>
+            </div>
+          ) : null}
           <div className="flex items-center justify-between px-1">
             <p className="text-sm font-black text-[#4d3829]">{q ? "نتائج البحث" : srTopic === "الكل" ? "كل أكواد الخدمة" : `أكواد ${srTopic}`}</p>
             <p className="text-xs text-[#88796e]">{filteredSr.length} من {SR_ITEMS.length} كود</p>
