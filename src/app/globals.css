@@ -3676,3 +3676,97 @@ body {
     transition: none !important;
   }
 }
+
+
+/* Manager overview — clearer KPI hierarchy and branch-status scanability. */
+.tx-manager section.grid.grid-cols-2 > article {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border-color: #efddce;
+  background: linear-gradient(145deg, #fff 0%, #fffaf6 72%, #fff3e8 100%);
+  box-shadow: 0 9px 25px rgba(126,65,24,.06);
+  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+}
+.tx-manager section.grid.grid-cols-2 > article::after {
+  position: absolute;
+  z-index: -1;
+  inset-inline-end: -1.35rem;
+  bottom: -2rem;
+  width: 5.5rem;
+  height: 5.5rem;
+  border: 1rem solid rgba(217,106,32,.055);
+  border-radius: 999px;
+  content: "";
+}
+.tx-manager section.grid.grid-cols-2 > article > div:first-child > span:first-child {
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.8);
+}
+.tx-manager section.grid.grid-cols-2 > article > strong {
+  letter-spacing: -.045em;
+  line-height: 1.1;
+}
+.tx-manager section.overflow-hidden:has(> div.divide-y > button) > div.divide-y > button {
+  min-height: 76px;
+  border-inline-start: 3px solid transparent;
+  padding-block: .8rem;
+  transition: background-color 160ms ease, border-color 160ms ease;
+}
+.tx-manager section.overflow-hidden:has(> div.divide-y > button) > div.divide-y > button:focus-visible {
+  outline: 3px solid rgba(217,95,18,.2);
+  outline-offset: -3px;
+}
+.tx-manager section.overflow-hidden:has(> div.divide-y > button) > div.divide-y > button > span:nth-child(2) {
+  box-shadow: 0 0 0 3px rgba(255,255,255,.9), 0 2px 9px rgba(91,49,23,.08);
+}
+@media (hover: hover) and (pointer: fine) {
+  .tx-manager section.grid.grid-cols-2 > article:hover {
+    transform: translateY(-2px);
+    border-color: #eac5a5;
+    box-shadow: 0 14px 30px rgba(126,65,24,.09);
+  }
+  .tx-manager section.overflow-hidden:has(> div.divide-y > button) > div.divide-y > button:hover {
+    border-inline-start-color: #e8792b;
+  }
+}
+@media (max-width: 640px) {
+  .tx-manager section.grid.grid-cols-2 > article {
+    min-height: 112px;
+    padding: .75rem !important;
+    border-radius: 17px !important;
+  }
+  .tx-manager section.grid.grid-cols-2 > article > div:first-child > span:first-child {
+    width: 1.9rem;
+    height: 1.9rem;
+    border-radius: .7rem;
+  }
+  .tx-manager section.grid.grid-cols-2 > article > p {
+    margin-top: .55rem !important;
+    font-size: .68rem;
+  }
+  .tx-manager section.grid.grid-cols-2 > article > strong {
+    margin-top: .15rem !important;
+    font-size: 1.55rem !important;
+  }
+  .tx-manager section.overflow-hidden:has(> div.divide-y > button) > div.divide-y > button {
+    min-height: 70px;
+    gap: .55rem !important;
+    padding: .65rem .75rem !important;
+  }
+  .tx-manager section.overflow-hidden:has(> div.divide-y > button) > div.divide-y > button > span:nth-child(2) {
+    width: 2.65rem;
+    height: 2.65rem;
+  }
+  .tx-manager section.overflow-hidden:has(> div.divide-y > button) > div.divide-y > button > span:nth-child(4) {
+    max-width: 6.2rem;
+    text-align: center;
+    white-space: normal;
+    line-height: 1.45;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tx-manager section.grid.grid-cols-2 > article,
+  .tx-manager section.overflow-hidden:has(> div.divide-y > button) > div.divide-y > button {
+    transition: none !important;
+  }
+}
