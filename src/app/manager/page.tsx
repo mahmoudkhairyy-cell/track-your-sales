@@ -449,11 +449,23 @@ export default function ManagerPage() {
                 const content = <>
                   <span className={"flex h-8 w-8 items-center justify-center rounded-xl text-lg " + (active ? "bg-white text-[#c45b18]" : "bg-[#f8f5f1] text-[#927b69]")}>{item.icon}</span>{item.label}{active ? <span className="mr-auto h-1.5 w-1.5 rounded-full bg-[#d96a20]" /> : null}
                 </>;
-                // الرئيسية تعيد تحميل صفحة المدير مباشرة لضمان تصفير أي حالة داخلية عالقة
-                // (فرع/موظف/Drawer) حتى لو تعطّل تحديث حالة React في الجلسة الحالية.
-                return item.id === "overview"
-                  ? <a key={item.id} href="/track-your-sales/manager/" onClick={() => setMobileMenuOpen(false)} className={className}>{content}</a>
-                  : <button key={item.id} type="button" onClick={() => changeView(item.id)} className={className}>{content}</button>;
+                // الرجوع للرئيسية يتم داخل نفس الجلسة حتى لا نفقد حالة دخول المدير.
+                if (item.id === "overview") {
+                  return <button
+                    key={item.id}
+                    type="button"
+                    onClick={() => {
+                      setView("overview");
+                      setBranchPreview(null);
+                      setBranchOpenFor(null);
+                      setDetailsId(null);
+                      setPwOpen(false);
+                      setMobileMenuOpen(false);
+                    }}
+                    className={className}
+                  >{content}</button>;
+                }
+                return <button key={item.id} type="button" onClick={() => changeView(item.id)} className={className}>{content}</button>;
               })}
             </nav>
             <div className="mt-auto rounded-2xl border border-[#f1dfd0] bg-gradient-to-br from-[#fffaf6] to-[#fff0e2]/70 p-3">
