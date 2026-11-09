@@ -170,6 +170,7 @@ export default function ManagerPage() {
   const [password, setPassword] = useState("");
   const [detailsId, setDetailsId] = useState<string | null>(null);
   const [branchOpenFor, setBranchOpenFor] = useState<string | null>(null);
+  const [branchPreview, setBranchPreview] = useState<string | null>(null);
   // "list" = الفروع، "b:<فرع>" = صفحة فرع، "b:<فرع>|e:<id>" = موظف مفتوح. كل خطوة بتتسجل في تاريخ المتصفح.
   const [view, setView] = useHistoryView<string>("overview");
   const branch = view.startsWith("b:") ? view.slice(2).split("|e:")[0] : null;
@@ -498,7 +499,7 @@ export default function ManagerPage() {
                   </div>
                   {behindBranches.length ? (
                     <div className="relative mt-5 flex flex-wrap gap-2">
-                      {behindBranches.slice(0,4).map((b) => <button key={b.name} type="button" onClick={() => changeView("b:" + b.name)} className="rounded-full border border-white/20 bg-[#7f2d0b]/30 px-3 py-1.5 text-[11px] font-bold text-white">{b.name} · متأخر</button>)}
+                      {behindBranches.slice(0,4).map((b) => <button key={b.name} type="button" onClick={() => setBranchPreview(b.name)} className="rounded-full border border-white/20 bg-[#7f2d0b]/30 px-3 py-1.5 text-[11px] font-bold text-white">{b.name} · متأخر</button>)}
                       {behindBranches.length > 4 ? <span className="self-center text-[10px] text-orange-50/80">+{behindBranches.length - 4} فروع أخرى</span> : null}
                     </div>
                   ) : null}
@@ -606,6 +607,28 @@ export default function ManagerPage() {
             ) : null}
 
             <footer className="flex flex-wrap items-center justify-between gap-3 border-t border-[#eee5dc] pt-4"><p className="text-[10px] text-[#9a8879]">Track Your Sales · لوحة متابعة الأداء</p><button type="button" onClick={()=>{setPwOpen(v=>!v);setPwMsg("");}} className="text-xs font-bold text-[#8f3d0a]">{pwOpen?"إخفاء تغيير كلمة السر":"🔑 تغيير كلمة السر"}</button></footer>
+            {branchPreview ? (() => {
+              const previewRows = branchGroups.find(([name]) => name === branchPreview)?.[1] ?? [];
+              const preview = branchStatus.find((item) => item.name === branchPreview);
+              const previewKpis = aggregateKpis(previewRows);
+              return (
+                <div className="fixed inset-0 z-[70] flex justify-end bg-[#2d211a]/35 backdrop-blur-[3px]" onClick={() => setBranchPreview(null)}>
+                  <aside role="dialog" aria-modal="true" aria-label={"تفاصيل فرع " + branchPreview} onClick={(event) => event.stopPropagation()} className="h-full w-full max-w-[520px] overflow-y-auto border-r border-white/50 bg-[#fffaf6] p-4 shadow-2xl sm:p-6">
+                    <div className="flex items-start justify-between gap-3">
+                      <div><p className="text-[10px] font-black tracking-[.15em] text-[#c45b18]" dir="ltr">BRANCH QUICK VIEW</p><h2 className="mt-1 text-2xl font-black text-[#382719]" dir="auto">{branchPreview}</h2><p className="mt-1 text-xs text-[#927b69]">ملخص أداء الفرع والموظفين</p></div>
+                      <button type="button" aria-label="إغلاق التفاصيل" onClick={() => setBranchPreview(null)} className="flex h-10 w-10 items-center justify-center rounded-xl border border-[#efdfd2] bg-white text-lg font-bold text-[#806653]">×</button>
+                    </div>
+                    <div className="mt-5 grid grid-cols-2 gap-3">
+                      <div className="rounded-2xl bg-white p-4 ring-1 ring-[#f0dfd2]"><p className="text-[10px] font-bold text-[#927b69]">إنجاز الفرع</p><strong className="mt-1 block text-3xl font-black tabular-nums text-[#a94308]">{Math.round(preview?.percent ?? 0)}%</strong></div>
+                      <div className="rounded-2xl bg-white p-4 ring-1 ring-[#f0dfd2]"><p className="text-[10px] font-bold text-[#927b69]">حالة الفرع</p><strong className={"mt-2 inline-flex rounded-full px-3 py-1.5 text-xs font-black "+(preview?.expected===undefined?"bg-stone-100 text-stone-600":preview.onTrack?"bg-emerald-50 text-emerald-700":"bg-red-50 text-red-700")}>{preview?.expected===undefined?"بيانات غير مكتملة":preview.onTrack?"على المسار":"متأخر"}</strong></div>
+                    </div>
+                    <div className="mt-5"><div className="mb-3 flex items-center justify-between"><h3 className="text-sm font-black">أداء المؤشرات</h3><span className="text-[10px] text-[#927b69]">{previewKpis.length} مؤشرات</span></div><div className="grid grid-cols-2 gap-2">{previewKpis.map((k)=> <KpiTile key={k.name} kpi={k}/>)}</div></div>
+                    <div className="mt-6"><div className="mb-3 flex items-center justify-between"><h3 className="text-sm font-black">موظفو الفرع</h3><span className="rounded-full bg-[#fff0e2] px-2.5 py-1 text-[10px] font-black text-[#a94308]">{previewRows.length}</span></div><div className="space-y-2">{[...previewRows].sort((a,b)=>(b.payload.overall??0)-(a.payload.overall??0)).map((row,index)=><div key={row.branch_id} className="rounded-2xl border border-[#f0dfd2] bg-white p-3"><div className="mb-2 flex items-center justify-between gap-3"><span className="text-[10px] font-black text-[#a94308]">#{index+1}</span><strong className="text-sm font-black text-[#352317]">{Math.round(row.payload.overall??0)}%</strong></div>{renderRow(row)}</div>)}</div></div>
+                    <button type="button" onClick={() => { setBranchPreview(null); changeView("b:" + branchPreview); }} className="mt-6 w-full rounded-xl bg-gradient-to-l from-[#a94308] to-[#e97824] px-4 py-3 text-sm font-black text-white shadow-lg shadow-orange-900/10">فتح صفحة الفرع بالكامل ←</button>
+                  </aside>
+                </div>
+              );
+            })() : null}
             {pwOpen ? <form onSubmit={changePassword} className="rounded-2xl border border-[#efdfd2] bg-white p-4"><h3 className="mb-3 text-sm font-black">تغيير كلمة السر</h3><div className="grid gap-3 sm:grid-cols-3">
               <label className="text-xs font-bold">كلمة السر الحالية<input type="password" autoComplete="current-password" value={oldPw} onChange={e=>setOldPw(e.target.value)} className="mt-1.5 w-full rounded-xl border border-[#ead8c9] px-3 py-2.5 text-sm"/></label>
               <label className="text-xs font-bold">كلمة السر الجديدة<input type="password" autoComplete="new-password" value={newPw} onChange={e=>setNewPw(e.target.value)} className="mt-1.5 w-full rounded-xl border border-[#ead8c9] px-3 py-2.5 text-sm"/></label>
