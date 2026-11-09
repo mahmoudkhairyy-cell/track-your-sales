@@ -1,7 +1,6 @@
 "use client";
 
 import { FormEvent, useEffect, useState } from "react";
-import { useHistoryView } from "@/lib/use-history-view";
 import { managerApi } from "@/lib/cloud";
 import { KPI_CATALOG } from "@/lib/constants";
 import { cairoISODate } from "@/lib/dates";
@@ -172,17 +171,13 @@ export default function ManagerPage() {
   const [branchOpenFor, setBranchOpenFor] = useState<string | null>(null);
   const [branchPreview, setBranchPreview] = useState<string | null>(null);
   // "list" = الفروع، "b:<فرع>" = صفحة فرع، "b:<فرع>|e:<id>" = موظف مفتوح. كل خطوة بتتسجل في تاريخ المتصفح.
-  const [view, setView] = useHistoryView<string>("overview");
+  const [view, setView] = useState<string>("overview");
   const branch = view.startsWith("b:") ? view.slice(2).split("|e:")[0] : null;
   const branchOpen = branch !== null && branchOpenFor === branch;
   const openId = view.includes("|e:") ? view.split("|e:")[1] : null;
   const setOpenId = (id: string | null) => {
     if (!branch) return;
-    // قفل الموظف: نرجع خطوة لورا في التاريخ بدل ما نضيف خطوة جديدة، عشان زرار الرجوع ما يفتحش الموظف تاني.
-    if (!id && openId && typeof window !== "undefined" && window.history.state?.tysView === view) {
-      window.history.back();
-      return;
-    }
+    // قفل الموظف يحدّث واجهة المدير مباشرة دون الاعتماد على سجل المتصفح.
     setView(id ? `b:${branch}|e:${id}` : `b:${branch}`);
   };
   const [rows, setRows] = useState<ReportRow[] | null>(null);
