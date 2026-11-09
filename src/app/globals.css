@@ -3322,3 +3322,30 @@ body {
   .tys-mobile-nav-icon { height: 2rem !important; width: 2.5rem !important; }
   .tys-mobile-nav-primary { height: 2.55rem !important; width: 2.55rem !important; }
 }
+
+/* Knowledge hub: calmer mobile hero and category tiles */
+@media (max-width: 640px) {
+  .tys-page-wiki { gap: .85rem !important; }
+  .tys-page-wiki > section:first-of-type {
+    border-radius: 22px !important;
+    padding: 1rem !important;
+    box-shadow: 0 8px 24px rgba(126,65,24,.045) !important;
+  }
+  .tys-page-wiki > section:first-of-type h1 { font-size: 1.45rem !important; }
+  .tys-page-wiki > section:first-of-type > div.relative.mt-4 > div {
+    padding: .55rem .35rem !important;
+    border-radius: 13px !important;
+  }
+  .tys-page-wiki > section:first-of-type > div.relative.mt-4 > div p:first-child {
+    font-size: 1rem !important;
+  }
+  .tys-page-wiki > section:nth-of-type(2) {
+    border-radius: 18px !important;
+    padding: .7rem !important;
+  }
+  .tys-page-wiki button.rounded-\[24px\] {
+    border-radius: 16px !important;
+    padding: .8rem !important;
+    box-shadow: 0 3px 12px rgba(100,55,25,.035) !important;
+  }
+}
