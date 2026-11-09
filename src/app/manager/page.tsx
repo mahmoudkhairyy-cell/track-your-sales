@@ -540,7 +540,7 @@ export default function ManagerPage() {
                   </p>
                 ) : null}
                 
-                <section className="grid grid-cols-3 gap-2.5 sm:grid-cols-4 sm:gap-3">
+                <section className="grid grid-cols-2 gap-2.5 sm:grid-cols-4 sm:gap-3">
                   {[
                     {label:"إجمالي الفروع",value:branchGroups.length,sub:"كل فروع الأريا",tone:"orange",icon:"▦"},
                     {label:"فروع متقدمة",value:branchStatus.filter(b=>b.expected!==undefined && b.percent-b.expected>=5).length,sub:"أعلى من المتوقع",tone:"green",icon:"↗"},
