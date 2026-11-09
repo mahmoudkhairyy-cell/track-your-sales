@@ -484,7 +484,7 @@ export default function ManagerPage() {
                     </div>
                     <div className="shrink-0 rounded-2xl border border-white/20 bg-white/10 px-3 py-2 text-center backdrop-blur-md">
                       <p className="text-[10px] font-bold text-orange-100/80">حالة الأريا</p>
-                      <p className="mt-1 text-sm font-black">{behindBranches.length ? "تحتاج متابعة" : branchGroups.length ? "على المسار" : "بانتظار البيانات"}</p>
+                      <p className="mt-1 text-sm font-black">{behindBranches.length ? "تحتاج متابعة" : branchGroups.length > 0 && unclassifiedBranches.length === branchGroups.length ? "بانتظار البيانات" : branchGroups.length ? "على المسار" : "بانتظار البيانات"}</p>
                     </div>
                   </div>
                   <div className="relative mt-6 flex flex-wrap items-end justify-between gap-4">
