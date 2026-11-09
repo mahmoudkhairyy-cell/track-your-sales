@@ -2838,3 +2838,116 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .tys-page-manager .tys-manager-branch-card { transition: none; }
 }
+
+
+/* Manager page — focused mobile hierarchy and calmer information density. */
+.tys-page-manager > div > section.grid:first-of-type {
+  gap: .65rem;
+}
+.tys-page-manager > div > section.grid:first-of-type > div {
+  min-width: 0;
+  padding: .9rem .85rem;
+  border: 1px solid #efdfd2;
+  border-radius: 18px;
+  background: linear-gradient(150deg,#fff 0%,#fffaf6 100%);
+  box-shadow: 0 5px 16px rgba(91,49,23,.035);
+}
+.tys-page-manager > div > section.grid:first-of-type > div p:first-child {
+  color: #927b69;
+  font-size: .68rem;
+  line-height: 1.45;
+}
+.tys-page-manager > div > section.grid:first-of-type > div p:last-child {
+  margin-top: .3rem;
+  font-size: clamp(1.25rem, 4vw, 1.65rem);
+  line-height: 1.1;
+}
+.tys-page-manager .tys-manager-branch-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 160px;
+  padding: 1rem;
+  text-align: right;
+}
+.tys-page-manager .tys-manager-branch-card > div:nth-child(2) {
+  margin-top: 1.1rem;
+}
+.tys-page-manager .tys-manager-branch-card > p:last-child {
+  margin-top: .8rem;
+  padding-top: .65rem;
+  border-top: 1px solid #f3e8df;
+}
+.tys-page-manager .tys-manager-disclosure > summary {
+  gap: .75rem;
+  border-radius: inherit;
+}
+.tys-page-manager .tys-manager-disclosure[open] > summary {
+  border-bottom: 1px solid #f3e8df;
+  border-radius: 17px 17px 0 0;
+  background: #fffaf6;
+}
+.tys-page-manager .tys-manager-employee-card > button:first-child {
+  align-items: center;
+}
+.tys-page-manager .tys-manager-employee-card > button:first-child > div:first-child {
+  min-width: 0;
+}
+.tys-page-manager .tys-manager-employee-card > button:first-child > div:last-child {
+  flex-shrink: 0;
+  padding: .35rem .55rem;
+  border-radius: 12px;
+  background: #fff6ee;
+}
+.tys-page-manager .tys-manager-employee-card .grid > div {
+  min-width: 0;
+}
+.tys-page-manager .tys-manager-employee-card :is(input,button) {
+  -webkit-tap-highlight-color: transparent;
+}
+.tys-page-manager footer {
+  color: #927b69;
+}
+@media (max-width: 640px) {
+  .tys-page-manager > div { gap: 1rem; }
+  .tys-page-manager .tys-manager-header {
+    align-items: flex-start;
+    gap: .75rem;
+    padding-bottom: .8rem;
+  }
+  .tys-page-manager .tys-manager-header h1 { font-size: 1.65rem; }
+  .tys-page-manager > div > section.grid:first-of-type > div {
+    padding: .75rem .55rem;
+    border-radius: 15px;
+  }
+  .tys-page-manager > div > section.grid:first-of-type > div p:first-child {
+    font-size: .62rem;
+  }
+  .tys-page-manager > div > section.grid:first-of-type > div p:last-child {
+    font-size: 1.35rem;
+  }
+  .tys-page-manager .tys-manager-branch-card {
+    min-height: 148px;
+    padding: .85rem;
+  }
+  .tys-page-manager .tys-manager-disclosure > summary {
+    align-items: flex-start;
+    padding: .85rem .9rem;
+  }
+  .tys-page-manager .tys-manager-disclosure > summary > span:last-child {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: .35rem .55rem;
+  }
+  .tys-page-manager .tys-manager-employee-card {
+    padding: .8rem;
+  }
+  .tys-page-manager .tys-manager-employee-card > button:first-child > div:last-child p {
+    font-size: 1.2rem;
+  }
+}
+@media (max-width: 370px) {
+  .tys-page-manager > div > section.grid:first-of-type { gap: .4rem; }
+  .tys-page-manager > div > section.grid:first-of-type > div { padding: .65rem .4rem; }
+  .tys-page-manager > div > section.grid:first-of-type > div p:last-child { font-size: 1.15rem; }
+}
