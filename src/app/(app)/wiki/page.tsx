@@ -200,12 +200,12 @@ const SR_TOPIC_FILTERS = [
 function srTopicMatches(item: SrItem, topic: string) {
   const value = `${item.title} ${item.titleAr} ${item.description} ${item.steps}`.toLowerCase();
   const rules: Record<string, RegExp> = {
-    DSL: /\\bdsl\\b|landline|broadband/,
-    "Orange Cash": /orange cash|\\boc\\b|wallet/,
-    MNP: /\\bmnp\\b|mobile number portability|port.?in|port.?out/,
-    FREEmax: /free\\s*max|freemax/,
+    DSL: /\bdsl\b|landline|broadband/,
+    "Orange Cash": /orange cash|\boc\b|wallet/,
+    MNP: /\bmnp\b|mobile number portability|port.?in|port.?out/,
+    FREEmax: /free\s*max|freemax/,
     Premier: /premier|elite postpaid/,
-    VAS: /\\bvas\\b|value added|subscription service/,
+    VAS: /\bvas\b|value added|subscription service/,
     Billing: /billing|invoice|payment|bill amount|charges/,
     Network: /network|coverage|signal|connectivity/,
     "New Line": /new line|line activation|new activation/,
@@ -215,12 +215,12 @@ function srTopicMatches(item: SrItem, topic: string) {
 
 function srArabicSummary(item: SrItem) {
   const value = `${item.title} ${item.description}`.toLowerCase();
-  if (/\\bmnp\\b|port.?in|port.?out|number portability/.test(value)) return "خاص بطلبات نقل الرقم ومتابعة إجراءات النقل";
-  if (/orange cash|\\boc\\b|wallet/.test(value)) return "خاص بمحفظة أورنج كاش: التفعيل أو المعاملات أو حل المشكلات";
-  if (/\\bdsl\\b|landline|broadband/.test(value)) return "خاص بخدمات الإنترنت الأرضي والخط والراوتر";
-  if (/free\\s*max|freemax/.test(value)) return "خاص بباقات Free Max ومميزاتها وطلباتها";
+  if (/\bmnp\b|port.?in|port.?out|number portability/.test(value)) return "خاص بطلبات نقل الرقم ومتابعة إجراءات النقل";
+  if (/orange cash|\boc\b|wallet/.test(value)) return "خاص بمحفظة أورنج كاش: التفعيل أو المعاملات أو حل المشكلات";
+  if (/\bdsl\b|landline|broadband/.test(value)) return "خاص بخدمات الإنترنت الأرضي والخط والراوتر";
+  if (/free\s*max|freemax/.test(value)) return "خاص بباقات Free Max ومميزاتها وطلباتها";
   if (/premier|elite postpaid/.test(value)) return "خاص بخطوط وباقات Premier وخدمات عملائها";
-  if (/\\bvas\\b|value added/.test(value)) return "خاص بخدمات القيمة المضافة والاشتراكات";
+  if (/\bvas\b|value added/.test(value)) return "خاص بخدمات القيمة المضافة والاشتراكات";
   if (/billing|invoice|payment|bill amount|charges/.test(value)) return "خاص بالفواتير والمدفوعات ومراجعة المبالغ";
   if (/network|coverage|signal|connectivity/.test(value)) return "خاص بأعطال الشبكة والتغطية والاتصال";
   if (/new line|line activation/.test(value)) return "خاص بطلبات الخطوط الجديدة والتفعيل";
@@ -960,7 +960,7 @@ export default function WikiPage() {
               <p className="mb-1 text-xs font-black text-[#bd4b0a]">تفاصيل الإجراء</p>
               <p className="whitespace-pre-wrap text-[#88796e]">{openSr.steps || openSr.description || "لا توجد خطوات إضافية مسجلة."}</p>
             </div>
-            <SecondaryButton type="button" className="w-full" onClick={() => copyText(`${openSr.id} — ${openSr.titleAr || openSr.title}\\n${openSr.steps || openSr.description || ""}`, toast, "📋 تفاصيل الـ SR اتنسخت")}>
+            <SecondaryButton type="button" className="w-full" onClick={() => copyText(`${openSr.id} — ${openSr.titleAr || openSr.title}\n${openSr.steps || openSr.description || ""}`, toast, "📋 تفاصيل الـ SR اتنسخت")}>
               نسخ التفاصيل
             </SecondaryButton>
           </div>
