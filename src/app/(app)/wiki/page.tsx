@@ -147,10 +147,19 @@ function PlanBand({ title, big }: { title: string; big?: string }) {
 function TwoPrice({ fees }: { fees: string }) {
   const after = parseFloat(fees);
   if (!Number.isFinite(after)) return <p className="font-extrabold text-[#bd4b0a]">{fees}</p>;
+  const before = Math.round(after * 0.7 * 100) / 100;
   return (
-    <div className="rounded-xl bg-[#fff0e2] px-2.5 py-1.5 text-center">
-      <p className="text-[11px] font-bold text-[#88796e]">السعر بعد الضريبة</p>
-      <p className="font-extrabold text-[#b84700]">{after.toFixed(2)} جنيه</p>
+    <div className="space-y-1.5">
+      <div className="flex gap-2 text-center">
+        <div className="flex-1 rounded-xl bg-[#fff0e2] px-2.5 py-1.5">
+          <p className="text-[11px] font-bold text-[#88796e]">السعر المكتوب (بعد الضريبة)</p>
+          <p className="font-extrabold text-[#b84700]">{after.toFixed(2)} جنيه</p>
+        </div>
+        <div className="flex-1 rounded-xl bg-neutral-50 px-2.5 py-1.5">
+          <p className="text-[11px] font-bold text-[#88796e]">قبل الضريبة</p>
+          <p className="font-extrabold text-neutral-700">{before.toFixed(2)} جنيه</p>
+        </div>
+      </div>
     </div>
   );
 }
