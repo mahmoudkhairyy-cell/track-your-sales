@@ -185,9 +185,7 @@ const EDU_WINCASH_LINES = [
 ];
 
 const SR_PRIORITY_IDS = [
-  "31001", "31005", "31006", "31007", "31014", "31319",
-  "14032", "19005", "60619", "1030", "10841",
-  "421002", "421003", "10758", "115",
+  "31319", "31001", "31005", "31006", "31007", "31014",
   "11102", "1121", "1650", "1651", "1652", "5010", "5011",
   "1004", "1008", "1019", "1120",
 ] as const;
@@ -222,6 +220,8 @@ function srTopicMatches(item: SrItem, topic: string) {
 }
 
 function srArabicSummary(item: SrItem) {
+  if (item.id === "31319") return "اكتب الشكوى في Notes واعمل رن للفريق المختص لمتابعة حلها؛ مناسب لشكاوى الشبكة وخصم الرصيد ومشكلات حساب الفاتورة.";
+  if (item.id === "1030") return "بداية إجراء Reallocation؛ افتح الكود ثم تواصل مع Activation Team واختار Option 2.";
   const value = `${item.title} ${item.description}`.toLowerCase();
   if (/\bmnp\b|port.?in|port.?out|number portability/.test(value)) return "خاص بطلبات نقل الرقم ومتابعة إجراءات النقل";
   if (/orange cash|\boc\b|wallet/.test(value)) return "خاص بمحفظة أورنج كاش: التفعيل أو المعاملات أو حل المشكلات";
@@ -470,11 +470,44 @@ export default function WikiPage() {
             </div>
           </div>
           {srTopic === "الأكثر استخدامًا" || srTopic === "الكل" ? (
-            <div className="grid gap-2 rounded-2xl border border-[#f1dfd0] bg-[#fffaf5] p-3 text-xs leading-6 text-[#70513c]">
-              <p className="font-black text-[#bd4b0a]">إجراءات مهمة في الفرع</p>
-              <div><b>ريالوكيشن:</b> افتح SR 1030، تواصل مع Activation Team واختار Option 2، ثم افتح SR 10841 واملأ العقد الفاضي ببيانات العميل وارفع البطاقة عبر Live Capture.</div>
-              <div><b>إلغاء الفاتورة:</b> افتح SR 10758، استخدم حاسبة إلغاء الفاتورة الموجودة في المستندات لمعرفة المبلغ المتبقي، وخلي العميل يسدده قبل استكمال الطلب. املأ عقدًا فاضيًا واكتب نوع الميجريشن (مثال: من X إلى FREEmax 115).</div>
-              <div><b>MNP:</b> 421002 لنقل الرقم، و421003 لإلغاء طلب MNP.</div>
+            <div className="grid gap-3 rounded-2xl border border-[#f1dfd0] bg-[#fffaf5] p-3 text-xs leading-6 text-[#70513c]">
+              <p className="font-black text-[#bd4b0a]">أهم أكواد وإجراءات الفرع</p>
+              <div className="rounded-xl border border-[#f0d8c5] bg-white p-3">
+                <p className="font-black text-[#bd4b0a]">SR 31319 — رن الشكوى للفريق المختص <span className="text-[10px] text-[#c45a13]">• أولوية قصوى</span></p>
+                <p>اكتب تفاصيل الشكوى في Notes، وبعدها اعمل رن للفريق المختص. مناسب لشكاوى الشبكة، وخصم الرصيد بدون سبب، ومشكلات حساب الفاتورة.</p>
+              </div>
+              <div className="rounded-xl border border-[#f0d8c5] bg-white p-3">
+                <p className="font-black text-[#bd4b0a]">DSL</p>
+                <p><b>14032:</b> رفع استمارة مشترك جديد في DSL.</p>
+                <p><b>19005:</b> تعديل بيانات عميل DSL، مثل رقم العميل أو الرقم القومي أو العنوان.</p>
+              </div>
+              <div className="rounded-xl border border-[#f0d8c5] bg-white p-3">
+                <p className="font-black text-[#bd4b0a]">Reallocation — إعادة التخصيص</p>
+                <ol className="list-decimal pr-5">
+                  <li>افتح SR 1030.</li>
+                  <li>اتصل بـ Activation Team واختار Option 2.</li>
+                  <li>افتح SR 10841.</li>
+                  <li>املأ عقدًا فاضيًا ببيانات العميل وارفع البطاقة عن طريق Live Capture.</li>
+                </ol>
+              </div>
+              <div className="rounded-xl border border-[#f0d8c5] bg-white p-3">
+                <p className="font-black text-[#bd4b0a]">MNP</p>
+                <p><b>421002:</b> MNP.</p>
+                <p><b>421003:</b> إلغاء MNP.</p>
+              </div>
+              <div className="rounded-xl border border-[#f0d8c5] bg-white p-3">
+                <p className="font-black text-[#bd4b0a]">إلغاء الفاتورة — SR 10758</p>
+                <ol className="list-decimal pr-5">
+                  <li>افتح حاسبة إلغاء الفاتورة الموجودة في المستندات لمعرفة المبلغ المتبقي على العميل.</li>
+                  <li>العميل يسدد المبلغ، وبعدها استكمل الـ SR.</li>
+                  <li>املأ عقدًا فاضيًا واكتب نوع الـ Migration، مثال: من X إلى FREEmax 115.</li>
+                </ol>
+              </div>
+              <div className="rounded-xl border border-[#f0d8c5] bg-white p-3">
+                <p className="font-black text-[#bd4b0a]">SR 60619</p>
+                <p>تحميل تطبيق Max it.</p>
+              </div>
+              <p className="text-[10px] text-[#9a7c66]">الأكواد التي لم تتوفر لها سجلات في قاعدة الأكواد معروضة هنا كمرجع مؤكد من إجراءات الفرع، وليست سجلات رسمية مضافة إلى قاعدة SR.</p>
             </div>
           ) : null}
           <div className="flex items-center justify-between px-1">
@@ -490,7 +523,7 @@ export default function WikiPage() {
                     <p className="text-xs font-black text-[#bd4b0a]" dir="ltr">SR {item.id}</p>
                     <span className="rounded-full bg-[#fff4e9] px-2 py-1 text-[10px] font-bold text-[#9b6038]">{item.category}</span>
                   </div>
-                  <p className="mt-1.5 text-sm font-extrabold text-[#38291f]">{item.titleAr || item.title}</p>
+                  <p className="mt-1.5 text-sm font-extrabold text-[#38291f]">{item.id === "31319" ? "رن الشكوى للفريق المختص" : item.id === "1030" ? "بداية إجراء Reallocation" : item.titleAr || item.title}</p>
                   <p className="mt-1.5 line-clamp-2 text-xs leading-5 text-[#88796e]">{srArabicSummary(item)}</p>
                   <p className="mt-2 text-[10px] font-bold text-[#bd4b0a]">اضغط لعرض التفاصيل ←</p>
                 </button>
@@ -962,7 +995,7 @@ export default function WikiPage() {
         </div>
       ) : null}
 
-      <Modal open={Boolean(openSr)} title={openSr?.titleAr || openSr?.title || "تفاصيل SR"} onClose={() => setOpenSr(null)}>
+      <Modal open={Boolean(openSr)} title={openSr?.id === "31319" ? "رن الشكوى للفريق المختص" : openSr?.id === "1030" ? "بداية إجراء Reallocation" : openSr?.titleAr || openSr?.title || "تفاصيل SR"} onClose={() => setOpenSr(null)}>
         {openSr ? (
           <div className="space-y-3 text-sm leading-7">
             <div className="rounded-xl bg-[#fff4e9] px-3 py-2">
@@ -970,12 +1003,12 @@ export default function WikiPage() {
               <p className="mt-1 text-xs font-bold text-[#8b796b]">{openSr.category}</p>
             </div>
             <p className="font-bold text-[#4d3829]">{srArabicSummary(openSr)}</p>
-            <p className="text-[#665448]">{openSr.description || "لا يوجد وصف إضافي مسجل لهذا الكود."}</p>
+            <p className="text-[#665448]">{openSr.id === "31319" ? "اكتب تفاصيل شكوى العميل في Notes، ثم اعمل رن للفريق المختص. يُستخدم لشكاوى الشبكة وخصم الرصيد بدون سبب ومشكلات حساب الفاتورة." : openSr.id === "1030" ? "ابدأ طلب Reallocation من هنا، ثم اتصل بـ Activation Team واختار Option 2، وبعدها افتح SR 10841." : openSr.description || "لا يوجد وصف إضافي مسجل لهذا الكود."}</p>
             <div className="rounded-xl border border-[#f2e4d8] bg-[#fffaf6] p-3">
               <p className="mb-1 text-xs font-black text-[#bd4b0a]">تفاصيل الإجراء</p>
-              <p className="whitespace-pre-wrap text-[#88796e]">{openSr.steps || openSr.description || "لا توجد خطوات إضافية مسجلة."}</p>
+              <p className="whitespace-pre-wrap text-[#88796e]">{openSr.id === "31319" ? "1. اكتب الشكوى في Notes.\n2. اعمل رن للفريق المختص لمتابعة حل المشكلة." : openSr.id === "1030" ? "1. افتح SR 1030.\n2. اتصل بـ Activation Team واختار Option 2.\n3. افتح SR 10841.\n4. املأ عقدًا فاضيًا ببيانات العميل وارفع البطاقة عبر Live Capture." : openSr.steps || openSr.description || "لا توجد خطوات إضافية مسجلة."}</p>
             </div>
-            <SecondaryButton type="button" className="w-full" onClick={() => copyText(`${openSr.id} — ${openSr.titleAr || openSr.title}\n${openSr.steps || openSr.description || ""}`, toast, "📋 تفاصيل الـ SR اتنسخت")}>
+            <SecondaryButton type="button" className="w-full" onClick={() => copyText(`${openSr.id} — ${openSr.id === "31319" ? "رن الشكوى للفريق المختص" : openSr.id === "1030" ? "بداية إجراء Reallocation" : openSr.titleAr || openSr.title}\n${openSr.id === "31319" ? "اكتب الشكوى في Notes ثم اعمل رن للفريق المختص." : openSr.id === "1030" ? "ابدأ Reallocation ثم اتصل بـ Activation Team واختار Option 2، وبعدها افتح SR 10841." : openSr.steps || openSr.description || ""}`, toast, "📋 تفاصيل الـ SR اتنسخت")}>
               نسخ التفاصيل
             </SecondaryButton>
           </div>
