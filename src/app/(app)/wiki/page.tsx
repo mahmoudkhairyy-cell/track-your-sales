@@ -24,7 +24,6 @@ import {
   PLAN_GROUPS,
   PREMIER_GUIDE,
   PREMIER_PERKS,
-  SR_CATEGORIES,
   SR_ITEMS,
   type SrItem,
 } from "@/data";
@@ -184,63 +183,6 @@ const EDU_WINCASH_LINES = [
   { code: "711094", name: "EDUCATION LINE", price: "300.00", note: "" },
   { code: "727623", name: "Document State Development Fees", price: "3.57", note: "خصم 100% = 0" },
 ];
-
-const SR_CATEGORY_INFO: Record<string, { title: string; description: string; icon: string }> = {
-  "استعلام": { title: "استعلام ومعلومات", description: "أسئلة العملاء عن الرصيد والفواتير والخدمات والباقات", icon: "🔎" },
-  "تعديل": { title: "طلبات التعديل", description: "تغيير بيانات الخط والباقات والخدمات والاشتراكات", icon: "🛠️" },
-  "عطل": { title: "الأعطال والشكاوى", description: "مشاكل الخط والشبكة والفواتير والإنترنت والخدمات", icon: "⚠️" },
-};
-
-const SR_FAMILY_LABELS: Record<string, string> = {
-  "Billing And Usage": "الفواتير والاستخدام",
-  "Request For Information": "استعلامات عامة",
-  "Request For Info VAS": "خدمات القيمة المضافة",
-  "Request For Info Campaign": "الحملات والإعلانات",
-  "Request For Info Data": "خدمات الإنترنت والبيانات",
-  "Request For Info Product": "المنتجات",
-  "Request For Info Loyalty": "برامج الولاء",
-  "Request For Info MNP": "نقل الأرقام",
-  "Request For Info Offers": "العروض",
-  "Request For Info Devices": "الأجهزة",
-  "Acc Mod For Line Modification": "تعديلات الخط",
-  "Acc Mod For VAS": "تعديلات الخدمات",
-  "Acc Mod For Billing": "تعديلات الفواتير",
-  "Acc Mod For Migration": "تغيير النظام",
-  "Acc Mod For Changing Tariff": "تغيير الباقة",
-  "Acc Mod For Data Services": "تعديلات الإنترنت والبيانات",
-  "Acc Mod For Offers": "تعديلات العروض",
-  "Acc Mod For MNP": "تعديلات نقل الأرقام",
-  "Acc Mod For Products": "تعديلات المنتجات",
-  "Fault For VAS": "أعطال الخدمات",
-  "Fault For Billing": "مشاكل الفواتير والمدفوعات",
-  "Fault For Products": "مشاكل المنتجات",
-  "Fault For Data Services": "مشاكل الإنترنت والبيانات",
-  "Fault For Customer Care": "مشاكل خدمة العملاء",
-  "Fault For Line Modification": "مشاكل الخط والتعديلات",
-  "Fault For Sales Teams": "مشاكل أنظمة البيع",
-  "Fault For Network Complaints": "شكاوى الشبكة",
-  "Fault For MNP": "مشاكل نقل الأرقام",
-  "Fault For New Line": "مشاكل الخطوط الجديدة",
-  "Fault For Offers": "مشاكل العروض",
-  "DSL Fault Billing": "أعطال فواتير DSL",
-  "DSL Fault Connectivity": "مشاكل اتصال DSL",
-  "DSL Fault Physical": "أعطال الخط الأرضي والراوتر",
-  "DSL Fault VAS": "أعطال خدمات DSL",
-  "DSL G Info": "استعلامات DSL",
-};
-
-function srFamilyKey(item: SrItem) {
-  return item.title.split(/\s+[–—-]\s+/)[0].trim();
-}
-
-function srFamilyLabel(key: string) {
-  if (SR_FAMILY_LABELS[key]) return SR_FAMILY_LABELS[key];
-  if (key.startsWith("DSL ")) return "الإنترنت الأرضي · " + key.replace(/^DSL\s+/, "");
-  if (key.startsWith("Acc Mod ")) return "تعديلات · " + key.replace(/^Acc Mod For\s+/, "");
-  if (key.startsWith("Fault For ")) return "أعطال · " + key.replace(/^Fault For\s+/, "");
-  if (key.startsWith("Request For ")) return "استعلامات · " + key.replace(/^Request For Info?\s+/, "");
-  return key;
-}
 
 const SR_TOPIC_FILTERS = [
   { id: "الكل", label: "كل الأكواد", icon: "▦" },
