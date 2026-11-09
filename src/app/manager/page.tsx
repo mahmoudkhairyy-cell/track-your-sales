@@ -42,6 +42,32 @@ function daysSince(iso: string): number {
   return (Date.now() - new Date(iso).getTime()) / (24 * 60 * 60 * 1000);
 }
 
+function ManagerNavIcon({ name }: { name: string }) {
+  const common = { fill: "none", stroke: "currentColor", strokeWidth: 1.7, strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
+  return (
+    <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" {...common}>
+      {name === "overview" ? <>
+        <path d="m3.8 10.5 8.2-6.8 8.2 6.8v9a1.5 1.5 0 0 1-1.5 1.5h-4.4v-6h-4.6v6H5.3a1.5 1.5 0 0 1-1.5-1.5z" fill="currentColor" fillOpacity=".13" />
+        <path d="m3.8 10.5 8.2-6.8 8.2 6.8M5.3 9.4v10.1A1.5 1.5 0 0 0 6.8 21h4.4v-6h1.6v6h4.4a1.5 1.5 0 0 0 1.5-1.5V9.4" />
+      </> : name === "list" ? <>
+        <rect x="3.5" y="3.5" width="7" height="7" rx="1.7" fill="currentColor" fillOpacity=".16" />
+        <rect x="13.5" y="3.5" width="7" height="7" rx="1.7" />
+        <rect x="3.5" y="13.5" width="7" height="7" rx="1.7" />
+        <rect x="13.5" y="13.5" width="7" height="7" rx="1.7" fill="currentColor" fillOpacity=".16" />
+      </> : name === "top" ? <>
+        <circle cx="9" cy="8" r="3.2" fill="currentColor" fillOpacity=".15" />
+        <path d="M3.5 19.5c.5-3.1 2.4-4.8 5.5-4.8s5 1.7 5.5 4.8M16 5.2a3 3 0 0 1 0 5.7M16.5 14.8c2.3.5 3.6 2.1 4 4.7" />
+      </> : name === "activity" ? <>
+        <circle cx="12" cy="12" r="8.5" fill="currentColor" fillOpacity=".10" />
+        <path d="M12 7v5l3.3 2M12 2.5v1.8M21.5 12h-1.8" />
+      </> : <>
+        <path d="M6 3.5h8l4 4v13H6a2 2 0 0 1-2-2v-13a2 2 0 0 1 2-2z" fill="currentColor" fillOpacity=".12" />
+        <path d="M14 3.5v4h4M8 12h8M8 16h8" />
+      </>}
+    </svg>
+  );
+}
+
 /** اسم المؤشر بالإنجليزي من الكتالوج، ولو مش موجود بيرجع المفتاح نفسه. */
 function kpiLabel(key: string): string {
   return KPI_CATALOG.find((item) => item.key === key)?.nameEn ?? key;
@@ -398,12 +424,12 @@ export default function ManagerPage() {
   const onLeaveToday = allRows.filter((r) => (r.payload.settings?.holidays ?? []).some((h) => h.date === today));
   const missingToday = allRows.filter((r) => !onLeaveToday.some((x) => x.branch_id === r.branch_id) && !loggedToday.some((x) => x.branch_id === r.branch_id));
   const navItems = [
-    { id: "overview", label: "الرئيسية", icon: "⌂" },
-    { id: "list", label: "الفروع", icon: "▦" },
-    { id: "top", label: "الموظفون", icon: "♙" },
-    { id: "activity", label: "التسجيلات", icon: "◷" },
-    { id: "reports", label: "التقارير", icon: "▤" },
-  ];
+    { id: "overview", label: "الرئيسية" },
+    { id: "list", label: "الفروع" },
+    { id: "top", label: "الموظفون" },
+    { id: "activity", label: "التسجيلات" },
+    { id: "reports", label: "التقارير" },
+  ] as const;
   const activeLabel = navItems.find((item) => item.id === view)?.label ?? (branch ? "تفاصيل الفرع" : "لوحة المدير");
   const changeView = (next: string) => { setView(next); setMobileMenuOpen(false); };
   const statusNames = (items: typeof branchStatus) => items.length ? (
@@ -447,7 +473,7 @@ export default function ManagerPage() {
                 const active = view === item.id;
                 const className = "flex w-full items-center gap-3 rounded-2xl px-3 py-3 text-right text-sm font-extrabold transition " + (active ? "bg-[#fff0e5] text-[#b94e0c] shadow-sm" : "text-[#766252] hover:bg-[#faf6f2]");
                 const content = <>
-                  <span className={"flex h-8 w-8 items-center justify-center rounded-xl text-lg " + (active ? "bg-white text-[#c45b18]" : "bg-[#f8f5f1] text-[#927b69]")}>{item.icon}</span>{item.label}{active ? <span className="mr-auto h-1.5 w-1.5 rounded-full bg-[#d96a20]" /> : null}
+                  <span className={"flex h-9 w-9 items-center justify-center rounded-xl " + (active ? "bg-white text-[#c45b18] shadow-sm" : "bg-[#f8f5f1] text-[#927b69]")}><ManagerNavIcon name={item.id} /></span>{item.label}{active ? <span className="mr-auto h-1.5 w-1.5 rounded-full bg-[#d96a20]" /> : null}
                 </>;
                 // الرجوع للرئيسية يتم داخل نفس الجلسة حتى لا نفقد حالة دخول المدير.
                 if (item.id === "overview") {
