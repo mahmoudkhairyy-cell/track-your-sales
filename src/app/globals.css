@@ -3389,3 +3389,75 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .tys-page-target * { scroll-behavior: auto !important; transition-duration: .01ms !important; }
 }
+
+
+/* Track Your Sales manager UI polish — visual-only overrides. No data or calculation logic. */
+.tx-manager {
+  color: #35271f;
+  background:
+    radial-gradient(ellipse at 8% 0%, rgba(255, 157, 56, .12), transparent 34%),
+    linear-gradient(145deg, #fffaf6 0%, #fff 48%, #fff6ed 100%) !important;
+}
+.tx-manager > div { gap: 1rem !important; }
+.tx-manager aside[aria-label] { scrollbar-width: thin; scrollbar-color: #e8c7ad transparent; }
+.tx-manager header {
+  border-color: #f3e3d6 !important;
+  box-shadow: 0 8px 24px rgba(113, 61, 29, .045) !important;
+}
+.tx-manager header h1 { letter-spacing: -.025em; }
+.tx-manager nav button { min-height: 48px; }
+.tx-manager section {
+  scroll-margin-top: 1rem;
+}
+.tx-manager section.rounded-\[26px\],
+.tx-manager section.overflow-hidden {
+  border-color: #efdfd2 !important;
+  box-shadow: 0 8px 24px rgba(113, 61, 29, .045) !important;
+}
+.tx-manager article {
+  transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+}
+.tx-manager button:focus-visible,
+.tx-manager input:focus-visible {
+  outline: 3px solid rgba(217, 95, 18, .22);
+  outline-offset: 2px;
+}
+.tx-manager input {
+  accent-color: #d9651b;
+}
+@media (hover: hover) and (pointer: fine) {
+  .tx-manager article:hover {
+    border-color: #eac9ad;
+  }
+  .tx-manager nav button:hover {
+    transform: translateX(-1px);
+  }
+}
+@media (max-width: 640px) {
+  .tx-manager { padding: .65rem !important; }
+  .tx-manager > div { gap: .7rem !important; }
+  .tx-manager header {
+    position: sticky;
+    top: .45rem;
+    z-index: 25;
+    border-radius: 18px !important;
+    padding: .65rem .7rem !important;
+    backdrop-filter: blur(18px);
+  }
+  .tx-manager header h1 { font-size: 1.05rem !important; }
+  .tx-manager header p { font-size: 9px !important; }
+  .tx-manager header button { min-height: 38px; }
+  .tx-manager section.rounded-\[26px\],
+  .tx-manager section.overflow-hidden { border-radius: 19px !important; }
+  .tx-manager .tys-manager-employee-card { border-radius: 15px !important; }
+  .tx-manager footer { padding-bottom: max(.75rem, env(safe-area-inset-bottom)); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tx-manager *,
+  .tx-manager *::before,
+  .tx-manager *::after {
+    scroll-behavior: auto !important;
+    transition-duration: .01ms !important;
+    animation-duration: .01ms !important;
+  }
+}
