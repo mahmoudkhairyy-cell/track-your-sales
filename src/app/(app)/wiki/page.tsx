@@ -184,27 +184,29 @@ const EDU_WINCASH_LINES = [
   { code: "727623", name: "Document State Development Fees", price: "3.57", note: "خصم 100% = 0" },
 ];
 
+const SR_PRIORITY_IDS = ["31001", "11102", "1121", "1650", "1651", "1652", "5010", "5011", "1004", "1008", "1019", "1120"] as const;
+
 const SR_TOPIC_FILTERS = [
+  { id: "الأكثر استخدامًا", label: "الأكثر استخدامًا", icon: "⭐" },
   { id: "الكل", label: "كل الأكواد", icon: "▦" },
-  { id: "DSL", label: "DSL", icon: "🌐" },
   { id: "Orange Cash", label: "Orange Cash", icon: "🟠" },
+  { id: "DSL", label: "DSL", icon: "🌐" },
   { id: "MNP", label: "MNP", icon: "🔁" },
   { id: "FREEmax", label: "FREEmax", icon: "✨" },
-  { id: "Premier", label: "Premier", icon: "⭐" },
-  { id: "VAS", label: "VAS", icon: "🧩" },
-  { id: "Billing", label: "الفواتير", icon: "🧾" },
   { id: "Network", label: "الشبكة", icon: "📶" },
   { id: "New Line", label: "الخطوط الجديدة", icon: "📱" },
+  { id: "VAS", label: "VAS", icon: "🧩" },
+  { id: "Billing", label: "الفواتير", icon: "🧾" },
 ] as const;
 
 function srTopicMatches(item: SrItem, topic: string) {
+  if (topic === "الأكثر استخدامًا") return (SR_PRIORITY_IDS as readonly string[]).includes(item.id);
   const value = `${item.title} ${item.titleAr} ${item.description} ${item.steps}`.toLowerCase();
   const rules: Record<string, RegExp> = {
     DSL: /\bdsl\b|landline|broadband/,
     "Orange Cash": /orange cash|\boc\b|wallet/,
     MNP: /\bmnp\b|mobile number portability|port.?in|port.?out/,
     FREEmax: /free\s*max|freemax/,
-    Premier: /premier|elite postpaid/,
     VAS: /\bvas\b|value added|subscription service/,
     Billing: /billing|invoice|payment|bill amount|charges/,
     Network: /network|coverage|signal|connectivity/,
@@ -219,7 +221,6 @@ function srArabicSummary(item: SrItem) {
   if (/orange cash|\boc\b|wallet/.test(value)) return "خاص بمحفظة أورنج كاش: التفعيل أو المعاملات أو حل المشكلات";
   if (/\bdsl\b|landline|broadband/.test(value)) return "خاص بخدمات الإنترنت الأرضي والخط والراوتر";
   if (/free\s*max|freemax/.test(value)) return "خاص بباقات Free Max ومميزاتها وطلباتها";
-  if (/premier|elite postpaid/.test(value)) return "خاص بخطوط وباقات Premier وخدمات عملائها";
   if (/\bvas\b|value added/.test(value)) return "خاص بخدمات القيمة المضافة والاشتراكات";
   if (/billing|invoice|payment|bill amount|charges/.test(value)) return "خاص بالفواتير والمدفوعات ومراجعة المبالغ";
   if (/network|coverage|signal|connectivity/.test(value)) return "خاص بأعطال الشبكة والتغطية والاتصال";
@@ -269,7 +270,7 @@ export default function WikiPage() {
     if (srTopic !== "الكل" && !srTopicMatches(item, srTopic)) return false;
     if (!q) return true;
     return matchesQuery([item.id, item.title, item.titleAr, item.description, item.steps, item.category].join(" "), q);
-  }), [q, srTopic]);
+  }).sort((a, b) => Number((SR_PRIORITY_IDS as readonly string[]).includes(b.id)) - Number((SR_PRIORITY_IDS as readonly string[]).includes(a.id))), [q, srTopic]);
 
   const globalHits = useMemo(() => {
     if (!q) return null;
