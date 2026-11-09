@@ -3064,3 +3064,141 @@ body {
   }
   .tys-page-home > section:nth-of-type(5) > div:last-child > div { width: 86px; }
 }
+
+
+/* Manager dashboard redesign: compact, scannable and mobile-first. */
+.tys-page-manager { padding-top: 1rem !important; padding-bottom: 2rem !important; }
+.tys-page-manager > div { max-width: 1040px !important; gap: 1rem !important; }
+.tys-page-manager .tys-manager-header {
+  align-items: center !important;
+  padding: .2rem 0 .75rem !important;
+  gap: .75rem !important;
+}
+.tys-page-manager .tys-manager-header h1 {
+  margin-top: .15rem !important;
+  font-size: clamp(1.45rem, 3vw, 1.9rem) !important;
+  line-height: 1.2 !important;
+}
+.tys-page-manager .tys-manager-header p:not([dir="ltr"]) {
+  margin-top: .35rem !important;
+  font-size: .78rem !important;
+}
+.tys-page-manager > div > section.grid:first-of-type {
+  gap: .55rem !important;
+}
+.tys-page-manager > div > section.grid:first-of-type > div {
+  min-height: 68px !important;
+  padding: .65rem .8rem !important;
+  border-radius: 14px !important;
+  box-shadow: none !important;
+}
+.tys-page-manager > div > section.grid:first-of-type > div p:first-child {
+  font-size: .68rem !important;
+}
+.tys-page-manager > div > section.grid:first-of-type > div p:last-child {
+  margin-top: .15rem !important;
+  font-size: 1.35rem !important;
+}
+.tys-page-manager .tys-manager-branch-card {
+  display: block !important;
+  min-height: 0 !important;
+  padding: .9rem 1rem !important;
+  border-radius: 15px !important;
+  background: #fff !important;
+  box-shadow: 0 2px 9px rgba(91,49,23,.035) !important;
+}
+.tys-page-manager .tys-manager-branch-card > div:nth-child(2) {
+  margin-top: .65rem !important;
+  align-items: center !important;
+}
+.tys-page-manager .tys-manager-branch-card > div:nth-child(2) p:last-child {
+  font-size: 1.35rem !important;
+}
+.tys-page-manager .tys-manager-branch-card > p:last-child {
+  margin-top: .55rem !important;
+  padding-top: .45rem !important;
+  font-size: .68rem !important;
+}
+.tys-page-manager .tys-manager-disclosure {
+  border-radius: 14px !important;
+  box-shadow: none !important;
+}
+.tys-page-manager .tys-manager-disclosure > summary {
+  min-height: 48px !important;
+  padding: .7rem .85rem !important;
+}
+.tys-page-manager .tys-manager-employee-card {
+  padding: .75rem !important;
+  border-radius: 14px !important;
+  box-shadow: none !important;
+}
+.tys-page-manager .tys-manager-employee-card > button:first-child {
+  min-height: 42px !important;
+}
+.tys-page-manager .tys-manager-employee-card > button:first-child h3 {
+  font-size: .9rem !important;
+}
+.tys-page-manager .tys-manager-employee-card > button:first-child > div:last-child p {
+  font-size: 1.2rem !important;
+}
+.tys-page-manager .tys-manager-employee-card .grid {
+  gap: .45rem !important;
+}
+.tys-page-manager .tys-manager-employee-card .grid > div > div {
+  padding: .65rem !important;
+  border-radius: 12px !important;
+}
+.tys-page-manager .tys-manager-employee-card .grid > div > div p.text-2xl {
+  margin-top: .15rem !important;
+  font-size: 1.25rem !important;
+}
+.tys-page-manager .tys-manager-employee-card > button:not(:first-child) {
+  min-height: 38px !important;
+  margin-top: .5rem !important;
+  border-radius: 11px !important;
+}
+.tys-page-manager > div > section.space-y-4 > article {
+  padding: .85rem !important;
+  border-radius: 15px !important;
+  box-shadow: none !important;
+}
+.tys-page-manager footer { padding-top: .75rem !important; }
+@media (max-width: 640px) {
+  .tys-page-manager { padding-inline: .65rem !important; }
+  .tys-page-manager > div { gap: .85rem !important; }
+  .tys-page-manager .tys-manager-header { flex-wrap: nowrap !important; }
+  .tys-page-manager .tys-manager-header > div:last-child {
+    padding: .35rem .55rem !important;
+    white-space: nowrap !important;
+  }
+  .tys-page-manager .tys-manager-header > div:last-child > span:first-child {
+    width: 1.8rem !important;
+    height: 1.8rem !important;
+  }
+  .tys-page-manager > div > section.grid:first-of-type > div {
+    min-height: 62px !important;
+    padding: .55rem .45rem !important;
+  }
+  .tys-page-manager > div > section.grid:first-of-type > div p:first-child {
+    font-size: .6rem !important;
+  }
+  .tys-page-manager > div > section.grid:first-of-type > div p:last-child {
+    font-size: 1.2rem !important;
+  }
+  .tys-page-manager .tys-manager-branch-card {
+    padding: .75rem .8rem !important;
+  }
+  .tys-page-manager .tys-manager-branch-card > div:nth-child(2) {
+    margin-top: .45rem !important;
+  }
+  .tys-page-manager .tys-manager-branch-card > p:last-child {
+    display: none !important;
+  }
+  .tys-page-manager .tys-manager-employee-card .grid {
+    grid-template-columns: repeat(2,minmax(0,1fr)) !important;
+  }
+}
+@media (max-width: 370px) {
+  .tys-page-manager .tys-manager-header { flex-wrap: wrap !important; }
+  .tys-page-manager > div > section.grid:first-of-type > div p:last-child { font-size: 1.1rem !important; }
+}
