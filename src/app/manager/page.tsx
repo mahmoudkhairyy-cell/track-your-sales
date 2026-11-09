@@ -471,33 +471,43 @@ export default function ManagerPage() {
             {error ? <p className="rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-xs font-bold text-red-700">{error}</p> : null}
 
             {view === "overview" ? (
-              <div className="space-y-5">
-                <section className="relative overflow-hidden rounded-[28px] border border-[#f0e2d7] bg-gradient-to-br from-white via-[#fffaf6] to-[#fff0e4] p-5 shadow-sm sm:p-7">
-                  <div className="pointer-events-none absolute -left-12 -top-16 h-48 w-48 rounded-full bg-[#f6d7bd]/35 blur-3xl" />
-                  <div className="relative">
-                    <div className="flex flex-wrap items-start justify-between gap-3">
-                      <div><p className="text-[10px] font-black tracking-[.16em] text-[#bd642c]" dir="ltr">AREA OVERVIEW</p><h2 className="mt-2 text-2xl font-black sm:text-3xl">أداء الأريا</h2><p className="mt-1 text-xs text-[#927b69]">ملخص حالة الفروع ومين محتاج متابعة</p></div>
-                      <span className={"rounded-full px-3 py-1.5 text-xs font-black " + (behindBranches.length ? "bg-[#fff0ed] text-[#b83c32]" : unclassifiedBranches.length === branchGroups.length && branchGroups.length > 0 ? "bg-[#f5f1eb] text-[#806c5a]" : "bg-[#eaf6ef] text-[#28764b]")}>{behindBranches.length ? "تحتاج متابعة" : unclassifiedBranches.length === branchGroups.length && branchGroups.length > 0 ? "في انتظار البيانات" : "الأريا On Track"}</span>
+              <div className="space-y-3">
+                <section className="rounded-[22px] border border-[#eee5dc] bg-white p-4 shadow-sm sm:p-5">
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="min-w-0">
+                      <p className="text-[10px] font-black tracking-[.14em] text-[#c45b18]" dir="ltr">AREA OVERVIEW</p>
+                      <h2 className="mt-1 text-xl font-black">حالة الأريا</h2>
+                      <p className="mt-1 text-[11px] text-[#927b69]">ملخص سريع للفروع اللي محتاجة متابعة</p>
                     </div>
-                    <div className="mt-6 grid grid-cols-2 gap-3">
-                      <div className="rounded-2xl border border-[#e5eee7] bg-white/85 p-4 shadow-sm"><div className="flex items-center justify-between gap-2"><span className="text-xs font-bold text-[#718477]">فروع On Track</span><span className="text-lg text-[#36845a]">✓</span></div><p className="mt-2 text-4xl font-black tabular-nums text-[#28764b]">{onTrackBranches.length}</p></div>
-                      <div className="rounded-2xl border border-[#f3e0dc] bg-white/85 p-4 shadow-sm"><div className="flex items-center justify-between gap-2"><span className="text-xs font-bold text-[#96716b]">فروع متأخرة</span><span className="text-lg text-[#c34c42]">!</span></div><p className="mt-2 text-4xl font-black tabular-nums text-[#b83c32]">{behindBranches.length}</p></div>
-                    </div>
-                    <div className="mt-5 grid gap-4 sm:grid-cols-2">
-                      <div className="rounded-2xl border border-[#f1e7df] bg-white/75 p-4"><div className="flex items-center gap-2 text-sm font-black text-[#28764b]">✓ الفروع المنتظمة</div>{statusNames(onTrackBranches)}</div>
-                      <div className="rounded-2xl border border-[#f1e1de] bg-white/75 p-4"><div className="flex items-center gap-2 text-sm font-black text-[#b83c32]">! الفروع المتأخرة</div>{statusNames(behindBranches)}</div>
-                    </div>
-                    {unclassifiedBranches.length ? <p className="mt-3 text-[11px] leading-5 text-[#927b69]">فيه {unclassifiedBranches.length} فرع من غير نسبة متوقعة كافية لتحديد حالته حاليًا.</p> : null}
+                    <span className={"shrink-0 rounded-full px-3 py-1.5 text-[11px] font-black " + (behindBranches.length ? "bg-[#fff0ed] text-[#b83c32]" : unclassifiedBranches.length === branchGroups.length && branchGroups.length > 0 ? "bg-[#f5f1eb] text-[#806c5a]" : "bg-[#eaf6ef] text-[#28764b]")}>{behindBranches.length ? "تحتاج متابعة" : unclassifiedBranches.length === branchGroups.length && branchGroups.length > 0 ? "في انتظار البيانات" : "On Track"}</span>
                   </div>
+                  <div className="mt-4 grid grid-cols-2 gap-2">
+                    <div className="flex items-center justify-between rounded-xl bg-[#f2f8f3] px-3 py-3">
+                      <span className="text-xs font-bold text-[#54745f]">فروع On Track</span>
+                      <strong className="text-2xl font-black tabular-nums text-[#28764b]">{onTrackBranches.length}</strong>
+                    </div>
+                    <div className="flex items-center justify-between rounded-xl bg-[#fff3f1] px-3 py-3">
+                      <span className="text-xs font-bold text-[#9a625c]">فروع متأخرة</span>
+                      <strong className="text-2xl font-black tabular-nums text-[#b83c32]">{behindBranches.length}</strong>
+                    </div>
+                  </div>
+                  {behindBranches.length ? (
+                    <div className="mt-3 divide-y divide-[#f3eae3]">
+                      <p className="pb-1 text-xs font-black text-[#8f514a]">محتاجين متابعة</p>
+                      {behindBranches.map((b) => <button key={b.name} type="button" onClick={() => changeView("b:" + b.name)} className="flex w-full items-center justify-between gap-3 py-2.5 text-right">
+                        <span className="text-sm font-extrabold">{b.name}</span>
+                        <span className="rounded-full bg-[#fff0ed] px-2.5 py-1 text-[10px] font-black text-[#b83c32]">متأخر ←</span>
+                      </button>)}
+                    </div>
+                  ) : <p className="mt-3 rounded-xl bg-[#f2f8f3] px-3 py-2.5 text-xs font-bold text-[#54745f]">{branchGroups.length ? "كل الفروع On Track حاليًا." : "هتظهر حالة الفروع بعد وصول التقارير."}</p>}
+                  {unclassifiedBranches.length ? <p className="mt-2 text-[10px] leading-5 text-[#927b69]">{unclassifiedBranches.length} فرع بياناته غير كافية لتحديد حالته.</p> : null}
                 </section>
-                <section className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-                  <div className="rounded-2xl border border-[#eee5dc] bg-white p-4 shadow-sm"><p className="text-xs font-bold text-[#927b69]">إجمالي الفروع</p><p className="mt-2 text-3xl font-black tabular-nums">{branchGroups.length}</p></div>
-                  <div className="rounded-2xl border border-[#eee5dc] bg-white p-4 shadow-sm"><p className="text-xs font-bold text-[#927b69]">إجمالي الموظفين</p><p className="mt-2 text-3xl font-black tabular-nums">{allRows.length}</p></div>
-                  <div className="col-span-2 rounded-2xl border border-[#eee5dc] bg-white p-4 shadow-sm sm:col-span-1"><p className="text-xs font-bold text-[#927b69]">سجلوا إنجازاتهم النهارده</p><p className="mt-2 text-3xl font-black tabular-nums text-[#bd5b1b]">{loggedToday.length}<span className="mr-1 text-sm text-[#927b69]">/ {allRows.length}</span></p></div>
-                </section>
-                <section className="rounded-[24px] border border-[#eee5dc] bg-white p-4 shadow-sm sm:p-5">
-                  <div className="flex items-center justify-between gap-3"><div><h3 className="text-base font-black">الفروع محتاجة متابعة</h3><p className="mt-1 text-[11px] text-[#927b69]">اضغط على الفرع لفتح تفاصيله</p></div><button type="button" onClick={() => changeView("list")} className="rounded-xl bg-[#fff1e7] px-3 py-2 text-xs font-extrabold text-[#a94b13]">كل الفروع</button></div>
-                  {behindBranches.length ? <div className="mt-3 divide-y divide-[#f3eae3]">{behindBranches.slice(0, 5).map((b) => <button key={b.name} type="button" onClick={() => changeView("b:" + b.name)} className="flex w-full items-center justify-between gap-3 py-3 text-right"><span className="font-extrabold">{b.name}</span><span className="rounded-full bg-[#fff0ed] px-2.5 py-1 text-[10px] font-black text-[#b83c32]">متأخر</span></button>)}</div> : <p className="mt-4 rounded-xl bg-[#f4f8f4] p-3 text-xs text-[#54745f]">مفيش فروع متأخرة حاليًا حسب البيانات المتاحة.</p>}
+                <section className="flex items-center justify-between gap-3 rounded-xl border border-[#eee5dc] bg-white px-3 py-3">
+                  <div className="min-w-0">
+                    <p className="text-xs font-black">ملخص الفريق</p>
+                    <p className="mt-1 text-[10px] text-[#927b69]">{branchGroups.length} فروع · {allRows.length} موظفين · {loggedToday.length} سجّلوا النهارده</p>
+                  </div>
+                  <button type="button" onClick={() => changeView("list")} className="shrink-0 rounded-lg bg-[#fff1e7] px-3 py-2 text-[11px] font-extrabold text-[#a94b13]">عرض الفروع</button>
                 </section>
               </div>
             ) : view === "list" ? (
