@@ -3247,3 +3247,78 @@ body {
   .tys-page-more > div.grid.grid-cols-2 { gap: .7rem !important; }
   .tys-page-more > div.grid.grid-cols-2 > button { min-height: 76px !important; }
 }
+
+/* Employee home: tighter information hierarchy on phones */
+@media (max-width: 640px) {
+  .tys-page-home { gap: .85rem !important; padding-inline: .05rem !important; }
+  .tys-page-home > section:nth-of-type(2) {
+    border-radius: 22px !important;
+    padding: .9rem !important;
+  }
+  .tys-page-home > section:nth-of-type(2) h1,
+  .tys-page-home > section:nth-of-type(2) h2 {
+    line-height: 1.25 !important;
+  }
+  .tys-page-home > section:nth-of-type(3) {
+    border-radius: 19px !important;
+  }
+  .tys-page-home > section:nth-of-type(3) > div {
+    min-width: 0 !important;
+  }
+  .tys-page-home > section:nth-of-type(4) { gap: .5rem !important; }
+  .tys-page-home > section:nth-of-type(4) a {
+    min-height: 44px !important;
+    padding-block: .65rem !important;
+    border-radius: 14px !important;
+  }
+  .tys-page-home > section:last-of-type {
+    gap: .65rem !important;
+    padding: .8rem !important;
+    border-radius: 21px !important;
+  }
+  .tys-page-home > section:last-of-type article {
+    padding: .65rem !important;
+    border-radius: 15px !important;
+    box-shadow: 0 3px 12px rgba(100,55,25,.035) !important;
+  }
+}
+
+/* Employee sales entry: compact KPI rows without shrinking input controls */
+@media (max-width: 640px) {
+  .tys-page-log { gap: .8rem !important; }
+  .tys-page-log > section:has(article) { gap: .55rem !important; }
+  .tys-page-log > section article {
+    padding: .75rem !important;
+    border-radius: 17px !important;
+    box-shadow: 0 3px 12px rgba(100,55,25,.035) !important;
+  }
+  .tys-page-log > section article > div:first-child { gap: .5rem !important; }
+  .tys-page-log > section article > div:nth-child(2) {
+    margin-top: .55rem !important;
+    padding: .55rem !important;
+  }
+  .tys-page-log > section article > div:nth-child(3) { margin-top: .55rem !important; }
+}
+
+/* Employee target setup: consistent compact panels and a clear save dock */
+@media (max-width: 640px) {
+  .tys-page-target { gap: .8rem !important; }
+  .tys-page-target > section {
+    border-radius: 20px !important;
+    padding: .85rem !important;
+    box-shadow: 0 4px 15px rgba(100,55,25,.035) !important;
+  }
+  .tys-page-target > section h2 { font-size: 1rem !important; }
+  .tys-page-target > div.sticky {
+    bottom: calc(70px + env(safe-area-inset-bottom)) !important;
+    padding: .5rem !important;
+    border-radius: 17px !important;
+  }
+}
+
+/* Bottom navigation: reclaim a little vertical space while respecting safe areas */
+@media (max-width: 640px) {
+  .tys-mobile-nav-link { min-height: 62px !important; gap: .25rem !important; }
+  .tys-mobile-nav-icon { height: 2rem !important; width: 2.5rem !important; }
+  .tys-mobile-nav-primary { height: 2.55rem !important; width: 2.55rem !important; }
+}
