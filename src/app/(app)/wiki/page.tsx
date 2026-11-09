@@ -152,7 +152,7 @@ function TwoPrice({ fees }: { fees: string }) {
     <div className="space-y-1.5">
       <div className="flex gap-2 text-center">
         <div className="flex-1 rounded-xl bg-[#fff0e2] px-2.5 py-1.5">
-          <p className="text-[11px] font-bold text-[#88796e]">السعر المكتوب (بعد الضريبة)</p>
+          <p className="text-[11px] font-bold text-[#88796e]">السعر بعد الضريبة</p>
           <p className="font-extrabold text-[#b84700]">{after.toFixed(2)} جنيه</p>
         </div>
         <div className="flex-1 rounded-xl bg-neutral-50 px-2.5 py-1.5">
