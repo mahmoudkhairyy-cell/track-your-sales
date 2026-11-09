@@ -3770,3 +3770,69 @@ body {
     transition: none !important;
   }
 }
+
+
+/* Manager branches and leaderboard — final visual-only consistency pass. */
+.tx-manager section.grid.grid-cols-2 > div {
+  min-width: 0;
+  border-color: #efddce;
+  border-radius: 17px;
+  background: linear-gradient(145deg, #fff 0%, #fff8f1 100%);
+  box-shadow: 0 7px 20px rgba(126,65,24,.05);
+}
+.tx-manager section.overflow-hidden > div.divide-y > div {
+  margin-inline: .45rem;
+  border-radius: 15px;
+  transition: background-color 160ms ease, box-shadow 160ms ease;
+}
+.tx-manager section.overflow-hidden > div.divide-y > div:has(> strong) {
+  padding: .75rem .65rem;
+}
+.tx-manager section.overflow-hidden > div.divide-y > div:has(> button) {
+  padding-block: .15rem;
+}
+.tx-manager section.overflow-hidden > div.divide-y > div:has(button[ type="button" ]) {
+  border: 1px solid transparent;
+}
+.tx-manager section.overflow-hidden > div.divide-y > div > button {
+  border-radius: 13px;
+}
+.tx-manager section.overflow-hidden > div.divide-y > div > button:focus-visible {
+  outline-offset: -2px;
+}
+.tx-manager section.overflow-hidden > div.divide-y > div:has(> button) > span:first-child {
+  font-variant-numeric: tabular-nums;
+}
+.tx-manager section.overflow-hidden > div.divide-y > div:has(> button) > button[class*="rounded-xl"] {
+  min-height: 40px;
+}
+@media (hover: hover) and (pointer: fine) {
+  .tx-manager section.overflow-hidden > div.divide-y > div:hover {
+    background: #fff8f1;
+  }
+}
+@media (max-width: 640px) {
+  .tx-manager section.grid.grid-cols-2 > div {
+    min-height: 88px;
+    padding: .8rem !important;
+  }
+  .tx-manager section.grid.grid-cols-2 > div p:first-child {
+    font-size: .7rem;
+  }
+  .tx-manager section.grid.grid-cols-2 > div p:last-child {
+    font-size: 1.45rem;
+    line-height: 1.2;
+  }
+  .tx-manager section.overflow-hidden > div.divide-y > div {
+    margin-inline: .3rem;
+  }
+  .tx-manager section.overflow-hidden > div.divide-y > div:has(> strong) {
+    gap: .55rem;
+    padding: .7rem .5rem;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tx-manager section.overflow-hidden > div.divide-y > div {
+    transition: none !important;
+  }
+}
