@@ -3202,3 +3202,91 @@ body {
   .tys-page-manager .tys-manager-header { flex-wrap: wrap !important; }
   .tys-page-manager > div > section.grid:first-of-type > div p:last-child { font-size: 1.1rem !important; }
 }
+
+
+/* Daily entry page — focused visual refinement (presentation only). */
+.tys-page-log > section {
+  border-color: #f0dfd1;
+  box-shadow: 0 10px 28px rgba(126, 65, 24, .055);
+}
+.tys-page-log > section:first-of-type {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border-color: #efcfb5;
+  background: linear-gradient(118deg, #fff7ef 0%, #fff 52%, #ffead8 100%);
+  box-shadow: 0 16px 38px rgba(126, 65, 24, .075);
+}
+.tys-page-log > section:first-of-type::after {
+  position: absolute;
+  z-index: -1;
+  inset-inline-start: -2.5rem;
+  top: -3.5rem;
+  width: 9rem;
+  height: 9rem;
+  border: 1.4rem solid rgba(233, 104, 18, .055);
+  border-radius: 999px;
+  content: "";
+}
+.tys-page-log article {
+  min-width: 0;
+  border-color: #efdfd2;
+  border-radius: 22px;
+  background: linear-gradient(155deg, #fff 0%, #fffdfb 100%);
+  box-shadow: 0 8px 22px rgba(126, 65, 24, .045);
+  transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+}
+.tys-page-log article > div:first-child > div:first-child {
+  min-width: 0;
+}
+.tys-page-log article input[type="number"] {
+  min-height: 48px;
+  border-color: #ead8c9;
+  background: #fffaf6;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+.tys-page-log article input[type="number"]:focus {
+  background: #fff;
+}
+.tys-page-log textarea {
+  min-height: 88px;
+}
+.tys-page-log button[aria-pressed] {
+  min-height: 48px;
+  transition: border-color 160ms ease, background-color 160ms ease, box-shadow 160ms ease;
+}
+.tys-page-log button[type="submit"] {
+  min-height: 54px;
+  border-radius: 18px;
+  box-shadow: 0 10px 22px rgba(189, 75, 10, .18);
+}
+@media (hover: hover) and (pointer: fine) {
+  .tys-page-log article:hover {
+    transform: translateY(-2px);
+    border-color: #edc4a4;
+    box-shadow: 0 14px 30px rgba(126, 65, 24, .075);
+  }
+}
+@media (max-width: 640px) {
+  .tys-page-log {
+    gap: 1rem;
+  }
+  .tys-page-log > section:first-of-type {
+    padding: 1.1rem;
+  }
+  .tys-page-log article {
+    border-radius: 19px;
+  }
+  .tys-page-log button[type="submit"] {
+    position: sticky;
+    bottom: calc(78px + env(safe-area-inset-bottom));
+    z-index: 15;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tys-page-log article,
+  .tys-page-log button[aria-pressed] {
+    transition: none !important;
+  }
+}
