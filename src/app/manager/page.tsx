@@ -255,8 +255,12 @@ export default function ManagerPage() {
   }
 
   useEffect(() => {
-    const hour = Number(new Intl.DateTimeFormat("en-GB", { timeZone: "Africa/Cairo", hour: "numeric", hour12: false }).format(new Date()));
-    setGreeting(hour < 12 ? "صباح الخير" : "مساء الخير");
+    // بيتحسب بعد الـ render (مش جوه الـ effect مباشرة) عشان قاعدة lint بتمنع setState المتزامن.
+    const id = setTimeout(() => {
+      const hour = Number(new Intl.DateTimeFormat("en-GB", { timeZone: "Africa/Cairo", hour: "numeric", hour12: false }).format(new Date()));
+      setGreeting(hour < 12 ? "صباح الخير" : "مساء الخير");
+    }, 0);
+    return () => clearTimeout(id);
   }, []);
 
   useEffect(() => {
