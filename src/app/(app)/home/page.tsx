@@ -179,7 +179,7 @@ export default function HomePage() {
             <div className="relative mx-auto h-[108px] w-[108px] sm:h-[132px] sm:w-[132px]">
               <svg viewBox="0 0 100 100" className="h-full w-full -rotate-90">
                 <circle cx="50" cy="50" r="40" fill="none" stroke="#f3dfce" strokeWidth="9" />
-                <circle cx="50" cy="50" r="40" fill="none" stroke="url(#hero-progress)" strokeWidth="9" strokeLinecap="round" strokeDasharray={ringLen} strokeDashoffset={ringLen - (ringLen * Math.min(200, Math.max(0, data.overall))) / 200} className="transition-all duration-700" />
+                <circle cx="50" cy="50" r="40" fill="none" stroke="url(#hero-progress)" strokeWidth="9" strokeLinecap="round" strokeDasharray={ringLen} strokeDashoffset={ringLen - (ringLen * Math.min(100, Math.max(0, data.overall))) / 100} className="transition-all duration-700" />
                 <defs><linearGradient id="hero-progress" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stopColor="#ffad58" /><stop offset="100%" stopColor="#bd4b0a" /></linearGradient></defs>
               </svg>
               <div className="absolute inset-0 flex flex-col items-center justify-center">
@@ -191,7 +191,7 @@ export default function HomePage() {
           <div>
             <div className="relative h-2.5 overflow-hidden rounded-full bg-[#f2dfcf]">
               <div className="absolute inset-y-0 right-1/2 z-10 w-px bg-[#8d6040]/45" />
-              <div className="h-full rounded-full bg-gradient-to-l from-[#ffad58] via-[#ed741d] to-[#bd4b0a] shadow-[0_1px_5px_rgba(189,75,10,0.22)] transition-all duration-700" style={{ width: `${Math.min(200, Math.max(0, data.overall)) / 2}%` }} />
+              <div className="h-full rounded-full bg-gradient-to-l from-[#ffad58] via-[#ed741d] to-[#bd4b0a] shadow-[0_1px_5px_rgba(189,75,10,0.22)] transition-all duration-700" style={{ width: `${Math.min(100, Math.max(0, data.overall)) / 2}%` }} />
             </div>
             <div className="mt-1 flex justify-between text-[9px] font-bold text-[#a18a78]" dir="ltr">
               <span>200%</span><span className="translate-x-1/2">100% target</span><span>0%</span>
