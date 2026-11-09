@@ -32,7 +32,7 @@ import { BookIcon, CallIcon, CardIcon, CheckIcon, PhoneIcon, StarIcon, WalletIco
 import { matchesQuery } from "@/lib/search";
 
 type Article = { id: string; title: string; content: string; updatedAt: string };
-type SectionId = "hub" | "capsule" | "sr" | "premier" | "freemax" | "go" | "hunts" | "home" | "dsl" | "docs" | "emails" | "notes";
+type SectionId = "hub" | "capsule" | "sr" | "premier" | "freemax" | "go" | "educational" | "hunts" | "home" | "dsl" | "docs" | "emails" | "notes";
 
 const CAPSULE: { title: string; body: string }[] = [
   { title: "Qmatic & Facade", body: "الياقطة منورة + ضبط التاريخ والوقت والشاشة" },
@@ -64,6 +64,7 @@ const HUB: { id: SectionId; title: string; desc: string; count: string; icon: Re
   { id: "sr", title: "مرجع الـ SR", desc: "أكواد Service Request", count: `${SR_ITEMS.length} كود`, icon: <BookIcon className="text-[#bd4b0a]" /> },
   { id: "freemax", title: "FREEmax", desc: "باقات فري ماكس والأسعار", count: `${FREEMAX.plans.length} باقة`, icon: <StarIcon className="text-[#bd4b0a]" /> },
   { id: "go", title: "Go", desc: "باقات Go Monthly و Extra", count: "باقات شهرية", icon: <PhoneIcon className="text-[#bd4b0a]" /> },
+  { id: "educational", title: "Educational GO", desc: "المواقع المشمولة وتفعيل الباقة", count: "مواقع + Siebel و Wincash", icon: <PhoneIcon className="text-[#bd4b0a]" /> },
   { id: "premier", title: "Premier", desc: "Premier و Super Max", count: "باقات بوست بايد", icon: <StarIcon className="text-[#bd4b0a]" /> },
   { id: "home", title: "Home Wireless", desc: "باقات الإنترنت اللاسلكي", count: `${PLAN_GROUPS.find((g) => g.category === "Home Wireless")?.plans.length ?? 0} باقة`, icon: <WifiIcon className="text-[#bd4b0a]" /> },
   { id: "dsl", title: "Home Internet", desc: "باقات DSL والراوتر", count: `${DSL.plans.length} باقة`, icon: <WifiIcon className="text-[#bd4b0a]" /> },
@@ -163,6 +164,27 @@ function TwoPrice({ fees }: { fees: string }) {
     </div>
   );
 }
+
+const EDU_SITE_GROUPS: { category: string; sites: string[] }[] = [
+  { category: "منصات التعليم والتعلم الإلكتروني", sites: ["EKB", "EKB LMS", "Coursera", "edX", "Udemy", "Khan Academy", "Edraak", "Academic Earth", "Brightstorm", "CosmoLearning", "Discovery Education", "EthraaDL", "IKNITO", "Made in Me", "Learnosity"] },
+  { category: "منصات التعليم المدرسي والاختبارات والتقييم", sites: ["Ministry of Education (Egypt)", "EMIS", "EKB Assessment", "EKB Marking", "SPRIX Portal", "SPRIX EJS", "TOFAS Programming", "TOFAS Programming Retake", "TOFAS Mock Exam", "TOFAS Programming Results", "TOFAS EJS Visual Coding", "QUREO"] },
+  { category: "البحث العلمي وقواعد البيانات الأكاديمية", sites: ["JSTOR", "ProQuest", "EBSCOhost", "Gale", "Scopus", "Web of Knowledge", "Web of Science", "InCites", "East View", "Emerald Insight", "Engineering Village", "ZBMath", "Thomson Reuters", "Thomson Innovation", "CABI"] },
+  { category: "المكتبات الرقمية والمراجع والمصادر العلمية", sites: ["Nature", "Cell", "Springer", "Springer Protocols", "Wiley", "ScienceDirect", "SAGE Journals", "Palgrave Journals", "Taylor & Francis", "Archive Editions", "Archives Direct", "Kortext", "OneClickdigital", "RBdigital", "iPublishCentral", "Internet Archive", "Encyclopaedia Britannica (EB)", "LexisNexis", "Doctrinal Plus", "Mou3jam"] },
+  { category: "العلوم والهندسة والتكنولوجيا والرياضيات", sites: ["IEEE", "Engineering Village", "The IET", "Royal Society of Chemistry (RSC)", "ChemSpider", "Wolfram", "Wolfram Alpha", "Wolfram Cloud", "Scientific American"] },
+  { category: "الطب والعلوم الصحية", sites: ["ClinicalKey", "Ovid"] },
+  { category: "خدمات ومواقع أساسية إضافية", sites: ["Kaspersky", "Kaspersky Labs", "Orange", "Amazon S3", "Amazon Compute", "AWS", "Google Analytics", "Google Tag Manager", "New Relic", "jQuery", "DataTables", "PEGQA", "PEG Cloud", "EKB Assessment Local", "Learnosity Reports", "BAM", "API York-e"] },
+];
+
+const EDU_SIEBEL_STEPS = [
+  "Service Type: Data",
+  "Term Type: Prepaid",
+  "Bucket: GO Education",
+];
+
+const EDU_WINCASH_LINES = [
+  { code: "711094", name: "EDUCATION LINE", price: "300.00", note: "" },
+  { code: "727623", name: "Document State Development Fees", price: "3.57", note: "خصم 100% = 0" },
+];
 
 export default function WikiPage() {
   const toast = useToast();
@@ -597,6 +619,42 @@ export default function WikiPage() {
           </article>
           <article className="rounded-[24px] bg-[#fff0e2] p-4 text-sm leading-7">
             الرصيد بعد الشحن = قيمة الشحن × 0.70 (خصم 30% ضريبة ومصاريف). سعر الشريحة {FREEMAX.simPrice} ج.
+          </article>
+        </div>
+      ) : null}
+
+      {section === "educational" ? (
+        <div className="space-y-3">
+          <Back onClick={() => setSection("hub")} title="Educational GO" />
+          <article className="rounded-[24px] border border-[#f2e4d8] bg-white p-4 shadow-sm">
+            <h2 className="mb-2 text-lg font-black tracking-tight">المواقع المشمولة</h2>
+            <p className="mb-3 text-xs text-[#88796e]">الباقة بتشمل المواقع دي فقط، والباقة الشهرية 2 جيجا مخصصة للمواقع التعليمية.</p>
+            <div className="space-y-4">
+              {EDU_SITE_GROUPS.map((group) => (
+                <div key={group.category}>
+                  <p className="mb-1.5 text-sm font-black text-[#bd4b0a]">{group.category}</p>
+                  <p className="text-xs leading-6 text-[#4d3829]">{group.sites.join("، ")}</p>
+                </div>
+              ))}
+            </div>
+          </article>
+          <article className="rounded-[24px] border border-[#f2e4d8] bg-white p-4 shadow-sm">
+            <h2 className="mb-2 text-lg font-black tracking-tight">Siebel</h2>
+            <ul className="list-disc space-y-1 pr-5 text-sm text-[#4d3829]">
+              {EDU_SIEBEL_STEPS.map((step) => <li key={step}>{step}</li>)}
+            </ul>
+          </article>
+          <article className="rounded-[24px] border border-[#f2e4d8] bg-white p-4 shadow-sm">
+            <h2 className="mb-2 text-lg font-black tracking-tight">Wincash</h2>
+            <div className="space-y-2">
+              {EDU_WINCASH_LINES.map((line) => (
+                <div key={line.code} className="flex items-center justify-between gap-3 text-sm">
+                  <span className="font-bold text-[#4d3829]">{line.code} · {line.name}{line.note ? <span className="block text-[11px] text-[#88796e]">{line.note}</span> : null}</span>
+                  <span className="shrink-0 font-black tabular-nums text-[#bd4b0a]">{line.price} EGP</span>
+                </div>
+              ))}
+              <p className="border-t border-[#f2e4d8] pt-2 text-right text-sm font-black">الإجمالي: 300.00 EGP</p>
+            </div>
           </article>
         </div>
       ) : null}
