@@ -567,34 +567,7 @@ export default function ManagerPage() {
                   ))}
                 </section>
 
-                <section className="grid gap-4 xl:grid-cols-[1.15fr_.85fr]">
-                  <article className="rounded-[26px] border border-[#efddce] bg-white/90 p-4 shadow-[0_10px_28px_rgba(104,53,19,.055)] sm:p-5">
-                    <div className="flex items-center justify-between gap-3">
-                      <div><p className="text-[10px] font-black tracking-[.15em] text-[#c45b18]" dir="ltr">BRANCH COMPARISON</p><h2 className="mt-1 text-base font-black">مقارنة أداء الفروع</h2></div>
-                      <button type="button" onClick={()=>changeView("list")} className="text-[11px] font-extrabold text-[#a94308]">كل الفروع ←</button>
-                    </div>
-                    {branchStatus.length ? <div className="mt-5 space-y-4">{[...branchStatus].sort((a,b)=>b.percent-a.percent).slice(0,6).map((b,index)=>(
-                      <button key={b.name} type="button" onClick={()=>setBranchPreview(b.name)} className="block w-full text-right">
-                        <div className="mb-1.5 flex items-center justify-between gap-3"><span className="min-w-0 truncate text-xs font-extrabold text-[#4d3829]">{index+1}. {b.name}</span><span className="shrink-0 text-xs font-black tabular-nums text-[#a94308]">{Math.round(b.percent)}%</span></div>
-                        <div className="h-2.5 overflow-hidden rounded-full bg-[#f5eee8]"><div className={"h-full rounded-full "+(b.expected===undefined?"bg-[#d7c8ba]":b.percent<b.expected?"bg-gradient-to-l from-red-500 to-red-300":"bg-gradient-to-l from-[#bd4b0a] to-[#ffad62]")} style={{width:Math.min(100,Math.max(0,b.percent))+"%"}} /></div>
-                      </button>
-                    ))}</div> : <p className="py-8 text-center text-xs text-[#927b69]">ستظهر المقارنة بعد وصول التقارير.</p>}
-                  </article>
-
-                  <article className="rounded-[26px] border border-[#efddce] bg-white/90 p-4 shadow-[0_10px_28px_rgba(104,53,19,.055)] sm:p-5">
-                    <div><p className="text-[10px] font-black tracking-[.15em] text-[#c45b18]" dir="ltr">DAILY ACTIVITY</p><h2 className="mt-1 text-base font-black">نشاط التسجيل اليومي</h2><p className="mt-1 text-[10px] text-[#927b69]">عدد الموظفين الذين سجلوا إنجازًا كل يوم</p></div>
-                    <div className="mt-5 flex h-36 items-end justify-between gap-2">
-                      {Array.from({length:7},(_,i)=>{
-                        const date=new Date(Date.parse(today+"T12:00:00+02:00")-(6-i)*86400000);
-                        const key=new Intl.DateTimeFormat("en-CA",{timeZone:"Africa/Cairo",year:"numeric",month:"2-digit",day:"2-digit"}).format(date);
-                        const count=allRows.filter(r=>(r.payload.entries??[]).some(e=>e.date===key)).length;
-                        const max=Math.max(1,...Array.from({length:7},(_,j)=>{const d=new Date(Date.parse(today+"T12:00:00+02:00")-(6-j)*86400000);const k=new Intl.DateTimeFormat("en-CA",{timeZone:"Africa/Cairo",year:"numeric",month:"2-digit",day:"2-digit"}).format(d);return allRows.filter(r=>(r.payload.entries??[]).some(e=>e.date===k)).length;}));
-                        return <div key={key} className="flex h-full flex-1 flex-col items-center justify-end gap-2"><span className="text-[9px] font-black tabular-nums text-[#927b69]">{count}</span><div className="flex h-24 w-full items-end overflow-hidden rounded-t-lg bg-[#fff3e8]"><div className="w-full rounded-t-lg bg-gradient-to-t from-[#a94308] to-[#ffad62]" style={{height:Math.max(5,(count/max)*100)+"%"}} /></div><span className="text-[9px] font-bold text-[#927b69]">{new Intl.DateTimeFormat("ar-EG",{timeZone:"Africa/Cairo",weekday:"short"}).format(date)}</span></div>;
-                      })}
-                    </div>
-                  </article>
-                </section>
-
+                
                 <section className="overflow-hidden rounded-[26px] border border-[#efddce] bg-white/90 shadow-[0_10px_28px_rgba(104,53,19,.055)]">
                   <div className="flex items-center justify-between gap-3 border-b border-[#f3e7dd] px-4 py-4 sm:px-5">
                     <div><p className="text-[10px] font-black tracking-[.15em] text-[#c45b18]" dir="ltr">BRANCH STATUS</p><h2 className="mt-1 text-base font-black">حالة الفروع</h2><p className="mt-0.5 text-[10px] text-[#927b69]">مرتبة حسب الإنجاز من الأعلى للأقل</p></div>
