@@ -663,20 +663,29 @@ export default function WikiPage() {
           <Back onClick={() => setSection("hub")} title="Go" />
           {goPlans.map((group) => (
             <div key={group.category}>
-              <h2 className="mb-2 text-lg font-black tracking-tight">{group.category}</h2>
-              {group.plans.map((plan) => (
-                <article key={plan.name} className="mb-2 overflow-hidden rounded-[24px] bg-white p-4 border border-[#f2e4d8] shadow-sm">
-                  <PlanBand title={plan.name} big={String(plan.data ?? "")} />
-                  <EntertainRow keys={goLogos(plan.name)} />
-                  <div className="flex items-center justify-between">
-                  <div>
-                    <p className="font-black">{plan.name}</p>
-                    <p className="text-xs text-[#88796e]">{String(plan.data ?? "")}</p>
-                  </div>
-                  <TwoPrice fees={String(plan.fees ?? "")} />
-                  </div>
-                </article>
-              ))}
+              <h2 className="mb-2 text-base font-black tracking-tight text-[#8f3d0b]">{group.category}</h2>
+              <div className="space-y-2">
+                {group.plans.map((plan) => {
+                  const after = Number.parseFloat(String(plan.fees ?? ""));
+                  const before = Number.isFinite(after) ? Math.round(after * 0.7 * 100) / 100 : null;
+                  return (
+                    <article key={plan.name} className="grid grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-2 rounded-2xl border border-[#f0dfd1] bg-white px-3 py-2.5 shadow-[0_3px_12px_rgba(100,55,25,0.035)]">
+                      <div className="min-w-0">
+                        <p className="truncate text-sm font-black text-[#38291f]">{plan.name}</p>
+                        <p className="mt-0.5 text-xs font-bold text-[#8b796b]">{String(plan.data ?? "—")}</p>
+                      </div>
+                      <div className="min-w-[76px] text-center">
+                        <p className="text-[9px] font-bold text-[#9a887b]">قبل الضريبة</p>
+                        <p className="text-xs font-extrabold tabular-nums text-[#5f5147]">{before === null ? "—" : before.toFixed(2) + " ج"}</p>
+                      </div>
+                      <div className="min-w-[76px] rounded-xl bg-[#fff0e2] px-2 py-1.5 text-center">
+                        <p className="text-[9px] font-bold text-[#a56b43]">بعد الضريبة</p>
+                        <p className="text-xs font-black tabular-nums text-[#bd4b0a]">{Number.isFinite(after) ? after.toFixed(2) + " ج" : "—"}</p>
+                      </div>
+                    </article>
+                  );
+                })}
+              </div>
             </div>
           ))}
         </div>
