@@ -105,9 +105,6 @@ export default function HomePage() {
   if (!data) return <Banner tone="error">مفيش بيانات نعرضها</Banner>;
 
   const gap = Math.max(0, 100 - data.overall);
-  const newWalletKpi = data.kpis.find((kpi) => kpi.kpiKey === "new_orange_cash");
-  const requiredWallets = newWalletKpi?.target ?? 0;
-  const missingWallets = Math.max(0, requiredWallets - (newWalletKpi?.achieved ?? 0));
   // اون تراك: الإجمالي وصل لنسبة الأيام اللي عدّت من الشهر (أيام الشغل). لو مفيش أيام، مبنحكمش.
   // النهارده مش محسوب في الأيام اللي عدّت.
   const doneDays = data.work.elapsedBeforeToday ?? data.work.elapsed;
@@ -228,24 +225,6 @@ export default function HomePage() {
           </span>
           <span className="text-[11px] font-semibold leading-relaxed text-[#927b69]">{data.pace.message}</span>
         </div>
-      </section>
-
-      {/* شرط المحافظ الجديدة: وزن صفر لكنه شرط مستقل لاستحقاق الكوميشن */}
-      <section className={`flex items-center gap-3 rounded-[22px] border px-3.5 py-3 shadow-sm ${data.rules.walletDone ? "border-emerald-200 bg-emerald-50/80" : "border-[#efc89f] bg-[#fff4e8]"}`}>
-        <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-lg ${data.rules.walletDone ? "bg-emerald-100" : "bg-[#ffe4c9]"}`}>
-          {data.rules.walletDone ? "✓" : "👛"}
-        </span>
-        <div className="min-w-0 flex-1">
-          <p className={`text-xs font-black ${data.rules.walletDone ? "text-emerald-800" : "text-[#9a4b12]"}`}>شرط المحافظ الجديدة</p>
-          <p className={`mt-0.5 text-[11px] leading-5 ${data.rules.walletDone ? "text-emerald-700" : "text-[#8c6548]"}`}>
-            {data.rules.walletDone
-              ? "محقق — وصلت للتارجت بتاع المحافظ الجديدة."
-              : `محتاج ${formatQty(missingWallets)} محفظة كمان عشان تكمل تارجت المحافظ الجديدة 100%. الشرط لازم يتحقق لاستحقاق الكوميشن.`}
-          </p>
-        </div>
-        <span className={`shrink-0 rounded-full px-2 py-1 text-[10px] font-black ${data.rules.walletDone ? "bg-emerald-100 text-emerald-800" : "bg-[#ffe4c9] text-[#9a4b12]"}`}>
-          {data.rules.walletDone ? "مكتمل" : "مطلوب"}
-        </span>
       </section>
 
       {/* نسبة الإنجاز بالمحاور */}
