@@ -3202,3 +3202,48 @@ body {
   .tys-page-manager .tys-manager-header { flex-wrap: wrap !important; }
   .tys-page-manager > div > section.grid:first-of-type > div p:last-child { font-size: 1.1rem !important; }
 }
+
+/* Employee "More" menu: compact, readable navigation rows */
+.tys-page-more > div.grid.grid-cols-2 {
+  grid-template-columns: minmax(0, 1fr) !important;
+  gap: .6rem !important;
+}
+.tys-page-more > div.grid.grid-cols-2 > button {
+  min-height: 70px !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: .8rem !important;
+  padding: .7rem .85rem !important;
+  border-radius: 18px !important;
+  box-shadow: 0 4px 14px rgba(126, 65, 24, .035) !important;
+}
+.tys-page-more > div.grid.grid-cols-2 > button > span:first-child {
+  width: 2.65rem !important;
+  height: 2.65rem !important;
+  border-radius: 14px !important;
+  font-size: 1.35rem !important;
+}
+.tys-page-more > div.grid.grid-cols-2 > button > span:nth-child(2) {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+}
+.tys-page-more > div.grid.grid-cols-2 > button > span:nth-child(2) > span:first-child {
+  font-size: .9rem !important;
+  line-height: 1.45 !important;
+}
+.tys-page-more > div.grid.grid-cols-2 > button > span:nth-child(2) > span:last-child {
+  margin-top: .12rem !important;
+  line-height: 1.45 !important;
+}
+.tys-page-more > div.grid.grid-cols-2 > button > span:last-child {
+  position: static !important;
+  flex: 0 0 1.7rem !important;
+  width: 1.7rem !important;
+  height: 1.7rem !important;
+  margin-inline-start: auto !important;
+}
+@media (min-width: 640px) {
+  .tys-page-more > div.grid.grid-cols-2 { gap: .7rem !important; }
+  .tys-page-more > div.grid.grid-cols-2 > button { min-height: 76px !important; }
+}
