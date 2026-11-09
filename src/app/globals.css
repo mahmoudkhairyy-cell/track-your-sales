@@ -3836,3 +3836,67 @@ body {
     transition: none !important;
   }
 }
+
+
+/* Final manager mobile navigation and content rhythm — CSS only. */
+.tx-manager > div > aside:not([role="dialog"]) {
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: #e8c7ad transparent;
+}
+.tx-manager > div > aside:not([role="dialog"]) > div:first-child {
+  flex-shrink: 0;
+}
+.tx-manager > div > aside:not([role="dialog"]) nav button {
+  position: relative;
+  text-align: right;
+}
+.tx-manager > div > aside:not([role="dialog"]) nav button[aria-current="page"] {
+  background: linear-gradient(105deg, #fff0e2 0%, #fff8f2 100%);
+  border-color: #f0d9c7;
+}
+.tx-manager > div > aside:not([role="dialog"]) nav button span:last-child {
+  flex-shrink: 0;
+}
+.tx-manager > div > div.min-w-0.flex-1 {
+  min-width: 0;
+}
+.tx-manager > div > div.min-w-0.flex-1 > header {
+  min-width: 0;
+}
+@media (max-width: 1023px) {
+  .tx-manager > div > aside:not([role="dialog"]) {
+    height: 100dvh;
+    max-height: 100dvh;
+    padding-top: max(1rem, env(safe-area-inset-top)) !important;
+    padding-bottom: max(1rem, env(safe-area-inset-bottom)) !important;
+    box-shadow: -18px 0 48px rgba(68, 39, 20, .16);
+  }
+  .tx-manager > div > aside:not([role="dialog"]) nav {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding-bottom: .5rem;
+  }
+  .tx-manager > div > aside:not([role="dialog"]) nav button {
+    min-height: 54px;
+  }
+  .tx-manager > div > div.min-w-0.flex-1 {
+    width: 100%;
+  }
+  .tx-manager > div > div.min-w-0.flex-1 > header {
+    gap: .6rem;
+  }
+}
+@media (max-width: 420px) {
+  .tx-manager > div > div.min-w-0.flex-1 > header {
+    padding-inline: .65rem !important;
+  }
+  .tx-manager > div > div.min-w-0.flex-1 > header > div:last-child {
+    gap: .35rem;
+  }
+  .tx-manager > div > div.min-w-0.flex-1 > header > div:last-child > button {
+    padding-inline: .6rem;
+    font-size: 10px;
+  }
+}
