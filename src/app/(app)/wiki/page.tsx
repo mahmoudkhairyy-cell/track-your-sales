@@ -185,11 +185,69 @@ const EDU_WINCASH_LINES = [
   { code: "727623", name: "Document State Development Fees", price: "3.57", note: "خصم 100% = 0" },
 ];
 
+const SR_CATEGORY_INFO: Record<string, { title: string; description: string; icon: string }> = {
+  "استعلام": { title: "استعلام ومعلومات", description: "أسئلة العملاء عن الرصيد والفواتير والخدمات والباقات", icon: "🔎" },
+  "تعديل": { title: "طلبات التعديل", description: "تغيير بيانات الخط والباقات والخدمات والاشتراكات", icon: "🛠️" },
+  "عطل": { title: "الأعطال والشكاوى", description: "مشاكل الخط والشبكة والفواتير والإنترنت والخدمات", icon: "⚠️" },
+};
+
+const SR_FAMILY_LABELS: Record<string, string> = {
+  "Billing And Usage": "الفواتير والاستخدام",
+  "Request For Information": "استعلامات عامة",
+  "Request For Info VAS": "خدمات القيمة المضافة",
+  "Request For Info Campaign": "الحملات والإعلانات",
+  "Request For Info Data": "خدمات الإنترنت والبيانات",
+  "Request For Info Product": "المنتجات",
+  "Request For Info Loyalty": "برامج الولاء",
+  "Request For Info MNP": "نقل الأرقام",
+  "Request For Info Offers": "العروض",
+  "Request For Info Devices": "الأجهزة",
+  "Acc Mod For Line Modification": "تعديلات الخط",
+  "Acc Mod For VAS": "تعديلات الخدمات",
+  "Acc Mod For Billing": "تعديلات الفواتير",
+  "Acc Mod For Migration": "تغيير النظام",
+  "Acc Mod For Changing Tariff": "تغيير الباقة",
+  "Acc Mod For Data Services": "تعديلات الإنترنت والبيانات",
+  "Acc Mod For Offers": "تعديلات العروض",
+  "Acc Mod For MNP": "تعديلات نقل الأرقام",
+  "Acc Mod For Products": "تعديلات المنتجات",
+  "Fault For VAS": "أعطال الخدمات",
+  "Fault For Billing": "مشاكل الفواتير والمدفوعات",
+  "Fault For Products": "مشاكل المنتجات",
+  "Fault For Data Services": "مشاكل الإنترنت والبيانات",
+  "Fault For Customer Care": "مشاكل خدمة العملاء",
+  "Fault For Line Modification": "مشاكل الخط والتعديلات",
+  "Fault For Sales Teams": "مشاكل أنظمة البيع",
+  "Fault For Network Complaints": "شكاوى الشبكة",
+  "Fault For MNP": "مشاكل نقل الأرقام",
+  "Fault For New Line": "مشاكل الخطوط الجديدة",
+  "Fault For Offers": "مشاكل العروض",
+  "DSL Fault Billing": "أعطال فواتير DSL",
+  "DSL Fault Connectivity": "مشاكل اتصال DSL",
+  "DSL Fault Physical": "أعطال الخط الأرضي والراوتر",
+  "DSL Fault VAS": "أعطال خدمات DSL",
+  "DSL G Info": "استعلامات DSL",
+};
+
+function srFamilyKey(item: SrItem) {
+  return item.title.split(/\\s+[–—-]\\s+/)[0].trim();
+}
+
+function srFamilyLabel(key: string) {
+  if (SR_FAMILY_LABELS[key]) return SR_FAMILY_LABELS[key];
+  if (key.startsWith("DSL ")) return "الإنترنت الأرضي · " + key.replace(/^DSL\\s+/, "");
+  if (key.startsWith("Acc Mod ")) return "تعديلات · " + key.replace(/^Acc Mod For\\s+/, "");
+  if (key.startsWith("Fault For ")) return "أعطال · " + key.replace(/^Fault For\\s+/, "");
+  if (key.startsWith("Request For ")) return "استعلامات · " + key.replace(/^Request For Info?\\s+/, "");
+  return key;
+}
+
 export default function WikiPage() {
   const toast = useToast();
   const [section, setSection] = useHistoryView<SectionId>("hub");
   const [query, setQuery] = useState("");
   const [srCategory, setSrCategory] = useState("الكل");
+  const [srFamily, setSrFamily] = useState("");
   const [openSr, setOpenSr] = useState<SrItem | null>(null);
   const [articles, setArticles] = useState<Article[]>([]);
   const [loadingNotes, setLoadingNotes] = useState(false);
@@ -226,10 +284,11 @@ export default function WikiPage() {
     return SR_ITEMS.filter((item) => {
       const catOk = srCategory === "الكل" || item.category === srCategory;
       if (!catOk) return false;
+      if (srFamily && srFamilyKey(item) !== srFamily) return false;
       if (!q) return true;
       return matchesQuery([item.id, item.title, item.titleAr, item.description, item.steps, item.category].join(" "), q);
     });
-  }, [q, srCategory]);
+  }, [q, srCategory, srFamily]);
 
   const globalHits = useMemo(() => {
     if (!q) return null;
@@ -404,31 +463,90 @@ export default function WikiPage() {
       ) : null}
 
       {section === "sr" ? (
-        <div>
-          <Back onClick={() => setSection("hub")} title="مرجع الـ SR" />
+        <div className="space-y-3">
+          <Back onClick={() => {
+            if (srFamily) setSrFamily("");
+            else if (srCategory !== "الكل") setSrCategory("الكل");
+            else setSection("hub");
+          }} title={srFamily ? srFamilyLabel(srFamily) : srCategory === "الكل" ? "مرجع الـ SR" : SR_CATEGORY_INFO[srCategory]?.title ?? srCategory} />
           <SearchBox value={query} onChange={setQuery} placeholder="ابحث بكود SR أو اسم الإجراء..." />
-          <div className="mt-3 flex gap-2 overflow-x-auto pb-2">
-            {["الكل", ...SR_CATEGORIES].map((cat) => (
-              <button
-                key={cat}
-                type="button"
-                onClick={() => setSrCategory(cat)}
-                className={`shrink-0 rounded-full px-3 py-2 text-xs font-extrabold ${srCategory === cat ? "bg-[#e96812] text-white" : "bg-white text-[#88796e]"}`}
-              >
-                {cat}
-              </button>
-            ))}
-          </div>
-          <p className="mt-2 text-xs text-[#88796e]">{filteredSr.length} نتيجة</p>
-          <div className="mt-3 grid gap-2 sm:grid-cols-2">
-            {filteredSr.map((item) => (
-              <button key={`${item.id}-${item.title}`} type="button" onClick={() => setOpenSr(item)} className="w-full rounded-[24px] border border-[#f2e4d8] bg-white p-4 text-right shadow-sm">
-                <p className="text-xs font-extrabold text-[#bd4b0a]">{item.id}</p>
-                <p className="font-extrabold">{item.titleAr || item.title}</p>
-                <p className="mt-1 line-clamp-2 text-xs leading-6 text-[#88796e]">{item.description}</p>
-              </button>
-            ))}
-          </div>
+
+          {q ? (
+            <>
+              <div className="flex items-center justify-between px-1">
+                <p className="text-sm font-black text-[#4d3829]">نتائج البحث</p>
+                <p className="text-xs text-[#88796e]">{filteredSr.length} نتيجة</p>
+              </div>
+              <div className="grid gap-2 sm:grid-cols-2">
+                {filteredSr.map((item) => (
+                  <button key={item.id + item.title} type="button" onClick={() => setOpenSr(item)} className="w-full rounded-2xl border border-[#f2e4d8] bg-white p-3.5 text-right shadow-sm">
+                    <div className="flex items-center justify-between gap-2">
+                      <p className="text-xs font-black text-[#bd4b0a]" dir="ltr">{item.id}</p>
+                      <span className="rounded-full bg-[#fff4e9] px-2 py-1 text-[10px] font-bold text-[#9b6038]">{item.category}</span>
+                    </div>
+                    <p className="mt-1 text-sm font-extrabold">{item.titleAr || item.title}</p>
+                    <p className="mt-1 line-clamp-2 text-xs leading-5 text-[#88796e]">{item.description}</p>
+                  </button>
+                ))}
+              </div>
+              {!filteredSr.length ? <EmptyState title="مفيش نتيجة" text="جرّب كود أو كلمة مختلفة." /> : null}
+            </>
+          ) : srCategory === "الكل" ? (
+            <div className="grid gap-3 sm:grid-cols-3">
+              {SR_CATEGORIES.map((cat) => {
+                const count = SR_ITEMS.filter((item) => item.category === cat).length;
+                const info = SR_CATEGORY_INFO[cat] ?? { title: cat, description: "تصفح الأكواد المرتبطة بالقسم", icon: "📁" };
+                return (
+                  <button key={cat} type="button" onClick={() => { setSrCategory(cat); setSrFamily(""); }} className="rounded-[24px] border border-[#f1dfd0] bg-white p-4 text-right shadow-sm transition hover:border-[#edc4a4]">
+                    <div className="flex items-center justify-between">
+                      <span className="text-2xl">{info.icon}</span>
+                      <span className="rounded-full bg-[#fff0e2] px-2.5 py-1 text-xs font-black text-[#bd4b0a]">{count} كود</span>
+                    </div>
+                    <p className="mt-3 font-black text-[#2d2119]">{info.title}</p>
+                    <p className="mt-1 text-xs leading-5 text-[#88796e]">{info.description}</p>
+                  </button>
+                );
+              })}
+            </div>
+          ) : !srFamily ? (
+            <div className="space-y-2">
+              <div className="flex items-center justify-between px-1">
+                <p className="text-sm font-black text-[#4d3829]">اختار نوع الطلب</p>
+                <p className="text-xs text-[#88796e]">{filteredSr.length} كود</p>
+              </div>
+              <div className="grid gap-2 sm:grid-cols-2">
+                {Array.from(new Set(SR_ITEMS.filter((item) => item.category === srCategory).map(srFamilyKey))).sort((a, b) => srFamilyLabel(a).localeCompare(srFamilyLabel(b), "ar")).map((family) => {
+                  const count = SR_ITEMS.filter((item) => item.category === srCategory && srFamilyKey(item) === family).length;
+                  return (
+                    <button key={family} type="button" onClick={() => setSrFamily(family)} className="flex items-center gap-3 rounded-2xl border border-[#f2e4d8] bg-white p-3.5 text-right shadow-sm">
+                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#fff0e2] text-lg">📂</span>
+                      <span className="min-w-0 flex-1">
+                        <span className="block text-sm font-extrabold text-[#38291f]">{srFamilyLabel(family)}</span>
+                        <span className="mt-0.5 block text-[10px] text-[#9a887b]" dir="ltr">{family}</span>
+                      </span>
+                      <span className="shrink-0 rounded-full bg-[#fff7ef] px-2 py-1 text-[10px] font-black text-[#bd4b0a]">{count}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          ) : (
+            <>
+              <div className="flex items-center justify-between px-1">
+                <p className="text-sm font-black text-[#4d3829]">{srFamilyLabel(srFamily)}</p>
+                <p className="text-xs text-[#88796e]">{filteredSr.length} كود</p>
+              </div>
+              <div className="grid gap-2 sm:grid-cols-2">
+                {filteredSr.map((item) => (
+                  <button key={item.id + item.title} type="button" onClick={() => setOpenSr(item)} className="w-full rounded-2xl border border-[#f2e4d8] bg-white p-3.5 text-right shadow-sm">
+                    <p className="text-xs font-black text-[#bd4b0a]" dir="ltr">{item.id}</p>
+                    <p className="mt-1 text-sm font-extrabold">{item.titleAr || item.title}</p>
+                    <p className="mt-1 line-clamp-2 text-xs leading-5 text-[#88796e]">{item.description}</p>
+                  </button>
+                ))}
+              </div>
+            </>
+          )}
         </div>
       ) : null}
 
