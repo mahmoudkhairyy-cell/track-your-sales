@@ -142,7 +142,7 @@ function PlanBand({ title, big }: { title: string; big?: string }) {
 
 /**
  * السعر المكتوب في الداتا هو السعر بعد الضريبة (زي جدول FREEmax: NoTax = WithTax × 0.7).
- * الرقم قبل الضريبة ده تقدير محسوب بالمعادلة دي، مش رقم رسمي من أورانج.
+ * الرقم قبل الضريبة محسوب بالمعادلة دي، والمرجع هو الأسعار المعتمدة من أورانج.
  */
 function TwoPrice({ fees }: { fees: string }) {
   const after = parseFloat(fees);
@@ -156,11 +156,11 @@ function TwoPrice({ fees }: { fees: string }) {
           <p className="font-extrabold text-[#b84700]">{after.toFixed(2)} جنيه</p>
         </div>
         <div className="flex-1 rounded-xl bg-neutral-50 px-2.5 py-1.5">
-          <p className="text-[11px] font-bold text-[#88796e]">تقدير قبل الضريبة</p>
+          <p className="text-[11px] font-bold text-[#88796e]">قبل الضريبة</p>
           <p className="font-extrabold text-neutral-700">{before.toFixed(2)} جنيه</p>
         </div>
       </div>
-      <p className="text-[11px] leading-5 text-[#88796e]">التقدير = المكتوب × 0.7. ده حساب تقريبي مش رقم رسمي، والمرجع هو الأسعار المعتمدة من أورانج.</p>
+      <p className="text-[11px] leading-5 text-[#88796e]">قبل الضريبة = المكتوب × 0.7. والمرجع هو الأسعار المعتمدة من أورانج.</p>
     </div>
   );
 }
