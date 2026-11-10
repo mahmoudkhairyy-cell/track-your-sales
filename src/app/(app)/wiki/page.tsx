@@ -79,7 +79,7 @@ function copyText(value: string, toast: { push: (t: "success" | "error" | "info"
   navigator.clipboard
     .writeText(value)
     .then(() => toast.push("success", ok))
-    .catch(() => toast.push("error", "النسخ معرفش يتم، جرّب تاني"));
+    .catch(() => toast.push("error", "ماقدرناش ننسخ. حاول تاني."));
 }
 
 function money(value: number) {
@@ -238,7 +238,7 @@ export default function WikiPage() {
     } catch (err) {
       // لو الحمل فشل، منعرضش "مفيش ملاحظات" كأنها فاضية فعلاً.
       setArticles([]);
-      setNotesError(err instanceof Error ? err.message : "مقدرناش نحمّل الملاحظات");
+      setNotesError(err instanceof Error ? err.message : "ماقدرناش نحمّل الملاحظات. اتأكد من النت وحاول تاني.");
     } finally {
       setLoadingNotes(false);
     }
@@ -404,7 +404,7 @@ export default function WikiPage() {
                 </a>
               ))}
               {!globalHits.sr.length && !globalHits.hunts.length && !globalHits.emails.length && !globalHits.fm.length && !globalHits.plans.length && !globalHits.dsl.length && !globalHits.docs.length ? (
-                <EmptyState title="مفيش نتيجة 🤷" text="جرّب كلمة تانية: كود SR، اسم باقة، رقم، أو إيميل." />
+                <EmptyState title="مفيش نتايج" text="جرّب كلمة تانية: كود SR، اسم باقة، رقم، أو إيميل." />
               ) : null}
             </div>
           ) : (

@@ -100,7 +100,7 @@ export default function TargetPage() {
         setQuality(result.settings.quality ?? ZERO_QUALITY_FORM);
       })
       .catch((err) => {
-        if (!cancelled) setError(err instanceof ApiError || err instanceof Error ? err.message : "مقدرناش نحمّل الإعدادات");
+        if (!cancelled) setError(err instanceof ApiError || err instanceof Error ? err.message : "ماقدرناش نحمّل الإعدادات. اتأكد من النت وحاول تاني.");
       })
       .finally(() => {
         if (!cancelled) setLoading(false);
@@ -143,7 +143,7 @@ export default function TargetPage() {
       window.dispatchEvent(new Event("tys-settings-saved"));
       toast.push("success", "✅ تمام! إعدادات الشهر اتحفظت");
     } catch (err) {
-      const message = err instanceof ApiError || err instanceof Error ? err.message : "مقدرناش نحفظ الإعدادات";
+      const message = err instanceof ApiError || err instanceof Error ? err.message : "ماقدرناش نحفظ الإعدادات. اتأكد من النت وحاول تاني.";
       setError(message);
       toast.push("error", message);
     } finally {
