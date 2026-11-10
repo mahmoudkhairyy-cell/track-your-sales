@@ -217,20 +217,26 @@ export default function HomePage() {
             فاضل {formatQty(data.work.remaining)} يوم عمل
           </span>
         </div>
-        {data.kpis.filter((k) => k.remaining > 0).length > 0 ? (
-          <div className="grid grid-cols-2 gap-2">
-            {data.kpis.filter((k) => k.remaining > 0).map((k) => (
-              <div key={k.kpiKey} className="flex min-w-0 items-center justify-between gap-2 rounded-xl bg-[var(--color-surface-cream)] px-2.5 py-2">
-                <span className="min-w-0 truncate text-[11px] font-bold text-[var(--color-text-secondary)]" dir="ltr">{k.nameEn}</span>
-                <strong className="shrink-0 text-sm font-black tabular-nums text-[var(--color-primary-700)]">
-                  {formatQty(data.work.remaining > 0 ? Math.ceil(k.remaining / data.work.remaining) : k.remaining)}
-                </strong>
+        <div className="grid grid-cols-2 gap-2">
+          {data.kpis.map((k) => {
+            const dailyRequired = data.work.remaining > 0 ? Math.ceil(k.remaining / data.work.remaining) : k.remaining;
+            const completed = k.remaining <= 0;
+            return (
+              <div
+                key={k.kpiKey}
+                className="flex min-h-[68px] min-w-0 flex-col justify-between gap-2 rounded-xl border border-[#e87520]/25 bg-gradient-to-br from-[#ff9d38] to-[#ed7417] px-3 py-2.5 text-white shadow-[0_3px_10px_rgba(237,116,23,0.18)]"
+              >
+                <span className="truncate text-[10px] font-extrabold tracking-wide text-white/95" dir="ltr">{k.nameEn}</span>
+                <div className="flex items-end justify-between gap-2">
+                  <span className="text-[9px] font-bold text-white/85">{completed ? "مكتمل ✓" : "المطلوب يوميًا"}</span>
+                  <strong className="shrink-0 text-xl font-black leading-none tabular-nums text-white">
+                    {completed ? "✓" : formatQty(dailyRequired)}
+                  </strong>
+                </div>
               </div>
-            ))}
-          </div>
-        ) : (
-          <p className="rounded-xl bg-[var(--color-primary-50)] px-3 py-2 text-xs font-bold text-[var(--color-primary-700)]">كل المؤشرات وصلت للتارجت 🎉</p>
-        )}
+            );
+          })}
+        </div>
       </section>
 
       {/* المؤشرات */}
