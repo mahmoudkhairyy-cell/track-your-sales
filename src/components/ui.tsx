@@ -190,7 +190,7 @@ export function Modal({
   }, [open, onClose]);
   if (!open) return null;
   return (
-    <div className="fixed inset-0 z-[80] flex items-end justify-center bg-[#4b3024]/35 p-3 backdrop-blur-[3px] sm:items-center">
+    <div className="fixed inset-0 z-[80] flex items-center justify-center bg-[#4b3024]/35 p-3 backdrop-blur-[3px]">
       <button className="absolute inset-0" aria-label="إغلاق" tabIndex={-1} onClick={onClose} />
       <div role="dialog" aria-modal="true" aria-labelledby={titleId} className="relative max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-[28px] border border-[#f1dfd0] bg-white p-5 shadow-[0_24px_70px_rgba(77,44,25,0.20)]">
         <div className="mb-4 flex items-start justify-between gap-3">
