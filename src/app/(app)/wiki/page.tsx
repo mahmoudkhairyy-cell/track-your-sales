@@ -3,6 +3,7 @@
 import { BrandLogo, brandKeysFrom } from "@/components/BrandLogo";
 import { useHistoryView } from "@/lib/use-history-view";
 import { Fragment, FormEvent, useEffect, useMemo, useState, type ReactNode } from "react";
+import { useSearchParams } from "next/navigation";
 import {
   Banner,
   EmptyState,
@@ -267,8 +268,12 @@ function SrCard({ item }: { item: SrItem }) {
 
 export default function WikiPage() {
   const toast = useToast();
-  const [section, setSection] = useHistoryView<SectionId>("hub");
-  const [query, setQuery] = useState("");
+  const searchParams = useSearchParams();
+  const sectionParam = searchParams.get("section") as SectionId | null;
+  const validSections: SectionId[] = ["hub", "capsule", "sr", "premier", "freemax", "go", "educational", "hunts", "home", "dsl", "docs", "emails", "notes"];
+  const initialSection = sectionParam && validSections.includes(sectionParam) ? sectionParam : "hub";
+  const [section, setSection] = useHistoryView<SectionId>("hub", initialSection);
+  const [query, setQuery] = useState(() => searchParams.get("q") ?? "");
   const [srTopic, setSrTopic] = useState("الكل");
   const [articles, setArticles] = useState<Article[]>([]);
   const [loadingNotes, setLoadingNotes] = useState(false);
@@ -290,6 +295,15 @@ export default function WikiPage() {
   const PREMIER_GUIDE = wikiData?.PREMIER_GUIDE ?? { steps: [], secondIds: [] };
   const PREMIER_PERKS = wikiData?.PREMIER_PERKS ?? [];
   const SR_ITEMS = wikiData?.SR_ITEMS ?? [];
+
+  useEffect(() => {
+    const url = new URL(window.location.href);
+    if (section === "hub") url.searchParams.delete("section");
+    else url.searchParams.set("section", section);
+    if (query.trim()) url.searchParams.set("q", query.trim());
+    else url.searchParams.delete("q");
+    window.history.replaceState(window.history.state, "", url);
+  }, [section, query]);
 
   const q = query.trim();
   const needsWikiData = (section !== "hub" && section !== "notes" && section !== "capsule") || Boolean(q);
@@ -404,6 +418,7 @@ export default function WikiPage() {
               <div>
                 <p className="text-[10px] font-black tracking-[0.2em] text-[var(--color-primary-700)]" dir="ltr">KNOWLEDGE HUB</p>
                 <h1 className="mt-1 text-2xl font-black tracking-tight text-[var(--color-text-primary)] sm:text-3xl">مرجع أورانج</h1>
+                <p className="mt-1 text-[11px] font-bold text-[#8a3b0b]">مرجع غير رسمي — راجع أحدث التعليمات المعتمدة قبل تنفيذ أي إجراء.</p>
                 <p className="mt-2 max-w-lg text-xs leading-6 text-[var(--color-text-secondary)]">كل اللي تحتاجه في الشيفت: أكواد SR، الباقات، أرقام التواصل، والمستندات في مكان واحد.</p>
               </div>
               <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-white bg-white/90 text-2xl shadow-sm">📚</span>
