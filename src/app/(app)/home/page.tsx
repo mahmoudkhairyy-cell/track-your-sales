@@ -221,43 +221,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* نسبة الإنجاز بالمحاور */}
-      <section className="flex flex-col gap-3 rounded-[26px] border border-[var(--color-border)] bg-white/70 p-4 shadow-[0_5px_14px_rgba(100,55,25,0.13)]">
-        <div className="flex items-center justify-between">
-          <h2 className="flex items-center gap-1.5 text-sm font-black tracking-tight text-[var(--color-text-primary)]">
-            <span>نسبة الإنجاز بالمحاور</span>
-            <span className="rounded border border-[var(--color-border)] bg-[var(--color-primary-50)] px-1.5 text-[11px] font-bold text-[var(--color-primary-700)]">{data.kpis.length} مؤشرات</span>
-          </h2>
-          <span className="text-[11px] font-bold text-[var(--color-text-secondary)]">اسحب ←</span>
-        </div>
-        <div className="no-scrollbar flex gap-3 overflow-x-auto pb-1 pt-0.5">
-          {data.kpis.map((kpi) => {
-            const ok = kpi.achieved >= kpi.expectedToDate;
-            return (
-              <div key={kpi.kpiKey} className="flex w-[104px] shrink-0 flex-col items-center rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface-cream)] p-2 text-center shadow-[0_5px_14px_rgba(100,55,25,0.13)] transition-shadow">
-                <div className={`flex h-10 w-10 items-center justify-center rounded-full border-2 font-mono text-xs font-black ${ok ? "border-emerald-500 text-emerald-700" : "border-red-500 text-red-700"}`}>
-                  {Math.round(kpi.percent)}%
-                </div>
-                <span className="mt-1.5 w-full truncate text-[11px] font-bold text-[var(--color-text-primary)]" dir="ltr">{shortKpiName(kpi.nameEn)}</span>
-                <span className={`mt-0.5 text-[10px] font-extrabold ${ok ? "text-emerald-700" : "text-red-700"}`}>{ok ? "On Track" : "متأخر"}</span>
-              </div>
-            );
-          })}
-        </div>
-      </section>
-
-      {/* إجراءات سريعة (صفحات موجودة بس) */}
-      <section className="grid grid-cols-2 gap-2.5">
-        {[
-          { href: "/target/", label: "التارجت" },
-          { href: "/wiki/", label: "المرجع" },
-        ].map((item) => (
-          <Link key={item.href} href={`${item.href}?month=${month}`} className="rounded-2xl border border-[var(--color-border)] bg-white px-2 py-3 text-center text-xs font-extrabold text-[var(--color-text-primary)] shadow-[0_5px_14px_rgba(100,55,25,0.13)] transition-all hover:-translate-y-0.5 hover:border-[var(--color-border)] active:scale-95">
-            {item.label}
-          </Link>
-        ))}
-      </section>
-
       {/* المؤشرات */}
       <section className="flex flex-col gap-3 rounded-[28px] border border-[var(--color-border)] bg-white/75 p-4 shadow-[0_5px_14px_rgba(100,55,25,0.13)] sm:p-5">
         <div className="flex items-center justify-between">
