@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import { KPI_CATALOG, kpiEmoji, type KpiKey } from "@/lib/constants";
 import { cairoISODate, cairoYearMonth, monthLabelAr } from "@/lib/dates";
 import { haptic } from "@/lib/prefs";
@@ -34,18 +34,19 @@ export default function LogPage() {
 
   const [dash, setDash] = useState<DashData | null>(null);
   const [quantities, setQuantities] = useState<Partial<Record<KpiKey, string>>>({});
-  const [entryDate, setEntryDate] = useState(cairoISODate());
+  const [entryDate, setEntryDate] = useState(() => month === cairoYearMonth() ? cairoISODate() : `${month}-01`);
+  const entryDateTouched = useRef(false);
   const [note, setNote] = useState("");
   const [error, setError] = useState("");
   const [pending, setPending] = useState(false);
 
-  // لو الشهر اتغيّر، التاريخ يتظبط عشان يقع جوه الشهر المعروض (وإلا الإنجاز بيروح لشهر تاني بصمت).
+  // عند تغيير الشهر نحدّث التاريخ الافتراضي فقط قبل ما المستخدم يختار تاريخًا بنفسه.
+  // اختيار المستخدم يظل كما هو حتى لو كان خارج الشهر المحدد، مع تنبيه شهر الحفظ.
   useEffect(() => {
-    let cancelled = false;
-    queueMicrotask(() => {
-      if (!cancelled) setEntryDate((cur) => (cur.startsWith(month) ? cur : month === cairoYearMonth() ? cairoISODate() : `${month}-01`));
-    });
-    return () => { cancelled = true; };
+    if (!entryDateTouched.current) {
+      entryDateTouched.current = false;
+      setEntryDate(month === cairoYearMonth() ? cairoISODate() : `${month}-01`);
+    }
   }, [month]);
 
   // بنحدّث الأرقام لما نسجّل إنجاز جديد (tys-data-changed) عشان "الباقي" و"التوتال" ما يفضلوش قديمين.
@@ -257,7 +258,7 @@ export default function LogPage() {
 
       <section className="rounded-[22px] border border-[var(--color-border)] bg-white p-3 shadow-sm sm:rounded-[24px] sm:p-4">
         <label htmlFor="entry-date" className="block text-xs font-bold text-[var(--color-text-secondary)]">📅 تاريخ الإنجاز</label>
-        <input id="entry-date" className={`${inputClass} mt-2`} type="date" value={entryDate} onChange={(e) => setEntryDate(e.target.value)} required />
+        <input id="entry-date" className={`${inputClass} mt-2`} type="date" value={entryDate} onChange={(e) => { entryDateTouched.current = true; setEntryDate(e.target.value); }} required />
         <p className="mt-2 text-xs leading-6 text-[var(--color-text-secondary)]">التاريخ هو اللي بيحدد شهر السجل، مش الشهر المختار أعلى التطبيق.</p>
         {dateOutsideSelectedMonth ? <Banner tone="warn">تنبيه: التاريخ ده في {monthLabelAr(dateMonth)}، والسجل هيتحفظ ضمن الشهر ده، مش {monthLabelAr(month)}.</Banner> : null}
       </section>
