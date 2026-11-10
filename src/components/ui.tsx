@@ -46,14 +46,14 @@ export function Banner({
   children: ReactNode;
 }) {
   const config = {
-    info: { icon: "ⓘ", style: "border-[#f0d5bf] bg-[#fff8f1] text-[#75401f]" },
-    error: { icon: "!", style: "border-[#f0c9c3] bg-[#fff5f3] text-[#913b31]" },
-    success: { icon: "✓", style: "border-[#cfe5d7] bg-[#f4fbf6] text-[#286345]" },
-    warn: { icon: "⚠", style: "border-[#f0dfb8] bg-[#fffaf0] text-[#78551c]" },
+    info: { icon: "ⓘ", style: "border-[#e9ddd3] border-r-[#c6530b] text-[#75401f]", iconStyle: "bg-[#fff0e4] text-[#bd4b0a]" },
+    error: { icon: "!", style: "border-[#ecd7d3] border-r-[#dc6254] text-[#913b31]", iconStyle: "bg-[#fff0ed] text-[#c44b3d]" },
+    success: { icon: "✓", style: "border-[#d7e7dc] border-r-[#329565] text-[#286345]", iconStyle: "bg-[#edf8f0] text-[#258253]" },
+    warn: { icon: "⚠", style: "border-[#eee2c9] border-r-[#d99a24] text-[#78551c]", iconStyle: "bg-[#fff7e6] text-[#b77a10]" },
   }[tone];
   return (
-    <div role={tone === "error" ? "alert" : "status"} aria-live={tone === "error" ? "assertive" : "polite"} className={`flex items-start gap-3 rounded-[20px] border px-4 py-3 text-sm leading-7 shadow-[0_5px_16px_rgba(105,54,20,.035)] ${config.style}`}>
-      <span aria-hidden="true" className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-white/80 text-sm font-black shadow-sm">{config.icon}</span>
+    <div role={tone === "error" ? "alert" : "status"} aria-live={tone === "error" ? "assertive" : "polite"} className={`flex items-start gap-3 rounded-[18px] border border-r-4 bg-white px-4 py-3 text-sm leading-7 shadow-[0_6px_20px_rgba(70,43,24,.055)] ${config.style}`}>
+      <span aria-hidden="true" className={`mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-xl text-sm font-black ${config.iconStyle}`}>{config.icon}</span>
       <div className="min-w-0 flex-1">{children}</div>
     </div>
   );
@@ -148,14 +148,19 @@ export function ToastProvider({ children }: { children: ReactNode }) {
       <div aria-live="polite" aria-relevant="additions" className="pointer-events-none fixed left-1/2 top-4 z-[70] flex w-[min(92vw,420px)] -translate-x-1/2 flex-col gap-2">
         {toasts.map((toast) => {
           const tone = toast.type === "success"
-            ? "border-[#cfe5d7] text-[#286345]"
+            ? "border-[#d7e7dc] border-r-[#329565] text-[#286345]"
             : toast.type === "error"
-              ? "border-[#f0c9c3] text-[#913b31]"
-              : "border-[#f0d5bf] text-[#75401f]";
+              ? "border-[#ecd7d3] border-r-[#dc6254] text-[#913b31]"
+              : "border-[#e9ddd3] border-r-[#c6530b] text-[#75401f]";
           const icon = toast.type === "success" ? "✓" : toast.type === "error" ? "!" : "ⓘ";
+          const iconTone = toast.type === "success"
+            ? "bg-[#edf8f0] text-[#258253]"
+            : toast.type === "error"
+              ? "bg-[#fff0ed] text-[#c44b3d]"
+              : "bg-[#fff0e4] text-[#bd4b0a]";
           return (
-            <div key={toast.id} role={toast.type === "error" ? "alert" : "status"} className={`flex items-center gap-3 rounded-[20px] border bg-white/95 px-4 py-3 text-sm font-bold shadow-[0_14px_38px_rgba(75,42,20,.14)] backdrop-blur-xl ${tone}`}>
-              <span aria-hidden="true" className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#fff0e4] text-[#bd4b0a]">{icon}</span>
+            <div key={toast.id} role={toast.type === "error" ? "alert" : "status"} className={`flex items-center gap-3 rounded-[18px] border border-r-4 bg-white px-4 py-3 text-sm font-bold shadow-[0_10px_28px_rgba(75,42,20,.11)] ${tone}`}>
+              <span aria-hidden="true" className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-xl ${iconTone}`}>{icon}</span>
               <span className="min-w-0 flex-1">{toast.text}</span>
             </div>
           );
