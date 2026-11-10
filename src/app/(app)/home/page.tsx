@@ -181,7 +181,6 @@ export default function HomePage() {
               </svg>
               <div className="absolute inset-0 flex flex-col items-center justify-center">
                 <span className="font-mono text-lg font-black text-[#bd4b0a] sm:text-xl">{Math.round(Math.min(200, data.overall))}%</span>
-                <span className="text-[9px] font-bold text-[#9a806c]">من 200%</span>
               </div>
             </div>
           </div>
