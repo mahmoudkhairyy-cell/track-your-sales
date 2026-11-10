@@ -2,7 +2,7 @@
 
 import { FormEvent, useEffect, useState } from "react";
 import { KPI_CATALOG, kpiEmoji, type KpiKey } from "@/lib/constants";
-import { cairoISODate, cairoYearMonth, monthDateRange } from "@/lib/dates";
+import { cairoISODate, cairoYearMonth, monthLabelAr } from "@/lib/dates";
 import { haptic } from "@/lib/prefs";
 import { Banner, PrimaryButton, inputClass, useToast } from "@/components/ui";
 import { ApiError, api } from "@/lib/client";
@@ -121,6 +121,8 @@ export default function LogPage() {
   const qualityScore = quality
     ? QUALITY_ITEMS.reduce((sum, item) => sum + (quality.checks?.[item.key] ? item.weight : 0), 0)
     : 0;
+  const dateMonth = entryDate.slice(0, 7);
+  const dateOutsideSelectedMonth = Boolean(entryDate && dateMonth !== month);
 
   const dashByKey = new Map((dash?.kpis ?? []).map((k) => [k.kpiKey, k]));
   const onTrack = (dash?.kpis ?? []).filter((k) => k.weight > 0 && k.remaining > 0);
@@ -173,7 +175,7 @@ export default function LogPage() {
       window.dispatchEvent(new Event("tys-data-changed"));
       setQuantities({});
       setNote("");
-      setEntryDate(cairoISODate());
+      setEntryDate(month === cairoYearMonth() ? cairoISODate() : `${month}-01`);
     } catch (err) {
       const message = err instanceof ApiError || err instanceof Error ? err.message : "ماقدرناش نحفظ السجل. اتأكد من النت وحاول تاني.";
       setError(saved > 0 ? `اتحفظ ${saved} من ${filled.length} بس. ${message}` : message);
@@ -255,7 +257,9 @@ export default function LogPage() {
 
       <section className="rounded-[22px] border border-[var(--color-border)] bg-white p-3 shadow-sm sm:rounded-[24px] sm:p-4">
         <label htmlFor="entry-date" className="block text-xs font-bold text-[var(--color-text-secondary)]">📅 تاريخ الإنجاز</label>
-        <input id="entry-date" className={`${inputClass} mt-2`} type="date" value={entryDate} min={monthDateRange(month).start} max={monthDateRange(month).end} onChange={(e) => setEntryDate(e.target.value)} required />
+        <input id="entry-date" className={`${inputClass} mt-2`} type="date" value={entryDate} onChange={(e) => setEntryDate(e.target.value)} required />
+        <p className="mt-2 text-xs leading-6 text-[var(--color-text-secondary)]">التاريخ هو اللي بيحدد شهر السجل، مش الشهر المختار أعلى التطبيق.</p>
+        {dateOutsideSelectedMonth ? <Banner tone="warn">تنبيه: التاريخ ده في {monthLabelAr(dateMonth)}، والسجل هيتحفظ ضمن الشهر ده، مش {monthLabelAr(month)}.</Banner> : null}
       </section>
 
       <section className="grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -272,7 +276,8 @@ export default function LogPage() {
               <div className="flex items-center gap-3">
                 <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--color-primary-50)] text-[var(--color-primary-600)]"><KpiIcon kpiKey={item.key} className="h-5 w-5" /></span>
                 <div>
-                  <p className="font-extrabold" dir="ltr">{item.nameEn}</p>
+                  <p className="font-extrabold">{item.nameAr}</p>
+                  <p className="text-[10px] font-semibold text-[var(--color-text-secondary)]" dir="ltr">{item.nameEn}</p>
                   <p className="text-[11px] font-bold text-[var(--color-primary-700)]">
                     {excluded ? "متتحسبش غير لما تكمل 90%" : commission > 0 ? `كوميشن ${commission} ج` : " "}
                   </p>
@@ -295,6 +300,7 @@ export default function LogPage() {
             </div>
             <div className="mt-3 flex items-center gap-2">
               <input
+                id={`quantity-${item.key}`}
                 className={`${inputClass} text-lg font-black`}
                 type="number"
                 inputMode="numeric"
@@ -304,7 +310,7 @@ export default function LogPage() {
                 value={quantities[item.key] ?? ""}
                 onChange={(e) => setQuantities((cur) => ({ ...cur, [item.key]: e.target.value }))}
                 placeholder="0"
-                aria-label={`كمية ${item.nameEn}`}
+                aria-label={`كمية ${item.nameAr}`}
               />
               <span className="shrink-0 text-xs font-bold text-[var(--color-text-secondary)]">{d?.unitAr ?? ""}</span>
             </div>
