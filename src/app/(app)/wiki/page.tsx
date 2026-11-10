@@ -297,6 +297,13 @@ export default function WikiPage() {
   const SR_ITEMS = wikiData?.SR_ITEMS ?? [];
 
   useEffect(() => {
+    const syncQueryFromHistory = () => {
+      setQuery(new URLSearchParams(window.location.search).get("q") ?? "");
+    };
+    window.addEventListener("popstate", syncQueryFromHistory);
+    return () => window.removeEventListener("popstate", syncQueryFromHistory);
+  }, []);
+  useEffect(() => {
     const url = new URL(window.location.href);
     if (section === "hub") url.searchParams.delete("section");
     else url.searchParams.set("section", section);
