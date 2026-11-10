@@ -35,7 +35,7 @@ type TodayItem = {
 };
 
 export default function MorePage() {
-  const [view, setView] = useHistoryView<"menu" | "today" | "history" | "profile" | "backup" | "about" | "report">("menu");
+  const [view, setView] = useHistoryView<"menu" | "today" | "history" | "data" | "profile" | "backup" | "about" | "report">("menu");
   const [reportData, setReportData] = useState<{ overall: number; estimatedCommission: number; fullCommission: number; kpis: { kpiKey: string; nameEn: string; achieved: number; target: number; percent: number; contribution: number }[] } | null>(null);
 
   const toast = useToast();
@@ -45,6 +45,8 @@ export default function MorePage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [entries, setEntries] = useState<EntryRow[]>([]);
+  const [historyQuery, setHistoryQuery] = useState("");
+  const [historyKpi, setHistoryKpi] = useState<KpiKey | "all">("all");
   const [todaySummary, setTodaySummary] = useState<TodayItem[]>([]);
   const [profile, setProfile] = useState({ name: "", branch: "", role: "user" });
   const [name, setName] = useState("");
@@ -291,6 +293,12 @@ export default function MorePage() {
   if (error) return <Banner tone="error">{error}</Banner>;
 
   const todayItems = todaySummary.filter((item) => item.quantity > 0 || item.count > 0);
+  const filteredEntries = entries.filter((entry) => {
+    if (historyKpi !== "all" && entry.kpiKey !== historyKpi) return false;
+    const needle = historyQuery.trim().toLocaleLowerCase("ar");
+    if (!needle) return true;
+    return [entry.nameAr, entry.nameEn, entry.note ?? "", entry.entryDate].join(" ").toLocaleLowerCase("ar").includes(needle);
+  });
 
   return (
     <div className="tys-page tys-page-more mx-auto max-w-5xl space-y-5">
@@ -330,7 +338,7 @@ export default function MorePage() {
               title: "متابعة الأداء",
               items: [
                 { key: "today", icon: "📊", title: "اللي عملته النهارده", desc: "ملخص إنجازات اليوم" },
-                { key: "history", icon: "🗂️", title: "سجل العمليات", desc: "كل الإنجازات الشهر ده" },
+                { key: "history", icon: "🗂️", title: "السجل", desc: "عرض وتعديل وحذف الإنجازات" },
                 { key: "report", icon: "📄", title: "تقرير الشهر", desc: "اطبعه أو احفظه PDF" },
               ],
             },
@@ -339,6 +347,7 @@ export default function MorePage() {
               items: [
                 { key: "profile", icon: "👤", title: "بياناتك", desc: "الاسم والفرع" },
                 { key: "backup", icon: "💾", title: "نسخة احتياطية واستعادة", desc: "احفظ بياناتك أو استرجعها" },
+                { key: "data", icon: "🛡️", title: "إدارة البيانات", desc: "إجراءات حذف بيانات الشهر" },
               ],
             },
             {
@@ -370,6 +379,23 @@ export default function MorePage() {
           </div>
           ))}
         </div>
+      ) : null}
+
+      {view === "data" ? (
+        <section className="space-y-4">
+          <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[var(--color-primary-700)]">رجوع للقائمة</button>
+          <div className="rounded-[24px] border border-red-200 bg-white p-5 shadow-sm">
+            <h2 className="text-lg font-black text-[var(--color-text-primary)]">🛡️ إدارة البيانات</h2>
+            <p className="mt-2 text-sm leading-7 text-[var(--color-text-secondary)]">الإجراء ده منفصل عن الاستخدام اليومي. تقدر تمسح سجلات شهر محدد مع الاحتفاظ بإعدادات التارجت والملف الشخصي.</p>
+            <div className="mt-4 rounded-2xl bg-red-50 p-4 text-sm leading-7 text-red-900">
+              الشهر المحدد: <strong>{monthLabelAr(month)}</strong><br />
+              عدد السجلات المتأثرة: <strong>{entries.length}</strong>
+            </div>
+            <button type="button" className="mt-4 min-h-12 w-full rounded-full border border-red-200 bg-red-50 font-extrabold text-red-700" onClick={() => setClearOpen(true)}>
+              🚨 مراجعة حذف سجلات الشهر
+            </button>
+          </div>
+        </section>
       ) : null}
 
       {view === "report" ? (
@@ -448,7 +474,11 @@ export default function MorePage() {
       <section className="rounded-[24px] border border-[var(--color-border)] bg-white p-5 shadow-sm">
         <div className="flex items-center justify-between gap-3">
           <h2 className="text-lg font-black tracking-tight">🗂️ سجل عمليات {monthLabelAr(month)}</h2>
-          <span className="text-sm text-[var(--color-text-secondary)]">{entries.length} سجل</span>
+          <span className="text-sm text-[var(--color-text-secondary)]">{filteredEntries.length} من {entries.length} سجل</span>
+        </div>
+        <div className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-[minmax(0,1fr)_220px]">
+          <label className="block"><span className="sr-only">ابحث في السجل</span><input className={inputClass} type="search" value={historyQuery} onChange={(e) => setHistoryQuery(e.target.value)} placeholder="ابحث في المؤشر أو الملاحظات..." /></label>
+          <label className="block"><span className="sr-only">فلترة حسب المؤشر</span><select className={inputClass} value={historyKpi} onChange={(e) => setHistoryKpi(e.target.value as KpiKey | "all")}><option value="all">كل المؤشرات</option>{KPI_CATALOG.map((item) => <option key={item.key} value={item.key}>{item.nameAr}</option>)}</select></label>
         </div>
         {entries.length === 0 ? (
           <div className="mt-4">
@@ -456,7 +486,7 @@ export default function MorePage() {
           </div>
         ) : (
           <ul className="mt-4 space-y-2">
-            {entries.map((entry) => (
+            {filteredEntries.map((entry) => (
               <li key={entry.id} className="rounded-2xl border border-[var(--color-border)] p-3">
                 <div className="flex items-start justify-between gap-3">
                   <div>
@@ -483,13 +513,6 @@ export default function MorePage() {
             ))}
           </ul>
         )}
-        <button
-          type="button"
-          className="mt-4 min-h-12 w-full rounded-full border border-red-200 bg-red-50 font-extrabold text-red-700"
-          onClick={() => setClearOpen(true)}
-        >
-          🚨 امسح كل سجلات الشهر (مش بيترجع)
-        </button>
       </section>
         </div>
       ) : null}
