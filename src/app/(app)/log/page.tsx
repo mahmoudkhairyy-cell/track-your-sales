@@ -46,16 +46,18 @@ export default function LogPage() {
 
   const [dash, setDash] = useState<DashData | null>(null);
   const [quantities, setQuantities] = useState<Partial<Record<KpiKey, string>>>({});
-  const [entryDate, setEntryDate] = useState(() => month === cairoYearMonth() ? cairoISODate() : `${month}-01`);
+  const [entryDateState, setEntryDateState] = useState(() => ({
+    month,
+    value: month === cairoYearMonth() ? cairoISODate() : `${month}-01`,
+  }));
+  // لكل شهر تاريخ مستقل؛ عند تغيير الشهر نعرض اليوم أو أول الشهر دون تحديث state داخل effect.
+  const entryDate = entryDateState.month === month
+    ? entryDateState.value
+    : month === cairoYearMonth() ? cairoISODate() : `${month}-01`;
+  const setEntryDate = (value: string) => setEntryDateState({ month, value });
   const [note, setNote] = useState("");
   const [error, setError] = useState("");
   const [pending, setPending] = useState(false);
-
-  // التاريخ يفضل داخل الشهر المختار: نحتفظ به لو صالح، وإلا نستخدم اليوم أو أول الشهر.
-  useEffect(() => {
-    const validForMonth = isValidEntryDate(entryDate, month);
-    if (!validForMonth) setEntryDate(month === cairoYearMonth() ? cairoISODate() : `${month}-01`);
-  }, [month, entryDate]);
 
   // بنحدّث الأرقام لما نسجّل إنجاز جديد (tys-data-changed) عشان "الباقي" و"التوتال" ما يفضلوش قديمين.
   const [refreshTick, setRefreshTick] = useState(0);
