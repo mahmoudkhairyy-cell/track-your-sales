@@ -8,7 +8,8 @@ import { Banner, PrimaryButton, inputClass, useToast } from "@/components/ui";
 import { ApiError, api } from "@/lib/client";
 import { useMonth } from "@/components/AppShell";
 import { KpiIcon } from "@/components/KpiIcon";
-import { formatQty } from "@/lib/calculations";
+import { formatMoney, formatQty } from "@/lib/calculations";
+import { overallLine } from "@/lib/phrases";
 import { quantityHint, quantityMax, quantityMin, quantityStep, validateQuantity } from "@/lib/quantity";
 
 
@@ -25,7 +26,7 @@ const QUALITY_ITEMS: { key: QualityKey; label: string; weight: number }[] = [
 
 type DashKpi = { kpiKey: KpiKey; target: number; weight: number; remaining: number; unitAr: string; contribution: number; gated: boolean };
 /** rawOverall = الإجمالي قبل سقف 200%. بنستخدمه عشان نوزّع الكوميشن على المؤشرات بنفس النسبة المعروضة. */
-type DashData = { kpis: DashKpi[]; fullCommission: number; overall: number; rawOverall?: number; work: { remaining: number } };
+type DashData = { kpis: DashKpi[]; fullCommission: number; estimatedCommission: number; overall: number; rawOverall?: number; work: { total: number; elapsed: number; elapsedBeforeToday?: number; remaining: number } };
 
 export default function LogPage() {
   const toast = useToast();
@@ -124,6 +125,10 @@ export default function LogPage() {
   const dashByKey = new Map((dash?.kpis ?? []).map((k) => [k.kpiKey, k]));
   const onTrack = (dash?.kpis ?? []).filter((k) => k.weight > 0 && k.remaining > 0);
   const workLeft = dash?.work.remaining ?? 0;
+  const doneDays = dash ? (dash.work.elapsedBeforeToday ?? dash.work.elapsed) : 0;
+  const onTrack: boolean | null = dash && dash.work.total > 0
+    ? dash.overall >= (doneDays / dash.work.total) * 100
+    : null;
 
   async function onSubmit(event: FormEvent) {
     event.preventDefault();
@@ -212,6 +217,24 @@ export default function LogPage() {
             <div className="rounded-2xl border border-[#f1dfd0] bg-white/90 px-2 py-3 text-center">
               <p className="font-mono text-xl font-black tabular-nums text-[#38291f]">{formatQty(onTrack.length)}</p>
               <p className="mt-1 text-[10px] font-bold text-[#927b69]">مؤشرات لسه ناقصة</p>
+            </div>
+          </div>
+        </section>
+      ) : null}
+
+      {dash ? (
+        <section className="rounded-[26px] border border-[#efc8a8] bg-gradient-to-br from-[#fff8f0] via-white to-[#ffe8d4] p-4 shadow-[0_12px_30px_rgba(145,75,30,0.07)]">
+          <p className="mb-3 text-[10px] font-black tracking-[0.14em] text-[#bd6a35]">COMMISSION & PERFORMANCE</p>
+          <div className="grid grid-cols-2 gap-2.5">
+            <div className="rounded-2xl border border-white bg-white/90 px-3 py-3 shadow-[0_5px_16px_rgba(145,75,30,0.05)]">
+              <span className="block text-[10px] font-bold text-[#9a806c]">الكوميشن المتوقع</span>
+              <strong className="mt-1 block truncate font-mono text-lg font-black text-[#bd4b0a]">{formatMoney(dash.estimatedCommission)} <span className="text-[10px] font-bold text-[#9a806c]">ج.م</span></strong>
+              <span className="mt-0.5 block text-[10px] font-semibold text-[#a18a78]">من {formatMoney(dash.fullCommission)} ج.م</span>
+            </div>
+            <div className="rounded-2xl border border-white bg-white/90 px-3 py-3 shadow-[0_5px_16px_rgba(145,75,30,0.05)]">
+              <span className="block text-[10px] font-bold text-[#9a806c]">ملخص الأداء</span>
+              <strong className="mt-1 block truncate text-sm font-black text-[#38291f]">{onTrack === null ? "جاري حساب الأداء" : onTrack ? "ماشي بشكل ممتاز" : "لسه في فرصة تعوّض"}</strong>
+              <span className="mt-0.5 block text-[10px] font-semibold text-[#a18a78]">{overallLine()}</span>
             </div>
           </div>
         </section>
