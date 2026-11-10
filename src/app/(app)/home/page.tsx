@@ -286,7 +286,7 @@ export default function HomePage() {
                 </div>
                 <div className="flex min-w-0 flex-1 flex-col gap-1">
                   <div className="flex items-center justify-between gap-2">
-                    <span className="flex min-w-0 items-center gap-1.5">
+                    <span dir="rtl" className="flex min-w-0 items-center gap-1.5">
                       <span className="inline-flex shrink-0 items-center justify-center rounded-full bg-[#fff0e2] px-2.5 py-1.5 text-[#e96812]">
                         <KpiIcon kpiKey={kpi.kpiKey} className="h-5 w-5" />
                       </span>
