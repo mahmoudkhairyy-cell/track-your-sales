@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Banner } from "@/components/ui";
 import { HomeSkeleton } from "@/components/Skeleton";
 import { ApiError, api } from "@/lib/client";
@@ -63,7 +63,8 @@ function shortKpiName(name: string) {
 
 export default function HomePage() {
   const [copied, setCopied] = useState(false);
-  const [animatedOverall, setAnimatedOverall] = useState(0);
+  const overallValueRef = useRef<HTMLSpanElement | null>(null);
+  const overallBarRef = useRef<HTMLDivElement | null>(null);
   const [sync, setSync] = useState<SyncStatus | null>(null);
   useEffect(() => {
     const refresh = () => setSync(readSyncStatus());
@@ -102,25 +103,31 @@ export default function HomePage() {
   const loading = state.month !== month;
   const { data, error } = state;
 
-  // Count-up للإنجاز الحقيقي بعد تحميل بيانات الشهر، مع احترام سقف الإجمالي 200%.
+  // Count-up خفيف: تحديث DOM مباشرة لتجنب إعادة رسم الصفحة في كل frame.
   useEffect(() => {
-    if (!data) {
-      setAnimatedOverall(0);
-      return;
-    }
-    const target = Math.min(200, Math.max(0, data.overall));
+    const valueNode = overallValueRef.current;
+    const barNode = overallBarRef.current;
+    if (!valueNode || !barNode) return;
+
+    const target = data ? Math.min(200, Math.max(0, data.overall)) : 0;
     const duration = 1600;
     let frame = 0;
     const start = performance.now();
+    valueNode.textContent = formatPercent(0);
+    barNode.style.width = "0%";
+
     const animate = (now: number) => {
       const progress = Math.min(1, (now - start) / duration);
       const eased = 1 - Math.pow(1 - progress, 3);
-      setAnimatedOverall(target * eased);
+      const current = target * eased;
+      valueNode.textContent = formatPercent(current);
+      barNode.style.width = `${Math.min(100, current)}%`;
       if (progress < 1) frame = requestAnimationFrame(animate);
     };
+
     frame = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(frame);
-  }, [data?.yearMonth, data?.overall]);
+  }, [data?.yearMonth, data?.overall, loading]);
 
   if (loading) return <HomeSkeleton />;
   if (error) return <Banner tone="error">{error}</Banner>;
@@ -185,7 +192,7 @@ export default function HomePage() {
             <div className="min-w-0">
               <p className="text-[10px] font-bold text-[var(--color-text-secondary)]">نسبة تحقيقك للتارجت</p>
               <div className="mt-1 flex items-baseline gap-1">
-                <span className="font-mono text-[52px] font-black leading-none tracking-[-0.065em] text-[var(--color-primary-700)] sm:text-[68px]">{formatPercent(animatedOverall)}</span>
+                <span className="font-mono text-[52px] font-black leading-none tracking-[-0.065em] text-[var(--color-primary-700)] sm:text-[68px]" ref={overallValueRef}>{formatPercent(0)}</span>
                 <span className="text-xl font-black text-[var(--color-primary-600)]">%</span>
               </div>
             </div>
@@ -196,7 +203,7 @@ export default function HomePage() {
           </div>
           <div>
             <div className="relative h-2.5 overflow-hidden rounded-full bg-[var(--color-border)]">
-              <div className="h-full rounded-full bg-gradient-to-l from-[var(--color-primary-500)] via-[var(--color-primary-600)] to-[var(--color-primary-700)] shadow-[0_1px_5px_rgba(189,75,10,0.22)] transition-all duration-700" style={{ width: `${Math.min(100, Math.max(0, animatedOverall))}%` }} />
+              <div ref={overallBarRef} className="h-full rounded-full bg-gradient-to-l from-[var(--color-primary-500)] via-[var(--color-primary-600)] to-[var(--color-primary-700)] shadow-[0_1px_5px_rgba(189,75,10,0.22)]" style={{ width: "0%" }} />
             </div>
             <div className="mt-1 flex justify-between text-[9px] font-bold text-[var(--color-text-secondary)]" dir="ltr">
               <span>100% target</span><span>0%</span>
