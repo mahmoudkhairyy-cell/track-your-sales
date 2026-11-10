@@ -80,7 +80,8 @@ function money(value: number) {
 function SearchBox({ value, onChange, placeholder }: { value: string; onChange: (v: string) => void; placeholder: string }) {
   return (
     <div className="relative">
-      <input aria-label={placeholder} className={`${inputClass} rounded-full bg-white pr-4 pl-12`} value={value} onChange={(e) => onChange(e.target.value)} placeholder={placeholder} />
+      <label htmlFor="wiki-search-field" className="sr-only">البحث في الموسوعة</label>
+      <input id="wiki-search-field" className={`${inputClass} rounded-full bg-white pr-4 pl-12`} value={value} onChange={(e) => onChange(e.target.value)} placeholder={placeholder} />
       <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[var(--color-text-secondary)]">⌕</span>
     </div>
   );
@@ -1037,7 +1038,12 @@ export default function WikiPage() {
             إضافة ملاحظة
           </PrimaryButton>
           {loadingNotes ? <Spinner label="بيحمّل ملاحظاتك..." /> : null}
-          {!loadingNotes && notesError ? <Banner tone="error">❌ {notesError}</Banner> : null}
+          {!loadingNotes && notesError ? (
+            <div className="space-y-2">
+              <Banner tone="error">❌ {notesError}</Banner>
+              <SecondaryButton type="button" onClick={() => void loadNotes()}>إعادة تحميل الملاحظات</SecondaryButton>
+            </div>
+          ) : null}
           {!loadingNotes && !notesError && articles.length === 0 ? <EmptyState title="مفيش ملاحظات" text="ضيف مرجع أو ملاحظة شغل من عندك." /> : null}
           {articles.map((article) => (
             <article key={article.id} className="rounded-[24px] bg-white p-4 border border-[var(--color-border)] shadow-sm">
