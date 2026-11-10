@@ -7,6 +7,7 @@ import {
   useEffect,
   useId,
   useMemo,
+  useRef,
   useState,
   type ButtonHTMLAttributes,
   type ReactNode,
@@ -179,15 +180,38 @@ export function Modal({
   onClose: () => void;
 }) {
   const titleId = useId();
+  const onCloseRef = useRef(onClose);
+  useEffect(() => {
+    onCloseRef.current = onClose;
+  }, [onClose]);
   // Escape بيقفل النافذة، زي أي نافذة على الويب.
   useEffect(() => {
     if (!open) return;
     const onKey = (event: KeyboardEvent) => {
-      if (event.key === "Escape") onClose();
+      if (event.key === "Escape") onCloseRef.current();
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [open, onClose]);
+  }, [open]);
+  // زرار الرجوع في الموبايل بيقفل النافذة الأول، بدل ما يسيبها مفتوحة ويرجّعك لصفحة قبلها.
+  useEffect(() => {
+    if (!open) return;
+    const current = (window.history.state ?? {}) as Record<string, unknown>;
+    window.history.pushState({ ...current, tysModal: true }, "");
+    let closedByBack = false;
+    const onPop = () => {
+      closedByBack = true;
+      onCloseRef.current();
+    };
+    window.addEventListener("popstate", onPop);
+    return () => {
+      window.removeEventListener("popstate", onPop);
+      // لو اتقفلت من الزرار (مش من الرجوع)، نشيل الخطوة اللي ضفناها.
+      if (!closedByBack && (window.history.state as { tysModal?: boolean } | null)?.tysModal) {
+        window.history.back();
+      }
+    };
+  }, [open]);
   if (!open) return null;
   return (
     <div className="fixed inset-0 z-[80] flex items-center justify-center bg-[#4b3024]/35 p-3 backdrop-blur-[3px]">
