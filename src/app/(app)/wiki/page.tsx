@@ -299,7 +299,7 @@ export default function WikiPage() {
     if (srTopic !== "الكل" && !srTopicMatches(item, srTopic)) return false;
     if (!q) return true;
     return matchesQuery([item.id, item.title, item.titleAr, item.description, item.steps, item.category].join(" "), q);
-  }).sort((a, b) => Number((SR_PRIORITY_IDS as readonly string[]).includes(b.id)) - Number((SR_PRIORITY_IDS as readonly string[]).includes(a.id))), [q, srTopic]);
+  }).sort((a, b) => Number((SR_PRIORITY_IDS as readonly string[]).includes(b.id)) - Number((SR_PRIORITY_IDS as readonly string[]).includes(a.id))), [q, srTopic, wikiData]);
 
   const globalHits = useMemo(() => {
     if (!q || !wikiData) return null;
@@ -311,7 +311,7 @@ export default function WikiPage() {
     const fm = FREEMAX.plans.filter((p) => matchesQuery(`${p.name} ${p.nameAr}`, q));
     const dsl = DSL.plans.filter((p) => matchesQuery(p.name, q));
     return { sr, hunts, emails, docs, plans, fm, dsl };
-  }, [q]);
+  }, [q, wikiData]);
 
   async function saveNote(event: FormEvent) {
     event.preventDefault();
