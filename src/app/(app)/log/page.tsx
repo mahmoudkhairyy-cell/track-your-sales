@@ -283,8 +283,7 @@ export default function LogPage() {
               <div className="flex items-center gap-3">
                 <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--color-primary-50)] text-[var(--color-primary-600)]"><KpiIcon kpiKey={item.key} className="h-5 w-5" /></span>
                 <div>
-                  <p className="font-extrabold">{item.nameAr}</p>
-                  <p className="text-[10px] font-semibold text-[var(--color-text-secondary)]" dir="ltr">{item.nameEn}</p>
+                  <p className="font-extrabold" dir="ltr">{item.nameEn}</p>
                   <p className="text-[11px] font-bold text-[var(--color-primary-700)]">
                     {excluded ? "متتحسبش غير لما تكمل 90%" : commission > 0 ? `كوميشن ${commission} ج` : " "}
                   </p>
@@ -306,7 +305,7 @@ export default function LogPage() {
               </div>
             </div>
             <div className="mt-3 flex items-center gap-2">
-              <label className="sr-only" htmlFor={`quantity-${item.key}`}>الكمية — {item.nameAr}</label>
+              <label className="sr-only" htmlFor={`quantity-${item.key}`}>Quantity — {item.nameEn}</label>
               <input
                 id={`quantity-${item.key}`}
                 className={`${inputClass} text-lg font-black`}
@@ -318,7 +317,7 @@ export default function LogPage() {
                 value={quantities[item.key] ?? ""}
                 onChange={(e) => setQuantities((cur) => ({ ...cur, [item.key]: e.target.value }))}
                 placeholder="0"
-                aria-label={`كمية ${item.nameAr}`}
+                aria-label={`Quantity ${item.nameEn}`}
               />
               <span className="shrink-0 text-xs font-bold text-[var(--color-text-secondary)]">{d?.unitAr ?? ""}</span>
             </div>
