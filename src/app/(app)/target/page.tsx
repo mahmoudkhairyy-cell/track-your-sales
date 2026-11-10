@@ -35,6 +35,10 @@ const ZERO_QUALITY_FORM: Quality = { checks: {} };
 type DailyRow = { kpiKey: string; nameEn: string; unitAr: string; weight: number; percent: number; remaining: number; achieved: number; target: number };
 type DailyData = { kpis: DailyRow[]; work: { remaining: number } };
 
+function settingsSnapshot(v: { fullCommission: number; workingDays: unknown; kpis: unknown; holidays: unknown; quality: unknown }) {
+  return JSON.stringify({ fullCommission: v.fullCommission, workingDays: v.workingDays, kpis: v.kpis, holidays: v.holidays, quality: v.quality });
+}
+
 export default function TargetPage() {
   const toast = useToast();
   const month = useMonth();
@@ -61,6 +65,7 @@ export default function TargetPage() {
   const monthDays = Array.from({ length: new Date(Date.UTC(yy, mm, 0)).getUTCDate() }, (_, i) => `${month}-${String(i + 1).padStart(2, "0")}`);
   const firstWeekdayOffset = (new Date(Date.UTC(yy, mm - 1, 1)).getUTCDay() + 1) % 7;
   const [saved, setSaved] = useState(false);
+  const [baseline, setBaseline] = useState<string | null>(null);
   const [daily, setDaily] = useState<DailyData | null>(null);
 
   useEffect(() => {
@@ -98,6 +103,15 @@ export default function TargetPage() {
         setKpis(result.settings.kpis);
         setHolidays(result.settings.holidays);
         setQuality(result.settings.quality ?? ZERO_QUALITY_FORM);
+        setBaseline(
+          settingsSnapshot({
+            fullCommission: result.settings.fullCommission,
+            workingDays: result.settings.workingDays,
+            kpis: result.settings.kpis,
+            holidays: result.settings.holidays,
+            quality: result.settings.quality ?? ZERO_QUALITY_FORM,
+          }),
+        );
       })
       .catch((err) => {
         if (!cancelled) setError(err instanceof ApiError || err instanceof Error ? err.message : "ماقدرناش نحمّل الإعدادات. اتأكد من النت وحاول تاني.");
@@ -111,6 +125,18 @@ export default function TargetPage() {
   }, [month]);
 
   const weightSum = sumWeights(kpis);
+
+  const snapshot = settingsSnapshot({ fullCommission, workingDays, kpis, holidays, quality });
+  const dirty = baseline !== null && snapshot !== baseline;
+  const saveState = saving
+    ? { label: "⏳ جارٍ الحفظ", tone: "bg-amber-50 text-amber-800 ring-1 ring-amber-200" }
+    : error && !dirty
+      ? { label: "⚠️ تعذر الحفظ", tone: "bg-red-50 text-red-700 ring-1 ring-red-200" }
+      : dirty
+        ? { label: "● تغييرات غير محفوظة", tone: "bg-[var(--color-primary-50)] text-[var(--color-primary-700)] ring-1 ring-[#f3d6c0]" }
+        : saved
+          ? { label: "✓ محفوظة", tone: "bg-emerald-50 text-emerald-700 ring-1 ring-emerald-100" }
+          : { label: "● محتاجة حفظ", tone: "bg-[var(--color-primary-50)] text-[var(--color-primary-700)] ring-1 ring-[#f3d6c0]" };
 
   async function onSave(event: FormEvent) {
     event.preventDefault();
@@ -127,6 +153,7 @@ export default function TargetPage() {
       toast.push("error", message);
       return;
     }
+    const submitted = settingsSnapshot({ fullCommission, workingDays, kpis, holidays, quality });
     setSaving(true);
     try {
       await api<{ message: string; settings: { saved: boolean } }>(`/api/months/${month}`, {
@@ -140,6 +167,7 @@ export default function TargetPage() {
         }),
       });
       setSaved(true);
+      setBaseline(submitted);
       window.dispatchEvent(new Event("tys-settings-saved"));
       toast.push("success", "✅ تمام! إعدادات الشهر اتحفظت");
     } catch (err) {
@@ -165,8 +193,8 @@ export default function TargetPage() {
               <h1 className="mt-1 text-2xl font-black tracking-tight text-[var(--color-text-primary)] sm:text-3xl">التارجت 🎯</h1>
               <p className="mt-1.5 max-w-md text-xs leading-6 text-[var(--color-text-secondary)]">كل إعدادات الشهر في مكان واحد — راجع أهدافك قبل الحفظ.</p>
             </div>
-            <span className={`shrink-0 rounded-full px-3 py-1.5 text-[10px] font-extrabold ${saved ? "bg-emerald-50 text-emerald-700 ring-1 ring-emerald-100" : "bg-[var(--color-primary-50)] text-[var(--color-primary-700)] ring-1 ring-[#f3d6c0]"}`}>
-              {saved ? "✓ محفوظة" : "● محتاجة حفظ"}
+            <span role="status" aria-live="polite" className={`shrink-0 rounded-full px-3 py-1.5 text-[10px] font-extrabold ${saveState.tone}`}>
+              {saveState.label}
             </span>
           </div>
           <div className="mt-5 grid grid-cols-3 gap-2 border-t border-[var(--color-border)] pt-4">
