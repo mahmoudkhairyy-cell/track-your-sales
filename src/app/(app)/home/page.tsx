@@ -110,7 +110,7 @@ export default function HomePage() {
     if (!valueNode || !barNode) return;
 
     const target = data ? Math.min(200, Math.max(0, data.overall)) : 0;
-    const duration = 1600;
+    const duration = 2800;
     let frame = 0;
     const start = performance.now();
     valueNode.textContent = formatPercent(0);
@@ -118,7 +118,9 @@ export default function HomePage() {
 
     const animate = (now: number) => {
       const progress = Math.min(1, (now - start) / duration);
-      const eased = 1 - Math.pow(1 - progress, 3);
+      const eased = progress < 0.5
+        ? 4 * progress * progress * progress
+        : 1 - Math.pow(-2 * progress + 2, 3) / 2;
       const current = target * eased;
       valueNode.textContent = formatPercent(current);
       barNode.style.width = `${Math.min(100, current)}%`;
