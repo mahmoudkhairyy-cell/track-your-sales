@@ -479,11 +479,8 @@ function AppFrame({ children, blocked, month }: { children: ReactNode; blocked: 
               <header className="tys-app-header sticky top-0 z-30 border-b border-[#f1dfd0]/80 bg-[#fffaf5]/90 px-4 py-3 backdrop-blur-2xl lg:px-8">
                 <div className="mx-auto flex max-w-6xl items-center justify-between gap-3">
                   <div className="flex min-w-0 items-center gap-3 lg:hidden">
-                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-[#e96812] to-[#ff9d38] shadow-[0_4px_12px_rgba(217,104,18,0.22)] ring-1 ring-white/80" aria-hidden="true">
-                      <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M5 3v18h16" />
-                        <path d="m5 14 4-4 4 4 6-6" />
-                      </svg>
+                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white shadow-[0_4px_12px_rgba(217,104,18,0.12)] ring-1 ring-[#f2e4d8]">
+                      <img src="/track-your-sales/logo-mark.png" alt="" className="h-9 w-9 object-contain" />
                     </span>
                     <div className="min-w-0">
                       <p className="truncate text-[13px] font-black tracking-tight text-[#2d2119]" dir="ltr">{APP_NAME}</p>
