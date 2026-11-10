@@ -223,10 +223,10 @@ export default function HomePage() {
             return (
               <div
                 key={k.kpiKey}
-                className="flex min-h-[46px] min-w-0 items-center justify-between gap-2 rounded-lg border border-[#e58a4b]/30 bg-gradient-to-br from-[#a9430b] via-[#913905] to-[#702b06] px-2.5 py-1.5 text-white shadow-[0_2px_7px_rgba(83,35,8,0.22)]"
+                className="flex min-h-[46px] min-w-0 items-center justify-between gap-2 rounded-lg border border-[#e58a4b]/35 bg-gradient-to-br from-[#fff0e3]/90 via-[#ffe2cb]/75 to-[#ffd0ad]/65 px-2.5 py-1.5 text-[#873b12] shadow-[0_2px_8px_rgba(145,65,18,0.09)] backdrop-blur-md"
               >
-                <span className="min-w-0 truncate text-[9px] font-bold tracking-wide text-[#fff1e6]" dir="ltr">{k.nameEn}</span>
-                <strong className="shrink-0 rounded-md bg-white/10 px-2 py-1 text-base font-black leading-none tabular-nums text-white shadow-inner">
+                <span className="min-w-0 truncate text-[9px] font-bold tracking-wide text-[#8b421d]" dir="ltr">{k.nameEn}</span>
+                <strong className="shrink-0 rounded-md border border-white/70 bg-white/65 px-2 py-1 text-base font-black leading-none tabular-nums text-[#7c320d] shadow-sm">
                   {formatQty(dailyRequired)}
                 </strong>
               </div>
