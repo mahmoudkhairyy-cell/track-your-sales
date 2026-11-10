@@ -1,5 +1,6 @@
 "use client";
 
+import { createPortal } from "react-dom";
 import {
   createContext,
   useCallback,
@@ -213,7 +214,8 @@ export function Modal({
     };
   }, [open]);
   if (!open) return null;
-  return (
+  // بنرسم النافذة على الـ body مباشرة، عشان أي transform في الصفحة ما يحبسهاش جوه المحتوى.
+  return createPortal(
     <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-[#4b3024]/45 p-3 backdrop-blur-[3px]">
       <button className="absolute inset-0" aria-label="إغلاق" tabIndex={-1} onClick={onClose} />
       <div role="dialog" aria-modal="true" aria-labelledby={titleId} className="relative z-[1] max-h-[min(90dvh,760px)] w-full max-w-lg overflow-y-auto overscroll-contain rounded-[28px] border border-[#f1dfd0] bg-white p-5 text-[#38291f] shadow-[0_24px_70px_rgba(77,44,25,0.20)]">
@@ -225,6 +227,7 @@ export function Modal({
         </div>
         {children}
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }
