@@ -54,7 +54,7 @@ export function Banner({
     success: "bg-emerald-50 text-emerald-950 border-emerald-200",
     warn: "bg-amber-50 text-amber-950 border-amber-200",
   };
-  return <div className={`rounded-2xl border px-4 py-3 text-sm leading-7 ${tones[tone]}`}>{children}</div>;
+  return <div role={tone === "error" ? "alert" : "status"} aria-live={tone === "error" ? "assertive" : "polite"} className={`rounded-2xl border px-4 py-3 text-sm leading-7 ${tones[tone]}`}>{children}</div>;
 }
 
 export function PrimaryButton({
@@ -143,7 +143,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
   return (
     <ToastContext.Provider value={value}>
       {children}
-      <div className="pointer-events-none fixed top-4 left-1/2 z-[70] flex w-[min(92vw,420px)] -translate-x-1/2 flex-col gap-2">
+      <div role="status" aria-live="polite" aria-atomic="false" className="pointer-events-none fixed top-4 left-1/2 z-[70] flex w-[min(92vw,420px)] -translate-x-1/2 flex-col gap-2">
         {toasts.map((toast) => (
           <div
             key={toast.id}
