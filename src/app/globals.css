@@ -3465,3 +3465,56 @@ body {
     animation-iteration-count: 1 !important; transition-duration: .01ms !important;
   }
 }
+
+
+/* Home KPI cards — compact premium layout on mobile */
+@media (max-width: 640px) {
+  .tys-premium-home .tys-home-kpis {
+    gap: .7rem !important;
+    padding: .8rem !important;
+  }
+  .tys-premium-home .tys-home-kpis > div:last-child {
+    gap: .6rem !important;
+  }
+  .tys-premium-home .tys-home-kpi {
+    min-height: 76px !important;
+    gap: .65rem !important;
+    padding: .65rem .7rem !important;
+    border-radius: 16px !important;
+    box-shadow: 0 3px 10px rgba(126,65,24,.055) !important;
+  }
+  .tys-premium-home .tys-home-kpi > div:first-child {
+    width: 2.65rem !important;
+    height: 2.65rem !important;
+  }
+  .tys-premium-home .tys-home-kpi > div:first-child > span {
+    font-size: .68rem !important;
+  }
+  .tys-premium-home .tys-home-kpi > div:last-child {
+    gap: .35rem !important;
+  }
+  .tys-premium-home .tys-home-kpi > div:last-child > div:first-child {
+    gap: .4rem !important;
+  }
+  .tys-premium-home .tys-home-kpi > div:last-child > div:first-child > span:first-child > span:first-child {
+    padding: .3rem !important;
+    border-radius: 9px !important;
+  }
+  .tys-premium-home .tys-home-kpi > div:last-child > div:first-child > span:first-child svg {
+    width: 1rem !important;
+    height: 1rem !important;
+  }
+  .tys-premium-home .tys-home-kpi > div:last-child > div:first-child > span:first-child > span:last-child {
+    font-size: .72rem !important;
+  }
+  .tys-premium-home .tys-home-kpi > div:last-child > div:first-child > span:last-child {
+    padding: .2rem .4rem !important;
+    font-size: .58rem !important;
+  }
+  .tys-premium-home .tys-home-kpi > div:last-child > div:nth-child(2) {
+    font-size: .65rem !important;
+  }
+  .tys-premium-home .tys-home-kpi > div:last-child > div:last-child {
+    height: 5px !important;
+  }
+}
