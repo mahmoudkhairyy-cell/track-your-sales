@@ -332,7 +332,7 @@ export default function MorePage() {
       </section>
 
       {view === "menu" ? (
-        <div className="grid grid-cols-2 gap-2.5 sm:gap-3">
+        <div className="tys-more-menu space-y-4">
           {[
             {
               title: "متابعة الأداء",
@@ -357,26 +357,29 @@ export default function MorePage() {
               ],
             },
           ].map((group) => (
-          <div key={group.title} className="space-y-2.5">
-            <h2 className="text-sm font-black text-[var(--color-text-secondary)]">{group.title}</h2>
-            <div className="grid grid-cols-2 gap-2.5 sm:gap-3">
-            {group.items.map((item) => (
-            <button
-              key={item.key}
-              type="button"
-              onClick={() => setView(item.key as typeof view)}
-              className="group relative flex min-h-[142px] w-full flex-col items-start justify-start gap-2.5 rounded-[22px] border border-[var(--color-border)] bg-gradient-to-br from-white to-[var(--color-surface-cream)] p-3.5 text-right shadow-[0_8px_22px_rgba(126,65,24,0.045)] transition-all duration-200 hover:-translate-y-0.5 hover:border-[#edc4a4] hover:shadow-[0_14px_28px_rgba(126,65,24,0.08)] active:scale-[0.99] sm:min-h-[156px] sm:p-4"
-            >
-              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-[var(--color-primary-50)] to-[#ffe1c8] text-2xl shadow-sm">{item.icon}</span>
-              <span className="w-full pr-0">
-                <span className="block font-black text-[var(--color-text-primary)]">{item.title}</span>
-                <span className="block text-xs text-[var(--color-text-secondary)]">{item.desc}</span>
-              </span>
-              <span className="absolute left-3 top-3 flex h-7 w-7 items-center justify-center rounded-full bg-[var(--color-primary-50)] text-lg text-[var(--color-primary-700)] transition-transform group-hover:-translate-x-0.5">‹</span>
-            </button>
-            ))}
-            </div>
-          </div>
+            <section key={group.title} className="tys-more-group rounded-[22px] border border-[var(--color-border)] bg-white/80 p-3.5 shadow-[0_6px_18px_rgba(126,65,24,0.045)]">
+              <div className="mb-3 flex items-center gap-2">
+                <span className="h-5 w-1 rounded-full bg-[var(--color-primary-600)]" />
+                <h2 className="text-sm font-black text-[var(--color-text-primary)]">{group.title}</h2>
+              </div>
+              <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                {group.items.map((item) => (
+                  <button
+                    key={item.key}
+                    type="button"
+                    onClick={() => setView(item.key as typeof view)}
+                    className="tys-more-item group flex min-h-[76px] w-full items-center gap-3 rounded-[17px] border border-[#f1dfce] bg-gradient-to-l from-white to-[#fff8f1] px-3 py-2.5 text-right transition-all duration-200 hover:border-[#edc4a4] hover:shadow-[0_6px_16px_rgba(126,65,24,0.07)] active:scale-[0.99]"
+                  >
+                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[13px] bg-gradient-to-br from-[#fff0df] to-[#ffe0c1] text-xl shadow-sm">{item.icon}</span>
+                    <span className="min-w-0 flex-1">
+                      <span className="block text-sm font-black leading-6 text-[var(--color-text-primary)]">{item.title}</span>
+                      <span className="block text-[11px] leading-5 text-[var(--color-text-secondary)]">{item.desc}</span>
+                    </span>
+                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#fff0e3] text-lg text-[var(--color-primary-700)] transition-transform group-hover:-translate-x-0.5">‹</span>
+                  </button>
+                ))}
+              </div>
+            </section>
           ))}
         </div>
       ) : null}
