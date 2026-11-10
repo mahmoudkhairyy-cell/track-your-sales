@@ -160,17 +160,17 @@ export default function HomePage() {
               {onTrack === null ? "Waiting for data" : onTrack ? "On track" : "Behind"}
             </span>
           </div>
-          <div className="grid grid-cols-1 items-center gap-3 py-4 sm:py-5">
+          <div className="flex flex-wrap items-end justify-between gap-3 py-4 sm:py-5">
             <div className="min-w-0">
               <p className="text-[10px] font-bold text-[var(--color-text-secondary)]">نسبة تحقيقك للتارجت</p>
               <div className="mt-1 flex items-baseline gap-1">
                 <span className="font-mono text-[52px] font-black leading-none tracking-[-0.065em] text-[var(--color-primary-700)] sm:text-[68px]">{formatPercent(data.overall)}</span>
                 <span className="text-xl font-black text-[var(--color-primary-600)]">%</span>
               </div>
-              <div className="mt-3 inline-flex max-w-full items-center gap-2 rounded-xl border border-[var(--color-border)] bg-white/85 px-3 py-2 shadow-sm">
-                <span className="text-[10px] font-bold text-[var(--color-text-secondary)]">{gap > 0 ? "فاضلك على الهدف" : "حالة التارجت"}</span>
-                <strong className="truncate font-mono text-sm font-black text-[var(--color-text-primary)]">{gap > 0 ? `${formatPercent(gap)}%` : "محقق الهدف ✓"}</strong>
-              </div>
+            </div>
+            <div className="inline-flex max-w-full shrink-0 items-center gap-2 rounded-xl border border-[var(--color-border)] bg-white/85 px-3 py-2 shadow-sm">
+              <span className="text-[10px] font-bold text-[var(--color-text-secondary)]">{gap > 0 ? "فاضلك على الهدف" : "حالة التارجت"}</span>
+              <strong className="truncate font-mono text-sm font-black text-[var(--color-text-primary)]">{gap > 0 ? `${formatPercent(gap)}%` : "محقق الهدف ✓"}</strong>
             </div>
           </div>
           <div>
