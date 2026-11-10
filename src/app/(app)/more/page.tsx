@@ -294,30 +294,30 @@ export default function MorePage() {
 
   return (
     <div className="tys-page tys-page-more mx-auto max-w-5xl space-y-5">
-      <section className="relative overflow-hidden rounded-[26px] border border-[#f2dfce] bg-gradient-to-br from-white via-[#fffaf5] to-[#fff0e2] p-5 shadow-[0_12px_30px_rgba(126,65,24,0.06)]">
+      <section className="relative overflow-hidden rounded-[26px] border border-[#f2dfce] bg-gradient-to-br from-white via-[var(--color-surface-cream)] to-[var(--color-primary-50)] p-5 shadow-[0_12px_30px_rgba(126,65,24,0.06)]">
         <div className="absolute -left-10 -top-12 h-36 w-36 rounded-full bg-[#ffb36e]/20 blur-3xl" />
         <div className="relative flex flex-wrap items-center justify-between gap-3">
           <div>
-            <p className="text-[10px] font-black tracking-[0.18em] text-[#bd6b39]" dir="ltr">YOUR WORKSPACE</p>
-            <h1 className="mt-1 text-xl font-black tracking-tight text-[#2d2119]">كل أدواتك في مكان واحد</h1>
-            <p className="mt-1 text-xs text-[#9a7963]">إدارة سجلاتك وبياناتك ومراجعة أدائك</p>
+            <p className="text-[10px] font-black tracking-[0.18em] text-[var(--color-primary-700)]" dir="ltr">YOUR WORKSPACE</p>
+            <h1 className="mt-1 text-xl font-black tracking-tight text-[var(--color-text-primary)]">كل أدواتك في مكان واحد</h1>
+            <p className="mt-1 text-xs text-[var(--color-text-secondary)]">إدارة سجلاتك وبياناتك ومراجعة أدائك</p>
           </div>
           <img src="/track-your-sales/logo-mark.png" alt="Track Your Sales" className="h-14 w-14 object-contain" />
         </div>
-        <p className="relative mt-3 text-[11px] leading-6 text-[#9a7963]">أداة مساعدة مستقلة وغير رسمية، وليست تطبيقًا رسميًا تابعًا لشركة Orange.</p>
+        <p className="relative mt-3 text-[11px] leading-6 text-[var(--color-text-secondary)]">أداة مساعدة مستقلة وغير رسمية، وليست تطبيقًا رسميًا تابعًا لشركة Orange.</p>
         {reportData ? (
           <div className="relative mt-4 grid grid-cols-3 gap-2 text-center">
-            <div className="rounded-2xl border border-[#f3dfce] bg-white/90 px-2 py-3">
-              <p className="text-xl font-black tabular-nums text-[#bd4b0a]">{Math.round(reportData.overall)}%</p>
-              <p className="text-[10px] font-bold text-[#9a7963]">التوتال</p>
+            <div className="rounded-2xl border border-[var(--color-border)] bg-white/90 px-2 py-3">
+              <p className="text-xl font-black tabular-nums text-[var(--color-primary-700)]">{Math.round(reportData.overall)}%</p>
+              <p className="text-[10px] font-bold text-[var(--color-text-secondary)]">التوتال</p>
             </div>
-            <div className="rounded-2xl border border-[#f3dfce] bg-white/90 px-2 py-3">
-              <p className="text-xl font-black tabular-nums text-[#bd4b0a]">{Math.round(reportData.estimatedCommission)}</p>
-              <p className="text-[10px] font-bold text-[#9a7963]">الكوميشن (ج)</p>
+            <div className="rounded-2xl border border-[var(--color-border)] bg-white/90 px-2 py-3">
+              <p className="text-xl font-black tabular-nums text-[var(--color-primary-700)]">{Math.round(reportData.estimatedCommission)}</p>
+              <p className="text-[10px] font-bold text-[var(--color-text-secondary)]">الكوميشن (ج)</p>
             </div>
-            <div className="rounded-2xl border border-[#f3dfce] bg-white/90 px-2 py-3">
-              <p className="text-xl font-black tabular-nums text-[#bd4b0a]">{entries.length}</p>
-              <p className="text-[10px] font-bold text-[#9a7963]">سجلات الشهر</p>
+            <div className="rounded-2xl border border-[var(--color-border)] bg-white/90 px-2 py-3">
+              <p className="text-xl font-black tabular-nums text-[var(--color-primary-700)]">{entries.length}</p>
+              <p className="text-[10px] font-bold text-[var(--color-text-secondary)]">سجلات الشهر</p>
             </div>
           </div>
         ) : null}
@@ -337,14 +337,14 @@ export default function MorePage() {
               key={item.key}
               type="button"
               onClick={() => setView(item.key as typeof view)}
-              className="group relative flex min-h-[142px] w-full flex-col items-start justify-start gap-2.5 rounded-[22px] border border-[#f1dfd0] bg-gradient-to-br from-white to-[#fffaf5] p-3.5 text-right shadow-[0_8px_22px_rgba(126,65,24,0.045)] transition-all duration-200 hover:-translate-y-0.5 hover:border-[#edc4a4] hover:shadow-[0_14px_28px_rgba(126,65,24,0.08)] active:scale-[0.99] sm:min-h-[156px] sm:p-4"
+              className="group relative flex min-h-[142px] w-full flex-col items-start justify-start gap-2.5 rounded-[22px] border border-[var(--color-border)] bg-gradient-to-br from-white to-[var(--color-surface-cream)] p-3.5 text-right shadow-[0_8px_22px_rgba(126,65,24,0.045)] transition-all duration-200 hover:-translate-y-0.5 hover:border-[#edc4a4] hover:shadow-[0_14px_28px_rgba(126,65,24,0.08)] active:scale-[0.99] sm:min-h-[156px] sm:p-4"
             >
-              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-[#fff0e2] to-[#ffe1c8] text-2xl shadow-sm">{item.icon}</span>
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-[var(--color-primary-50)] to-[#ffe1c8] text-2xl shadow-sm">{item.icon}</span>
               <span className="w-full pr-0">
-                <span className="block font-black text-[#241f1b]">{item.title}</span>
-                <span className="block text-xs text-[#88796e]">{item.desc}</span>
+                <span className="block font-black text-[var(--color-text-primary)]">{item.title}</span>
+                <span className="block text-xs text-[var(--color-text-secondary)]">{item.desc}</span>
               </span>
-              <span className="absolute left-3 top-3 flex h-7 w-7 items-center justify-center rounded-full bg-[#fff0e2] text-lg text-[#bd6b39] transition-transform group-hover:-translate-x-0.5">‹</span>
+              <span className="absolute left-3 top-3 flex h-7 w-7 items-center justify-center rounded-full bg-[var(--color-primary-50)] text-lg text-[var(--color-primary-700)] transition-transform group-hover:-translate-x-0.5">‹</span>
             </button>
           ))}
         </div>
@@ -352,31 +352,31 @@ export default function MorePage() {
 
       {view === "report" ? (
         <section className="space-y-4">
-          <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[#bd4b0a]">← رجوع للقائمة</button>
-          <div id="report-print" className="rounded-[24px] border border-[#f2e4d8] bg-white p-5 shadow-sm">
-            <p className="text-xs font-bold text-[#88796e]">تقرير الشهر · {monthLabelAr(month)}</p>
+          <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[var(--color-primary-700)]">← رجوع للقائمة</button>
+          <div id="report-print" className="rounded-[24px] border border-[var(--color-border)] bg-white p-5 shadow-sm">
+            <p className="text-xs font-bold text-[var(--color-text-secondary)]">تقرير الشهر · {monthLabelAr(month)}</p>
             <h2 className="mt-1 text-xl font-black">{profile.name || "—"}</h2>
-            <p className="text-sm text-[#88796e]">📍 {profile.branch || "—"}</p>
+            <p className="text-sm text-[var(--color-text-secondary)]">📍 {profile.branch || "—"}</p>
             {reportData ? (
               <>
                 <div className="mt-4 grid grid-cols-2 gap-3">
-                  <div className="rounded-2xl bg-[#fff0e2] p-3"><p className="text-[11px] font-bold text-[#88796e]">التوتال</p><p className="text-2xl font-black text-[#bd4b0a]">{reportData.overall.toFixed(1)}%</p></div>
-                  <div className="rounded-2xl bg-[#fff0e2] p-3"><p className="text-[11px] font-bold text-[#88796e]">الكوميشن المتوقع</p><p className="text-2xl font-black text-[#bd4b0a]">{Math.round(reportData.estimatedCommission)} ج</p><p className="text-[10px] text-[#88796e]">من {Math.round(reportData.fullCommission)} ج</p></div>
+                  <div className="rounded-2xl bg-[var(--color-primary-50)] p-3"><p className="text-[11px] font-bold text-[var(--color-text-secondary)]">التوتال</p><p className="text-2xl font-black text-[var(--color-primary-700)]">{reportData.overall.toFixed(1)}%</p></div>
+                  <div className="rounded-2xl bg-[var(--color-primary-50)] p-3"><p className="text-[11px] font-bold text-[var(--color-text-secondary)]">الكوميشن المتوقع</p><p className="text-2xl font-black text-[var(--color-primary-700)]">{Math.round(reportData.estimatedCommission)} ج</p><p className="text-[10px] text-[var(--color-text-secondary)]">من {Math.round(reportData.fullCommission)} ج</p></div>
                 </div>
                 <div className="mt-4 divide-y divide-dashed divide-[#F3D2B5]">
                   {reportData.kpis.map((kpi) => (
                     <div key={kpi.kpiKey} className="flex items-center justify-between py-2.5 text-sm">
                       <span className="font-extrabold" dir="ltr">{kpi.nameEn}</span>
-                      <span className="text-[#88796e]">{formatQty(kpi.achieved)} / {formatQty(kpi.target)} · <b className="text-[#bd4b0a]">{kpi.percent.toFixed(0)}%</b></span>
+                      <span className="text-[var(--color-text-secondary)]">{formatQty(kpi.achieved)} / {formatQty(kpi.target)} · <b className="text-[var(--color-primary-700)]">{kpi.percent.toFixed(0)}%</b></span>
                     </div>
                   ))}
                 </div>
               </>
             ) : (
-              <p className="mt-4 text-sm text-[#88796e]">بنحمّل التقرير...</p>
+              <p className="mt-4 text-sm text-[var(--color-text-secondary)]">بنحمّل التقرير...</p>
             )}
           </div>
-          <button type="button" onClick={() => window.print()} className="w-full rounded-2xl bg-gradient-to-br from-[#e96812] to-[#ff9d38] py-3 font-extrabold text-white shadow-sm">
+          <button type="button" onClick={() => window.print()} className="w-full rounded-2xl bg-gradient-to-br from-[var(--color-primary-600)] to-[var(--color-primary-500)] py-3 font-extrabold text-white shadow-sm">
             🖨️ اطبع / احفظ PDF
           </button>
         </section>
@@ -384,30 +384,30 @@ export default function MorePage() {
 
       {view === "about" ? (
         <div className="space-y-4">
-          <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[#bd4b0a]">← رجوع للقائمة</button>
-          <section className="rounded-[24px] border border-[#f2e4d8] bg-white p-5 shadow-sm">
+          <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[var(--color-primary-700)]">← رجوع للقائمة</button>
+          <section className="rounded-[24px] border border-[var(--color-border)] bg-white p-5 shadow-sm">
             <p className="font-black">{APP_NAME}</p>
-            <p className="mt-2 text-sm leading-7 text-[#88796e]">أداة مساعدة مستقلة وغير رسمية، وليست تطبيقًا رسميًا تابعًا لشركة Orange.</p>
+            <p className="mt-2 text-sm leading-7 text-[var(--color-text-secondary)]">أداة مساعدة مستقلة وغير رسمية، وليست تطبيقًا رسميًا تابعًا لشركة Orange.</p>
           </section>
         </div>
       ) : null}
 
       {view === "today" ? (
         <div className="space-y-4">
-          <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[#bd4b0a]">← رجوع للقائمة</button>
-      <section className="rounded-[24px] border border-[#f2e4d8] bg-white p-5 shadow-sm">
+          <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[var(--color-primary-700)]">← رجوع للقائمة</button>
+      <section className="rounded-[24px] border border-[var(--color-border)] bg-white p-5 shadow-sm">
         <h2 className="text-lg font-black tracking-tight">📊 اللي عملته النهارده</h2>
         {todayItems.length === 0 ? (
-          <p className="mt-3 text-sm text-[#88796e]">لسه مسجلتش حاجة النهارده. يلا نبدأ! 💪</p>
+          <p className="mt-3 text-sm text-[var(--color-text-secondary)]">لسه مسجلتش حاجة النهارده. يلا نبدأ! 💪</p>
         ) : (
           <ul className="mt-3 space-y-2">
             {todayItems.map((item) => (
-              <li key={item.kpiKey} className="flex items-center justify-between rounded-2xl bg-[#fff0e2] px-3 py-2 text-sm">
+              <li key={item.kpiKey} className="flex items-center justify-between rounded-2xl bg-[var(--color-primary-50)] px-3 py-2 text-sm">
                 <span className="flex items-center gap-2">
-                  <span className="flex h-7 w-7 items-center justify-center text-[#bd4b0a]"><KpiIcon kpiKey={item.kpiKey} className="h-5 w-5" /></span>
+                  <span className="flex h-7 w-7 items-center justify-center text-[var(--color-primary-700)]"><KpiIcon kpiKey={item.kpiKey} className="h-5 w-5" /></span>
                   <span>
                     <span dir="ltr" className="font-extrabold">{item.nameEn}</span>
-                    <span className="block text-xs text-[#88796e]">{item.count} عملية</span>
+                    <span className="block text-xs text-[var(--color-text-secondary)]">{item.count} عملية</span>
                   </span>
                 </span>
                 <strong>
@@ -422,11 +422,11 @@ export default function MorePage() {
       ) : null}
       {view === "history" ? (
         <div className="space-y-4">
-          <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[#bd4b0a]">← رجوع للقائمة</button>
-      <section className="rounded-[24px] border border-[#f2e4d8] bg-white p-5 shadow-sm">
+          <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[var(--color-primary-700)]">← رجوع للقائمة</button>
+      <section className="rounded-[24px] border border-[var(--color-border)] bg-white p-5 shadow-sm">
         <div className="flex items-center justify-between gap-3">
           <h2 className="text-lg font-black tracking-tight">🗂️ سجل عمليات {monthLabelAr(month)}</h2>
-          <span className="text-sm text-[#88796e]">{entries.length} سجل</span>
+          <span className="text-sm text-[var(--color-text-secondary)]">{entries.length} سجل</span>
         </div>
         {entries.length === 0 ? (
           <div className="mt-4">
@@ -435,21 +435,21 @@ export default function MorePage() {
         ) : (
           <ul className="mt-4 space-y-2">
             {entries.map((entry) => (
-              <li key={entry.id} className="rounded-2xl border border-[#f2e4d8] p-3">
+              <li key={entry.id} className="rounded-2xl border border-[var(--color-border)] p-3">
                 <div className="flex items-start justify-between gap-3">
                   <div>
                     <p className="font-extrabold">
-                      <span className="ml-1 inline-flex align-middle text-[#bd4b0a]"><KpiIcon kpiKey={entry.kpiKey} className="h-4 w-4" /></span>
+                      <span className="ml-1 inline-flex align-middle text-[var(--color-primary-700)]"><KpiIcon kpiKey={entry.kpiKey} className="h-4 w-4" /></span>
                       <span dir="ltr">{entry.nameEn}</span>
                     </p>
-                    <p className="text-xs text-[#88796e]">
+                    <p className="text-xs text-[var(--color-text-secondary)]">
                       {formatDateAr(entry.entryDate)} · {formatQty(entry.quantity)} {entry.unitAr}
                     </p>
-                    {entry.note ? <p className="mt-1 text-sm text-[#88796e]">{entry.note}</p> : null}
-                    <p className="mt-1 text-[11px] text-[#88796e]">اتسجل {formatTimeCairo(entry.createdAt)}</p>
+                    {entry.note ? <p className="mt-1 text-sm text-[var(--color-text-secondary)]">{entry.note}</p> : null}
+                    <p className="mt-1 text-[11px] text-[var(--color-text-secondary)]">اتسجل {formatTimeCairo(entry.createdAt)}</p>
                   </div>
                   <div className="flex shrink-0 items-center gap-3">
-                    <button type="button" className="min-h-10 font-extrabold text-[#bd4b0a]" onClick={() => openEdit(entry)}>
+                    <button type="button" className="min-h-10 font-extrabold text-[var(--color-primary-700)]" onClick={() => openEdit(entry)}>
                       ✏️ عدّل
                     </button>
                     <button type="button" className="min-h-10 font-extrabold text-red-600" onClick={() => setDeleteId(entry.id)}>
@@ -473,10 +473,10 @@ export default function MorePage() {
       ) : null}
       {view === "profile" ? (
         <div className="space-y-4">
-          <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[#bd4b0a]">← رجوع للقائمة</button>
+          <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[var(--color-primary-700)]">← رجوع للقائمة</button>
       <section className="rounded-[24px] border border-red-200 bg-white p-5">
         <h2 className="text-lg font-black tracking-tight">🚪 تسجيل خروج (نقل لفرع تاني)</h2>
-        <p className="mt-1 text-xs leading-5 text-[#88796e]">
+        <p className="mt-1 text-xs leading-5 text-[var(--color-text-secondary)]">
           ده بيمسح بيانات الجهاز كلها (الإنجازات والتارجت) وبيرجع لشاشة التسجيل. لو عايز تحتفظ بالبيانات، اطلع نسخة احتياطية الأول.
         </p>
         <button
@@ -499,7 +499,7 @@ export default function MorePage() {
         </button>
       </section>
 
-      <section className="rounded-[24px] border border-[#f2e4d8] bg-white p-5 shadow-sm">
+      <section className="rounded-[24px] border border-[var(--color-border)] bg-white p-5 shadow-sm">
         <h2 className="text-lg font-black tracking-tight">👤 بياناتك</h2>
         <div className="mt-4 space-y-3">
           <Field label="اسم الموظف">
@@ -509,16 +509,16 @@ export default function MorePage() {
             <input className={`${inputClass} bg-[#fdf6f0]`} value={branch} readOnly />
           </Field>
         </div>
-        <p className="mt-3 text-xs leading-6 text-[#88796e]">بياناتك اتسجلت أول مرة، ومينفعش تتغير من التطبيق.</p>
+        <p className="mt-3 text-xs leading-6 text-[var(--color-text-secondary)]">بياناتك اتسجلت أول مرة، ومينفعش تتغير من التطبيق.</p>
       </section>
         </div>
       ) : null}
       {view === "backup" ? (
         <div className="space-y-4">
-          <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[#bd4b0a]">← رجوع للقائمة</button>
-      <section className="rounded-[24px] border border-[#f2e4d8] bg-white p-5 shadow-sm">
+          <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[var(--color-primary-700)]">← رجوع للقائمة</button>
+      <section className="rounded-[24px] border border-[var(--color-border)] bg-white p-5 shadow-sm">
         <h2 className="text-lg font-black tracking-tight">💾 نسخة احتياطية واستعادة</h2>
-        <p className="mt-2 text-sm leading-7 text-[#88796e]">التصدير بينزّل ملف JSON فيه بياناتك وإعدادات الشهور والسجلات والملاحظات. من غير أي مفاتيح أو أسرار.</p>
+        <p className="mt-2 text-sm leading-7 text-[var(--color-text-secondary)]">التصدير بينزّل ملف JSON فيه بياناتك وإعدادات الشهور والسجلات والملاحظات. من غير أي مفاتيح أو أسرار.</p>
         <div className="mt-4 grid gap-3 sm:grid-cols-2">
           <PrimaryButton type="button" disabled={pending} onClick={() => void exportBackup()}>
             ⬇️ نزّل نسخة JSON
@@ -559,10 +559,10 @@ export default function MorePage() {
                     type="button"
                     onClick={() => setEditKpi(kpi.key)}
                     className={`flex min-h-12 items-center gap-2 rounded-2xl border px-3 text-right text-xs font-extrabold transition ${
-                      active ? "border-[#bd4b0a] bg-[#fff0e2] text-[#bd4b0a]" : "border-neutral-200 bg-white text-[#88796e]"
+                      active ? "border-[var(--color-primary-700)] bg-[var(--color-primary-50)] text-[var(--color-primary-700)]" : "border-neutral-200 bg-white text-[var(--color-text-secondary)]"
                     }`}
                   >
-                    <span className="text-[#bd4b0a]"><KpiIcon kpiKey={kpi.key} className="h-5 w-5" /></span>
+                    <span className="text-[var(--color-primary-700)]"><KpiIcon kpiKey={kpi.key} className="h-5 w-5" /></span>
                     <span dir="ltr" className="leading-4">
                       {kpi.nameEn}
                     </span>
@@ -602,7 +602,7 @@ export default function MorePage() {
       </Modal>
 
       <Modal open={Boolean(deleteId)} title="🗑️ تشيل السجل ده؟" onClose={() => setDeleteId(null)}>
-        <p className="text-sm leading-7 text-[#88796e]">السجل هيتشال من الجهاز ده نهائيًا.</p>
+        <p className="text-sm leading-7 text-[var(--color-text-secondary)]">السجل هيتشال من الجهاز ده نهائيًا.</p>
         <div className="mt-4 flex gap-2">
           <SecondaryButton type="button" onClick={() => setDeleteId(null)}>
             لأ، خليه
@@ -614,7 +614,7 @@ export default function MorePage() {
       </Modal>
 
       <Modal open={clearOpen} title="🚨 تمسح الشهر كله؟" onClose={() => setClearOpen(false)}>
-        <p className="text-sm leading-7 text-[#88796e]">
+        <p className="text-sm leading-7 text-[var(--color-text-secondary)]">
           هتمسح كل سجلات <strong>{monthLabelAr(month)}</strong> وعددها <strong>{entries.length}</strong>. الإعدادات مش هتتمسح. ده مش بيترجع بعد ما تأكده.
         </p>
         <Field label={`اكتب ${month} للتأكيد`}>
@@ -631,7 +631,7 @@ export default function MorePage() {
       </Modal>
 
       <Modal open={restoreOpen} title="⬆️ استعادة نسخة" onClose={() => setRestoreOpen(false)}>
-        <p className="text-sm leading-7 text-[#88796e]">{restoreSummary}</p>
+        <p className="text-sm leading-7 text-[var(--color-text-secondary)]">{restoreSummary}</p>
         <div className="mt-4 grid gap-2">
           <label className="flex min-h-12 items-center gap-2 rounded-2xl bg-neutral-50 px-3 text-sm font-bold">
             <input type="radio" name="restore-mode" checked={restoreMode === "merge"} onChange={() => setRestoreMode("merge")} />

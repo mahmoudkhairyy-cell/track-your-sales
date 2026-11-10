@@ -185,67 +185,67 @@ export default function LogPage() {
 
   return (
     <form className="tys-page tys-page-log mx-auto max-w-5xl space-y-5 pb-8" onSubmit={onSubmit}>
-      <section className="flex items-end justify-between gap-3 rounded-[26px] border border-[#f0dfd1] bg-white/85 px-4 py-4 shadow-[0_10px_28px_rgba(100,55,25,0.045)] sm:px-5">
+      <section className="flex items-end justify-between gap-3 rounded-[26px] border border-[var(--color-border)] bg-white/85 px-4 py-4 shadow-[0_10px_28px_rgba(100,55,25,0.045)] sm:px-5">
         <div>
           <p className="text-[10px] font-black tracking-[0.16em] text-[#c66b34]">DAILY SALES ENTRY</p>
-          <h1 className="mt-1 text-2xl font-black tracking-tight text-[#38291f]">إنجاز اليوم</h1>
-          <p className="mt-1 text-xs font-semibold text-[#927b69]">سجّل مبيعاتك وإنجازاتك بسهولة — هتتحفظ تلقائيًا.</p>
+          <h1 className="mt-1 text-2xl font-black tracking-tight text-[var(--color-text-primary)]">إنجاز اليوم</h1>
+          <p className="mt-1 text-xs font-semibold text-[var(--color-text-secondary)]">سجّل مبيعاتك وإنجازاتك بسهولة — هتتحفظ تلقائيًا.</p>
         </div>
-        <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#fff0e2] text-2xl">✍️</span>
+        <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[var(--color-primary-50)] text-2xl">✍️</span>
       </section>
 
       {error ? <Banner tone="error">❌ {error}</Banner> : null}
 
       {dash ? (
-        <section className="rounded-[26px] border border-[#f0dfd1] bg-gradient-to-br from-white via-[#fffaf5] to-[#fff0e2] p-4 shadow-[0_12px_30px_rgba(100,55,25,0.055)] sm:p-5">
+        <section className="rounded-[26px] border border-[var(--color-border)] bg-gradient-to-br from-white via-[var(--color-surface-cream)] to-[var(--color-primary-50)] p-4 shadow-[0_12px_30px_rgba(100,55,25,0.055)] sm:p-5">
           <div className="mb-3 flex items-center justify-between gap-2">
             <div>
               <p className="text-[10px] font-black tracking-[0.14em] text-[#bd6a35]">MONTHLY SNAPSHOT</p>
-              <h2 className="mt-0.5 text-sm font-black text-[#38291f]">ملخص الشهر</h2>
+              <h2 className="mt-0.5 text-sm font-black text-[var(--color-text-primary)]">ملخص الشهر</h2>
             </div>
             <span className="rounded-full border border-[#f0ddcd] bg-white px-3 py-1 text-[10px] font-extrabold text-[#a56b43]">مباشر</span>
           </div>
           <div className="grid grid-cols-3 gap-2">
-            <div className="rounded-2xl border border-[#f1dfd0] bg-white/90 px-2 py-3 text-center">
-              <p className="font-mono text-xl font-black tabular-nums text-[#bd4b0a]">{formatQty(Math.round(dash.overall))}%</p>
-              <p className="mt-1 text-[10px] font-bold text-[#927b69]">تحقيق التارجت</p>
+            <div className="rounded-2xl border border-[var(--color-border)] bg-white/90 px-2 py-3 text-center">
+              <p className="font-mono text-xl font-black tabular-nums text-[var(--color-primary-700)]">{formatQty(Math.round(dash.overall))}%</p>
+              <p className="mt-1 text-[10px] font-bold text-[var(--color-text-secondary)]">تحقيق التارجت</p>
             </div>
-            <div className="rounded-2xl border border-[#f1dfd0] bg-white/90 px-2 py-3 text-center">
-              <p className="font-mono text-xl font-black tabular-nums text-[#38291f]">{formatQty(workLeft)}</p>
-              <p className="mt-1 text-[10px] font-bold text-[#927b69]">أيام شغل فاضلة</p>
+            <div className="rounded-2xl border border-[var(--color-border)] bg-white/90 px-2 py-3 text-center">
+              <p className="font-mono text-xl font-black tabular-nums text-[var(--color-text-primary)]">{formatQty(workLeft)}</p>
+              <p className="mt-1 text-[10px] font-bold text-[var(--color-text-secondary)]">أيام شغل فاضلة</p>
             </div>
-            <div className="rounded-2xl border border-[#f1dfd0] bg-white/90 px-2 py-3 text-center">
-              <p className="font-mono text-xl font-black tabular-nums text-[#38291f]">{formatQty(onTrack.length)}</p>
-              <p className="mt-1 text-[10px] font-bold text-[#927b69]">مؤشرات لسه ناقصة</p>
+            <div className="rounded-2xl border border-[var(--color-border)] bg-white/90 px-2 py-3 text-center">
+              <p className="font-mono text-xl font-black tabular-nums text-[var(--color-text-primary)]">{formatQty(onTrack.length)}</p>
+              <p className="mt-1 text-[10px] font-bold text-[var(--color-text-secondary)]">مؤشرات لسه ناقصة</p>
             </div>
           </div>
         </section>
       ) : null}
 
       {dash ? (
-        <section className="rounded-[26px] border border-[#efc8a8] bg-gradient-to-br from-[#fff8f0] via-white to-[#ffe8d4] p-4 shadow-[0_12px_30px_rgba(145,75,30,0.07)]">
+        <section className="rounded-[26px] border border-[var(--color-border)] bg-gradient-to-br from-[var(--color-surface-cream)] via-white to-[var(--color-primary-100)] p-4 shadow-[0_12px_30px_rgba(145,75,30,0.07)]">
           <p className="mb-3 text-[10px] font-black tracking-[0.14em] text-[#bd6a35]">COMMISSION & PERFORMANCE</p>
           <div className="grid grid-cols-2 gap-2.5">
             <div className="rounded-2xl border border-white bg-white/90 px-3 py-3 shadow-[0_5px_16px_rgba(145,75,30,0.05)]">
-              <span className="block text-[10px] font-bold text-[#9a806c]">الكوميشن المتوقع</span>
-              <strong className="mt-1 block truncate font-mono text-lg font-black text-[#bd4b0a]">{formatMoney(dash.estimatedCommission)} <span className="text-[10px] font-bold text-[#9a806c]">ج.م</span></strong>
-              <span className="mt-0.5 block text-[10px] font-semibold text-[#a18a78]">من {formatMoney(dash.fullCommission)} ج.م</span>
+              <span className="block text-[10px] font-bold text-[var(--color-text-secondary)]">الكوميشن المتوقع</span>
+              <strong className="mt-1 block truncate font-mono text-lg font-black text-[var(--color-primary-700)]">{formatMoney(dash.estimatedCommission)} <span className="text-[10px] font-bold text-[var(--color-text-secondary)]">ج.م</span></strong>
+              <span className="mt-0.5 block text-[10px] font-semibold text-[var(--color-text-secondary)]">من {formatMoney(dash.fullCommission)} ج.م</span>
             </div>
             <div className="rounded-2xl border border-white bg-white/90 px-3 py-3 shadow-[0_5px_16px_rgba(145,75,30,0.05)]">
-              <span className="block text-[10px] font-bold text-[#9a806c]">ملخص الأداء</span>
-              <strong className="mt-1 block truncate text-sm font-black text-[#38291f]">{performanceOnTrack === null ? "جاري حساب الأداء" : performanceOnTrack ? "ماشي بشكل ممتاز" : "لسه في فرصة تعوّض"}</strong>
-              <span className="mt-0.5 block text-[10px] font-semibold text-[#a18a78]">{overallLine()}</span>
+              <span className="block text-[10px] font-bold text-[var(--color-text-secondary)]">ملخص الأداء</span>
+              <strong className="mt-1 block truncate text-sm font-black text-[var(--color-text-primary)]">{performanceOnTrack === null ? "جاري حساب الأداء" : performanceOnTrack ? "ماشي بشكل ممتاز" : "لسه في فرصة تعوّض"}</strong>
+              <span className="mt-0.5 block text-[10px] font-semibold text-[var(--color-text-secondary)]">{overallLine()}</span>
             </div>
           </div>
         </section>
       ) : null}
 
       {onTrack.length > 0 ? (
-        <section className="rounded-[24px] bg-[#fff0e2] p-4 text-[#bd4b0a]">
+        <section className="rounded-[24px] bg-[var(--color-primary-50)] p-4 text-[var(--color-primary-700)]">
           <p className="text-sm font-extrabold">⚡ المطلوب منك النهارده عشان تفضل ON TRACK</p>
           <div className="mt-2 flex flex-wrap gap-2">
             {onTrack.map((k) => (
-              <span key={k.kpiKey} className="rounded-full bg-white px-3 py-1 text-xs font-extrabold text-[#bd4b0a] shadow-sm">
+              <span key={k.kpiKey} className="rounded-full bg-white px-3 py-1 text-xs font-extrabold text-[var(--color-primary-700)] shadow-sm">
                 {kpiEmoji(k.kpiKey)} {formatQty(workLeft > 0 ? Math.ceil(k.remaining / workLeft) : k.remaining)} · {KPI_CATALOG.find((i) => i.key === k.kpiKey)?.nameEn}
               </span>
             ))}
@@ -253,8 +253,8 @@ export default function LogPage() {
         </section>
       ) : null}
 
-      <section className="rounded-[22px] border border-[#f2e4d8] bg-white p-3 shadow-sm sm:rounded-[24px] sm:p-4">
-        <label htmlFor="entry-date" className="block text-xs font-bold text-[#88796e]">📅 تاريخ الإنجاز</label>
+      <section className="rounded-[22px] border border-[var(--color-border)] bg-white p-3 shadow-sm sm:rounded-[24px] sm:p-4">
+        <label htmlFor="entry-date" className="block text-xs font-bold text-[var(--color-text-secondary)]">📅 تاريخ الإنجاز</label>
         <input id="entry-date" className={`${inputClass} mt-2`} type="date" value={entryDate} min={monthDateRange(month).start} max={monthDateRange(month).end} onChange={(e) => setEntryDate(e.target.value)} required />
       </section>
 
@@ -267,30 +267,30 @@ export default function LogPage() {
         const excluded = !!d && d.weight > 0 && d.gated;
         const needToday = d && workLeft > 0 ? Math.ceil(Math.max(0, d.remaining) / workLeft) : 0;
         return (
-          <article key={item.key} className="rounded-[22px] border border-[#f2e4d8] bg-white p-3 shadow-sm transition duration-300 hover:-translate-y-0.5 hover:shadow-md sm:rounded-[24px] sm:p-4">
+          <article key={item.key} className="rounded-[22px] border border-[var(--color-border)] bg-white p-3 shadow-sm transition duration-300 hover:-translate-y-0.5 hover:shadow-md sm:rounded-[24px] sm:p-4">
             <div className="flex items-center justify-between gap-3">
               <div className="flex items-center gap-3">
-                <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#fff0e2] text-[#e96812]"><KpiIcon kpiKey={item.key} className="h-5 w-5" /></span>
+                <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--color-primary-50)] text-[var(--color-primary-600)]"><KpiIcon kpiKey={item.key} className="h-5 w-5" /></span>
                 <div>
                   <p className="font-extrabold" dir="ltr">{item.nameEn}</p>
-                  <p className="text-[11px] font-bold text-[#bd4b0a]">
+                  <p className="text-[11px] font-bold text-[var(--color-primary-700)]">
                     {excluded ? "متتحسبش غير لما تكمل 90%" : commission > 0 ? `كوميشن ${commission} ج` : " "}
                   </p>
                 </div>
               </div>
             </div>
-            <div className="mt-3 grid grid-cols-3 gap-2 rounded-2xl bg-[#fffaf5] p-2.5 text-center">
+            <div className="mt-3 grid grid-cols-3 gap-2 rounded-2xl bg-[var(--color-surface-cream)] p-2.5 text-center">
               <div>
-                <p className="text-[10px] text-[#88796e]">المستهدف</p>
+                <p className="text-[10px] text-[var(--color-text-secondary)]">المستهدف</p>
                 <p className="text-sm font-black tabular-nums">{d ? formatQty(d.target) : "—"}</p>
               </div>
               <div>
-                <p className="text-[10px] text-[#88796e]">الوزن</p>
+                <p className="text-[10px] text-[var(--color-text-secondary)]">الوزن</p>
                 <p className="text-sm font-black tabular-nums">{d ? d.weight : 0}%</p>
               </div>
               <div>
-                <p className="text-[10px] text-[#88796e]">الباقي</p>
-                <p className="text-sm font-black tabular-nums text-[#bd4b0a]">{d ? formatQty(Math.max(0, d.remaining)) : "—"}</p>
+                <p className="text-[10px] text-[var(--color-text-secondary)]">الباقي</p>
+                <p className="text-sm font-black tabular-nums text-[var(--color-primary-700)]">{d ? formatQty(Math.max(0, d.remaining)) : "—"}</p>
               </div>
             </div>
             <div className="mt-3 flex items-center gap-2">
@@ -306,9 +306,9 @@ export default function LogPage() {
                 placeholder="0"
                 aria-label={`كمية ${item.nameEn}`}
               />
-              <span className="shrink-0 text-xs font-bold text-[#88796e]">{d?.unitAr ?? ""}</span>
+              <span className="shrink-0 text-xs font-bold text-[var(--color-text-secondary)]">{d?.unitAr ?? ""}</span>
             </div>
-            <p className="mt-2 text-[11px] text-[#88796e]" title={quantityHint(item.key)}>
+            <p className="mt-2 text-[11px] text-[var(--color-text-secondary)]" title={quantityHint(item.key)}>
               {needToday > 0 ? `المطلوب النهارده: ${formatQty(needToday)} ${d?.unitAr ?? ""}` : "مفيش مطلوب إضافي النهارده"}
             </p>
           </article>
@@ -317,12 +317,12 @@ export default function LogPage() {
       </section>
 
       {quality ? (
-        <section className="rounded-[22px] border border-[#f2e4d8] bg-white p-3 shadow-sm sm:rounded-[24px] sm:p-4">
+        <section className="rounded-[22px] border border-[var(--color-border)] bg-white p-3 shadow-sm sm:rounded-[24px] sm:p-4">
           <div className="mb-2 flex items-center justify-between">
             <p className="text-sm font-black">✅ الكواليتي (15%)</p>
-            <p className="text-xs font-extrabold text-[#bd4b0a]">{qualityScore}% من 15%</p>
+            <p className="text-xs font-extrabold text-[var(--color-primary-700)]">{qualityScore}% من 15%</p>
           </div>
-          <p className="mb-3 text-[11px] text-[#88796e]">{monthSaved ? "علّم البند لو اتحقق بالكامل، والتغيير بيتحفظ فوراً." : "⚠️ احفظ تارجت الشهر الأول من صفحة التارجت، وبعدين تقدر تعلّم الكواليتي."}</p>
+          <p className="mb-3 text-[11px] text-[var(--color-text-secondary)]">{monthSaved ? "علّم البند لو اتحقق بالكامل، والتغيير بيتحفظ فوراً." : "⚠️ احفظ تارجت الشهر الأول من صفحة التارجت، وبعدين تقدر تعلّم الكواليتي."}</p>
           <div className="space-y-2">
             {QUALITY_ITEMS.map((item) => {
               const on = !!quality.checks?.[item.key];
@@ -333,15 +333,15 @@ export default function LogPage() {
                   disabled={qualityBusy || !monthSaved}
                   aria-pressed={on}
                   onClick={() => toggleQuality(item.key)}
-                  className="flex w-full items-center justify-between rounded-2xl border border-[#f2e4d8] bg-white px-3 py-2.5 text-right disabled:opacity-60"
+                  className="flex w-full items-center justify-between rounded-2xl border border-[var(--color-border)] bg-white px-3 py-2.5 text-right disabled:opacity-60"
                 >
                   <span className="flex items-center gap-3">
-                    <span className={`flex h-6 w-6 items-center justify-center rounded-full border-2 text-xs font-black ${on ? "border-emerald-500 bg-emerald-500 text-white" : "border-[#f2e4d8] text-transparent"}`}>✓</span>
+                    <span className={`flex h-6 w-6 items-center justify-center rounded-full border-2 text-xs font-black ${on ? "border-emerald-500 bg-emerald-500 text-white" : "border-[var(--color-border)] text-transparent"}`}>✓</span>
                     <span className="flex flex-col items-start gap-0.5">
                       <span className="text-sm font-extrabold" dir="ltr">{item.label}</span>
                     </span>
                   </span>
-                  <span className="text-xs font-black text-[#88796e]">{item.weight}%</span>
+                  <span className="text-xs font-black text-[var(--color-text-secondary)]">{item.weight}%</span>
                 </button>
               );
             })}
@@ -349,8 +349,8 @@ export default function LogPage() {
         </section>
       ) : null}
 
-      <section className="rounded-[22px] border border-[#f2e4d8] bg-white p-3 sm:rounded-[24px] sm:p-4">
-        <label htmlFor="entry-note" className="block text-xs font-bold text-[#88796e]">📝 ملاحظة (لو حابب)</label>
+      <section className="rounded-[22px] border border-[var(--color-border)] bg-white p-3 sm:rounded-[24px] sm:p-4">
+        <label htmlFor="entry-note" className="block text-xs font-bold text-[var(--color-text-secondary)]">📝 ملاحظة (لو حابب)</label>
         <textarea
           id="entry-note"
           className={`${inputClass} mt-2 min-h-20 py-3`}
@@ -364,7 +364,7 @@ export default function LogPage() {
       <PrimaryButton type="submit" disabled={pending}>
         {pending ? "⏳ بنحفظ..." : "💾 احفظ إنجاز اليوم"}
       </PrimaryButton>
-      <p className="text-center text-xs text-[#88796e]">التاريخ اللي فوق هو اللي بيحدد الشهر · الشهر المعروض: {month}</p>
+      <p className="text-center text-xs text-[var(--color-text-secondary)]">التاريخ اللي فوق هو اللي بيحدد الشهر · الشهر المعروض: {month}</p>
     </form>
   );
 }
