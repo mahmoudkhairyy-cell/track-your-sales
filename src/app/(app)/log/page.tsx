@@ -44,7 +44,6 @@ export default function LogPage() {
   // اختيار المستخدم يظل كما هو حتى لو كان خارج الشهر المحدد، مع تنبيه شهر الحفظ.
   useEffect(() => {
     if (!entryDateTouched.current) {
-      entryDateTouched.current = false;
       setEntryDate(month === cairoYearMonth() ? cairoISODate() : `${month}-01`);
     }
   }, [month]);
@@ -140,6 +139,9 @@ export default function LogPage() {
       setError("اختار تاريخ الإنجاز");
       return;
     }
+    if (dateOutsideSelectedMonth && !window.confirm("التاريخ المختار تابع لشهر " + monthLabelAr(dateMonth) + " وليس " + monthLabelAr(month) + ". هيتحفظ السجل في شهر " + monthLabelAr(dateMonth) + ". هل تريد المتابعة؟")) {
+      return;
+    }
     const filled = KPI_CATALOG.filter((item) => (quantities[item.key] ?? "").trim() !== "");
     if (filled.length === 0) {
       setError("اكتب كمية لواحد على الأقل قبل الحفظ");
@@ -176,6 +178,7 @@ export default function LogPage() {
       window.dispatchEvent(new Event("tys-data-changed"));
       setQuantities({});
       setNote("");
+      entryDateTouched.current = false;
       setEntryDate(month === cairoYearMonth() ? cairoISODate() : `${month}-01`);
     } catch (err) {
       const message = err instanceof ApiError || err instanceof Error ? err.message : "ماقدرناش نحفظ السجل. اتأكد من النت وحاول تاني.";
