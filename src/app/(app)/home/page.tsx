@@ -158,7 +158,7 @@ export default function HomePage() {
             </div>
             <span className={`shrink-0 rounded-full border px-3 py-1.5 text-[10px] font-extrabold ${onTrack === null ? "border-[#ead8c9] bg-white text-[#8b7565]" : onTrack ? "border-emerald-200 bg-emerald-50 text-emerald-700" : "border-orange-200 bg-orange-50 text-[#bd4b0a]"}`}>
               <span className={`ml-1.5 inline-block h-1.5 w-1.5 rounded-full ${onTrack === null ? "bg-[#b9a494]" : onTrack ? "bg-emerald-500" : "bg-[#e96812]"}`} />
-              {onTrack === null ? "بانتظار البيانات" : onTrack ? "على المسار" : "محتاج تسرّع"}
+              {onTrack === null ? "Waiting for data" : onTrack ? "On track" : "Behind"}
             </span>
           </div>
           <div className="grid grid-cols-[minmax(0,1fr)_112px] items-center gap-3 py-4 sm:grid-cols-[minmax(0,1fr)_136px] sm:gap-6 sm:py-5">
