@@ -151,3 +151,51 @@ main button:focus-visible {
     transition-duration: .01ms !important;
   }
 }
+
+
+/* Track Your Sales — premium striped tables and shared states */
+main table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  overflow: hidden;
+  border: 1px solid #f1e2d6;
+  border-radius: 18px;
+  background: #fff;
+}
+main thead th {
+  background: linear-gradient(110deg, #fff4e9, #fffaf6);
+  color: #75401f;
+  font-weight: 800;
+}
+main tbody tr:nth-child(even) { background: #fff8f1; }
+main tbody tr:nth-child(odd) { background: #fff; }
+main th, main td {
+  border-bottom: 1px solid #f3e7dd;
+}
+main tbody tr:last-child td { border-bottom: 0; }
+main tbody tr { transition: background .16s ease; }
+main tbody tr:hover { background: #fff0e4; }
+
+@media (max-width: 1023px) {
+  nav[aria-label="التنقل الرئيسي للموبايل"] {
+    inset-inline: 12px;
+    bottom: max(10px, env(safe-area-inset-bottom));
+    overflow: hidden;
+    border: 1px solid rgba(241, 226, 214, .95);
+    border-radius: 24px;
+    background: rgba(255, 255, 255, .94);
+    box-shadow: 0 12px 34px rgba(80, 43, 20, .13);
+  }
+  nav[aria-label="التنقل الرئيسي للموبايل"] > div {
+    padding-inline: 4px;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .tx-empty-state { animation: tx-empty-in .28s ease-out both; }
+  @keyframes tx-empty-in {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+}
