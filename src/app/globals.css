@@ -1543,7 +1543,7 @@ body {
 .tys-page {
   color: var(--tys-ink);
   isolation: isolate;
-  animation: tys-page-enter .28s ease-out both;
+  animation: tys-page-enter .28s ease-out backwards;
 }
 @keyframes tys-page-enter {
   from { opacity: .72; transform: translateY(5px); }
