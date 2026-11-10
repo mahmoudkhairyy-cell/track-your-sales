@@ -134,14 +134,14 @@ function KpiTile({ kpi }: { kpi: AggKpi }) {
       style={neutral ? undefined : { boxShadow: ok
         ? "0 0 0 1px rgba(22,163,74,.12), 0 0 18px rgba(22,163,74,.16), 0 6px 18px rgba(22,163,74,.08)"
         : "0 0 0 1px rgba(220,38,38,.12), 0 0 18px rgba(220,38,38,.16), 0 6px 18px rgba(220,38,38,.08)" }}
-      className={`relative overflow-hidden rounded-2xl bg-gradient-to-br from-white to-[#fff0e2]/60 p-3 shadow-sm ring-1 ${tone.ring} ${neutral ? "" : ok ? "bg-emerald-50/70" : "bg-red-50/70"}`}
+      className={`relative overflow-hidden rounded-2xl bg-gradient-to-br from-white to-[#fff0e2]/60 p-3 shadow-sm ring-1 transition duration-300 hover:-translate-y-0.5 hover:shadow-lg ${tone.ring} ${neutral ? "" : ok ? "bg-emerald-50/70" : "bg-red-50/70"}`}
     >
       <p className="truncate text-[10px] font-extrabold text-[#927b69]" dir="ltr">{kpi.name}</p>
       <p className={`mt-1 text-2xl font-black tabular-nums tracking-tight ${tone.text}`}>
         {Math.round(kpi.percent)}<span className="text-sm">%</span>
       </p>
       <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-white/80">
-        <div className={`h-full rounded-full bg-gradient-to-r ${tone.bar}`} style={{ width: `${Math.min(100, Math.max(0, kpi.percent))}%` }} />
+        <div className={`h-full rounded-full bg-gradient-to-r transition-[width] duration-700 ease-out ${tone.bar}`} style={{ width: `${Math.min(100, Math.max(0, kpi.percent))}%` }} />
       </div>
       <p className="mt-1.5 text-[10px] tabular-nums text-[#927b69]" dir="ltr">{Math.round(kpi.achieved)} / {kpi.target}</p>
     </div>
