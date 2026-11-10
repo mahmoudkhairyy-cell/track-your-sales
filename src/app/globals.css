@@ -19,7 +19,7 @@
   /* Design tokens (مركزية): الألوان الجديدة، بدون استخدام لحد ما نطبقها تدريجياً */
   --color-primary-900: #7a2e00;
   --color-primary-700: #c2410c;
-  --color-primary-600: #ea580c;
+  --color-primary-600: #c2410c;
   --color-primary-500: #f97316;
   --color-primary-100: #ffedd5;
   --color-primary-50: #fff7ed;
@@ -36,7 +36,7 @@
 
   --color-text-primary: #1c1917;
   --color-text-secondary: #57534e;
-  --color-text-muted: #a8a29e;
+  --color-text-muted: #78716c;
   --color-surface: #ffffff;
   --color-surface-cream: #fff7ed;
   --color-border: #fed7aa;
@@ -125,7 +125,7 @@ textarea { resize: vertical; }
   --brand-bg: #fffaf5;
   --brand-card: #ffffff;
   --brand-text: #2d2119;
-  --brand-muted: #927b69;
+  --brand-muted: #70513c;
   --brand-border: #f1dfd0;
   --app-shadow: 0 12px 30px rgba(126, 65, 24, 0.065);
 }
@@ -275,13 +275,7 @@ textarea { resize: vertical; }
   color: #7b3107;
   background: #ffe0c5;
 }
-@media (hover: hover) and (pointer: fine) {
-  .tys-page-wiki article:hover,
-  .tys-page-manager article:hover {
-    border-color: #edc4a4;
-    box-shadow: 0 13px 30px rgba(126, 65, 24, 0.075);
-  }
-}
+
 @media (prefers-reduced-motion: reduce) {
   .tys-page,
   .tys-page *,
