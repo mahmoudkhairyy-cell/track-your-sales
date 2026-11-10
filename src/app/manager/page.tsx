@@ -216,7 +216,7 @@ export default function ManagerPage() {
   async function changePassword(event: FormEvent) {
     event.preventDefault();
     setPwMsg("");
-    if (newPw.length < 6) return setPwMsg("الباسورد الجديد لازم يكون 6 حروف على الأقل.");
+    if (newPw.length < 8) return setPwMsg("الباسورد الجديد لازم يكون 8 حروف على الأقل.");
     if (newPw !== newPw2) return setPwMsg("الباسورد الجديد مش متطابق.");
     try {
       await managerApi("change_password", { password: oldPw, newPassword: newPw });
