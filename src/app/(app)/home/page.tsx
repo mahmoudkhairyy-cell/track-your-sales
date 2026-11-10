@@ -151,18 +151,32 @@ export default function HomePage() {
         </p>
       </section>
 
-      <section className="relative isolate flex items-center gap-4 overflow-hidden rounded-[28px] border border-white/20 bg-gradient-to-br from-[#f58a3c] via-[#e96812] to-[#b94a0b] p-4 text-white shadow-[0_18px_38px_rgba(189,75,10,0.20)] sm:gap-6 sm:p-6 before:absolute before:-left-12 before:-top-16 before:-z-10 before:h-52 before:w-52 before:rounded-full before:bg-white/10">
-        <ScoreRing value={data.overall} />
-        <div className="flex-1">
-          <p className="text-sm font-bold text-white/80">إجمالي التارجت الشهري</p>
-          <p className="mt-1 text-3xl font-black tracking-tight text-white">{formatPercent(data.overall)}%</p>
-          <p className="text-sm text-white/85">{gap > 0 ? `فاضل ${formatPercent(gap)}%` : "مفيش فاضل، قفلت الشهر"}</p>
-          <p className="mt-2 text-xs font-extrabold text-white">
-            💰 كوميشنك: {formatMoney(data.estimatedCommission)} من {formatMoney(data.fullCommission)} جنيه
-          </p>
+      <section className="relative isolate overflow-hidden rounded-[30px] border border-[#edc7a7] bg-gradient-to-br from-[#fffaf5] via-[#fff2e4] to-[#ffe4ca] p-4 shadow-[0_18px_42px_rgba(112,57,18,0.11)] sm:p-6">
+        <div aria-hidden="true" className="pointer-events-none absolute -left-12 -top-16 h-52 w-52 rounded-full bg-[#ff963f]/20 blur-3xl" />
+        <div aria-hidden="true" className="pointer-events-none absolute -bottom-20 right-1/4 h-48 w-48 rounded-full bg-white/80 blur-3xl" />
+        <div className="relative flex items-center gap-4 sm:gap-6">
+          <div className="flex h-28 w-28 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#ff9a45] via-[#f07818] to-[#c6530b] p-1 shadow-[0_12px_28px_rgba(198,83,11,0.22)] sm:h-36 sm:w-36">
+            <div className="flex h-full w-full items-center justify-center rounded-full border border-white/40 bg-white/10">
+              <ScoreRing value={data.overall} />
+            </div>
+          </div>
+          <div className="min-w-0 flex-1">
+            <p className="text-sm font-extrabold text-[#80502f]">إجمالي التارجت الشهري</p>
+            <p className="mt-1 text-3xl font-black tracking-tight text-[#9d430d] sm:text-4xl">{formatPercent(data.overall)}%</p>
+            <p className="mt-1 text-sm font-bold text-[#80502f]">{gap > 0 ? `فاضل ${formatPercent(gap)}%` : "مفيش فاضل، قفلت الشهر"}</p>
+          </div>
+        </div>
+        <div className="relative mt-4 grid grid-cols-2 gap-2">
+          <div className="rounded-2xl border border-white/80 bg-white/75 p-3 shadow-sm backdrop-blur-sm">
+            <p className="text-[11px] font-bold text-[#897466]">الكوميشن المتوقع</p>
+            <p className="mt-1 text-lg font-black text-[#9d430d]">{formatMoney(data.estimatedCommission)} <span className="text-[10px] font-bold text-[#897466]">جنيه</span></p>
+          </div>
+          <div className="rounded-2xl border border-white/80 bg-white/75 p-3 shadow-sm backdrop-blur-sm">
+            <p className="text-[11px] font-bold text-[#897466]">الكوميشن الكامل</p>
+            <p className="mt-1 text-lg font-black text-[#2b1b12]">{formatMoney(data.fullCommission)} <span className="text-[10px] font-bold text-[#897466]">جنيه</span></p>
+          </div>
         </div>
       </section>
-
       <section className={`rounded-[26px] border p-4 shadow-[0_10px_28px_rgba(116,63,26,0.045)] ${moodStyle.box}`}>
         <p className={`text-base font-black ${moodStyle.title}`}>
           {mood.emoji} {mood.headline}
