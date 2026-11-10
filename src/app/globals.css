@@ -2,13 +2,13 @@
 
 :root {
   color-scheme: light;
-  --tx-orange: #e96812;
-  --tx-orange-deep: #bd4b0a;
-  --tx-orange-soft: #fff0e4;
-  --tx-cream: #fff9f4;
-  --tx-ink: #24180f;
-  --tx-muted: #8c7b6e;
-  --tx-line: #f1e2d6;
+  --tx-orange: #f07818;
+  --tx-orange-deep: #c6530b;
+  --tx-orange-soft: #fff0df;
+  --tx-cream: #fff8f0;
+  --tx-ink: #2b1b12;
+  --tx-muted: #897466;
+  --tx-line: #f0dfd0;
 }
 
 html {
@@ -21,8 +21,9 @@ html {
 body {
   margin: 0;
   background:
-    radial-gradient(ellipse at 92% 0%, rgba(255, 191, 137, .20), transparent 34rem),
-    linear-gradient(180deg, #fffaf6 0%, #fff6ee 52%, #fffaf6 100%);
+    radial-gradient(ellipse at 92% -8%, rgba(255, 166, 91, .24), transparent 31rem),
+    radial-gradient(ellipse at 5% 35%, rgba(255, 224, 195, .30), transparent 27rem),
+    linear-gradient(145deg, #fffaf5 0%, #fff4e9 48%, #fffaf5 100%);
   color: var(--tx-ink);
   font-family: var(--font-cairo), Tahoma, "Segoe UI", Arial, sans-serif;
   text-rendering: optimizeLegibility;
@@ -33,7 +34,7 @@ body {
 
 input, select, textarea, button { font-family: inherit; }
 textarea { resize: vertical; }
-::selection { background: #ffd8bd; color: #612b0c; }
+::selection { background: #ffd8bd; color: #5d2a0d; }
 
 button, a { -webkit-tap-highlight-color: transparent; }
 a { text-decoration: none; }
@@ -54,8 +55,8 @@ a { text-decoration: none; }
 
 /* Shared interface polish */
 :root {
-  --tx-card-shadow: 0 10px 30px rgba(105, 54, 20, .055);
-  --tx-card-shadow-hover: 0 16px 34px rgba(105, 54, 20, .095);
+  --tx-card-shadow: 0 12px 32px rgba(112, 57, 18, .065);
+  --tx-card-shadow-hover: 0 18px 38px rgba(112, 57, 18, .12);
 }
 
 main {
@@ -197,5 +198,45 @@ main tbody tr:hover { background: #fff0e4; }
   @keyframes tx-empty-in {
     from { opacity: 0; transform: translateY(5px); }
     to { opacity: 1; transform: translateY(0); }
+  }
+}
+
+
+/* Neo-Tech Orange identity foundation */
+:root {
+  --tx-orange-bright: #ff963f;
+  --tx-orange-glow: rgba(240, 120, 24, .16);
+  --tx-cream-deep: #fff0e1;
+  --tx-surface: rgba(255, 255, 255, .94);
+  --tx-surface-soft: #fffaf5;
+  --tx-border-strong: #edc7a7;
+  --tx-gradient-brand: linear-gradient(125deg, #ff9a45 0%, #f07818 48%, #c6530b 100%);
+  --tx-gradient-soft: linear-gradient(135deg, #fffaf5 0%, #fff0df 100%);
+}
+
+html, body {
+  accent-color: var(--tx-orange);
+}
+
+body {
+  background-attachment: fixed;
+}
+
+main article,
+main section {
+  scroll-margin-top: 88px;
+}
+
+main article {
+  box-shadow: var(--tx-card-shadow);
+}
+
+main :where(button, [role="button"]):not(:disabled):focus-visible {
+  box-shadow: 0 0 0 4px var(--tx-orange-glow);
+}
+
+@media (max-width: 640px) {
+  body {
+    background-attachment: scroll;
   }
 }
