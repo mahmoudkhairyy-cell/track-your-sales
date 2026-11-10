@@ -117,16 +117,21 @@ export function AppShell({ user, children }: { user: SafeUser; children: ReactNo
             </aside>
 
             <div className="flex min-w-0 flex-1 flex-col">
-              <header className="sticky top-0 z-30 border-b border-[#f0dfd0]/90 bg-[#fffaf5]/92 px-4 py-3 shadow-[0_5px_24px_rgba(116,63,26,0.035)] backdrop-blur-xl">
-                <div className="flex items-center justify-between gap-3">
-                  <div className="flex items-center gap-2">
-                    <LogoMark />
-                    <div>
-                      <p className="text-sm font-black leading-none text-neutral-900" dir="ltr">{APP_NAME}</p>
-                      <p className="mt-1 text-[11px] text-neutral-400" dir="ltr">{BRAND_BY}</p>
+              <header className="sticky top-0 z-30 border-b border-white/70 bg-[#fffaf5]/72 px-3 py-3 backdrop-blur-2xl sm:px-4">
+                <div className="relative mx-auto flex max-w-[1440px] items-center justify-between gap-3 overflow-hidden rounded-[22px] border border-white/90 bg-gradient-to-l from-white/95 via-[#fffaf5]/95 to-[#fff0df]/90 px-3 py-2.5 shadow-[0_8px_28px_rgba(198,83,11,0.09)] ring-1 ring-[#f0dfd0]/60 sm:px-4">
+                  <span aria-hidden="true" className="pointer-events-none absolute inset-y-0 right-0 w-1 bg-gradient-to-b from-[#ffb36e] via-[#f07818] to-[#c6530b]" />
+                  <div className="relative flex min-w-0 items-center gap-2.5">
+                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-[#fff0df] to-white shadow-[0_3px_12px_rgba(198,83,11,0.10)] ring-1 ring-[#edc7a7]/70">
+                      <LogoMark />
+                    </span>
+                    <div className="min-w-0">
+                      <p className="truncate text-sm font-black leading-none text-[#3a2416]" dir="ltr">{APP_NAME}</p>
+                      <p className="mt-1 truncate text-[10px] font-semibold text-[#a58b77]" dir="ltr">{BRAND_BY}</p>
                     </div>
                   </div>
-                  <MonthSwitcher />
+                  <div className="relative shrink-0">
+                    <MonthSwitcher />
+                  </div>
                 </div>
               </header>
               <main id="main-content" tabIndex={-1} className="mx-auto w-full max-w-[1440px] flex-1 px-4 py-5 pb-28 sm:px-5 lg:px-8 lg:py-7 lg:pb-10">{children}</main>
