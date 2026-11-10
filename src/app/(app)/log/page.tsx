@@ -195,7 +195,7 @@ export default function LogPage() {
 
   return (
     <form className="tys-page tys-page-log mx-auto max-w-5xl space-y-5 pb-8" onSubmit={onSubmit}>
-      <section className="flex items-end justify-between gap-3 rounded-[26px] border border-[var(--color-border)] bg-white/85 px-4 py-4 shadow-[0_10px_28px_rgba(100,55,25,0.045)] sm:px-5">
+      <section className="flex items-end justify-between gap-3 rounded-[26px] border border-[#f2dfcf] bg-[linear-gradient(118deg,#fff8f1_0%,#fff_55%,#ffead8_100%)] px-4 py-4 shadow-[0_10px_28px_rgba(126,65,24,0.06)] sm:px-5">
         <div>
           <p className="text-[10px] font-black tracking-[0.16em] text-[#c66b34]">DAILY SALES ENTRY</p>
           <h1 className="mt-1 text-2xl font-black tracking-tight text-[var(--color-text-primary)]">تسجيل إنجاز</h1>
@@ -209,7 +209,7 @@ export default function LogPage() {
 
 
       {dash ? (
-        <section className="rounded-2xl border border-[var(--color-border)] bg-white p-3 shadow-sm sm:p-4">
+        <section className="rounded-[22px] border border-[#f2dfcf] bg-[linear-gradient(155deg,#fff_0%,#fffaf6_100%)] p-3 shadow-[0_8px_22px_rgba(126,65,24,0.045)] sm:p-4">
           <div className="mb-3 flex items-center justify-between gap-2">
             <div>
               <p className="text-xs font-black tracking-wide text-[var(--color-primary-700)]">DAILY</p>
@@ -222,7 +222,7 @@ export default function LogPage() {
           {dailyItems.length > 0 ? (
             <div className="grid grid-cols-2 gap-2">
               {dailyItems.map((k) => (
-                <div key={k.kpiKey} className="flex min-w-0 items-center justify-between gap-2 rounded-xl bg-[var(--color-surface-cream)] px-2.5 py-2">
+                <div key={k.kpiKey} className="flex min-w-0 items-center justify-between gap-2 rounded-xl border border-[#f3e6dc] bg-[#fff8f1] px-2.5 py-2">
                   <span className="min-w-0 truncate text-[11px] font-bold text-[var(--color-text-secondary)]" dir="ltr">
                     {KPI_CATALOG.find((i) => i.key === k.kpiKey)?.nameEn ?? k.kpiKey}
                   </span>
@@ -238,7 +238,7 @@ export default function LogPage() {
         </section>
       ) : null}
 
-      <section className="rounded-[22px] border border-[var(--color-border)] bg-white p-3 shadow-sm sm:rounded-[24px] sm:p-4">
+      <section className="rounded-[22px] border border-[#f2dfcf] bg-[linear-gradient(155deg,#fff_0%,#fffaf6_100%)] p-3 shadow-[0_8px_22px_rgba(126,65,24,0.045)] sm:rounded-[24px] sm:p-4">
         <label htmlFor="entry-date" className="block text-xs font-bold text-[var(--color-text-secondary)]">📅 تاريخ الإنجاز</label>
         <input id="entry-date" className={`${inputClass} mt-2`} type="date" min={`${month}-01`} max={lastDateOfMonth(month)} value={entryDate} onChange={(e) => setEntryDate(e.target.value)} required />
         <p className="mt-2 text-xs leading-6 text-[var(--color-text-secondary)]">تاريخ الإنجاز لازم يكون داخل شهر {monthLabelAr(month)} المحدد أعلى التطبيق.</p>
@@ -253,7 +253,7 @@ export default function LogPage() {
         const excluded = !!d && d.weight > 0 && d.gated;
         const needToday = d && workLeft > 0 ? Math.ceil(Math.max(0, d.remaining) / workLeft) : 0;
         return (
-          <article key={item.key} className="rounded-[18px] border border-[var(--color-border)] bg-[#fffaf5] p-2.5 shadow-sm sm:rounded-[20px] sm:p-3">
+          <article key={item.key} className="rounded-[18px] border border-[#f0ddcd] bg-[linear-gradient(150deg,#fff_0%,#fff7f0_100%)] p-2.5 shadow-[0_5px_16px_rgba(126,65,24,0.045)] sm:rounded-[20px] sm:p-3">
             <div className="flex items-center justify-between gap-2">
               <div className="flex items-center gap-2">
                 <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#ffeddc] text-[var(--color-primary-600)]"><KpiIcon kpiKey={item.key} className="h-[18px] w-[18px]" /></span>
@@ -265,7 +265,7 @@ export default function LogPage() {
                 </div>
               </div>
             </div>
-            <div className="mt-2.5 grid grid-cols-3 gap-1.5 rounded-xl bg-[#ffefdf] p-2 text-center">
+            <div className="mt-2.5 grid grid-cols-3 gap-1.5 rounded-xl border border-[#f4dfcc] bg-[linear-gradient(135deg,#fff3e8_0%,#ffead8_100%)] p-2 text-center">
               <div>
                 <p className="text-[10px] text-[var(--color-text-secondary)]">المستهدف</p>
                 <p className="text-sm font-black tabular-nums">{d ? formatQty(d.target) : "—"}</p>
@@ -305,7 +305,7 @@ export default function LogPage() {
       </section>
 
       {quality ? (
-        <section className="rounded-[22px] border border-[var(--color-border)] bg-white p-3 shadow-sm sm:rounded-[24px] sm:p-4">
+        <section className="rounded-[22px] border border-[#f2dfcf] bg-[linear-gradient(155deg,#fff_0%,#fffaf6_100%)] p-3 shadow-[0_8px_22px_rgba(126,65,24,0.045)] sm:rounded-[24px] sm:p-4">
           <div className="mb-2 flex items-center justify-between">
             <p className="text-sm font-black">✅ الكواليتي (15%)</p>
             <p className="text-xs font-extrabold text-[var(--color-primary-700)]">{qualityScore}% من 15%</p>
