@@ -362,8 +362,8 @@ export default function ManagerPage() {
               {new Date(row.updated_at).toLocaleString("en-US", { timeZone: "Africa/Cairo", hour12: false })}
             </p>
             <div className="mt-4 grid grid-cols-2 gap-2 sm:gap-3">
-              {(row.payload.kpis ?? []).map((kpi) => (
-                <div key={kpi.name}>
+              {(row.payload.kpis ?? []).map((kpi, index) => (
+                <div key={kpi.name} className="tys-rise" style={{ animationDelay: `${index * 70}ms` }}>
                   <KpiTile kpi={kpi} />
                 </div>
               ))}
