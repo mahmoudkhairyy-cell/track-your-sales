@@ -80,7 +80,7 @@ function NavLinks({ pathname, month }: { pathname: string; month: string }) {
         return (
           <Link
             key={item.href}
-            href={`${item.href}?month=${month}`}
+            href={`${item.href}?month=${month}`} prefetch={false}
             aria-current={active ? "page" : undefined}
             className={`tys-desktop-nav-link relative flex min-h-12 items-center gap-3 rounded-2xl px-3 text-sm font-bold transition ${
               active ? "tys-desktop-nav-link-active bg-gradient-to-l from-[#fff0e2] to-[#fff8f1] text-[#bd4b0a] shadow-[inset_0_0_0_1px_rgba(233,104,18,0.08)]" : "text-[#88796e] hover:bg-[#fff8f1] hover:text-[#bd4b0a]"
@@ -368,17 +368,24 @@ export function AppShell({ children }: { children: ReactNode }) {
     return () => window.removeEventListener("tys-settings-saved", bump);
   }, []);
 
-  // بيبعت الملخص للسيرفر عند فتح التطبيق، وبعد أي تسجيل أو تعديل تارجت، ولما النت يرجع.
+  // المزامنة في الخلفية بعد تغيّر البيانات أو رجوع الإنترنت، من غير طلبات عند فتح التطبيق.
   useEffect(() => {
-    const push = () => void pushReport();
-    window.addEventListener("online", push);
-    window.addEventListener("tys-data-changed", push);
-    window.addEventListener("tys-settings-saved", push);
-    push();
+    let timer: number | undefined;
+    const schedulePush = () => {
+      if (timer !== undefined) window.clearTimeout(timer);
+      timer = window.setTimeout(() => {
+        timer = undefined;
+        void pushReport();
+      }, 1200);
+    };
+    window.addEventListener("online", schedulePush);
+    window.addEventListener("tys-data-changed", schedulePush);
+    window.addEventListener("tys-settings-saved", schedulePush);
     return () => {
-      window.removeEventListener("online", push);
-      window.removeEventListener("tys-data-changed", push);
-      window.removeEventListener("tys-settings-saved", push);
+      if (timer !== undefined) window.clearTimeout(timer);
+      window.removeEventListener("online", schedulePush);
+      window.removeEventListener("tys-data-changed", schedulePush);
+      window.removeEventListener("tys-settings-saved", schedulePush);
     };
   }, []);
 
@@ -500,7 +507,7 @@ function AppFrame({ children, blocked, month }: { children: ReactNode; blocked: 
                 return (
                   <Link
                     key={item.href}
-                    href={`${item.href}?month=${month}`}
+                    href={`${item.href}?month=${month}`} prefetch={false}
                     aria-current={active ? "page" : undefined}
                     className={`tys-mobile-nav-link flex min-h-[68px] flex-col items-center justify-center gap-1.5 px-1 pt-1 text-[10px] font-extrabold transition-colors ${
                       active ? "tys-mobile-nav-link-active text-[#bd4b0a]" : "text-[#9b8b7f] hover:text-[#bd4b0a]"
