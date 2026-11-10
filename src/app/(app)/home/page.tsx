@@ -265,7 +265,7 @@ export default function HomePage() {
             const ringLen = 2 * Math.PI * 18;
             const pct = Math.min(100, Math.max(0, kpi.percent));
             return (
-              <article key={kpi.kpiKey} style={{ boxShadow: onTrackKpi ? "0 0 0 1px rgba(22,163,74,.12), 0 0 20px rgba(22,163,74,.17), 0 8px 22px rgba(16,185,129,.10)" : "0 0 0 1px rgba(220,38,38,.12), 0 0 20px rgba(220,38,38,.16), 0 8px 22px rgba(220,38,38,.09)" }} className={`flex min-w-0 items-center gap-2.5 rounded-[20px] border p-3 transition-all duration-300 sm:gap-3 sm:p-3.5 ${onTrackKpi ? "border-emerald-300 bg-[#e2f5e9]" : "border-red-300 bg-[#fde5e5]"}`}>
+              <article key={kpi.kpiKey} style={{ boxShadow: onTrackKpi ? "0 0 0 1px rgba(22,163,74,.12), 0 0 20px rgba(22,163,74,.17), 0 8px 22px rgba(16,185,129,.10)" : "0 0 0 1px rgba(220,38,38,.12), 0 0 20px rgba(220,38,38,.16), 0 8px 22px rgba(220,38,38,.09)" }} className={`flex min-w-0 items-center gap-2.5 rounded-[20px] border p-3 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg sm:gap-3 sm:p-3.5 ${onTrackKpi ? "border-emerald-300 bg-[#e2f5e9]" : "border-red-300 bg-[#fde5e5]"}`}>
                 <div className="relative h-12 w-12 shrink-0 sm:h-14 sm:w-14">
                   <svg viewBox="0 0 44 44" className="h-full w-full -rotate-90">
                     <circle cx="22" cy="22" r="18" fill="none" stroke="#f6e9df" strokeWidth="5" />
