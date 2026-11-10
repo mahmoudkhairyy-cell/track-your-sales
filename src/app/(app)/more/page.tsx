@@ -326,13 +326,32 @@ export default function MorePage() {
       {view === "menu" ? (
         <div className="grid grid-cols-2 gap-2.5 sm:gap-3">
           {[
-            { key: "today", icon: "📊", title: "اللي عملته النهارده", desc: "ملخص إنجازات اليوم" },
-            { key: "history", icon: "🗂️", title: "سجل العمليات", desc: "كل الإنجازات الشهر ده" },
-            { key: "profile", icon: "👤", title: "بياناتك", desc: "الاسم والفرع" },
-            { key: "backup", icon: "💾", title: "نسخة احتياطية واستعادة", desc: "احفظ بياناتك أو استرجعها" },
-            { key: "report", icon: "📄", title: "تقرير الشهر", desc: "اطبعه أو احفظه PDF" },
-            { key: "about", icon: "ℹ️", title: "حول التطبيق", desc: "معلومات عن الأداة" },
-          ].map((item) => (
+            {
+              title: "متابعة الأداء",
+              items: [
+                { key: "today", icon: "📊", title: "اللي عملته النهارده", desc: "ملخص إنجازات اليوم" },
+                { key: "history", icon: "🗂️", title: "سجل العمليات", desc: "كل الإنجازات الشهر ده" },
+                { key: "report", icon: "📄", title: "تقرير الشهر", desc: "اطبعه أو احفظه PDF" },
+              ],
+            },
+            {
+              title: "الحساب والبيانات",
+              items: [
+                { key: "profile", icon: "👤", title: "بياناتك", desc: "الاسم والفرع" },
+                { key: "backup", icon: "💾", title: "نسخة احتياطية واستعادة", desc: "احفظ بياناتك أو استرجعها" },
+              ],
+            },
+            {
+              title: "التطبيق",
+              items: [
+                { key: "about", icon: "ℹ️", title: "حول التطبيق", desc: "معلومات عن الأداة" },
+              ],
+            },
+          ].map((group) => (
+          <div key={group.title} className="space-y-2.5">
+            <h2 className="text-sm font-black text-[var(--color-text-secondary)]">{group.title}</h2>
+            <div className="grid grid-cols-2 gap-2.5 sm:gap-3">
+            {group.items.map((item) => (
             <button
               key={item.key}
               type="button"
@@ -346,6 +365,9 @@ export default function MorePage() {
               </span>
               <span className="absolute left-3 top-3 flex h-7 w-7 items-center justify-center rounded-full bg-[var(--color-primary-50)] text-lg text-[var(--color-primary-700)] transition-transform group-hover:-translate-x-0.5">‹</span>
             </button>
+            ))}
+            </div>
+          </div>
           ))}
         </div>
       ) : null}
