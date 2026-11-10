@@ -224,8 +224,9 @@ export function Modal({
     window.addEventListener("keydown", onKey);
     return () => {
       window.removeEventListener("keydown", onKey);
-      previousFocusRef.current?.focus();
+      const previousFocus = previousFocusRef.current;
       previousFocusRef.current = null;
+      window.setTimeout(() => previousFocus?.focus(), 0);
     };
   }, [open]);
   // عزل بقية الصفحة عن قارئات الشاشة ولوحة المفاتيح أثناء فتح النافذة.
