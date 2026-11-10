@@ -126,7 +126,7 @@ export default function LogPage() {
   const onTrack = (dash?.kpis ?? []).filter((k) => k.weight > 0 && k.remaining > 0);
   const workLeft = dash?.work.remaining ?? 0;
   const doneDays = dash ? (dash.work.elapsedBeforeToday ?? dash.work.elapsed) : 0;
-  const onTrack: boolean | null = dash && dash.work.total > 0
+  const performanceOnTrack: boolean | null = dash && dash.work.total > 0
     ? dash.overall >= (doneDays / dash.work.total) * 100
     : null;
 
@@ -233,7 +233,7 @@ export default function LogPage() {
             </div>
             <div className="rounded-2xl border border-white bg-white/90 px-3 py-3 shadow-[0_5px_16px_rgba(145,75,30,0.05)]">
               <span className="block text-[10px] font-bold text-[#9a806c]">ملخص الأداء</span>
-              <strong className="mt-1 block truncate text-sm font-black text-[#38291f]">{onTrack === null ? "جاري حساب الأداء" : onTrack ? "ماشي بشكل ممتاز" : "لسه في فرصة تعوّض"}</strong>
+              <strong className="mt-1 block truncate text-sm font-black text-[#38291f]">{performanceOnTrack === null ? "جاري حساب الأداء" : performanceOnTrack ? "ماشي بشكل ممتاز" : "لسه في فرصة تعوّض"}</strong>
               <span className="mt-0.5 block text-[10px] font-semibold text-[#a18a78]">{overallLine()}</span>
             </div>
           </div>
