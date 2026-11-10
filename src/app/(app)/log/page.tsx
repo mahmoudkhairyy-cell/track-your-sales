@@ -206,49 +206,7 @@ export default function LogPage() {
 
       {error ? <Banner tone="error">❌ {error}</Banner> : null}
 
-      {dash ? (
-        <section className="rounded-[26px] border border-[var(--color-border)] bg-gradient-to-br from-white via-[var(--color-surface-cream)] to-[var(--color-primary-50)] p-4 shadow-[0_12px_30px_rgba(100,55,25,0.055)] sm:p-5">
-          <div className="mb-3 flex items-center justify-between gap-2">
-            <div>
-              <p className="text-[10px] font-black tracking-[0.14em] text-[#bd6a35]">MONTHLY SNAPSHOT</p>
-              <h2 className="mt-0.5 text-sm font-black text-[var(--color-text-primary)]">ملخص الشهر</h2>
-            </div>
-            <span className="rounded-full border border-[#f0ddcd] bg-white px-3 py-1 text-[10px] font-extrabold text-[#a56b43]">مباشر</span>
-          </div>
-          <div className="grid grid-cols-3 gap-2">
-            <div className="rounded-2xl border border-[var(--color-border)] bg-white/90 px-2 py-3 text-center">
-              <p className="font-mono text-xl font-black tabular-nums text-[var(--color-primary-700)]">{formatQty(Math.round(dash.overall))}%</p>
-              <p className="mt-1 text-[10px] font-bold text-[var(--color-text-secondary)]">تحقيق التارجت</p>
-            </div>
-            <div className="rounded-2xl border border-[var(--color-border)] bg-white/90 px-2 py-3 text-center">
-              <p className="font-mono text-xl font-black tabular-nums text-[var(--color-text-primary)]">{formatQty(workLeft)}</p>
-              <p className="mt-1 text-[10px] font-bold text-[var(--color-text-secondary)]">أيام شغل فاضلة</p>
-            </div>
-            <div className="rounded-2xl border border-[var(--color-border)] bg-white/90 px-2 py-3 text-center">
-              <p className="font-mono text-xl font-black tabular-nums text-[var(--color-text-primary)]">{formatQty(onTrack.length)}</p>
-              <p className="mt-1 text-[10px] font-bold text-[var(--color-text-secondary)]">مؤشرات لسه ناقصة</p>
-            </div>
-          </div>
-        </section>
-      ) : null}
 
-      {dash ? (
-        <section className="rounded-[26px] border border-[var(--color-border)] bg-gradient-to-br from-[var(--color-surface-cream)] via-white to-[var(--color-primary-100)] p-4 shadow-[0_12px_30px_rgba(145,75,30,0.07)]">
-          <p className="mb-3 text-[10px] font-black tracking-[0.14em] text-[#bd6a35]">COMMISSION & PERFORMANCE</p>
-          <div className="grid grid-cols-2 gap-2.5">
-            <div className="rounded-2xl border border-white bg-white/90 px-3 py-3 shadow-[0_5px_16px_rgba(145,75,30,0.05)]">
-              <span className="block text-[10px] font-bold text-[var(--color-text-secondary)]">الكوميشن المتوقع</span>
-              <strong className="mt-1 block truncate font-mono text-lg font-black text-[var(--color-primary-700)]">{formatMoney(dash.estimatedCommission)} <span className="text-[10px] font-bold text-[var(--color-text-secondary)]">ج.م</span></strong>
-              <span className="mt-0.5 block text-[10px] font-semibold text-[var(--color-text-secondary)]">من {formatMoney(dash.fullCommission)} ج.م</span>
-            </div>
-            <div className="rounded-2xl border border-white bg-white/90 px-3 py-3 shadow-[0_5px_16px_rgba(145,75,30,0.05)]">
-              <span className="block text-[10px] font-bold text-[var(--color-text-secondary)]">ملخص الأداء</span>
-              <strong className="mt-1 block truncate text-sm font-black text-[var(--color-text-primary)]">{performanceOnTrack === null ? "جاري حساب الأداء" : performanceOnTrack ? "ماشي بشكل ممتاز" : "لسه في فرصة تعوّض"}</strong>
-              <span className="mt-0.5 block text-[10px] font-semibold text-[var(--color-text-secondary)]">{overallLine()}</span>
-            </div>
-          </div>
-        </section>
-      ) : null}
 
       {onTrack.length > 0 ? (
         <section className="rounded-[24px] bg-[var(--color-primary-50)] p-4 text-[var(--color-primary-700)]">
