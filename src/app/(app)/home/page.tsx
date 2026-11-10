@@ -226,12 +226,12 @@ export default function HomePage() {
         <div className="flex items-center justify-between">
           <h2 className="flex items-center gap-1.5 text-sm font-black tracking-tight text-[var(--color-text-primary)]">
             <span>نسبة الإنجاز بالمحاور</span>
-            <span className="rounded border border-[var(--color-border)] bg-[var(--color-primary-50)] px-1.5 text-[11px] font-bold text-[var(--color-primary-700)]">{data.kpis.filter((kpi) => kpi.kpiKey !== "new_lines").length} مؤشرات</span>
+            <span className="rounded border border-[var(--color-border)] bg-[var(--color-primary-50)] px-1.5 text-[11px] font-bold text-[var(--color-primary-700)]">{data.kpis.length} مؤشرات</span>
           </h2>
           <span className="text-[11px] font-bold text-[var(--color-text-secondary)]">اسحب ←</span>
         </div>
         <div className="no-scrollbar flex gap-3 overflow-x-auto pb-1 pt-0.5">
-          {data.kpis.filter((kpi) => kpi.kpiKey !== "new_lines").map((kpi) => {
+          {data.kpis.map((kpi) => {
             const ok = kpi.achieved >= kpi.expectedToDate;
             return (
               <div key={kpi.kpiKey} className="flex w-[104px] shrink-0 flex-col items-center rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface-cream)] p-2 text-center shadow-[0_5px_14px_rgba(100,55,25,0.13)] transition-shadow">
