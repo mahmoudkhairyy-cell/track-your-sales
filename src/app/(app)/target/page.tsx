@@ -240,7 +240,7 @@ export default function TargetPage() {
                       : [...current, { date, note: null }].sort((a, b) => a.date.localeCompare(b.date)),
                   )
                 }
-                className={`flex aspect-square items-center justify-center rounded-2xl text-sm font-extrabold transition ${
+                className={`flex aspect-square items-center justify-center rounded-2xl text-sm font-extrabold transition duration-200 hover:scale-[1.04] active:scale-95 ${
                   isHoliday ? "bg-gradient-to-br from-[#e96812] to-[#ff9d38] text-white shadow-sm" : "bg-[#fffaf5] text-[#2d2119]"
                 }`}
               >
