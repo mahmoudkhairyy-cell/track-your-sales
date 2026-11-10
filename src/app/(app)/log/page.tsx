@@ -244,7 +244,7 @@ export default function LogPage() {
         const excluded = !!d && d.weight > 0 && d.gated;
         const needToday = d && workLeft > 0 ? Math.ceil(Math.max(0, d.remaining) / workLeft) : 0;
         return (
-          <article key={item.key} className="rounded-[22px] border border-[#f2e4d8] bg-white p-3 shadow-sm sm:rounded-[24px] sm:p-4">
+          <article key={item.key} className="rounded-[22px] border border-[#f2e4d8] bg-white p-3 shadow-sm transition duration-300 hover:-translate-y-0.5 hover:shadow-md sm:rounded-[24px] sm:p-4">
             <div className="flex items-center justify-between gap-3">
               <div className="flex items-center gap-3">
                 <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#fff0e2] text-[#e96812]"><KpiIcon kpiKey={item.key} className="h-5 w-5" /></span>
