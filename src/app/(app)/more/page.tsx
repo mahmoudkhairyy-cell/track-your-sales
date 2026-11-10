@@ -297,7 +297,7 @@ export default function MorePage() {
     if (historyKpi !== "all" && entry.kpiKey !== historyKpi) return false;
     const needle = historyQuery.trim().toLocaleLowerCase("ar");
     if (!needle) return true;
-    return [entry.nameAr, entry.nameEn, entry.note ?? "", entry.entryDate].join(" ").toLocaleLowerCase("ar").includes(needle);
+    return [entry.nameEn, entry.note ?? "", entry.entryDate].join(" ").toLocaleLowerCase("en").includes(needle);
   });
 
   return (
@@ -478,7 +478,7 @@ export default function MorePage() {
         </div>
         <div className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-[minmax(0,1fr)_220px]">
           <label className="block"><span className="sr-only">ابحث في السجل</span><input className={inputClass} type="search" value={historyQuery} onChange={(e) => setHistoryQuery(e.target.value)} placeholder="ابحث في المؤشر أو الملاحظات..." /></label>
-          <label className="block"><span className="sr-only">فلترة حسب المؤشر</span><select className={inputClass} value={historyKpi} onChange={(e) => setHistoryKpi(e.target.value as KpiKey | "all")}><option value="all">كل المؤشرات</option>{KPI_CATALOG.map((item) => <option key={item.key} value={item.key}>{item.nameAr}</option>)}</select></label>
+          <label className="block"><span className="sr-only">فلترة حسب المؤشر</span><select className={inputClass} value={historyKpi} onChange={(e) => setHistoryKpi(e.target.value as KpiKey | "all")}><option value="all">كل المؤشرات</option>{KPI_CATALOG.map((item) => <option key={item.key} value={item.key}>{item.nameEn}</option>)}</select></label>
         </div>
         {entries.length === 0 ? (
           <div className="mt-4">
@@ -492,7 +492,7 @@ export default function MorePage() {
                   <div>
                     <p className="font-extrabold">
                       <span className="ml-1 inline-flex align-middle text-[var(--color-primary-700)]"><KpiIcon kpiKey={entry.kpiKey} className="h-4 w-4" /></span>
-                      <span>{entry.nameAr}</span> <span className="text-[10px] font-semibold text-[var(--color-text-secondary)]" dir="ltr">{entry.nameEn}</span>
+                      <span dir="ltr">{entry.nameEn}</span>
                     </p>
                     <p className="text-xs text-[var(--color-text-secondary)]">
                       {formatDateAr(entry.entryDate)} · {formatQty(entry.quantity)} {entry.unitAr}
