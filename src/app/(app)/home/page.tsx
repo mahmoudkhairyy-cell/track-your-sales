@@ -228,7 +228,7 @@ export default function HomePage() {
           {data.kpis.map((kpi) => {
             const ok = kpi.achieved >= kpi.expectedToDate;
             return (
-              <div key={kpi.kpiKey} className="flex w-[104px] shrink-0 flex-col items-center rounded-[22px] border border-[#e8cdb7] bg-[#fff8f1] p-3 text-center">
+              <div key={kpi.kpiKey} className="flex w-[104px] shrink-0 flex-col items-center rounded-[22px] border border-[#f4c49e] bg-[#fff8f1] p-3 text-center shadow-[0_3px_10px_rgba(233,104,0,0.10)] transition-shadow">
                 <div className={`flex h-10 w-10 items-center justify-center rounded-full border-2 font-mono text-xs font-black ${ok ? "border-emerald-500 text-emerald-700" : "border-red-500 text-red-700"}`}>
                   {Math.round(kpi.percent)}%
                 </div>
@@ -265,7 +265,7 @@ export default function HomePage() {
             const ringLen = 2 * Math.PI * 18;
             const pct = Math.min(100, Math.max(0, kpi.percent));
             return (
-              <article key={kpi.kpiKey} style={{ animationDelay: `${kpiIndex * 70}ms`, boxShadow: onTrackKpi ? "0 0 0 1px rgba(22,163,74,.12), 0 0 20px rgba(22,163,74,.17), 0 8px 22px rgba(16,185,129,.10)" : "0 0 0 1px rgba(220,38,38,.12), 0 0 20px rgba(220,38,38,.16), 0 8px 22px rgba(220,38,38,.09)" }} className={`tys-rise flex min-w-0 items-center gap-2.5 rounded-[20px] border p-3 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg sm:gap-3 sm:p-3.5 ${onTrackKpi ? "border-emerald-300 bg-[#e2f5e9]" : "border-red-300 bg-[#fde5e5]"}`}>
+              <article key={kpi.kpiKey} style={{ animationDelay: `${kpiIndex * 70}ms`, boxShadow: onTrackKpi ? "0 0 0 1px rgba(22,163,74,.08), 0 0 12px rgba(22,163,74,.10), 0 4px 12px rgba(126,65,24,.06)" : "0 0 0 1px rgba(220,38,38,.08), 0 0 12px rgba(220,38,38,.10), 0 4px 12px rgba(126,65,24,.06)" }} className={`tys-rise flex min-w-0 items-center gap-2.5 rounded-[20px] border p-3 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg sm:gap-3 sm:p-3.5 border-[#f4c49e] bg-[#fff8f1]`}>
                 <div className="relative h-12 w-12 shrink-0 sm:h-14 sm:w-14">
                   <svg viewBox="0 0 44 44" className="h-full w-full -rotate-90">
                     <circle cx="22" cy="22" r="18" fill="none" stroke="#f6e9df" strokeWidth="5" />
