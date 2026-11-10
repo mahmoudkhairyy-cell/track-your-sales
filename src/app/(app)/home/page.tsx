@@ -200,7 +200,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <div className="flex flex-col gap-2 sm:flex-row">
+      <div className="hidden flex-col gap-2 sm:flex sm:flex-row">
         <Link href={`/log?month=${month}`} className="inline-flex min-h-14 flex-1 items-center justify-center gap-2 rounded-2xl bg-[#bd4b0a] px-5 py-3 text-base font-black text-white shadow-sm transition hover:bg-[#9f3e08] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#7a2e00]">
           <span aria-hidden="true">＋</span> تسجيل إنجاز
         </Link>
@@ -226,7 +226,7 @@ export default function HomePage() {
         <div className="flex items-center justify-between">
           <h2 className="flex items-center gap-1.5 text-sm font-black tracking-tight text-[var(--color-text-primary)]">
             <span>نسبة الإنجاز بالمحاور</span>
-            <span className="rounded border border-[var(--color-border)] bg-[var(--color-primary-50)] px-1.5 text-[11px] font-bold text-[var(--color-primary-700)]">{data.kpis.length} مؤشرات</span>
+            <span className="rounded border border-[var(--color-border)] bg-[var(--color-primary-50)] px-1.5 text-[11px] font-bold text-[var(--color-primary-700)]">{data.kpis.filter((kpi) => kpi.kpiKey !== "new_lines").length} مؤشرات</span>
           </h2>
           <span className="text-[11px] font-bold text-[var(--color-text-secondary)]">اسحب ←</span>
         </div>
