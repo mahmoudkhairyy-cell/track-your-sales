@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useEffect, useRef, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { KPI_CATALOG, kpiEmoji, type KpiKey } from "@/lib/constants";
 import { cairoISODate, cairoYearMonth, monthLabelAr } from "@/lib/dates";
 import { haptic } from "@/lib/prefs";
@@ -28,6 +28,18 @@ type DashKpi = { kpiKey: KpiKey; target: number; weight: number; remaining: numb
 /** rawOverall = الإجمالي قبل سقف 200%. بنستخدمه عشان نوزّع الكوميشن على المؤشرات بنفس النسبة المعروضة. */
 type DashData = { kpis: DashKpi[]; fullCommission: number; estimatedCommission: number; overall: number; rawOverall?: number; work: { total: number; elapsed: number; elapsedBeforeToday?: number; remaining: number } };
 
+function lastDateOfMonth(yearMonth: string) {
+  const [year, month] = yearMonth.split("-").map(Number);
+  return `${yearMonth}-${String(new Date(year, month, 0).getDate()).padStart(2, "0")}`;
+}
+
+function isValidEntryDate(value: string, yearMonth: string) {
+  if (!/^\\d{4}-\\d{2}-\\d{2}$/.test(value) || value.slice(0, 7) !== yearMonth) return false;
+  const [year, month, day] = value.split("-").map(Number);
+  const date = new Date(year, month - 1, day, 12);
+  return date.getFullYear() === year && date.getMonth() === month - 1 && date.getDate() === day;
+}
+
 export default function LogPage() {
   const toast = useToast();
   const month = useMonth();
@@ -35,18 +47,15 @@ export default function LogPage() {
   const [dash, setDash] = useState<DashData | null>(null);
   const [quantities, setQuantities] = useState<Partial<Record<KpiKey, string>>>({});
   const [entryDate, setEntryDate] = useState(() => month === cairoYearMonth() ? cairoISODate() : `${month}-01`);
-  const entryDateTouched = useRef(false);
   const [note, setNote] = useState("");
   const [error, setError] = useState("");
   const [pending, setPending] = useState(false);
 
-  // عند تغيير الشهر نحدّث التاريخ الافتراضي فقط قبل ما المستخدم يختار تاريخًا بنفسه.
-  // اختيار المستخدم يظل كما هو حتى لو كان خارج الشهر المحدد، مع تنبيه شهر الحفظ.
+  // التاريخ يفضل داخل الشهر المختار: نحتفظ به لو صالح، وإلا نستخدم اليوم أو أول الشهر.
   useEffect(() => {
-    if (!entryDateTouched.current) {
-      setEntryDate(month === cairoYearMonth() ? cairoISODate() : `${month}-01`);
-    }
-  }, [month]);
+    const validForMonth = isValidEntryDate(entryDate, month);
+    if (!validForMonth) setEntryDate(month === cairoYearMonth() ? cairoISODate() : `${month}-01`);
+  }, [month, entryDate]);
 
   // بنحدّث الأرقام لما نسجّل إنجاز جديد (tys-data-changed) عشان "الباقي" و"التوتال" ما يفضلوش قديمين.
   const [refreshTick, setRefreshTick] = useState(0);
@@ -121,9 +130,6 @@ export default function LogPage() {
   const qualityScore = quality
     ? QUALITY_ITEMS.reduce((sum, item) => sum + (quality.checks?.[item.key] ? item.weight : 0), 0)
     : 0;
-  const dateMonth = entryDate.slice(0, 7);
-  const dateOutsideSelectedMonth = Boolean(entryDate && dateMonth !== month);
-
   const dashByKey = new Map((dash?.kpis ?? []).map((k) => [k.kpiKey, k]));
   const onTrack = (dash?.kpis ?? []).filter((k) => k.weight > 0 && k.remaining > 0);
   const workLeft = dash?.work.remaining ?? 0;
@@ -135,11 +141,8 @@ export default function LogPage() {
   async function onSubmit(event: FormEvent) {
     event.preventDefault();
     setError("");
-    if (!entryDate) {
-      setError("اختار تاريخ الإنجاز");
-      return;
-    }
-    if (dateOutsideSelectedMonth && !window.confirm("التاريخ المختار تابع لشهر " + monthLabelAr(dateMonth) + " وليس " + monthLabelAr(month) + ". هيتحفظ السجل في شهر " + monthLabelAr(dateMonth) + ". هل تريد المتابعة؟")) {
+    if (!isValidEntryDate(entryDate, month)) {
+      setError("اختار تاريخًا صحيحًا داخل شهر " + monthLabelAr(month) + " قبل الحفظ.");
       return;
     }
     const filled = KPI_CATALOG.filter((item) => (quantities[item.key] ?? "").trim() !== "");
@@ -178,7 +181,6 @@ export default function LogPage() {
       window.dispatchEvent(new Event("tys-data-changed"));
       setQuantities({});
       setNote("");
-      entryDateTouched.current = false;
       setEntryDate(month === cairoYearMonth() ? cairoISODate() : `${month}-01`);
     } catch (err) {
       const message = err instanceof ApiError || err instanceof Error ? err.message : "ماقدرناش نحفظ السجل. اتأكد من النت وحاول تاني.";
@@ -261,9 +263,8 @@ export default function LogPage() {
 
       <section className="rounded-[22px] border border-[var(--color-border)] bg-white p-3 shadow-sm sm:rounded-[24px] sm:p-4">
         <label htmlFor="entry-date" className="block text-xs font-bold text-[var(--color-text-secondary)]">📅 تاريخ الإنجاز</label>
-        <input id="entry-date" className={`${inputClass} mt-2`} type="date" value={entryDate} onChange={(e) => { entryDateTouched.current = true; setEntryDate(e.target.value); }} required />
-        <p className="mt-2 text-xs leading-6 text-[var(--color-text-secondary)]">التاريخ هو اللي بيحدد شهر السجل، مش الشهر المختار أعلى التطبيق.</p>
-        {dateOutsideSelectedMonth ? <Banner tone="warn">تنبيه: التاريخ ده في {monthLabelAr(dateMonth)}، والسجل هيتحفظ ضمن الشهر ده، مش {monthLabelAr(month)}.</Banner> : null}
+        <input id="entry-date" className={`${inputClass} mt-2`} type="date" min={`${month}-01`} max={lastDateOfMonth(month)} value={entryDate} onChange={(e) => setEntryDate(e.target.value)} required />
+        <p className="mt-2 text-xs leading-6 text-[var(--color-text-secondary)]">تاريخ الإنجاز لازم يكون داخل شهر {monthLabelAr(month)} المحدد أعلى التطبيق.</p>
       </section>
 
       <section className="grid grid-cols-1 gap-3 sm:grid-cols-2">
