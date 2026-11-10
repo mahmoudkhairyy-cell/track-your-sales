@@ -515,7 +515,7 @@ function AppFrame({ children, blocked, month }: { children: ReactNode; blocked: 
                     href={`${item.href}?month=${month}`} prefetch={false}
                     aria-current={active ? "page" : undefined}
                     className={`tys-mobile-nav-link flex min-h-[68px] flex-col items-center justify-center gap-1.5 px-1 pt-1 text-[10px] font-extrabold transition-colors ${
-                      active ? "tys-mobile-nav-link-active text-[#bd4b0a]" : "text-[#9b8b7f] hover:text-[#bd4b0a]"
+                      active ? (item.emphasize ? "tys-mobile-nav-link-active-primary text-[#bd4b0a]" : "tys-mobile-nav-link-active text-[#bd4b0a]") : "text-[#9b8b7f] hover:text-[#bd4b0a]"
                     }`}
                   >
                     <span
