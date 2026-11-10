@@ -3518,3 +3518,53 @@ body {
     height: 5px !important;
   }
 }
+
+
+/* Home DAILY tiles — clearer labels and balanced number emphasis */
+@media (max-width: 640px) {
+  .tys-premium-home .tys-home-daily {
+    padding: .8rem !important;
+    border-radius: 20px !important;
+  }
+  .tys-premium-home .tys-home-daily > div:first-child {
+    margin-bottom: .65rem !important;
+    align-items: center !important;
+  }
+  .tys-premium-home .tys-home-daily > div:first-child h2 {
+    font-size: .9rem !important;
+    letter-spacing: .08em !important;
+  }
+  .tys-premium-home .tys-home-daily > div:first-child > span {
+    padding: .3rem .55rem !important;
+    font-size: .64rem !important;
+    border: 1px solid #ffe0c5 !important;
+    background: #fff5ec !important;
+  }
+  .tys-premium-home .tys-home-daily > div:last-child {
+    gap: .45rem !important;
+  }
+  .tys-premium-home .tys-home-daily > div:last-child > div {
+    min-height: 46px !important;
+    padding: .45rem .55rem !important;
+    gap: .35rem !important;
+    border-radius: 12px !important;
+    border-color: #f2c9a8 !important;
+    background: linear-gradient(135deg,#fff8f2 0%,#ffead9 100%) !important;
+    box-shadow: 0 2px 7px rgba(126,65,24,.055) !important;
+  }
+  .tys-premium-home .tys-home-daily > div:last-child > div > span {
+    font-size: .62rem !important;
+    line-height: 1.25 !important;
+    letter-spacing: 0 !important;
+    color: #78401f !important;
+  }
+  .tys-premium-home .tys-home-daily > div:last-child > div > strong {
+    min-width: 2rem !important;
+    padding: .32rem .42rem !important;
+    border-radius: 8px !important;
+    background: rgba(255,255,255,.88) !important;
+    color: #9a430e !important;
+    font-size: .9rem !important;
+    text-align: center !important;
+  }
+}
