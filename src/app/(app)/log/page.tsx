@@ -112,7 +112,7 @@ export default function LogPage() {
       window.dispatchEvent(new Event("tys-data-changed"));
     } catch (err) {
       setQuality(quality);
-      setError(err instanceof ApiError || err instanceof Error ? err.message : "مقدرناش نحفظ الكواليتي");
+      setError(err instanceof ApiError || err instanceof Error ? err.message : "ماقدرناش نحفظ الكواليتي. اتأكد من النت وحاول تاني.");
     } finally {
       setQualityBusy(false);
     }
@@ -175,7 +175,7 @@ export default function LogPage() {
       setNote("");
       setEntryDate(cairoISODate());
     } catch (err) {
-      const message = err instanceof ApiError || err instanceof Error ? err.message : "مقدرناش نحفظ السجل، جرّب تاني";
+      const message = err instanceof ApiError || err instanceof Error ? err.message : "ماقدرناش نحفظ السجل. اتأكد من النت وحاول تاني.";
       setError(saved > 0 ? `اتحفظ ${saved} من ${filled.length} بس. ${message}` : message);
       toast.push("error", message);
     } finally {

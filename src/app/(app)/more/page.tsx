@@ -87,7 +87,7 @@ export default function MorePage() {
       setName(dash.profile.name);
       setBranch(dash.profile.branch);
     } catch (err) {
-      setError(err instanceof ApiError || err instanceof Error ? err.message : "تعذر تحميل صفحة المزيد");
+      setError(err instanceof ApiError || err instanceof Error ? err.message : "ماقدرناش نحمّل الصفحة. اتأكد من النت وحاول تاني.");
     } finally {
       setLoading(false);
     }
@@ -149,7 +149,7 @@ export default function MorePage() {
       await load();
       window.dispatchEvent(new Event("tys-data-changed"));
     } catch (err) {
-      const message = err instanceof ApiError || err instanceof Error ? err.message : "مقدرناش نعدّل السجل";
+      const message = err instanceof ApiError || err instanceof Error ? err.message : "ماقدرناش نعدّل السجل. حاول تاني.";
       setEditError(message);
       toast.push("error", message);
     } finally {
@@ -430,7 +430,7 @@ export default function MorePage() {
         </div>
         {entries.length === 0 ? (
           <div className="mt-4">
-            <EmptyState title="السجل فاضي" text="مفيش عمليات محفوظة في الشهر ده." />
+            <EmptyState title="لسه مفيش عمليات" text="ابدأ بتسجيل بيعة، وهتظهر هنا في الشهر ده." />
           </div>
         ) : (
           <ul className="mt-4 space-y-2">
