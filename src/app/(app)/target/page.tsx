@@ -198,7 +198,7 @@ export default function TargetPage() {
       </section>
 
       {kpis.some((k) => k.weight > 0) ? (
-        <section className="rounded-[28px] border border-[var(--color-border)] bg-white p-4 shadow-[0_12px_30px_rgba(100,55,25,0.045)]">
+        <section className="rounded-[28px] border border-[#f2dfcf] bg-[linear-gradient(155deg,#fff_0%,#fffaf6_100%)] p-4 shadow-[0_10px_26px_rgba(126,65,24,0.055)]">
           <p className="text-sm font-black text-[var(--color-text-primary)]">توزيع الأوزان</p>
           <div className="mt-3 flex h-3 w-full overflow-hidden rounded-full bg-[var(--color-surface-cream)]">
             {kpis.filter((k) => k.weight > 0).map((k, i) => (
@@ -217,7 +217,7 @@ export default function TargetPage() {
         </section>
       ) : null}
 
-      <section className="rounded-[28px] border border-[var(--color-border)] bg-white p-4 shadow-[0_12px_30px_rgba(100,55,25,0.045)] sm:p-5">
+      <section className="rounded-[28px] border border-[#f2dfcf] bg-[linear-gradient(155deg,#fff_0%,#fffaf6_100%)] p-4 shadow-[0_10px_26px_rgba(126,65,24,0.055)] sm:p-5">
         <div className="mb-4 flex items-center justify-between gap-3">
           <div>
             <h2 className="text-sm font-black text-[var(--color-text-primary)]">تقويم الإجازات</h2>
@@ -250,8 +250,8 @@ export default function TargetPage() {
                       : [...current, { date, note: null }].sort((a, b) => a.date.localeCompare(b.date)),
                   )
                 }
-                className={`flex aspect-square items-center justify-center rounded-2xl text-sm font-extrabold transition duration-200 hover:scale-[1.04] active:scale-95 ${
-                  isHoliday ? "bg-gradient-to-br from-[var(--color-primary-600)] to-[var(--color-primary-500)] text-white shadow-sm" : "bg-[var(--color-surface-cream)] text-[var(--color-text-primary)]"
+                className={`flex aspect-square items-center justify-center rounded-xl text-sm font-extrabold transition duration-200 hover:scale-[1.04] active:scale-95 ${
+                  isHoliday ? "bg-gradient-to-br from-[var(--color-primary-600)] to-[var(--color-primary-500)] text-white shadow-sm" : "border border-[#f3e6dc] bg-[#fff8f1] text-[var(--color-text-primary)]"
                 }`}
               >
                 {Number(date.slice(8, 10))}
@@ -268,7 +268,7 @@ export default function TargetPage() {
         {Math.abs(weightSum - 100) > 0.01 ? `⚠️ الأوزان ${weightSum}%: ${weightSum < 100 ? `ناقص ${Math.round((100 - weightSum) * 100) / 100}%` : `زيادة ${Math.round((weightSum - 100) * 100) / 100}%`} (لازم 100% عشان تتحفظ)` : "✓ الأوزان 100%"}
       </p>
 
-      <section className="rounded-[28px] border border-[var(--color-border)] bg-white p-5 shadow-[0_12px_30px_rgba(100,55,25,0.045)]">
+      <section className="rounded-[28px] border border-[#f2dfcf] bg-[linear-gradient(155deg,#fff_0%,#fffaf6_100%)] p-4 shadow-[0_10px_26px_rgba(126,65,24,0.055)] sm:p-5">
         <Field label="💰 الكوميشن الكامل (جنيه)">
           <input
             className={`${inputClass} text-xl font-black`}
@@ -282,7 +282,7 @@ export default function TargetPage() {
         </Field>
       </section>
 
-      <section className="rounded-[28px] border border-[var(--color-border)] bg-white p-4 shadow-[0_12px_30px_rgba(100,55,25,0.045)]">
+      <section className="rounded-[28px] border border-[#f2dfcf] bg-[linear-gradient(155deg,#fff_0%,#fffaf6_100%)] p-4 shadow-[0_10px_26px_rgba(126,65,24,0.055)]">
         <div className="mb-1 flex items-center justify-between">
           <h2 className="text-lg font-black">الإيتمز والأوزان</h2>
         </div>
