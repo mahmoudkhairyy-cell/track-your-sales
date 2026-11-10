@@ -253,10 +253,10 @@ export default function LogPage() {
         const excluded = !!d && d.weight > 0 && d.gated;
         const needToday = d && workLeft > 0 ? Math.ceil(Math.max(0, d.remaining) / workLeft) : 0;
         return (
-          <article key={item.key} className="rounded-[22px] border border-[var(--color-border)] bg-white p-3 shadow-sm sm:rounded-[24px] sm:p-4">
-            <div className="flex items-center justify-between gap-3">
-              <div className="flex items-center gap-3">
-                <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--color-primary-50)] text-[var(--color-primary-600)]"><KpiIcon kpiKey={item.key} className="h-5 w-5" /></span>
+          <article key={item.key} className="rounded-[18px] border border-[var(--color-border)] bg-[#fffaf5] p-2.5 shadow-sm sm:rounded-[20px] sm:p-3">
+            <div className="flex items-center justify-between gap-2">
+              <div className="flex items-center gap-2">
+                <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#ffeddc] text-[var(--color-primary-600)]"><KpiIcon kpiKey={item.key} className="h-[18px] w-[18px]" /></span>
                 <div>
                   <p className="font-extrabold" dir="ltr">{item.nameEn}</p>
                   <p className="text-[11px] font-bold text-[var(--color-primary-700)]">
@@ -265,7 +265,7 @@ export default function LogPage() {
                 </div>
               </div>
             </div>
-            <div className="mt-3 grid grid-cols-3 gap-2 rounded-2xl bg-[var(--color-surface-cream)] p-2.5 text-center">
+            <div className="mt-2.5 grid grid-cols-3 gap-1.5 rounded-xl bg-[#ffefdf] p-2 text-center">
               <div>
                 <p className="text-[10px] text-[var(--color-text-secondary)]">المستهدف</p>
                 <p className="text-sm font-black tabular-nums">{d ? formatQty(d.target) : "—"}</p>
@@ -279,7 +279,7 @@ export default function LogPage() {
                 <p className="text-sm font-black tabular-nums text-[var(--color-primary-700)]">{d ? formatQty(Math.max(0, d.remaining)) : "—"}</p>
               </div>
             </div>
-            <div className="mt-3 flex items-center gap-2">
+            <div className="mt-2.5 flex items-center gap-2">
               <label className="sr-only" htmlFor={`quantity-${item.key}`}>Quantity — {item.nameEn}</label>
               <input
                 id={`quantity-${item.key}`}
@@ -296,7 +296,7 @@ export default function LogPage() {
               />
               <span className="shrink-0 text-xs font-bold text-[var(--color-text-secondary)]">{d?.unitAr ?? ""}</span>
             </div>
-            <p className="mt-2 text-[11px] text-[var(--color-text-secondary)]" title={quantityHint(item.key)}>
+            <p className="mt-1.5 text-[10px] text-[var(--color-text-secondary)]" title={quantityHint(item.key)}>
               {needToday > 0 ? `المطلوب النهارده: ${formatQty(needToday)} ${d?.unitAr ?? ""}` : "مفيش مطلوب إضافي النهارده"}
             </p>
           </article>
