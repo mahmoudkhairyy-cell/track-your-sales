@@ -265,8 +265,7 @@ export default function WikiPage() {
       })
       .catch(() => {
         if (!cancelled) toast.push("error", "تعذر تحميل بيانات المرجع، جرّب تفتح القسم تاني");
-      })
-;
+      });
     return () => {
       cancelled = true;
     };
