@@ -189,7 +189,7 @@ function SrCard({ item }: { item: SrItem }) {
   const toast = useToast();
   const [open, setOpen] = useState(false);
   return (
-    <div className="w-full rounded-[24px] border border-[#f2e4d8] bg-white p-4 text-right shadow-sm">
+    <div className="w-full rounded-[24px] border border-[#f2e4d8] bg-white p-4 text-right shadow-sm transition duration-300 hover:-translate-y-0.5 hover:shadow-md">
       <button type="button" onClick={() => setOpen((v) => !v)} aria-expanded={open} className="flex w-full items-start justify-between gap-3 text-right">
         <span className="min-w-0 flex-1">
           <span className="block text-xs font-extrabold text-[#bd4b0a]">{item.id}</span>
