@@ -15,18 +15,9 @@ import {
   useToast,
 } from "@/components/ui";
 import { ApiError, api } from "@/lib/client";
-import {
-  DOCS,
-  DSL,
-  EMAILS,
-  FREEMAX,
-  HUNTS,
-  PLAN_GROUPS,
-  PREMIER_GUIDE,
-  PREMIER_PERKS,
-  SR_ITEMS,
-  type SrItem,
-} from "@/data";
+import type { SrItem } from "@/data";
+
+type WikiData = typeof import("@/data");
 import { BookIcon, CallIcon, CardIcon, CheckIcon, PhoneIcon, StarIcon, WalletIcon, WifiIcon } from "@/components/icons";
 import { matchesQuery } from "@/lib/search";
 
@@ -60,18 +51,18 @@ const CAPSULE: { title: string; body: string }[] = [
 ];
 
 const HUB: { id: SectionId; title: string; desc: string; count: string; icon: ReactNode }[] = [
-  { id: "sr", title: "مرجع الـ SR", desc: "أكواد Service Request", count: `${SR_ITEMS.length} كود`, icon: <BookIcon className="text-[#bd4b0a]" /> },
-  { id: "freemax", title: "FREEmax", desc: "باقات فري ماكس والأسعار", count: `${FREEMAX.plans.length} باقة`, icon: <StarIcon className="text-[#bd4b0a]" /> },
+  { id: "sr", title: "مرجع الـ SR", desc: "أكواد Service Request", count: "أكواد SR", icon: <BookIcon className="text-[#bd4b0a]" /> },
+  { id: "freemax", title: "FREEmax", desc: "باقات فري ماكس والأسعار", count: "باقات وأسعار", icon: <StarIcon className="text-[#bd4b0a]" /> },
   { id: "go", title: "Go", desc: "باقات Go Monthly و Extra", count: "باقات شهرية", icon: <PhoneIcon className="text-[#bd4b0a]" /> },
   { id: "educational", title: "Educational GO", desc: "المواقع المشمولة وتفعيل الباقة", count: "مواقع + Siebel و Wincash", icon: <PhoneIcon className="text-[#bd4b0a]" /> },
   { id: "premier", title: "Premier", desc: "Premier و Super Max", count: "باقات بوست بايد", icon: <StarIcon className="text-[#bd4b0a]" /> },
-  { id: "home", title: "Home Wireless", desc: "باقات الإنترنت اللاسلكي", count: `${PLAN_GROUPS.find((g) => g.category === "Home Wireless")?.plans.length ?? 0} باقة`, icon: <WifiIcon className="text-[#bd4b0a]" /> },
-  { id: "dsl", title: "Home Internet", desc: "باقات DSL والراوتر", count: `${DSL.plans.length} باقة`, icon: <WifiIcon className="text-[#bd4b0a]" /> },
+  { id: "home", title: "Home Wireless", desc: "باقات الإنترنت اللاسلكي", count: "باقات الإنترنت", icon: <WifiIcon className="text-[#bd4b0a]" /> },
+  { id: "dsl", title: "Home Internet", desc: "باقات DSL والراوتر", count: "باقات DSL", icon: <WifiIcon className="text-[#bd4b0a]" /> },
   { id: "capsule", title: "الكبسولة", desc: "سكربتات وعروض الشيفت", count: `${CAPSULE.length} بند`, icon: <BookIcon className="text-[#bd4b0a]" /> },
-  { id: "hunts", title: "أرقام Hunts", desc: "جهات للتواصل السريع", count: `${HUNTS.length} جهة`, icon: <CallIcon className="text-[#bd4b0a]" /> },
+  { id: "hunts", title: "أرقام Hunts", desc: "جهات للتواصل السريع", count: "أرقام التواصل", icon: <CallIcon className="text-[#bd4b0a]" /> },
   { id: "notes", title: "ملاحظاتي", desc: "مرجع شخصي بتضيفه بنفسك", count: "", icon: <CheckIcon className="text-[#bd4b0a]" /> },
-  { id: "docs", title: "أهم المستندات", desc: "نماذج ومستندات", count: `${DOCS.length} ملف`, icon: <CardIcon className="text-[#bd4b0a]" /> },
-  { id: "emails", title: "E-Mails", desc: "إيميلات للتواصل", count: `${EMAILS.length} إيميل`, icon: <WalletIcon className="text-[#bd4b0a]" /> },
+  { id: "docs", title: "أهم المستندات", desc: "نماذج ومستندات", count: "نماذج ومستندات", icon: <CardIcon className="text-[#bd4b0a]" /> },
+  { id: "emails", title: "E-Mails", desc: "إيميلات للتواصل", count: "جهات التواصل", icon: <WalletIcon className="text-[#bd4b0a]" /> },
 ];
 
 function copyText(value: string, toast: { push: (t: "success" | "error" | "info", m: string) => void }, ok: string) {
@@ -250,6 +241,40 @@ export default function WikiPage() {
   const [content, setContent] = useState("");
   const [pending, setPending] = useState(false);
   const [confirmId, setConfirmId] = useState<string | null>(null);
+  const [wikiData, setWikiData] = useState<WikiData | null>(null);
+  const [wikiDataLoading, setWikiDataLoading] = useState(false);
+
+  const DOCS = wikiData?.DOCS ?? [];
+  const DSL = wikiData?.DSL ?? { plans: [], addons: [], routers: [] };
+  const EMAILS = wikiData?.EMAILS ?? [];
+  const FREEMAX = wikiData?.FREEMAX ?? { tagline: "", highlights: [], simPrice: 0, plans: [], weekly: { name: "", nameAr: "", units: "", renewalPrice: 0, tagline: "", channels: [], hasPerks: false } };
+  const HUNTS = wikiData?.HUNTS ?? [];
+  const PLAN_GROUPS = wikiData?.PLAN_GROUPS ?? [];
+  const PREMIER_GUIDE = wikiData?.PREMIER_GUIDE ?? { steps: [], secondIds: [] };
+  const PREMIER_PERKS = wikiData?.PREMIER_PERKS ?? [];
+  const SR_ITEMS = wikiData?.SR_ITEMS ?? [];
+
+  const q = query.trim();
+  const needsWikiData = (section !== "hub" && section !== "notes" && section !== "capsule") || Boolean(q);
+
+  useEffect(() => {
+    if (!needsWikiData || wikiData) return;
+    let cancelled = false;
+    setWikiDataLoading(true);
+    import("@/data")
+      .then((data) => {
+        if (!cancelled) setWikiData(data);
+      })
+      .catch(() => {
+        if (!cancelled) toast.push("error", "تعذر تحميل بيانات المرجع، جرّب تفتح القسم تاني");
+      })
+      .finally(() => {
+        if (!cancelled) setWikiDataLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [needsWikiData, wikiData, toast]);
 
   async function loadNotes() {
     setLoadingNotes(true);
@@ -270,8 +295,6 @@ export default function WikiPage() {
     if (section === "notes") queueMicrotask(() => { void loadNotes(); });
   }, [section]);
 
-  const q = query.trim();
-
   const filteredSr = useMemo(() => SR_ITEMS.filter((item) => {
     if (srTopic !== "الكل" && !srTopicMatches(item, srTopic)) return false;
     if (!q) return true;
@@ -279,7 +302,7 @@ export default function WikiPage() {
   }).sort((a, b) => Number((SR_PRIORITY_IDS as readonly string[]).includes(b.id)) - Number((SR_PRIORITY_IDS as readonly string[]).includes(a.id))), [q, srTopic]);
 
   const globalHits = useMemo(() => {
-    if (!q) return null;
+    if (!q || !wikiData) return null;
     const sr = SR_ITEMS.filter((item) => matchesQuery([item.id, item.title, item.titleAr, item.description, item.category, item.steps].join(" "), q)).slice(0, 12);
     const hunts = HUNTS.filter((item) => matchesQuery(`${item.name} ${item.number}`, q));
     const emails = EMAILS.filter((item) => matchesQuery(`${item.name} ${item.email} ${item.description}`, q));
@@ -329,6 +352,15 @@ export default function WikiPage() {
   const goPlans = PLAN_GROUPS.filter((g) => g.category.startsWith("Go"));
   const homePlans = PLAN_GROUPS.find((g) => g.category === "Home Wireless");
 
+  if (needsWikiData && !wikiData) {
+    return (
+      <div className="tys-page tys-page-wiki mx-auto max-w-6xl space-y-4">
+        <Back onClick={() => setSection("hub")} title="مركز المعرفة" />
+        <Spinner label={wikiDataLoading ? "بنحمّل بيانات القسم..." : "بنجهّز بيانات المرجع..."} />
+      </div>
+    );
+  }
+
   return (
     <div className="tys-page tys-page-wiki mx-auto max-w-6xl space-y-5">
       {section === "hub" ? (
@@ -345,7 +377,7 @@ export default function WikiPage() {
             </div>
             <div className="relative mt-4 grid grid-cols-3 gap-2 text-center">
               <div className="rounded-2xl border border-[#f3dfce] bg-white/90 px-2 py-2.5">
-                <p className="text-lg font-black tabular-nums text-[#bd4b0a]">{SR_ITEMS.length}</p>
+                <p className="text-lg font-black tabular-nums text-[#bd4b0a]">{wikiData ? wikiData.SR_ITEMS.length : "—"}</p>
                 <p className="text-[10px] font-bold text-[#9a7963]">كود SR</p>
               </div>
               <div className="rounded-2xl border border-[#f3dfce] bg-white/90 px-2 py-2.5">
@@ -353,7 +385,7 @@ export default function WikiPage() {
                 <p className="text-[10px] font-bold text-[#9a7963]">قسم</p>
               </div>
               <div className="rounded-2xl border border-[#f3dfce] bg-white/90 px-2 py-2.5">
-                <p className="text-lg font-black tabular-nums text-[#bd4b0a]">{DOCS.length}</p>
+                <p className="text-lg font-black tabular-nums text-[#bd4b0a]">{wikiData ? wikiData.DOCS.length : "—"}</p>
                 <p className="text-[10px] font-bold text-[#9a7963]">مستند</p>
               </div>
             </div>
