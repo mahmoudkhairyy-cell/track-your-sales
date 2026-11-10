@@ -3349,3 +3349,21 @@ body {
     box-shadow: 0 3px 12px rgba(100,55,25,.035) !important;
   }
 }
+
+
+/* App-wide card contrast: apply to real card surfaces across employee and manager areas. */
+.tys-page :is(section, article)[class*="rounded-"],
+.tys-page div[class*="rounded-"][class*="border"][class*="bg-white"],
+.tys-page div[class*="rounded-"][class*="border"][class*="bg-[#fff"] ,
+.tys-page-manager :is(section, article)[class*="rounded-"],
+.tys-page-manager div[class*="rounded-"][class*="border"][class*="bg-white"] {
+  border-color: #e8cdb7;
+  box-shadow: 0 8px 24px rgba(126, 65, 24, .085);
+}
+.tys-page :is(section, article)[class*="rounded-"]:not([class*="bg-red"]):not([class*="bg-emerald"]):not([class*="bg-amber"]),
+.tys-page div[class*="rounded-"][class*="border"][class*="bg-white"],
+.tys-page div[class*="rounded-"][class*="border"][class*="bg-[#fff"],
+.tys-page-manager :is(section, article)[class*="rounded-"]:not([class*="bg-red"]):not([class*="bg-emerald"]):not([class*="bg-amber"]),
+.tys-page-manager div[class*="rounded-"][class*="border"][class*="bg-white"] {
+  background-color: #fff9f2;
+}
