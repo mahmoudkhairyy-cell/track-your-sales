@@ -129,7 +129,12 @@ function KpiTile({ kpi }: { kpi: AggKpi }) {
       ? { text: "text-emerald-700", bar: "from-emerald-400 to-emerald-600", ring: "ring-emerald-200" }
       : { text: "text-red-600", bar: "from-red-400 to-red-600", ring: "ring-red-200" };
   return (
-    <div className={`relative overflow-hidden rounded-2xl bg-gradient-to-br from-white to-[#fff0e2]/60 p-3 shadow-sm ring-1 ${tone.ring}`}>
+    <div
+      style={neutral ? undefined : { boxShadow: ok
+        ? "0 0 0 1px rgba(22,163,74,.12), 0 0 18px rgba(22,163,74,.16), 0 6px 18px rgba(22,163,74,.08)"
+        : "0 0 0 1px rgba(220,38,38,.12), 0 0 18px rgba(220,38,38,.16), 0 6px 18px rgba(220,38,38,.08)" }}
+      className={`relative overflow-hidden rounded-2xl bg-gradient-to-br from-white to-[#fff0e2]/60 p-3 shadow-sm ring-1 ${tone.ring} ${neutral ? "" : ok ? "bg-emerald-50/70" : "bg-red-50/70"}`}
+    >
       <p className="truncate text-[10px] font-extrabold text-[#927b69]" dir="ltr">{kpi.name}</p>
       <p className={`mt-1 text-2xl font-black tabular-nums tracking-tight ${tone.text}`}>
         {Math.round(kpi.percent)}<span className="text-sm">%</span>
