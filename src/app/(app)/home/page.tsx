@@ -200,6 +200,12 @@ export default function HomePage() {
         </div>
       </section>
 
+      <div className="flex flex-col gap-2 sm:flex-row">
+        <Link href={`/log?month=${month}`} className="inline-flex min-h-14 flex-1 items-center justify-center gap-2 rounded-2xl bg-[#bd4b0a] px-5 py-3 text-base font-black text-white shadow-sm transition hover:bg-[#9f3e08] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#7a2e00]">
+          <span aria-hidden="true">＋</span> تسجيل إنجاز
+        </Link>
+      </div>
+
       {/* المطلوب انهاردة */}
       <section className="flex items-stretch overflow-hidden rounded-[26px] border border-[var(--color-border)] bg-white shadow-[0_5px_14px_rgba(100,55,25,0.13)]">
         <div className="flex w-24 shrink-0 flex-col items-center justify-center bg-gradient-to-br from-[var(--color-primary-700)] to-[var(--color-primary-600)] px-2.5 py-3.5 text-white sm:w-28 sm:px-3 sm:py-4">
@@ -225,7 +231,7 @@ export default function HomePage() {
           <span className="text-[11px] font-bold text-[var(--color-text-secondary)]">اسحب ←</span>
         </div>
         <div className="no-scrollbar flex gap-3 overflow-x-auto pb-1 pt-0.5">
-          {data.kpis.map((kpi) => {
+          {data.kpis.filter((kpi) => kpi.kpiKey !== "new_lines").map((kpi) => {
             const ok = kpi.achieved >= kpi.expectedToDate;
             return (
               <div key={kpi.kpiKey} className="flex w-[104px] shrink-0 flex-col items-center rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface-cream)] p-2 text-center shadow-[0_5px_14px_rgba(100,55,25,0.13)] transition-shadow">
@@ -241,9 +247,8 @@ export default function HomePage() {
       </section>
 
       {/* إجراءات سريعة (صفحات موجودة بس) */}
-      <section className="grid grid-cols-3 gap-2.5">
+      <section className="grid grid-cols-2 gap-2.5">
         {[
-          { href: "/log/", label: "تسجيل بيعة" },
           { href: "/target/", label: "التارجت" },
           { href: "/wiki/", label: "المرجع" },
         ].map((item) => (
