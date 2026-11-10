@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useEffect, useState } from "react";
+import { useHistoryView } from "@/lib/use-history-view";
 import { managerApi } from "@/lib/cloud";
 import { applyCompanyRules } from "@/lib/calculations";
 import { KPI_CATALOG, type KpiKey } from "@/lib/constants";
@@ -209,7 +210,8 @@ export default function ManagerPage() {
   const [branchOpenFor, setBranchOpenFor] = useState<string | null>(null);
   const [branchPreview, setBranchPreview] = useState<string | null>(null);
   // "list" = الفروع، "b:<فرع>" = صفحة فرع، "b:<فرع>|e:<id>" = موظف مفتوح. كل خطوة بتتسجل في تاريخ المتصفح.
-  const [view, setView] = useState<string>("overview");
+  // زرار الرجوع في الموبايل بيرجّع لشاشة المدير اللي قبلها (الفرع/الموظف/الرئيسية) من غير ما يطلّع من الصفحة.
+  const [view, setView] = useHistoryView<string>("overview");
   const branch = view.startsWith("b:") ? view.slice(2).split("|e:")[0] : null;
   const branchOpen = branch !== null && branchOpenFor === branch;
   const openId = view.includes("|e:") ? view.split("|e:")[1] : null;
