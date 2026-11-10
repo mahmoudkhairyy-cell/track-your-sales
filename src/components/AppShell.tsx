@@ -494,7 +494,7 @@ function AppFrame({ children, blocked, month }: { children: ReactNode; blocked: 
                     <p className="text-sm font-black text-[#2d2119]">{pathname === "/home" ? "لوحة الأداء" : NAV.find((item) => pathname.startsWith(item.href))?.label || "مساحة العمل"}</p>
                     <p className="mt-1 text-[11px] text-[#a17d65]">تابع إنجازك وخطتك الشهرية من مكان واحد</p>
                   </div>
-                  <MonthSwitcher />
+                  {pathname === "/wiki" || pathname.startsWith("/wiki/") ? null : <MonthSwitcher />}
                 </div>
               </header>
               <main className="tys-app-main flex-1 bg-[radial-gradient(ellipse_at_top_right,_rgba(255,220,190,0.22),_transparent_34rem)] px-4 py-5 pb-28 lg:px-8 lg:py-8 lg:pb-10">
