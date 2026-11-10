@@ -3,9 +3,9 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
 // حالة "صفحة داخلية" بتتسجل في تاريخ المتصفح، عشان زرار الرجوع يرجّع خطوة لورا جوه التطبيق بدل ما يقفله.
-export function useHistoryView<T extends string>(defaultValue: T) {
-  const [view, setViewState] = useState<T>(defaultValue);
-  const viewRef = useRef<T>(defaultValue);
+export function useHistoryView<T extends string>(defaultValue: T, initialValue: T = defaultValue) {
+  const [view, setViewState] = useState<T>(initialValue);
+  const viewRef = useRef<T>(initialValue);
 
   const setView = useCallback(
     (next: T) => {
