@@ -188,7 +188,7 @@ export default function LogPage() {
       <section className="flex items-end justify-between gap-3 rounded-[26px] border border-[var(--color-border)] bg-white/85 px-4 py-4 shadow-[0_10px_28px_rgba(100,55,25,0.045)] sm:px-5">
         <div>
           <p className="text-[10px] font-black tracking-[0.16em] text-[#c66b34]">DAILY SALES ENTRY</p>
-          <h1 className="mt-1 text-2xl font-black tracking-tight text-[var(--color-text-primary)]">إنجاز اليوم</h1>
+          <h1 className="mt-1 text-2xl font-black tracking-tight text-[var(--color-text-primary)]">تسجيل إنجاز</h1>
           <p className="mt-1 text-xs font-semibold text-[var(--color-text-secondary)]">سجّل مبيعاتك وإنجازاتك بسهولة — هتتحفظ تلقائيًا.</p>
         </div>
         <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[var(--color-primary-50)] text-2xl">✍️</span>
@@ -267,7 +267,7 @@ export default function LogPage() {
         const excluded = !!d && d.weight > 0 && d.gated;
         const needToday = d && workLeft > 0 ? Math.ceil(Math.max(0, d.remaining) / workLeft) : 0;
         return (
-          <article key={item.key} className="rounded-[22px] border border-[var(--color-border)] bg-white p-3 shadow-sm transition duration-300 hover:-translate-y-0.5 hover:shadow-md sm:rounded-[24px] sm:p-4">
+          <article key={item.key} className="rounded-[22px] border border-[var(--color-border)] bg-white p-3 shadow-sm sm:rounded-[24px] sm:p-4">
             <div className="flex items-center justify-between gap-3">
               <div className="flex items-center gap-3">
                 <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--color-primary-50)] text-[var(--color-primary-600)]"><KpiIcon kpiKey={item.key} className="h-5 w-5" /></span>
@@ -365,7 +365,7 @@ export default function LogPage() {
       </section>
 
       <PrimaryButton type="submit" disabled={pending}>
-        {pending ? "⏳ بنحفظ..." : "💾 احفظ إنجاز اليوم"}
+        {pending ? "⏳ بنحفظ..." : "💾 احفظ الإنجاز"}
       </PrimaryButton>
       <p className="text-center text-xs text-[var(--color-text-secondary)]">التاريخ اللي فوق هو اللي بيحدد الشهر · الشهر المعروض: {month}</p>
     </form>
