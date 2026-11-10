@@ -135,7 +135,7 @@ export default function TargetPage() {
       : dirty
         ? { label: "● تغييرات غير محفوظة", tone: "bg-[var(--color-primary-50)] text-[var(--color-primary-700)] ring-1 ring-[#f3d6c0]" }
         : saved
-          ? { label: "✓ محفوظة", tone: "bg-emerald-50 text-emerald-700 ring-1 ring-emerald-100" }
+          ? { label: "✓ محفوظ", tone: "bg-emerald-50 text-emerald-700 ring-1 ring-emerald-100" }
           : { label: "● محتاجة حفظ", tone: "bg-[var(--color-primary-50)] text-[var(--color-primary-700)] ring-1 ring-[#f3d6c0]" };
 
   async function onSave(event: FormEvent) {
