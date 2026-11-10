@@ -481,9 +481,8 @@ function AppFrame({ children, blocked, month }: { children: ReactNode; blocked: 
                   <div className="flex min-w-0 items-center gap-2.5 lg:hidden">
                     <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-[#e96812] to-[#ff9d38] shadow-[0_4px_12px_rgba(217,104,18,0.22)] ring-1 ring-white/80" aria-hidden="true">
                       <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M4 19V5M4 19h17" />
-                        <path d="M7 15l4-4 3 2 6-7" />
-                        <path d="M16 6h4v4" />
+                        <path d="M5 3v18h16" />
+                        <path d="m5 14 4-4 4 4 6-6" />
                       </svg>
                     </span>
                     <div className="min-w-0">
