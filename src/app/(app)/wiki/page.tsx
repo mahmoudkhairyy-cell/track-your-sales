@@ -482,7 +482,7 @@ export default function WikiPage() {
                 <p><b>19005:</b> تعديل بيانات عميل DSL، مثل رقم العميل أو الرقم القومي أو العنوان.</p>
               </div>
               <div className="rounded-xl border border-[#f0d8c5] bg-white p-3">
-                <p className="font-black text-[#bd4b0a]">Reallocation — إعادة التخصيص</p>
+                <p className="font-black text-[#bd4b0a]">Reallocation</p>
                 <ol className="list-decimal pr-5">
                   <li>افتح SR 1030.</li>
                   <li>اتصل بـ Activation Team واختار Option 2.</li>
