@@ -156,82 +156,82 @@ export default function TargetPage() {
   return (
     <form className="tys-page tys-page-target mx-auto max-w-6xl space-y-5 pb-4" onSubmit={onSave}>
       <section className="relative isolate overflow-hidden rounded-[30px] border border-[#efc9a9] bg-[linear-gradient(118deg,#fff8f1_0%,#fff_48%,#ffead8_100%)] p-5 shadow-[0_18px_42px_rgba(126,65,24,0.075)] sm:p-6">
-        <div className="pointer-events-none absolute -left-12 -top-16 h-44 w-44 rounded-full border-[26px] border-[#e96812]/[0.055]" />
-        <div className="pointer-events-none absolute -bottom-20 right-1/3 h-36 w-36 rounded-full bg-[#ff9d38]/10 blur-2xl" />
+        <div className="pointer-events-none absolute -left-12 -top-16 h-44 w-44 rounded-full border-[26px] border-[var(--color-primary-600)]/[0.055]" />
+        <div className="pointer-events-none absolute -bottom-20 right-1/3 h-36 w-36 rounded-full bg-[var(--color-primary-500)]/10 blur-2xl" />
         <div className="relative">
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div className="min-w-0">
               <p className="text-[10px] font-black tracking-[0.18em] text-[#c45a17]">MONTHLY CONFIGURATION</p>
-              <h1 className="mt-1 text-2xl font-black tracking-tight text-[#2d2119] sm:text-3xl">التارجت 🎯</h1>
-              <p className="mt-1.5 max-w-md text-xs leading-6 text-[#88796e]">كل إعدادات الشهر في مكان واحد — راجع أهدافك قبل الحفظ.</p>
+              <h1 className="mt-1 text-2xl font-black tracking-tight text-[var(--color-text-primary)] sm:text-3xl">التارجت 🎯</h1>
+              <p className="mt-1.5 max-w-md text-xs leading-6 text-[var(--color-text-secondary)]">كل إعدادات الشهر في مكان واحد — راجع أهدافك قبل الحفظ.</p>
             </div>
-            <span className={`shrink-0 rounded-full px-3 py-1.5 text-[10px] font-extrabold ${saved ? "bg-emerald-50 text-emerald-700 ring-1 ring-emerald-100" : "bg-[#fff0e2] text-[#bd4b0a] ring-1 ring-[#f3d6c0]"}`}>
+            <span className={`shrink-0 rounded-full px-3 py-1.5 text-[10px] font-extrabold ${saved ? "bg-emerald-50 text-emerald-700 ring-1 ring-emerald-100" : "bg-[var(--color-primary-50)] text-[var(--color-primary-700)] ring-1 ring-[#f3d6c0]"}`}>
               {saved ? "✓ محفوظة" : "● محتاجة حفظ"}
             </span>
           </div>
-          <div className="mt-5 grid grid-cols-3 gap-2 border-t border-[#f0d9c5] pt-4">
+          <div className="mt-5 grid grid-cols-3 gap-2 border-t border-[var(--color-border)] pt-4">
             <div className="min-w-0 rounded-2xl border border-white/80 bg-white/75 px-2.5 py-3 text-center shadow-sm">
-              <p className="text-xl font-black tabular-nums text-[#a94308]">{kpis.filter((k) => k.kpiKey !== "quality" && (k.weight > 0 || k.kpiKey !== "productivity")).length}</p>
-              <p className="mt-0.5 text-[10px] font-bold text-[#927b69]">مؤشرات التارجت</p>
+              <p className="text-xl font-black tabular-nums text-[var(--color-primary-700)]">{kpis.filter((k) => k.kpiKey !== "quality" && (k.weight > 0 || k.kpiKey !== "productivity")).length}</p>
+              <p className="mt-0.5 text-[10px] font-bold text-[var(--color-text-secondary)]">مؤشرات التارجت</p>
             </div>
             <div className="min-w-0 rounded-2xl border border-white/80 bg-white/75 px-2.5 py-3 text-center shadow-sm">
-              <p className={`text-xl font-black tabular-nums ${Math.abs(weightSum - 100) < 0.01 ? "text-emerald-700" : "text-[#a94308]"}`}>{weightSum}%</p>
-              <p className="mt-0.5 text-[10px] font-bold text-[#927b69]">إجمالي الأوزان</p>
+              <p className={`text-xl font-black tabular-nums ${Math.abs(weightSum - 100) < 0.01 ? "text-emerald-700" : "text-[var(--color-primary-700)]"}`}>{weightSum}%</p>
+              <p className="mt-0.5 text-[10px] font-bold text-[var(--color-text-secondary)]">إجمالي الأوزان</p>
             </div>
             <div className="min-w-0 rounded-2xl border border-white/80 bg-white/75 px-2.5 py-3 text-center shadow-sm">
-              <p className="text-xl font-black tabular-nums text-[#a94308]">{workingDatesInMonth(month, workingDays, holidays.map((item) => item.date)).length}</p>
-              <p className="mt-0.5 text-[10px] font-bold text-[#927b69]">أيام العمل</p>
+              <p className="text-xl font-black tabular-nums text-[var(--color-primary-700)]">{workingDatesInMonth(month, workingDays, holidays.map((item) => item.date)).length}</p>
+              <p className="mt-0.5 text-[10px] font-bold text-[var(--color-text-secondary)]">أيام العمل</p>
             </div>
           </div>
         </div>
       </section>
 
       {!saved ? (
-        <section className="rounded-[24px] border-2 border-[#bd4b0a] bg-[#fff0e2] p-4 text-[#bd4b0a]">
+        <section className="rounded-[24px] border-2 border-[var(--color-primary-700)] bg-[var(--color-primary-50)] p-4 text-[var(--color-primary-700)]">
           <p className="text-sm font-black">📅 الخطوة الأولى: اختار إجازاتك لهذا الشهر</p>
           <p className="mt-1 text-xs leading-6">اضغط على الأيام اللي هتاخد فيها إجازة في التقويم تحت. لو مش هتاخد إجازة، فعّل التأكيد بس.</p>
           <label className="mt-3 flex items-center gap-2 text-sm font-extrabold">
-            <input type="checkbox" checked={holidaysConfirmed} onChange={(e) => setHolidaysConfirmed(e.target.checked)} className="h-5 w-5 accent-[#bd4b0a]" />
+            <input type="checkbox" checked={holidaysConfirmed} onChange={(e) => setHolidaysConfirmed(e.target.checked)} className="h-5 w-5 accent-[var(--color-primary-700)]" />
             {holidays.length > 0 ? `أكدت إن عندي ${holidays.length} إجازة` : "مفيش عندي إجازات الشهر ده"}
           </label>
         </section>
       ) : null}
 
-      <section className="overflow-hidden rounded-[28px] border border-[#f0dfd2] bg-white p-4 shadow-[0_12px_30px_rgba(100,55,25,0.045)]">
+      <section className="overflow-hidden rounded-[28px] border border-[var(--color-border)] bg-white p-4 shadow-[0_12px_30px_rgba(100,55,25,0.045)]">
         <div className="grid grid-cols-3 gap-2 text-center">
-          <div className="rounded-2xl bg-[#fff0e2] px-2 py-3"><p className="text-2xl font-black tabular-nums text-[#2d2119]">{monthDays.length}</p><p className="text-[11px] text-[#88796e]">أيام الشهر</p></div>
-          <div className="rounded-2xl bg-[#fff0e2] px-2 py-3"><p className="text-2xl font-black tabular-nums text-[#2d2119]">{holidays.length}</p><p className="text-[11px] text-[#88796e]">إجازات</p></div>
-          <div className="rounded-2xl bg-[#fff0e2] px-2 py-3"><p className="text-2xl font-black tabular-nums text-[#2d2119]">{workingDatesInMonth(month, workingDays, holidays.map((item) => item.date)).length}</p><p className="text-[11px] text-[#88796e]">أيام شغل</p></div>
+          <div className="rounded-2xl bg-[var(--color-primary-50)] px-2 py-3"><p className="text-2xl font-black tabular-nums text-[var(--color-text-primary)]">{monthDays.length}</p><p className="text-[11px] text-[var(--color-text-secondary)]">أيام الشهر</p></div>
+          <div className="rounded-2xl bg-[var(--color-primary-50)] px-2 py-3"><p className="text-2xl font-black tabular-nums text-[var(--color-text-primary)]">{holidays.length}</p><p className="text-[11px] text-[var(--color-text-secondary)]">إجازات</p></div>
+          <div className="rounded-2xl bg-[var(--color-primary-50)] px-2 py-3"><p className="text-2xl font-black tabular-nums text-[var(--color-text-primary)]">{workingDatesInMonth(month, workingDays, holidays.map((item) => item.date)).length}</p><p className="text-[11px] text-[var(--color-text-secondary)]">أيام شغل</p></div>
         </div>
       </section>
 
       {kpis.some((k) => k.weight > 0) ? (
-        <section className="rounded-[28px] border border-[#f0dfd2] bg-white p-4 shadow-[0_12px_30px_rgba(100,55,25,0.045)]">
-          <p className="text-sm font-black text-[#2d2119]">توزيع الأوزان</p>
-          <div className="mt-3 flex h-3 w-full overflow-hidden rounded-full bg-[#fffaf5]">
+        <section className="rounded-[28px] border border-[var(--color-border)] bg-white p-4 shadow-[0_12px_30px_rgba(100,55,25,0.045)]">
+          <p className="text-sm font-black text-[var(--color-text-primary)]">توزيع الأوزان</p>
+          <div className="mt-3 flex h-3 w-full overflow-hidden rounded-full bg-[var(--color-surface-cream)]">
             {kpis.filter((k) => k.weight > 0).map((k, i) => (
-              <span key={k.kpiKey} style={{ width: `${k.weight}%`, background: ["#e96812", "#ff9d38", "#bd4b0a", "#e7a06a", "#f2c49f"][i % 5] }} />
+              <span key={k.kpiKey} style={{ width: `${k.weight}%`, background: ["var(--color-primary-600)", "var(--color-primary-500)", "var(--color-primary-700)", "#e7a06a", "#f2c49f"][i % 5] }} />
             ))}
           </div>
-          <ul className="mt-3 grid grid-cols-2 gap-2 text-xs font-bold text-[#88796e]">
+          <ul className="mt-3 grid grid-cols-2 gap-2 text-xs font-bold text-[var(--color-text-secondary)]">
             {kpis.filter((k) => k.weight > 0).map((k, i) => (
               <li key={k.kpiKey} className="flex items-center gap-2">
-                <span className="h-2.5 w-2.5 rounded-full" style={{ background: ["#e96812", "#ff9d38", "#bd4b0a", "#e7a06a", "#f2c49f"][i % 5] }} />
+                <span className="h-2.5 w-2.5 rounded-full" style={{ background: ["var(--color-primary-600)", "var(--color-primary-500)", "var(--color-primary-700)", "#e7a06a", "#f2c49f"][i % 5] }} />
                 <span className="truncate">{kpiEmoji(k.kpiKey)} {KPI_CATALOG.find((c) => c.key === k.kpiKey)?.nameEn ?? k.kpiKey}</span>
-                <span className="mr-auto tabular-nums text-[#2d2119]">{k.weight}%</span>
+                <span className="mr-auto tabular-nums text-[var(--color-text-primary)]">{k.weight}%</span>
               </li>
             ))}
           </ul>
         </section>
       ) : null}
 
-      <section className="rounded-[28px] border border-[#f0dfd2] bg-white p-4 shadow-[0_12px_30px_rgba(100,55,25,0.045)] sm:p-5">
+      <section className="rounded-[28px] border border-[var(--color-border)] bg-white p-4 shadow-[0_12px_30px_rgba(100,55,25,0.045)] sm:p-5">
         <div className="mb-4 flex items-center justify-between gap-3">
           <div>
-            <h2 className="text-sm font-black text-[#2d2119]">تقويم الإجازات</h2>
+            <h2 className="text-sm font-black text-[var(--color-text-primary)]">تقويم الإجازات</h2>
             <p className="mt-1 text-[11px] text-[#9a8170]">اختار الأيام اللي مش هتشتغل فيها</p>
           </div>
-          <span className="rounded-xl bg-[#fff0e2] px-3 py-2 text-xs font-black text-[#bd4b0a]">{month}</span>
+          <span className="rounded-xl bg-[var(--color-primary-50)] px-3 py-2 text-xs font-black text-[var(--color-primary-700)]">{month}</span>
         </div>
         <div className="grid grid-cols-7 gap-1 text-center text-[11px] font-bold text-[#9a8170]">
           {["سبت", "أحد", "اتنين", "تلات", "أربع", "خميس", "جمعة"].map((d) => (
@@ -258,7 +258,7 @@ export default function TargetPage() {
                   )
                 }
                 className={`flex aspect-square items-center justify-center rounded-2xl text-sm font-extrabold transition duration-200 hover:scale-[1.04] active:scale-95 ${
-                  isHoliday ? "bg-gradient-to-br from-[#e96812] to-[#ff9d38] text-white shadow-sm" : "bg-[#fffaf5] text-[#2d2119]"
+                  isHoliday ? "bg-gradient-to-br from-[var(--color-primary-600)] to-[var(--color-primary-500)] text-white shadow-sm" : "bg-[var(--color-surface-cream)] text-[var(--color-text-primary)]"
                 }`}
               >
                 {Number(date.slice(8, 10))}
@@ -266,7 +266,7 @@ export default function TargetPage() {
             );
           })}
         </div>
-        <p className="mt-3 text-center text-xs text-[#927b69]">اضغط أي يوم لإضافته أو إلغائه كإجازة</p>
+        <p className="mt-3 text-center text-xs text-[var(--color-text-secondary)]">اضغط أي يوم لإضافته أو إلغائه كإجازة</p>
       </section>
 
       {error ? <Banner tone="error">❌ {error}</Banner> : null}
@@ -276,7 +276,7 @@ export default function TargetPage() {
       </p>
 
       {daily ? (
-        <section className="rounded-[24px] bg-[#fff0e2] p-4 text-sm leading-7 text-[#bd4b0a]">
+        <section className="rounded-[24px] bg-[var(--color-primary-50)] p-4 text-sm leading-7 text-[var(--color-primary-700)]">
           <p className="font-extrabold">⚡ المطلوب منك النهارده عشان تفضل ON TRACK:</p>
           {behindKpis.length === 0 ? (
             <p className="mt-1 font-bold">كل المؤشرات تمام. مفيش حاجة ضاغطة النهارده 👌</p>
@@ -299,7 +299,7 @@ export default function TargetPage() {
         </section>
       ) : null}
 
-      <section className="rounded-[28px] border border-[#f0dfd2] bg-white p-5 shadow-[0_12px_30px_rgba(100,55,25,0.045)]">
+      <section className="rounded-[28px] border border-[var(--color-border)] bg-white p-5 shadow-[0_12px_30px_rgba(100,55,25,0.045)]">
         <Field label="💰 الكوميشن الكامل (جنيه)">
           <input
             className={`${inputClass} text-xl font-black`}
@@ -313,14 +313,14 @@ export default function TargetPage() {
         </Field>
       </section>
 
-      <section className="rounded-[28px] border border-[#f0dfd2] bg-white p-4 shadow-[0_12px_30px_rgba(100,55,25,0.045)]">
+      <section className="rounded-[28px] border border-[var(--color-border)] bg-white p-4 shadow-[0_12px_30px_rgba(100,55,25,0.045)]">
         <div className="mb-1 flex items-center justify-between">
           <h2 className="text-lg font-black">الإيتمز والأوزان</h2>
         </div>
-        <p className="mb-2 rounded-xl bg-[#fff0e2] px-3 py-2 text-[11px] font-bold leading-5 text-[#bd4b0a]">
+        <p className="mb-2 rounded-xl bg-[var(--color-primary-50)] px-3 py-2 text-[11px] font-bold leading-5 text-[var(--color-primary-700)]">
           📌 الأوزان مختلفة للموظف والمدير. ده وزن {kpis.some((k) => k.kpiKey === "productivity" && k.weight > 0) ? "المدير" : "الموظف"}، وبيتحدد أوتوماتيك حسب اختيارك في أول مرة، ومش بيتعدل من التطبيق.
         </p>
-        <div className="grid grid-cols-[minmax(0,1fr)_68px_60px] gap-1.5 border-b sm:grid-cols-[minmax(0,1fr)_74px_74px] sm:gap-2 border-dashed border-[#f2e4d8]/70 pb-2 text-[11px] font-bold text-[#927b69]">
+        <div className="grid grid-cols-[minmax(0,1fr)_68px_60px] gap-1.5 border-b sm:grid-cols-[minmax(0,1fr)_74px_74px] sm:gap-2 border-dashed border-[var(--color-border)]/70 pb-2 text-[11px] font-bold text-[var(--color-text-secondary)]">
           <span>الإيتم</span>
           <span className="text-center">التارجت</span>
           <span className="text-center">الوزن %</span>
@@ -332,15 +332,15 @@ export default function TargetPage() {
           if (kpi.kpiKey === "productivity" && kpi.weight === 0) return null;
           const catalog = KPI_CATALOG.find((item) => item.key === kpi.kpiKey);
           return (
-            <div key={kpi.kpiKey} className="grid grid-cols-[minmax(0,1fr)_68px_60px] items-center gap-1.5 border-b sm:grid-cols-[minmax(0,1fr)_74px_74px] sm:gap-2 border-dashed border-[#f2e4d8]/70 py-2.5 last:border-0">
+            <div key={kpi.kpiKey} className="grid grid-cols-[minmax(0,1fr)_68px_60px] items-center gap-1.5 border-b sm:grid-cols-[minmax(0,1fr)_74px_74px] sm:gap-2 border-dashed border-[var(--color-border)]/70 py-2.5 last:border-0">
               <div className="flex min-w-0 items-center gap-2">
-                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[#fff0e2] text-[#bd4b0a]"><KpiIcon kpiKey={kpi.kpiKey} className="h-4 w-4" /></span>
+                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[var(--color-primary-50)] text-[var(--color-primary-700)]"><KpiIcon kpiKey={kpi.kpiKey} className="h-4 w-4" /></span>
                 <div className="min-w-0">
                   <p className="truncate text-sm font-extrabold" dir="ltr">{catalog?.nameEn}</p>
                   {kpi.kpiKey === "new_orange_cash" ? (
-                    <p className="text-[10px] font-bold text-[#bd4b0a]">تارجت بتدخله بإيدك</p>
+                    <p className="text-[10px] font-bold text-[var(--color-primary-700)]">تارجت بتدخله بإيدك</p>
                   ) : (
-                    <p className="text-[10px] text-[#927b69]">{kpi.unitAr}</p>
+                    <p className="text-[10px] text-[var(--color-text-secondary)]">{kpi.unitAr}</p>
                   )}
                 </div>
               </div>
@@ -357,13 +357,13 @@ export default function TargetPage() {
                   setKpis((current) => current.map((row, rowIndex) => (rowIndex === index ? { ...row, target } : row)));
                 }}
               />
-              <p aria-label={`وزن ${catalog?.nameEn}`} className="py-2 text-center text-sm font-black text-[#927b69]">{kpi.weight}%</p>
+              <p aria-label={`وزن ${catalog?.nameEn}`} className="py-2 text-center text-sm font-black text-[var(--color-text-secondary)]">{kpi.weight}%</p>
             </div>
           );
         })}
       </section>
 
-      <div className="sticky bottom-[calc(76px+env(safe-area-inset-bottom))] z-20 rounded-[24px] border border-[#f0dfd2] bg-[#fffaf5]/95 p-2 shadow-[0_12px_30px_rgba(100,55,25,0.12)] backdrop-blur-xl lg:bottom-4">
+      <div className="sticky bottom-[calc(76px+env(safe-area-inset-bottom))] z-20 rounded-[24px] border border-[var(--color-border)] bg-[var(--color-surface-cream)]/95 p-2 shadow-[0_12px_30px_rgba(100,55,25,0.12)] backdrop-blur-xl lg:bottom-4">
       <PrimaryButton type="submit" disabled={saving}>
         {saving ? "⏳ بنحفظ على السيرفر..." : "💾 احفظ إعدادات الشهر"}
       </PrimaryButton>
