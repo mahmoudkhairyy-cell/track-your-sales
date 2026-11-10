@@ -144,7 +144,7 @@ export default function HomePage() {
       </section>
 
       {/* الهيرو الرئيسي — لوحة إنجاز دائرية */}
-      <section className="relative isolate overflow-hidden rounded-[30px] border border-[#efc8a8] bg-[linear-gradient(125deg,#fff8f0_0%,#fff_48%,#ffe8d4_100%)] p-4 shadow-[0_20px_48px_rgba(145,75,30,0.10)] sm:p-6">
+      <section style={{ boxShadow: onTrack === null ? "0 12px 30px rgba(126,65,24,.10)" : onTrack ? "0 0 0 1px rgba(22,163,74,.10), 0 0 22px rgba(22,163,74,.15), 0 16px 38px rgba(22,163,74,.10)" : "0 0 0 1px rgba(220,38,38,.10), 0 0 22px rgba(220,38,38,.15), 0 16px 38px rgba(220,38,38,.10)" }} className="relative isolate overflow-hidden rounded-[30px] border border-[#dfb995] bg-[linear-gradient(125deg,#fff3e8_0%,#fffaf5_48%,#ffe2c7_100%)] p-4 sm:p-6">
         <div className="pointer-events-none absolute -left-12 -top-16 h-52 w-52 rounded-full bg-[#ff9d38]/20 blur-3xl" />
         <div className="pointer-events-none absolute -bottom-24 right-1/3 h-52 w-52 rounded-full bg-[#e96812]/10 blur-3xl" />
         <div className="relative">
@@ -228,12 +228,12 @@ export default function HomePage() {
           {data.kpis.map((kpi) => {
             const ok = kpi.achieved >= kpi.expectedToDate;
             return (
-              <div key={kpi.kpiKey} style={{ boxShadow: ok ? "0 0 0 1px rgba(22,163,74,.12), 0 0 18px rgba(22,163,74,.18), 0 5px 16px rgba(22,163,74,.08)" : "0 0 0 1px rgba(220,38,38,.12), 0 0 18px rgba(220,38,38,.17), 0 5px 16px rgba(220,38,38,.08)" }} className={`flex w-[104px] shrink-0 flex-col items-center rounded-[22px] border p-3 text-center transition-all duration-300 ${ok ? "border-emerald-300 bg-[#e2f5e9]" : "border-red-300 bg-[#fde5e5]"}`}>
+              <div key={kpi.kpiKey} className="flex w-[104px] shrink-0 flex-col items-center rounded-[22px] border border-[#e8cdb7] bg-[#fff8f1] p-3 text-center">
                 <div className={`flex h-10 w-10 items-center justify-center rounded-full border-2 font-mono text-xs font-black ${ok ? "border-emerald-500 text-emerald-700" : "border-red-500 text-red-700"}`}>
                   {Math.round(kpi.percent)}%
                 </div>
                 <span className="mt-1.5 w-full truncate text-[11px] font-bold text-[#38291f]" dir="ltr">{shortKpiName(kpi.nameEn)}</span>
-                <span className={`mt-0.5 text-[10px] font-extrabold ${ok ? "text-emerald-600" : "text-red-600"}`}>{ok ? "On Track" : "متأخر"}</span>
+                <span className={`mt-0.5 text-[10px] font-extrabold ${ok ? "text-emerald-700" : "text-red-700"}`}>{ok ? "On Track" : "متأخر"}</span>
               </div>
             );
           })}
