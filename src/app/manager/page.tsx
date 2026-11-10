@@ -252,7 +252,7 @@ export default function ManagerPage() {
       alert("✅ اتغيّر الباسورد بنجاح.");
     } catch (err) {
       const raw = err instanceof Error ? err.message : String(err);
-      setPwMsg(raw.includes("wrong password") ? "الباسورد القديم غلط." : "حصلت مشكلة، حاول تاني.");
+      setPwMsg(raw.includes("wrong password") ? "الباسورد القديم مش صح. اكتبه تاني." : "حصلت مشكلة في الحفظ. اتأكد من النت وحاول تاني.");
     }
   }
 
@@ -308,10 +308,10 @@ export default function ManagerPage() {
         } catch {
           // لا شيء
         }
-        setError("كلمة السر غلط");
+        setError("كلمة السر مش صح. جرّب تاني.");
       } else {
         // خطأ نت أو غيره: نحتفظ بالبيانات اللي موجودة ونعرض الخطأ فوقها.
-        setError(`مقدرناش نحدّث البيانات، جرّب تاني. (${raw.slice(0, 160)})`);
+        setError(`ماقدرناش نحدّث البيانات. اتأكد من النت وحاول تاني. (${raw.slice(0, 160)})`);
       }
     } finally {
       setPending(false);
@@ -347,7 +347,7 @@ export default function ManagerPage() {
       setRows((cur) => (cur ?? []).filter((r) => r.branch_id !== row.branch_id));
       setOpenId(null);
     } catch (err) {
-      setError(`مقدرناش نمسح ${row.employee_name}. (${err instanceof Error ? err.message.slice(0, 120) : ""})`);
+      setError(`ماقدرناش نمسح بيانات ${row.employee_name}. حاول تاني. (${err instanceof Error ? err.message.slice(0, 120) : ""})`);
     } finally {
       setPending(false);
     }
