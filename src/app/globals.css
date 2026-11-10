@@ -3568,3 +3568,74 @@ body {
     text-align: center !important;
   }
 }
+
+
+/* Home monthly performance hero — clearer hierarchy, no data or motion changes */
+.tys-premium-home .tys-home-hero {
+  border-radius: 26px !important;
+  background: linear-gradient(132deg,#fff1e4 0%,#fffaf5 48%,#ffe5cf 100%) !important;
+}
+.tys-premium-home .tys-home-hero > .relative > div:first-child {
+  padding-bottom: .85rem !important;
+  border-color: rgba(190,105,48,.18) !important;
+}
+.tys-premium-home .tys-home-hero > .relative > div:first-child > div:first-child > span {
+  box-shadow: 0 5px 12px rgba(174,77,14,.18) !important;
+}
+.tys-premium-home .tys-home-hero > .relative > div:first-child > span {
+  padding: .38rem .65rem !important;
+  font-size: .62rem !important;
+  letter-spacing: .015em !important;
+}
+.tys-premium-home .tys-home-hero > .relative > div:nth-child(2) {
+  align-items: center !important;
+  gap: .8rem !important;
+  padding-top: 1.05rem !important;
+  padding-bottom: 1rem !important;
+}
+.tys-premium-home .tys-home-hero > .relative > div:nth-child(2) > div:first-child {
+  flex: 1 1 9rem !important;
+  min-width: 0 !important;
+}
+.tys-premium-home .tys-home-hero > .relative > div:nth-child(2) > div:first-child > div {
+  gap: .18rem !important;
+}
+.tys-premium-home .tys-home-hero > .relative > div:nth-child(2) > div:first-child .font-mono {
+  font-size: clamp(3.15rem, 12vw, 4.25rem) !important;
+  line-height: .98 !important;
+}
+.tys-premium-home .tys-home-hero > .relative > div:nth-child(2) > div:last-child {
+  max-width: 48% !important;
+  min-width: 0 !important;
+  border-color: #f3cfb2 !important;
+  border-radius: 15px !important;
+  background: rgba(255,255,255,.78) !important;
+  box-shadow: 0 4px 12px rgba(126,65,24,.055) !important;
+}
+.tys-premium-home .tys-home-hero > .relative > div:nth-child(2) > div:last-child strong {
+  font-size: clamp(.9rem, 3.5vw, 1.05rem) !important;
+  font-variant-numeric: tabular-nums !important;
+}
+.tys-premium-home .tys-home-hero > .relative > div:nth-child(3) > div:first-child {
+  height: 9px !important;
+  background: rgba(189,111,59,.16) !important;
+  box-shadow: inset 0 1px 2px rgba(91,43,12,.08) !important;
+}
+.tys-premium-home .tys-home-hero > .relative > div:nth-child(3) > div:first-child > div {
+  box-shadow: 0 1px 7px rgba(189,75,10,.28) !important;
+}
+.tys-premium-home .tys-home-hero > .relative > div:nth-child(4) {
+  margin-top: .85rem !important;
+  line-height: 1.65 !important;
+}
+@media (max-width: 420px) {
+  .tys-premium-home .tys-home-hero { padding: .9rem !important; border-radius: 22px !important; }
+  .tys-premium-home .tys-home-hero > .relative > div:nth-child(2) { gap: .55rem !important; }
+  .tys-premium-home .tys-home-hero > .relative > div:nth-child(2) > div:last-child {
+    max-width: 46% !important;
+    padding: .55rem .65rem !important;
+  }
+  .tys-premium-home .tys-home-hero > .relative > div:nth-child(2) > div:first-child .font-mono {
+    font-size: clamp(2.8rem, 11.5vw, 3.4rem) !important;
+  }
+}
