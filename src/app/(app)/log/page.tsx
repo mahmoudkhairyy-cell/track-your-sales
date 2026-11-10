@@ -274,7 +274,7 @@ export default function LogPage() {
                 <div>
                   <p className="font-extrabold" dir="ltr">{item.nameEn}</p>
                   <p className="text-[11px] font-bold text-[#bd4b0a]">
-                    {excluded ? "متتحسبش" : commission > 0 ? `كوميشن ${commission} ج` : " "}
+                    {excluded ? "متتحسبش غير لما تكمل 90%" : commission > 0 ? `كوميشن ${commission} ج` : " "}
                   </p>
                 </div>
               </div>
