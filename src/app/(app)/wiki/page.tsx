@@ -477,6 +477,10 @@ export default function WikiPage() {
                 <p>اكتب تفاصيل الشكوى في Notes، وبعدها اعمل رن للفريق المختص. مناسب لشكاوى الشبكة، وخصم الرصيد بدون سبب، ومشكلات حساب الفاتورة.</p>
               </div>
               <div className="rounded-xl border border-[#f0d8c5] bg-white p-3">
+                <p className="font-black text-[#bd4b0a]">SR 11189 — فك بلوك محفظة Orange Cash</p>
+                <p>لو محفظة العميل عليها Block، ارفع في الـ Attachments عقد أورنج كاش وصورة بطاقة العميل.</p>
+              </div>
+              <div className="rounded-xl border border-[#f0d8c5] bg-white p-3">
                 <p className="font-black text-[#bd4b0a]">DSL</p>
                 <p><b>14032:</b> رفع استمارة مشترك جديد في DSL.</p>
                 <p><b>19005:</b> تعديل بيانات عميل DSL، مثل رقم العميل أو الرقم القومي أو العنوان.</p>
