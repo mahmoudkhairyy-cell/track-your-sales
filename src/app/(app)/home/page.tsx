@@ -132,7 +132,7 @@ export default function HomePage() {
         </p>
       ) : null}
 
-      <section className="flex items-end justify-between gap-3 rounded-[26px] border border-[var(--color-border)] bg-white/80 px-4 py-4 shadow-[0_10px_30px_rgba(100,55,25,0.045)] sm:px-5">
+      <section className="flex items-end justify-between gap-3 rounded-[26px] border border-[var(--color-border)] bg-white/80 px-4 py-4 shadow-[0_5px_14px_rgba(100,55,25,0.13)] sm:px-5">
         <div className="min-w-0">
           <p className="text-[10px] font-black tracking-[0.16em] text-[var(--color-primary-600)]">YOUR SALES OVERVIEW</p>
           <h1 className="mt-1 text-xl font-black tracking-tight text-[var(--color-text-primary)] sm:text-2xl">
@@ -144,7 +144,7 @@ export default function HomePage() {
       </section>
 
       {/* الهيرو الرئيسي — لوحة إنجاز دائرية */}
-      <section className="relative isolate overflow-hidden rounded-[30px] border border-[var(--color-border)] bg-[linear-gradient(125deg,var(--color-surface-cream)_0%,#fff_48%,var(--color-primary-100)_100%)] p-4 shadow-[0_20px_48px_rgba(145,75,30,0.10)] sm:p-6">
+      <section style={{ boxShadow: onTrack === null ? "0 5px 14px rgba(100,55,25,.13)" : onTrack ? "0 0 0 1px rgba(22,163,74,.06), 0 0 10px rgba(22,163,74,.08), 0 5px 14px rgba(100,55,25,.13)" : "0 0 0 1px rgba(220,38,38,.06), 0 0 10px rgba(220,38,38,.08), 0 5px 14px rgba(100,55,25,.13)" }} className="relative isolate overflow-hidden rounded-[30px] border border-[var(--color-border)] bg-[linear-gradient(125deg,#fff3e8_0%,#fffaf5_48%,#ffe2c7_100%)] p-4 sm:p-6">
         <div className="pointer-events-none absolute -left-12 -top-16 h-52 w-52 rounded-full bg-[var(--color-primary-500)]/20 blur-3xl" />
         <div className="pointer-events-none absolute -bottom-24 right-1/3 h-52 w-52 rounded-full bg-[var(--color-primary-600)]/10 blur-3xl" />
         <div className="relative">
@@ -195,24 +195,13 @@ export default function HomePage() {
           <div className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] font-semibold text-[var(--color-text-secondary)]">
             <span className="font-extrabold text-[var(--color-primary-700)]">{statusTextEgy}</span><span className="text-[var(--color-border)]">•</span><span>{timeText}</span>
           </div>
-          <div className="mt-4 grid grid-cols-2 gap-2.5 border-t border-[var(--color-border)] pt-3">
-            <div className="rounded-2xl border border-white bg-white/90 px-3 py-3 shadow-[0_5px_16px_rgba(145,75,30,0.05)]">
-              <span className="block text-[10px] font-bold text-[var(--color-text-secondary)]">الكوميشن المتوقع</span>
-              <strong className="mt-1 block truncate font-mono text-lg font-black text-[var(--color-primary-700)]">{formatMoney(data.estimatedCommission)} <span className="text-[10px] font-bold text-[var(--color-text-secondary)]">ج.م</span></strong>
-              <span className="mt-0.5 block text-[10px] font-semibold text-[var(--color-text-secondary)]">من {formatMoney(data.fullCommission)} ج.م</span>
-            </div>
-            <div className="rounded-2xl border border-white bg-white/90 px-3 py-3 shadow-[0_5px_16px_rgba(145,75,30,0.05)]">
-              <span className="block text-[10px] font-bold text-[var(--color-text-secondary)]">ملخص الأداء</span>
-              <strong className="mt-1 block truncate text-sm font-black text-[var(--color-text-primary)]">{onTrack === null ? "جاري حساب الأداء" : onTrack ? "ماشي بشكل ممتاز" : "لسه في فرصة تعوّض"}</strong>
-              <span className="mt-0.5 block text-[10px] font-semibold text-[var(--color-text-secondary)]">{overallLine()}</span>
-            </div>
-          </div>
+
           {sarcastic ? <p className="mt-3 text-[11px] font-bold text-[var(--color-primary-700)]">{sarcastic}</p> : null}
         </div>
       </section>
 
       {/* المطلوب انهاردة */}
-      <section className="flex items-stretch overflow-hidden rounded-[26px] border border-[var(--color-border)] bg-white shadow-[0_12px_28px_rgba(100,55,25,0.05)]">
+      <section className="flex items-stretch overflow-hidden rounded-[26px] border border-[var(--color-border)] bg-white shadow-[0_5px_14px_rgba(100,55,25,0.13)]">
         <div className="flex w-24 shrink-0 flex-col items-center justify-center bg-gradient-to-br from-[var(--color-primary-700)] to-[var(--color-primary-600)] px-2.5 py-3.5 text-white sm:w-28 sm:px-3 sm:py-4">
           <span className="font-mono text-2xl font-black leading-none sm:text-3xl">{data.pace.perDay === null ? "—" : formatQty(Math.ceil(data.pace.perDay))}</span>
           <span className="mt-1 text-[10px] font-bold text-[var(--color-primary-50)]">{data.pace.perDay === null ? "" : linesWord(Math.ceil(data.pace.perDay)) + " / يوم"}</span>
@@ -227,7 +216,7 @@ export default function HomePage() {
       </section>
 
       {/* نسبة الإنجاز بالمحاور */}
-      <section className="flex flex-col gap-3 rounded-[26px] border border-[var(--color-border)] bg-white/70 p-4 shadow-[0_12px_28px_rgba(100,55,25,0.04)]">
+      <section className="flex flex-col gap-3 rounded-[26px] border border-[var(--color-border)] bg-white/70 p-4 shadow-[0_5px_14px_rgba(100,55,25,0.13)]">
         <div className="flex items-center justify-between">
           <h2 className="flex items-center gap-1.5 text-sm font-black tracking-tight text-[var(--color-text-primary)]">
             <span>نسبة الإنجاز بالمحاور</span>
@@ -239,12 +228,12 @@ export default function HomePage() {
           {data.kpis.map((kpi) => {
             const ok = kpi.achieved >= kpi.expectedToDate;
             return (
-              <div key={kpi.kpiKey} className="flex w-[104px] shrink-0 flex-col items-center rounded-[22px] border border-[var(--color-border)] bg-[var(--color-surface-cream)] p-3 text-center shadow-[0_5px_16px_rgba(100,55,25,0.045)]">
+              <div key={kpi.kpiKey} className="flex w-[104px] shrink-0 flex-col items-center rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface-cream)] p-2 text-center shadow-[0_5px_14px_rgba(100,55,25,0.13)] transition-shadow">
                 <div className={`flex h-10 w-10 items-center justify-center rounded-full border-2 font-mono text-xs font-black ${ok ? "border-emerald-500 text-emerald-700" : "border-red-500 text-red-700"}`}>
                   {Math.round(kpi.percent)}%
                 </div>
                 <span className="mt-1.5 w-full truncate text-[11px] font-bold text-[var(--color-text-primary)]" dir="ltr">{shortKpiName(kpi.nameEn)}</span>
-                <span className={`mt-0.5 text-[10px] font-extrabold ${ok ? "text-emerald-600" : "text-red-600"}`}>{ok ? "On Track" : "متأخر"}</span>
+                <span className={`mt-0.5 text-[10px] font-extrabold ${ok ? "text-emerald-700" : "text-red-700"}`}>{ok ? "On Track" : "متأخر"}</span>
               </div>
             );
           })}
@@ -258,14 +247,14 @@ export default function HomePage() {
           { href: "/target/", label: "التارجت" },
           { href: "/wiki/", label: "المرجع" },
         ].map((item) => (
-          <Link key={item.href} href={`${item.href}?month=${month}`} className="rounded-[20px] border border-[var(--color-border)] bg-white px-2 py-4 text-center text-xs font-extrabold text-[var(--color-text-primary)] shadow-[0_8px_20px_rgba(100,55,25,0.05)] transition-all hover:-translate-y-0.5 hover:border-[var(--color-border)] active:scale-95">
+          <Link key={item.href} href={`${item.href}?month=${month}`} className="rounded-2xl border border-[var(--color-border)] bg-white px-2 py-3 text-center text-xs font-extrabold text-[var(--color-text-primary)] shadow-[0_5px_14px_rgba(100,55,25,0.13)] transition-all hover:-translate-y-0.5 hover:border-[var(--color-border)] active:scale-95">
             {item.label}
           </Link>
         ))}
       </section>
 
       {/* المؤشرات */}
-      <section className="flex flex-col gap-3 rounded-[28px] border border-[var(--color-border)] bg-white/75 p-4 shadow-[0_12px_30px_rgba(100,55,25,0.04)] sm:p-5">
+      <section className="flex flex-col gap-3 rounded-[28px] border border-[var(--color-border)] bg-white/75 p-4 shadow-[0_5px_14px_rgba(100,55,25,0.13)] sm:p-5">
         <div className="flex items-center justify-between">
           <h2 className="text-base font-black tracking-tight text-[var(--color-text-primary)]">مؤشرات الأداء (KPIs)</h2>
           <span className="text-[11px] font-bold text-[var(--color-text-secondary)]">{data.kpis.length} مؤشر</span>
@@ -276,7 +265,7 @@ export default function HomePage() {
             const ringLen = 2 * Math.PI * 18;
             const pct = Math.min(100, Math.max(0, kpi.percent));
             return (
-              <article key={kpi.kpiKey} style={{ animationDelay: `${kpiIndex * 70}ms` }} className={`tys-rise flex min-w-0 items-center gap-2.5 rounded-[20px] border bg-white p-3 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg sm:gap-3 sm:p-3.5 ${onTrackKpi ? "border-emerald-200 shadow-[0_8px_22px_rgba(16,185,129,0.07)]" : "border-[var(--color-border)] shadow-[0_8px_22px_rgba(145,61,13,0.055)]"}`}>
+              <article key={kpi.kpiKey} style={{ animationDelay: `${kpiIndex * 70}ms`, boxShadow: onTrackKpi ? "0 0 0 1px rgba(22,163,74,.06), 0 0 8px rgba(22,163,74,.07), 0 5px 14px rgba(100,55,25,.13)" : "0 0 0 1px rgba(220,38,38,.06), 0 0 8px rgba(220,38,38,.07), 0 5px 14px rgba(100,55,25,.13)" }} className={`tys-rise flex min-w-0 items-center gap-2.5 rounded-2xl border p-2 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg sm:gap-3 sm:p-2.5 border-[var(--color-border)] bg-[var(--color-surface-cream)]`}>
                 <div className="relative h-12 w-12 shrink-0 sm:h-14 sm:w-14">
                   <svg viewBox="0 0 44 44" className="h-full w-full -rotate-90">
                     <circle cx="22" cy="22" r="18" fill="none" stroke="var(--color-border)" strokeWidth="5" />
@@ -297,8 +286,10 @@ export default function HomePage() {
                 </div>
                 <div className="flex min-w-0 flex-1 flex-col gap-1">
                   <div className="flex items-center justify-between gap-2">
-                    <span className="flex min-w-0 items-center gap-1.5">
-                      <KpiIcon kpiKey={kpi.kpiKey} className="h-3.5 w-3.5 shrink-0 text-[var(--color-primary-600)]" />
+                    <span dir="rtl" className="flex min-w-0 items-center gap-1.5">
+                      <span className="inline-flex shrink-0 items-center justify-center rounded-full bg-[var(--color-primary-50)] px-2.5 py-1.5 text-[var(--color-primary-600)]">
+                        <KpiIcon kpiKey={kpi.kpiKey} className="h-5 w-5" />
+                      </span>
                       <span className="truncate text-xs font-black text-[var(--color-text-primary)]" dir="ltr">{kpi.nameEn}</span>
                     </span>
                     <span className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-extrabold ${onTrackKpi ? "bg-emerald-50 text-emerald-700" : "bg-red-50 text-red-600"}`}>
