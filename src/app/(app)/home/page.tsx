@@ -238,38 +238,51 @@ export default function HomePage() {
         <p className="text-sm text-neutral-500">عدد العمليات المحفوظة الشهر ده: {data.entriesCount}</p>
       )}
 
-      <h2 className="text-xl font-black">مؤشرات الأداء</h2>
-      <div className="grid grid-cols-2 gap-3">
-        {data.kpis.map((kpi) => {
-          const visual = Math.min(100, Math.max(0, kpi.percent));
-          const kpiExpected = kpi.target > 0 ? (kpi.expectedToDate / kpi.target) * 100 : 0;
-          const m = kpiMood({ percent: kpi.percent, expectedPercent: kpiExpected, weight: kpi.weight });
-          const moodColor =
-            m.tone === "good" ? "text-emerald-700" : m.tone === "warn" ? "text-yellow-700" : m.tone === "bad" ? "text-red-600" : "text-neutral-400";
-          return (
-            <article key={kpi.kpiKey} className="rounded-[20px] border border-[#f1e2d6] bg-white/95 p-3 shadow-[0_8px_22px_rgba(116,63,26,0.045)] transition-transform duration-200 hover:-translate-y-0.5">
-              <div className="flex items-center justify-between">
-                <span className="text-xl">{kpiEmoji(kpi.kpiKey)}</span>
-                <p className="text-sm font-black text-[#ff7900]">{formatPercent(kpi.percent)}%</p>
-              </div>
-              <h3 className="mt-2 text-sm font-extrabold text-neutral-900" dir="ltr">
-                {kpi.nameEn}
-              </h3>
-              <p className="mt-1 text-lg font-black text-neutral-900">
-                {formatQty(kpi.achieved)}
-                <span className="text-xs font-normal text-neutral-400"> / {formatQty(kpi.target)}</span>
-              </p>
-              <div className="mt-2 h-2 overflow-hidden rounded-full bg-[#f5eae1]">
-                <div className="h-full rounded-full bg-gradient-to-l from-[#f6a05f] to-[#d95d0b]" style={{ width: `${visual}%` }} />
-              </div>
-              <p className={`mt-2 text-[11px] font-bold ${moodColor}`}>
-                {m.emoji} {m.text}
-              </p>
-              <p className="text-[11px] text-neutral-400">فاضل {formatQty(kpi.remaining)} {kpi.unitAr}</p>
-            </article>
-          );
-        })}
-      </div>
+      <section className="space-y-3">
+        <div className="flex items-end justify-between gap-3">
+          <div>
+            <h2 className="text-xl font-black text-[#2b1b12]">مؤشرات الأداء</h2>
+            <p className="mt-1 text-xs text-[#897466]">نظرة سريعة على كل مؤشر من مؤشراتك</p>
+          </div>
+          <span className="rounded-full border border-[#f0dfd0] bg-white/80 px-3 py-1 text-[11px] font-extrabold text-[#c6530b]">{data.kpis.length} مؤشرات</span>
+        </div>
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4">
+          {data.kpis.map((kpi) => {
+            const visual = Math.min(100, Math.max(0, kpi.percent));
+            const featured = kpi.kpiKey === "new_lines";
+            const kpiExpected = kpi.target > 0 ? (kpi.expectedToDate / kpi.target) * 100 : 0;
+            const m = kpiMood({ percent: kpi.percent, expectedPercent: kpiExpected, weight: kpi.weight });
+            const moodColor =
+              m.tone === "good" ? "text-emerald-700" : m.tone === "warn" ? "text-yellow-700" : m.tone === "bad" ? "text-red-600" : "text-neutral-400";
+            return (
+              <article
+                key={kpi.kpiKey}
+                className={`relative overflow-hidden rounded-[22px] border p-3.5 shadow-[0_10px_26px_rgba(112,57,18,0.055)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_16px_32px_rgba(112,57,18,0.10)] sm:p-4 ${featured ? "col-span-2 border-[#edc7a7] bg-gradient-to-br from-white via-[#fffaf5] to-[#fff0df] sm:col-span-2" : "border-[#f0dfd0] bg-white/95"}`}
+              >
+                {featured ? <span aria-hidden="true" className="pointer-events-none absolute -left-8 -top-10 h-28 w-28 rounded-full bg-[#ff963f]/10 blur-2xl" /> : null}
+                <div className="relative flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-2">
+                    <span className={`flex h-9 w-9 items-center justify-center rounded-xl ${featured ? "bg-gradient-to-br from-[#ff9a45] to-[#c6530b] text-xl text-white shadow-md shadow-orange-900/10" : "bg-[#fff0df] text-xl"}`}>{kpiEmoji(kpi.kpiKey)}</span>
+                    <h3 className="text-sm font-extrabold text-[#2b1b12]" dir="ltr">{kpi.nameEn}</h3>
+                  </div>
+                  <p className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-black ${featured ? "bg-white/85 text-[#c6530b]" : "bg-[#fff5eb] text-[#c6530b]"}`}>{formatPercent(kpi.percent)}%</p>
+                </div>
+                <div className="relative mt-3 flex items-baseline gap-1.5">
+                  <p className={`font-black tracking-tight text-[#2b1b12] ${featured ? "text-3xl sm:text-4xl" : "text-2xl"}`}>{formatQty(kpi.achieved)}</p>
+                  <span className="text-xs text-[#897466]">من {formatQty(kpi.target)} {kpi.unitAr}</span>
+                </div>
+                <div className={`relative mt-3 overflow-hidden rounded-full bg-[#f2e6dc] ${featured ? "h-2.5" : "h-2"}`}>
+                  <div className="h-full rounded-full bg-gradient-to-l from-[#ffad68] via-[#f07818] to-[#c6530b]" style={{ width: `${visual}%` }} />
+                </div>
+                <div className="relative mt-2 flex flex-wrap items-center justify-between gap-1">
+                  <p className={`text-[11px] font-bold ${moodColor}`}>{m.emoji} {m.text}</p>
+                  <p className="text-[11px] text-[#897466]">فاضل {formatQty(kpi.remaining)}</p>
+                </div>
+              </article>
+            );
+          })}
+        </div>
+      </section>
     </div>
   );
 }
