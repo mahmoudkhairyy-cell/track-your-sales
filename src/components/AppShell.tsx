@@ -134,28 +134,25 @@ export function AppShell({ user, children }: { user: SafeUser; children: ReactNo
             </div>
           </div>
 
-          <nav aria-label="التنقل الرئيسي للموبايل" className="fixed inset-x-0 bottom-0 z-40 border border-[#f0dfd0] bg-white/95 pb-[env(safe-area-inset-bottom)] shadow-[0_-8px_30px_rgba(116,63,26,0.07)] backdrop-blur-xl lg:hidden">
-            <div className="grid grid-cols-5">
+          <nav aria-label="التنقل الرئيسي للموبايل" className="fixed inset-x-3 bottom-[calc(env(safe-area-inset-bottom)+12px)] z-40 mx-auto max-w-xl rounded-[26px] border border-[#f0dfd0] bg-white/95 p-2 shadow-[0_12px_36px_rgba(112,57,18,0.14)] backdrop-blur-2xl lg:hidden">
+            <div className="grid grid-cols-5 items-center gap-1">
               {NAV.map((item) => {
                 const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
                 const Icon = item.icon;
+                const highlighted = active || item.emphasize;
                 return (
                   <Link
                     key={item.href}
                     href={`${item.href}?month=${month}`}
                     aria-current={active ? "page" : undefined}
-                    className={`flex min-h-16 flex-col items-center justify-center gap-1 text-[11px] font-extrabold ${
-                      active ? "text-[#c6530b]" : "text-[#a99586]"
+                    className={`flex min-h-12 flex-col items-center justify-center gap-1 rounded-[18px] px-1 py-1.5 text-[10px] font-extrabold transition-all duration-200 sm:min-h-14 sm:text-[11px] ${
+                      highlighted
+                        ? "bg-gradient-to-br from-[#ff9a45] via-[#f07818] to-[#c6530b] text-white shadow-[0_5px_14px_rgba(198,83,11,0.20)]"
+                        : "text-[#9b8878] hover:bg-[#fff5eb] hover:text-[#c6530b]"
                     }`}
                   >
-                    <span
-                      className={`flex h-9 w-9 items-center justify-center rounded-2xl ${
-                        item.emphasize ? "bg-gradient-to-br from-[#ff9a45] to-[#c6530b] text-white shadow-[0_5px_14px_rgba(189,75,10,0.25)]" : active ? "bg-[#fff0df]" : ""
-                      }`}
-                    >
-                      <Icon />
-                    </span>
-                    {item.label}
+                    <span className="flex h-6 w-6 items-center justify-center"><Icon /></span>
+                    <span className="leading-none">{item.label}</span>
                   </Link>
                 );
               })}
