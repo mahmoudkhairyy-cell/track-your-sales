@@ -89,7 +89,7 @@ export default function HomePage() {
           setState({
             month,
             data: null,
-            error: err instanceof ApiError || err instanceof Error ? err.message : "مقدرناش نحمّل اللوحة",
+            error: err instanceof ApiError || err instanceof Error ? err.message : "ماقدرناش نحمّل البيانات. اتأكد من النت وحاول تاني.",
           });
         }
       });
@@ -102,7 +102,7 @@ export default function HomePage() {
   const { data, error } = state;
   if (loading) return <HomeSkeleton />;
   if (error) return <Banner tone="error">{error}</Banner>;
-  if (!data) return <Banner tone="error">مفيش بيانات نعرضها</Banner>;
+  if (!data) return <Banner tone="error">مفيش بيانات لسه. ابدأ بتسجيل أول بيعة النهارده.</Banner>;
 
   const gap = Math.max(0, 100 - data.overall);
   // اون تراك: الإجمالي وصل لنسبة الأيام اللي عدّت من الشهر (أيام الشغل). لو مفيش أيام، مبنحكمش.
@@ -128,7 +128,7 @@ export default function HomePage() {
         <p className={`text-[11px] font-bold ${sync.ok ? "text-emerald-700" : "text-red-600"}`} dir="rtl">
           {sync.ok
             ? `☁️ اتبعت للمدير ${new Date(sync.at).toLocaleTimeString("en-US", { timeZone: "Africa/Cairo", hour: "2-digit", minute: "2-digit", hour12: false })}`
-            : `⚠️ ماتبعتش للمدير: ${sync.error ?? ""}`}
+            : `⚠️ مااتبعتش للمدير: ${sync.error ?? ""}. حاول تاني لما النت يرجع.`}
         </p>
       ) : null}
 
