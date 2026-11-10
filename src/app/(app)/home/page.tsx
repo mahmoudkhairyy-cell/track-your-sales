@@ -104,7 +104,6 @@ export default function HomePage() {
   if (error) return <Banner tone="error">{error}</Banner>;
   if (!data) return <Banner tone="error">مفيش بيانات لسه. ابدأ بتسجيل أول بيعة النهارده.</Banner>;
 
-  const gap = Math.max(0, 100 - data.overall);
   // اون تراك: الإجمالي وصل لنسبة الأيام اللي عدّت من الشهر (أيام الشغل). لو مفيش أيام، مبنحكمش.
   // النهارده مش محسوب في الأيام اللي عدّت.
   const doneDays = data.work.elapsedBeforeToday ?? data.work.elapsed;
@@ -168,9 +167,9 @@ export default function HomePage() {
                 <span className="text-xl font-black text-[var(--color-primary-600)]">%</span>
               </div>
             </div>
-            <div className="inline-flex max-w-full shrink-0 items-center gap-2 rounded-xl border border-[var(--color-border)] bg-white/85 px-3 py-2 shadow-sm">
-              <span className="text-[10px] font-bold text-[var(--color-text-secondary)]">{gap > 0 ? "فاضلك على الهدف" : "حالة التارجت"}</span>
-              <strong className="truncate font-mono text-sm font-black text-[var(--color-text-primary)]">{gap > 0 ? `${formatPercent(gap)}%` : "محقق الهدف ✓"}</strong>
+            <div className="inline-flex max-w-full shrink-0 flex-col items-end rounded-xl border border-[var(--color-border)] bg-white/85 px-3 py-2 shadow-sm">
+              <span className="text-[10px] font-bold text-[var(--color-text-secondary)]">الكوميشن المحقق</span>
+              <strong className="truncate font-mono text-base font-black text-[var(--color-primary-700)]">{formatMoney(data.estimatedCommission)} جنيه</strong>
             </div>
           </div>
           <div>
