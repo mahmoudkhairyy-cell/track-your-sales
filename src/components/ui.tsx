@@ -186,6 +186,7 @@ export function Modal({
     onCloseRef.current = onClose;
   }, [onClose]);
   const dialogRef = useRef<HTMLDivElement>(null);
+  const overlayRef = useRef<HTMLDivElement>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);
   // إدارة التركيز داخل النافذة: نقل التركيز عند الفتح، وحصر Tab، وإعادته بعد الإغلاق.
   useEffect(() => {
@@ -227,6 +228,29 @@ export function Modal({
       previousFocusRef.current = null;
     };
   }, [open]);
+  // عزل بقية الصفحة عن قارئات الشاشة ولوحة المفاتيح أثناء فتح النافذة.
+  useEffect(() => {
+    if (!open || !overlayRef.current) return;
+    const siblings = Array.from(document.body.children).filter(
+      (element): element is HTMLElement => element instanceof HTMLElement && element !== overlayRef.current,
+    );
+    const previous = siblings.map((element) => ({
+      element,
+      inert: element.inert,
+      ariaHidden: element.getAttribute("aria-hidden"),
+    }));
+    siblings.forEach((element) => {
+      element.inert = true;
+      element.setAttribute("aria-hidden", "true");
+    });
+    return () => {
+      previous.forEach(({ element, inert, ariaHidden }) => {
+        element.inert = inert;
+        if (ariaHidden === null) element.removeAttribute("aria-hidden");
+        else element.setAttribute("aria-hidden", ariaHidden);
+      });
+    };
+  }, [open]);
   // زرار الرجوع في الموبايل بيقفل النافذة الأول، بدل ما يسيبها مفتوحة ويرجّعك لصفحة قبلها.
   useEffect(() => {
     if (!open) return;
@@ -249,7 +273,7 @@ export function Modal({
   if (!open) return null;
   // بنرسم النافذة على الـ body مباشرة، عشان أي transform في الصفحة ما يحبسهاش جوه المحتوى.
   return createPortal(
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-[#4b3024]/45 p-3 backdrop-blur-[3px]">
+    <div ref={overlayRef} className="fixed inset-0 z-[9999] flex items-center justify-center bg-[#4b3024]/45 p-3 backdrop-blur-[3px]">
       <button className="absolute inset-0" aria-label="إغلاق" tabIndex={-1} onClick={onClose} />
       <div ref={dialogRef} tabIndex={-1} role="dialog" aria-modal="true" aria-labelledby={titleId} className="relative z-[1] max-h-[min(90dvh,760px)] w-full max-w-lg overflow-y-auto overscroll-contain rounded-[28px] border border-[#f1dfd0] bg-white p-5 text-[#38291f] shadow-[0_24px_70px_rgba(77,44,25,0.20)]">
         <div className="mb-4 flex items-start justify-between gap-3">
