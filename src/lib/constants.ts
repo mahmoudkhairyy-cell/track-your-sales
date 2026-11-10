@@ -90,7 +90,7 @@ export const KPI_CATALOG = [
   {
     key: "new_lines",
     nameEn: "GAs",
-    nameAr: "GAs",
+    nameAr: "الخطوط الجديدة",
     emoji: "📱",
     unitAr: "خط",
     defaultTarget: 175,
@@ -99,7 +99,7 @@ export const KPI_CATALOG = [
   {
     key: "new_orange_cash",
     nameEn: "New Orange Cash Wallets",
-    nameAr: "New Orange Cash Wallets",
+    nameAr: "محافظ Orange Cash الجديدة",
     emoji: "👛",
     unitAr: "محفظة",
     defaultTarget: 158,
@@ -108,7 +108,7 @@ export const KPI_CATALOG = [
   {
     key: "existing_wallets",
     nameEn: "Excite",
-    nameAr: "Excite",
+    nameAr: "المحافظ القائمة",
     emoji: "💳",
     unitAr: "محفظة",
     defaultTarget: 74,
@@ -117,7 +117,7 @@ export const KPI_CATALOG = [
   {
     key: "points",
     nameEn: "Points",
-    nameAr: "Points",
+    nameAr: "النقاط",
     emoji: "⭐",
     unitAr: "نقطة",
     defaultTarget: 1737,
@@ -126,7 +126,7 @@ export const KPI_CATALOG = [
   {
     key: "postpaid_lines",
     nameEn: "Postpaid",
-    nameAr: "Postpaid",
+    nameAr: "خطوط Postpaid",
     emoji: "📞",
     unitAr: "خط",
     defaultTarget: 10,
@@ -135,7 +135,7 @@ export const KPI_CATALOG = [
   {
     key: "dsl",
     nameEn: "Home ADSL",
-    nameAr: "Home ADSL",
+    nameAr: "إنترنت منزلي DSL",
     emoji: "🌐",
     unitAr: "خط",
     defaultTarget: 1,
@@ -154,7 +154,7 @@ export const KPI_CATALOG = [
   {
     key: "quality",
     nameEn: "KYC & Compliance",
-    nameAr: "KYC & Compliance",
+    nameAr: "الجودة",
     emoji: "✅",
     unitAr: "%",
     defaultTarget: 100,
