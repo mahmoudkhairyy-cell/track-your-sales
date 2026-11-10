@@ -195,20 +195,6 @@ export default function TargetPage() {
               {saveState.label}
             </span>
           </div>
-          <div className="mt-5 grid grid-cols-3 gap-2 border-t border-[var(--color-border)] pt-4">
-            <div className="min-w-0 rounded-2xl border border-[var(--color-border)] bg-white px-2.5 py-3 text-center">
-              <p className="text-xl font-black tabular-nums text-[var(--color-primary-700)]">{kpis.filter((k) => k.kpiKey !== "quality" && (k.weight > 0 || k.kpiKey !== "productivity")).length}</p>
-              <p className="mt-0.5 text-[10px] font-bold text-[var(--color-text-secondary)]">مؤشرات التارجت</p>
-            </div>
-            <div className="min-w-0 rounded-2xl border border-[var(--color-border)] bg-white px-2.5 py-3 text-center">
-              <p className={`text-xl font-black tabular-nums ${Math.abs(weightSum - 100) < 0.01 ? "text-emerald-700" : "text-[var(--color-primary-700)]"}`}>{weightSum}%</p>
-              <p className="mt-0.5 text-[10px] font-bold text-[var(--color-text-secondary)]">إجمالي الأوزان</p>
-            </div>
-            <div className="min-w-0 rounded-2xl border border-[var(--color-border)] bg-white px-2.5 py-3 text-center">
-              <p className="text-xl font-black tabular-nums text-[var(--color-primary-700)]">{workingDatesInMonth(month, workingDays, holidays.map((item) => item.date)).length}</p>
-              <p className="mt-0.5 text-[10px] font-bold text-[var(--color-text-secondary)]">أيام العمل</p>
-            </div>
-          </div>
         </div>
       </section>
 
