@@ -67,7 +67,7 @@ export function PrimaryButton({
   return (
     <button
       {...props}
-      className={`inline-flex min-h-12 w-full items-center justify-center rounded-full bg-gradient-to-l from-[#bd4b0a] via-[#e96812] to-[#f58a3c] px-4 text-base font-extrabold text-white shadow-[0_9px_22px_rgba(189,75,10,0.23)] transition hover:brightness-[1.04] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#e96812]/20 enabled:active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60 ${className}`}
+      className={`tx-btn-primary inline-flex min-h-12 w-full items-center justify-center rounded-full border border-[#e9782c]/35 bg-gradient-to-l from-[#c6530b] via-[#f07818] to-[#ff963f] px-4 text-base font-extrabold text-white shadow-[0_10px_24px_rgba(198,83,11,0.24),inset_0_1px_0_rgba(255,255,255,0.28)] transition duration-200 hover:-translate-y-0.5 hover:brightness-105 hover:shadow-[0_14px_28px_rgba(198,83,11,0.29)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#f07818]/25 enabled:active:translate-y-0 enabled:active:scale-[0.985] disabled:cursor-not-allowed disabled:opacity-55 disabled:saturate-50 ${className}`}
     >
       {children}
     </button>
