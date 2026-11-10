@@ -200,8 +200,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      <div className="hidden flex-col gap-2 sm:flex sm:flex-row">
-        <Link href={`/log?month=${month}`} className="inline-flex min-h-14 flex-1 items-center justify-center gap-2 rounded-2xl bg-[#bd4b0a] px-5 py-3 text-base font-black text-white shadow-sm transition hover:bg-[#9f3e08] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#7a2e00]">
+      <div className="fixed inset-x-4 bottom-[calc(76px+env(safe-area-inset-bottom))] z-30 flex flex-col gap-2 sm:static sm:flex-row">
+        <Link href={`/log?month=${month}`} className="inline-flex min-h-14 w-full flex-1 items-center justify-center gap-2 rounded-2xl bg-[#bd4b0a] px-5 py-3 text-base font-black text-white shadow-[0_8px_24px_rgba(126,65,24,0.22)] transition hover:bg-[#9f3e08] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#7a2e00]">
           <span aria-hidden="true">＋</span> تسجيل إنجاز
         </Link>
       </div>
