@@ -228,7 +228,7 @@ export default function HomePage() {
           {data.kpis.map((kpi) => {
             const ok = kpi.achieved >= kpi.expectedToDate;
             return (
-              <div key={kpi.kpiKey} className="flex w-[104px] shrink-0 flex-col items-center rounded-2xl border border-[#f4c49e] bg-[#fff8f1] p-3 text-center shadow-[0_3px_10px_rgba(233,104,0,0.10)] transition-shadow">
+              <div key={kpi.kpiKey} className="flex w-[104px] shrink-0 flex-col items-center rounded-2xl border border-[#f4c49e] bg-[#fff8f1] p-2 text-center shadow-[0_3px_10px_rgba(233,104,0,0.10)] transition-shadow">
                 <div className={`flex h-10 w-10 items-center justify-center rounded-full border-2 font-mono text-xs font-black ${ok ? "border-emerald-500 text-emerald-700" : "border-red-500 text-red-700"}`}>
                   {Math.round(kpi.percent)}%
                 </div>
@@ -247,7 +247,7 @@ export default function HomePage() {
           { href: "/target/", label: "التارجت" },
           { href: "/wiki/", label: "المرجع" },
         ].map((item) => (
-          <Link key={item.href} href={`${item.href}?month=${month}`} className="rounded-2xl border border-[#f1dfd0] bg-white px-2 py-4 text-center text-xs font-extrabold text-[#63391f] shadow-[0_8px_20px_rgba(100,55,25,0.05)] transition-all hover:-translate-y-0.5 hover:border-[#e8b58f] active:scale-95">
+          <Link key={item.href} href={`${item.href}?month=${month}`} className="rounded-2xl border border-[#f1dfd0] bg-white px-2 py-3 text-center text-xs font-extrabold text-[#63391f] shadow-[0_8px_20px_rgba(100,55,25,0.05)] transition-all hover:-translate-y-0.5 hover:border-[#e8b58f] active:scale-95">
             {item.label}
           </Link>
         ))}
@@ -265,7 +265,7 @@ export default function HomePage() {
             const ringLen = 2 * Math.PI * 18;
             const pct = Math.min(100, Math.max(0, kpi.percent));
             return (
-              <article key={kpi.kpiKey} style={{ animationDelay: `${kpiIndex * 70}ms`, boxShadow: onTrackKpi ? "0 0 0 1px rgba(22,163,74,.08), 0 0 12px rgba(22,163,74,.10), 0 4px 12px rgba(126,65,24,.06)" : "0 0 0 1px rgba(220,38,38,.08), 0 0 12px rgba(220,38,38,.10), 0 4px 12px rgba(126,65,24,.06)" }} className={`tys-rise flex min-w-0 items-center gap-2.5 rounded-2xl border p-3 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg sm:gap-3 sm:p-3.5 border-[#f4c49e] bg-[#fff8f1]`}>
+              <article key={kpi.kpiKey} style={{ animationDelay: `${kpiIndex * 70}ms`, boxShadow: onTrackKpi ? "0 0 0 1px rgba(22,163,74,.08), 0 0 12px rgba(22,163,74,.10), 0 4px 12px rgba(126,65,24,.06)" : "0 0 0 1px rgba(220,38,38,.08), 0 0 12px rgba(220,38,38,.10), 0 4px 12px rgba(126,65,24,.06)" }} className={`tys-rise flex min-w-0 items-center gap-2.5 rounded-2xl border p-2 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg sm:gap-3 sm:p-2.5 border-[#f4c49e] bg-[#fff8f1]`}>
                 <div className="relative h-12 w-12 shrink-0 sm:h-14 sm:w-14">
                   <svg viewBox="0 0 44 44" className="h-full w-full -rotate-90">
                     <circle cx="22" cy="22" r="18" fill="none" stroke="#f6e9df" strokeWidth="5" />
