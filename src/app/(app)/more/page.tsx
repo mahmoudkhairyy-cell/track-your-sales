@@ -492,7 +492,7 @@ export default function MorePage() {
                   <div>
                     <p className="font-extrabold">
                       <span className="ml-1 inline-flex align-middle text-[var(--color-primary-700)]"><KpiIcon kpiKey={entry.kpiKey} className="h-4 w-4" /></span>
-                      <span dir="ltr">{entry.nameEn}</span>
+                      <span>{entry.nameAr}</span> <span className="text-[10px] font-semibold text-[var(--color-text-secondary)]" dir="ltr">{entry.nameEn}</span>
                     </p>
                     <p className="text-xs text-[var(--color-text-secondary)]">
                       {formatDateAr(entry.entryDate)} · {formatQty(entry.quantity)} {entry.unitAr}
