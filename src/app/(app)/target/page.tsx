@@ -349,8 +349,7 @@ export default function TargetPage() {
               <div className="flex min-w-0 items-center gap-2">
                 <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[var(--color-primary-50)] text-[var(--color-primary-700)]"><KpiIcon kpiKey={kpi.kpiKey} className="h-4 w-4" /></span>
                 <div className="min-w-0">
-                  <p className="truncate text-sm font-extrabold">{catalog?.nameAr}</p>
-                  <p className="truncate text-[10px] font-semibold text-[var(--color-text-secondary)]" dir="ltr">{catalog?.nameEn}</p>
+                  <p className="truncate text-sm font-extrabold" dir="ltr">{catalog?.nameEn}</p>
                   {kpi.kpiKey === "new_orange_cash" ? (
                     <p className="text-[10px] font-bold text-[var(--color-primary-700)]">تارجت بتدخله بإيدك</p>
                   ) : (
