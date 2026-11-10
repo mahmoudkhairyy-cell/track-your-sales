@@ -3367,3 +3367,14 @@ body {
 .tys-page-manager div[class*="rounded-"][class*="border"][class*="bg-white"] {
   background-color: #fff9f2;
 }
+
+
+/* Preserve clear green/red KPI status surfaces after the shared card treatment. */
+.tys-page :is(div, article, section)[class*="border-emerald"] {
+  background-color: #e5f5e9;
+  box-shadow: 0 0 0 1px rgba(22,163,74,.10), 0 0 18px rgba(22,163,74,.14), 0 8px 22px rgba(22,163,74,.08);
+}
+.tys-page :is(div, article, section)[class*="border-red"] {
+  background-color: #fde8e8;
+  box-shadow: 0 0 0 1px rgba(220,38,38,.10), 0 0 18px rgba(220,38,38,.14), 0 8px 22px rgba(220,38,38,.08);
+}
