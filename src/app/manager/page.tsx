@@ -125,7 +125,7 @@ function KpiTile({ kpi }: { kpi: AggKpi }) {
   const ok = kpi.expectedPercent === undefined || kpi.percent >= kpi.expectedPercent;
   const neutral = kpi.weight === 0;
   const tone = neutral
-    ? { text: "text-[#927b69]", bar: "from-[#f1dfd0] to-[#e8b88f]", ring: "ring-[#f1dfd0]" }
+    ? { text: "text-[var(--color-text-secondary)]", bar: "from-[var(--color-border)] to-[#e8b88f]", ring: "ring-[var(--color-border)]" }
     : ok
       ? { text: "text-emerald-700", bar: "from-emerald-400 to-emerald-600", ring: "ring-emerald-200" }
       : { text: "text-red-600", bar: "from-red-400 to-red-600", ring: "ring-red-200" };
@@ -134,16 +134,16 @@ function KpiTile({ kpi }: { kpi: AggKpi }) {
       style={neutral ? undefined : { boxShadow: ok
         ? "0 0 0 1px rgba(22,163,74,.12), 0 0 18px rgba(22,163,74,.16), 0 6px 18px rgba(22,163,74,.08)"
         : "0 0 0 1px rgba(220,38,38,.12), 0 0 18px rgba(220,38,38,.16), 0 6px 18px rgba(220,38,38,.08)" }}
-      className={`relative overflow-hidden rounded-2xl bg-gradient-to-br from-white to-[#fff0e2]/60 p-3 shadow-sm ring-1 transition duration-300 hover:-translate-y-0.5 hover:shadow-lg ${tone.ring} ${neutral ? "" : ok ? "bg-emerald-50/70" : "bg-red-50/70"}`}
+      className={`relative overflow-hidden rounded-2xl bg-gradient-to-br from-white to-[var(--color-primary-50)]/60 p-3 shadow-sm ring-1 transition duration-300 hover:-translate-y-0.5 hover:shadow-lg ${tone.ring} ${neutral ? "" : ok ? "bg-emerald-50/70" : "bg-red-50/70"}`}
     >
-      <p className="truncate text-[10px] font-extrabold text-[#927b69]" dir="ltr">{kpi.name}</p>
+      <p className="truncate text-[10px] font-extrabold text-[var(--color-text-secondary)]" dir="ltr">{kpi.name}</p>
       <p className={`mt-1 text-2xl font-black tabular-nums tracking-tight ${tone.text}`}>
         {Math.round(kpi.percent)}<span className="text-sm">%</span>
       </p>
       <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-white/80">
         <div className={`h-full rounded-full bg-gradient-to-r transition-[width] duration-700 ease-out ${tone.bar}`} style={{ width: `${Math.min(100, Math.max(0, kpi.percent))}%` }} />
       </div>
-      <p className="mt-1.5 text-[10px] tabular-nums text-[#927b69]" dir="ltr">{Math.round(kpi.achieved)} / {kpi.target}</p>
+      <p className="mt-1.5 text-[10px] tabular-nums text-[var(--color-text-secondary)]" dir="ltr">{Math.round(kpi.achieved)} / {kpi.target}</p>
     </div>
   );
 }
@@ -338,12 +338,12 @@ export default function ManagerPage() {
     const staleClass = days >= 3 ? "bg-red-100 text-red-700" : days >= 1 ? "bg-amber-100 text-amber-800" : "";
     const percent = Math.round(row.payload.overall ?? 0);
     return (
-      <article key={row.branch_id} className="tys-manager-employee-card rounded-[26px] bg-white/95 p-4 shadow-[0_10px_28px_rgba(126,65,24,0.06)] ring-1 ring-[#f1dfd0]/70">
+      <article key={row.branch_id} className="tys-manager-employee-card rounded-[26px] bg-white/95 p-4 shadow-[0_10px_28px_rgba(126,65,24,0.06)] ring-1 ring-[var(--color-border)]/70">
         <button type="button" onClick={() => setOpenId(open ? null : row.branch_id)} className="flex w-full items-center justify-between gap-3 text-right">
           <div>
             <h3 className="font-black">{row.employee_name}</h3>
             <div className="mt-1 flex flex-wrap items-center gap-1">
-              {row.payload.role === "team_leader" ? <span className="rounded-full bg-[#fff0e2] px-2 py-0.5 text-[10px] font-black text-[#bd4b0a]">🧑‍🏫 تيم ليدر</span> : null}
+              {row.payload.role === "team_leader" ? <span className="rounded-full bg-[var(--color-primary-50)] px-2 py-0.5 text-[10px] font-black text-[var(--color-primary-700)]">🧑‍🏫 تيم ليدر</span> : null}
               <TrackBadge percent={row.payload.overall} expected={row.payload.expectedPercent} />
               {staleClass ? (
                 <span className={`rounded-full px-2 py-0.5 text-[10px] font-black ${staleClass}`}>آخر تحديث من {Math.floor(days)} يوم</span>
@@ -351,14 +351,14 @@ export default function ManagerPage() {
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <p className="text-2xl font-black text-[#bd4b0a] tabular-nums">{percent}%</p>
-            <span className="text-[#927b69]">{open ? "▲" : "▼"}</span>
+            <p className="text-2xl font-black text-[var(--color-primary-700)] tabular-nums">{percent}%</p>
+            <span className="text-[var(--color-text-secondary)]">{open ? "▲" : "▼"}</span>
           </div>
         </button>
 
         {open ? (
           <>
-            <p className="mt-1 text-[10px] text-[#927b69]" dir="ltr">
+            <p className="mt-1 text-[10px] text-[var(--color-text-secondary)]" dir="ltr">
               {new Date(row.updated_at).toLocaleString("en-US", { timeZone: "Africa/Cairo", hour12: false })}
             </p>
             <div className="mt-4 grid grid-cols-2 gap-2 sm:gap-3">
@@ -371,7 +371,7 @@ export default function ManagerPage() {
             <button
               type="button"
               onClick={() => setDetailsId(detailsId === row.branch_id ? null : row.branch_id)}
-              className="mt-3 w-full rounded-2xl bg-[#fff0e2] py-2 text-xs font-extrabold text-[#bd4b0a]"
+              className="mt-3 w-full rounded-2xl bg-[var(--color-primary-50)] py-2 text-xs font-extrabold text-[var(--color-primary-700)]"
             >
               {detailsId === row.branch_id ? "إخفاء التفاصيل" : `عرض كل التفاصيل (${row.payload.entries?.length ?? 0} إنجاز)`}
             </button>
@@ -388,20 +388,20 @@ export default function ManagerPage() {
                 <div>
                   <p className="mb-1 font-black">التارجت والأوزان</p>
                   {(row.payload.settings?.kpis ?? []).map((k) => (
-                    <div key={k.kpiKey} className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 rounded-xl border border-[#f4e5d9] bg-[#fffaf6] px-3 py-2">
-                      <span className="min-w-0 font-extrabold text-[#5b4030]">{kpiLabel(k.kpiKey)}</span>
-                      <span className="whitespace-nowrap text-[10px] font-bold tabular-nums text-[#927b69] sm:text-xs">تارجت {k.target} · وزن {k.weight}%</span>
+                    <div key={k.kpiKey} className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface-cream)] px-3 py-2">
+                      <span className="min-w-0 font-extrabold text-[var(--color-text-primary)]">{kpiLabel(k.kpiKey)}</span>
+                      <span className="whitespace-nowrap text-[10px] font-bold tabular-nums text-[var(--color-text-secondary)] sm:text-xs">تارجت {k.target} · وزن {k.weight}%</span>
                     </div>
                   ))}
                 </div>
                 <div>
-                  <p className="mb-2 flex items-center justify-between font-black"><span>كل الإنجازات</span><span className="rounded-full bg-[#fff0e2] px-2 py-0.5 text-[10px] font-black text-[#bd4b0a]">{row.payload.entries?.length ?? 0}</span></p>
-                  {(row.payload.entries ?? []).length === 0 ? <p className="text-[#927b69]">لا يوجد</p> : null}
+                  <p className="mb-2 flex items-center justify-between font-black"><span>كل الإنجازات</span><span className="rounded-full bg-[var(--color-primary-50)] px-2 py-0.5 text-[10px] font-black text-[var(--color-primary-700)]">{row.payload.entries?.length ?? 0}</span></p>
+                  {(row.payload.entries ?? []).length === 0 ? <p className="text-[var(--color-text-secondary)]">لا يوجد</p> : null}
                   {(row.payload.entries ?? []).map((e, i) => (
-                    <div key={`${e.date}-${i}`} className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] items-center gap-2 rounded-xl border border-[#f4e5d9] bg-[#fffaf6] px-3 py-2.5 text-[11px] sm:text-xs">
-                      <span className="font-bold text-[#806653]" dir="ltr">{e.date}</span>
-                      <span className="min-w-0 truncate font-extrabold text-[#5b4030]">{kpiLabel(e.kpi)}</span>
-                      <span className="whitespace-nowrap rounded-lg bg-[#fff0e2] px-2 py-1 font-black tabular-nums text-[#bd4b0a]">{e.quantity} {e.unit}</span>
+                    <div key={`${e.date}-${i}`} className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] items-center gap-2 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface-cream)] px-3 py-2.5 text-[11px] sm:text-xs">
+                      <span className="font-bold text-[var(--color-text-secondary)]" dir="ltr">{e.date}</span>
+                      <span className="min-w-0 truncate font-extrabold text-[var(--color-text-primary)]">{kpiLabel(e.kpi)}</span>
+                      <span className="whitespace-nowrap rounded-lg bg-[var(--color-primary-50)] px-2 py-1 font-black tabular-nums text-[var(--color-primary-700)]">{e.quantity} {e.unit}</span>
                     </div>
                   ))}
                 </div>
@@ -437,46 +437,46 @@ export default function ManagerPage() {
   const changeView = (next: string) => { setView(next); setMobileMenuOpen(false); };
   const statusNames = (items: typeof branchStatus) => items.length ? (
     <div className="mt-3 flex flex-wrap gap-2">
-      {items.map((item) => <button key={item.name} type="button" onClick={() => changeView("b:" + item.name)} className="rounded-xl border border-[#f1dfd4] bg-white px-3 py-2 text-xs font-extrabold text-[#5b4030]">{item.name}</button>)}
+      {items.map((item) => <button key={item.name} type="button" onClick={() => changeView("b:" + item.name)} className="rounded-xl border border-[#f1dfd4] bg-white px-3 py-2 text-xs font-extrabold text-[var(--color-text-primary)]">{item.name}</button>)}
     </div>
-  ) : <p className="mt-3 text-xs text-[#927b69]">مفيش فروع في القائمة دي حاليًا.</p>;
+  ) : <p className="mt-3 text-xs text-[var(--color-text-secondary)]">مفيش فروع في القائمة دي حاليًا.</p>;
 
   return (
-    <main className="tys-page tx-manager min-h-screen bg-[radial-gradient(ellipse_at_top_left,rgba(255,176,111,.13),transparent_38%),linear-gradient(145deg,#fffaf6_0%,#f8f4ef_55%,#fff8f1_100%)] px-3 py-4 text-[#30251e] sm:px-5 sm:py-6" dir="rtl">
+    <main className="tys-page tx-manager min-h-screen bg-[radial-gradient(ellipse_at_top_left,rgba(255,176,111,.13),transparent_38%),linear-gradient(145deg,#fffaf6_0%,#f8f4ef_55%,#fff8f1_100%)] px-3 py-4 text-[var(--color-text-primary)] sm:px-5 sm:py-6" dir="rtl">
       {rows === null ? (
         <div className="mx-auto max-w-md">
-          <section className="mt-10 rounded-[28px] border border-[#f0dfd2] bg-white p-6 shadow-sm">
+          <section className="mt-10 rounded-[28px] border border-[var(--color-border)] bg-white p-6 shadow-sm">
             <div className="mb-6 text-center">
               <img src="/track-your-sales/logo-mark.png" alt="" className="mx-auto h-12 w-12 object-contain" />
-              <p className="mt-3 text-[10px] font-black tracking-[.16em] text-[#bd4b0a]" dir="ltr">MANAGEMENT</p>
+              <p className="mt-3 text-[10px] font-black tracking-[.16em] text-[var(--color-primary-700)]" dir="ltr">MANAGEMENT</p>
               <h1 className="mt-1 text-2xl font-black">دخول المدير</h1>
-              <p className="mt-2 text-xs leading-6 text-[#887565]">ادخل كلمة السر لمتابعة تقارير الفريق.</p>
+              <p className="mt-2 text-xs leading-6 text-[var(--color-text-secondary)]">ادخل كلمة السر لمتابعة تقارير الفريق.</p>
             </div>
             <form onSubmit={load} className="space-y-3">
               <label className="block text-sm font-bold">كلمة السر
-                <input type="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="اكتب كلمة السر" className="mt-2 w-full rounded-xl border border-[#ead8c9] bg-[#fffaf6] px-4 py-3 text-base outline-none focus:border-[#d9651b]" />
+                <input type="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="اكتب كلمة السر" className="mt-2 w-full rounded-xl border border-[var(--color-border)] bg-[var(--color-surface-cream)] px-4 py-3 text-base outline-none focus:border-[#d9651b]" />
               </label>
               {error ? <p className="text-sm font-bold text-red-600">{error}</p> : null}
-              <button type="submit" disabled={pending || !password} className="w-full rounded-xl bg-[#bd4b0a] py-3 font-extrabold text-white disabled:opacity-50">{pending ? "جاري الدخول..." : "دخول"}</button>
+              <button type="submit" disabled={pending || !password} className="w-full rounded-xl bg-[var(--color-primary-700)] py-3 font-extrabold text-white disabled:opacity-50">{pending ? "جاري الدخول..." : "دخول"}</button>
             </form>
           </section>
         </div>
       ) : (
         <div className="mx-auto flex max-w-[1440px] gap-5">
-          {mobileMenuOpen ? <button type="button" aria-label="إغلاق القائمة" onClick={() => setMobileMenuOpen(false)} className="fixed inset-0 z-40 bg-[#30251e]/30 backdrop-blur-[2px] lg:hidden" /> : null}
+          {mobileMenuOpen ? <button type="button" aria-label="إغلاق القائمة" onClick={() => setMobileMenuOpen(false)} className="fixed inset-0 z-40 bg-[var(--color-text-primary)]/30 backdrop-blur-[2px] lg:hidden" /> : null}
           <aside className={"fixed inset-y-0 right-0 z-50 flex w-[min(82vw,300px)] flex-col border-l border-white/70 bg-white/90 p-4 shadow-2xl backdrop-blur-2xl transition-transform duration-200 lg:sticky lg:top-5 lg:z-auto lg:h-[calc(100vh-2.5rem)] lg:w-[248px] lg:shrink-0 lg:translate-x-0 lg:rounded-[28px] lg:border lg:shadow-[0_14px_42px_rgba(93,54,26,.08)] " + (mobileMenuOpen ? "translate-x-0" : "translate-x-full lg:translate-x-0")}>
             <div className="flex items-center gap-3 border-b border-[#f1e8e0] px-1 pb-5">
               <img src="/track-your-sales/logo-mark.png" alt="" className="h-10 w-10 object-contain" />
-              <div className="min-w-0"><p className="text-[10px] font-black tracking-[.14em] text-[#c45b18]" dir="ltr">TRACK YOUR SALES</p><h2 className="mt-1 truncate text-sm font-black">لوحة المدير</h2></div>
+              <div className="min-w-0"><p className="text-[10px] font-black tracking-[.14em] text-[var(--color-primary-700)]" dir="ltr">TRACK YOUR SALES</p><h2 className="mt-1 truncate text-sm font-black">لوحة المدير</h2></div>
               <button type="button" onClick={() => setMobileMenuOpen(false)} aria-label="إغلاق القائمة" className="mr-auto rounded-lg p-2 text-[#8c7868] lg:hidden">✕</button>
             </div>
-            <p className="px-2 pb-2 pt-6 text-[10px] font-extrabold text-[#a18c7c]">القائمة الرئيسية</p>
+            <p className="px-2 pb-2 pt-6 text-[10px] font-extrabold text-[var(--color-text-secondary)]">القائمة الرئيسية</p>
             <nav className="space-y-1">
               {navItems.map((item) => {
                 const active = view === item.id;
-                const className = "flex w-full items-center gap-3 rounded-2xl px-3 py-3 text-right text-sm font-extrabold transition " + (active ? "bg-[#fff0e5] text-[#b94e0c] shadow-sm" : "text-[#766252] hover:bg-[#faf6f2]");
+                const className = "flex w-full items-center gap-3 rounded-2xl px-3 py-3 text-right text-sm font-extrabold transition " + (active ? "bg-[#fff0e5] text-[var(--color-primary-700)] shadow-sm" : "text-[#766252] hover:bg-[#faf6f2]");
                 const content = <>
-                  <span className={"flex h-8 w-8 items-center justify-center rounded-xl text-lg " + (active ? "bg-white text-[#c45b18]" : "bg-[#f8f5f1] text-[#927b69]")}>{item.icon}</span>{item.label}{active ? <span className="mr-auto h-1.5 w-1.5 rounded-full bg-[#d96a20]" /> : null}
+                  <span className={"flex h-8 w-8 items-center justify-center rounded-xl text-lg " + (active ? "bg-white text-[var(--color-primary-700)]" : "bg-[#f8f5f1] text-[var(--color-text-secondary)]")}>{item.icon}</span>{item.label}{active ? <span className="mr-auto h-1.5 w-1.5 rounded-full bg-[var(--color-primary-600)]" /> : null}
                 </>;
                 // الرجوع للرئيسية يتم داخل نفس الجلسة حتى لا نفقد حالة دخول المدير.
                 if (item.id === "overview") {
@@ -497,26 +497,26 @@ export default function ManagerPage() {
                 return <button key={item.id} type="button" onClick={() => changeView(item.id)} className={className}>{content}</button>;
               })}
             </nav>
-            <div className="mt-auto rounded-2xl border border-[#f1dfd0] bg-gradient-to-br from-[#fffaf6] to-[#fff0e2]/70 p-3">
-              <p className="truncate text-xs font-extrabold">{managerName || "إدارة الفريق"}</p><p className="mt-1 text-[10px] text-[#9a8879]">متابعة الأداء اليومي</p>
-              <button type="button" onClick={() => { setPwOpen((v) => !v); setPwMsg(""); setMobileMenuOpen(false); }} className="mt-3 w-full rounded-xl border border-[#eadbce] bg-white px-3 py-2 text-xs font-bold text-[#8f3d0a]">⚙ تغيير كلمة السر</button>
+            <div className="mt-auto rounded-2xl border border-[var(--color-border)] bg-gradient-to-br from-[var(--color-surface-cream)] to-[var(--color-primary-50)]/70 p-3">
+              <p className="truncate text-xs font-extrabold">{managerName || "إدارة الفريق"}</p><p className="mt-1 text-[10px] text-[var(--color-text-secondary)]">متابعة الأداء اليومي</p>
+              <button type="button" onClick={() => { setPwOpen((v) => !v); setPwMsg(""); setMobileMenuOpen(false); }} className="mt-3 w-full rounded-xl border border-[#eadbce] bg-white px-3 py-2 text-xs font-bold text-[var(--color-primary-700)]">⚙ تغيير كلمة السر</button>
             </div>
           </aside>
 
           <div className="min-w-0 flex-1 space-y-5">
             <header className="flex items-center justify-between gap-3 rounded-[24px] border border-white/80 bg-white/80 px-4 py-3 shadow-[0_10px_30px_rgba(104,53,19,.055)] backdrop-blur-xl sm:px-5">
               <div className="flex min-w-0 items-center gap-3">
-                <button type="button" onClick={() => setMobileMenuOpen(true)} aria-label="فتح القائمة" className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#fff2e8] text-xl text-[#b94e0c] lg:hidden">☰</button>
-                <div className="min-w-0"><p className="text-[10px] font-black tracking-[.14em] text-[#c45b18]" dir="ltr">MANAGEMENT</p><h1 className="mt-0.5 truncate text-xl font-black sm:text-2xl">{activeLabel}</h1><p className="mt-0.5 truncate text-[11px] text-[#927b69]">متابعة أداء الفريق</p></div>
+                <button type="button" onClick={() => setMobileMenuOpen(true)} aria-label="فتح القائمة" className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--color-primary-50)] text-xl text-[var(--color-primary-700)] lg:hidden">☰</button>
+                <div className="min-w-0"><p className="text-[10px] font-black tracking-[.14em] text-[var(--color-primary-700)]" dir="ltr">MANAGEMENT</p><h1 className="mt-0.5 truncate text-xl font-black sm:text-2xl">{activeLabel}</h1><p className="mt-0.5 truncate text-[11px] text-[var(--color-text-secondary)]">متابعة أداء الفريق</p></div>
               </div>
-              <div className="flex shrink-0 items-center gap-2"><div className="flex items-center gap-2 rounded-2xl border border-[#f1dfd0] bg-[#fffaf6] py-1 pl-1 pr-1 sm:py-1.5 sm:pl-3 sm:pr-1.5"><span className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-[#bd4b0a] to-[#ffad62] text-xs font-black text-white">{(managerName.trim()[0] || "م").toUpperCase()}</span><span className="hidden max-w-[120px] truncate text-[11px] font-extrabold text-[#5b4030] sm:inline">{managerName || "المدير"}</span></div><button type="button" disabled={pending} onClick={() => load()} className="shrink-0 rounded-xl border border-[#eee0d5] bg-white px-3 py-2.5 text-xs font-extrabold text-[#8f3d0a] disabled:opacity-50">{pending ? "تحديث..." : "↻ تحديث"}</button></div>
+              <div className="flex shrink-0 items-center gap-2"><div className="flex items-center gap-2 rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface-cream)] py-1 pl-1 pr-1 sm:py-1.5 sm:pl-3 sm:pr-1.5"><span className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-[var(--color-primary-700)] to-[var(--color-primary-500)] text-xs font-black text-white">{(managerName.trim()[0] || "م").toUpperCase()}</span><span className="hidden max-w-[120px] truncate text-[11px] font-extrabold text-[var(--color-text-primary)] sm:inline">{managerName || "المدير"}</span></div><button type="button" disabled={pending} onClick={() => load()} className="shrink-0 rounded-xl border border-[#eee0d5] bg-white px-3 py-2.5 text-xs font-extrabold text-[var(--color-primary-700)] disabled:opacity-50">{pending ? "تحديث..." : "↻ تحديث"}</button></div>
             </header>
             {error ? <p className="rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-xs font-bold text-red-700">{error}</p> : null}
 
             {view === "overview" ? (
               <div className="space-y-5">
                 {greeting && managerName ? (
-                  <p className="inline-flex items-center gap-2 rounded-full border border-[#f1dfd0] bg-[#fff8f2] px-3 py-1.5 text-xs font-extrabold text-[#8f3d0a]">
+                  <p className="inline-flex items-center gap-2 rounded-full border border-[var(--color-border)] bg-[var(--color-surface-cream)] px-3 py-1.5 text-xs font-extrabold text-[var(--color-primary-700)]">
                     <span aria-hidden="true">👋</span>{greeting}، {managerTitle(managerName)} {managerName}
                   </p>
                 ) : null}
@@ -528,101 +528,101 @@ export default function ManagerPage() {
                     {label:"فروع متأخرة",value:behindBranches.length,sub:"تحتاج متابعة",tone:"red",icon:"!"},
                     {label:"إجمالي الموظفين",value:allRows.length,sub:"ضمن التقارير الحالية",tone:"violet",icon:"♙"}
                   ].map((item)=>(
-                    <article key={item.label} className="min-w-0 rounded-[20px] border border-[#f0dfd2] bg-white/85 p-3 shadow-[0_8px_24px_rgba(126,65,24,.055)] backdrop-blur-xl sm:rounded-[24px] sm:p-4">
+                    <article key={item.label} className="min-w-0 rounded-[20px] border border-[var(--color-border)] bg-white/85 p-3 shadow-[0_8px_24px_rgba(126,65,24,.055)] backdrop-blur-xl sm:rounded-[24px] sm:p-4">
                       <div className="flex items-center justify-between gap-1">
-                        <span className={"flex h-8 w-8 items-center justify-center rounded-xl text-sm font-black "+(item.tone==="red"?"bg-red-50 text-red-600":item.tone==="green"?"bg-emerald-50 text-emerald-700":item.tone==="violet"?"bg-violet-50 text-violet-700":"bg-[#fff0e2] text-[#a94308]")}>{item.icon}</span>
-                        <span className="hidden text-[9px] font-bold text-[#a18c7c] sm:inline">{item.sub}</span>
+                        <span className={"flex h-8 w-8 items-center justify-center rounded-xl text-sm font-black "+(item.tone==="red"?"bg-red-50 text-red-600":item.tone==="green"?"bg-emerald-50 text-emerald-700":item.tone==="violet"?"bg-violet-50 text-violet-700":"bg-[var(--color-primary-50)] text-[var(--color-primary-700)]")}>{item.icon}</span>
+                        <span className="hidden text-[9px] font-bold text-[var(--color-text-secondary)] sm:inline">{item.sub}</span>
                       </div>
-                      <p className="mt-3 truncate text-[10px] font-extrabold text-[#927b69] sm:text-xs">{item.label}</p>
-                      <strong className={"mt-0.5 block text-2xl font-black tabular-nums sm:text-3xl "+(item.tone==="red"?"text-red-600":item.tone==="green"?"text-emerald-700":"text-[#352317]")}>{item.value}</strong>
+                      <p className="mt-3 truncate text-[10px] font-extrabold text-[var(--color-text-secondary)] sm:text-xs">{item.label}</p>
+                      <strong className={"mt-0.5 block text-2xl font-black tabular-nums sm:text-3xl "+(item.tone==="red"?"text-red-600":item.tone==="green"?"text-emerald-700":"text-[var(--color-text-primary)]")}>{item.value}</strong>
                     </article>
                   ))}
                 </section>
 
                 
-                <section className="overflow-hidden rounded-[26px] border border-[#efddce] bg-white/90 shadow-[0_10px_28px_rgba(104,53,19,.055)]">
-                  <div className="flex items-center justify-between gap-3 border-b border-[#f3e7dd] px-4 py-4 sm:px-5">
-                    <div><p className="text-[10px] font-black tracking-[.15em] text-[#c45b18]" dir="ltr">BRANCH STATUS</p><h2 className="mt-1 text-base font-black">حالة الفروع</h2><p className="mt-0.5 text-[10px] text-[#927b69]">مرتبة حسب الإنجاز من الأعلى للأقل</p></div>
-                    <button type="button" onClick={()=>changeView("list")} className="rounded-xl bg-[#fff0e2] px-3 py-2 text-[10px] font-extrabold text-[#a94308]">عرض الكل</button>
+                <section className="overflow-hidden rounded-[26px] border border-[var(--color-border)] bg-white/90 shadow-[0_10px_28px_rgba(104,53,19,.055)]">
+                  <div className="flex items-center justify-between gap-3 border-b border-[var(--color-border)] px-4 py-4 sm:px-5">
+                    <div><p className="text-[10px] font-black tracking-[.15em] text-[var(--color-primary-700)]" dir="ltr">BRANCH STATUS</p><h2 className="mt-1 text-base font-black">حالة الفروع</h2><p className="mt-0.5 text-[10px] text-[var(--color-text-secondary)]">مرتبة حسب الإنجاز من الأعلى للأقل</p></div>
+                    <button type="button" onClick={()=>changeView("list")} className="rounded-xl bg-[var(--color-primary-50)] px-3 py-2 text-[10px] font-extrabold text-[var(--color-primary-700)]">عرض الكل</button>
                   </div>
-                  {branchStatus.length ? <div className="divide-y divide-[#f4e9df]">{[...branchStatus].sort((a,b)=>b.percent-a.percent).map((b,index)=>{
+                  {branchStatus.length ? <div className="divide-y divide-[var(--color-border)]">{[...branchStatus].sort((a,b)=>b.percent-a.percent).map((b,index)=>{
                     const delta=b.expected===undefined?null:b.percent-b.expected;
                     const label=delta===null?"بيانات غير مكتملة":delta<0?"متأخر":delta>=15?"متقدم جدًا":delta>=5?"متقدم":"على المسار";
                     const tone=delta===null?"bg-stone-100 text-stone-600":delta<0?"bg-red-50 text-red-700":delta>=5?"bg-emerald-50 text-emerald-700":"bg-amber-50 text-amber-800";
-                    const ring=b.percent>=100?"#15945d":delta!==null&&delta<0?"#dc5148":"#d96a20";
-                    return <button key={b.name} type="button" onClick={()=>changeView("b:"+b.name)} className="flex w-full items-center gap-3 px-4 py-3 text-right transition hover:bg-[#fffaf6] sm:px-5">
-                      <span className="w-5 shrink-0 text-[10px] font-black text-[#a18c7c]">#{index+1}</span>
-                      <span className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-full" style={{background:"conic-gradient("+ring+" "+Math.min(100,Math.max(0,b.percent))+"%, #f3e8df 0)"}}><span className="flex h-9 w-9 items-center justify-center rounded-full bg-white text-[10px] font-black tabular-nums text-[#4d3829]">{Math.round(b.percent)}%</span></span>
-                      <span className="min-w-0 flex-1"><span className="block truncate text-xs font-black text-[#3c2a1d]">{b.name}</span><span className="mt-1 block text-[10px] text-[#927b69]">{b.group.length} موظف</span></span>
+                    const ring=b.percent>=100?"#15945d":delta!==null&&delta<0?"var(--color-danger-text)":"var(--color-primary-600)";
+                    return <button key={b.name} type="button" onClick={()=>changeView("b:"+b.name)} className="flex w-full items-center gap-3 px-4 py-3 text-right transition hover:bg-[var(--color-surface-cream)] sm:px-5">
+                      <span className="w-5 shrink-0 text-[10px] font-black text-[var(--color-text-secondary)]">#{index+1}</span>
+                      <span className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-full" style={{background:"conic-gradient("+ring+" "+Math.min(100,Math.max(0,b.percent))+"%, var(--color-border) 0)"}}><span className="flex h-9 w-9 items-center justify-center rounded-full bg-white text-[10px] font-black tabular-nums text-[#4d3829]">{Math.round(b.percent)}%</span></span>
+                      <span className="min-w-0 flex-1"><span className="block truncate text-xs font-black text-[var(--color-text-primary)]">{b.name}</span><span className="mt-1 block text-[10px] text-[var(--color-text-secondary)]">{b.group.length} موظف</span></span>
                       <span className={"shrink-0 rounded-full px-2.5 py-1 text-[10px] font-black "+tone}>{label}</span>
-                      <span className="hidden text-xs font-black text-[#a94308] sm:inline">←</span>
+                      <span className="hidden text-xs font-black text-[var(--color-primary-700)] sm:inline">←</span>
                     </button>;
-                  })}</div> : <p className="p-8 text-center text-xs text-[#927b69]">لا توجد تقارير حتى الآن.</p>}
+                  })}</div> : <p className="p-8 text-center text-xs text-[var(--color-text-secondary)]">لا توجد تقارير حتى الآن.</p>}
                 </section>
               </div>
             ) : view === "list" ? (
               <div className="space-y-4">
                 <section className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-                  <div className="rounded-2xl border border-[#eee5dc] bg-white p-4"><p className="text-xs text-[#927b69]">الفروع</p><p className="mt-1 text-2xl font-black">{branchGroups.length}</p></div>
-                  <div className="rounded-2xl border border-[#eee5dc] bg-white p-4"><p className="text-xs text-[#927b69]">الموظفين</p><p className="mt-1 text-2xl font-black">{allRows.length}</p></div>
-                  <div className="col-span-2 rounded-2xl border border-[#eee5dc] bg-white p-4 sm:col-span-1"><p className="text-xs text-[#927b69]">فروع متأخرة</p><p className="mt-1 text-2xl font-black text-red-600">{behindBranches.length}</p></div>
+                  <div className="rounded-2xl border border-[#eee5dc] bg-white p-4"><p className="text-xs text-[var(--color-text-secondary)]">الفروع</p><p className="mt-1 text-2xl font-black">{branchGroups.length}</p></div>
+                  <div className="rounded-2xl border border-[#eee5dc] bg-white p-4"><p className="text-xs text-[var(--color-text-secondary)]">الموظفين</p><p className="mt-1 text-2xl font-black">{allRows.length}</p></div>
+                  <div className="col-span-2 rounded-2xl border border-[#eee5dc] bg-white p-4 sm:col-span-1"><p className="text-xs text-[var(--color-text-secondary)]">فروع متأخرة</p><p className="mt-1 text-2xl font-black text-red-600">{behindBranches.length}</p></div>
                 </section>
-                <section><h2 className="text-lg font-black">كل الفروع</h2><p className="text-[11px] text-[#887565]">{allRows.length} تقرير · {lastLoaded ? lastLoaded.toLocaleTimeString("en-US", { timeZone: "Africa/Cairo", hour: "2-digit", minute: "2-digit", hour12: false }) : "لم يتم التحديث بعد"}</p></section>
-                {branchStatus.length ? <section className="overflow-hidden rounded-[26px] border border-[#efddce] bg-white/90 shadow-[0_10px_28px_rgba(104,53,19,.055)]"><div className="hidden grid-cols-[52px_minmax(0,1.5fr)_minmax(100px,1fr)_100px_90px] gap-3 border-b border-[#f3e7dd] bg-[#fffaf6] px-4 py-3 text-[10px] font-black text-[#927b69] sm:grid"><span>الترتيب</span><span>الفرع</span><span>الحالة</span><span>الإنجاز</span><span>الموظفون</span></div><div className="divide-y divide-[#f4e9df]">{[...branchStatus].sort((a,b)=>b.percent-a.percent).map((b,index)=>{const delta=b.expected===undefined?null:b.percent-b.expected;const label=delta===null?"بيانات غير مكتملة":delta<0?"متأخر":delta>=15?"متقدم جدًا":delta>=5?"متقدم":"على المسار";const tone=delta===null?"bg-stone-100 text-stone-600":delta<0?"bg-red-50 text-red-700":delta>=5?"bg-emerald-50 text-emerald-700":"bg-amber-50 text-amber-800";const ring=delta!==null&&delta<0?"#dc5148":"#d96a20";return <button key={b.name} type="button" onClick={()=>changeView("b:"+b.name)} className="grid w-full grid-cols-[26px_minmax(0,1fr)_auto] items-center gap-3 px-3 py-3 text-right transition hover:bg-[#fffaf6] sm:grid-cols-[52px_minmax(0,1.5fr)_minmax(100px,1fr)_100px_90px] sm:px-4"><span className="text-[10px] font-black text-[#a18c7c]">#{index+1}</span><span className="min-w-0"><span className="block truncate text-xs font-black text-[#3c2a1d]">{b.name}</span><span className="mt-1 block text-[10px] text-[#927b69] sm:hidden">{b.group.length} موظف · {Math.round(b.percent)}% إنجاز</span></span><span className={"col-start-3 row-start-1 rounded-full px-2.5 py-1 text-[10px] font-black "+tone+" sm:col-start-auto sm:row-auto sm:justify-self-start"}>{label}</span><span className="col-span-2 flex items-center gap-2 sm:col-span-1"><span className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full" style={{background:"conic-gradient("+ring+" "+Math.min(100,Math.max(0,b.percent))+"%, #f3e8df 0)"}}><span className="flex h-7 w-7 items-center justify-center rounded-full bg-white text-[9px] font-black tabular-nums">{Math.round(b.percent)}%</span></span><span className="h-1.5 min-w-0 flex-1 overflow-hidden rounded-full bg-[#f5eee8] sm:hidden"><span className="block h-full rounded-full bg-gradient-to-l from-[#bd4b0a] to-[#ffad62]" style={{width:Math.min(100,Math.max(0,b.percent))+"%"}} /></span></span><span className="hidden text-xs font-bold text-[#6f5948] sm:block">{b.group.length}</span></button>})}</div></section> : <div className="rounded-2xl border border-dashed border-[#e8d5c5] bg-white p-8 text-center"><p className="font-extrabold">لا توجد تقارير حتى الآن</p><p className="mt-1 text-xs text-[#887565]">ستظهر بيانات الفريق بعد المزامنة.</p></div>}
+                <section><h2 className="text-lg font-black">كل الفروع</h2><p className="text-[11px] text-[var(--color-text-secondary)]">{allRows.length} تقرير · {lastLoaded ? lastLoaded.toLocaleTimeString("en-US", { timeZone: "Africa/Cairo", hour: "2-digit", minute: "2-digit", hour12: false }) : "لم يتم التحديث بعد"}</p></section>
+                {branchStatus.length ? <section className="overflow-hidden rounded-[26px] border border-[var(--color-border)] bg-white/90 shadow-[0_10px_28px_rgba(104,53,19,.055)]"><div className="hidden grid-cols-[52px_minmax(0,1.5fr)_minmax(100px,1fr)_100px_90px] gap-3 border-b border-[var(--color-border)] bg-[var(--color-surface-cream)] px-4 py-3 text-[10px] font-black text-[var(--color-text-secondary)] sm:grid"><span>الترتيب</span><span>الفرع</span><span>الحالة</span><span>الإنجاز</span><span>الموظفون</span></div><div className="divide-y divide-[var(--color-border)]">{[...branchStatus].sort((a,b)=>b.percent-a.percent).map((b,index)=>{const delta=b.expected===undefined?null:b.percent-b.expected;const label=delta===null?"بيانات غير مكتملة":delta<0?"متأخر":delta>=15?"متقدم جدًا":delta>=5?"متقدم":"على المسار";const tone=delta===null?"bg-stone-100 text-stone-600":delta<0?"bg-red-50 text-red-700":delta>=5?"bg-emerald-50 text-emerald-700":"bg-amber-50 text-amber-800";const ring=delta!==null&&delta<0?"var(--color-danger-text)":"var(--color-primary-600)";return <button key={b.name} type="button" onClick={()=>changeView("b:"+b.name)} className="grid w-full grid-cols-[26px_minmax(0,1fr)_auto] items-center gap-3 px-3 py-3 text-right transition hover:bg-[var(--color-surface-cream)] sm:grid-cols-[52px_minmax(0,1.5fr)_minmax(100px,1fr)_100px_90px] sm:px-4"><span className="text-[10px] font-black text-[var(--color-text-secondary)]">#{index+1}</span><span className="min-w-0"><span className="block truncate text-xs font-black text-[var(--color-text-primary)]">{b.name}</span><span className="mt-1 block text-[10px] text-[var(--color-text-secondary)] sm:hidden">{b.group.length} موظف · {Math.round(b.percent)}% إنجاز</span></span><span className={"col-start-3 row-start-1 rounded-full px-2.5 py-1 text-[10px] font-black "+tone+" sm:col-start-auto sm:row-auto sm:justify-self-start"}>{label}</span><span className="col-span-2 flex items-center gap-2 sm:col-span-1"><span className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full" style={{background:"conic-gradient("+ring+" "+Math.min(100,Math.max(0,b.percent))+"%, var(--color-border) 0)"}}><span className="flex h-7 w-7 items-center justify-center rounded-full bg-white text-[9px] font-black tabular-nums">{Math.round(b.percent)}%</span></span><span className="h-1.5 min-w-0 flex-1 overflow-hidden rounded-full bg-[var(--color-border)] sm:hidden"><span className="block h-full rounded-full bg-gradient-to-l from-[var(--color-primary-700)] to-[var(--color-primary-500)]" style={{width:Math.min(100,Math.max(0,b.percent))+"%"}} /></span></span><span className="hidden text-xs font-bold text-[#6f5948] sm:block">{b.group.length}</span></button>})}</div></section> : <div className="rounded-2xl border border-dashed border-[#e8d5c5] bg-white p-8 text-center"><p className="font-extrabold">لا توجد تقارير حتى الآن</p><p className="mt-1 text-xs text-[var(--color-text-secondary)]">ستظهر بيانات الفريق بعد المزامنة.</p></div>}
               </div>
             ) : view === "top" ? (
-              <section className="overflow-hidden rounded-[26px] border border-[#efddce] bg-white/90 shadow-[0_10px_28px_rgba(104,53,19,.055)]">
-                <div className="flex items-center justify-between gap-3 border-b border-[#f3e7dd] px-4 py-4 sm:px-5"><div><p className="text-[10px] font-black tracking-[.15em] text-[#c45b18]" dir="ltr">TEAM LEADERBOARD</p><h2 className="mt-1 text-lg font-black">ترتيب الموظفين</h2><p className="mt-0.5 text-[10px] text-[#887565]">من الأعلى إلى الأقل تحقيقًا</p></div><span className="rounded-xl bg-[#fff0e2] px-3 py-2 text-xs font-black text-[#a94308]">{topRows.length} موظف</span></div>
-                <div className="divide-y divide-[#f4e9df]">{topRows.map((row) => <div key={row.branch + row.name + row.rank} className="flex items-center gap-3 px-4 py-3.5 sm:px-5"><span className={"flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-xs font-black "+(row.rank===1?"bg-[#fff0d7] text-[#a66a08]":row.rank===2?"bg-[#f2f3f5] text-[#657080]":row.rank===3?"bg-[#faeee5] text-[#9b5b31]":"bg-[#fff7f0] text-[#a94308]")}>{row.rank}</span><span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#ffe2c9] to-[#fff4e9] text-sm font-black text-[#a94308]">{(row.name.trim()[0]||"م").toUpperCase()}</span><div className="min-w-0 flex-1"><p className="truncate text-sm font-extrabold text-[#3c2a1d]">{row.name}</p><p className="truncate text-[10px] text-[#887565]" dir="ltr">{row.branch}</p><div className="mt-2 h-1.5 overflow-hidden rounded-full bg-[#f5eee8]"><div className="h-full rounded-full bg-gradient-to-l from-[#a94308] to-[#ffad62]" style={{width:Math.min(100,Math.max(0,row.percent))+"%"}} /></div></div><strong className="shrink-0 text-lg font-black tabular-nums text-[#bd4b0a]">{Math.round(row.percent)}%</strong></div>)}</div>
+              <section className="overflow-hidden rounded-[26px] border border-[var(--color-border)] bg-white/90 shadow-[0_10px_28px_rgba(104,53,19,.055)]">
+                <div className="flex items-center justify-between gap-3 border-b border-[var(--color-border)] px-4 py-4 sm:px-5"><div><p className="text-[10px] font-black tracking-[.15em] text-[var(--color-primary-700)]" dir="ltr">TEAM LEADERBOARD</p><h2 className="mt-1 text-lg font-black">ترتيب الموظفين</h2><p className="mt-0.5 text-[10px] text-[var(--color-text-secondary)]">من الأعلى إلى الأقل تحقيقًا</p></div><span className="rounded-xl bg-[var(--color-primary-50)] px-3 py-2 text-xs font-black text-[var(--color-primary-700)]">{topRows.length} موظف</span></div>
+                <div className="divide-y divide-[var(--color-border)]">{topRows.map((row) => <div key={row.branch + row.name + row.rank} className="flex items-center gap-3 px-4 py-3.5 sm:px-5"><span className={"flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-xs font-black "+(row.rank===1?"bg-[#fff0d7] text-[#a66a08]":row.rank===2?"bg-[#f2f3f5] text-[#657080]":row.rank===3?"bg-[#faeee5] text-[#9b5b31]":"bg-[var(--color-surface-cream)] text-[var(--color-primary-700)]")}>{row.rank}</span><span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#ffe2c9] to-[var(--color-primary-50)] text-sm font-black text-[var(--color-primary-700)]">{(row.name.trim()[0]||"م").toUpperCase()}</span><div className="min-w-0 flex-1"><p className="truncate text-sm font-extrabold text-[var(--color-text-primary)]">{row.name}</p><p className="truncate text-[10px] text-[var(--color-text-secondary)]" dir="ltr">{row.branch}</p><div className="mt-2 h-1.5 overflow-hidden rounded-full bg-[var(--color-border)]"><div className="h-full rounded-full bg-gradient-to-l from-[var(--color-primary-700)] to-[var(--color-primary-500)]" style={{width:Math.min(100,Math.max(0,row.percent))+"%"}} /></div></div><strong className="shrink-0 text-lg font-black tabular-nums text-[var(--color-primary-700)]">{Math.round(row.percent)}%</strong></div>)}</div>
               </section>
             ) : view === "activity" ? (
               <section className="space-y-4">
-                <div className="flex flex-wrap items-end justify-between gap-3"><div><p className="text-[10px] font-black tracking-[.15em] text-[#c45b18]" dir="ltr">DAILY CHECK-IN</p><h2 className="mt-1 text-xl font-black">متابعة تسجيلات النهارده</h2><p className="mt-1 text-xs text-[#887565]" dir="ltr">{today}</p></div><span className="rounded-xl border border-[#efdfd2] bg-white/80 px-3 py-2 text-[10px] font-bold text-[#806653]">حالة تسجيل الفريق</span></div>
+                <div className="flex flex-wrap items-end justify-between gap-3"><div><p className="text-[10px] font-black tracking-[.15em] text-[var(--color-primary-700)]" dir="ltr">DAILY CHECK-IN</p><h2 className="mt-1 text-xl font-black">متابعة تسجيلات النهارده</h2><p className="mt-1 text-xs text-[var(--color-text-secondary)]" dir="ltr">{today}</p></div><span className="rounded-xl border border-[var(--color-border)] bg-white/80 px-3 py-2 text-[10px] font-bold text-[var(--color-text-secondary)]">حالة تسجيل الفريق</span></div>
                 <div className="grid gap-3 sm:grid-cols-3">
-                  {[{title:"سجّلوا",items:loggedToday,tone:"text-emerald-700",surface:"bg-emerald-50",dot:"bg-emerald-500"},{title:"لم يسجلوا",items:missingToday,tone:"text-red-700",surface:"bg-red-50",dot:"bg-red-500"},{title:"إجازة",items:onLeaveToday,tone:"text-[#806653]",surface:"bg-[#f7f1eb]",dot:"bg-[#b69b84]"}].map((group)=><article key={group.title} className="overflow-hidden rounded-[24px] border border-[#efdfd2] bg-white/90 shadow-[0_8px_24px_rgba(126,65,24,.05)]"><div className="flex items-center justify-between border-b border-[#f3e9e1] px-4 py-3"><div className="flex items-center gap-2"><span className={"h-2.5 w-2.5 rounded-full "+group.dot}/><h3 className={"text-sm font-black "+group.tone}>{group.title}</h3></div><span className={"rounded-lg px-2.5 py-1 text-sm font-black tabular-nums "+group.surface}>{group.items.length}</span></div><div className="space-y-2 p-3">{group.items.length?group.items.map((r)=><div key={r.branch_id} className="flex items-center justify-between gap-2 rounded-xl bg-[#fffaf6] px-3 py-2.5 text-xs"><b className="min-w-0 truncate">{r.employee_name}</b><span className="max-w-[45%] truncate text-[10px] text-[#927b69]" dir="ltr">{r.branch_name||NO_BRANCH}</span></div>):<p className="py-5 text-center text-xs text-[#927b69]">لا يوجد</p>}</div></article>)}
+                  {[{title:"سجّلوا",items:loggedToday,tone:"text-emerald-700",surface:"bg-emerald-50",dot:"bg-emerald-500"},{title:"لم يسجلوا",items:missingToday,tone:"text-red-700",surface:"bg-red-50",dot:"bg-red-500"},{title:"إجازة",items:onLeaveToday,tone:"text-[var(--color-text-secondary)]",surface:"bg-[#f7f1eb]",dot:"bg-[#b69b84]"}].map((group)=><article key={group.title} className="overflow-hidden rounded-[24px] border border-[var(--color-border)] bg-white/90 shadow-[0_8px_24px_rgba(126,65,24,.05)]"><div className="flex items-center justify-between border-b border-[#f3e9e1] px-4 py-3"><div className="flex items-center gap-2"><span className={"h-2.5 w-2.5 rounded-full "+group.dot}/><h3 className={"text-sm font-black "+group.tone}>{group.title}</h3></div><span className={"rounded-lg px-2.5 py-1 text-sm font-black tabular-nums "+group.surface}>{group.items.length}</span></div><div className="space-y-2 p-3">{group.items.length?group.items.map((r)=><div key={r.branch_id} className="flex items-center justify-between gap-2 rounded-xl bg-[var(--color-surface-cream)] px-3 py-2.5 text-xs"><b className="min-w-0 truncate">{r.employee_name}</b><span className="max-w-[45%] truncate text-[10px] text-[var(--color-text-secondary)]" dir="ltr">{r.branch_name||NO_BRANCH}</span></div>):<p className="py-5 text-center text-xs text-[var(--color-text-secondary)]">لا يوجد</p>}</div></article>)}
                 </div>
               </section>
             ) : view === "reports" ? (
-              <section className="overflow-hidden rounded-[26px] border border-[#efddce] bg-white/90 shadow-[0_10px_28px_rgba(104,53,19,.055)]">
-                <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#f3e7dd] px-4 py-4 sm:px-5"><div><p className="text-[10px] font-black tracking-[.15em] text-[#c45b18]" dir="ltr">BRANCH REPORTS</p><h2 className="mt-1 text-lg font-black">تقارير الفروع</h2><p className="mt-0.5 text-[10px] text-[#887565]">تحميل تقرير CSV تفصيلي لكل فرع</p></div><span className="rounded-xl bg-[#fff0e2] px-3 py-2 text-xs font-black text-[#a94308]">{branchGroups.length} فرع</span></div>
-                {branchGroups.length?<div className="divide-y divide-[#f4e9df]">{branchGroups.map(([name,group])=><div key={name} className="flex items-center gap-3 px-4 py-3.5 sm:px-5"><span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#fff0e2] text-sm font-black text-[#a94308]">▦</span><div className="min-w-0 flex-1"><p className="truncate text-sm font-extrabold text-[#3c2a1d]" dir="ltr">{name}</p><p className="mt-1 text-[10px] text-[#927b69]">{group.length} موظف · تقرير تفصيلي</p></div><button type="button" onClick={()=>downloadBranchCsv(name,group)} className="shrink-0 rounded-xl border border-[#f0d4bd] bg-gradient-to-l from-[#fff0e2] to-[#fffaf6] px-3 py-2.5 text-[11px] font-black text-[#a94b13] transition hover:border-[#e5b58e]">↓ CSV</button></div>)}</div>:<p className="py-8 text-center text-xs text-[#927b69]">لا توجد بيانات لتصديرها.</p>}
+              <section className="overflow-hidden rounded-[26px] border border-[var(--color-border)] bg-white/90 shadow-[0_10px_28px_rgba(104,53,19,.055)]">
+                <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--color-border)] px-4 py-4 sm:px-5"><div><p className="text-[10px] font-black tracking-[.15em] text-[var(--color-primary-700)]" dir="ltr">BRANCH REPORTS</p><h2 className="mt-1 text-lg font-black">تقارير الفروع</h2><p className="mt-0.5 text-[10px] text-[var(--color-text-secondary)]">تحميل تقرير CSV تفصيلي لكل فرع</p></div><span className="rounded-xl bg-[var(--color-primary-50)] px-3 py-2 text-xs font-black text-[var(--color-primary-700)]">{branchGroups.length} فرع</span></div>
+                {branchGroups.length?<div className="divide-y divide-[var(--color-border)]">{branchGroups.map(([name,group])=><div key={name} className="flex items-center gap-3 px-4 py-3.5 sm:px-5"><span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--color-primary-50)] text-sm font-black text-[var(--color-primary-700)]">▦</span><div className="min-w-0 flex-1"><p className="truncate text-sm font-extrabold text-[var(--color-text-primary)]" dir="ltr">{name}</p><p className="mt-1 text-[10px] text-[var(--color-text-secondary)]">{group.length} موظف · تقرير تفصيلي</p></div><button type="button" onClick={()=>downloadBranchCsv(name,group)} className="shrink-0 rounded-xl border border-[#f0d4bd] bg-gradient-to-l from-[var(--color-primary-50)] to-[var(--color-surface-cream)] px-3 py-2.5 text-[11px] font-black text-[#a94b13] transition hover:border-[#e5b58e]">↓ CSV</button></div>)}</div>:<p className="py-8 text-center text-xs text-[var(--color-text-secondary)]">لا توجد بيانات لتصديرها.</p>}
               </section>
             ) : branch !== null ? (
               <section className="space-y-3">
-                <div className="flex items-center justify-between gap-3"><div><button type="button" onClick={()=>changeView("list")} className="mb-1 text-xs font-bold text-[#bd4b0a]">← كل الفروع</button><h2 className="text-xl font-black" dir="ltr">{branch}</h2><p className="text-xs text-[#887565]">{branchRows.length} موظف</p></div><button type="button" onClick={()=>downloadBranchCsv(branch,branchRows)} className="rounded-xl border border-[#efdfd2] bg-white px-3 py-2 text-xs font-bold text-[#8f3d0a]">↓ CSV</button></div>
-                <article className="rounded-2xl border border-[#efdfd2] bg-white p-3"><button type="button" onClick={()=>setBranchOpenFor(branchOpen?null:branch)} className="flex w-full items-center justify-between gap-3 text-right"><span className="text-xs font-bold text-[#887565]">إجمالي أداء الفرع</span><strong className="text-2xl text-[#bd4b0a]">{Math.round(branchAvg)}%　{branchOpen?"−":"+"}</strong></button>{branchOpen?<div className="mt-3 grid grid-cols-2 gap-2 border-t border-[#f4e9df] pt-3 sm:grid-cols-3">{aggregateKpis(branchRows).map(k=><KpiTile key={k.name} kpi={k}/>)}</div>:null}<TrackBadge percent={branchAvg} expected={branchExpected}/></article>
-                <h3 className="text-sm font-black">الموظفون · مرتّبون حسب الأداء</h3><div className="space-y-2">{[...branchRows].sort((a,b)=>(b.payload.overall??0)-(a.payload.overall??0)).map((row,index)=><div key={row.branch_id} className="relative"><span className="absolute right-3 top-2 z-10 rounded-md bg-[#fff0e2] px-2 py-0.5 text-[10px] font-black text-[#8f3d0a]">#{index+1}</span>{renderRow(row)}</div>)}</div>
+                <div className="flex items-center justify-between gap-3"><div><button type="button" onClick={()=>changeView("list")} className="mb-1 text-xs font-bold text-[var(--color-primary-700)]">← كل الفروع</button><h2 className="text-xl font-black" dir="ltr">{branch}</h2><p className="text-xs text-[var(--color-text-secondary)]">{branchRows.length} موظف</p></div><button type="button" onClick={()=>downloadBranchCsv(branch,branchRows)} className="rounded-xl border border-[var(--color-border)] bg-white px-3 py-2 text-xs font-bold text-[var(--color-primary-700)]">↓ CSV</button></div>
+                <article className="rounded-2xl border border-[var(--color-border)] bg-white p-3"><button type="button" onClick={()=>setBranchOpenFor(branchOpen?null:branch)} className="flex w-full items-center justify-between gap-3 text-right"><span className="text-xs font-bold text-[var(--color-text-secondary)]">إجمالي أداء الفرع</span><strong className="text-2xl text-[var(--color-primary-700)]">{Math.round(branchAvg)}%　{branchOpen?"−":"+"}</strong></button>{branchOpen?<div className="mt-3 grid grid-cols-2 gap-2 border-t border-[var(--color-border)] pt-3 sm:grid-cols-3">{aggregateKpis(branchRows).map(k=><KpiTile key={k.name} kpi={k}/>)}</div>:null}<TrackBadge percent={branchAvg} expected={branchExpected}/></article>
+                <h3 className="text-sm font-black">الموظفون · مرتّبون حسب الأداء</h3><div className="space-y-2">{[...branchRows].sort((a,b)=>(b.payload.overall??0)-(a.payload.overall??0)).map((row,index)=><div key={row.branch_id} className="relative"><span className="absolute right-3 top-2 z-10 rounded-md bg-[var(--color-primary-50)] px-2 py-0.5 text-[10px] font-black text-[var(--color-primary-700)]">#{index+1}</span>{renderRow(row)}</div>)}</div>
               </section>
             ) : null}
 
-            <footer className="flex flex-wrap items-center justify-between gap-3 border-t border-[#eee5dc] pt-4"><p className="text-[10px] text-[#9a8879]">Track Your Sales · لوحة متابعة الأداء</p><button type="button" onClick={()=>{setPwOpen(v=>!v);setPwMsg("");}} className="text-xs font-bold text-[#8f3d0a]">{pwOpen?"إخفاء تغيير كلمة السر":"🔑 تغيير كلمة السر"}</button></footer>
+            <footer className="flex flex-wrap items-center justify-between gap-3 border-t border-[#eee5dc] pt-4"><p className="text-[10px] text-[var(--color-text-secondary)]">Track Your Sales · لوحة متابعة الأداء</p><button type="button" onClick={()=>{setPwOpen(v=>!v);setPwMsg("");}} className="text-xs font-bold text-[var(--color-primary-700)]">{pwOpen?"إخفاء تغيير كلمة السر":"🔑 تغيير كلمة السر"}</button></footer>
             {branchPreview ? (() => {
               const previewRows = branchGroups.find(([name]) => name === branchPreview)?.[1] ?? [];
               const preview = branchStatus.find((item) => item.name === branchPreview);
               const previewKpis = aggregateKpis(previewRows);
               return (
                 <div className="fixed inset-0 z-[70] flex justify-end bg-[#2d211a]/35 backdrop-blur-[3px]" onClick={() => setBranchPreview(null)}>
-                  <aside role="dialog" aria-modal="true" aria-label={"تفاصيل فرع " + branchPreview} onClick={(event) => event.stopPropagation()} className="h-full w-full max-w-[520px] overflow-y-auto border-r border-white/50 bg-[#fffaf6] p-4 shadow-2xl sm:p-6">
+                  <aside role="dialog" aria-modal="true" aria-label={"تفاصيل فرع " + branchPreview} onClick={(event) => event.stopPropagation()} className="h-full w-full max-w-[520px] overflow-y-auto border-r border-white/50 bg-[var(--color-surface-cream)] p-4 shadow-2xl sm:p-6">
                     <div className="flex items-start justify-between gap-3">
-                      <div><p className="text-[10px] font-black tracking-[.15em] text-[#c45b18]" dir="ltr">BRANCH QUICK VIEW</p><h2 className="mt-1 text-2xl font-black text-[#382719]" dir="auto">{branchPreview}</h2><p className="mt-1 text-xs text-[#927b69]">ملخص أداء الفرع والموظفين</p></div>
-                      <button type="button" aria-label="إغلاق التفاصيل" onClick={() => setBranchPreview(null)} className="flex h-10 w-10 items-center justify-center rounded-xl border border-[#efdfd2] bg-white text-lg font-bold text-[#806653]">×</button>
+                      <div><p className="text-[10px] font-black tracking-[.15em] text-[var(--color-primary-700)]" dir="ltr">BRANCH QUICK VIEW</p><h2 className="mt-1 text-2xl font-black text-[#382719]" dir="auto">{branchPreview}</h2><p className="mt-1 text-xs text-[var(--color-text-secondary)]">ملخص أداء الفرع والموظفين</p></div>
+                      <button type="button" aria-label="إغلاق التفاصيل" onClick={() => setBranchPreview(null)} className="flex h-10 w-10 items-center justify-center rounded-xl border border-[var(--color-border)] bg-white text-lg font-bold text-[var(--color-text-secondary)]">×</button>
                     </div>
                     <div className="mt-5 grid grid-cols-2 gap-3">
-                      <div className="rounded-2xl bg-white p-4 ring-1 ring-[#f0dfd2]"><p className="text-[10px] font-bold text-[#927b69]">إنجاز الفرع</p><strong className="mt-1 block text-3xl font-black tabular-nums text-[#a94308]">{Math.round(preview?.percent ?? 0)}%</strong></div>
-                      <div className="rounded-2xl bg-white p-4 ring-1 ring-[#f0dfd2]"><p className="text-[10px] font-bold text-[#927b69]">حالة الفرع</p><strong className={"mt-2 inline-flex rounded-full px-3 py-1.5 text-xs font-black "+(preview?.expected===undefined?"bg-stone-100 text-stone-600":preview.onTrack?"bg-emerald-50 text-emerald-700":"bg-red-50 text-red-700")}>{preview?.expected===undefined?"بيانات غير مكتملة":preview.onTrack?"على المسار":"متأخر"}</strong></div>
+                      <div className="rounded-2xl bg-white p-4 ring-1 ring-[var(--color-border)]"><p className="text-[10px] font-bold text-[var(--color-text-secondary)]">إنجاز الفرع</p><strong className="mt-1 block text-3xl font-black tabular-nums text-[var(--color-primary-700)]">{Math.round(preview?.percent ?? 0)}%</strong></div>
+                      <div className="rounded-2xl bg-white p-4 ring-1 ring-[var(--color-border)]"><p className="text-[10px] font-bold text-[var(--color-text-secondary)]">حالة الفرع</p><strong className={"mt-2 inline-flex rounded-full px-3 py-1.5 text-xs font-black "+(preview?.expected===undefined?"bg-stone-100 text-stone-600":preview.onTrack?"bg-emerald-50 text-emerald-700":"bg-red-50 text-red-700")}>{preview?.expected===undefined?"بيانات غير مكتملة":preview.onTrack?"على المسار":"متأخر"}</strong></div>
                     </div>
-                    <div className="mt-5"><div className="mb-3 flex items-center justify-between"><h3 className="text-sm font-black">أداء المؤشرات</h3><span className="text-[10px] text-[#927b69]">{previewKpis.length} مؤشرات</span></div><div className="grid grid-cols-2 gap-2">{previewKpis.map((k)=> <KpiTile key={k.name} kpi={k}/>)}</div></div>
-                    <div className="mt-6"><div className="mb-3 flex items-center justify-between"><h3 className="text-sm font-black">موظفو الفرع</h3><span className="rounded-full bg-[#fff0e2] px-2.5 py-1 text-[10px] font-black text-[#a94308]">{previewRows.length}</span></div><div className="space-y-2">{[...previewRows].sort((a,b)=>(b.payload.overall??0)-(a.payload.overall??0)).map((row,index)=><div key={row.branch_id} className="rounded-2xl border border-[#f0dfd2] bg-white p-3"><div className="mb-2 flex items-center justify-between gap-3"><span className="text-[10px] font-black text-[#a94308]">#{index+1}</span><strong className="text-sm font-black text-[#352317]">{Math.round(row.payload.overall??0)}%</strong></div>{renderRow(row)}</div>)}</div></div>
-                    <button type="button" onClick={() => { setBranchPreview(null); changeView("b:" + branchPreview); }} className="mt-6 w-full rounded-xl bg-gradient-to-l from-[#a94308] to-[#e97824] px-4 py-3 text-sm font-black text-white shadow-lg shadow-orange-900/10">فتح صفحة الفرع بالكامل ←</button>
+                    <div className="mt-5"><div className="mb-3 flex items-center justify-between"><h3 className="text-sm font-black">أداء المؤشرات</h3><span className="text-[10px] text-[var(--color-text-secondary)]">{previewKpis.length} مؤشرات</span></div><div className="grid grid-cols-2 gap-2">{previewKpis.map((k)=> <KpiTile key={k.name} kpi={k}/>)}</div></div>
+                    <div className="mt-6"><div className="mb-3 flex items-center justify-between"><h3 className="text-sm font-black">موظفو الفرع</h3><span className="rounded-full bg-[var(--color-primary-50)] px-2.5 py-1 text-[10px] font-black text-[var(--color-primary-700)]">{previewRows.length}</span></div><div className="space-y-2">{[...previewRows].sort((a,b)=>(b.payload.overall??0)-(a.payload.overall??0)).map((row,index)=><div key={row.branch_id} className="rounded-2xl border border-[var(--color-border)] bg-white p-3"><div className="mb-2 flex items-center justify-between gap-3"><span className="text-[10px] font-black text-[var(--color-primary-700)]">#{index+1}</span><strong className="text-sm font-black text-[var(--color-text-primary)]">{Math.round(row.payload.overall??0)}%</strong></div>{renderRow(row)}</div>)}</div></div>
+                    <button type="button" onClick={() => { setBranchPreview(null); changeView("b:" + branchPreview); }} className="mt-6 w-full rounded-xl bg-gradient-to-l from-[var(--color-primary-700)] to-[#e97824] px-4 py-3 text-sm font-black text-white shadow-lg shadow-orange-900/10">فتح صفحة الفرع بالكامل ←</button>
                   </aside>
                 </div>
               );
             })() : null}
-            {pwOpen ? <form onSubmit={changePassword} className="rounded-2xl border border-[#efdfd2] bg-white p-4"><h3 className="mb-3 text-sm font-black">تغيير كلمة السر</h3><div className="grid gap-3 sm:grid-cols-3">
-              <label className="text-xs font-bold">كلمة السر الحالية<input type="password" autoComplete="current-password" value={oldPw} onChange={e=>setOldPw(e.target.value)} className="mt-1.5 w-full rounded-xl border border-[#ead8c9] px-3 py-2.5 text-sm"/></label>
-              <label className="text-xs font-bold">كلمة السر الجديدة<input type="password" autoComplete="new-password" value={newPw} onChange={e=>setNewPw(e.target.value)} className="mt-1.5 w-full rounded-xl border border-[#ead8c9] px-3 py-2.5 text-sm"/></label>
-              <label className="text-xs font-bold">تأكيد كلمة السر<input type="password" autoComplete="new-password" value={newPw2} onChange={e=>setNewPw2(e.target.value)} className="mt-1.5 w-full rounded-xl border border-[#ead8c9] px-3 py-2.5 text-sm"/></label>
-            </div>{pwMsg?<p className="mt-3 text-xs font-bold text-red-600">{pwMsg}</p>:null}<button type="submit" disabled={!oldPw||!newPw||!newPw2} className="mt-3 rounded-xl bg-[#bd4b0a] px-5 py-3 text-sm font-bold text-white disabled:opacity-50">حفظ كلمة السر</button></form>:null}
+            {pwOpen ? <form onSubmit={changePassword} className="rounded-2xl border border-[var(--color-border)] bg-white p-4"><h3 className="mb-3 text-sm font-black">تغيير كلمة السر</h3><div className="grid gap-3 sm:grid-cols-3">
+              <label className="text-xs font-bold">كلمة السر الحالية<input type="password" autoComplete="current-password" value={oldPw} onChange={e=>setOldPw(e.target.value)} className="mt-1.5 w-full rounded-xl border border-[var(--color-border)] px-3 py-2.5 text-sm"/></label>
+              <label className="text-xs font-bold">كلمة السر الجديدة<input type="password" autoComplete="new-password" value={newPw} onChange={e=>setNewPw(e.target.value)} className="mt-1.5 w-full rounded-xl border border-[var(--color-border)] px-3 py-2.5 text-sm"/></label>
+              <label className="text-xs font-bold">تأكيد كلمة السر<input type="password" autoComplete="new-password" value={newPw2} onChange={e=>setNewPw2(e.target.value)} className="mt-1.5 w-full rounded-xl border border-[var(--color-border)] px-3 py-2.5 text-sm"/></label>
+            </div>{pwMsg?<p className="mt-3 text-xs font-bold text-red-600">{pwMsg}</p>:null}<button type="submit" disabled={!oldPw||!newPw||!newPw2} className="mt-3 rounded-xl bg-[var(--color-primary-700)] px-5 py-3 text-sm font-bold text-white disabled:opacity-50">حفظ كلمة السر</button></form>:null}
           </div>
         </div>
       )}
