@@ -108,7 +108,7 @@ textarea { resize: vertical; }
 .tys-page {
   width: 100%;
   color: var(--brand-text);
-  animation: tys-page-enter 260ms ease-out both;
+  animation: tys-page-enter 260ms ease-out backwards;
 }
 @keyframes tys-page-enter {
   from { opacity: .72; transform: translateY(5px); }
