@@ -302,7 +302,8 @@ export default function WikiPage() {
     else url.searchParams.set("section", section);
     if (query.trim()) url.searchParams.set("q", query.trim());
     else url.searchParams.delete("q");
-    window.history.replaceState(window.history.state, "", url);
+    const currentState = (window.history.state ?? {}) as Record<string, unknown>;
+    window.history.replaceState({ ...currentState, tysView: section }, "", url);
   }, [section, query]);
 
   const q = query.trim();
@@ -419,6 +420,7 @@ export default function WikiPage() {
                 <p className="text-[10px] font-black tracking-[0.2em] text-[var(--color-primary-700)]" dir="ltr">KNOWLEDGE HUB</p>
                 <h1 className="mt-1 text-2xl font-black tracking-tight text-[var(--color-text-primary)] sm:text-3xl">مرجع أورانج</h1>
                 <p className="mt-1 text-[11px] font-bold text-[#8a3b0b]">مرجع غير رسمي — راجع أحدث التعليمات المعتمدة قبل تنفيذ أي إجراء.</p>
+                <p className="mt-1 text-[10px] text-[var(--color-text-secondary)]">المصدر وتاريخ آخر مراجعة غير محددين في بيانات المرجع الحالية.</p>
                 <p className="mt-2 max-w-lg text-xs leading-6 text-[var(--color-text-secondary)]">كل اللي تحتاجه في الشيفت: أكواد SR، الباقات، أرقام التواصل، والمستندات في مكان واحد.</p>
               </div>
               <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-white bg-white/90 text-2xl shadow-sm">📚</span>
