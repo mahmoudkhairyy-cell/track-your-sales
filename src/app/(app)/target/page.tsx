@@ -259,6 +259,7 @@ export default function TargetPage() {
           </div>
           <span className="rounded-xl bg-[var(--color-primary-50)] px-3 py-2 text-xs font-black text-[var(--color-primary-700)]">{month}</span>
         </div>
+        <p className="mb-2 text-xs font-bold text-[var(--color-text-secondary)]">اختيار تاريخ الإجازة</p>
         <div className="grid grid-cols-7 gap-1 text-center text-[11px] font-bold text-[#9a8170]">
           {["سبت", "أحد", "اتنين", "تلات", "أربع", "خميس", "جمعة"].map((d) => (
             <span key={d} className="py-1">{d}</span>
@@ -293,6 +294,24 @@ export default function TargetPage() {
           })}
         </div>
         <p className="mt-3 text-center text-xs text-[var(--color-text-secondary)]">اضغط أي يوم لإضافته أو إلغائه كإجازة</p>
+        {holidays.length > 0 ? (
+          <div className="mt-4 space-y-3 border-t border-[var(--color-border)] pt-4">
+            <h3 className="text-sm font-extrabold text-[var(--color-text-primary)]">ملاحظات الإجازات</h3>
+            {holidays.map((holiday) => (
+              <div key={holiday.date}>
+                <label htmlFor={"holiday-note-" + holiday.date} className="mb-1 block text-xs font-bold text-[var(--color-text-secondary)]">ملاحظة إجازة يوم {Number(holiday.date.slice(8, 10))}</label>
+                <input
+                  id={"holiday-note-" + holiday.date}
+                  className={inputClass}
+                  type="text"
+                  value={holiday.note ?? ""}
+                  placeholder="اكتب ملاحظة اختيارية"
+                  onChange={(event) => setHolidays((current) => current.map((item) => item.date === holiday.date ? { ...item, note: event.target.value || null } : item))}
+                />
+              </div>
+            ))}
+          </div>
+        ) : null}
       </section>
 
       {error ? <Banner tone="error">❌ {error}</Banner> : null}
