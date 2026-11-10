@@ -268,6 +268,16 @@ export default function HomePage() {
             const m = kpiMood({ percent: kpi.percent, expectedPercent: kpiExpected, weight: kpi.weight });
             const moodColor =
               m.tone === "good" ? "text-emerald-700" : m.tone === "warn" ? "text-yellow-700" : m.tone === "bad" ? "text-red-600" : "text-neutral-400";
+            const progressGradient =
+              m.tone === "good"
+                ? "linear-gradient(90deg, #34d399 0%, #059669 100%)"
+                : m.tone === "warn"
+                  ? "linear-gradient(90deg, #fbbf24 0%, #d97706 100%)"
+                  : m.tone === "bad"
+                    ? "linear-gradient(90deg, #fb7185 0%, #dc2626 100%)"
+                    : "linear-gradient(90deg, #ffad68 0%, #f07818 52%, #c6530b 100%)";
+            const progressTrack =
+              m.tone === "good" ? "bg-emerald-50" : m.tone === "warn" ? "bg-amber-50" : m.tone === "bad" ? "bg-rose-50" : "bg-[#f2e6dc]";
             return (
               <article
                 key={kpi.kpiKey}
@@ -285,8 +295,18 @@ export default function HomePage() {
                   <p className={`font-black tracking-tight text-[#2b1b12] ${featured ? "text-3xl sm:text-4xl" : "text-2xl"}`}>{formatQty(kpi.achieved)}</p>
                   <span className="text-xs text-[#897466]">من {formatQty(kpi.target)} {kpi.unitAr}</span>
                 </div>
-                <div className={`relative mt-3 overflow-hidden rounded-full bg-[#f2e6dc] ${featured ? "h-2.5" : "h-2"}`}>
-                  <div className="h-full rounded-full bg-gradient-to-l from-[#ffad68] via-[#f07818] to-[#c6530b]" style={{ width: `${visual}%` }} />
+                <div
+                  role="progressbar"
+                  aria-label={`نسبة إنجاز ${kpi.nameEn}`}
+                  aria-valuemin={0}
+                  aria-valuemax={100}
+                  aria-valuenow={visual}
+                  className={`relative mt-3 overflow-hidden rounded-full ${progressTrack} ${featured ? "h-2.5" : "h-2"} ring-1 ring-inset ring-black/[0.025]`}
+                >
+                  <div
+                    className="h-full rounded-full transition-[width] duration-700 ease-out"
+                    style={{ width: `${visual}%`, background: progressGradient, boxShadow: "0 1px 5px rgba(90, 45, 15, .16)" }}
+                  />
                 </div>
                 <div className="relative mt-2 flex flex-wrap items-center justify-between gap-1">
                   <p className={`text-[11px] font-bold ${moodColor}`}>{m.emoji} {m.text}</p>
