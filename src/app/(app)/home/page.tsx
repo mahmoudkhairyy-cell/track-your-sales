@@ -198,7 +198,7 @@ export default function HomePage() {
       <section className="rounded-2xl border border-[var(--color-border)] bg-white p-3 shadow-sm sm:p-4">
         <div className="mb-3 flex items-center justify-between gap-2">
           <div>
-            <h2 className="mt-0.5 text-sm font-extrabold text-[var(--color-text-primary)]">الديلي المطلوب</h2>
+            <h2 className="mt-0.5 text-sm font-extrabold text-[var(--color-text-primary)]">DAILY</h2>
           </div>
           <span className="shrink-0 rounded-full bg-[var(--color-primary-50)] px-2.5 py-1 text-[11px] font-extrabold text-[var(--color-primary-700)]">
             فاضل {formatQty(data.work.remaining)} يوم عمل
