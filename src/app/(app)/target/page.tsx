@@ -191,9 +191,9 @@ export default function TargetPage() {
 
       <section className="overflow-hidden rounded-[28px] border border-[var(--color-border)] bg-white p-4 shadow-[0_12px_30px_rgba(100,55,25,0.045)]">
         <div className="grid grid-cols-3 gap-2 text-center">
-          <div className="rounded-2xl bg-[var(--color-primary-50)] px-2 py-3"><p className="text-2xl font-black tabular-nums text-[var(--color-text-primary)]">{monthDays.length}</p><p className="text-[11px] text-[var(--color-text-secondary)]">أيام الشهر</p></div>
-          <div className="rounded-2xl bg-[var(--color-primary-50)] px-2 py-3"><p className="text-2xl font-black tabular-nums text-[var(--color-text-primary)]">{holidays.length}</p><p className="text-[11px] text-[var(--color-text-secondary)]">إجازات</p></div>
-          <div className="rounded-2xl bg-[var(--color-primary-50)] px-2 py-3"><p className="text-2xl font-black tabular-nums text-[var(--color-text-primary)]">{workingDatesInMonth(month, workingDays, holidays.map((item) => item.date)).length}</p><p className="text-[11px] text-[var(--color-text-secondary)]">أيام شغل</p></div>
+          <div className="rounded-2xl border border-[#f4d7bf] bg-[linear-gradient(145deg,#fff8f1_0%,#ffead8_100%)] px-2 py-3 shadow-[0_4px_12px_rgba(126,65,24,0.06)]"><p className="text-2xl font-black tabular-nums text-[var(--color-text-primary)]">{monthDays.length}</p><p className="text-[11px] text-[var(--color-text-secondary)]">أيام الشهر</p></div>
+          <div className="rounded-2xl border border-[#f4d7bf] bg-[linear-gradient(145deg,#fff8f1_0%,#ffead8_100%)] px-2 py-3 shadow-[0_4px_12px_rgba(126,65,24,0.06)]"><p className="text-2xl font-black tabular-nums text-[var(--color-text-primary)]">{holidays.length}</p><p className="text-[11px] text-[var(--color-text-secondary)]">إجازات</p></div>
+          <div className="rounded-2xl border border-[#f4d7bf] bg-[linear-gradient(145deg,#fff8f1_0%,#ffead8_100%)] px-2 py-3 shadow-[0_4px_12px_rgba(126,65,24,0.06)]"><p className="text-2xl font-black tabular-nums text-[var(--color-text-primary)]">{workingDatesInMonth(month, workingDays, holidays.map((item) => item.date)).length}</p><p className="text-[11px] text-[var(--color-text-secondary)]">أيام شغل</p></div>
         </div>
       </section>
 
