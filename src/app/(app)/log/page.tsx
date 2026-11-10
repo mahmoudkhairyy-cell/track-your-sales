@@ -299,6 +299,7 @@ export default function LogPage() {
               </div>
             </div>
             <div className="mt-3 flex items-center gap-2">
+              <label className="sr-only" htmlFor={`quantity-${item.key}`}>الكمية — {item.nameAr}</label>
               <input
                 id={`quantity-${item.key}`}
                 className={`${inputClass} text-lg font-black`}
