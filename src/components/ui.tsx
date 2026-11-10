@@ -185,14 +185,47 @@ export function Modal({
   useEffect(() => {
     onCloseRef.current = onClose;
   }, [onClose]);
-  // Escape بيقفل النافذة، زي أي نافذة على الويب.
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const previousFocusRef = useRef<HTMLElement | null>(null);
+  // إدارة التركيز داخل النافذة: نقل التركيز عند الفتح، وحصر Tab، وإعادته بعد الإغلاق.
   useEffect(() => {
     if (!open) return;
+    previousFocusRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    const dialog = dialogRef.current;
+    const getFocusable = () => dialog?.querySelectorAll<HTMLElement>(
+      'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+    ) ?? [];
+    const first = getFocusable()[0];
+    (first ?? dialog)?.focus();
     const onKey = (event: KeyboardEvent) => {
-      if (event.key === "Escape") onCloseRef.current();
+      if (event.key === "Escape") {
+        event.preventDefault();
+        onCloseRef.current();
+        return;
+      }
+      if (event.key !== "Tab") return;
+      const items = getFocusable();
+      if (!items.length) {
+        event.preventDefault();
+        dialog?.focus();
+        return;
+      }
+      const firstItem = items[0];
+      const lastItem = items[items.length - 1];
+      if (event.shiftKey && (document.activeElement === firstItem || document.activeElement === dialog)) {
+        event.preventDefault();
+        lastItem.focus();
+      } else if (!event.shiftKey && document.activeElement === lastItem) {
+        event.preventDefault();
+        firstItem.focus();
+      }
     };
     window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      previousFocusRef.current?.focus();
+      previousFocusRef.current = null;
+    };
   }, [open]);
   // زرار الرجوع في الموبايل بيقفل النافذة الأول، بدل ما يسيبها مفتوحة ويرجّعك لصفحة قبلها.
   useEffect(() => {
@@ -218,7 +251,7 @@ export function Modal({
   return createPortal(
     <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-[#4b3024]/45 p-3 backdrop-blur-[3px]">
       <button className="absolute inset-0" aria-label="إغلاق" tabIndex={-1} onClick={onClose} />
-      <div role="dialog" aria-modal="true" aria-labelledby={titleId} className="relative z-[1] max-h-[min(90dvh,760px)] w-full max-w-lg overflow-y-auto overscroll-contain rounded-[28px] border border-[#f1dfd0] bg-white p-5 text-[#38291f] shadow-[0_24px_70px_rgba(77,44,25,0.20)]">
+      <div ref={dialogRef} tabIndex={-1} role="dialog" aria-modal="true" aria-labelledby={titleId} className="relative z-[1] max-h-[min(90dvh,760px)] w-full max-w-lg overflow-y-auto overscroll-contain rounded-[28px] border border-[#f1dfd0] bg-white p-5 text-[#38291f] shadow-[0_24px_70px_rgba(77,44,25,0.20)]">
         <div className="mb-4 flex items-start justify-between gap-3">
           <h2 id={titleId} className="text-lg font-extrabold text-neutral-900">{title}</h2>
           <button type="button" onClick={onClose} aria-label="إغلاق" className="min-h-10 min-w-10 rounded-full text-xl text-neutral-500">
