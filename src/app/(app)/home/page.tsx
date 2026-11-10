@@ -200,14 +200,14 @@ export default function HomePage() {
       </section>
 
       <div className="grid grid-cols-2 gap-3">
-        <article className="rounded-[22px] border border-[#f1e2d6] bg-white/90 p-3 shadow-[0_8px_24px_rgba(116,63,26,0.045)]">
+        <article className="group relative overflow-hidden rounded-[22px] border border-[#edc7a7] bg-gradient-to-br from-white via-white to-[#fff6ed] p-3 shadow-[0_10px_26px_rgba(112,57,18,0.075)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_14px_30px_rgba(198,83,11,0.12)] before:absolute before:inset-y-3 before:right-0 before:w-1 before:rounded-l-full before:bg-gradient-to-b before:from-[#ff963f] before:to-[#c6530b]">
           <p className="text-sm font-bold text-neutral-500">📱 الخطوط اللي عملتها</p>
-          <p className="mt-2 text-3xl font-black">{formatQty(newLines?.achieved ?? 0)}</p>
+          <p className="mt-2 text-3xl font-black tracking-tight text-[#c6530b]">{formatQty(newLines?.achieved ?? 0)}</p>
           <p className="text-xs text-neutral-400">من {formatQty(newLines?.target ?? 0)}</p>
         </article>
-        <article className="rounded-[24px] bg-white p-4 shadow-[0_8px_24px_rgba(255,121,0,0.06)]">
+        <article className="group relative overflow-hidden rounded-[22px] border border-[#edc7a7] bg-gradient-to-br from-white via-white to-[#fff6ed] p-3 shadow-[0_10px_26px_rgba(112,57,18,0.075)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_14px_30px_rgba(198,83,11,0.12)] before:absolute before:inset-y-3 before:right-0 before:w-1 before:rounded-l-full before:bg-gradient-to-b before:from-[#ff963f] before:to-[#c6530b]">
           <p className="text-sm font-bold text-neutral-500">🎯 الفاضل في الخطوط</p>
-          <p className="mt-2 text-3xl font-black">{formatQty(newLines?.remaining ?? 0)}</p>
+          <p className="mt-2 text-3xl font-black tracking-tight text-[#c6530b]">{formatQty(newLines?.remaining ?? 0)}</p>
           <p className="text-xs text-neutral-400">خط</p>
         </article>
       </div>
