@@ -195,18 +195,7 @@ export default function HomePage() {
           <div className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] font-semibold text-[#8c725f]">
             <span className="font-extrabold text-[#bd4b0a]">{statusTextEgy}</span><span className="text-[#d9bda7]">•</span><span>{timeText}</span>
           </div>
-          <div className="mt-4 grid grid-cols-2 gap-2.5 border-t border-[#f0dfd1] pt-3">
-            <div className="rounded-2xl border border-white bg-white/90 px-3 py-3 shadow-[0_5px_16px_rgba(145,75,30,0.05)]">
-              <span className="block text-[10px] font-bold text-[#9a806c]">الكوميشن المتوقع</span>
-              <strong className="mt-1 block truncate font-mono text-lg font-black text-[#bd4b0a]">{formatMoney(data.estimatedCommission)} <span className="text-[10px] font-bold text-[#9a806c]">ج.م</span></strong>
-              <span className="mt-0.5 block text-[10px] font-semibold text-[#a18a78]">من {formatMoney(data.fullCommission)} ج.م</span>
-            </div>
-            <div className="rounded-2xl border border-white bg-white/90 px-3 py-3 shadow-[0_5px_16px_rgba(145,75,30,0.05)]">
-              <span className="block text-[10px] font-bold text-[#9a806c]">ملخص الأداء</span>
-              <strong className="mt-1 block truncate text-sm font-black text-[#38291f]">{onTrack === null ? "جاري حساب الأداء" : onTrack ? "ماشي بشكل ممتاز" : "لسه في فرصة تعوّض"}</strong>
-              <span className="mt-0.5 block text-[10px] font-semibold text-[#a18a78]">{overallLine()}</span>
-            </div>
-          </div>
+
           {sarcastic ? <p className="mt-3 text-[11px] font-bold text-[#a75b2c]">{sarcastic}</p> : null}
         </div>
       </section>
