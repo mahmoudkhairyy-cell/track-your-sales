@@ -999,25 +999,34 @@ export default function WikiPage() {
         </div>
       ) : null}
 
-      <Modal open={Boolean(openSr)} title={openSr?.id === "31319" ? "رن الشكوى للفريق المختص" : openSr?.id === "1030" ? "بداية إجراء Reallocation" : openSr?.titleAr || openSr?.title || "تفاصيل SR"} onClose={() => setOpenSr(null)}>
-        {openSr ? (
-          <div className="space-y-3 text-sm leading-7">
-            <div className="rounded-xl bg-[#fff4e9] px-3 py-2">
-              <p className="font-black text-[#bd4b0a]" dir="ltr">SR {openSr.id}</p>
-              <p className="mt-1 text-xs font-bold text-[#8b796b]">{openSr.category}</p>
+      {openSr ? (
+        <div className="fixed inset-0 z-[10000] flex items-end justify-center bg-[#4b3024]/55 p-3 backdrop-blur-sm sm:items-center" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setOpenSr(null); }}>
+          <section role="dialog" aria-modal="true" aria-labelledby="sr-dialog-title" className="relative z-10 max-h-[88dvh] w-full max-w-lg overflow-y-auto rounded-[28px] border border-[#f1dfd0] bg-white p-5 text-[#38291f] shadow-2xl">
+            <div className="mb-4 flex items-start justify-between gap-3">
+              <div className="min-w-0">
+                <p className="text-[10px] font-black tracking-widest text-[#bd4b0a]" dir="ltr">SERVICE REQUEST</p>
+                <h2 id="sr-dialog-title" className="mt-1 text-lg font-extrabold">{openSr.id === "31319" ? "رن الشكوى للفريق المختص" : openSr.id === "1030" ? "بداية إجراء Reallocation" : openSr.titleAr || openSr.title || "تفاصيل SR"}</h2>
+              </div>
+              <button type="button" onClick={() => setOpenSr(null)} aria-label="إغلاق" className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#fff4e9] text-xl font-bold text-[#8b3d0a]">×</button>
             </div>
-            <p className="font-bold text-[#4d3829]">{srArabicSummary(openSr)}</p>
-            <p className="text-[#665448]">{openSr.id === "31319" ? "اكتب تفاصيل شكوى العميل في Notes، ثم اعمل رن للفريق المختص. يُستخدم لشكاوى الشبكة وخصم الرصيد بدون سبب ومشكلات حساب الفاتورة." : openSr.id === "1030" ? "ابدأ طلب Reallocation من هنا، ثم اتصل بـ Activation Team واختار Option 2، وبعدها افتح SR 10841." : openSr.description || "لا يوجد وصف إضافي مسجل لهذا الكود."}</p>
-            <div className="rounded-xl border border-[#f2e4d8] bg-[#fffaf6] p-3">
-              <p className="mb-1 text-xs font-black text-[#bd4b0a]">تفاصيل الإجراء</p>
-              <p className="whitespace-pre-wrap text-[#88796e]">{openSr.id === "31319" ? "1. اكتب الشكوى في Notes.\n2. اعمل رن للفريق المختص لمتابعة حل المشكلة." : openSr.id === "1030" ? "1. افتح SR 1030.\n2. اتصل بـ Activation Team واختار Option 2.\n3. افتح SR 10841.\n4. املأ عقدًا فاضيًا ببيانات العميل وارفع البطاقة عبر Live Capture." : openSr.steps || openSr.description || "لا توجد خطوات إضافية مسجلة."}</p>
+            <div className="space-y-3 text-sm leading-7">
+              <div className="rounded-xl bg-[#fff4e9] px-3 py-2">
+                <p className="font-black text-[#bd4b0a]" dir="ltr">SR {openSr.id}</p>
+                <p className="mt-1 text-xs font-bold text-[#8b796b]">{openSr.category || "مرجع SR"}</p>
+              </div>
+              <p className="font-bold text-[#4d3829]">{srArabicSummary(openSr)}</p>
+              <p className="text-[#665448]">{openSr.id === "31319" ? "اكتب تفاصيل شكوى العميل في Notes، ثم اعمل رن للفريق المختص. يُستخدم لشكاوى الشبكة وخصم الرصيد بدون سبب ومشكلات حساب الفاتورة." : openSr.id === "1030" ? "ابدأ طلب Reallocation من هنا، ثم اتصل بـ Activation Team واختار Option 2، وبعدها افتح SR 10841." : openSr.description || "لا يوجد وصف إضافي مسجل لهذا الكود."}</p>
+              <div className="rounded-xl border border-[#f2e4d8] bg-[#fffaf6] p-3">
+                <p className="mb-1 text-xs font-black text-[#bd4b0a]">تفاصيل الإجراء</p>
+                <p className="whitespace-pre-wrap text-[#665448]">{openSr.id === "31319" ? "1. اكتب الشكوى في Notes.\n2. اعمل رن للفريق المختص لمتابعة حل المشكلة." : openSr.id === "1030" ? "1. افتح SR 1030.\n2. اتصل بـ Activation Team واختار Option 2.\n3. افتح SR 10841.\n4. املأ عقدًا فاضيًا ببيانات العميل وارفع البطاقة عبر Live Capture." : openSr.steps || openSr.description || "لا توجد خطوات إضافية مسجلة."}</p>
+              </div>
+              <SecondaryButton type="button" className="w-full" onClick={() => copyText(`${openSr.id} — ${openSr.id === "31319" ? "رن الشكوى للفريق المختص" : openSr.id === "1030" ? "بداية إجراء Reallocation" : openSr.titleAr || openSr.title}\n${openSr.id === "31319" ? "اكتب الشكوى في Notes ثم اعمل رن للفريق المختص." : openSr.id === "1030" ? "ابدأ Reallocation ثم اتصل بـ Activation Team واختار Option 2، وبعدها افتح SR 10841." : openSr.steps || openSr.description || ""}`, toast, "📋 تفاصيل الـ SR اتنسخت")}>
+                نسخ التفاصيل
+              </SecondaryButton>
             </div>
-            <SecondaryButton type="button" className="w-full" onClick={() => copyText(`${openSr.id} — ${openSr.id === "31319" ? "رن الشكوى للفريق المختص" : openSr.id === "1030" ? "بداية إجراء Reallocation" : openSr.titleAr || openSr.title}\n${openSr.id === "31319" ? "اكتب الشكوى في Notes ثم اعمل رن للفريق المختص." : openSr.id === "1030" ? "ابدأ Reallocation ثم اتصل بـ Activation Team واختار Option 2، وبعدها افتح SR 10841." : openSr.steps || openSr.description || ""}`, toast, "📋 تفاصيل الـ SR اتنسخت")}>
-              نسخ التفاصيل
-            </SecondaryButton>
-          </div>
-        ) : null}
-      </Modal>
+          </section>
+        </div>
+      ) : null}
 
       <Modal open={noteOpen} title={editing ? "تعديل ملاحظة" : "ملاحظة جديدة"} onClose={() => setNoteOpen(false)}>
         <form className="space-y-4" onSubmit={saveNote}>
