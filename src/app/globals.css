@@ -15,6 +15,31 @@
   --brand-muted: #88796e;
   --brand-border: #f2e4d8;
   --app-shadow: 0 12px 34px rgba(115, 58, 20, 0.07);
+
+  /* Design tokens (مركزية): الألوان الجديدة، بدون استخدام لحد ما نطبقها تدريجياً */
+  --color-primary-900: #7a2e00;
+  --color-primary-700: #c2410c;
+  --color-primary-600: #ea580c;
+  --color-primary-500: #f97316;
+  --color-primary-100: #ffedd5;
+  --color-primary-50: #fff7ed;
+
+  --color-success-bg: #ecfdf5;
+  --color-success-text: #047857;
+  --color-success-ring: #10b981;
+  --color-warning-bg: #fffbeb;
+  --color-warning-text: #92400e;
+  --color-warning-ring: #f59e0b;
+  --color-danger-bg: #fef2f2;
+  --color-danger-text: #b91c1c;
+  --color-danger-ring: #ef4444;
+
+  --color-text-primary: #1c1917;
+  --color-text-secondary: #57534e;
+  --color-text-muted: #a8a29e;
+  --color-surface: #ffffff;
+  --color-surface-cream: #fff7ed;
+  --color-border: #fed7aa;
 }
 
 html {
