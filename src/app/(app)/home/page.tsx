@@ -132,7 +132,7 @@ export default function HomePage() {
         </p>
       ) : null}
 
-      <section className="flex items-end justify-between gap-3 rounded-[26px] border border-[#f2e2d4] bg-white/80 px-4 py-4 shadow-[0_10px_30px_rgba(100,55,25,0.045)] sm:px-5">
+      <section className="flex items-end justify-between gap-3 rounded-[26px] border border-[#f4c49e] bg-white/80 px-4 py-4 shadow-[0_10px_30px_rgba(100,55,25,0.045)] sm:px-5">
         <div className="min-w-0">
           <p className="text-[10px] font-black tracking-[0.16em] text-[#d66a27]">YOUR SALES OVERVIEW</p>
           <h1 className="mt-1 text-xl font-black tracking-tight text-[#2d2119] sm:text-2xl">
@@ -144,7 +144,7 @@ export default function HomePage() {
       </section>
 
       {/* الهيرو الرئيسي — لوحة إنجاز دائرية */}
-      <section style={{ boxShadow: onTrack === null ? "0 12px 30px rgba(126,65,24,.10)" : onTrack ? "0 0 0 1px rgba(22,163,74,.10), 0 0 22px rgba(22,163,74,.15), 0 16px 38px rgba(22,163,74,.10)" : "0 0 0 1px rgba(220,38,38,.10), 0 0 22px rgba(220,38,38,.15), 0 16px 38px rgba(220,38,38,.10)" }} className="relative isolate overflow-hidden rounded-[30px] border border-[#dfb995] bg-[linear-gradient(125deg,#fff3e8_0%,#fffaf5_48%,#ffe2c7_100%)] p-4 sm:p-6">
+      <section style={{ boxShadow: onTrack === null ? "0 12px 30px rgba(126,65,24,.10)" : onTrack ? "0 0 0 1px rgba(22,163,74,.10), 0 0 22px rgba(22,163,74,.15), 0 16px 38px rgba(22,163,74,.10)" : "0 0 0 1px rgba(220,38,38,.10), 0 0 22px rgba(220,38,38,.15), 0 16px 38px rgba(220,38,38,.10)" }} className="relative isolate overflow-hidden rounded-[30px] border border-[#f4c49e] bg-[linear-gradient(125deg,#fff3e8_0%,#fffaf5_48%,#ffe2c7_100%)] p-4 sm:p-6">
         <div className="pointer-events-none absolute -left-12 -top-16 h-52 w-52 rounded-full bg-[#ff9d38]/20 blur-3xl" />
         <div className="pointer-events-none absolute -bottom-24 right-1/3 h-52 w-52 rounded-full bg-[#e96812]/10 blur-3xl" />
         <div className="relative">
@@ -201,7 +201,7 @@ export default function HomePage() {
       </section>
 
       {/* المطلوب انهاردة */}
-      <section className="flex items-stretch overflow-hidden rounded-[26px] border border-[#f1dfd0] bg-white shadow-[0_12px_28px_rgba(100,55,25,0.05)]">
+      <section className="flex items-stretch overflow-hidden rounded-[26px] border border-[#f4c49e] bg-white shadow-[0_12px_28px_rgba(100,55,25,0.05)]">
         <div className="flex w-24 shrink-0 flex-col items-center justify-center bg-gradient-to-br from-[#a94308] to-[#e96812] px-2.5 py-3.5 text-white sm:w-28 sm:px-3 sm:py-4">
           <span className="font-mono text-2xl font-black leading-none sm:text-3xl">{data.pace.perDay === null ? "—" : formatQty(Math.ceil(data.pace.perDay))}</span>
           <span className="mt-1 text-[10px] font-bold text-[#fff0e2]">{data.pace.perDay === null ? "" : linesWord(Math.ceil(data.pace.perDay)) + " / يوم"}</span>
@@ -216,11 +216,11 @@ export default function HomePage() {
       </section>
 
       {/* نسبة الإنجاز بالمحاور */}
-      <section className="flex flex-col gap-3 rounded-[26px] border border-[#f1dfd0] bg-white/70 p-4 shadow-[0_12px_28px_rgba(100,55,25,0.04)]">
+      <section className="flex flex-col gap-3 rounded-[26px] border border-[#f4c49e] bg-white/70 p-4 shadow-[0_12px_28px_rgba(100,55,25,0.04)]">
         <div className="flex items-center justify-between">
           <h2 className="flex items-center gap-1.5 text-sm font-black tracking-tight text-[#38291f]">
             <span>نسبة الإنجاز بالمحاور</span>
-            <span className="rounded border border-[#f1dfd0] bg-[#fff0e2] px-1.5 text-[11px] font-bold text-[#bd4b0a]">{data.kpis.length} مؤشرات</span>
+            <span className="rounded border border-[#f4c49e] bg-[#fff0e2] px-1.5 text-[11px] font-bold text-[#bd4b0a]">{data.kpis.length} مؤشرات</span>
           </h2>
           <span className="text-[11px] font-bold text-[#9a7963]">اسحب ←</span>
         </div>
@@ -247,14 +247,14 @@ export default function HomePage() {
           { href: "/target/", label: "التارجت" },
           { href: "/wiki/", label: "المرجع" },
         ].map((item) => (
-          <Link key={item.href} href={`${item.href}?month=${month}`} className="rounded-2xl border border-[#f1dfd0] bg-white px-2 py-3 text-center text-xs font-extrabold text-[#63391f] shadow-[0_8px_20px_rgba(100,55,25,0.05)] transition-all hover:-translate-y-0.5 hover:border-[#e8b58f] active:scale-95">
+          <Link key={item.href} href={`${item.href}?month=${month}`} className="rounded-2xl border border-[#f4c49e] bg-white px-2 py-3 text-center text-xs font-extrabold text-[#63391f] shadow-[0_8px_20px_rgba(100,55,25,0.05)] transition-all hover:-translate-y-0.5 hover:border-[#e8b58f] active:scale-95">
             {item.label}
           </Link>
         ))}
       </section>
 
       {/* المؤشرات */}
-      <section className="flex flex-col gap-3 rounded-[28px] border border-[#f1dfd0] bg-white/75 p-4 shadow-[0_12px_30px_rgba(100,55,25,0.04)] sm:p-5">
+      <section className="flex flex-col gap-3 rounded-[28px] border border-[#f4c49e] bg-white/75 p-4 shadow-[0_12px_30px_rgba(100,55,25,0.04)] sm:p-5">
         <div className="flex items-center justify-between">
           <h2 className="text-base font-black tracking-tight text-[#38291f]">مؤشرات الأداء (KPIs)</h2>
           <span className="text-[11px] font-bold text-[#927b69]">{data.kpis.length} مؤشر</span>
