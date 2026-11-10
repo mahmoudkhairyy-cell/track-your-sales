@@ -185,12 +185,40 @@ const EDU_WINCASH_LINES = [
   { code: "727623", name: "Document State Development Fees", price: "3.57", note: "خصم 100% = 0" },
 ];
 
+function SrCard({ item }: { item: SrItem }) {
+  const toast = useToast();
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="w-full rounded-[24px] border border-[#f2e4d8] bg-white p-4 text-right shadow-sm">
+      <button type="button" onClick={() => setOpen((v) => !v)} aria-expanded={open} className="flex w-full items-start justify-between gap-3 text-right">
+        <span className="min-w-0 flex-1">
+          <span className="block text-xs font-extrabold text-[#bd4b0a]">{item.id}</span>
+          <span className="block font-extrabold">{item.titleAr || item.title}</span>
+          {!open ? <span className="mt-1 line-clamp-2 block text-xs leading-6 text-[#88796e]">{item.description}</span> : null}
+        </span>
+        <svg viewBox="0 0 24 24" aria-hidden="true" className={`mt-1 h-5 w-5 shrink-0 text-[#bd4b0a] transition-transform duration-200 ${open ? "rotate-180" : ""}`} fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="m6 9 6 6 6-6" />
+        </svg>
+      </button>
+      {open ? (
+        <div className="mt-3 space-y-3 border-t border-[#f2e4d8] pt-3 text-sm leading-7">
+          <p className="text-[#88796e]">{item.category}</p>
+          <p>{item.description}</p>
+          <p className="whitespace-pre-wrap text-[#88796e]">{item.steps}</p>
+          <SecondaryButton type="button" className="w-full" onClick={() => copyText(`${item.id} — ${item.titleAr}\n${item.steps}`, toast, "📋 تفاصيل الـ SR اتنسخت")}>
+            نسخ التفاصيل
+          </SecondaryButton>
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
 export default function WikiPage() {
   const toast = useToast();
   const [section, setSection] = useHistoryView<SectionId>("hub");
   const [query, setQuery] = useState("");
   const [srCategory, setSrCategory] = useState("الكل");
-  const [openSr, setOpenSr] = useState<SrItem | null>(null);
   const [articles, setArticles] = useState<Article[]>([]);
   const [loadingNotes, setLoadingNotes] = useState(false);
   const [notesError, setNotesError] = useState("");
@@ -324,10 +352,7 @@ export default function WikiPage() {
               ) : null}
               {globalHits.sr.length > 0 ? <p className="text-xs font-black text-[#b84700]">أكواد SR</p> : null}
               {globalHits.sr.map((item) => (
-                <button key={item.id + item.title} type="button" onClick={() => setOpenSr(item)} className="w-full rounded-[24px] border border-[#f2e4d8] bg-white p-4 text-right shadow-sm">
-                  <p className="text-xs font-extrabold text-[#bd4b0a]">{item.id}</p>
-                  <p className="font-extrabold">{item.titleAr || item.title}</p>
-                </button>
+                <SrCard key={item.id + item.title} item={item} />
               ))}
               {globalHits.hunts.length > 0 ? <p className="text-xs font-black text-[#b84700]">أرقام</p> : null}
               {globalHits.hunts.map((item) => (
@@ -422,11 +447,7 @@ export default function WikiPage() {
           <p className="mt-2 text-xs text-[#88796e]">{filteredSr.length} نتيجة</p>
           <div className="mt-3 grid gap-2 sm:grid-cols-2">
             {filteredSr.map((item) => (
-              <button key={`${item.id}-${item.title}`} type="button" onClick={() => setOpenSr(item)} className="w-full rounded-[24px] border border-[#f2e4d8] bg-white p-4 text-right shadow-sm">
-                <p className="text-xs font-extrabold text-[#bd4b0a]">{item.id}</p>
-                <p className="font-extrabold">{item.titleAr || item.title}</p>
-                <p className="mt-1 line-clamp-2 text-xs leading-6 text-[#88796e]">{item.description}</p>
-              </button>
+              <SrCard key={`${item.id}-${item.title}`} item={item} />
             ))}
           </div>
         </div>
@@ -859,19 +880,6 @@ export default function WikiPage() {
         </div>
       ) : null}
 
-      <Modal open={Boolean(openSr)} title={openSr?.titleAr || openSr?.title || "تفاصيل SR"} onClose={() => setOpenSr(null)}>
-        {openSr ? (
-          <div className="space-y-3 text-sm leading-7">
-            <p className="font-extrabold text-[#bd4b0a]">{openSr.id}</p>
-            <p className="text-[#88796e]">{openSr.category}</p>
-            <p>{openSr.description}</p>
-            <p className="whitespace-pre-wrap text-[#88796e]">{openSr.steps}</p>
-            <SecondaryButton type="button" className="w-full" onClick={() => copyText(`${openSr.id} — ${openSr.titleAr}\n${openSr.steps}`, toast, "📋 تفاصيل الـ SR اتنسخت")}>
-              نسخ التفاصيل
-            </SecondaryButton>
-          </div>
-        ) : null}
-      </Modal>
 
       <Modal open={noteOpen} title={editing ? "تعديل ملاحظة" : "ملاحظة جديدة"} onClose={() => setNoteOpen(false)}>
         <form className="space-y-4" onSubmit={saveNote}>
