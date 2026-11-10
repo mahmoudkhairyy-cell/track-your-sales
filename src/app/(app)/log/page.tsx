@@ -133,7 +133,7 @@ export default function LogPage() {
     ? QUALITY_ITEMS.reduce((sum, item) => sum + (quality.checks?.[item.key] ? item.weight : 0), 0)
     : 0;
   const dashByKey = new Map((dash?.kpis ?? []).map((k) => [k.kpiKey, k]));
-  const onTrack = (dash?.kpis ?? []).filter((k) => k.weight > 0 && k.remaining > 0);
+  const dailyItems = (dash?.kpis ?? []).filter((k) => k.remaining > 0);
   const workLeft = dash?.work.remaining ?? 0;
   const doneDays = dash ? (dash.work.elapsedBeforeToday ?? dash.work.elapsed) : 0;
   const performanceOnTrack: boolean | null = dash && dash.work.total > 0
@@ -208,16 +208,33 @@ export default function LogPage() {
 
 
 
-      {onTrack.length > 0 ? (
-        <section className="rounded-[24px] bg-[var(--color-primary-50)] p-4 text-[var(--color-primary-700)]">
-          <p className="text-sm font-extrabold">⚡ المطلوب منك النهارده عشان تفضل ON TRACK</p>
-          <div className="mt-2 flex flex-wrap gap-2">
-            {onTrack.map((k) => (
-              <span key={k.kpiKey} className="rounded-full bg-white px-3 py-1 text-xs font-extrabold text-[var(--color-primary-700)] shadow-sm">
-                {kpiEmoji(k.kpiKey)} {formatQty(workLeft > 0 ? Math.ceil(k.remaining / workLeft) : k.remaining)} · {KPI_CATALOG.find((i) => i.key === k.kpiKey)?.nameEn}
-              </span>
-            ))}
+      {dash ? (
+        <section className="rounded-2xl border border-[var(--color-border)] bg-white p-3 shadow-sm sm:p-4">
+          <div className="mb-3 flex items-center justify-between gap-2">
+            <div>
+              <p className="text-xs font-black tracking-wide text-[var(--color-primary-700)]">DAILY</p>
+              <h2 className="mt-0.5 text-sm font-extrabold text-[var(--color-text-primary)]">الديلي المطلوب</h2>
+            </div>
+            <span className="shrink-0 rounded-full bg-[var(--color-primary-50)] px-2.5 py-1 text-[11px] font-extrabold text-[var(--color-primary-700)]">
+              فاضل {formatQty(workLeft)} يوم عمل
+            </span>
           </div>
+          {dailyItems.length > 0 ? (
+            <div className="grid grid-cols-2 gap-2">
+              {dailyItems.map((k) => (
+                <div key={k.kpiKey} className="flex min-w-0 items-center justify-between gap-2 rounded-xl bg-[var(--color-surface-cream)] px-2.5 py-2">
+                  <span className="min-w-0 truncate text-[11px] font-bold text-[var(--color-text-secondary)]" dir="ltr">
+                    {KPI_CATALOG.find((i) => i.key === k.kpiKey)?.nameEn ?? k.kpiKey}
+                  </span>
+                  <strong className="shrink-0 text-sm font-black tabular-nums text-[var(--color-primary-700)]">
+                    {formatQty(workLeft > 0 ? Math.ceil(k.remaining / workLeft) : k.remaining)}
+                  </strong>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="rounded-xl bg-[var(--color-primary-50)] px-3 py-2 text-xs font-bold text-[var(--color-primary-700)]">كل المؤشرات وصلت للتارجت 🎉</p>
+          )}
         </section>
       ) : null}
 
