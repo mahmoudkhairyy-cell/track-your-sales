@@ -242,7 +242,6 @@ export default function WikiPage() {
   const [pending, setPending] = useState(false);
   const [confirmId, setConfirmId] = useState<string | null>(null);
   const [wikiData, setWikiData] = useState<WikiData | null>(null);
-  const [wikiDataLoading, setWikiDataLoading] = useState(false);
 
   const DOCS = wikiData?.DOCS ?? [];
   const DSL = wikiData?.DSL ?? { plans: [], addons: [], routers: [] };
@@ -260,7 +259,6 @@ export default function WikiPage() {
   useEffect(() => {
     if (!needsWikiData || wikiData) return;
     let cancelled = false;
-    setWikiDataLoading(true);
     import("@/data")
       .then((data) => {
         if (!cancelled) setWikiData(data);
@@ -268,9 +266,7 @@ export default function WikiPage() {
       .catch(() => {
         if (!cancelled) toast.push("error", "تعذر تحميل بيانات المرجع، جرّب تفتح القسم تاني");
       })
-      .finally(() => {
-        if (!cancelled) setWikiDataLoading(false);
-      });
+;
     return () => {
       cancelled = true;
     };
@@ -356,7 +352,7 @@ export default function WikiPage() {
     return (
       <div className="tys-page tys-page-wiki mx-auto max-w-6xl space-y-4">
         <Back onClick={() => setSection("hub")} title="مركز المعرفة" />
-        <Spinner label={wikiDataLoading ? "بنحمّل بيانات القسم..." : "بنجهّز بيانات المرجع..."} />
+        <Spinner label="بنحمّل بيانات المرجع..." />
       </div>
     );
   }
