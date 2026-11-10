@@ -130,7 +130,7 @@ export default function TargetPage() {
   const dirty = baseline !== null && snapshot !== baseline;
   const saveState = saving
     ? { label: "⏳ جارٍ الحفظ", tone: "bg-amber-50 text-amber-800 ring-1 ring-amber-200" }
-    : error && !dirty
+    : error
       ? { label: "⚠️ تعذر الحفظ", tone: "bg-red-50 text-red-700 ring-1 ring-red-200" }
       : dirty
         ? { label: "● تغييرات غير محفوظة", tone: "bg-[var(--color-primary-50)] text-[var(--color-primary-700)] ring-1 ring-[#f3d6c0]" }
@@ -183,22 +183,11 @@ export default function TargetPage() {
 
   return (
     <form className="tys-page tys-page-target mx-auto max-w-6xl space-y-5 pb-4" onSubmit={onSave}>
-<<<<<<< ours
-      <section className="relative isolate overflow-hidden rounded-[30px] border border-[#f0d7c4] bg-[linear-gradient(120deg,#fff7ef_0%,#fff_52%,#ffead8_100%)] p-5 shadow-[0_16px_38px_rgba(126,65,24,0.07)] sm:p-6">
-        <div className="pointer-events-none absolute -left-10 -top-12 h-36 w-36 rounded-full border-[22px] border-[var(--color-primary-600)]/[0.06]" />
-        <div className="relative flex items-start justify-between gap-3">
-          <div>
-            <p className="text-[10px] font-black tracking-[0.18em] text-[#c45a17]">MONTHLY CONFIGURATION</p>
-            <h1 className="mt-1 text-2xl font-black tracking-tight text-[var(--color-text-primary)] sm:text-3xl">التارجت 🎯</h1>
-            <p className="mt-1.5 max-w-md text-xs leading-6 text-[var(--color-text-secondary)]">ظبّط أهداف الشهر وأيام الشغل والأوزان من مكان واحد.</p>
-=======
-      <section className="relative isolate overflow-hidden rounded-[30px] border border-[#efc9a9] bg-[linear-gradient(118deg,#fff8f1_0%,#fff_48%,#ffead8_100%)] p-5 shadow-[0_18px_42px_rgba(126,65,24,0.075)] sm:p-6">
-        <div className="pointer-events-none absolute -left-12 -top-16 h-44 w-44 rounded-full border-[26px] border-[var(--color-primary-600)]/[0.055]" />
-        <div className="pointer-events-none absolute -bottom-20 right-1/3 h-36 w-36 rounded-full bg-[var(--color-primary-500)]/10 blur-2xl" />
+      <section className="relative isolate overflow-hidden rounded-[28px] border border-[var(--color-border)] bg-[linear-gradient(118deg,#fff8f1_0%,#fff_52%,#ffead8_100%)] p-5 shadow-[0_10px_28px_rgba(126,65,24,0.055)] sm:p-6">
         <div className="relative">
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div className="min-w-0">
-              <p className="text-[10px] font-black tracking-[0.18em] text-[#c45a17]">MONTHLY CONFIGURATION</p>
+              <p className="text-[10px] font-black tracking-[0.18em] text-[var(--color-primary-700)]">MONTHLY CONFIGURATION</p>
               <h1 className="mt-1 text-2xl font-black tracking-tight text-[var(--color-text-primary)] sm:text-3xl">التارجت 🎯</h1>
               <p className="mt-1.5 max-w-md text-xs leading-6 text-[var(--color-text-secondary)]">كل إعدادات الشهر في مكان واحد — راجع أهدافك قبل الحفظ.</p>
             </div>
@@ -207,23 +196,19 @@ export default function TargetPage() {
             </span>
           </div>
           <div className="mt-5 grid grid-cols-3 gap-2 border-t border-[var(--color-border)] pt-4">
-            <div className="min-w-0 rounded-2xl border border-white/80 bg-white/75 px-2.5 py-3 text-center shadow-sm">
+            <div className="min-w-0 rounded-2xl border border-[var(--color-border)] bg-white px-2.5 py-3 text-center">
               <p className="text-xl font-black tabular-nums text-[var(--color-primary-700)]">{kpis.filter((k) => k.kpiKey !== "quality" && (k.weight > 0 || k.kpiKey !== "productivity")).length}</p>
               <p className="mt-0.5 text-[10px] font-bold text-[var(--color-text-secondary)]">مؤشرات التارجت</p>
             </div>
-            <div className="min-w-0 rounded-2xl border border-white/80 bg-white/75 px-2.5 py-3 text-center shadow-sm">
+            <div className="min-w-0 rounded-2xl border border-[var(--color-border)] bg-white px-2.5 py-3 text-center">
               <p className={`text-xl font-black tabular-nums ${Math.abs(weightSum - 100) < 0.01 ? "text-emerald-700" : "text-[var(--color-primary-700)]"}`}>{weightSum}%</p>
               <p className="mt-0.5 text-[10px] font-bold text-[var(--color-text-secondary)]">إجمالي الأوزان</p>
             </div>
-            <div className="min-w-0 rounded-2xl border border-white/80 bg-white/75 px-2.5 py-3 text-center shadow-sm">
+            <div className="min-w-0 rounded-2xl border border-[var(--color-border)] bg-white px-2.5 py-3 text-center">
               <p className="text-xl font-black tabular-nums text-[var(--color-primary-700)]">{workingDatesInMonth(month, workingDays, holidays.map((item) => item.date)).length}</p>
               <p className="mt-0.5 text-[10px] font-bold text-[var(--color-text-secondary)]">أيام العمل</p>
             </div>
->>>>>>> theirs
           </div>
-          <span className={`shrink-0 rounded-full px-3 py-1.5 text-[10px] font-extrabold ${saved ? "bg-emerald-50 text-emerald-700 ring-1 ring-emerald-100" : "bg-[var(--color-primary-50)] text-[var(--color-primary-700)] ring-1 ring-[#f3d6c0]"}`}>
-            {saved ? "✓ محفوظة" : "● محتاجة حفظ"}
-          </span>
         </div>
       </section>
 
