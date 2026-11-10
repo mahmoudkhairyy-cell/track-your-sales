@@ -132,107 +132,107 @@ export default function HomePage() {
         </p>
       ) : null}
 
-      <section className="flex items-end justify-between gap-3 rounded-[26px] border border-[#f4c49e] bg-white/80 px-4 py-4 shadow-[0_5px_14px_rgba(100,55,25,0.13)] sm:px-5">
+      <section className="flex items-end justify-between gap-3 rounded-[26px] border border-[var(--color-border)] bg-white/80 px-4 py-4 shadow-[0_5px_14px_rgba(100,55,25,0.13)] sm:px-5">
         <div className="min-w-0">
-          <p className="text-[10px] font-black tracking-[0.16em] text-[#d66a27]">YOUR SALES OVERVIEW</p>
-          <h1 className="mt-1 text-xl font-black tracking-tight text-[#2d2119] sm:text-2xl">
+          <p className="text-[10px] font-black tracking-[0.16em] text-[var(--color-primary-600)]">YOUR SALES OVERVIEW</p>
+          <h1 className="mt-1 text-xl font-black tracking-tight text-[var(--color-text-primary)] sm:text-2xl">
             {greeting()} {data.profile.name.split(" ")[0]} 👋
           </h1>
-          <p className="mt-1 text-xs font-semibold text-[#9a7e6b]">📍 {data.profile.branch}</p>
+          <p className="mt-1 text-xs font-semibold text-[var(--color-text-secondary)]">📍 {data.profile.branch}</p>
         </div>
-        <div className="hidden h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#fff0e2] text-2xl sm:flex">📈</div>
+        <div className="hidden h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[var(--color-primary-50)] text-2xl sm:flex">📈</div>
       </section>
 
       {/* الهيرو الرئيسي — لوحة إنجاز دائرية */}
-      <section style={{ boxShadow: onTrack === null ? "0 5px 14px rgba(100,55,25,.13)" : onTrack ? "0 0 0 1px rgba(22,163,74,.06), 0 0 10px rgba(22,163,74,.08), 0 5px 14px rgba(100,55,25,.13)" : "0 0 0 1px rgba(220,38,38,.06), 0 0 10px rgba(220,38,38,.08), 0 5px 14px rgba(100,55,25,.13)" }} className="relative isolate overflow-hidden rounded-[30px] border border-[#f4c49e] bg-[linear-gradient(125deg,#fff3e8_0%,#fffaf5_48%,#ffe2c7_100%)] p-4 sm:p-6">
-        <div className="pointer-events-none absolute -left-12 -top-16 h-52 w-52 rounded-full bg-[#ff9d38]/20 blur-3xl" />
-        <div className="pointer-events-none absolute -bottom-24 right-1/3 h-52 w-52 rounded-full bg-[#e96812]/10 blur-3xl" />
+      <section style={{ boxShadow: onTrack === null ? "0 5px 14px rgba(100,55,25,.13)" : onTrack ? "0 0 0 1px rgba(22,163,74,.06), 0 0 10px rgba(22,163,74,.08), 0 5px 14px rgba(100,55,25,.13)" : "0 0 0 1px rgba(220,38,38,.06), 0 0 10px rgba(220,38,38,.08), 0 5px 14px rgba(100,55,25,.13)" }} className="relative isolate overflow-hidden rounded-[30px] border border-[var(--color-border)] bg-[linear-gradient(125deg,#fff3e8_0%,#fffaf5_48%,#ffe2c7_100%)] p-4 sm:p-6">
+        <div className="pointer-events-none absolute -left-12 -top-16 h-52 w-52 rounded-full bg-[var(--color-primary-500)]/20 blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-24 right-1/3 h-52 w-52 rounded-full bg-[var(--color-primary-600)]/10 blur-3xl" />
         <div className="relative">
-          <div className="flex items-center justify-between gap-3 border-b border-[#f0d9c5] pb-3">
+          <div className="flex items-center justify-between gap-3 border-b border-[var(--color-border)] pb-3">
             <div className="flex min-w-0 items-center gap-2.5">
-              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-[#ff9d38] to-[#e96812] text-lg text-white shadow-md">◎</span>
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-[var(--color-primary-500)] to-[var(--color-primary-600)] text-lg text-white shadow-md">◎</span>
               <div className="min-w-0">
-                <p className="text-[10px] font-black tracking-[0.14em] text-[#bd6b39]">MONTHLY PERFORMANCE</p>
-                <p className="mt-0.5 text-sm font-black text-[#38291f]">إجمالي التارجت الشهري</p>
+                <p className="text-[10px] font-black tracking-[0.14em] text-[var(--color-primary-700)]">MONTHLY PERFORMANCE</p>
+                <p className="mt-0.5 text-sm font-black text-[var(--color-text-primary)]">إجمالي التارجت الشهري</p>
               </div>
             </div>
-            <span className={`shrink-0 rounded-full border px-3 py-1.5 text-[10px] font-extrabold ${onTrack === null ? "border-[#ead8c9] bg-white text-[#8b7565]" : onTrack ? "border-emerald-200 bg-emerald-50 text-emerald-700" : "border-orange-200 bg-orange-50 text-[#bd4b0a]"}`}>
-              <span className={`ml-1.5 inline-block h-1.5 w-1.5 rounded-full ${onTrack === null ? "bg-[#b9a494]" : onTrack ? "bg-emerald-500" : "bg-[#e96812]"}`} />
+            <span className={`shrink-0 rounded-full border px-3 py-1.5 text-[10px] font-extrabold ${onTrack === null ? "border-[var(--color-border)] bg-white text-[var(--color-text-secondary)]" : onTrack ? "border-emerald-200 bg-emerald-50 text-emerald-700" : "border-orange-200 bg-orange-50 text-[var(--color-primary-700)]"}`}>
+              <span className={`ml-1.5 inline-block h-1.5 w-1.5 rounded-full ${onTrack === null ? "bg-[var(--color-text-muted)]" : onTrack ? "bg-emerald-500" : "bg-[var(--color-primary-600)]"}`} />
               {onTrack === null ? "Waiting for data" : onTrack ? "On track" : "Behind"}
             </span>
           </div>
           <div className="grid grid-cols-[minmax(0,1fr)_112px] items-center gap-3 py-4 sm:grid-cols-[minmax(0,1fr)_136px] sm:gap-6 sm:py-5">
             <div className="min-w-0">
-              <p className="text-[10px] font-bold text-[#927763]">نسبة تحقيقك للتارجت</p>
+              <p className="text-[10px] font-bold text-[var(--color-text-secondary)]">نسبة تحقيقك للتارجت</p>
               <div className="mt-1 flex items-baseline gap-1">
-                <span className="font-mono text-[52px] font-black leading-none tracking-[-0.065em] text-[#bd4b0a] sm:text-[68px]">{formatPercent(data.overall)}</span>
-                <span className="text-xl font-black text-[#e58a4a]">%</span>
+                <span className="font-mono text-[52px] font-black leading-none tracking-[-0.065em] text-[var(--color-primary-700)] sm:text-[68px]">{formatPercent(data.overall)}</span>
+                <span className="text-xl font-black text-[var(--color-primary-600)]">%</span>
               </div>
-              <div className="mt-3 inline-flex max-w-full items-center gap-2 rounded-xl border border-[#f0d9c5] bg-white/85 px-3 py-2 shadow-sm">
-                <span className="text-[10px] font-bold text-[#9a806c]">{gap > 0 ? "فاضلك على الهدف" : "حالة التارجت"}</span>
-                <strong className="truncate font-mono text-sm font-black text-[#38291f]">{gap > 0 ? `${formatPercent(gap)}%` : "محقق الهدف ✓"}</strong>
+              <div className="mt-3 inline-flex max-w-full items-center gap-2 rounded-xl border border-[var(--color-border)] bg-white/85 px-3 py-2 shadow-sm">
+                <span className="text-[10px] font-bold text-[var(--color-text-secondary)]">{gap > 0 ? "فاضلك على الهدف" : "حالة التارجت"}</span>
+                <strong className="truncate font-mono text-sm font-black text-[var(--color-text-primary)]">{gap > 0 ? `${formatPercent(gap)}%` : "محقق الهدف ✓"}</strong>
               </div>
             </div>
             <div className="relative mx-auto h-[108px] w-[108px] sm:h-[132px] sm:w-[132px]">
               <svg viewBox="0 0 100 100" className="h-full w-full -rotate-90">
-                <circle cx="50" cy="50" r="40" fill="none" stroke="#f3dfce" strokeWidth="9" />
+                <circle cx="50" cy="50" r="40" fill="none" stroke="var(--color-border)" strokeWidth="9" />
                 <circle cx="50" cy="50" r="40" fill="none" stroke="url(#hero-progress)" strokeWidth="9" strokeLinecap="round" strokeDasharray={ringLen} strokeDashoffset={ringLen - (ringLen * Math.min(100, Math.max(0, data.overall))) / 100} className="transition-all duration-700" />
-                <defs><linearGradient id="hero-progress" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stopColor="#ffad58" /><stop offset="100%" stopColor="#bd4b0a" /></linearGradient></defs>
+                <defs><linearGradient id="hero-progress" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stopColor="var(--color-primary-500)" /><stop offset="100%" stopColor="var(--color-primary-700)" /></linearGradient></defs>
               </svg>
               <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <span className="font-mono text-lg font-black text-[#bd4b0a] sm:text-xl">{Math.round(Math.min(200, data.overall))}%</span>
+                <span className="font-mono text-lg font-black text-[var(--color-primary-700)] sm:text-xl">{Math.round(Math.min(200, data.overall))}%</span>
               </div>
             </div>
           </div>
           <div>
-            <div className="relative h-2.5 overflow-hidden rounded-full bg-[#f2dfcf]">
-              <div className="h-full rounded-full bg-gradient-to-l from-[#ffad58] via-[#ed741d] to-[#bd4b0a] shadow-[0_1px_5px_rgba(189,75,10,0.22)] transition-all duration-700" style={{ width: `${Math.min(100, Math.max(0, data.overall))}%` }} />
+            <div className="relative h-2.5 overflow-hidden rounded-full bg-[var(--color-border)]">
+              <div className="h-full rounded-full bg-gradient-to-l from-[var(--color-primary-500)] via-[var(--color-primary-600)] to-[var(--color-primary-700)] shadow-[0_1px_5px_rgba(189,75,10,0.22)] transition-all duration-700" style={{ width: `${Math.min(100, Math.max(0, data.overall))}%` }} />
             </div>
-            <div className="mt-1 flex justify-between text-[9px] font-bold text-[#a18a78]" dir="ltr">
+            <div className="mt-1 flex justify-between text-[9px] font-bold text-[var(--color-text-secondary)]" dir="ltr">
               <span>100% target</span><span>0%</span>
             </div>
           </div>
-          <div className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] font-semibold text-[#8c725f]">
-            <span className="font-extrabold text-[#bd4b0a]">{statusTextEgy}</span><span className="text-[#d9bda7]">•</span><span>{timeText}</span>
+          <div className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] font-semibold text-[var(--color-text-secondary)]">
+            <span className="font-extrabold text-[var(--color-primary-700)]">{statusTextEgy}</span><span className="text-[var(--color-border)]">•</span><span>{timeText}</span>
           </div>
 
-          {sarcastic ? <p className="mt-3 text-[11px] font-bold text-[#a75b2c]">{sarcastic}</p> : null}
+          {sarcastic ? <p className="mt-3 text-[11px] font-bold text-[var(--color-primary-700)]">{sarcastic}</p> : null}
         </div>
       </section>
 
       {/* المطلوب انهاردة */}
-      <section className="flex items-stretch overflow-hidden rounded-[26px] border border-[#f4c49e] bg-white shadow-[0_5px_14px_rgba(100,55,25,0.13)]">
-        <div className="flex w-24 shrink-0 flex-col items-center justify-center bg-gradient-to-br from-[#a94308] to-[#e96812] px-2.5 py-3.5 text-white sm:w-28 sm:px-3 sm:py-4">
+      <section className="flex items-stretch overflow-hidden rounded-[26px] border border-[var(--color-border)] bg-white shadow-[0_5px_14px_rgba(100,55,25,0.13)]">
+        <div className="flex w-24 shrink-0 flex-col items-center justify-center bg-gradient-to-br from-[var(--color-primary-700)] to-[var(--color-primary-600)] px-2.5 py-3.5 text-white sm:w-28 sm:px-3 sm:py-4">
           <span className="font-mono text-2xl font-black leading-none sm:text-3xl">{data.pace.perDay === null ? "—" : formatQty(Math.ceil(data.pace.perDay))}</span>
-          <span className="mt-1 text-[10px] font-bold text-[#fff0e2]">{data.pace.perDay === null ? "" : linesWord(Math.ceil(data.pace.perDay)) + " / يوم"}</span>
+          <span className="mt-1 text-[10px] font-bold text-[var(--color-primary-50)]">{data.pace.perDay === null ? "" : linesWord(Math.ceil(data.pace.perDay)) + " / يوم"}</span>
         </div>
         <div className="flex min-w-0 flex-1 flex-col justify-center gap-1 p-3.5">
-          <span className="flex items-center gap-1.5 text-xs font-black text-[#2d2119]">
-            <span className="h-1.5 w-1.5 rounded-full bg-[#e96812]" />
+          <span className="flex items-center gap-1.5 text-xs font-black text-[var(--color-text-primary)]">
+            <span className="h-1.5 w-1.5 rounded-full bg-[var(--color-primary-600)]" />
             المطلوب انهاردة عشان تفضل On Track
           </span>
-          <span className="text-[11px] font-semibold leading-relaxed text-[#927b69]">{data.pace.message}</span>
+          <span className="text-[11px] font-semibold leading-relaxed text-[var(--color-text-secondary)]">{data.pace.message}</span>
         </div>
       </section>
 
       {/* نسبة الإنجاز بالمحاور */}
-      <section className="flex flex-col gap-3 rounded-[26px] border border-[#f4c49e] bg-white/70 p-4 shadow-[0_5px_14px_rgba(100,55,25,0.13)]">
+      <section className="flex flex-col gap-3 rounded-[26px] border border-[var(--color-border)] bg-white/70 p-4 shadow-[0_5px_14px_rgba(100,55,25,0.13)]">
         <div className="flex items-center justify-between">
-          <h2 className="flex items-center gap-1.5 text-sm font-black tracking-tight text-[#38291f]">
+          <h2 className="flex items-center gap-1.5 text-sm font-black tracking-tight text-[var(--color-text-primary)]">
             <span>نسبة الإنجاز بالمحاور</span>
-            <span className="rounded border border-[#f4c49e] bg-[#fff0e2] px-1.5 text-[11px] font-bold text-[#bd4b0a]">{data.kpis.length} مؤشرات</span>
+            <span className="rounded border border-[var(--color-border)] bg-[var(--color-primary-50)] px-1.5 text-[11px] font-bold text-[var(--color-primary-700)]">{data.kpis.length} مؤشرات</span>
           </h2>
-          <span className="text-[11px] font-bold text-[#9a7963]">اسحب ←</span>
+          <span className="text-[11px] font-bold text-[var(--color-text-secondary)]">اسحب ←</span>
         </div>
         <div className="no-scrollbar flex gap-3 overflow-x-auto pb-1 pt-0.5">
           {data.kpis.map((kpi) => {
             const ok = kpi.achieved >= kpi.expectedToDate;
             return (
-              <div key={kpi.kpiKey} className="flex w-[104px] shrink-0 flex-col items-center rounded-2xl border border-[#f4c49e] bg-[#fff8f1] p-2 text-center shadow-[0_5px_14px_rgba(100,55,25,0.13)] transition-shadow">
+              <div key={kpi.kpiKey} className="flex w-[104px] shrink-0 flex-col items-center rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface-cream)] p-2 text-center shadow-[0_5px_14px_rgba(100,55,25,0.13)] transition-shadow">
                 <div className={`flex h-10 w-10 items-center justify-center rounded-full border-2 font-mono text-xs font-black ${ok ? "border-emerald-500 text-emerald-700" : "border-red-500 text-red-700"}`}>
                   {Math.round(kpi.percent)}%
                 </div>
-                <span className="mt-1.5 w-full truncate text-[11px] font-bold text-[#38291f]" dir="ltr">{shortKpiName(kpi.nameEn)}</span>
+                <span className="mt-1.5 w-full truncate text-[11px] font-bold text-[var(--color-text-primary)]" dir="ltr">{shortKpiName(kpi.nameEn)}</span>
                 <span className={`mt-0.5 text-[10px] font-extrabold ${ok ? "text-emerald-700" : "text-red-700"}`}>{ok ? "On Track" : "متأخر"}</span>
               </div>
             );
@@ -247,17 +247,17 @@ export default function HomePage() {
           { href: "/target/", label: "التارجت" },
           { href: "/wiki/", label: "المرجع" },
         ].map((item) => (
-          <Link key={item.href} href={`${item.href}?month=${month}`} className="rounded-2xl border border-[#f4c49e] bg-white px-2 py-3 text-center text-xs font-extrabold text-[#63391f] shadow-[0_5px_14px_rgba(100,55,25,0.13)] transition-all hover:-translate-y-0.5 hover:border-[#e8b58f] active:scale-95">
+          <Link key={item.href} href={`${item.href}?month=${month}`} className="rounded-2xl border border-[var(--color-border)] bg-white px-2 py-3 text-center text-xs font-extrabold text-[var(--color-text-primary)] shadow-[0_5px_14px_rgba(100,55,25,0.13)] transition-all hover:-translate-y-0.5 hover:border-[var(--color-border)] active:scale-95">
             {item.label}
           </Link>
         ))}
       </section>
 
       {/* المؤشرات */}
-      <section className="flex flex-col gap-3 rounded-[28px] border border-[#f4c49e] bg-white/75 p-4 shadow-[0_5px_14px_rgba(100,55,25,0.13)] sm:p-5">
+      <section className="flex flex-col gap-3 rounded-[28px] border border-[var(--color-border)] bg-white/75 p-4 shadow-[0_5px_14px_rgba(100,55,25,0.13)] sm:p-5">
         <div className="flex items-center justify-between">
-          <h2 className="text-base font-black tracking-tight text-[#38291f]">مؤشرات الأداء (KPIs)</h2>
-          <span className="text-[11px] font-bold text-[#927b69]">{data.kpis.length} مؤشر</span>
+          <h2 className="text-base font-black tracking-tight text-[var(--color-text-primary)]">مؤشرات الأداء (KPIs)</h2>
+          <span className="text-[11px] font-bold text-[var(--color-text-secondary)]">{data.kpis.length} مؤشر</span>
         </div>
         <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
           {data.kpis.map((kpi, kpiIndex) => {
@@ -265,16 +265,16 @@ export default function HomePage() {
             const ringLen = 2 * Math.PI * 18;
             const pct = Math.min(100, Math.max(0, kpi.percent));
             return (
-              <article key={kpi.kpiKey} style={{ animationDelay: `${kpiIndex * 70}ms`, boxShadow: onTrackKpi ? "0 0 0 1px rgba(22,163,74,.06), 0 0 8px rgba(22,163,74,.07), 0 5px 14px rgba(100,55,25,.13)" : "0 0 0 1px rgba(220,38,38,.06), 0 0 8px rgba(220,38,38,.07), 0 5px 14px rgba(100,55,25,.13)" }} className={`tys-rise flex min-w-0 items-center gap-2.5 rounded-2xl border p-2 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg sm:gap-3 sm:p-2.5 border-[#f4c49e] bg-[#fff8f1]`}>
+              <article key={kpi.kpiKey} style={{ animationDelay: `${kpiIndex * 70}ms`, boxShadow: onTrackKpi ? "0 0 0 1px rgba(22,163,74,.06), 0 0 8px rgba(22,163,74,.07), 0 5px 14px rgba(100,55,25,.13)" : "0 0 0 1px rgba(220,38,38,.06), 0 0 8px rgba(220,38,38,.07), 0 5px 14px rgba(100,55,25,.13)" }} className={`tys-rise flex min-w-0 items-center gap-2.5 rounded-2xl border p-2 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg sm:gap-3 sm:p-2.5 border-[var(--color-border)] bg-[var(--color-surface-cream)]`}>
                 <div className="relative h-12 w-12 shrink-0 sm:h-14 sm:w-14">
                   <svg viewBox="0 0 44 44" className="h-full w-full -rotate-90">
-                    <circle cx="22" cy="22" r="18" fill="none" stroke="#f6e9df" strokeWidth="5" />
+                    <circle cx="22" cy="22" r="18" fill="none" stroke="var(--color-border)" strokeWidth="5" />
                     <circle
                       cx="22"
                       cy="22"
                       r="18"
                       fill="none"
-                      stroke={onTrackKpi ? "#16B981" : "#DC2626"}
+                      stroke={onTrackKpi ? "var(--color-success-ring)" : "var(--color-danger-text)"}
                       strokeWidth="5"
                       strokeLinecap="round"
                       strokeDasharray={ringLen}
@@ -282,30 +282,30 @@ export default function HomePage() {
                       className="transition-all duration-700"
                     />
                   </svg>
-                  <span className="absolute inset-0 flex items-center justify-center font-mono text-xs font-black text-[#2d2119]">{Math.round(kpi.percent)}%</span>
+                  <span className="absolute inset-0 flex items-center justify-center font-mono text-xs font-black text-[var(--color-text-primary)]">{Math.round(kpi.percent)}%</span>
                 </div>
                 <div className="flex min-w-0 flex-1 flex-col gap-1">
                   <div className="flex items-center justify-between gap-2">
                     <span dir="rtl" className="flex min-w-0 items-center gap-1.5">
-                      <span className="inline-flex shrink-0 items-center justify-center rounded-full bg-[#fff0e2] px-2.5 py-1.5 text-[#e96812]">
+                      <span className="inline-flex shrink-0 items-center justify-center rounded-full bg-[var(--color-primary-50)] px-2.5 py-1.5 text-[var(--color-primary-600)]">
                         <KpiIcon kpiKey={kpi.kpiKey} className="h-5 w-5" />
                       </span>
-                      <span className="truncate text-xs font-black text-[#2d2119]" dir="ltr">{kpi.nameEn}</span>
+                      <span className="truncate text-xs font-black text-[var(--color-text-primary)]" dir="ltr">{kpi.nameEn}</span>
                     </span>
                     <span className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-extrabold ${onTrackKpi ? "bg-emerald-50 text-emerald-700" : "bg-red-50 text-red-600"}`}>
                       {onTrackKpi ? "On Track" : `ناقص ${formatQty(Math.max(0, Math.ceil(kpi.expectedToDate - kpi.achieved)))}`}
                     </span>
                   </div>
-                  <div className="flex items-center justify-between text-[11px] font-semibold text-[#927b69]">
+                  <div className="flex items-center justify-between text-[11px] font-semibold text-[var(--color-text-secondary)]">
                     <span>
-                      <strong className="font-mono text-[#2d2119]">{formatQty(kpi.achieved)}</strong> / {formatQty(kpi.target)}
+                      <strong className="font-mono text-[var(--color-text-primary)]">{formatQty(kpi.achieved)}</strong> / {formatQty(kpi.target)}
                     </span>
-                    <span>المتبقي <strong className="font-mono text-[#2d2119]">{formatQty(kpi.remaining)}</strong></span>
+                    <span>المتبقي <strong className="font-mono text-[var(--color-text-primary)]">{formatQty(kpi.remaining)}</strong></span>
                   </div>
-                  <div className="h-1.5 w-full overflow-hidden rounded-full bg-[#f6e9df]">
-                    <div className="h-full rounded-full bg-gradient-to-r from-[#e96812] to-[#ff9d38] transition-all duration-700" style={{ width: `${pct}%` }} />
+                  <div className="h-1.5 w-full overflow-hidden rounded-full bg-[var(--color-border)]">
+                    <div className="h-full rounded-full bg-gradient-to-r from-[var(--color-primary-600)] to-[var(--color-primary-500)] transition-all duration-700" style={{ width: `${pct}%` }} />
                   </div>
-                  {kpi.overTarget ? <p className="text-[10px] font-bold text-[#e96812]">عدّيت التارجت 🎉</p> : null}
+                  {kpi.overTarget ? <p className="text-[10px] font-bold text-[var(--color-primary-600)]">عدّيت التارجت 🎉</p> : null}
                 </div>
               </article>
             );
