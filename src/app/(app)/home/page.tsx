@@ -228,7 +228,7 @@ export default function HomePage() {
           {data.kpis.map((kpi) => {
             const ok = kpi.achieved >= kpi.expectedToDate;
             return (
-              <div key={kpi.kpiKey} className="flex w-[104px] shrink-0 flex-col items-center rounded-[22px] border border-[#f1dfd0] bg-[#fffaf5] p-3 text-center shadow-[0_5px_16px_rgba(100,55,25,0.045)]">
+              <div key={kpi.kpiKey} style={{ boxShadow: ok ? "0 0 0 1px rgba(22,163,74,.12), 0 0 18px rgba(22,163,74,.18), 0 5px 16px rgba(22,163,74,.08)" : "0 0 0 1px rgba(220,38,38,.12), 0 0 18px rgba(220,38,38,.17), 0 5px 16px rgba(220,38,38,.08)" }} className={`flex w-[104px] shrink-0 flex-col items-center rounded-[22px] border p-3 text-center transition-all duration-300 ${ok ? "border-emerald-300 bg-[#e2f5e9]" : "border-red-300 bg-[#fde5e5]"}`}>
                 <div className={`flex h-10 w-10 items-center justify-center rounded-full border-2 font-mono text-xs font-black ${ok ? "border-emerald-500 text-emerald-700" : "border-red-500 text-red-700"}`}>
                   {Math.round(kpi.percent)}%
                 </div>
@@ -265,7 +265,7 @@ export default function HomePage() {
             const ringLen = 2 * Math.PI * 18;
             const pct = Math.min(100, Math.max(0, kpi.percent));
             return (
-              <article key={kpi.kpiKey} className={`flex min-w-0 items-center gap-2.5 rounded-[20px] border bg-white p-3 transition-all duration-300 sm:gap-3 sm:p-3.5 ${onTrackKpi ? "border-emerald-200 shadow-[0_8px_22px_rgba(16,185,129,0.07)]" : "border-[#f0d8c8] shadow-[0_8px_22px_rgba(145,61,13,0.055)]"}`}>
+              <article key={kpi.kpiKey} style={{ boxShadow: onTrackKpi ? "0 0 0 1px rgba(22,163,74,.12), 0 0 20px rgba(22,163,74,.17), 0 8px 22px rgba(16,185,129,.10)" : "0 0 0 1px rgba(220,38,38,.12), 0 0 20px rgba(220,38,38,.16), 0 8px 22px rgba(220,38,38,.09)" }} className={`flex min-w-0 items-center gap-2.5 rounded-[20px] border p-3 transition-all duration-300 sm:gap-3 sm:p-3.5 ${onTrackKpi ? "border-emerald-300 bg-[#e2f5e9]" : "border-red-300 bg-[#fde5e5]"}`}>
                 <div className="relative h-12 w-12 shrink-0 sm:h-14 sm:w-14">
                   <svg viewBox="0 0 44 44" className="h-full w-full -rotate-90">
                     <circle cx="22" cy="22" r="18" fill="none" stroke="#f6e9df" strokeWidth="5" />
