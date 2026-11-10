@@ -367,7 +367,7 @@ function enrichEntry(entry: Entry) {
   return {
     ...entry,
     nameEn: catalog?.nameEn ?? entry.kpiKey,
-    nameAr: catalog?.nameAr ?? entry.kpiKey,
+    nameAr: catalog?.nameEn ?? entry.kpiKey,
     unitAr: catalog?.unitAr ?? "",
   };
 }
@@ -599,7 +599,7 @@ function getDashboard(state: State, params: URLSearchParams) {
     return {
       kpiKey: kpi.key,
       nameEn: kpi.nameEn,
-      nameAr: kpi.nameAr,
+      nameAr: kpi.nameEn,
       unitAr: kpi.unitAr,
       quantity: rows.reduce((sum, entry) => sum + entry.quantity, 0),
       count: rows.length,
@@ -614,7 +614,7 @@ function getDashboard(state: State, params: URLSearchParams) {
     return {
       ...kpi,
       nameEn: catalog.nameEn,
-      nameAr: catalog.nameAr,
+      nameAr: catalog.nameEn,
       achieved: value,
       percent: achievementPercent(value, kpi.target),
       contribution: rules.counted.find((row) => row.kpiKey === kpi.kpiKey)?.contribution ?? 0,
