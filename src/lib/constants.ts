@@ -59,7 +59,7 @@ export const BRANCHES = [
 ] as const;
 
 /** مديرو المناطق (الأريا مانجر): الموظف بيختار مديره، ومديره بس يشوف تقاريره. */
-export const AREA_MANAGERS = ["Abd Elrahman Mahmoud", "Adham Mohey Eldin", "Khaled Mahdy", "Nesma Nassar", "Rana Mohamed"] as const;
+export const AREA_MANAGERS = ["Abd Elrahman Mahmoud", "Adham Mohey Eldin", "Khaled Mahdy", "Nesma Nassar", "Rana Mohamed", "Ayman Khatab", "Alaa Adel", "Hanan Mohamed", "Ibrahim Magdy", "Mahmoud Sobhy", "Mohamed Ayad", "Mohamed Mamdouh", "Mohamed Samy", "Ramzy Girgis", "Shady Mohamed"] as const;
 
 /** اختيار لمن مش تابع لفرع: بيتسجل عنده، ومايظهرش في لوحة المدير. */
 export const OUTSIDE_BRANCHES = "خارج الفروع";
