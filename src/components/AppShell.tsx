@@ -478,7 +478,7 @@ function AppFrame({ children, blocked, month }: { children: ReactNode; blocked: 
             <div className="flex min-w-0 flex-1 flex-col">
               <header className="tys-app-header sticky top-0 z-30 border-b border-[#f1dfd0]/80 bg-[#fffaf5]/90 px-4 py-3 backdrop-blur-2xl lg:px-8">
                 <div className="mx-auto flex max-w-6xl items-center justify-between gap-3">
-                  <div className="flex min-w-0 items-center gap-2.5 lg:hidden">
+                  <div className="flex min-w-0 items-center gap-3 lg:hidden">
                     <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-[#e96812] to-[#ff9d38] shadow-[0_4px_12px_rgba(217,104,18,0.22)] ring-1 ring-white/80" aria-hidden="true">
                       <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M5 3v18h16" />
