@@ -3378,3 +3378,23 @@ body {
   background-color: #fde8e8;
   box-shadow: 0 0 0 1px rgba(220,38,38,.10), 0 0 18px rgba(220,38,38,.14), 0 8px 22px rgba(220,38,38,.08);
 }
+
+
+/* Mobile rendering: keep the warm surfaces, skip expensive blur paint layers. */
+@media (max-width: 767px) {
+  .tys-app-header,
+  .tys-mobile-nav {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+
+  .blur-2xl,
+  .blur-3xl {
+    filter: none !important;
+    opacity: 0.3;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+}
