@@ -90,7 +90,6 @@ export const KPI_CATALOG = [
   {
     key: "new_lines",
     nameEn: "GAs",
-    nameAr: "الخطوط الجديدة",
     emoji: "📱",
     unitAr: "خط",
     defaultTarget: 175,
@@ -99,7 +98,6 @@ export const KPI_CATALOG = [
   {
     key: "new_orange_cash",
     nameEn: "New Orange Cash Wallets",
-    nameAr: "محافظ Orange Cash الجديدة",
     emoji: "👛",
     unitAr: "محفظة",
     defaultTarget: 158,
@@ -108,7 +106,6 @@ export const KPI_CATALOG = [
   {
     key: "existing_wallets",
     nameEn: "Excite",
-    nameAr: "المحافظ القائمة",
     emoji: "💳",
     unitAr: "محفظة",
     defaultTarget: 74,
@@ -117,7 +114,6 @@ export const KPI_CATALOG = [
   {
     key: "points",
     nameEn: "Points",
-    nameAr: "النقاط",
     emoji: "⭐",
     unitAr: "نقطة",
     defaultTarget: 1737,
@@ -126,7 +122,6 @@ export const KPI_CATALOG = [
   {
     key: "postpaid_lines",
     nameEn: "Postpaid",
-    nameAr: "خطوط Postpaid",
     emoji: "📞",
     unitAr: "خط",
     defaultTarget: 10,
@@ -135,7 +130,6 @@ export const KPI_CATALOG = [
   {
     key: "dsl",
     nameEn: "Home ADSL",
-    nameAr: "إنترنت منزلي DSL",
     emoji: "🌐",
     unitAr: "خط",
     defaultTarget: 1,
@@ -145,7 +139,6 @@ export const KPI_CATALOG = [
     // المدير بس: إنتاجية الفرع (تارجت الـ GAs والـ OC). للموظف وزنها صفر ومش بتظهر.
     key: "productivity",
     nameEn: "Productivity (GA & OC)",
-    nameAr: "الإنتاجية",
     emoji: "📈",
     unitAr: "%",
     defaultTarget: 100,
@@ -154,7 +147,6 @@ export const KPI_CATALOG = [
   {
     key: "quality",
     nameEn: "KYC & Compliance",
-    nameAr: "الجودة",
     emoji: "✅",
     unitAr: "%",
     defaultTarget: 100,
