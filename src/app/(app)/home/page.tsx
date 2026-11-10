@@ -206,19 +206,31 @@ export default function HomePage() {
         </Link>
       </div>
 
-      {/* المطلوب انهاردة */}
-      <section className="flex items-stretch overflow-hidden rounded-[26px] border border-[var(--color-border)] bg-white shadow-[0_5px_14px_rgba(100,55,25,0.13)]">
-        <div className="flex w-24 shrink-0 flex-col items-center justify-center bg-gradient-to-br from-[var(--color-primary-700)] to-[var(--color-primary-600)] px-2.5 py-3.5 text-white sm:w-28 sm:px-3 sm:py-4">
-          <span className="font-mono text-2xl font-black leading-none sm:text-3xl">{data.pace.perDay === null ? "—" : formatQty(Math.ceil(data.pace.perDay))}</span>
-          <span className="mt-1 text-[10px] font-bold text-[var(--color-primary-50)]">{data.pace.perDay === null ? "" : linesWord(Math.ceil(data.pace.perDay)) + " / يوم"}</span>
-        </div>
-        <div className="flex min-w-0 flex-1 flex-col justify-center gap-1 p-3.5">
-          <span className="flex items-center gap-1.5 text-xs font-black text-[var(--color-text-primary)]">
-            <span className="h-1.5 w-1.5 rounded-full bg-[var(--color-primary-600)]" />
-            المطلوب انهاردة عشان تفضل On Track
+      {/* الديلي المطلوب */}
+      <section className="rounded-2xl border border-[var(--color-border)] bg-white p-3 shadow-sm sm:p-4">
+        <div className="mb-3 flex items-center justify-between gap-2">
+          <div>
+            <p className="text-xs font-black tracking-wide text-[var(--color-primary-700)]">DAILY</p>
+            <h2 className="mt-0.5 text-sm font-extrabold text-[var(--color-text-primary)]">الديلي المطلوب</h2>
+          </div>
+          <span className="shrink-0 rounded-full bg-[var(--color-primary-50)] px-2.5 py-1 text-[11px] font-extrabold text-[var(--color-primary-700)]">
+            فاضل {formatQty(data.work.remaining)} يوم عمل
           </span>
-          <span className="text-[11px] font-semibold leading-relaxed text-[var(--color-text-secondary)]">{data.pace.message}</span>
         </div>
+        {data.kpis.filter((k) => k.remaining > 0).length > 0 ? (
+          <div className="grid grid-cols-2 gap-2">
+            {data.kpis.filter((k) => k.remaining > 0).map((k) => (
+              <div key={k.kpiKey} className="flex min-w-0 items-center justify-between gap-2 rounded-xl bg-[var(--color-surface-cream)] px-2.5 py-2">
+                <span className="min-w-0 truncate text-[11px] font-bold text-[var(--color-text-secondary)]" dir="ltr">{k.nameEn}</span>
+                <strong className="shrink-0 text-sm font-black tabular-nums text-[var(--color-primary-700)]">
+                  {formatQty(data.work.remaining > 0 ? Math.ceil(k.remaining / data.work.remaining) : k.remaining)}
+                </strong>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="rounded-xl bg-[var(--color-primary-50)] px-3 py-2 text-xs font-bold text-[var(--color-primary-700)]">كل المؤشرات وصلت للتارجت 🎉</p>
+        )}
       </section>
 
       {/* المؤشرات */}
