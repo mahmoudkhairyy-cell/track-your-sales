@@ -35,7 +35,7 @@ function MonthSwitcher() {
   }
 
   return (
-    <div className="flex items-center gap-1 rounded-full border border-[#f1e2d6] bg-white/90 p-1 shadow-sm">
+    <div className="flex items-center gap-1 rounded-full border border-[#f0dfd0] bg-white/95 p-1 shadow-sm">
       <button
         type="button"
         onClick={() => go(shiftYearMonth(month, -1))}
@@ -71,7 +71,7 @@ function NavLinks({ pathname, month }: { pathname: string; month: string }) {
             href={`${item.href}?month=${month}`}
             aria-current={active ? "page" : undefined}
             className={`flex min-h-12 items-center gap-3 rounded-2xl px-3 text-sm font-bold transition ${
-              active ? "bg-[#fff0e4] text-[#bd4b0a] shadow-sm" : "text-[#8c7b6e] hover:bg-[#fff7f0] hover:text-[#bd4b0a]"
+              active ? "bg-[#fff0df] text-[#c6530b] shadow-[0_4px_14px_rgba(198,83,11,0.08)]" : "text-[#8c7b6e] hover:bg-[#fff5eb] hover:text-[#c6530b]"
             }`}
           >
             <Icon />
@@ -93,12 +93,12 @@ export function AppShell({ user, children }: { user: SafeUser; children: ReactNo
     <ToastProvider>
       <MonthContext.Provider value={month}>
         <div className="min-h-screen bg-transparent text-[#24180f]">
-          <a href="#main-content" className="sr-only z-[60] rounded-xl bg-white px-4 py-3 font-bold text-[#bd4b0a] shadow-lg focus:not-sr-only focus:fixed focus:right-4 focus:top-4">
+          <a href="#main-content" className="sr-only z-[60] rounded-xl bg-white px-4 py-3 font-bold text-[#c6530b] shadow-lg focus:not-sr-only focus:fixed focus:right-4 focus:top-4">
             تخطي إلى المحتوى
           </a>
-          <div className="h-1.5 bg-gradient-to-l from-[#bd4b0a] via-[#e96812] to-[#ffb36e]" />
+          <div className="h-1.5 bg-gradient-to-l from-[#c6530b] via-[#f07818] to-[#ffb36e]" />
           <div className="mx-auto flex min-h-screen max-w-7xl">
-            <aside className="sticky top-0 hidden h-screen w-72 shrink-0 flex-col border-l border-[#f1e2d6] bg-white/85 p-5 shadow-[8px_0_36px_rgba(116,63,26,0.035)] backdrop-blur-xl lg:flex">
+            <aside className="sticky top-0 hidden h-screen w-72 shrink-0 flex-col border-l border-[#f0dfd0] bg-[#fffaf5]/95 p-5 shadow-[8px_0_36px_rgba(116,63,26,0.035)] backdrop-blur-xl lg:flex">
               <div className="flex items-center gap-3">
                 <LogoMark />
                 <div>
@@ -106,7 +106,7 @@ export function AppShell({ user, children }: { user: SafeUser; children: ReactNo
                   <p className="text-xs text-neutral-400" dir="ltr">{BRAND_BY}</p>
                 </div>
               </div>
-              <div className="mt-6 overflow-hidden rounded-[26px] bg-gradient-to-br from-[#f47b27] via-[#e96812] to-[#bd4b0a] p-4 text-white shadow-[0_14px_28px_rgba(189,75,10,0.20)]">
+              <div className="mt-6 overflow-hidden rounded-[26px] bg-gradient-to-br from-[#ff9a45] via-[#f07818] to-[#c6530b] p-4 text-white shadow-[0_14px_28px_rgba(189,75,10,0.20)]">
                 <p className="text-sm font-extrabold">{user.name}</p>
                 <p className="text-xs text-white/80">📍 {user.branch}</p>
               </div>
@@ -117,7 +117,7 @@ export function AppShell({ user, children }: { user: SafeUser; children: ReactNo
             </aside>
 
             <div className="flex min-w-0 flex-1 flex-col">
-              <header className="sticky top-0 z-30 border-b border-[#f1e2d6]/80 bg-[#fffaf6]/90 px-4 py-3 shadow-[0_5px_24px_rgba(116,63,26,0.035)] backdrop-blur-xl">
+              <header className="sticky top-0 z-30 border-b border-[#f0dfd0]/90 bg-[#fffaf5]/92 px-4 py-3 shadow-[0_5px_24px_rgba(116,63,26,0.035)] backdrop-blur-xl">
                 <div className="flex items-center justify-between gap-3">
                   <div className="flex items-center gap-2">
                     <LogoMark />
@@ -134,7 +134,7 @@ export function AppShell({ user, children }: { user: SafeUser; children: ReactNo
             </div>
           </div>
 
-          <nav aria-label="التنقل الرئيسي للموبايل" className="fixed inset-x-0 bottom-0 z-40 border-t border-[#f1e2d6] bg-[#fffaf6]/95 pb-[env(safe-area-inset-bottom)] shadow-[0_-8px_30px_rgba(116,63,26,0.07)] backdrop-blur-xl lg:hidden">
+          <nav aria-label="التنقل الرئيسي للموبايل" className="fixed inset-x-0 bottom-0 z-40 border border-[#f0dfd0] bg-white/95 pb-[env(safe-area-inset-bottom)] shadow-[0_-8px_30px_rgba(116,63,26,0.07)] backdrop-blur-xl lg:hidden">
             <div className="grid grid-cols-5">
               {NAV.map((item) => {
                 const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
@@ -145,12 +145,12 @@ export function AppShell({ user, children }: { user: SafeUser; children: ReactNo
                     href={`${item.href}?month=${month}`}
                     aria-current={active ? "page" : undefined}
                     className={`flex min-h-16 flex-col items-center justify-center gap-1 text-[11px] font-extrabold ${
-                      active ? "text-[#bd4b0a]" : "text-[#a99586]"
+                      active ? "text-[#c6530b]" : "text-[#a99586]"
                     }`}
                   >
                     <span
                       className={`flex h-9 w-9 items-center justify-center rounded-2xl ${
-                        item.emphasize ? "bg-gradient-to-br from-[#f47b27] to-[#bd4b0a] text-white shadow-[0_5px_14px_rgba(189,75,10,0.25)]" : active ? "bg-[#fff0e4]" : ""
+                        item.emphasize ? "bg-gradient-to-br from-[#ff9a45] to-[#c6530b] text-white shadow-[0_5px_14px_rgba(189,75,10,0.25)]" : active ? "bg-[#fff0df]" : ""
                       }`}
                     >
                       <Icon />
