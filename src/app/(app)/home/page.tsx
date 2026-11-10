@@ -119,7 +119,6 @@ export default function HomePage() {
 
 
 
-  const ringLen = 251.2;
   const sarcastic = sarcasticLine(data.overall);
 
   return (
@@ -161,7 +160,7 @@ export default function HomePage() {
               {onTrack === null ? "Waiting for data" : onTrack ? "On track" : "Behind"}
             </span>
           </div>
-          <div className="grid grid-cols-[minmax(0,1fr)_112px] items-center gap-3 py-4 sm:grid-cols-[minmax(0,1fr)_136px] sm:gap-6 sm:py-5">
+          <div className="grid grid-cols-1 items-center gap-3 py-4 sm:py-5">
             <div className="min-w-0">
               <p className="text-[10px] font-bold text-[var(--color-text-secondary)]">نسبة تحقيقك للتارجت</p>
               <div className="mt-1 flex items-baseline gap-1">
@@ -171,16 +170,6 @@ export default function HomePage() {
               <div className="mt-3 inline-flex max-w-full items-center gap-2 rounded-xl border border-[var(--color-border)] bg-white/85 px-3 py-2 shadow-sm">
                 <span className="text-[10px] font-bold text-[var(--color-text-secondary)]">{gap > 0 ? "فاضلك على الهدف" : "حالة التارجت"}</span>
                 <strong className="truncate font-mono text-sm font-black text-[var(--color-text-primary)]">{gap > 0 ? `${formatPercent(gap)}%` : "محقق الهدف ✓"}</strong>
-              </div>
-            </div>
-            <div className="relative mx-auto h-[108px] w-[108px] sm:h-[132px] sm:w-[132px]">
-              <svg viewBox="0 0 100 100" className="h-full w-full -rotate-90">
-                <circle cx="50" cy="50" r="40" fill="none" stroke="var(--color-border)" strokeWidth="9" />
-                <circle cx="50" cy="50" r="40" fill="none" stroke="url(#hero-progress)" strokeWidth="9" strokeLinecap="round" strokeDasharray={ringLen} strokeDashoffset={ringLen - (ringLen * Math.min(100, Math.max(0, data.overall))) / 100} className="transition-all duration-700" />
-                <defs><linearGradient id="hero-progress" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stopColor="var(--color-primary-500)" /><stop offset="100%" stopColor="var(--color-primary-700)" /></linearGradient></defs>
-              </svg>
-              <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <span className="font-mono text-lg font-black text-[var(--color-primary-700)] sm:text-xl">{Math.round(Math.min(200, data.overall))}%</span>
               </div>
             </div>
           </div>
