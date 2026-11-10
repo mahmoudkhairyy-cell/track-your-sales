@@ -217,25 +217,24 @@ export default function HomePage() {
             فاضل {formatQty(data.work.remaining)} يوم عمل
           </span>
         </div>
-        <div className="grid grid-cols-2 gap-2">
-          {data.kpis.map((k) => {
+        <div className="grid grid-cols-2 gap-1.5 sm:grid-cols-3">
+          {data.kpis.filter((k) => k.remaining > 0).map((k) => {
             const dailyRequired = data.work.remaining > 0 ? Math.ceil(k.remaining / data.work.remaining) : k.remaining;
-            const completed = k.remaining <= 0;
             return (
               <div
                 key={k.kpiKey}
-                className="flex min-h-[68px] min-w-0 flex-col justify-between gap-2 rounded-xl border border-[#e87520]/25 bg-gradient-to-br from-[#ff9d38] to-[#ed7417] px-3 py-2.5 text-white shadow-[0_3px_10px_rgba(237,116,23,0.18)]"
+                className="flex min-h-[46px] min-w-0 items-center justify-between gap-2 rounded-lg border border-[#e58a4b]/30 bg-gradient-to-br from-[#a9430b] via-[#913905] to-[#702b06] px-2.5 py-1.5 text-white shadow-[0_2px_7px_rgba(83,35,8,0.22)]"
               >
-                <span className="truncate text-[10px] font-extrabold tracking-wide text-white/95" dir="ltr">{k.nameEn}</span>
-                <div className="flex items-end justify-between gap-2">
-                  <span className="text-[9px] font-bold text-white/85">{completed ? "مكتمل ✓" : "المطلوب يوميًا"}</span>
-                  <strong className="shrink-0 text-xl font-black leading-none tabular-nums text-white">
-                    {completed ? "✓" : formatQty(dailyRequired)}
-                  </strong>
-                </div>
+                <span className="min-w-0 truncate text-[9px] font-bold tracking-wide text-[#fff1e6]" dir="ltr">{k.nameEn}</span>
+                <strong className="shrink-0 rounded-md bg-white/10 px-2 py-1 text-base font-black leading-none tabular-nums text-white shadow-inner">
+                  {formatQty(dailyRequired)}
+                </strong>
               </div>
             );
           })}
+          {data.kpis.every((k) => k.remaining <= 0) ? (
+            <p className="col-span-full rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-center text-xs font-extrabold text-emerald-700">كل المؤشرات مكتملة ✓</p>
+          ) : null}
         </div>
       </section>
 
