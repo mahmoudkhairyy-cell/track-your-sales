@@ -322,6 +322,9 @@ export default function LogPage() {
             <p className="text-sm font-black">✅ الكواليتي (15%)</p>
             <p className="text-xs font-extrabold text-[var(--color-primary-700)]">{qualityScore}% من 15%</p>
           </div>
+          <div className="mb-3 h-2 overflow-hidden rounded-full bg-[var(--color-primary-50)]" role="progressbar" aria-label="نسبة الكواليتي" aria-valuemin={0} aria-valuemax={15} aria-valuenow={qualityScore}>
+            <div className="h-full rounded-full bg-gradient-to-l from-[var(--color-primary-500)] to-[var(--color-primary-700)] transition-all duration-500" style={{ width: `${Math.min(100, (qualityScore / 15) * 100)}%` }} />
+          </div>
           <p className="mb-3 text-[11px] text-[var(--color-text-secondary)]">{monthSaved ? "علّم البند لو اتحقق بالكامل، والتغيير بيتحفظ فوراً." : "⚠️ احفظ تارجت الشهر الأول من صفحة التارجت، وبعدين تقدر تعلّم الكواليتي."}</p>
           <div className="space-y-2">
             {QUALITY_ITEMS.map((item) => {
