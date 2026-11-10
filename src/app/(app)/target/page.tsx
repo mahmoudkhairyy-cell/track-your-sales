@@ -2,7 +2,7 @@
 
 import { FormEvent, useEffect, useState } from "react";
 import { KPI_CATALOG, WEEK_DAYS, kpiEmoji } from "@/lib/constants";
-import { formatQty, sumWeights } from "@/lib/calculations";
+import { sumWeights } from "@/lib/calculations";
 import { Banner, Field, PrimaryButton, SecondaryButton, Spinner, inputClass, useToast } from "@/components/ui";
 import { ApiError, api } from "@/lib/client";
 import type { WorkingDays } from "@/lib/types";
@@ -32,8 +32,6 @@ const QUALITY_ITEMS: { key: QualityKey; label: string; weight: number }[] = [
 ];
 const ZERO_QUALITY_FORM: Quality = { checks: {} };
 
-type DailyRow = { kpiKey: string; nameEn: string; unitAr: string; weight: number; percent: number; remaining: number; achieved: number; target: number };
-type DailyData = { kpis: DailyRow[]; work: { remaining: number } };
 
 function settingsSnapshot(v: { fullCommission: number; workingDays: unknown; kpis: unknown; holidays: unknown; quality: unknown }) {
   return JSON.stringify({ fullCommission: v.fullCommission, workingDays: v.workingDays, kpis: v.kpis, holidays: v.holidays, quality: v.quality });
@@ -66,24 +64,6 @@ export default function TargetPage() {
   const firstWeekdayOffset = (new Date(Date.UTC(yy, mm - 1, 1)).getUTCDay() + 1) % 7;
   const [saved, setSaved] = useState(false);
   const [baseline, setBaseline] = useState<string | null>(null);
-  const [daily, setDaily] = useState<DailyData | null>(null);
-
-  useEffect(() => {
-    let cancelled = false;
-    api<DailyData>(`/api/dashboard?month=${month}`)
-      .then((result) => {
-        if (!cancelled) setDaily(result);
-      })
-      .catch(() => {
-        if (!cancelled) setDaily(null);
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [month]);
-
-  const behindKpis = daily ? daily.kpis.filter((kpi) => kpi.weight > 0 && kpi.percent < 100 && kpi.remaining > 0) : [];
-
   useEffect(() => {
     let cancelled = false;
     queueMicrotask(() => {
@@ -287,30 +267,6 @@ export default function TargetPage() {
       <p className={`px-1 text-xs font-bold ${Math.abs(weightSum - 100) > 0.01 ? "text-amber-700" : "text-emerald-700"}`}>
         {Math.abs(weightSum - 100) > 0.01 ? `⚠️ الأوزان ${weightSum}%: ${weightSum < 100 ? `ناقص ${Math.round((100 - weightSum) * 100) / 100}%` : `زيادة ${Math.round((weightSum - 100) * 100) / 100}%`} (لازم 100% عشان تتحفظ)` : "✓ الأوزان 100%"}
       </p>
-
-      {daily ? (
-        <section className="rounded-[24px] bg-[var(--color-primary-50)] p-4 text-sm leading-7 text-[var(--color-primary-700)]">
-          <p className="font-extrabold">⚡ المطلوب منك النهارده عشان تفضل ON TRACK:</p>
-          {behindKpis.length === 0 ? (
-            <p className="mt-1 font-bold">كل المؤشرات تمام. مفيش حاجة ضاغطة النهارده 👌</p>
-          ) : daily.work.remaining <= 0 ? (
-            <p className="mt-1 font-bold">أيام الشغل خلصت. اللي فاضل: {behindKpis.map((k) => `${kpiEmoji(k.kpiKey)} ${k.nameEn} ${formatQty(k.remaining)}`).join(" · ")}</p>
-          ) : (
-            <ul className="mt-2 space-y-1">
-              {behindKpis.map((kpi) => (
-                <li key={kpi.kpiKey} className="flex items-center justify-between gap-2">
-                  <span className="font-bold">
-                    {kpiEmoji(kpi.kpiKey)} {kpi.nameEn}
-                  </span>
-                  <span className="font-black">
-                    {formatQty(Math.ceil(kpi.remaining / daily.work.remaining))} {kpi.unitAr} — فاضل {formatQty(kpi.remaining)}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          )}
-        </section>
-      ) : null}
 
       <section className="rounded-[28px] border border-[var(--color-border)] bg-white p-5 shadow-[0_12px_30px_rgba(100,55,25,0.045)]">
         <Field label="💰 الكوميشن الكامل (جنيه)">
