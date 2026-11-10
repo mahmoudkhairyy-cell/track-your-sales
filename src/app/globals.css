@@ -3357,7 +3357,7 @@ body {
 .tys-page div[class*="rounded-"][class*="border"][class*="bg-[#fff"] ,
 .tys-page-manager :is(section, article)[class*="rounded-"],
 .tys-page-manager div[class*="rounded-"][class*="border"][class*="bg-white"] {
-  border-color: #dfb995;
+  border-color: #e3c1a3;
   box-shadow: 0 8px 24px rgba(126, 65, 24, .12);
 }
 .tys-page :is(section, article)[class*="rounded-"]:not([class*="bg-red"]):not([class*="bg-emerald"]):not([class*="bg-amber"]),
@@ -3365,7 +3365,7 @@ body {
 .tys-page div[class*="rounded-"][class*="border"][class*="bg-[#fff"],
 .tys-page-manager :is(section, article)[class*="rounded-"]:not([class*="bg-red"]):not([class*="bg-emerald"]):not([class*="bg-amber"]),
 .tys-page-manager div[class*="rounded-"][class*="border"][class*="bg-white"] {
-  background-color: #fff1e4;
+  background-color: #fff4eb;
 }
 
 
