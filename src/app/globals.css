@@ -340,6 +340,7 @@ textarea { resize: vertical; }
   letter-spacing: -.015em;
   transition: color 180ms ease, transform 180ms ease;
 }
+.tys-mobile-nav-link-active-primary::before { display: none; }
 .tys-mobile-nav-link-active::before {
   position: absolute;
   top: -7px;
