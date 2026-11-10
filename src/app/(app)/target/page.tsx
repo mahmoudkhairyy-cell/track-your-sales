@@ -410,7 +410,7 @@ export default function TargetPage() {
       </section>
 
       <div className="sticky bottom-[calc(76px+env(safe-area-inset-bottom))] z-20 rounded-[24px] border border-[var(--color-border)] bg-[var(--color-surface-cream)]/95 p-2 shadow-[0_12px_30px_rgba(100,55,25,0.12)] backdrop-blur-xl lg:bottom-4">
-      <PrimaryButton type="submit" disabled={saving}>
+      <PrimaryButton type="submit" disabled={saving || (saved && !dirty)}>
         {saving ? "⏳ بنحفظ على السيرفر..." : "💾 احفظ إعدادات الشهر"}
       </PrimaryButton>
       </div>
