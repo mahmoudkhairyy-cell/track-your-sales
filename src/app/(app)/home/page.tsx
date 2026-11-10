@@ -109,9 +109,11 @@ export default function HomePage() {
   // النهارده مش محسوب في الأيام اللي عدّت.
   const doneDays = data.work.elapsedBeforeToday ?? data.work.elapsed;
   const onTrack: boolean | null = data.work.total > 0 ? data.overall >= (doneDays / data.work.total) * 100 : null;
-  const statusTextEgy = onTrack === false
+  const employeeName = data.profile.name.trim().split(/\s+/)[0] || "يا نجم";
+  const statusPhrase = onTrack === false
     ? pickPhrase(overallBandLines(Math.min(data.overall, 69.9)), `overall|off|${data.yearMonth}`)
     : pickPhrase(overallBandLines(data.overall), `overall|${data.yearMonth}`);
+  const statusTextEgy = statusPhrase.replaceAll("{name}", employeeName);
   const timeText = pickPhrase(
     timeLines(data.work.remaining, data.work.total, data.work.elapsedBeforeToday ?? data.work.elapsed),
     `time|${data.yearMonth}`,
