@@ -75,8 +75,8 @@ Deno.serve(async (req: Request) => {
     return json({ error: "bad password" }, 400, origin);
   }
   if (body.action === "change_password") {
-    if (typeof body.newPassword !== "string" || body.newPassword.length < 6 || body.newPassword.length > 200) {
-      return json({ error: "new password must be 6 to 200 characters" }, 400, origin);
+    if (typeof body.newPassword !== "string" || body.newPassword.length < 8 || body.newPassword.length > 200) {
+      return json({ error: "new password must be 8 to 200 characters" }, 400, origin);
     }
   }
 
