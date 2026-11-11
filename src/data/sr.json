@@ -6262,5 +6262,77 @@
     "description": "Fault For Data Via Channel – Slow Connection",
     "category": "عطل",
     "steps": "Fault For Data Via Channel – Slow Connection"
+  },
+  {
+    "id": "19005",
+    "title": "DSL Acc Modification For Sales - Account Dispute",
+    "titleAr": "DSL Acc Modification For Sales - Account Dispute",
+    "description": "Branch sold a new DSL subscription, the number is already reserved in the system but the data is incorrect. Required Smart Script: customer name, mobile, complaint details, landline number, governorate code, DSL reseller name, subscribed package.",
+    "category": "تعديل",
+    "steps": "Create this SR from the branch and do not send an email. Do not close the SR from the branch. The SR is auto-assigned to DSL Indirect Sales Group, reviewed by Fixed Sales Team, and their notes are added to the SR notes."
+  },
+  {
+    "id": "19008",
+    "title": "DSL Acc Mod For Sales - Modify Offer Via Retail",
+    "titleAr": "DSL Acc Mod For Sales - Modify Offer Via Retail",
+    "description": "Adding an offer to a DSL candidate account. Case 1: the offer cannot be added easily to a candidate account. Case 2: an offer was wrongly added to a candidate account.",
+    "category": "تعديل",
+    "steps": "Case 1: use this SR and do not send an email. Case 2: the DSL backoffice corrects the offer automatically. The same team sends SR 32003 to the branch inbox to notify it of the Wrong Action."
+  },
+  {
+    "id": "16830",
+    "title": "DSL Acc Mod for Line Mod - Change of DSL Ownership",
+    "titleAr": "DSL Acc Mod for Line Mod - Change of DSL Ownership",
+    "description": "New landline owner wants a DSL subscription, and the number is already subscribed (Active or Suspended). Required from the customer: a new Orange contract, a valid national ID card, and an NTRA reservation form signed by the new owner.",
+    "category": "تعديل",
+    "steps": "After receiving the documents, attach them to the SR. Sub areas: Done-Valid, Not Done-Invalid, Not Done-Missing Documents. Smart Script: customer name, mobile number, new package. This procedure is done only once for the account."
+  },
+  {
+    "id": "83101",
+    "title": "DSL Termination Request - Land Line Owner Cancellation",
+    "titleAr": "DSL Termination Request - Land Line Owner Cancellation",
+    "description": "Active customer complaining that they did not subscribe with Orange. SLA: 24 hours. Owner group: DSL Save & Retention, DSL CH Billing, DSL TE Apply.",
+    "category": "عطل",
+    "steps": "Attach a scan of the landline owner's national ID and proof of ownership of the landline to the SR. Confirm the Smart Script is complete before sending: complainer full name, mobile number, DSL number."
+  },
+  {
+    "id": "14032",
+    "title": "DSL - NTRA Form Attachment",
+    "titleAr": "DSL - NTRA Form Attachment",
+    "description": "Used to attach an NTRA form (line reservation) for accounts reserved under a rental contract, and to attach a new NTRA form when a work order is pending on NTRA.",
+    "category": "تعديل",
+    "steps": "Open the SR and attach the new NTRA form. Required checks: the form has a code, is scanned as one PDF, is stamped, and the NID matches the line owner's name. Also used to verify the line reservation against SRs 5010 or 5011."
+  },
+  {
+    "id": "5006",
+    "title": "DSL Add ADSL Router",
+    "titleAr": "DSL Add ADSL Router",
+    "description": "Add a router to the customer's ADSL account (Installment / Router / Shop, product High End VDSL Router).",
+    "category": "تعديل",
+    "steps": "Compensation & Add-ons > click + > choose Router type, delivery Shop, router High End VDSL Router > Ctrl + S > Confirm & Start Request. Then stamp the router transaction on Wincash and attach the signed router receipt to this SR."
+  },
+  {
+    "id": "5009",
+    "title": "Automated SR - Deactivation After Cancellation",
+    "titleAr": "Automated SR - Deactivation After Cancellation",
+    "description": "Automated SR created on the cancellation contract after the customer pays the full amount and the router is lifted.",
+    "category": "تعديل",
+    "steps": "After full payment, lift the router, then the system creates an automated SR 5009 on the cancellation contract. Deactivate the service from Siebel (Deactivated status); the customer is notified within 24 hours that the contract is ended."
+  },
+  {
+    "id": "5024",
+    "title": "DSL Rent to Sold Router",
+    "titleAr": "DSL Rent to Sold Router",
+    "description": "Converting a rented router to a sold router on the customer account.",
+    "category": "تعديل",
+    "steps": "Compensation & Add-ons > click + > Type: Rent to Sold Router > choose High End VDSL Router or VDSL Router > Confirm & Start Request."
+  },
+  {
+    "id": "33134",
+    "title": "DSL Acc Mod For Billing - Rental Modem Fees",
+    "titleAr": "DSL Acc Mod For Billing - Rental Modem Fees",
+    "description": "Monthly fees for the High End router on existing customers. Sub areas: Solved, Not Solved, No Problem Found. Product: Monthly Fees High End Router For Existing.",
+    "category": "تعديل",
+    "steps": "Stamp the amount on Wincash under ADSL Bill Payment, then attach the Wincash receipt to this SR."
   }
 ]
