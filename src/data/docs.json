@@ -75,5 +75,12 @@
     "url": "/track-your-sales/docs/dsl-temporary-suspension.pdf",
     "icon": "download-cloud",
     "color": "#D95B00"
+  },
+  {
+    "title": "حاسبة إلغاء ADSL",
+    "description": "حاسبة لحساب مبلغ إلغاء خدمة ADSL",
+    "url": "/track-your-sales/docs/adsl-cancellation-calculator.xlsx",
+    "icon": "download-cloud",
+    "color": "#D95B00"
   }
 ]
