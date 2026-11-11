@@ -811,6 +811,7 @@ export default function WikiPage() {
           <article className="rounded-[24px] border border-[var(--color-border)] bg-white p-4 shadow-sm">
             <h2 className="mb-2 text-lg font-black tracking-tight">المواقع المشمولة</h2>
             <p className="mb-3 text-xs text-[var(--color-text-secondary)]">الباقة بتشمل المواقع دي فقط، والباقة الشهرية 2 جيجا مخصصة للمواقع التعليمية.</p>
+            <p className="mb-3 text-xs font-extrabold text-[var(--color-primary-700)]">لمدة 3 سنين</p>
             <div className="space-y-4">
               {EDU_SITE_GROUPS.map((group) => (
                 <div key={group.category}>
