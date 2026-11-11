@@ -212,7 +212,7 @@ export default function HomePage() {
             </div>
           </div>
           <div className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] font-semibold text-[var(--color-text-secondary)]">
-            <span className="font-extrabold text-[var(--color-primary-700)]">{statusTextEgy}</span><span className="text-[var(--color-border)]">•</span><span>{timeText}</span>
+            <span className="font-extrabold text-[var(--color-primary-700)]">{statusTextEgy}</span>{statusTextEgy && timeText ? <span className="text-[var(--color-border)]">•</span> : null}<span>{timeText}</span>
           </div>
 
           {sarcastic ? <p className="mt-3 text-[11px] font-bold text-[var(--color-primary-700)]">{sarcastic}</p> : null}
