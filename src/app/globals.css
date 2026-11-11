@@ -3855,3 +3855,49 @@ body {
     font-size: .98rem !important;
   }
 }
+
+
+/* Isolated manager redesign preview — scoped to preview route only. */
+.tx-manager {
+  background: #fbf8f4 !important;
+  color: #30251e;
+}
+.tx-manager > div { gap: 22px; }
+.tx-manager aside {
+  border-color: #eee5dc !important;
+  background: rgba(255,255,255,.94) !important;
+  box-shadow: 0 8px 30px rgba(66,45,29,.045) !important;
+}
+.tx-manager header {
+  border-color: #eee5dc !important;
+  border-radius: 20px !important;
+  background: rgba(255,255,255,.92) !important;
+  box-shadow: 0 4px 18px rgba(66,45,29,.035) !important;
+}
+.tx-manager .tx-hero-card {
+  box-shadow: 0 14px 40px rgba(66,45,29,.045);
+}
+.tx-manager .tx-score-ring {
+  background: conic-gradient(#d97838 calc(var(--score) * 1%), #f2e9e1 0);
+  padding: 8px;
+}
+.tx-manager .tx-hero-line {
+  background: linear-gradient(90deg, transparent, #e87532 22%, #f4b27d 72%, transparent);
+  opacity: .8;
+}
+.tx-manager .tx-text-action { color: #b76531; }
+.tx-manager .tx-text-action:hover { color: #91471d; }
+.tx-manager .tx-shortcut-card {
+  box-shadow: 0 4px 18px rgba(66,45,29,.025);
+}
+.tx-manager .tx-shortcut-card:hover {
+  border-color: #e7cbb6;
+  box-shadow: 0 9px 24px rgba(66,45,29,.06);
+  transform: translateY(-1px);
+}
+@media (max-width: 640px) {
+  .tx-manager { padding: 12px 12px 24px !important; }
+  .tx-manager > div { gap: 12px; }
+  .tx-manager .tx-hero-card { border-radius: 22px !important; }
+  .tx-manager .tx-overview { gap: 16px; }
+}
