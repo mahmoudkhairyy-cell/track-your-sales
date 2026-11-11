@@ -183,6 +183,23 @@ function managerTitle(name: string): string {
   return n && FEMALE_MANAGER_NAMES.some((f) => n.includes(f.toLowerCase())) ? "MS." : "MR.";
 }
 
+type ManagerIconName = "home" | "branches" | "users" | "activity" | "reports" | "trend" | "alert" | "settings";
+
+function ManagerIcon({ name, size = 18 }: { name: ManagerIconName; size?: number }) {
+  const common = { fill: "none", stroke: "currentColor", strokeWidth: 1.7, strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
+  const paths: Record<ManagerIconName, React.ReactNode> = {
+    home: <><path d="m3 10 9-7 9 7" /><path d="M5 9v11h14V9M9 20v-6h6v6" /></>,
+    branches: <><rect x="3.5" y="4" width="7" height="7" rx="1.5" /><rect x="13.5" y="13" width="7" height="7" rx="1.5" /><path d="M10.5 7.5h3a2 2 0 0 1 2 2V13" /></>,
+    users: <><circle cx="9" cy="8" r="3" /><path d="M3.5 20v-1.5a5.5 5.5 0 0 1 11 0V20zM16 5.5a3 3 0 0 1 0 5.8M17 14a4.5 4.5 0 0 1 3.5 4.4V20" /></>,
+    activity: <><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3.2 2" /></>,
+    reports: <><path d="M6 3.5h8l4 4V20H6z" /><path d="M14 3.5V8h4M9 12h6M9 16h6" /></>,
+    trend: <><path d="m4 16 5-5 3 3 7-8" /><path d="M14 6h5v5" /></>,
+    alert: <><path d="M12 3.5 21 20H3z" /><path d="M12 9v4M12 16.5h.01" /></>,
+    settings: <><circle cx="12" cy="12" r="3" /><path d="m19.4 15 .1.1 1.2 1-1.4 2.4-1.5-.6a8 8 0 0 1-1.5.9l-.3 1.6h-2.8l-.3-1.6a8 8 0 0 1-1.5-.9l-1.5.6L6.5 16l1.2-1a7 7 0 0 1 0-1.8l-1.2-1 1.4-2.4 1.5.6a8 8 0 0 1 1.5-.9l.3-1.6H14l.3 1.6a8 8 0 0 1 1.5.9l1.5-.6 1.4 2.4-1.2 1a7 7 0 0 1-.1 1.8Z" /></>,
+  };
+  return <svg width={size} height={size} viewBox="0 0 24 24" aria-hidden="true" {...common}>{paths[name]}</svg>;
+}
+
 export default function ManagerPage() {
   const [password, setPassword] = useState("");
   const [detailsId, setDetailsId] = useState<string | null>(null);
@@ -427,11 +444,11 @@ export default function ManagerPage() {
   const onLeaveToday = allRows.filter((r) => (r.payload.settings?.holidays ?? []).some((h) => h.date === today));
   const missingToday = allRows.filter((r) => !onLeaveToday.some((x) => x.branch_id === r.branch_id) && !loggedToday.some((x) => x.branch_id === r.branch_id));
   const navItems = [
-    { id: "overview", label: "الرئيسية", icon: "⌂" },
-    { id: "list", label: "الفروع", icon: "▦" },
-    { id: "top", label: "الموظفون", icon: "♙" },
-    { id: "activity", label: "التسجيلات", icon: "◷" },
-    { id: "reports", label: "التقارير", icon: "▤" },
+    { id: "overview", label: "الرئيسية", icon: "home" as const },
+    { id: "list", label: "الفروع", icon: "branches" as const },
+    { id: "top", label: "الموظفون", icon: "users" as const },
+    { id: "activity", label: "التسجيلات", icon: "activity" as const },
+    { id: "reports", label: "التقارير", icon: "reports" as const },
   ];
   const activeLabel = navItems.find((item) => item.id === view)?.label ?? (branch ? "تفاصيل الفرع" : "لوحة المدير");
   const changeView = (next: string) => { setView(next); setMobileMenuOpen(false); };
@@ -476,7 +493,7 @@ export default function ManagerPage() {
                 const active = view === item.id;
                 const className = "flex w-full items-center gap-3 rounded-2xl px-3 py-3 text-right text-sm font-extrabold transition " + (active ? "bg-[#fff0e5] text-[var(--color-primary-700)] shadow-sm" : "text-[#766252] hover:bg-[#faf6f2]");
                 const content = <>
-                  <span className={"flex h-8 w-8 items-center justify-center rounded-xl text-lg " + (active ? "bg-white text-[var(--color-primary-700)]" : "bg-[#f8f5f1] text-[var(--color-text-secondary)]")}>{item.icon}</span>{item.label}{active ? <span className="mr-auto h-1.5 w-1.5 rounded-full bg-[var(--color-primary-600)]" /> : null}
+                  <span className={"flex h-8 w-8 items-center justify-center rounded-xl " + (active ? "bg-white text-[var(--color-primary-700)]" : "bg-[#f8f5f1] text-[var(--color-text-secondary)]")}><ManagerIcon name={item.icon} size={17} /></span>{item.label}{active ? <span className="mr-auto h-1.5 w-1.5 rounded-full bg-[var(--color-primary-600)]" /> : null}
                 </>;
                 // الرجوع للرئيسية يتم داخل نفس الجلسة حتى لا نفقد حالة دخول المدير.
                 if (item.id === "overview") {
@@ -523,14 +540,14 @@ export default function ManagerPage() {
                 
                 <section className="grid grid-cols-3 gap-2.5 sm:grid-cols-4 sm:gap-3">
                   {[
-                    {label:"إجمالي الفروع",value:branchGroups.length,sub:"كل فروع الأريا",tone:"orange",icon:"▦"},
-                    {label:"فروع متقدمة",value:branchStatus.filter(b=>b.expected!==undefined && b.percent-b.expected>=5).length,sub:"أعلى من المتوقع",tone:"green",icon:"↗"},
-                    {label:"فروع متأخرة",value:behindBranches.length,sub:"تحتاج متابعة",tone:"red",icon:"!"},
-                    {label:"إجمالي الموظفين",value:allRows.length,sub:"ضمن التقارير الحالية",tone:"violet",icon:"♙"}
+                    {label:"إجمالي الفروع",value:branchGroups.length,sub:"كل فروع الأريا",tone:"orange",icon:"branches" as const},
+                    {label:"فروع متقدمة",value:branchStatus.filter(b=>b.expected!==undefined && b.percent-b.expected>=5).length,sub:"أعلى من المتوقع",tone:"green",icon:"trend" as const},
+                    {label:"فروع متأخرة",value:behindBranches.length,sub:"تحتاج متابعة",tone:"red",icon:"alert" as const},
+                    {label:"إجمالي الموظفين",value:allRows.length,sub:"ضمن التقارير الحالية",tone:"violet",icon:"users" as const}
                   ].map((item)=>(
                     <article key={item.label} className="min-w-0 rounded-[20px] border border-[var(--color-border)] bg-white/85 p-3 shadow-[0_8px_24px_rgba(126,65,24,.055)] backdrop-blur-xl sm:rounded-[24px] sm:p-4">
                       <div className="flex items-center justify-between gap-1">
-                        <span className={"flex h-8 w-8 items-center justify-center rounded-xl text-sm font-black "+(item.tone==="red"?"bg-red-50 text-red-600":item.tone==="green"?"bg-emerald-50 text-emerald-700":item.tone==="violet"?"bg-violet-50 text-violet-700":"bg-[var(--color-primary-50)] text-[var(--color-primary-700)]")}>{item.icon}</span>
+                        <span className={"flex h-8 w-8 items-center justify-center rounded-xl text-sm font-black "+(item.tone==="red"?"bg-red-50 text-red-600":item.tone==="green"?"bg-emerald-50 text-emerald-700":item.tone==="violet"?"bg-violet-50 text-violet-700":"bg-[var(--color-primary-50)] text-[var(--color-primary-700)]")}><ManagerIcon name={item.icon} size={17} /></span>
                         <span className="hidden text-[9px] font-bold text-[var(--color-text-secondary)] sm:inline">{item.sub}</span>
                       </div>
                       <p className="mt-3 truncate text-[10px] font-extrabold text-[var(--color-text-secondary)] sm:text-xs">{item.label}</p>
