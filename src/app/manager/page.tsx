@@ -616,9 +616,19 @@ export default function ManagerPage() {
 
           <div className="min-w-0 flex-1 space-y-5">
             <header className="flex items-center justify-between gap-3 rounded-[24px] border border-white/80 bg-white/80 px-4 py-3 shadow-[0_10px_30px_rgba(104,53,19,.055)] backdrop-blur-xl sm:px-5">
-              <div className="flex min-w-0 items-center gap-3">
-                <button type="button" onClick={() => setMobileMenuOpen(true)} aria-label="فتح القائمة" className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--color-primary-50)] text-xl text-[var(--color-primary-700)] lg:hidden">☰</button>
-                <div className="min-w-0"><p className="text-[10px] font-black tracking-[.14em] text-[var(--color-primary-700)]" dir="ltr">MANAGEMENT</p><h1 className="mt-0.5 truncate text-xl font-black sm:text-2xl">{dashboardDetail ? ({ "branches-all":"كل الفروع", "branches-ahead":"الفروع المتقدمة", "branches-behind":"الفروع المتأخرة", "employees-all":"كل الموظفين", "employees-track":"على المسار", "employees-behind":"دون المستهدف" } as const)[dashboardDetail] : activeLabel}</h1><p className="mt-0.5 truncate text-[11px] text-[var(--color-text-secondary)]">متابعة أداء الفريق</p></div>
+              <div className="flex min-w-0 flex-col gap-2">
+                <div className="flex min-w-0 items-center gap-2.5">
+                  <button type="button" onClick={() => setMobileMenuOpen(true)} aria-label="فتح القائمة" className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--color-primary-50)] text-xl text-[var(--color-primary-700)] lg:hidden">☰</button>
+                  <img src="/track-your-sales/logo-mark.png" alt="Track Your Sales" className="h-9 w-9 shrink-0 object-contain" />
+                  <div className="min-w-0">
+                    <p className="truncate text-[11px] font-black tracking-[.08em] text-[var(--color-primary-700)]" dir="ltr">TRACK YOUR SALES</p>
+                    <p className="mt-0.5 truncate text-[10px] font-semibold text-[var(--color-text-secondary)]" dir="ltr">Developed by Mahmoud Khairy</p>
+                  </div>
+                </div>
+                <div className="min-w-0 pr-1">
+                  <h1 className="truncate text-xl font-black sm:text-2xl">{dashboardDetail ? ({ "branches-all":"كل الفروع", "branches-ahead":"الفروع المتقدمة", "branches-behind":"الفروع المتأخرة", "employees-all":"كل الموظفين", "employees-track":"على المسار", "employees-behind":"دون المستهدف" } as const)[dashboardDetail] : activeLabel}</h1>
+                  <p className="mt-0.5 truncate text-[11px] text-[var(--color-text-secondary)]">متابعة أداء الفريق</p>
+                </div>
               </div>
               <div className="flex shrink-0 items-center gap-2"><div className="flex items-center gap-2 rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface-cream)] py-1 pl-1 pr-1 sm:py-1.5 sm:pl-3 sm:pr-1.5"><span className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-[var(--color-primary-700)] to-[var(--color-primary-500)] text-xs font-black text-white">{(managerName.trim()[0] || "م").toUpperCase()}</span><span className="hidden max-w-[120px] truncate text-[11px] font-extrabold text-[var(--color-text-primary)] sm:inline">{managerName || "المدير"}</span></div><button type="button" disabled={pending} onClick={() => load()} className="shrink-0 rounded-xl border border-[#eee0d5] bg-white px-3 py-2.5 text-xs font-extrabold text-[var(--color-primary-700)] disabled:opacity-50">{pending ? "تحديث..." : "↻ تحديث"}</button></div>
             </header>
