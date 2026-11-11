@@ -844,7 +844,7 @@ export default function WikiPage() {
       {section === "go" ? (
         <div className="space-y-4">
           <Back onClick={() => setSection("hub")} title="Go" />
-          <section className="relative overflow-hidden rounded-[26px] border border-[#f2d7c0] bg-gradient-to-br from-[var(--color-surface-cream)] via-white to-[#ffead8] p-4 shadow-[0_10px_26px_rgba(126,65,24,0.06)]">
+          <section className="relative overflow-hidden rounded-[26px] border border-[#f2d7c0] bg-gradient-to-br from-[var(--color-surface-cream)] via-white to-[#ffead8] p-4 shadow-[0_10px_26px_rgba(126,65,25,0.06)]">
             <div className="absolute -left-8 -top-10 h-28 w-28 rounded-full bg-[var(--color-primary-500)]/15 blur-2xl" />
             <div className="relative flex items-center gap-3">
               <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-[#ff8a24] to-[#e85d0b] text-xl font-black text-white shadow-md shadow-orange-200">GO</div>
@@ -853,36 +853,28 @@ export default function WikiPage() {
                 <p className="mt-0.5 text-xs leading-5 text-[#8b796b]">تفاصيل الباقات والأسعار في مكان واحد</p>
               </div>
             </div>
-
           </section>
           {goPlans.map((group) => (
-            <section key={group.category} className="space-y-2.5">
+            <section key={group.category} className="space-y-3">
               <div className="flex items-center justify-between gap-3 px-1">
                 <h3 className="text-base font-black tracking-tight text-[#71370f]">{group.category}</h3>
                 <span className="rounded-full border border-[#f2d7c0] bg-[#fff5ec] px-2.5 py-1 text-[10px] font-extrabold text-[#a45a27]">{group.plans.length} باقة</span>
               </div>
-              <div className="grid gap-2.5 sm:grid-cols-2">
-                {group.plans.map((plan) => {
-                  const after = Number.parseFloat(String(plan.fees ?? ""));
-                  return (
-                    <article key={plan.name} className="overflow-hidden rounded-[20px] border border-[var(--color-border)] bg-white p-3 shadow-[0_5px_16px_rgba(100,55,25,0.045)] transition-shadow hover:shadow-[0_9px_22px_rgba(100,55,25,0.08)]">
-                      <div className="flex min-w-0 items-center justify-between gap-2">
-                        <div className="min-w-0">
-                          <p className="truncate text-sm font-black text-[var(--color-text-primary)]">{plan.name}</p>
-                          <p className="mt-1 text-xs font-bold text-[#8b796b]">{String(plan.data ?? "—")}</p>
-                        </div>
-                        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-[#fff3e8] text-sm font-black text-[#d65d13]">GO</span>
+              {group.plans.map((plan) => {
+                const after = Number.parseFloat(String(plan.fees ?? ""));
+                return (
+                  <article key={plan.name} className="overflow-hidden rounded-[24px] bg-white p-4 border border-[var(--color-border)] shadow-sm">
+                    <PlanBand title={plan.name} big={String(plan.data ?? "")} />
+                    <div className="flex items-center justify-between gap-3">
+                      <div className="min-w-0">
+                        <p className="font-black">{plan.name}</p>
+                        <p className="text-xs text-[var(--color-text-secondary)]">{String(plan.data ?? "")}</p>
                       </div>
-                      <div className="mt-3">
-                        <div className="rounded-xl border border-[#f6d2b4] bg-[var(--color-primary-50)] px-3 py-2.5 text-center">
-                          <p className="text-[9px] font-bold text-[#a56b43]">السعر</p>
-                          <p className="mt-0.5 text-base font-black tabular-nums text-[var(--color-primary-700)]">{Number.isFinite(after) ? after.toFixed(2) + " ج" : "—"}</p>
-                        </div>
-                      </div>
-                    </article>
-                  );
-                })}
-              </div>
+                      <p className="shrink-0 font-extrabold text-[var(--color-primary-700)]">{Number.isFinite(after) ? after.toFixed(2) + " ج" : String(plan.fees ?? "—")}</p>
+                    </div>
+                  </article>
+                );
+              })}
             </section>
           ))}
         </div>
