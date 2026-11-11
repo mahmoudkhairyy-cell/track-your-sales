@@ -8,6 +8,7 @@ import { formatMoney, formatPercent, formatQty } from "@/lib/calculations";
 import { useMonth } from "@/components/AppShell";
 import { kpiEmoji } from "@/lib/constants";
 import { MOOD_STYLES, kpiMood, overallMood } from "@/lib/motivation";
+import { pickStatusPhrase } from "@/lib/motivation-phrases";
 
 type KpiRow = {
   kpiKey: string;
@@ -96,6 +97,7 @@ export default function HomePage() {
     data: null,
     error: "",
   });
+  const [sessionPhrase, setSessionPhrase] = useState<{ month: string; text: string | null }>({ month: "", text: null });
 
   useEffect(() => {
     let cancelled = false;
@@ -116,6 +118,21 @@ export default function HomePage() {
       cancelled = true;
     };
   }, [month]);
+
+  useEffect(() => {
+    if (state.month !== month || !state.data) return;
+    setSessionPhrase((current) => {
+      if (current.month === month) return current;
+      const expected = state.data!.work.total > 0 ? (state.data!.work.elapsed / state.data!.work.total) * 100 : 0;
+      const currentMood = overallMood({
+        overall: state.data!.overall,
+        expectedPercent: expected,
+        empty: state.data!.empty,
+        remainingDays: state.data!.work.remaining,
+      });
+      return { month, text: pickStatusPhrase(currentMood.tone, state.data!.overall) };
+    });
+  }, [state, month]);
 
   const loading = state.month !== month;
   const { data, error } = state;
@@ -181,7 +198,7 @@ export default function HomePage() {
         <p className={`text-base font-black ${moodStyle.title}`}>
           {mood.emoji} {mood.headline}
         </p>
-        <p className={`mt-1 text-sm leading-7 ${moodStyle.text}`}>{mood.detail}</p>
+        <p className={`mt-1 text-sm leading-7 ${moodStyle.text}`}>{sessionPhrase.month === month && sessionPhrase.text ? sessionPhrase.text : mood.detail}</p>
         <div className="mt-3 grid grid-cols-3 gap-2 text-center">
           <div className="rounded-2xl border border-white/70 bg-white/75 p-2 shadow-sm">
             <p className="text-lg font-black text-neutral-900">{data.work.total}</p>
