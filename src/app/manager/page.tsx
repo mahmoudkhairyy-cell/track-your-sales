@@ -210,12 +210,8 @@ export default function ManagerPage() {
   const [view, setView] = useHistoryView<string>("overview");
   const branch = view.startsWith("b:") ? view.slice(2).split("|e:")[0] : null;
   const branchOpen = branch !== null && branchOpenFor === branch;
-  const openId = view.includes("|e:") ? view.split("|e:")[1] : null;
-  const setOpenId = (id: string | null) => {
-    if (!branch) return;
-    // قفل الموظف يحدّث واجهة المدير مباشرة دون الاعتماد على سجل المتصفح.
-    setView(id ? `b:${branch}|e:${id}` : `b:${branch}`);
-  };
+  // فتح وقفل بنود الموظف حالة داخل الصفحة فقط، ولا يضيف أي خطوة إلى سجل زر الرجوع.
+  const [openId, setOpenId] = useState<string | null>(null);
   const [rows, setRows] = useState<ReportRow[] | null>(null);
   const [error, setError] = useState("");
   const [pending, setPending] = useState(false);
@@ -575,7 +571,18 @@ export default function ManagerPage() {
             ) : view === "top" ? (
               <section className="overflow-hidden rounded-[26px] border border-[var(--color-border)] bg-white/90 shadow-[0_10px_28px_rgba(104,53,19,.055)]">
                 <div className="flex items-center justify-between gap-3 border-b border-[var(--color-border)] px-4 py-4 sm:px-5"><div><p className="text-[10px] font-black tracking-[.15em] text-[var(--color-primary-700)]" dir="ltr">TEAM LEADERBOARD</p><h2 className="mt-1 text-lg font-black">ترتيب الموظفين</h2><p className="mt-0.5 text-[10px] text-[var(--color-text-secondary)]">من الأعلى إلى الأقل تحقيقًا</p></div><span className="rounded-xl bg-[var(--color-primary-50)] px-3 py-2 text-xs font-black text-[var(--color-primary-700)]">{topRows.length} موظف</span></div>
-                <div className="divide-y divide-[var(--color-border)]">{topRows.map((row) => <button key={row.branch + row.name + row.rank} type="button" onClick={() => { setBranchOpenFor(row.branch); setDetailsId(null); changeView("b:" + row.branch + "|e:" + row.branchId); }} className="flex w-full items-center gap-3 px-4 py-3.5 text-right transition hover:bg-[var(--color-surface-cream)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--color-primary-600)] sm:px-5"><span className={"flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-xs font-black "+(row.rank===1?"bg-[#fff0d7] text-[#a66a08]":row.rank===2?"bg-[#f2f3f5] text-[#657080]":row.rank===3?"bg-[#faeee5] text-[#9b5b31]":"bg-[var(--color-surface-cream)] text-[var(--color-primary-700)]")}>{row.rank}</span><span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#ffe2c9] to-[var(--color-primary-50)] text-sm font-black text-[var(--color-primary-700)]">{(row.name.trim()[0]||"م").toUpperCase()}</span><div className="min-w-0 flex-1"><p className="truncate text-sm font-extrabold text-[var(--color-text-primary)]">{row.name}</p><p className="truncate text-[10px] text-[var(--color-text-secondary)]" dir="ltr">{row.branch}</p><div className="mt-2 h-1.5 overflow-hidden rounded-full bg-[var(--color-border)]"><div className="h-full rounded-full bg-gradient-to-l from-[var(--color-primary-700)] to-[var(--color-primary-500)]" style={{width:Math.min(100,Math.max(0,row.percent))+"%"}} /></div></div><strong className="shrink-0 text-lg font-black tabular-nums text-[var(--color-primary-700)]">{Math.round(row.percent)}%</strong><span className="text-[var(--color-text-secondary)]" aria-hidden="true">‹</span></button>)}</div>
+                <div className="divide-y divide-[var(--color-border)]">{topRows.map((row) => {
+                  const employee = allRows.find((item) => item.branch_id === row.branchId);
+                  const expanded = openId === row.branchId;
+                  return <div key={row.branchId}>
+                    <button type="button" aria-expanded={expanded} onClick={() => setOpenId(expanded ? null : row.branchId)} className="flex w-full items-center gap-3 px-4 py-3.5 text-right transition hover:bg-[var(--color-surface-cream)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--color-primary-600)] sm:px-5"><span className={"flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-xs font-black "+(row.rank===1?"bg-[#fff0d7] text-[#a66a08]":row.rank===2?"bg-[#f2f3f5] text-[#657080]":row.rank===3?"bg-[#faeee5] text-[#9b5b31]":"bg-[var(--color-surface-cream)] text-[var(--color-primary-700)]")}>{row.rank}</span><span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#ffe2c9] to-[var(--color-primary-50)] text-sm font-black text-[var(--color-primary-700)]">{(row.name.trim()[0]||"م").toUpperCase()}</span><div className="min-w-0 flex-1"><p className="truncate text-sm font-extrabold text-[var(--color-text-primary)]">{row.name}</p><p className="truncate text-[10px] text-[var(--color-text-secondary)]" dir="ltr">{row.branch}</p><div className="mt-2 h-1.5 overflow-hidden rounded-full bg-[var(--color-border)]"><div className="h-full rounded-full bg-gradient-to-l from-[var(--color-primary-700)] to-[var(--color-primary-500)]" style={{width:Math.min(100,Math.max(0,row.percent))+"%"}} /></div></div><strong className="shrink-0 text-lg font-black tabular-nums text-[var(--color-primary-700)]">{Math.round(row.percent)}%</strong><span className="text-[var(--color-text-secondary)]" aria-hidden="true">{expanded ? "⌄" : "‹"}</span></button>
+                    {expanded && employee ? <div className="border-t border-[var(--color-border)] bg-[var(--color-surface-cream)]/60 px-4 py-4 sm:px-5">
+                      <div className="mb-3 flex items-center justify-between gap-2"><h3 className="text-xs font-black">بنود التارجت</h3><TrackBadge percent={employee.payload.overall} expected={employee.payload.expectedPercent} /></div>
+                      <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">{(employee.payload.kpis ?? []).map((kpi) => <KpiTile key={kpi.name} kpi={kpi} />)}</div>
+                      <p className="mt-3 text-[10px] text-[var(--color-text-secondary)]" dir="ltr">Last update: {new Date(employee.updated_at).toLocaleString("en-US", { timeZone: "Africa/Cairo", hour12: false })}</p>
+                    </div> : null}
+                  </div>;
+                })}</div>
               </section>
             ) : view === "activity" ? (
               <section className="space-y-4">
