@@ -547,7 +547,7 @@ export default function ManagerPage() {
                     {label:"فروع متأخرة",value:behindBranches.length,sub:"تحتاج متابعة",tone:"red",icon:"alert" as const},
                     {label:"إجمالي الموظفين",value:allRows.length,sub:"ضمن التقارير الحالية",tone:"violet",icon:"users" as const},
                     {label:"موظفون On Track",value:onTrackEmployees.length,sub:"على المسار أو متقدم",tone:"green",icon:"trend" as const},
-                    {label:"موظفون متأخرون",value:behindEmployees.length,sub:"يحتاجون متابعة",tone:"red",icon:"alert" as const}
+                    {label:"Behind",value:behindEmployees.length,sub:"يحتاجون متابعة",tone:"red",icon:"alert" as const}
                   ].map((item)=>(
                     <article key={item.label} className="min-w-0 rounded-[20px] border border-[var(--color-border)] bg-white/85 p-3 shadow-[0_8px_24px_rgba(126,65,24,.055)] backdrop-blur-xl sm:rounded-[24px] sm:p-4">
                       <div className="flex items-center justify-between gap-1">
