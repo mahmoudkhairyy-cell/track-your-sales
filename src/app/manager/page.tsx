@@ -205,6 +205,7 @@ export default function ManagerPage() {
   const [detailsId, setDetailsId] = useState<string | null>(null);
   const [branchOpenFor, setBranchOpenFor] = useState<string | null>(null);
   const [branchPreview, setBranchPreview] = useState<string | null>(null);
+  const [dashboardDetail, setDashboardDetail] = useState<"branches-all" | "branches-ahead" | "branches-behind" | "employees-all" | "employees-track" | "employees-behind" | null>(null);
   // "list" = الفروع، "b:<فرع>" = صفحة فرع، "b:<فرع>|e:<id>" = موظف مفتوح. كل خطوة بتتسجل في تاريخ المتصفح.
   // زرار الرجوع في الموبايل بيرجّع لشاشة المدير اللي قبلها (الفرع/الموظف/الرئيسية) من غير ما يطلّع من الصفحة.
   const [view, setView] = useHistoryView<string>("overview");
@@ -218,6 +219,10 @@ export default function ManagerPage() {
   // زر الرجوع يقفل تفاصيل الموظف أو مؤشرات الفرع المفتوحة قبل مغادرة الصفحة.
   useEffect(() => {
     const onDetailsBack = () => {
+      if (dashboardDetail) {
+        setDashboardDetail(null);
+        return;
+      }
       if (employeeOverlayRef.current) {
         employeeOverlayRef.current = false;
         setOpenId(null);
@@ -230,7 +235,7 @@ export default function ManagerPage() {
     };
     window.addEventListener("popstate", onDetailsBack);
     return () => window.removeEventListener("popstate", onDetailsBack);
-  }, []);
+  }, [dashboardDetail]);
 
   function toggleBranchKpis(isOpen: boolean) {
     if (isOpen) {
@@ -607,21 +612,21 @@ export default function ManagerPage() {
                 
                 <section className="grid grid-cols-3 gap-2.5 sm:grid-cols-3 sm:gap-3">
                   {[
-                    {label:"إجمالي الفروع",value:branchGroups.length,sub:"كل فروع الأريا",tone:"orange",icon:"branches" as const},
-                    {label:"فروع متقدمة",value:branchStatus.filter(b=>b.expected!==undefined && b.percent-b.expected>=5).length,sub:"أعلى من المتوقع",tone:"green",icon:"trend" as const},
-                    {label:"فروع متأخرة",value:behindBranches.length,sub:"تحتاج متابعة",tone:"red",icon:"alert" as const},
-                    {label:"إجمالي الموظفين",value:allRows.length,sub:"ضمن التقارير الحالية",tone:"violet",icon:"users" as const},
-                    {label:"موظفون On Track",value:onTrackEmployees.length,sub:"على المسار أو متقدم",tone:"green",icon:"trend" as const},
-                    {label:"Behind",value:behindEmployees.length,sub:"يحتاجون متابعة",tone:"red",icon:"alert" as const}
+                    {label:"إجمالي الفروع",value:branchGroups.length,sub:"كل فروع الأريا",tone:"orange",icon:"branches" as const,detail:"branches-all" as const},
+                    {label:"فروع متقدمة",value:branchStatus.filter(b=>b.expected!==undefined && b.percent-b.expected>=5).length,sub:"أعلى من المتوقع",tone:"green",icon:"trend" as const,detail:"branches-ahead" as const},
+                    {label:"فروع متأخرة",value:behindBranches.length,sub:"تحتاج متابعة",tone:"red",icon:"alert" as const,detail:"branches-behind" as const},
+                    {label:"إجمالي الموظفين",value:allRows.length,sub:"ضمن التقارير الحالية",tone:"violet",icon:"users" as const,detail:"employees-all" as const},
+                    {label:"موظفون On Track",value:onTrackEmployees.length,sub:"على المسار أو متقدم",tone:"green",icon:"trend" as const,detail:"employees-track" as const},
+                    {label:"Behind",value:behindEmployees.length,sub:"يحتاجون متابعة",tone:"red",icon:"alert" as const,detail:"employees-behind" as const}
                   ].map((item)=>(
-                    <article key={item.label} className="min-w-0 rounded-[20px] border border-[var(--color-border)] bg-white/85 p-3 shadow-[0_8px_24px_rgba(126,65,24,.055)] backdrop-blur-xl sm:rounded-[24px] sm:p-4">
+                    <button key={item.label} type="button" onClick={()=>{const current=(window.history.state??{}) as Record<string,unknown>;window.history.pushState({...current,tysOverlay:"dashboard-detail"},"");setDashboardDetail(item.detail);}} aria-label={"عرض " + item.label} className="min-w-0 rounded-[20px] border border-[var(--color-border)] bg-white/85 p-3 text-right shadow-[0_8px_24px_rgba(126,65,24,.055)] backdrop-blur-xl transition hover:-translate-y-0.5 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary-600)] sm:rounded-[24px] sm:p-4">
                       <div className="flex items-center justify-between gap-1">
                         <span className={"flex h-8 w-8 items-center justify-center rounded-xl text-sm font-black "+(item.tone==="red"?"bg-red-50 text-red-600":item.tone==="green"?"bg-emerald-50 text-emerald-700":item.tone==="violet"?"bg-violet-50 text-violet-700":"bg-[var(--color-primary-50)] text-[var(--color-primary-700)]")}><ManagerIcon name={item.icon} size={17} /></span>
                         <span className="hidden text-[9px] font-bold text-[var(--color-text-secondary)] sm:inline">{item.sub}</span>
                       </div>
                       <p className="mt-3 truncate text-[10px] font-extrabold text-[var(--color-text-secondary)] sm:text-xs">{item.label}</p>
                       <strong className={"mt-0.5 block text-2xl font-black tabular-nums sm:text-3xl "+(item.tone==="red"?"text-red-600":item.tone==="green"?"text-emerald-700":"text-[var(--color-text-primary)]")}>{item.value}</strong>
-                    </article>
+                    </button>
                   ))}
                 </section>
 
@@ -673,6 +678,18 @@ export default function ManagerPage() {
               </section>
             ) : null}
 
+            {dashboardDetail ? (() => {
+              const branchItems = dashboardDetail === "branches-all" ? branchStatus : dashboardDetail === "branches-ahead" ? branchStatus.filter(b=>b.expected!==undefined && b.percent-b.expected>=5) : branchStatus.filter(b=>b.expected!==undefined && !b.onTrack);
+              const employeeItems = dashboardDetail === "employees-all" ? topRows : dashboardDetail === "employees-track" ? topRows.filter(r=>onTrackEmployees.some(e=>e.branch_id===r.branchId)) : topRows.filter(r=>behindEmployees.some(e=>e.branch_id===r.branchId));
+              const isBranches = dashboardDetail.startsWith("branches");
+              const title = ({ "branches-all":"كل الفروع", "branches-ahead":"الفروع المتقدمة", "branches-behind":"الفروع المتأخرة", "employees-all":"كل الموظفين", "employees-track":"موظفون On Track", "employees-behind":"الموظفون Behind" } as const)[dashboardDetail];
+              return <div className="fixed inset-0 z-[80] flex justify-center bg-[#2d211a]/40 p-3 backdrop-blur-[3px]" onClick={()=>{setDashboardDetail(null);window.history.back();}}>
+                <section role="dialog" aria-modal="true" aria-label={title} onClick={e=>e.stopPropagation()} className="my-auto max-h-[88vh] w-full max-w-2xl overflow-y-auto rounded-[26px] border border-white/70 bg-[var(--color-surface-cream)] p-4 shadow-2xl sm:p-6">
+                  <div className="mb-4 flex items-center justify-between gap-3"><div><p className="text-[10px] font-black tracking-[.15em] text-[var(--color-primary-700)]" dir="ltr">DASHBOARD DETAILS</p><h2 className="mt-1 text-xl font-black">{title}</h2><p className="mt-1 text-xs text-[var(--color-text-secondary)]">{isBranches?branchItems.length+" فرع":employeeItems.length+" موظف"}</p></div><button type="button" aria-label="إغلاق" onClick={()=>{setDashboardDetail(null);window.history.back();}} className="flex h-10 w-10 items-center justify-center rounded-xl border border-[var(--color-border)] bg-white text-xl">×</button></div>
+                  {isBranches ? <div className="space-y-2">{branchItems.length ? [...branchItems].sort((a,b)=>b.percent-a.percent).map((b,i)=><div key={b.name} className="flex items-center justify-between gap-3 rounded-2xl border border-[var(--color-border)] bg-white p-3"><div className="min-w-0"><p className="truncate text-sm font-black">{b.name}</p><p className="mt-1 text-[10px] text-[var(--color-text-secondary)]">{b.group.length} موظف · {b.expected===undefined?"بيانات غير مكتملة":b.onTrack?"على المسار أو متقدم":"متأخر"}</p></div><strong className="shrink-0 text-lg font-black tabular-nums text-[var(--color-primary-700)]">{Math.round(b.percent)}%</strong></div>) : <p className="py-8 text-center text-xs text-[var(--color-text-secondary)]">مفيش فروع في القائمة دي حاليًا.</p>}</div> : <div className="space-y-2">{employeeItems.length ? employeeItems.map(row=>{const employee=allRows.find(x=>x.branch_id===row.branchId);return employee?<div key={row.branchId}>{renderRow(employee)}</div>:null;}) : <p className="py-8 text-center text-xs text-[var(--color-text-secondary)]">مفيش موظفين في القائمة دي حاليًا.</p>}</div>}
+                </section>
+              </div>;
+            })() : null}
             <footer className="flex flex-wrap items-center justify-between gap-3 border-t border-[#eee5dc] pt-4"><p className="text-[10px] text-[var(--color-text-secondary)]">Track Your Sales · لوحة متابعة الأداء</p><button type="button" onClick={()=>{setPwOpen(v=>!v);setPwMsg("");}} className="text-xs font-bold text-[var(--color-primary-700)]">{pwOpen?"إخفاء تغيير كلمة السر":"🔑 تغيير كلمة السر"}</button></footer>
             {branchPreview ? (() => {
               const previewRows = branchGroups.find(([name]) => name === branchPreview)?.[1] ?? [];
