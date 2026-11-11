@@ -320,7 +320,7 @@ export default function MorePage() {
               <p className="text-[10px] font-bold text-[var(--color-text-secondary)]">التوتال</p>
             </div>
             <div className="rounded-2xl border border-[var(--color-border)] bg-white/90 px-2 py-3">
-              <p className="text-xl font-black tabular-nums text-[var(--color-primary-700)]">{Math.round(reportData.estimatedCommission)}</p>
+              <p className={`text-xl font-black tabular-nums ${reportData.overall >= 80 ? "text-[var(--color-success-text)]" : "text-[var(--color-danger-text)]"}`}>{Math.round(reportData.estimatedCommission)}</p>
               <p className="text-[10px] font-bold text-[var(--color-text-secondary)]">الكوميشن (ج)</p>
             </div>
             <div className="rounded-2xl border border-[var(--color-border)] bg-white/90 px-2 py-3">
@@ -414,11 +414,49 @@ export default function MorePage() {
                   <div className="rounded-2xl bg-[var(--color-primary-50)] p-3"><p className="text-[11px] font-bold text-[var(--color-text-secondary)]">التوتال</p><p className="text-2xl font-black text-[var(--color-primary-700)]">{reportData.overall.toFixed(1)}%</p></div>
                   <div className="rounded-2xl bg-[var(--color-primary-50)] p-3"><p className="text-[11px] font-bold text-[var(--color-text-secondary)]">الكوميشن المتوقع</p><p className="text-2xl font-black text-[var(--color-primary-700)]">{Math.round(reportData.estimatedCommission)} ج</p><p className="text-[10px] text-[var(--color-text-secondary)]">من {Math.round(reportData.fullCommission)} ج</p></div>
                 </div>
+<<<<<<< ours
                 <div className="mt-4 divide-y divide-dashed divide-[#F3D2B5]">
                   {reportData.kpis.map((kpi) => (
                     <div key={kpi.kpiKey} className="flex items-center justify-between py-2.5 text-sm">
                       <span className="font-extrabold" dir="ltr">{kpi.nameEn}</span>
                       <span className="text-[var(--color-text-secondary)]">{formatQty(kpi.achieved)} / {formatQty(kpi.target)} · <b className="text-[var(--color-primary-700)]">{kpi.percent.toFixed(0)}%</b></span>
+=======
+                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-white/20 bg-white/10 text-2xl">▤</span>
+              </div>
+            </div>
+            <div className="space-y-5 p-4 sm:p-6">
+              {reportData ? (
+                <>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface-cream)] p-4">
+                      <p className="text-[11px] font-bold text-[var(--color-text-secondary)]">إجمالي تحقيق التارجت</p>
+                      <p className="mt-1 font-mono text-3xl font-black tracking-tight text-[var(--color-primary-700)]">{reportData.overall.toFixed(1)}<span className="text-lg">%</span></p>
+                    </div>
+                    <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface-cream)] p-4">
+                      <p className="text-[11px] font-bold text-[var(--color-text-secondary)]">الكوميشن المتوقع</p>
+                      <p className={`mt-1 font-mono text-3xl font-black tracking-tight ${reportData.overall >= 80 ? "text-[var(--color-success-text)]" : "text-[var(--color-danger-text)]"}`}>{Math.round(reportData.estimatedCommission)} <span className="text-sm">ج</span></p>
+                      <p className="mt-1 text-[10px] font-semibold text-[var(--color-text-secondary)]">من إجمالي {Math.round(reportData.fullCommission)} ج</p>
+                    </div>
+                  </div>
+                  <div>
+                    <div className="mb-3 flex items-center justify-between gap-2">
+                      <h3 className="text-sm font-black text-[var(--color-text-primary)]">تفاصيل مؤشرات الأداء</h3>
+                      <span className="rounded-full bg-[var(--color-primary-50)] px-2.5 py-1 text-[10px] font-extrabold text-[var(--color-primary-700)]">{reportData.kpis.length} مؤشرات</span>
+                    </div>
+                    <div className="space-y-2.5">
+                      {reportData.kpis.map((kpi) => (
+                        <div key={kpi.kpiKey} className="rounded-2xl border border-[#f1e5da] bg-white p-3.5">
+                          <div className="flex items-center justify-between gap-3">
+                            <span className="min-w-0 truncate text-xs font-black text-[var(--color-text-primary)]" dir="ltr">{kpi.nameEn}</span>
+                            <span className="shrink-0 font-mono text-sm font-black text-[var(--color-primary-700)]">{kpi.percent.toFixed(0)}%</span>
+                          </div>
+                          <div className="mt-2.5 h-2 overflow-hidden rounded-full bg-[var(--color-border)]" dir="rtl">
+                            <div className="h-full rounded-full bg-gradient-to-l from-[var(--color-primary-500)] to-[var(--color-primary-700)]" style={{ width: `${Math.max(0, Math.min(100, kpi.percent))}%` }} />
+                          </div>
+                          <p className="mt-2 text-[10px] font-semibold text-[var(--color-text-secondary)]">{formatQty(kpi.achieved)} من {formatQty(kpi.target)} · المحقق / المستهدف</p>
+                        </div>
+                      ))}
+>>>>>>> theirs
                     </div>
                   ))}
                 </div>
