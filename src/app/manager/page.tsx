@@ -439,6 +439,8 @@ export default function ManagerPage() {
   const onTrackBranches = branchStatus.filter((b) => b.onTrack);
   const behindBranches = branchStatus.filter((b) => b.expected !== undefined && !b.onTrack);
   const unclassifiedBranches = branchStatus.filter((b) => b.expected === undefined);
+  const onTrackEmployees = allRows.filter((r) => typeof r.payload.expectedPercent === "number" && (r.payload.overall ?? 0) >= (r.payload.expectedPercent ?? 0));
+  const behindEmployees = allRows.filter((r) => typeof r.payload.expectedPercent === "number" && (r.payload.overall ?? 0) < (r.payload.expectedPercent ?? 0));
   const today = cairoISODate();
   const loggedToday = allRows.filter((r) => (r.payload.entries ?? []).some((e) => e.date === today));
   const onLeaveToday = allRows.filter((r) => (r.payload.settings?.holidays ?? []).some((h) => h.date === today));
@@ -538,12 +540,14 @@ export default function ManagerPage() {
                   </p>
                 ) : null}
                 
-                <section className="grid grid-cols-3 gap-2.5 sm:grid-cols-4 sm:gap-3">
+                <section className="grid grid-cols-3 gap-2.5 sm:grid-cols-3 sm:gap-3">
                   {[
                     {label:"إجمالي الفروع",value:branchGroups.length,sub:"كل فروع الأريا",tone:"orange",icon:"branches" as const},
                     {label:"فروع متقدمة",value:branchStatus.filter(b=>b.expected!==undefined && b.percent-b.expected>=5).length,sub:"أعلى من المتوقع",tone:"green",icon:"trend" as const},
                     {label:"فروع متأخرة",value:behindBranches.length,sub:"تحتاج متابعة",tone:"red",icon:"alert" as const},
-                    {label:"إجمالي الموظفين",value:allRows.length,sub:"ضمن التقارير الحالية",tone:"violet",icon:"users" as const}
+                    {label:"إجمالي الموظفين",value:allRows.length,sub:"ضمن التقارير الحالية",tone:"violet",icon:"users" as const},
+                    {label:"موظفون On Track",value:onTrackEmployees.length,sub:"على المسار أو متقدم",tone:"green",icon:"trend" as const},
+                    {label:"موظفون متأخرون",value:behindEmployees.length,sub:"يحتاجون متابعة",tone:"red",icon:"alert" as const}
                   ].map((item)=>(
                     <article key={item.label} className="min-w-0 rounded-[20px] border border-[var(--color-border)] bg-white/85 p-3 shadow-[0_8px_24px_rgba(126,65,24,.055)] backdrop-blur-xl sm:rounded-[24px] sm:p-4">
                       <div className="flex items-center justify-between gap-1">
@@ -557,25 +561,6 @@ export default function ManagerPage() {
                 </section>
 
                 
-                <section className="overflow-hidden rounded-[26px] border border-[var(--color-border)] bg-white/90 shadow-[0_10px_28px_rgba(104,53,19,.055)]">
-                  <div className="flex items-center justify-between gap-3 border-b border-[var(--color-border)] px-4 py-4 sm:px-5">
-                    <div><p className="text-[10px] font-black tracking-[.15em] text-[var(--color-primary-700)]" dir="ltr">BRANCH STATUS</p><h2 className="mt-1 text-base font-black">حالة الفروع</h2><p className="mt-0.5 text-[10px] text-[var(--color-text-secondary)]">مرتبة حسب الإنجاز من الأعلى للأقل</p></div>
-                    <button type="button" onClick={()=>changeView("list")} className="rounded-xl bg-[var(--color-primary-50)] px-3 py-2 text-[10px] font-extrabold text-[var(--color-primary-700)]">عرض الكل</button>
-                  </div>
-                  {branchStatus.length ? <div className="divide-y divide-[var(--color-border)]">{[...branchStatus].sort((a,b)=>b.percent-a.percent).map((b,index)=>{
-                    const delta=b.expected===undefined?null:b.percent-b.expected;
-                    const label=delta===null?"بيانات غير مكتملة":delta<0?"متأخر":delta>=15?"متقدم جدًا":delta>=5?"متقدم":"على المسار";
-                    const tone=delta===null?"bg-stone-100 text-stone-600":delta<0?"bg-red-50 text-red-700":delta>=5?"bg-emerald-50 text-emerald-700":"bg-amber-50 text-amber-800";
-                    const ring=b.percent>=100?"#15945d":delta!==null&&delta<0?"var(--color-danger-text)":"var(--color-primary-600)";
-                    return <button key={b.name} type="button" onClick={()=>changeView("b:"+b.name)} className="flex w-full items-center gap-3 px-4 py-3 text-right transition hover:bg-[var(--color-surface-cream)] sm:px-5">
-                      <span className="w-5 shrink-0 text-[10px] font-black text-[var(--color-text-secondary)]">#{index+1}</span>
-                      <span className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-full" style={{background:"conic-gradient("+ring+" "+Math.min(100,Math.max(0,b.percent))+"%, var(--color-border) 0)"}}><span className="flex h-9 w-9 items-center justify-center rounded-full bg-white text-[10px] font-black tabular-nums text-[#4d3829]">{Math.round(b.percent)}%</span></span>
-                      <span className="min-w-0 flex-1"><span className="block truncate text-xs font-black text-[var(--color-text-primary)]">{b.name}</span><span className="mt-1 block text-[10px] text-[var(--color-text-secondary)]">{b.group.length} موظف</span></span>
-                      <span className={"shrink-0 rounded-full px-2.5 py-1 text-[10px] font-black "+tone}>{label}</span>
-                      <span className="hidden text-xs font-black text-[var(--color-primary-700)] sm:inline">←</span>
-                    </button>;
-                  })}</div> : <p className="p-8 text-center text-xs text-[var(--color-text-secondary)]">لا توجد تقارير حتى الآن.</p>}
-                </section>
               </div>
             ) : view === "list" ? (
               <div className="space-y-4">
