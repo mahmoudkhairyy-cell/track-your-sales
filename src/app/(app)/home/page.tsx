@@ -200,7 +200,7 @@ export default function HomePage() {
             </div>
             <div className="inline-flex max-w-full shrink-0 flex-col items-end rounded-xl border border-[var(--color-border)] bg-white/85 px-3 py-2 shadow-sm">
               <span className="text-[10px] font-bold text-[var(--color-text-secondary)]">الكوميشن المحقق</span>
-              <strong className="truncate font-mono text-base font-black text-[var(--color-primary-700)]">{formatMoney(data.estimatedCommission)} جنيه</strong>
+              <strong className={`truncate font-mono text-base font-black ${data.overall < 80 ? "text-red-600" : "text-emerald-700"}`}>{formatMoney(data.estimatedCommission)} جنيه</strong>
             </div>
           </div>
           <div>
