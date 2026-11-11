@@ -586,8 +586,8 @@ function getDashboard(state: State, params: URLSearchParams) {
   );
   const overall = rules.total; // سقف 200% على الإجمالي بس، والمؤشرات الفردية بدون سقف
   // المحافظ الجديدة وزنها صفر، لكنها شرط استحقاق مستقل بجانب حد الـ80% للإجمالي.
-  // الكوميشن بيظهر دايمًا (حتى تحت 80%)، والمعادلة نفسها ما اتغيرتش. الشرط الوحيد هنا هو المحفظة.
-  const commission = rules.walletDone ? estimatedCommission(bundle.fullCommission, overall) : 0;
+  // الكوميشن بيظهر دايمًا (حتى تحت 80%)، والمعادلة نفسها ما اتغيرتش. شرط المحافظ مش مرتبط بالكوميشن، ومرتبط بالنيو لاين بس.
+  const commission = estimatedCommission(bundle.fullCommission, overall);
   const weightSum = sumWeights(bundle.kpis);
   const newLines = bundle.kpis.find((kpi) => kpi.kpiKey === "new_lines");
   const pace = newLinesDailyNeed(newLines?.target ?? 175, achieved.new_lines ?? 0, work.remaining);
