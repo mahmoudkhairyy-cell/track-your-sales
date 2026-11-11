@@ -634,9 +634,9 @@ export default function ManagerPage() {
                 <div className="flex min-w-0 items-center gap-2.5">
                   <button type="button" onClick={() => setMobileMenuOpen(true)} aria-label="فتح القائمة" className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--color-primary-50)] text-xl text-[var(--color-primary-700)] lg:hidden">☰</button>
                   <img src="/track-your-sales/logo-mark.png" alt="Track Your Sales" className="h-9 w-9 shrink-0 object-contain" />
-                  <div className="min-w-0">
-                    <p className="truncate text-[11px] font-black tracking-[.08em] text-[var(--color-primary-700)]" dir="ltr">TRACK YOUR SALES</p>
-                    <p className="mt-0.5 truncate text-[10px] font-semibold text-[var(--color-text-secondary)]" dir="ltr">Developed by Mahmoud Khairy</p>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-[11px] font-black tracking-[.06em] text-[var(--color-primary-700)]" dir="ltr">TRACK YOUR SALES</p>
+                    <p className="mt-0.5 whitespace-normal text-[10px] leading-4 font-semibold text-[var(--color-text-secondary)]" dir="ltr">Developed by Mahmoud Khairy</p>
                   </div>
                 </div>
                 <div className="min-w-0 pr-1">
@@ -734,7 +734,7 @@ export default function ManagerPage() {
                 {isBranches ? <section className="overflow-hidden rounded-[26px] border border-[var(--color-border)] bg-white/90 shadow-[0_10px_28px_rgba(104,53,19,.055)]"><div className="divide-y divide-[var(--color-border)]">{branchItems.length ? [...branchItems].sort((a,b)=>b.percent-a.percent).map((b,i)=><div key={b.name} className="flex items-center justify-between gap-3 px-4 py-3 text-right"><div className="min-w-0"><p className="truncate text-sm font-black">{b.name}</p><p className="mt-1 text-[10px] text-[var(--color-text-secondary)]">{b.group.length} موظف · {b.expected===undefined?"بيانات غير مكتملة":b.onTrack?"على المسار أو متقدم":"متأخر"}</p></div><strong className="shrink-0 text-lg font-black tabular-nums text-[var(--color-primary-700)]">{Math.round(b.percent)}%</strong></div>) : <p className="py-8 text-center text-xs text-[var(--color-text-secondary)]">مفيش فروع في القائمة دي حاليًا.</p>}</div></section> : <section className="overflow-hidden rounded-[26px] border border-[var(--color-border)] bg-white/90 shadow-[0_10px_28px_rgba(104,53,19,.055)]"><div className="divide-y divide-[var(--color-border)]">{employeeItems.length ? employeeItems.map(row=><div key={row.branchId} className="flex items-center justify-between gap-3 px-4 py-3 text-right"><div className="min-w-0"><p className="truncate text-sm font-black">{row.name}</p><p className="mt-1 text-[10px] text-[var(--color-text-secondary)]">{row.branch}</p></div><strong className="shrink-0 text-lg font-black tabular-nums text-[var(--color-primary-700)]">{Math.round(row.percent)}%</strong></div>) : <p className="py-8 text-center text-xs text-[var(--color-text-secondary)]">مفيش موظفين في القائمة دي حاليًا.</p>}</div></section>}
               </section>;
             })() : null}
-            <footer className="flex flex-wrap items-center justify-between gap-3 border-t border-[#eee5dc] pt-4"><div className="flex min-w-0 items-center gap-3"><img src="/track-your-sales/logo-full-light.png" alt="Track Your Sales logo" className="h-9 w-auto max-w-[132px] object-contain" /><div className="min-w-0"><p className="text-[10px] font-bold text-[var(--color-text-secondary)]">Developed by</p><p className="text-xs font-black text-[var(--color-text-primary)]">Mahmoud Khairy</p></div></div><button type="button" onClick={()=>{setPwOpen(v=>!v);setPwMsg("");}} className="text-xs font-bold text-[var(--color-primary-700)]">{pwOpen?"إخفاء تغيير كلمة السر":"🔑 تغيير كلمة السر"}</button></footer>
+            <footer className="flex justify-end border-t border-[#eee5dc] pt-4"><button type="button" onClick={()=>{setPwOpen(v=>!v);setPwMsg("");}} className="text-xs font-bold text-[var(--color-primary-700)]">{pwOpen?"إخفاء تغيير كلمة السر":"🔑 تغيير كلمة السر"}</button></footer>
             {branchPreview ? (() => {
               const previewRows = branchGroups.find(([name]) => name === branchPreview)?.[1] ?? [];
               const preview = branchStatus.find((item) => item.name === branchPreview);
