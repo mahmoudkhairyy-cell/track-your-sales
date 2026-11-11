@@ -82,5 +82,12 @@
     "url": "/track-your-sales/docs/adsl-cancellation-calculator.xlsx",
     "icon": "download-cloud",
     "color": "#D95B00"
+  },
+  {
+    "title": "كل ما يخص DSL على Siebel",
+    "description": "دليل After Sales لخدمات ADSL/DSL على نظام Siebel",
+    "url": "/track-your-sales/docs/dsl-after-sales-siebel.pdf",
+    "icon": "download-cloud",
+    "color": "#D95B00"
   }
 ]
