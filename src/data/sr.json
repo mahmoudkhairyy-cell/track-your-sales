@@ -5098,10 +5098,10 @@
   {
     "id": "31440",
     "title": "Fault For VAS – Cannot Send And Receive",
-    "titleAr": "Fault For VAS – Cannot Send And Receive",
-    "description": "in case CS is complaining that he can't send/receive SMS",
+    "titleAr": "مشاكل في رسائل SMS",
+    "description": "مشاكل في إرسال أو استقبال رسائل SMS.",
     "category": "عطل",
-    "steps": "in case CS is complaining that he can't send/receive SMS"
+    "steps": "مشاكل في إرسال أو استقبال رسائل SMS."
   },
   {
     "id": "31441",
