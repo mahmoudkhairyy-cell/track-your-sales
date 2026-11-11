@@ -148,7 +148,7 @@ function KpiTile({ kpi }: { kpi: AggKpi }) {
   );
 }
 
-type TopRow = { rank: number; name: string; branch: string; percent: number };
+type TopRow = { rank: number; name: string; branch: string; branchId: string; percent: number };
 
 /** نسبة الفرع: كل بند نسبته الكلية للفرع (مجموع المحقق ÷ مجموع التارجت) × وزن البند من الشيت. */
 // نفس قواعد الموظف بالظبط (applyCompanyRules) على مجموع الفرع، عشان الفرع اللي فيه موظف واحد يطلع نفس رقم الموظف.
