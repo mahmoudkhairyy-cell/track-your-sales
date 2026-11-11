@@ -68,5 +68,12 @@
     "url": "https://drive.google.com/file/d/12RNvCF8LfK0tBgJMsg1LfsbuSUurmT65/view",
     "icon": "smartphone",
     "color": "#3ddc84"
+  },
+  {
+    "title": "طلب إيقاف مؤقت (DSL)",
+    "description": "نموذج إقرار طلب إيقاف مؤقت لخط DSL لمدة شهر أو شهرين",
+    "url": "/track-your-sales/docs/dsl-temporary-suspension.pdf",
+    "icon": "download-cloud",
+    "color": "#D95B00"
   }
 ]
