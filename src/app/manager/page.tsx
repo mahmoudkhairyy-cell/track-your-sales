@@ -233,7 +233,7 @@ export default function ManagerPage() {
     if (newPw !== newPw2) return setPwMsg("الباسورد الجديد مش متطابق.");
     try {
       await managerApi("change_password", { password: oldPw, newPassword: newPw });
-      sessionStorage.setItem("tys.mgrPass", newPw);
+      localStorage.setItem("tys.mgrPass", newPw);
       setPassword(newPw);
       setOldPw("");
       setNewPw("");
@@ -283,7 +283,7 @@ export default function ManagerPage() {
       const data = await managerApi<ReportRow[]>("reports", { password: pw });
       // الباسورد بيفضل في الجلسة عشان الريفريش ما يطلبوش تاني.
       try {
-        sessionStorage.setItem("tys.mgrPass", pw);
+        localStorage.setItem("tys.mgrPass", pw);
       } catch {
         // التخزين مش متاح، هيطلب الباسورد تاني.
       }
@@ -296,6 +296,7 @@ export default function ManagerPage() {
         // الباسورد غلط: نرجع لشاشة الدخول.
         setRows(null);
         try {
+          localStorage.removeItem("tys.mgrPass");
           sessionStorage.removeItem("tys.mgrPass");
         } catch {
           // لا شيء
@@ -314,7 +315,12 @@ export default function ManagerPage() {
     let cancelled = false;
     let saved: string | null = null;
     try {
-      saved = sessionStorage.getItem("tys.mgrPass");
+      saved = localStorage.getItem("tys.mgrPass");
+      // ترحيل كلمة السر المحفوظة من الجلسات القديمة مرة واحدة.
+      if (!saved) {
+        saved = sessionStorage.getItem("tys.mgrPass");
+        if (saved) localStorage.setItem("tys.mgrPass", saved);
+      }
     } catch {
       saved = null;
     }
@@ -334,7 +340,7 @@ export default function ManagerPage() {
     setPending(true);
     setError("");
     try {
-      const pw = password || sessionStorage.getItem("tys.mgrPass") || "";
+      const pw = password || localStorage.getItem("tys.mgrPass") || "";
       await managerApi("delete", { password: pw, branchId: row.branch_id });
       setRows((cur) => (cur ?? []).filter((r) => r.branch_id !== row.branch_id));
       setOpenId(null);
