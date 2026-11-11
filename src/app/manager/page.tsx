@@ -275,6 +275,7 @@ export default function ManagerPage() {
   const [rows, setRows] = useState<ReportRow[] | null>(null);
   const [error, setError] = useState("");
   const [pending, setPending] = useState(false);
+  const [authChecking, setAuthChecking] = useState(true);
   const [lastLoaded, setLastLoaded] = useState<Date | null>(null);
   const [yesterday, setYesterday] = useState("");
   const [pwOpen, setPwOpen] = useState(false);
@@ -345,7 +346,11 @@ export default function ManagerPage() {
       try {
         localStorage.setItem("tys.mgrPass", pw);
       } catch {
-        // التخزين مش متاح، هيطلب الباسورد تاني.
+        try {
+          sessionStorage.setItem("tys.mgrPass", pw);
+        } catch {
+          // التخزين غير متاح في المتصفح.
+        }
       }
       setRows(data ?? []);
       setLastLoaded(new Date());
@@ -388,8 +393,18 @@ export default function ManagerPage() {
       queueMicrotask(() => {
         if (cancelled) return;
         setPassword(saved);
-        void load(undefined, saved);
+        void load(undefined, saved).finally(() => {
+          if (!cancelled) setAuthChecking(false);
+        });
       });
+    } else {
+      const timer = window.setTimeout(() => {
+        if (!cancelled) setAuthChecking(false);
+      }, 0);
+      return () => {
+        cancelled = true;
+        window.clearTimeout(timer);
+      };
     }
     return () => { cancelled = true; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -532,7 +547,14 @@ export default function ManagerPage() {
 
   return (
     <main className="tys-page tx-manager min-h-screen bg-[radial-gradient(ellipse_at_top_left,rgba(255,176,111,.13),transparent_38%),linear-gradient(145deg,#fffaf6_0%,#f8f4ef_55%,#fff8f1_100%)] px-3 py-4 text-[var(--color-text-primary)] sm:px-5 sm:py-6" dir="rtl">
-      {rows === null ? (
+      {authChecking ? (
+        <div className="mx-auto flex min-h-[70vh] max-w-md items-center justify-center">
+          <section className="rounded-2xl border border-[var(--color-border)] bg-white px-7 py-6 text-center shadow-sm">
+            <img src="/track-your-sales/logo-mark.png" alt="" className="mx-auto h-10 w-10 object-contain" />
+            <p className="mt-3 text-sm font-bold text-[var(--color-text-secondary)]">جاري استعادة جلسة المدير...</p>
+          </section>
+        </div>
+      ) : rows === null ? (
         <div className="mx-auto max-w-md">
           <section className="mt-10 rounded-[28px] border border-[var(--color-border)] bg-white p-6 shadow-sm">
             <div className="mb-6 text-center">
