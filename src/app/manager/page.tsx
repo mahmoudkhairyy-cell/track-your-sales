@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import { useHistoryView } from "@/lib/use-history-view";
 import { managerApi } from "@/lib/cloud";
 import { applyCompanyRules } from "@/lib/calculations";
@@ -212,6 +212,36 @@ export default function ManagerPage() {
   const branchOpen = branch !== null && branchOpenFor === branch;
   // فتح وقفل بنود الموظف حالة داخل الصفحة فقط، ولا يضيف أي خطوة إلى سجل زر الرجوع.
   const [openId, setOpenId] = useState<string | null>(null);
+  const employeeOverlayRef = useRef(false);
+
+  // بيانات الموظف المفتوحة تعتبر طبقة داخل الصفحة؛ زر الرجوع يقفلها أولًا.
+  useEffect(() => {
+    const onEmployeeBack = () => {
+      if (!employeeOverlayRef.current) return;
+      employeeOverlayRef.current = false;
+      setOpenId(null);
+    };
+    window.addEventListener("popstate", onEmployeeBack);
+    return () => window.removeEventListener("popstate", onEmployeeBack);
+  }, []);
+
+  function toggleEmployeeDetails(id: string, isOpen: boolean) {
+    if (isOpen) {
+      if (employeeOverlayRef.current) {
+        employeeOverlayRef.current = false;
+        window.history.back();
+      } else {
+        setOpenId(null);
+      }
+      return;
+    }
+    if (!employeeOverlayRef.current) {
+      const current = (window.history.state ?? {}) as Record<string, unknown>;
+      window.history.pushState({ ...current, tysOverlay: "employee" }, "");
+      employeeOverlayRef.current = true;
+    }
+    setOpenId(id);
+  }
   const [rows, setRows] = useState<ReportRow[] | null>(null);
   const [error, setError] = useState("");
   const [pending, setPending] = useState(false);
@@ -358,7 +388,7 @@ export default function ManagerPage() {
     const percent = Math.round(row.payload.overall ?? 0);
     return (
       <article key={row.branch_id} className="tys-manager-employee-card rounded-[26px] bg-white/95 p-4 shadow-[0_10px_28px_rgba(126,65,24,0.06)] ring-1 ring-[var(--color-border)]/70">
-        <button type="button" onClick={() => setOpenId(open ? null : row.branch_id)} className="flex w-full items-center justify-between gap-3 text-right">
+        <button type="button" onClick={() => toggleEmployeeDetails(row.branch_id, open)} className="flex w-full items-center justify-between gap-3 text-right">
           <div>
             <h3 className="font-black">{row.employee_name}</h3>
             <div className="mt-1 flex flex-wrap items-center gap-1">
@@ -455,7 +485,15 @@ export default function ManagerPage() {
     { id: "reports", label: "التقارير", icon: "reports" as const },
   ];
   const activeLabel = navItems.find((item) => item.id === view)?.label ?? (branch ? "تفاصيل الفرع" : "لوحة المدير");
-  const changeView = (next: string) => { setView(next); setMobileMenuOpen(false); };
+  const changeView = (next: string) => {
+    // فتح صفحة أداء فرع لازم يكون لها رجوع واضح لقائمة الفروع، حتى لو اتفتحت من الرئيسية.
+    if (next.startsWith("b:") && view !== "list" && !view.startsWith("b:")) {
+      const current = (window.history.state ?? {}) as Record<string, unknown>;
+      window.history.pushState({ ...current, tysView: "list" }, "");
+    }
+    setView(next);
+    setMobileMenuOpen(false);
+  };
   const statusNames = (items: typeof branchStatus) => items.length ? (
     <div className="mt-3 flex flex-wrap gap-2">
       {items.map((item) => <button key={item.name} type="button" onClick={() => changeView("b:" + item.name)} className="rounded-xl border border-[#f1dfd4] bg-white px-3 py-2 text-xs font-extrabold text-[var(--color-text-primary)]">{item.name}</button>)}
@@ -581,7 +619,7 @@ export default function ManagerPage() {
                   const employee = allRows.find((item) => item.branch_id === row.branchId);
                   const expanded = openId === row.branchId;
                   return <div key={row.branchId}>
-                    <button type="button" aria-expanded={expanded} onClick={() => setOpenId(expanded ? null : row.branchId)} className="flex w-full items-center gap-3 px-4 py-3.5 text-right transition hover:bg-[var(--color-surface-cream)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--color-primary-600)] sm:px-5"><span className={"flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-xs font-black "+(row.rank===1?"bg-[#fff0d7] text-[#a66a08]":row.rank===2?"bg-[#f2f3f5] text-[#657080]":row.rank===3?"bg-[#faeee5] text-[#9b5b31]":"bg-[var(--color-surface-cream)] text-[var(--color-primary-700)]")}>{row.rank}</span><span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#ffe2c9] to-[var(--color-primary-50)] text-sm font-black text-[var(--color-primary-700)]">{(row.name.trim()[0]||"م").toUpperCase()}</span><div className="min-w-0 flex-1"><p className="truncate text-sm font-extrabold text-[var(--color-text-primary)]">{row.name}</p><p className="truncate text-[10px] text-[var(--color-text-secondary)]" dir="ltr">{row.branch}</p><div className="mt-2 h-1.5 overflow-hidden rounded-full bg-[var(--color-border)]"><div className="h-full rounded-full bg-gradient-to-l from-[var(--color-primary-700)] to-[var(--color-primary-500)]" style={{width:Math.min(100,Math.max(0,row.percent))+"%"}} /></div></div><strong className="shrink-0 text-lg font-black tabular-nums text-[var(--color-primary-700)]">{Math.round(row.percent)}%</strong><span className="text-[var(--color-text-secondary)]" aria-hidden="true">{expanded ? "⌄" : "‹"}</span></button>
+                    <button type="button" aria-expanded={expanded} onClick={() => toggleEmployeeDetails(row.branchId, expanded)} className="flex w-full items-center gap-3 px-4 py-3.5 text-right transition hover:bg-[var(--color-surface-cream)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--color-primary-600)] sm:px-5"><span className={"flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-xs font-black "+(row.rank===1?"bg-[#fff0d7] text-[#a66a08]":row.rank===2?"bg-[#f2f3f5] text-[#657080]":row.rank===3?"bg-[#faeee5] text-[#9b5b31]":"bg-[var(--color-surface-cream)] text-[var(--color-primary-700)]")}>{row.rank}</span><span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#ffe2c9] to-[var(--color-primary-50)] text-sm font-black text-[var(--color-primary-700)]">{(row.name.trim()[0]||"م").toUpperCase()}</span><div className="min-w-0 flex-1"><p className="truncate text-sm font-extrabold text-[var(--color-text-primary)]">{row.name}</p><p className="truncate text-[10px] text-[var(--color-text-secondary)]" dir="ltr">{row.branch}</p><div className="mt-2 h-1.5 overflow-hidden rounded-full bg-[var(--color-border)]"><div className="h-full rounded-full bg-gradient-to-l from-[var(--color-primary-700)] to-[var(--color-primary-500)]" style={{width:Math.min(100,Math.max(0,row.percent))+"%"}} /></div></div><strong className="shrink-0 text-lg font-black tabular-nums text-[var(--color-primary-700)]">{Math.round(row.percent)}%</strong><span className="text-[var(--color-text-secondary)]" aria-hidden="true">{expanded ? "⌄" : "‹"}</span></button>
                     {expanded && employee ? <div className="border-t border-[var(--color-border)] bg-[var(--color-surface-cream)]/60 px-4 py-4 sm:px-5">
                       <div className="mb-3 flex items-center justify-between gap-2"><h3 className="text-xs font-black">بنود التارجت</h3><TrackBadge percent={employee.payload.overall} expected={employee.payload.expectedPercent} /></div>
                       <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">{(employee.payload.kpis ?? []).map((kpi) => <KpiTile key={kpi.name} kpi={kpi} />)}</div>
