@@ -312,7 +312,7 @@ export default function MorePage() {
               <p className="text-[10px] font-bold text-[var(--color-text-secondary)]">التوتال</p>
             </div>
             <div className="rounded-2xl border border-[var(--color-border)] bg-white/90 px-2 py-3">
-              <p className="text-xl font-black tabular-nums text-[var(--color-primary-700)]">{Math.round(reportData.estimatedCommission)}</p>
+              <p className={`text-xl font-black tabular-nums ${reportData.overall >= 80 ? "text-[var(--color-success-text)]" : "text-[var(--color-danger-text)]"}`}>{Math.round(reportData.estimatedCommission)}</p>
               <p className="text-[10px] font-bold text-[var(--color-text-secondary)]">الكوميشن (ج)</p>
             </div>
             <div className="rounded-2xl border border-[var(--color-border)] bg-white/90 px-2 py-3">
@@ -399,7 +399,7 @@ export default function MorePage() {
                     </div>
                     <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface-cream)] p-4">
                       <p className="text-[11px] font-bold text-[var(--color-text-secondary)]">الكوميشن المتوقع</p>
-                      <p className="mt-1 font-mono text-3xl font-black tracking-tight text-[var(--color-primary-700)]">{Math.round(reportData.estimatedCommission)} <span className="text-sm">ج</span></p>
+                      <p className={`mt-1 font-mono text-3xl font-black tracking-tight ${reportData.overall >= 80 ? "text-[var(--color-success-text)]" : "text-[var(--color-danger-text)]"}`}>{Math.round(reportData.estimatedCommission)} <span className="text-sm">ج</span></p>
                       <p className="mt-1 text-[10px] font-semibold text-[var(--color-text-secondary)]">من إجمالي {Math.round(reportData.fullCommission)} ج</p>
                     </div>
                   </div>
