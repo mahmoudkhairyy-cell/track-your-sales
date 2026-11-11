@@ -110,7 +110,7 @@ export default function TargetPage() {
   const dirty = baseline !== null && snapshot !== baseline;
   const saveState = saving
     ? { label: "⏳ جارٍ الحفظ", tone: "bg-amber-50 text-amber-800 ring-1 ring-amber-200" }
-    : error
+    : error && !dirty
       ? { label: "⚠️ تعذر الحفظ", tone: "bg-red-50 text-red-700 ring-1 ring-red-200" }
       : dirty
         ? { label: "● تغييرات غير محفوظة", tone: "bg-[var(--color-primary-50)] text-[var(--color-primary-700)] ring-1 ring-[#f3d6c0]" }
