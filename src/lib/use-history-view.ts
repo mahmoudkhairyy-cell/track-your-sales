@@ -16,10 +16,15 @@ export function useHistoryView<T extends string>(defaultValue: T, initialValue: 
       const isClosingEmployee =
         currentView.includes("|e:") && next === currentView.split("|e:")[0];
       const isClosingBranch = currentView.startsWith("b:") && next === "list";
+      const topLevelViews = ["overview", "list", "top", "activity", "reports"];
+      const isTopLevelNavigation =
+        topLevelViews.includes(currentView) && topLevelViews.includes(next);
+      // احتفظ بالرئيسية كنقطة رجوع: أول انتقال منها يضيف خطوة،
+      // والتنقل بين بقية الأقسام يستبدل نفس الخطوة بدل تكديسها.
+      const replaceTopLevel = isTopLevelNavigation && currentView !== "overview";
 
-      // إغلاق شاشة فرع أو موظف يستبدل سجل الشاشة الحالية بدل إضافة سجل جديد.
-      // كده الفتح والقفل المتكرر ما يسيبش نسخ قديمة من تفاصيل الفروع في زرار Back.
-      if (isClosingEmployee || isClosingBranch) {
+      // إغلاق شاشة فرع/موظف أو التنقل بين الأقسام يستبدل سجل الشاشة الحالية.
+      if (isClosingEmployee || isClosingBranch || replaceTopLevel) {
         window.history.replaceState({ ...current, tysView: next }, "");
       } else {
         // التنقل العادي يضيف خطوة، مع الحفاظ على حالة Next.js (زي __NA).
