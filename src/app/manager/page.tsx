@@ -213,17 +213,42 @@ export default function ManagerPage() {
   // فتح وقفل بنود الموظف حالة داخل الصفحة فقط، ولا يضيف أي خطوة إلى سجل زر الرجوع.
   const [openId, setOpenId] = useState<string | null>(null);
   const employeeOverlayRef = useRef(false);
+  const branchKpiOverlayRef = useRef(false);
 
-  // بيانات الموظف المفتوحة تعتبر طبقة داخل الصفحة؛ زر الرجوع يقفلها أولًا.
+  // زر الرجوع يقفل تفاصيل الموظف أو مؤشرات الفرع المفتوحة قبل مغادرة الصفحة.
   useEffect(() => {
-    const onEmployeeBack = () => {
-      if (!employeeOverlayRef.current) return;
-      employeeOverlayRef.current = false;
-      setOpenId(null);
+    const onDetailsBack = () => {
+      if (employeeOverlayRef.current) {
+        employeeOverlayRef.current = false;
+        setOpenId(null);
+        return;
+      }
+      if (branchKpiOverlayRef.current) {
+        branchKpiOverlayRef.current = false;
+        setBranchOpenFor(null);
+      }
     };
-    window.addEventListener("popstate", onEmployeeBack);
-    return () => window.removeEventListener("popstate", onEmployeeBack);
+    window.addEventListener("popstate", onDetailsBack);
+    return () => window.removeEventListener("popstate", onDetailsBack);
   }, []);
+
+  function toggleBranchKpis(isOpen: boolean) {
+    if (isOpen) {
+      if (branchKpiOverlayRef.current) {
+        branchKpiOverlayRef.current = false;
+        window.history.back();
+      } else {
+        setBranchOpenFor(null);
+      }
+      return;
+    }
+    if (!branchKpiOverlayRef.current) {
+      const current = (window.history.state ?? {}) as Record<string, unknown>;
+      window.history.pushState({ ...current, tysOverlay: "branch-kpis" }, "");
+      branchKpiOverlayRef.current = true;
+    }
+    setBranchOpenFor(branch);
+  }
 
   function toggleEmployeeDetails(id: string, isOpen: boolean) {
     if (isOpen) {
@@ -643,7 +668,7 @@ export default function ManagerPage() {
             ) : branch !== null ? (
               <section className="space-y-3">
                 <div className="flex items-center justify-between gap-3"><div><button type="button" onClick={()=>changeView("list")} className="mb-1 text-xs font-bold text-[var(--color-primary-700)]">← كل الفروع</button><h2 className="text-xl font-black" dir="ltr">{branch}</h2><p className="text-xs text-[var(--color-text-secondary)]">{branchRows.length} موظف</p></div><button type="button" onClick={()=>downloadBranchCsv(branch,branchRows)} className="rounded-xl border border-[var(--color-border)] bg-white px-3 py-2 text-xs font-bold text-[var(--color-primary-700)]">↓ CSV</button></div>
-                <article className="rounded-2xl border border-[var(--color-border)] bg-white p-3"><button type="button" onClick={()=>setBranchOpenFor(branchOpen?null:branch)} className="flex w-full items-center justify-between gap-3 text-right"><span className="text-xs font-bold text-[var(--color-text-secondary)]">إجمالي أداء الفرع</span><strong className="text-2xl text-[var(--color-primary-700)]">{Math.round(branchAvg)}%　{branchOpen?"−":"+"}</strong></button>{branchOpen?<div className="mt-3 grid grid-cols-2 gap-2 border-t border-[var(--color-border)] pt-3 sm:grid-cols-3">{aggregateKpis(branchRows).map(k=><KpiTile key={k.name} kpi={k}/>)}</div>:null}<TrackBadge percent={branchAvg} expected={branchExpected}/></article>
+                <article className="rounded-2xl border border-[var(--color-border)] bg-white p-3"><button type="button" onClick={()=>toggleBranchKpis(branchOpen)} className="flex w-full items-center justify-between gap-3 text-right"><span className="text-xs font-bold text-[var(--color-text-secondary)]">إجمالي أداء الفرع</span><strong className="text-2xl text-[var(--color-primary-700)]">{Math.round(branchAvg)}%　{branchOpen?"−":"+"}</strong></button>{branchOpen?<div className="mt-3 grid grid-cols-2 gap-2 border-t border-[var(--color-border)] pt-3 sm:grid-cols-3">{aggregateKpis(branchRows).map(k=><KpiTile key={k.name} kpi={k}/>)}</div>:null}<TrackBadge percent={branchAvg} expected={branchExpected}/></article>
                 <h3 className="text-sm font-black">الموظفون · مرتّبون حسب الأداء</h3><div className="space-y-2">{[...branchRows].sort((a,b)=>(b.payload.overall??0)-(a.payload.overall??0)).map((row,index)=><div key={row.branch_id} className="relative [&>article]:pt-8"><span className="absolute right-3 top-2 z-10 rounded-md bg-[var(--color-primary-50)] px-2 py-0.5 text-[10px] font-black text-[var(--color-primary-700)]">#{index+1}</span>{renderRow(row)}</div>)}</div>
               </section>
             ) : null}
