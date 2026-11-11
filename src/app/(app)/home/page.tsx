@@ -172,6 +172,10 @@ export default function HomePage() {
                 <span className="text-[10px] font-bold text-[var(--color-text-secondary)]">{gap > 0 ? "فاضلك على الهدف" : "حالة التارجت"}</span>
                 <strong className="truncate font-mono text-sm font-black text-[var(--color-text-primary)]">{gap > 0 ? `${formatPercent(gap)}%` : "محقق الهدف ✓"}</strong>
               </div>
+              <div className="mt-2 inline-flex max-w-full items-center gap-2 rounded-xl border border-[var(--color-border)] bg-white/85 px-3 py-2 shadow-sm">
+                <span className="text-[10px] font-bold text-[var(--color-text-secondary)]">الكوميشن المتوقع</span>
+                <strong className={`truncate font-mono text-sm font-black ${data.overall >= 80 ? "text-[var(--color-success-text)]" : "text-[var(--color-danger-text)]"}`}>{Math.round(data.estimatedCommission)} ج</strong>
+              </div>
             </div>
             <div className="relative mx-auto h-[108px] w-[108px] sm:h-[132px] sm:w-[132px]">
               <svg viewBox="0 0 100 100" className="h-full w-full -rotate-90">
