@@ -96,17 +96,26 @@ export default async function handler(req: RequestLike, res: ResponseLike) {
 
     const data = (await response.json()) as {
       candidates?: Array<{ content?: { parts?: Array<{ text?: string }> } }>;
-      error?: { message?: string };
+      error?: { code?: number; status?: string; message?: string };
     };
 
     if (!response.ok) {
+      console.error("Gemini API request failed", {
+        httpStatus: response.status,
+        errorCode: data.error?.code,
+        errorStatus: data.error?.status,
+        errorMessage: (data.error?.message ?? "").slice(0, 300),
+      });
       if (response.status === 429) {
         return send(res, 429, { ok: false, error: "وصلنا للحد المجاني مؤقتًا. استنى شوية وجرب تاني." });
       }
-      if (response.status === 400 || response.status === 403) {
+      if (response.status === 401 || response.status === 400 || response.status === 403) {
         return send(res, 502, { ok: false, error: "Gemini رفض الطلب أو المفتاح. راجع صلاحية المفتاح والموديل في Google AI Studio." });
       }
-      return send(res, 502, { ok: false, error: "حصلت مشكلة في خدمة Gemini. جرّب تاني بعد شوية." });
+      if (response.status === 404) {
+        return send(res, 502, { ok: false, error: "موديل Gemini المطلوب غير متاح حاليًا. راجع إعداد الموديل." });
+      }
+      return send(res, 502, { ok: false, error: "خدمة Gemini واجهت خطأ مؤقتًا. جرّب تاني بعد شوية." });
     }
 
     const answer = data.candidates?.[0]?.content?.parts?.map((part) => part.text ?? "").join("").trim();
@@ -115,7 +124,10 @@ export default async function handler(req: RequestLike, res: ResponseLike) {
     }
 
     return send(res, 200, { ok: true, answer });
-  } catch {
+  } catch (error) {
+    console.error("Gemini network/request exception", {
+      errorName: error instanceof Error ? error.name : "UnknownError",
+    });
     return send(res, 502, { ok: false, error: "تعذر الاتصال بخدمة الذكاء الاصطناعي. تحقق من الإنترنت وحاول تاني." });
   }
 }
