@@ -51,7 +51,7 @@ const SYSTEM_INSTRUCTION = `
 - لا تحوّل عنوان SR أو وصفه المختصر إلى خطوات تنفيذ غير موجودة. ميّز بين "الإجراء موثق بالكامل" و"المتاح مجرد وصف أو عنوان" و"لا توجد معلومة".
 - عند تعارض معلومتين أو اختلافهما بين الملفات، لا تختَر رقمًا أو شرطًا واحدًا ولا تعرضه كحقيقة نهائية؛ اذكر التعارض بوضوح وحدد أي مصدر يقول ماذا، واطلب تأكيد أحدث إجراء داخلي قبل التنفيذ. مثال: إذا اختلفت قاعدة غرامة إلغاء DSL بين عدد الفواتير ومدة الاشتراك، لا تجزم بقيمة 227 أو بشرطها.
 - المساعد لا يقدم إجراءات التحويل من Postpaid إلى Control؛ لا تنشئ لهذا المسار خطوات أو حسبة أو رسومًا، ووجّه المستخدم إلى القنوات الداخلية المعتمدة خارج المساعد.
-- عند سؤال المستخدم عن التحويل من Postpaid إلى Prepaid أو Control، لا تعرض SR 10707 ككود لهذا التحويل؛ عنوانه From Call And Control To ووصفه متعارض. SR 10704 عنوانه مبتور ولا يثبت اتجاه التحويل. لا تدّعِ معرفة خطوات التحويل أو شروطه أو رسومه ما لم يظهر مصدر موثوق يثبتها.
+- لا تعرض SR 10707 أو SR 10704 كأكواد لتحويل Postpaid إلى Prepaid؛ الأول يخص From Call And Control To، والثاني عنوانه مبتور ولا يثبت اتجاه التحويل. لا تدّعِ معرفة خطوات التحويل أو شروطه أو رسومه ما لم يظهر مصدر موثوق يثبتها.
 - إذا كانت المعرفة تجيب عن جزء من السؤال فقط، قدّم الجزء المؤكد أولًا، ثم قل بوضوح ما الذي لا يزال غير موثق. لا ترفض الإجابة كلها لمجرد نقص تفصيلة واحدة.
 - إذا لم تتوفر خطوات الإجراء، لا تخمّن ولا تملأ الفراغ بكلام عام. قل باختصار إن خطوات التنفيذ التفصيلية غير موجودة في المعرفة الحالية، وحدد المعلومة الناقصة بدقة، واسأل سؤالًا واحدًا مفيدًا عند الحاجة.
 - افصل بين المعلومة المؤكدة والاقتراح أو المثال التدريبي. لا تعرض الاقتراح على أنه إجراء Orange معتمد.
@@ -60,11 +60,10 @@ const SYSTEM_INSTRUCTION = `
 - إذا طلب المستخدم معلومة تشغيلية قد تتغير، نبّهه باختصار إلى ضرورة تأكيدها من أحدث مصدر داخلي قبل التنفيذ.
 - لا تكرر التحذيرات أو الاعتذارات، ولا تنه الإجابة بسؤال "هل تحب نراجع نقطة تانية؟" إذا كان بإمكانك الإجابة مباشرة.
 
-سيناريوهات Postpaid — ميّز أولاً بين ثلاثة طلبات مختلفة:
+سيناريوهات Postpaid — ميّز بين طلبين فقط:
 - تحويل Postpaid إلى Prepaid (كارت).
-- تحويل Postpaid إلى Control.
 - إلغاء/Termination لخط Postpaid.
-إذا قال الموظف "تحويل من فاتورة" وكان المقصود غير واضح، اسأله سؤالاً واحداً: "تقصد تحويل إلى كارت (Prepaid)؟" إذا كان يقصد إجراءً آخر، لا تبدأ الحسبة ووضّح أن هذا المسار غير مدعوم في المساعد حالياً.
+إذا قال الموظف "تحويل من فاتورة" وكان المقصود غير واضح، اسأله سؤالاً واحداً: "تقصد تحويل إلى كارت (Prepaid)؟" إذا كان يقصد إجراءً آخر، لا تبدأ الحسبة ووضّح أن خطواته غير متاحة في المساعد حالياً.
 
 مسار Postpaid إلى Prepaid (كارت) فقط:
 - يمكن استخدام بيانات Postpaid Calculator المتاحة لحساب المستحقات/أيام الفاتورة وفق المعرفة، مع توضيح أنها حاسبة مالية وليست خطوات تنفيذ Siebel.
@@ -128,7 +127,7 @@ function findSRKnowledge(records: SRRecord[], query: string): SRRecord[] {
     "بيانات": ["data", "usage"], "مكالمات": ["calls", "call"], "رسوم": ["charges", "fees"],
     "ضرائب": ["taxes", "tax"], "تحويل": ["migration", "migrate", "transfer"], "ترحيل": ["migration", "migrate"],
     "استعلام": ["inquiry", "information"], "الغاء": ["cancel", "deactivation"], "إلغاء": ["cancel", "deactivation"],
-    "تفعيل": ["activation", "addition"], "اشتراك": ["subscription"], "كنترول": ["control", "call and control"], "لكنترول": ["control", "call and control"], "للكنترول": ["control", "call and control"], "احول": ["migration", "migrate"], "حول": ["migration", "migrate"], "انقل": ["migration", "migrate"],
+    "تفعيل": ["activation", "addition"], "اشتراك": ["subscription"], "احول": ["migration", "migrate"], "حول": ["migration", "migrate"], "انقل": ["migration", "migrate"],
     "كارت": ["prepaid"], "تغيير": ["change", "migration", "migrate"], "نظام": ["tariff", "plan", "migration"],
   };
   const expandedTerms = [...new Set([...terms, ...terms.flatMap((term) => arabicToEnglish[term] ?? [])])];
@@ -227,7 +226,7 @@ function findBusinessKnowledge(records: KnowledgeRecord[], query: string): Knowl
   const aliases: Record<string, string[]> = {
     "باقة": ["plan", "package"], "باقات": ["plans", "packages"],
     "فريماكس": ["freemax", "free max"], "فاتورة": ["postpaid", "invoice", "bill"],
-    "فواتير": ["postpaid", "invoice", "bill"], "كنترول": ["control", "call and control", "star control"], "لكنترول": ["control", "call and control", "star control"], "للكنترول": ["control", "call and control", "star control"], "احول": ["migration", "migrate"], "حول": ["migration", "migrate"], "انقل": ["migration", "migrate"],
+    "فواتير": ["postpaid", "invoice", "bill"], "احول": ["migration", "migrate"], "حول": ["migration", "migrate"], "انقل": ["migration", "migrate"],
     "كارت": ["prepaid"], "تحويل": ["migration", "migrate", "transfer"], "ترحيل": ["migration", "migrate"],
     "تغيير": ["change", "migration", "migrate"], "الغاء": ["cancel", "cancellation"],
     "ايقاف": ["suspension", "suspend"], "استئناف": ["resume"], "ارضي": ["dsl", "landline"],
