@@ -242,9 +242,11 @@ function findBusinessKnowledge(records: KnowledgeRecord[], query: string): Knowl
   const expanded = [...new Set([...terms, ...terms.flatMap((term) => (aliases[term] ?? []).flatMap(normalize))])];
   const asksPostpaidCancellation = /(?:postpaid|بوست|فاتور|فاتوره)/i.test(normalized) && /(?:الغاء|الغى|الغي|انهاء|termination|cancel|cancellation)/i.test(normalized);
   const asksDsl = /(?:dsl|adsl|ارضي|ارضى)/i.test(normalized);
-  // No Postpaid termination procedure is documented in the current knowledge base.
-  // Return no business snippets rather than unrelated migration or DSL content.
-  if (asksPostpaidCancellation && !asksDsl) return [];
+  const asksPrepaidMigration = /(?:prepaid|كارت)/i.test(normalized) && /(?:تحويل|migration|migrate|احول|انقل)/i.test(normalized);
+  // In this Orange retail context, "cancel the bill/Postpaid line" means migrate
+  // the line from Postpaid to Prepaid, not terminate the service.
+  const asksPostpaidToPrepaid = asksPrepaidMigration || (asksPostpaidCancellation && !asksDsl);
+
   const asksPrepaidMigration = /(?:prepaid|كارت)/i.test(normalized) && /(?:تحويل|migration|migrate|احول|انقل)/i.test(normalized);
   const scored = records.map((record) => {
     const haystack = normalize(record.text);
@@ -258,9 +260,8 @@ function findBusinessKnowledge(records: KnowledgeRecord[], query: string): Knowl
     if (terms.length && terms.every((term) => haystack.includes(term))) score += 8;
     // Intent guards prevent broad words such as "invoice" or "cancel" from
     // routing a DSL or Postpaid cancellation question into the prepaid calculator.
-    if (asksPostpaidCancellation && topicId === "postpaid migration") score = 0;
     if (asksDsl && topicId === "postpaid migration") score = 0;
-    if (asksPrepaidMigration && topicId === "postpaid migration") score += 30;
+    if (asksPostpaidToPrepaid && topicId === "postpaid migration") score += 30;
     return { record, score };
   }).filter((item) => item.score > 0);
   return scored.sort((a, b) => b.score - a.score).slice(0, 12).map((item) => item.record);
