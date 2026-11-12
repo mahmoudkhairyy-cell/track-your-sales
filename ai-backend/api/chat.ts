@@ -128,9 +128,9 @@ async function buildKnowledgeContext(query: string): Promise<string> {
         item.category ? `التصنيف: ${item.category}` : "",
         item.description ? `الوصف: ${item.description}` : "",
         item.steps ? `التفاصيل/الخطوات المسجلة: ${item.steps}` : "",
-      ].filter(Boolean).join("\\n")),
+      ].filter(Boolean).join("\n")),
       "استخدم الخطوات فقط إذا كانت مكتوبة صراحة في الحقل. إذا كان الوصف مجرد عنوان أو سبب فتح SR، قل ذلك بوضوح.",
-    ].join("\\n\\n").slice(0, 10000);
+    ].join("\n\n").slice(0, 10000);
   } catch (error) {
     console.error("SR knowledge retrieval failed", { errorName: error instanceof Error ? error.name : "UnknownError" });
     return "";
@@ -191,12 +191,12 @@ async function loadBusinessKnowledge(): Promise<KnowledgeRecord[]> {
 
 function findBusinessKnowledge(records: KnowledgeRecord[], query: string): KnowledgeRecord[] {
   const normalize = (value: string) => value.toLowerCase().normalize("NFKC")
-    .replace(/[\\u064B-\\u065F\\u0670]/g, "")
+    .replace(/[\u064B-\u065F\u0670]/g, "")
     .replace(/[أإآ]/g, "ا").replace(/ة/g, "ه").replace(/ى/g, "ي")
-    .replace(/[^\\p{L}\\p{N}]+/gu, " ").trim();
+    .replace(/[^\p{L}\p{N}]+/gu, " ").trim();
   const normalized = normalize(query);
   const stopwords = new Set(["من", "الى", "إلى", "في", "على", "عن", "ازاي", "ازاى", "اعمل", "عاوز", "عايز", "ممكن", "هل", "هو", "هي", "ال"]);
-  const terms = normalized.split(/\\s+/).filter((term) => term.length >= 2 && !stopwords.has(term));
+  const terms = normalized.split(/\s+/).filter((term) => term.length >= 2 && !stopwords.has(term));
   const aliases: Record<string, string[]> = {
     "باقة": ["plan", "package"], "باقات": ["plans", "packages"],
     "فريماكس": ["freemax", "free max"], "فاتورة": ["postpaid", "invoice", "bill"],
