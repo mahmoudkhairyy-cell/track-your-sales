@@ -135,6 +135,85 @@ async function buildKnowledgeContext(query: string): Promise<string> {
   }
 }
 
+
+type KnowledgeRecord = { source: string; text: string };
+
+let businessKnowledgeCache: { records: KnowledgeRecord[]; expiresAt: number } | null = null;
+let businessKnowledgeRequest: Promise<KnowledgeRecord[]> | null = null;
+
+function flattenKnowledge(value: unknown, source: string, path = ""): KnowledgeRecord[] {
+  if (Array.isArray(value)) return value.flatMap((item, index) => flattenKnowledge(item, source, path ? `${path} ${index + 1}` : ""));
+  if (!value || typeof value !== "object") return [];
+  const obj = value as Record<string, unknown>;
+  const own = Object.entries(obj)
+    .filter(([, item]) => typeof item === "string" || typeof item === "number" || typeof item === "boolean")
+    .map(([key, item]) => `${key}: ${String(item)}`);
+  const current = [...(path ? [path] : []), ...own].join(" | ");
+  const nested = Object.entries(obj)
+    .filter(([, item]) => item && typeof item === "object")
+    .flatMap(([key, item]) => flattenKnowledge(item, source, key));
+  return [...(current ? [{ source, text: current }] : []), ...nested];
+}
+
+async function loadBusinessKnowledge(): Promise<KnowledgeRecord[]> {
+  if (businessKnowledgeCache && businessKnowledgeCache.expiresAt > Date.now()) return businessKnowledgeCache.records;
+  if (businessKnowledgeRequest) return businessKnowledgeRequest;
+  businessKnowledgeRequest = (async () => {
+    const files = ["plans.json", "freemax.json", "dsl.json", "docs.json"];
+    const results = await Promise.all(files.map(async (file) => {
+      const url = `https://raw.githubusercontent.com/mahmoudkhairyy-cell/track-your-sales/local-version/src/data/${file}`;
+      const response = await fetch(url, { signal: AbortSignal.timeout(3500) });
+      if (!response.ok) throw new Error(`Knowledge source ${file} returned ${response.status}`);
+      return flattenKnowledge(await response.json(), file);
+    }));
+    const records = results.flat();
+    businessKnowledgeCache = { records, expiresAt: Date.now() + 10 * 60 * 1000 };
+    return records;
+  })().finally(() => { businessKnowledgeRequest = null; });
+  return businessKnowledgeRequest;
+}
+
+function findBusinessKnowledge(records: KnowledgeRecord[], query: string): KnowledgeRecord[] {
+  const normalized = query.toLowerCase().replace(/[^\\p{L}\\p{N}]+/gu, " ").trim();
+  const terms = normalized.split(/\\s+/).filter((term) => term.length >= 2);
+  const aliases: Record<string, string[]> = {
+    "باقة": ["plan", "package"], "باقات": ["plans", "packages"], "فريماكس": ["freemax", "free max"],
+    "فري": ["free"], "ماكس": ["max"], "أرضي": ["dsl", "landline"], "ارضي": ["dsl", "landline"],
+    "انترنت": ["internet", "data"], "إنترنت": ["internet", "data"], "سرعة": ["speed"],
+    "ميجا": ["mbps", "mb"], "راوتر": ["router"], "إضافية": ["addon", "extra"],
+    "تجديد": ["renewal", "renew"], "سعر": ["price", "fees"], "رسوم": ["price", "fees"],
+    "اشتراك": ["subscription"], "خصم": ["discount"], "مميزات": ["perks", "highlights"],
+  };
+  const expanded = [...terms, ...terms.flatMap((term) => aliases[term] ?? [])];
+  return records.map((record) => {
+    const haystack = record.text.toLowerCase();
+    let score = 0;
+    for (const term of expanded) if (haystack.includes(term)) score += term.length >= 5 ? 3 : 1;
+    return { record, score };
+  }).filter((item) => item.score > 0)
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 10)
+    .map((item) => item.record);
+}
+
+async function buildBusinessKnowledgeContext(query: string): Promise<string> {
+  try {
+    const records = await loadBusinessKnowledge();
+    const matches = findBusinessKnowledge(records, query);
+    if (!matches.length) return "";
+    return [
+      "بيانات مرجعية مسترجعة من ملفات التطبيق (الباقات، FreeMax، DSL، والمستندات). هذه بيانات التطبيق وليست ضمانًا بأنها أحدث سياسة تشغيلية:",
+      ...matches.map((item) => `المصدر: ${item.source}\\n${item.text}`),
+      "اعرض الأرقام كما وردت دون تعديل، واذكر أن الأسعار والعروض قد تحتاج تأكيدًا من أحدث مصدر داخلي قبل التنفيذ.",
+    ].join("\\n\\n").slice(0, 10000);
+  } catch (error) {
+    console.error("Business knowledge retrieval failed", {
+      errorName: error instanceof Error ? error.name : "UnknownError",
+    });
+    return "";
+  }
+}
+
 function send(res: ResponseLike, status: number, body: unknown) {
   res.status(status).json(body);
 }
@@ -193,7 +272,7 @@ export default async function handler(req: RequestLike, res: ResponseLike) {
         "x-goog-api-key": apiKey,
       },
       body: JSON.stringify({
-        systemInstruction: { parts: [{ text: [SYSTEM_INSTRUCTION, await buildKnowledgeContext(message)].filter(Boolean).join("\n\n") }] },
+        systemInstruction: { parts: [{ text: [SYSTEM_INSTRUCTION, await buildKnowledgeContext(message), await buildBusinessKnowledgeContext(message)].filter(Boolean).join("\n\n") }] },
         contents: history,
         generationConfig: { temperature: 0.65, maxOutputTokens: 700 },
       }),
