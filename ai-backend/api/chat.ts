@@ -92,10 +92,10 @@ async function loadSRKnowledge(): Promise<SRRecord[]> {
 }
 
 function isPostpaidToControlQuery(query: string): boolean {
-  const normalized = query.toLowerCase().normalize("NFKC").replace(/[\\u064B-\\u065F\\u0670]/g, "").replace(/[^\\p{L}\\p{N}]+/gu, " ").trim();
-  const hasPostpaid = /\\bpostpaid\\b/.test(normalized) || normalized.includes("فاتورة") || normalized.includes("فواتير");
-  const hasControl = /\\bcontrol\\b/.test(normalized) || normalized.includes("كنترول") || normalized.includes("كول اند كنترول");
-  const hasPrepaid = /\\bprepaid\\b/.test(normalized) || normalized.includes("كارت") || normalized.includes("كارت شحن");
+  const normalized = query.toLowerCase().normalize("NFKC").replace(/[\u064B-\u065F\u0670]/g, "").replace(/[^\p{L}\p{N}]+/gu, " ").trim();
+  const hasPostpaid = /\bpostpaid\b/.test(normalized) || normalized.includes("فاتورة") || normalized.includes("فواتير");
+  const hasControl = /\bcontrol\b/.test(normalized) || normalized.includes("كنترول") || normalized.includes("كول اند كنترول");
+  const hasPrepaid = /\bprepaid\b/.test(normalized) || normalized.includes("كارت") || normalized.includes("كارت شحن");
   return hasPostpaid && hasControl && !hasPrepaid;
 }
 
@@ -107,8 +107,8 @@ function findSRKnowledge(records: SRRecord[], query: string): SRRecord[] {
     if (normalized.includes("hold") || normalized.includes("هولد")) selectedIds.add("1110");
     return records.filter((record) => selectedIds.has(record.id ?? ""));
   }
-  const normalized = query.toLowerCase().normalize("NFKC").replace(/[\\u064B-\\u065F\\u0670]/g, "").replace(/[^\\p{L}\\p{N}]+/gu, " ").trim();
-  const terms = normalized.split(/\\s+/).filter((term) => term.length >= 3);
+  const normalized = query.toLowerCase().normalize("NFKC").replace(/[\u064B-\u065F\u0670]/g, "").replace(/[^\p{L}\p{N}]+/gu, " ").trim();
+  const terms = normalized.split(/\s+/).filter((term) => term.length >= 3);
   const arabicToEnglish: Record<string, string[]> = {
     "فاتورة": ["invoice", "bill", "postpaid"], "فواتير": ["invoice", "bill", "postpaid"], "رصيد": ["balance", "credit"],
     "شحن": ["recharge", "topup"], "دفع": ["payment", "payments"], "تجديد": ["renewal", "renew"],
@@ -120,7 +120,7 @@ function findSRKnowledge(records: SRRecord[], query: string): SRRecord[] {
     "كارت": ["prepaid"], "تغيير": ["change", "migration", "migrate"], "نظام": ["tariff", "plan", "migration"],
   };
   const expandedTerms = [...new Set([...terms, ...terms.flatMap((term) => arabicToEnglish[term] ?? [])])];
-  const codeMatches = query.match(/\\b\\d{3,6}\\b/g) ?? [];
+  const codeMatches = query.match(/\b\d{3,6}\b/g) ?? [];
   return records.map((record) => {
     const searchable = [record.id, record.title, record.titleAr, record.description, record.category, record.steps].filter(Boolean).join(" ").toLowerCase();
     let score = codeMatches.some((code) => record.id === code) ? 100 : 0;
@@ -142,7 +142,7 @@ async function buildKnowledgeContext(query: string): Promise<string> {
         "مستند Postpaid Calculator موصوف بأنه يساعد في التحويل من فاتورة إلى كارت (Prepaid)، وليس إلى Control؛ لا تطبق تعليماته على مسار الكنترول.",
         "الخلاصة: قاعدة المعرفة الحالية لا تحتوي خطوات أو شروط أهلية أو رسوم أو مسار نظام مؤكد لتحويل Postpaid إلى Control. لا تخترع هذه التفاصيل. اذكر بوضوح أن المصدر المتاح غير كافٍ، ولا تنه الإجابة بسؤال عام عن موضوع آخر.",
         ...matches.map((item) => `مرجع SR: ${item.id} — ${item.title ?? ""} — ${item.description ?? ""}`),
-      ].join("\\n\\n").slice(0, 9000);
+      ].join("\n\n").slice(0, 9000);
     }
     if (!matches.length) return "";
     return [
@@ -154,9 +154,9 @@ async function buildKnowledgeContext(query: string): Promise<string> {
         item.category ? `التصنيف: ${item.category}` : "",
         item.description ? `الوصف: ${item.description}` : "",
         item.steps ? `التفاصيل: ${item.steps}` : "",
-      ].filter(Boolean).join("\\n")),
+      ].filter(Boolean).join("\n")),
       "إذا كانت المقتطفات لا تجيب عن السؤال بالكامل، وضّح حدود المعلومة ولا تخترع خطوات أو سياسات.",
-    ].join("\\n\\n").slice(0, 9000);
+    ].join("\n\n").slice(0, 9000);
   } catch (error) {
     console.error("SR knowledge retrieval failed", { errorName: error instanceof Error ? error.name : "UnknownError" });
     return "";
