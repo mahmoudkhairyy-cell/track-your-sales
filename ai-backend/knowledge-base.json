@@ -1,0 +1,244 @@
+{
+  "schemaVersion": 1,
+  "generated": "2026-11-13",
+  "title": "Track Your Sales — Orange Egypt operational knowledge",
+  "usageRules": [
+    "لا تخترع أكواد SR أو خطوات أو رسوم أو شروط غير واردة هنا.",
+    "إذا كانت الحالة جزئية أو غير متاحة، اذكر ذلك بوضوح ولا تكمل الإجراء بالتخمين.",
+    "المعلومات التشغيلية والأسعار قد تتغير؛ اطلب تأكيد أحدث مصدر داخلي قبل التنفيذ.",
+    "النماذج الفارغة ليست مصادر لإجراءات التشغيل.",
+    "لا تعتبر عنوان SR وحده دليلاً على خطوات الإجراء."
+  ],
+  "topics": [
+    {
+      "id": "postpaid-migration",
+      "title": "التحويل من Postpaid إلى Prepaid أو Control",
+      "status": "جزئي — خطوات التحويل غير متاحة",
+      "keywords": [
+        "فاتورة لكارت",
+        "فاتورة لكنترول",
+        "postpaid prepaid",
+        "postpaid control",
+        "migration",
+        "تحويل نظام",
+        "تحويل من فاتورة",
+        "line migration",
+        "10704",
+        "10707",
+        "tariff lock"
+      ],
+      "content": "المتاح: حاسبة Postpaid_calculator_2.xls، ورقة Line Mig & Ter Calculation. المدخلات: رقم الخط، الفواتير الصادرة، الاشتراك الشهري، أيام الشهر، أيام المرور، Unbilled usage، Unbilled OCC، SDF. الحساب: الاشتراك اليومي = الاشتراك الشهري ÷ أيام الشهر؛ الاشتراك حتى يوم التحويل = الاشتراك اليومي × أيام المرور؛ الإجمالي قبل الضرائب = الاشتراك حتى التحويل + Unbilled usage + Unbilled OCC + SDF؛ ثم ضريبة 8% وبعدها VAT 14%؛ المبلغ المستحق = الفواتير الصادرة + Total Unbilled بعد الضرائب. ملاحظات الحاسبة: التأكد من Tariff Lock على Siebel، تسوية كل أقساط الراوتر على Wincash، واستبدال نقاط الولاء. لا توجد بالمصادر خطوات تنفيذ التحويل في Siebel ولا شروط الأهلية ولا الرسوم الإدارية. SR 10704 عنوانه المبتور From Prepaid To ولا يثبت التحويل من Postpaid. SR 10707 عنوانه From Call And Control To ووصفه متعارض/منقول من SR آخر؛ لا تقدمه ككود تحويل Postpaid إلى Control. SR 10708 و10709 يخصان Corp Standard/Corp Call And Control إلى Prepaid، وليس عميل التجزئة Postpaid. B8 بالحاسبة قيمة يدوية (30) مع ملاحظة يوم إضافي غير محسومة، وSDF غير معرّف. النتيجة: لا تعطي خطوات تحويل؛ وضّح أن المتاح حساب المبلغ والتنبيهات فقط."
+    },
+    {
+      "id": "dsl-cancellation",
+      "title": "إلغاء DSL / ADSL",
+      "status": "مؤكد من Deck مع تعارضات تحتاج مراجعة",
+      "keywords": [
+        "الغاء dsl",
+        "إلغاء adsl",
+        "cancel dsl",
+        "cancellation",
+        "16058",
+        "5009",
+        "227",
+        "راوتر تقسيط"
+      ],
+      "content": "الخطوات الواردة: معرفة سبب الإلغاء ومحاولة الحل عبر Email أو SR إن أمكن؛ التأكد من وجود صاحب الاشتراك أو صاحب الخط وبطاقة سارية؛ حساب المبلغ عبر SR 16058 (المصدر يقول الرد خلال 30 دقيقة) أو إنهاء الحساب حسب الإجراء؛ سداد كامل المبلغ ورفع البطاقة وعقد الإلغاء على Automated SR 5009؛ اختيار Deactivated من Siebel وإبلاغ العميل خلال 24 ساعة. الحاسبة: Total = Penalty + Remaining installments × 57 + Open amount + Unbilled OCC × 1.14. Penalty 227 إذا عدد الفواتير الصادرة ≤12 حسب الحاسبة، بينما Deck يصفها غرامة قبل مرور 12 شهر وشاملة الضريبة؛ يوجد تعارض يحتاج مراجعة. قسط الراوتر 57 شهرياً وفق المصدر. مثال Deck يخلط قيم Unbilled OCC من حسابين مختلفين، فلا تعتمد المثال المتعارض. الحالات غير Active وسياسة الإلغاء التفصيلية غير متاحة."
+    },
+    {
+      "id": "dsl-suspension",
+      "title": "إيقاف DSL مؤقتاً واستئنافه",
+      "status": "مؤكد من Deck فقط ويحتاج تأكيد حداثة",
+      "keywords": [
+        "ايقاف dsl",
+        "إيقاف مؤقت",
+        "تعليق dsl",
+        "suspension",
+        "resume",
+        "استئناف",
+        "34.20",
+        "16801",
+        "18004"
+      ],
+      "content": "وفق Deck ص 27–29: الإيقاف من الفرع فقط (From Shop Only)، المدة شهر كحد أدنى وشهران كحد أقصى في السنة، لا يوجد تناسب وأي مدة أقل من شهر تحسب شهراً. الرسوم 34.20 جنيه لشهر واحد وشاملة الضريبة حسب Deck. يجب سداد الفواتير المستحقة والرسوم قبل الإجراء، وتوقيع نموذج الإيقاف وتقديم أصل الرقم القومي. Siebel: Service Account > Suspend > + Sign and submit Request > اختيار 1 أو 2 > Submit؛ ينشأ SR تلقائي باسم Voluntary Suspension. الاستئناف: Automated SR؛ من Activities اختر Category=Resume ثم Close للنشاط المفتوح. SR 16801 و18004 في sr.json لا يذكرهما Deck، فلا تخلط بينهما وبين SR التلقائي. النموذج المرفق فارغ وليس مصدراً لقواعد."
+    },
+    {
+      "id": "contact-hunt-email",
+      "title": "تغيير رقم التواصل وDSL Hunt وإيميلات DSL",
+      "status": "مؤكد من Deck مع بيانات ناقصة",
+      "keywords": [
+        "رقم التواصل",
+        "تغيير رقم الموبايل dsl",
+        "hunt",
+        "هانت",
+        "billing collections",
+        "01223200737",
+        "email aliases"
+      ],
+      "content": "تغيير رقم التواصل الخاص بـ DSL يتم من www.orange.eg أو تطبيق Max it، وليس من الفرع. الاتصال بـ DSL Unified Hunt من الخط الداخلي Internal فقط. IVR: 1 Operations، 2 After Sales Support، 3 Billing & Collections، 4 Fixed Technical Customer Support، 5 Save & Retention، 6 Involuntary Suspension. أوقات العمل وأرقام Hunt غير مقروءة/غير متاحة في المصدر. الرقم 01223200737 مذكور للتشغيل وTE Portal، وليس رقم Hunt مثبتاً. أسماء بعض Email aliases الجديدة موجودة لكن عناوين البريد الفعلية غير متاحة."
+    },
+    {
+      "id": "invoices-billing-sr",
+      "title": "الفواتير وأكواد SR للفوترة",
+      "status": "مؤكد من Deck مع بعض الخلايا المقطوعة",
+      "keywords": [
+        "فاتورة dsl",
+        "عرض الفاتورة",
+        "invoice",
+        "billing",
+        "wrong payment",
+        "33116",
+        "33107",
+        "33139",
+        "16008",
+        "16052"
+      ],
+      "content": "عرض الفواتير في Siebel: Accounts > Service Account List > MSISDN > اختيار الحساب > Parent Account > Billing Details > Invoices > اختيار Period والضغط Enter. من Customer Info يمكن قراءة Total Open Amount وUnbilled OCCs. أكواد مذكورة: 33116 Wrong Payment؛ 33107 Payment Dispute؛ 33139 DSL OC Payment Dispute؛ 16011 Hold Dunning؛ 32409 Reseller Payment not exist PGW؛ 32503 Release Line؛ 33112 Offer Not Reflected On Siebel؛ 33203 Offer Not Added؛ 33201 Offer Wrong Duration؛ 33204 Offer Not Added-Involuntary؛ 33101 Invoice Not Issued؛ 33118 Down Payment Dispute؛ 16007 Send Payment Request؛ 16006 Send Tax Card؛ 16052 Settlement Request؛ 16014 Drop Amount؛ 16008 Money Transfer؛ 33108 Wrong Bill Amount؛ 16064 Payment Transfer to Premier؛ 10763 Migrate To Premier Exist ADSL؛ 16067 Router Settlement؛ 5048 Extension Offer Adjustment؛ 16070 World Cup Campaign Dropping؛ 16075 Forced Migration Campaign H300. بعض النصوص في 16014 و33108 مقطوعة، وبعض الأكواد موجودة بالـ Deck فقط وليست في sr.json؛ راجع المصدر الأصلي قبل التنفيذ."
+    },
+    {
+      "id": "change-package",
+      "title": "تغيير باقة DSL",
+      "status": "الخطوات موثقة والسياسة ناقصة",
+      "keywords": [
+        "تغيير باقة dsl",
+        "change package",
+        "ترقية باقة",
+        "downgrade",
+        "candidate",
+        "self installation"
+      ],
+      "content": "قبل التفعيل: نشاط Self installation يجب أن يكون Open؛ من Service Account View اختر Change Package ثم الباقة الجديدة ثم Submit. أي تعديل آخر قبل التفعيل يتم عبر قسم التشغيل 01223200737. بعد التفعيل: من صفحة الخط الأرضي اختر Change Package > + Sign and submit package > اختر الباقة > Submit؛ تظهر الباقة في Contractual speed. الترقية لباقة أعلى تتطلب دفع فرق Down payment. سياسة Downgrade والشروط المالية التفصيلية غير متاحة. أسماء الباقات في Deck تختلف عن dsl.json، فلا تفترض أنها متطابقة."
+    },
+    {
+      "id": "router-settlement-highend",
+      "title": "الراوتر والتسوية وHigh-End والاستبدال",
+      "status": "معلومات Deck تحتاج تأكيد حداثة والأسعار",
+      "keywords": [
+        "راوتر",
+        "router",
+        "high end",
+        "settlement",
+        "تسوية الراوتر",
+        "rent to sold",
+        "33134",
+        "5006",
+        "57",
+        "1710",
+        "855"
+      ],
+      "content": "وفق Deck وdsl.json: زيارة منزلية مدفوعة 342 جنيه شامل الضريبة؛ High-End كاش 1710 جنيه للعميل الحالي؛ 855 للعميل الجديد بعد خصم 50%؛ قسط 57 جنيه شهرياً. هذه أسعار مصدرها Deck/ملف التطبيق وقد تتغير. جدول تسوية الراوتر القديم مكتوب Excluding VAT: High End السنوات 1–7: 800،700،600،500،300،200،100؛ Low End: 450،350،300،200،100،50،لا شيء. إضافة راوتر إيجار إلى بيع: Compensation & Add-ons > + > Type Rent to Sold Router > اختيار High End VDSL Router أو VDSL Router > Confirm & Start Request؛ سداد Wincash تحت ADSL Bill Payment ثم إرفاق الإيصال على SR 33134، Area Rental Modem Fees. إضافة High End بالتقسيط: Compensation & Add-ons > + > Installment / Router / Shop / High End VDSL Router > Ctrl+S > Confirm & Start Request (SR 5006) > Wincash. جدول التسوية VAT غير محسوم. الاستبدال: خلال 30 يوماً تختلف المعاملة بين Hub وغير Hub؛ بعد 30 يوماً وقبل سنة تتطلب مستندات/تواصل حسب Deck. عناوين البريد المذكورة تحتاج تأكيد حداثتها."
+    },
+    {
+      "id": "work-order-issues",
+      "title": "مشاكل Work Order وNTRA",
+      "status": "مؤكد من Deck",
+      "keywords": [
+        "work order",
+        "امر عمل",
+        "NTRA",
+        "نترة",
+        "no data",
+        "unpaid invoice",
+        "another isp",
+        "14032"
+      ],
+      "content": "Work Order يظهر في Activation Request Details ضمن Technical Details؛ إذا لم يظهر رقم راجع Work Order Issue. No Data: العميل يزور السنترال/غرفة البيانات لتحديث بياناته لدى المصرية للاتصالات. Unpaid Invoice: سداد فواتير الأرضي ثم الاتصال 16333 أو زيارة الفرع ليتصل الموظف بـ01223200737. Permanently Disconnected: زيارة السنترال لإعادة التعاقد وتحديث البيانات. Delegation required: تفويض مختوم من الشركة. Another ISP Inform: رقم إلغاء من المزود الآخر. أخطاء NTRA مثل Fake NID/Missing NTRA Documents/Missing Code/Not scanned as one PDF/Not stamped/No attachment/Waiting/Wrong NID/Wrong Form/Wrong Name: افتح SR 14032 وأرفق NTRA form جديد. تحقق من دقة البيانات والمستندات قبل الإرسال."
+    },
+    {
+      "id": "common-updates-dsl",
+      "title": "تحديثات DSL الشائعة",
+      "status": "مؤكد من Deck مع أكواد غير موجودة في sr.json",
+      "keywords": [
+        "19005",
+        "19008",
+        "16830",
+        "83101",
+        "16603",
+        "change username",
+        "مالك جديد",
+        "حجز بعقد ايجار"
+      ],
+      "content": "SR 19005 DSL Account Dispute: أنشئه من الفرع دون Email، لا تغلقه من الفرع؛ يذهب تلقائياً إلى DSL Indirect Sales Group؛ Smart Script: اسم العميل، موبايل، تفاصيل الشكوى، رقم الأرضي، كود المحافظة، اسم Reseller، الباقة. SR 19008 Modify Offer Via Retail: لحالة تعذر إضافة عرض على Candidate؛ لا ترسل Email. إذا أضيف عرض غير مستحق بالخطأ، Backoffice يعدله ويرسل SR 32003 لإخطار الفرع ولا يلزم إجراء من الفرع. SR 16830 Change Of DSL Ownership: المستندات عقد اشتراك جديد مؤرخ ومختوم من المصرية للاتصالات، بطاقة سارية، NTRA reservation form يوقعها المالك الجديد؛ مرة واحدة؛ بعده الراوتر كاش فقط. SR 83101 Land Line Owner Cancellation: يشترط بطاقة مالك الأرضي وإثبات ملكية حديث لم يمر عليه 3 أشهر والتحقق من الحجز بعقد إيجار وعدم تطابق البيانات؛ إرفاق المستندات وSmart Script؛ SLA 24 ساعة. SR 16603 Change Username: عند ظهور pending لأن الرقم الجديد مرتبط بحساب، أغلق SR بـ Subarea NOT DONE ثم Cancel Request؛ تعود الحالة Active على Siebel/Billing/PCRF."
+    },
+    {
+      "id": "data-gathering-sr-10692",
+      "title": "Data Gathering SR-10692",
+      "status": "غير متاح",
+      "keywords": [
+        "10692",
+        "data gathering",
+        "تحديث البيانات",
+        "تجميع البيانات"
+      ],
+      "content": "المتاح فقط وصف عام لاستمارة تجميع بيانات لتحديث بيانات خطوط العملاء للمصريين والأجانب. ملف SR-10692.pdf غير متاح. hunts.json يذكر 01223202995 لـ Data Gathering. SR 1708 استعلام عن حملة Business Prepaid DG وليس إجراء Data Gathering. لا توجد خطوات أو مستندات أو SR مؤكد."
+    },
+    {
+      "id": "tariff-lock",
+      "title": "Tariff Lock لمدة 6 أو 12 شهر",
+      "status": "غير متاح جزئياً",
+      "keywords": [
+        "tariff lock",
+        "قفل الباقة",
+        "قفل النظام",
+        "6 months",
+        "12 months",
+        "قفل التعريفة"
+      ],
+      "content": "docs.json يذكر نموذج إقرار موافقة على Tariff Lock لمدة 6 أشهر أو 12 شهراً. Postpaid Calculator ينبه إلى التحقق من Tariff Lock على Siebel قبل التحويل أو الإنهاء. لا توجد شروط التفعيل أو مكان الحقل في Siebel أو الرسوم أو إجراء فك القفل أو SR مؤكد. لا تستنتج هذه التفاصيل."
+    },
+    {
+      "id": "non-possession-421010",
+      "title": "استمارة عدم الحيازة 421010",
+      "status": "غير متاح",
+      "keywords": [
+        "421010",
+        "عدم حيازة",
+        "non possession"
+      ],
+      "content": "المتاح وصف عام لنموذج إقرار عدم الحيازة 421010 للطباعة والتوقيع. الملف الأصلي غير متاح. لا توجد معلومات عن حالات الاستخدام أو من يوقع أو SR المرتبط. لا تخترعها."
+    },
+    {
+      "id": "refund",
+      "title": "استرداد الأموال Refund",
+      "status": "جزئي — عناوين SR فقط",
+      "keywords": [
+        "refund",
+        "استرداد",
+        "استرجاع فلوس",
+        "10116",
+        "10117",
+        "10118",
+        "شيك",
+        "كاش"
+      ],
+      "content": "المتاح عناوين SR فقط: 1009 Deposit Refund؛ 10108 I and R DOP Refund؛ 10114 Primo Refund By Cheque؛ 10115 Primo Refund Credit؛ 10116 Refund By Cheque؛ 10117 Refund Credit؛ 10118 Refund DOP Cash؛ 10119 Refund DOP Via MCC؛ 10120 Refund International DOP؛ 10121 Refund MNP DOP Fees؛ 10122 Refund MNP Porting Fees؛ 10123 Refund Month in Advance؛ 10128 Roaming DOP Refund؛ 10138 Refund Via MCCs؛ 10155 CS Call Refund while Roaming؛ 12107 Port In Refund Payment؛ 12108 Port Out Refund Payment. نموذج Refund-Form.doc غير متاح. لا توجد خطوات أو شروط أو مستندات أو تعريفات DOP/MCC. لا تقدم العناوين كخطوات تنفيذ."
+    },
+    {
+      "id": "cnam",
+      "title": "CNAM — إظهار اسم المتصل",
+      "status": "غير متاح",
+      "keywords": [
+        "cnam",
+        "اظهار اسم المتصل",
+        "اسم المتصل",
+        "caller name"
+      ],
+      "content": "المتاح فقط وصف CNAM FEATURE CONTRACT بأنه عقد خاص بخدمات ترويجية وميزة إظهار اسم المتصل. ملف CNAM.pdf غير متاح. لا توجد شروط أو أسعار أو خطوات تفعيل أو SR مؤكد."
+    },
+    {
+      "id": "educational-go",
+      "title": "Educational GO",
+      "status": "الخطوات والأسعار الظاهرة موثقة؛ الشروط ناقصة",
+      "keywords": [
+        "educational go",
+        "go education",
+        "خط تعليمي",
+        "تعليمي",
+        "300",
+        "711094",
+        "727623"
+      ],
+      "content": "Siebel Lines Activation: Service Type=Data، Tariff Type=Prepaid، Bucket=GO Education. Wincash transaction PREPAID_1_1: EDUCATION LINE Article 711094 بسعر 300 جنيه؛ Document State Development Fees 1 Article 727623 بقيمة 3.57؛ Discount 100% بقيمة -3.57؛ الإجمالي 300 جنيه. ملف Websites يسرد مواقع تعليمية وبحثية ومدرسية وتقنية. مدة الاشتراك والأهلية والمستندات المطلوبة غير مؤكدة؛ لا تفترض أن مدة 3 سنوات مؤكدة."
+    }
+  ]
+}
