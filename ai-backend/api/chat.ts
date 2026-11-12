@@ -240,8 +240,11 @@ function findBusinessKnowledge(records: KnowledgeRecord[], query: string): Knowl
     "مهاجره": ["migration"], "مايجريشن": ["migration"], "بوست": ["postpaid"],
   };
   const expanded = [...new Set([...terms, ...terms.flatMap((term) => (aliases[term] ?? []).flatMap(normalize))])];
-  const asksPostpaidCancellation = /(?:postpaid|بوست|فاتور|فاتوره)/i.test(normalized) && /(?:الغاء|الغى|الغاءه|انهاء|termination|cancel|cancellation)/i.test(normalized);
+  const asksPostpaidCancellation = /(?:postpaid|بوست|فاتور|فاتوره)/i.test(normalized) && /(?:الغاء|الغى|الغي|انهاء|termination|cancel|cancellation)/i.test(normalized);
   const asksDsl = /(?:dsl|adsl|ارضي|ارضى)/i.test(normalized);
+  // No Postpaid termination procedure is documented in the current knowledge base.
+  // Return no business snippets rather than unrelated migration or DSL content.
+  if (asksPostpaidCancellation && !asksDsl) return [];
   const asksPrepaidMigration = /(?:prepaid|كارت)/i.test(normalized) && /(?:تحويل|migration|migrate|احول|انقل)/i.test(normalized);
   const scored = records.map((record) => {
     const haystack = normalize(record.text);
