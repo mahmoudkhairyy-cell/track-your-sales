@@ -59,17 +59,16 @@ const SYSTEM_INSTRUCTION = `
 - لا تكرر التحذيرات أو الاعتذارات، ولا تنه الإجابة بسؤال "هل تحب نراجع نقطة تانية؟" إذا كان بإمكانك الإجابة مباشرة.
 
 سيناريو إلغاء خط Postpaid (إلغاء الفاتورة / Termination / Migration):
-- لو الموظف طلب إلغاء خط Postpaid أو تحويله، اسأله السؤال الأول فقط، ثم سؤال واحد في كل رد بالترتيب التالي، ومن غير ما تسرد كل الأسئلة مرة واحدة:
+- لو الموظف طلب إلغاء خط Postpaid أو تحويله، اسأله السؤال الأول فقط، ثم سؤال واحد في كل رد بالترتيب التالي، ومن غير ما تسرد كل الأسئلة مرة واحدة. الخانات دي هي الخلايا البرتقالي في شيت الإكسل:
   1) رقم الخط.
-  2) الفواتير الصادرة (B4).
-  3) قيمة الاشتراك الشهري (B5).
-  4) عدد أيام الاشتراك في الشهر (B6).
-  5) عدد الأيام من تاريخ الإصدار لحد يوم الإلغاء أو التحويل، مع إضافة يوم لإجراءات التحويل خلال 24 ساعة (B8).
-  6) الاستخدام غير المفوتر (B10).
-  7) OCC غير المفوتر (B11).
-  8) رسوم التنمية SDF (B12).
-- لما تكمل الـ8 قيم، اكتب سطر واحد بالشكل ده بالضبط في آخر ردك، بدون أي شرح بعده:
-  <<CALC>>{"phone":"...","billed":0,"monthly":0,"tariffDays":0,"daysPassed":0,"unbilledUsage":0,"unbilledOCC":0,"sdf":0}<<END>>
+  2) الفواتير الصادرة.
+  3) قيمة الاشتراك الشهري.
+  4) عدد الأيام من تاريخ الإصدار لحد يوم الإلغاء أو التحويل، مع إضافة يوم لإجراءات التحويل خلال 24 ساعة.
+  5) الاستخدام غير المفوتر.
+  6) OCC غير المفوتر.
+- عدد أيام الاشتراك في الشهر (30) ورسوم التنمية SDF (10) ثوابت في الشيت، ماتسألش عنهم أبداً.
+- لما تكمل الـ6 قيم، اكتب سطر واحد بالشكل ده بالضبط في آخر ردك، بدون أي شرح بعده:
+  <<CALC>>{"phone":"...","billed":0,"monthly":0,"daysPassed":0,"unbilledUsage":0,"unbilledOCC":0}<<END>>
   التطبيق بيحسب الناتج من القيم دي بنفسه، فلا تحسب أنت الأرقام النهائية.
 - لا تذكر الراوتر أو الأقساط أو نقاط الولاء أو Wincash أو Tariff Lock في سيناريو الـ Postpaid، إلا لو الموظف سأل عنها صراحةً.
 - بعد الحساب، وجّه الموظف لتنفيذ SR 10758 (إلغاء الفاتورة) كالتالي، وذكر أن المصدر هو صفحة الويكي وتأكيد المستخدم:
@@ -289,14 +288,13 @@ function applyCalcMarker(answer: string): string {
   const cleaned = answer.replace(match[0], "").trim();
   try {
     const raw = JSON.parse(match[1]) as Record<string, unknown>;
-    const keys = ["billed", "monthly", "tariffDays", "daysPassed", "unbilledUsage", "unbilledOCC", "sdf"] as const;
-    const values: Record<string, number> = {};
+    const keys = ["billed", "monthly", "daysPassed", "unbilledUsage", "unbilledOCC"] as const;
+    const values: Record<string, number> = { tariffDays: 30, sdf: 10 };
     for (const key of keys) {
       const num = Number(raw[key]);
       if (!Number.isFinite(num) || num < 0) return cleaned;
       values[key] = num;
     }
-    if (values.tariffDays <= 0) return cleaned;
     const r = computePostpaidTermination(values);
     const phone = typeof raw.phone === "string" ? raw.phone : "غير مذكور";
     return [
