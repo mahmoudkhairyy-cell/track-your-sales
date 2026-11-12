@@ -57,6 +57,27 @@ const SYSTEM_INSTRUCTION = `
 - لا تطلب أو تعالج أسماء العملاء أو أرقام هواتفهم أو أرقامهم القومية أو كلمات المرور أو أكواد OTP أو أي بيانات سرية. اطلب إزالة البيانات الحساسة من أي مثال.
 - إذا طلب المستخدم معلومة تشغيلية قد تتغير، نبّهه باختصار إلى ضرورة تأكيدها من أحدث مصدر داخلي قبل التنفيذ.
 - لا تكرر التحذيرات أو الاعتذارات، ولا تنه الإجابة بسؤال "هل تحب نراجع نقطة تانية؟" إذا كان بإمكانك الإجابة مباشرة.
+
+سيناريو إلغاء خط Postpaid (إلغاء الفاتورة / Termination / Migration):
+- لو الموظف طلب إلغاء خط Postpaid أو تحويله، اسأله السؤال الأول فقط، ثم سؤال واحد في كل رد بالترتيب التالي، ومن غير ما تسرد كل الأسئلة مرة واحدة:
+  1) رقم الخط.
+  2) الفواتير الصادرة (B4).
+  3) قيمة الاشتراك الشهري (B5).
+  4) عدد أيام الاشتراك في الشهر (B6).
+  5) عدد الأيام من تاريخ الإصدار لحد يوم الإلغاء أو التحويل، مع إضافة يوم لإجراءات التحويل خلال 24 ساعة (B8).
+  6) الاستخدام غير المفوتر (B10).
+  7) OCC غير المفوتر (B11).
+  8) رسوم التنمية SDF (B12).
+- لما تكمل الـ8 قيم، اكتب سطر واحد بالشكل ده بالضبط في آخر ردك، بدون أي شرح بعده:
+  <<CALC>>{"phone":"...","billed":0,"monthly":0,"tariffDays":0,"daysPassed":0,"unbilledUsage":0,"unbilledOCC":0,"sdf":0}<<END>>
+  التطبيق بيحسب الناتج من القيم دي بنفسه، فلا تحسب أنت الأرقام النهائية.
+- لا تذكر الراوتر أو الأقساط أو نقاط الولاء أو Wincash أو Tariff Lock في سيناريو الـ Postpaid، إلا لو الموظف سأل عنها صراحةً.
+- بعد الحساب، وجّه الموظف لتنفيذ SR 10758 (إلغاء الفاتورة) كالتالي، وذكر أن المصدر هو صفحة الويكي وتأكيد المستخدم:
+  1) بعد ما العميل يسدد المبلغ المحسوب، افتح SR 10758.
+  2) املأ عقدًا فاضيًا ببيانات العميل، واكتب نوع الـ Migration (مثال: من X إلى FREEmax 115).
+  3) ارفع البطاقة عن طريق Live Capture.
+- لو سأل عن خطوات في Siebel بعد الحساب غير اللي فوق، قل إنها غير موثقة في المعرفة الحالية.
+- المعادلات المستخدمة (لو سألك عنها): المستحق قبل الضريبة = (الاشتراك/أيام الاشتراك × أيام المرور) + الاستخدام غير المفوتر + OCC غير المفوتر + SDF؛ ثم ضريبة الجدول 8% وVAT 14% على الناتج، ثم نضيف الفواتير الصادرة.
 `.trim();
 
 type SRRecord = {
@@ -246,6 +267,57 @@ async function buildBusinessKnowledgeContext(query: string): Promise<string> {
   }
 }
 
+function computePostpaidTermination(v: Record<string, number>) {
+  const daily = v.monthly / v.tariffDays;
+  const subscriptionTillDay = daily * v.daysPassed;
+  const beforeTax = subscriptionTillDay + v.unbilledUsage + v.unbilledOCC + v.sdf;
+  const tableTax = beforeTax * 0.08;
+  const afterTableTax = beforeTax + tableTax;
+  const vat = afterTableTax * 0.14;
+  const unbilledAfterTax = afterTableTax + vat;
+  const total = unbilledAfterTax + v.billed;
+  return { daily, subscriptionTillDay, beforeTax, tableTax, afterTableTax, vat, unbilledAfterTax, total };
+}
+
+function formatEGP(value: number) {
+  return value.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+function applyCalcMarker(answer: string): string {
+  const match = answer.match(/<<CALC>>([\s\S]*?)<<END>>/);
+  if (!match) return answer;
+  const cleaned = answer.replace(match[0], "").trim();
+  try {
+    const raw = JSON.parse(match[1]) as Record<string, unknown>;
+    const keys = ["billed", "monthly", "tariffDays", "daysPassed", "unbilledUsage", "unbilledOCC", "sdf"] as const;
+    const values: Record<string, number> = {};
+    for (const key of keys) {
+      const num = Number(raw[key]);
+      if (!Number.isFinite(num) || num < 0) return cleaned;
+      values[key] = num;
+    }
+    if (values.tariffDays <= 0) return cleaned;
+    const r = computePostpaidTermination(values);
+    const phone = typeof raw.phone === "string" ? raw.phone : "غير مذكور";
+    return [
+      cleaned,
+      "",
+      `**نتيجة حساب الخط ${phone}:**`,
+      `- الاشتراك اليومي: ${formatEGP(r.daily)} ج.م`,
+      `- الاشتراك حتى يوم الإلغاء/التحويل: ${formatEGP(r.subscriptionTillDay)} ج.م`,
+      `- الإجمالي قبل الضريبة: ${formatEGP(r.beforeTax)} ج.م`,
+      `- ضريبة الجدول 8%: ${formatEGP(r.tableTax)} ج.م`,
+      `- VAT 14%: ${formatEGP(r.vat)} ج.م`,
+      `- الاستخدام والـ OCC غير المفوتر بعد الضريبة: ${formatEGP(r.unbilledAfterTax)} ج.م`,
+      `- **المبلغ المستحق (مع الفواتير الصادرة ${formatEGP(values.billed)} ج.م): ${formatEGP(r.total)} ج.م**`,
+      "",
+      "الخطوة الجاية: بعد ما العميل يسدد المبلغ، افتح SR 10758 (إلغاء الفاتورة)، واملأ عقدًا فاضيًا ببيانات العميل واكتب نوع الـ Migration، وارفع البطاقة عن طريق Live Capture.",
+    ].join("\n");
+  } catch {
+    return cleaned;
+  }
+}
+
 function send(res: ResponseLike, status: number, body: unknown) {
   res.status(status).json(body);
 }
@@ -339,7 +411,7 @@ export default async function handler(req: RequestLike, res: ResponseLike) {
       return send(res, 502, { ok: false, error: "Gemini مرجعش إجابة نصية. جرّب صياغة السؤال بطريقة تانية." });
     }
 
-    return send(res, 200, { ok: true, answer });
+    return send(res, 200, { ok: true, answer: applyCalcMarker(answer) });
   } catch (error) {
     console.error("Gemini network/request exception", {
       errorName: error instanceof Error ? error.name : "UnknownError",
