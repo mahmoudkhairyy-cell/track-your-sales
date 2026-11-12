@@ -106,6 +106,8 @@ function findSRKnowledge(records: SRRecord[], query: string): SRRecord[] {
     "إلغاء": ["cancel", "deactivation"], "تفعيل": ["activation", "addition"],
     "اشتراك": ["subscription", "service addition"], "خدمة": ["service", "vas"],
     "باقات": ["plans", "tariff", "packages"], "باقة": ["plan", "tariff", "package"],
+    "كنترول": ["control", "call and control"], "كارت": ["prepaid"], "فاتورة": ["postpaid", "invoice", "bill"], "فواتير": ["postpaid", "invoice", "bill"],
+    "تغيير": ["change", "migration", "migrate"], "أغير": ["change", "migration", "migrate"], "اغير": ["change", "migration", "migrate"], "نظام": ["tariff", "plan", "migration"], "النظام": ["tariff", "plan", "migration"], "تحويل": ["migration", "migrate", "transfer"], "ترحيل": ["migration", "migrate"],
   };
   const expandedTerms = [...terms, ...terms.flatMap((term) => arabicToEnglish[term] ?? [])];
   const codeMatches = query.match(/\b\d{3,6}\b/g) ?? [];
@@ -174,7 +176,7 @@ async function loadBusinessKnowledge(): Promise<KnowledgeRecord[]> {
   if (businessKnowledgeCache && businessKnowledgeCache.expiresAt > Date.now()) return businessKnowledgeCache.records;
   if (businessKnowledgeRequest) return businessKnowledgeRequest;
   businessKnowledgeRequest = (async () => {
-    const files = ["plans.json", "freemax.json", "dsl.json", "docs.json", "knowledge-base.json"];
+    const files = ["plans.json", "freemax.json", "dsl.json", "docs.json", "knowledge-base.json", "hunts.json", "emails.json"];
     const results = await Promise.all(files.map(async (file) => {
       const url = `https://raw.githubusercontent.com/mahmoudkhairyy-cell/track-your-sales/local-version/src/data/${file}`;
       const response = await fetch(url, { signal: AbortSignal.timeout(3500) });
@@ -199,6 +201,7 @@ function findBusinessKnowledge(records: KnowledgeRecord[], query: string): Knowl
     "ميجا": ["mbps", "mb"], "راوتر": ["router"], "إضافية": ["addon", "extra"],
     "تجديد": ["renewal", "renew"], "سعر": ["price", "fees"], "رسوم": ["price", "fees"],
     "اشتراك": ["subscription"], "خصم": ["discount"], "مميزات": ["perks", "highlights"],
+    "هنت": ["hunt", "phone", "number"], "هنتات": ["hunt", "phone", "number"], "رقم": ["phone", "number", "contact"], "تليفون": ["phone", "telephone", "contact"], "اتصال": ["call", "contact"], "اتواصل": ["contact", "email", "phone"], "إيميل": ["email"], "ايميل": ["email"], "بريد": ["email"], "شكوى": ["complaint", "complain"], "شكاوى": ["complaint", "complain"], "دعم": ["support", "assist", "team"], "فريق": ["team"], "تيم": ["team"],
   };
   const expanded = [...terms, ...terms.flatMap((term) => aliases[term] ?? [])];
   return records.map((record) => {
@@ -218,7 +221,7 @@ async function buildBusinessKnowledgeContext(query: string): Promise<string> {
     const matches = findBusinessKnowledge(records, query);
     if (!matches.length) return "";
     return [
-      "بيانات مرجعية مسترجعة من ملفات التطبيق وقاعدة المعرفة التشغيلية (الباقات، FreeMax، DSL، وإجراءات خدمة العملاء). التزم بحالة كل موضوع: مؤكد أو جزئي أو غير متاح، ولا تحوّل المعلومة الناقصة إلى إجراء مؤكد:",
+      "بيانات مرجعية مسترجعة من ملفات التطبيق وقاعدة المعرفة التشغيلية (الباقات، FreeMax، DSL، المستندات، أرقام فرق الدعم والبريد الإلكتروني). عند السؤال عن رقم أو بريد أو فريق، اعرض الاسم والرقم/البريد كما وردا بالمصدر دون تعديل. التزم بحالة كل موضوع: مؤكد أو جزئي أو غير متاح، ولا تحوّل المعلومة الناقصة إلى إجراء مؤكد:",
       ...matches.map((item) => `المصدر: ${item.source}\n${item.text}`),
       "اعرض الأرقام كما وردت دون تعديل، واذكر أن الأسعار والعروض قد تحتاج تأكيدًا من أحدث مصدر داخلي قبل التنفيذ.",
     ].join("\n\n").slice(0, 10000);
