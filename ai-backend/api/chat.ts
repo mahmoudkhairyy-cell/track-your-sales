@@ -240,8 +240,12 @@ function findBusinessKnowledge(records: KnowledgeRecord[], query: string): Knowl
     "مهاجره": ["migration"], "مايجريشن": ["migration"], "بوست": ["postpaid"],
   };
   const expanded = [...new Set([...terms, ...terms.flatMap((term) => (aliases[term] ?? []).flatMap(normalize))])];
+  const asksPostpaidCancellation = /(?:postpaid|بوست|فاتور|فاتوره)/i.test(normalized) && /(?:الغاء|الغى|الغاءه|انهاء|termination|cancel|cancellation)/i.test(normalized);
+  const asksDsl = /(?:dsl|adsl|ارضي|ارضى)/i.test(normalized);
+  const asksPrepaidMigration = /(?:prepaid|كارت)/i.test(normalized) && /(?:تحويل|migration|migrate|احول|انقل)/i.test(normalized);
   const scored = records.map((record) => {
     const haystack = normalize(record.text);
+    const topicId = normalize(record.text.match(/id: ([^|]+)/)?.[1] ?? "");
     let score = 0;
     for (const term of expanded) {
       if (term.length < 2) continue;
@@ -249,6 +253,11 @@ function findBusinessKnowledge(records: KnowledgeRecord[], query: string): Knowl
     }
     if (record.source === "knowledge-base.json") score += 5;
     if (terms.length && terms.every((term) => haystack.includes(term))) score += 8;
+    // Intent guards prevent broad words such as "invoice" or "cancel" from
+    // routing a DSL or Postpaid cancellation question into the prepaid calculator.
+    if (asksPostpaidCancellation && topicId === "postpaid migration") score = 0;
+    if (asksDsl && topicId === "postpaid migration") score = 0;
+    if (asksPrepaidMigration && topicId === "postpaid migration") score += 30;
     return { record, score };
   }).filter((item) => item.score > 0);
   return scored.sort((a, b) => b.score - a.score).slice(0, 12).map((item) => item.record);
