@@ -91,22 +91,7 @@ async function loadSRKnowledge(): Promise<SRRecord[]> {
   return srKnowledgeRequest;
 }
 
-function isPostpaidToControlQuery(query: string): boolean {
-  const normalized = query.toLowerCase().normalize("NFKC").replace(/[\u064B-\u065F\u0670]/g, "").replace(/[^\p{L}\p{N}]+/gu, " ").trim();
-  const hasPostpaid = /\bpostpaid\b/.test(normalized) || normalized.includes("فاتورة") || normalized.includes("فواتير");
-  const hasControl = /\bcontrol\b/.test(normalized) || normalized.includes("كنترول") || normalized.includes("كول اند كنترول");
-  const hasPrepaid = /\bprepaid\b/.test(normalized) || normalized.includes("كارت") || normalized.includes("كارت شحن");
-  return hasPostpaid && hasControl && !hasPrepaid;
-}
-
 function findSRKnowledge(records: SRRecord[], query: string): SRRecord[] {
-  if (isPostpaidToControlQuery(query)) {
-    const normalized = query.toLowerCase();
-    const selectedIds = new Set(["1104", "10159"]);
-    if (normalized.includes("force") || normalized.includes("فورس")) selectedIds.add("1109");
-    if (normalized.includes("hold") || normalized.includes("هولد")) selectedIds.add("1110");
-    return records.filter((record) => selectedIds.has(record.id ?? ""));
-  }
   const normalized = query.toLowerCase().normalize("NFKC").replace(/[\u064B-\u065F\u0670]/g, "").replace(/[^\p{L}\p{N}]+/gu, " ").trim();
   const terms = normalized.split(/\s+/).filter((term) => term.length >= 3);
   const arabicToEnglish: Record<string, string[]> = {
@@ -133,30 +118,19 @@ async function buildKnowledgeContext(query: string): Promise<string> {
   try {
     const records = await loadSRKnowledge();
     const matches = findSRKnowledge(records, query);
-    if (isPostpaidToControlQuery(query)) {
-      return [
-        "المقصود هنا تحويل Postpaid (فاتورة) إلى Control (كنترول)، وليس إلى Prepaid (كارت). لا تخلط المسارين.",
-        "نتيجة مراجعة موسوعة SR: SR 1104 هو استعلام عام عن خطوات وتفاصيل ورسوم وقنوات Migration، ولا يحتوي على خطوات تنفيذ. SR 1109 للاستعلام عن Force Migration، وSR 1110 للاستعلام عن Hold Migration؛ لا تعرضهما كأكواد تنفيذ للتحويل العادي.",
-        "SR 10707 عنوانه Acc Mod For Migration – From Call And Control To، ووصفه إعادة تفعيل خط مستخدم بواسطة Shop and franchise؛ لذلك لا يثبت إجراء Postpaid إلى Control.",
-        "SR 10704 عنوانه Acc Mod For Migration – From Prepaid To، ووجهة التحويل غير مكتملة؛ لذلك لا يثبت إجراء Postpaid إلى Control.",
-        "مستند Postpaid Calculator موصوف بأنه يساعد في التحويل من فاتورة إلى كارت (Prepaid)، وليس إلى Control؛ لا تطبق تعليماته على مسار الكنترول.",
-        "الخلاصة: قاعدة المعرفة الحالية لا تحتوي خطوات أو شروط أهلية أو رسوم أو مسار نظام مؤكد لتحويل Postpaid إلى Control. لا تخترع هذه التفاصيل. اذكر بوضوح أن المصدر المتاح غير كافٍ، ولا تنه الإجابة بسؤال عام عن موضوع آخر.",
-        ...matches.map((item) => `مرجع SR: ${item.id} — ${item.title ?? ""} — ${item.description ?? ""}`),
-      ].join("\n\n").slice(0, 9000);
-    }
     if (!matches.length) return "";
     return [
-      "مقتطفات مسترجعة من موسوعة SR. استخدمها كمصدر factual فقط، ولا تستنتج إجراءات غير مكتوبة:",
+      "مقتطفات موسوعة SR من ملف src/data/sr.json. هذه سجلات مرجعية وليست كلها إجراءات تنفيذ؛ ميّز بين Request For Information وAcc Mod وFault، ولا تستنتج أن عنوان SR يشرح خطواته.",
       ...matches.map((item) => [
         `SR: ${item.id ?? "غير محدد"}`,
         item.titleAr ? `الاسم العربي: ${item.titleAr}` : "",
         item.title ? `العنوان: ${item.title}` : "",
         item.category ? `التصنيف: ${item.category}` : "",
         item.description ? `الوصف: ${item.description}` : "",
-        item.steps ? `التفاصيل: ${item.steps}` : "",
-      ].filter(Boolean).join("\n")),
-      "إذا كانت المقتطفات لا تجيب عن السؤال بالكامل، وضّح حدود المعلومة ولا تخترع خطوات أو سياسات.",
-    ].join("\n\n").slice(0, 9000);
+        item.steps ? `التفاصيل/الخطوات المسجلة: ${item.steps}` : "",
+      ].filter(Boolean).join("\\n")),
+      "استخدم الخطوات فقط إذا كانت مكتوبة صراحة في الحقل. إذا كان الوصف مجرد عنوان أو سبب فتح SR، قل ذلك بوضوح.",
+    ].join("\\n\\n").slice(0, 10000);
   } catch (error) {
     console.error("SR knowledge retrieval failed", { errorName: error instanceof Error ? error.name : "UnknownError" });
     return "";
@@ -187,15 +161,24 @@ async function loadBusinessKnowledge(): Promise<KnowledgeRecord[]> {
   if (businessKnowledgeCache && businessKnowledgeCache.expiresAt > Date.now()) return businessKnowledgeCache.records;
   if (businessKnowledgeRequest) return businessKnowledgeRequest;
   businessKnowledgeRequest = (async () => {
-    const files = ["plans.json", "freemax.json", "dsl.json", "docs.json", "hunts.json", "emails.json", "premier-guide.json"];
-    const results = await Promise.all(files.map(async (file) => {
+    const sources = [
+      { file: "ai-backend/knowledge-base.json", label: "knowledge-base.json" },
+      { file: "src/data/plans.json", label: "plans.json" },
+      { file: "src/data/freemax.json", label: "freemax.json" },
+      { file: "src/data/dsl.json", label: "dsl.json" },
+      { file: "src/data/docs.json", label: "docs.json" },
+      { file: "src/data/hunts.json", label: "hunts.json" },
+      { file: "src/data/emails.json", label: "emails.json" },
+      { file: "src/data/premier-guide.json", label: "premier-guide.json (derived from PREMIER_GUIDE in src/data/index.ts)" },
+    ];
+    const results = await Promise.all(sources.map(async ({ file, label }) => {
       try {
-        const url = `https://raw.githubusercontent.com/mahmoudkhairyy-cell/track-your-sales/local-version/src/data/${file}`;
-        const response = await fetch(url, { signal: AbortSignal.timeout(3500) });
+        const url = `https://raw.githubusercontent.com/mahmoudkhairyy-cell/track-your-sales/local-version/${file}`;
+        const response = await fetch(url, { signal: AbortSignal.timeout(5000) });
         if (!response.ok) throw new Error(`Knowledge source ${file} returned ${response.status}`);
-        return flattenKnowledge(await response.json(), file);
+        return flattenKnowledge(await response.json(), label);
       } catch (error) {
-        console.error("Optional knowledge source unavailable", { file, errorName: error instanceof Error ? error.name : "UnknownError" });
+        console.error("Knowledge source unavailable", { file, errorName: error instanceof Error ? error.name : "UnknownError" });
         return [];
       }
     }));
@@ -207,28 +190,42 @@ async function loadBusinessKnowledge(): Promise<KnowledgeRecord[]> {
 }
 
 function findBusinessKnowledge(records: KnowledgeRecord[], query: string): KnowledgeRecord[] {
-  const normalized = query.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
-  const terms = normalized.split(/\s+/).filter((term) => term.length >= 2);
+  const normalize = (value: string) => value.toLowerCase().normalize("NFKC")
+    .replace(/[\\u064B-\\u065F\\u0670]/g, "")
+    .replace(/[أإآ]/g, "ا").replace(/ة/g, "ه").replace(/ى/g, "ي")
+    .replace(/[^\\p{L}\\p{N}]+/gu, " ").trim();
+  const normalized = normalize(query);
+  const stopwords = new Set(["من", "الى", "إلى", "في", "على", "عن", "ازاي", "ازاى", "اعمل", "عاوز", "عايز", "ممكن", "هل", "هو", "هي", "ال"]);
+  const terms = normalized.split(/\\s+/).filter((term) => term.length >= 2 && !stopwords.has(term));
   const aliases: Record<string, string[]> = {
-    "باقة": ["plan", "package"], "باقات": ["plans", "packages"], "فريماكس": ["freemax", "free max"],
-    "فاتورة": ["postpaid", "invoice", "bill"], "الفاتورة": ["postpaid", "invoice", "bill"], "كنترول": ["control", "call and control"], "كارت": ["prepaid"], "تحويل": ["migration", "migrate", "transfer"], "ترحيل": ["migration", "migrate"], "تغيير": ["change", "migration", "migrate"], "أغير": ["change", "migration", "migrate"], "اغير": ["change", "migration", "migrate"], "نقل": ["migration", "migrate", "transfer"], "انقل": ["migration", "migrate"], "الغاء": ["cancel", "cancellation"], "إيقاف": ["suspension", "suspend"], "استئناف": ["resume"],
-    "فري": ["free"], "ماكس": ["max"], "أرضي": ["dsl", "landline"], "ارضي": ["dsl", "landline"],
-    "انترنت": ["internet", "data"], "إنترنت": ["internet", "data"], "سرعة": ["speed"],
-    "ميجا": ["mbps", "mb"], "راوتر": ["router"], "إضافية": ["addon", "extra"],
-    "تجديد": ["renewal", "renew"], "سعر": ["price", "fees"], "رسوم": ["price", "fees"],
-    "اشتراك": ["subscription"], "خصم": ["discount"], "مميزات": ["perks", "highlights"],
-    "هنت": ["hunt", "phone", "number"], "هنتات": ["hunt", "phone", "number"], "رقم": ["phone", "number", "contact"], "تليفون": ["phone", "telephone", "contact"], "اتصال": ["call", "contact"], "اتواصل": ["contact", "email", "phone"], "إيميل": ["email"], "ايميل": ["email"], "بريد": ["email"], "شكوى": ["complaint", "complain"], "شكاوى": ["complaint", "complain"], "دعم": ["support", "assist", "team"], "فريق": ["team"], "تيم": ["team"],
+    "باقة": ["plan", "package"], "باقات": ["plans", "packages"],
+    "فريماكس": ["freemax", "free max"], "فاتورة": ["postpaid", "invoice", "bill"],
+    "فواتير": ["postpaid", "invoice", "bill"], "كنترول": ["control", "call and control", "star control"],
+    "كارت": ["prepaid"], "تحويل": ["migration", "migrate", "transfer"], "ترحيل": ["migration", "migrate"],
+    "تغيير": ["change", "migration", "migrate"], "الغاء": ["cancel", "cancellation"],
+    "ايقاف": ["suspension", "suspend"], "استئناف": ["resume"], "ارضي": ["dsl", "landline"],
+    "انترنت": ["internet", "data"], "سرعة": ["speed"], "راوتر": ["router"],
+    "رسوم": ["fees", "charges", "price"], "سعر": ["price", "fees"], "اشتراك": ["subscription"],
+    "خصم": ["discount"], "مميزات": ["perks", "highlights"], "هنت": ["hunt", "phone", "number"],
+    "هنتات": ["hunt", "phone", "number"], "رقم": ["phone", "number", "contact"],
+    "تليفون": ["phone", "telephone", "contact"], "اتصال": ["call", "contact"],
+    "ايميل": ["email"], "بريد": ["email"], "شكوى": ["complaint", "complain"],
+    "دعم": ["support", "assist", "team"], "فريق": ["team"], "تيم": ["team"],
+    "مهاجره": ["migration"], "مايجريشن": ["migration"], "بوست": ["postpaid"],
   };
-  const expanded = [...terms, ...terms.flatMap((term) => aliases[term] ?? [])];
-  return records.map((record) => {
-    const haystack = record.text.toLowerCase();
+  const expanded = [...new Set([...terms, ...terms.flatMap((term) => (aliases[term] ?? []).flatMap(normalize))])];
+  const scored = records.map((record) => {
+    const haystack = normalize(record.text);
     let score = 0;
-    for (const term of expanded) if (haystack.includes(term)) score += term.length >= 5 ? 3 : 1;
+    for (const term of expanded) {
+      if (term.length < 2) continue;
+      if (haystack.includes(term)) score += term.length >= 6 ? 4 : 2;
+    }
+    if (record.source === "knowledge-base.json") score += 5;
+    if (terms.length && terms.every((term) => haystack.includes(term))) score += 8;
     return { record, score };
-  }).filter((item) => item.score > 0)
-    .sort((a, b) => b.score - a.score)
-    .slice(0, 10)
-    .map((item) => item.record);
+  }).filter((item) => item.score > 0);
+  return scored.sort((a, b) => b.score - a.score).slice(0, 12).map((item) => item.record);
 }
 
 async function buildBusinessKnowledgeContext(query: string): Promise<string> {
@@ -298,23 +295,6 @@ export default async function handler(req: RequestLike, res: ResponseLike) {
     if (text) history.push({ role: entry.role, parts: [{ text }] });
   }
   history.push({ role: "user", parts: [{ text: message }] });
-
-  if (isPostpaidToControlQuery(message)) {
-    return send(res, 200, {
-      ok: true,
-      answer: [
-        "راجعت المراجع المتاحة، وخلّي بالك إن تحويل فاتورة (Postpaid) إلى كنترول (Control) مختلف عن التحويل إلى كارت (Prepaid).",
-        "الموجود حاليًا في المعرفة:",
-        "• SR 10159: أقرب سجل مطابق؛ عنوانه Payment Agreement To Migrate، ووصفه يذكر التحويل من Star إلى Star Control من خلال CC cases فقط. لكنه لا يشرح الخطوات، ولا يثبت أن الإجراء متاح من الفرع.",
-        "• SR 1104: استعلام عن إجراءات التحويل ورسومه وقنواته، لكنه لا يحتوي خطوات التنفيذ نفسها.",
-        "• جهة الدعم المدرجة باسم Star Control Assist: cs110starcontrolsupport-eg@orange.com. استخدمها فقط عبر قنوات العمل المعتمدة للاستفسار عن شروط ومسار الإجراء.",
-        "• SR 10707: خاص بإعادة تفعيل خط مستخدم بواسطة Shop and franchise، وليس تحويل فاتورة إلى كنترول.",
-        "• SR 10704: خاص بالتحويل من Prepaid، ووجهته غير مكتملة؛ لا ينطبق على طلبك.",
-        "• Postpaid Calculator: موصوف للتحويل من فاتورة إلى كارت (Prepaid)، وليس إلى كنترول.",
-        "بالتالي لا توجد حاليًا خطوات أو شروط أو رسوم أو مسار نظام موثّق لتحويل Postpaid إلى Control. مش هديك خطوات تخمينية ممكن تسبب تنفيذًا خاطئًا. الأكواد المذكورة أعلاه لا تُستخدم كبديل عن إجراء التحويل."
-      ].join("\n\n")
-    });
-  }
 
   try {
     const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`, {
