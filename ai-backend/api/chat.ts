@@ -148,7 +148,8 @@ function flattenKnowledge(value: unknown, source: string, path = ""): KnowledgeR
   const own = Object.entries(obj)
     .filter(([, item]) => typeof item === "string" || typeof item === "number" || typeof item === "boolean")
     .map(([key, item]) => `${key}: ${String(item)}`);
-  const arrayText = Object.entries(obj).filter(([, item]) => Array.isArray(item)).map(([key, item]) => `${key}: ${(item as unknown[]).filter((entry): entry is string => typeof entry === "string").join(" ")}`);\n  const current = [...(path ? [path] : []), ...own, ...arrayText].join(" | ");
+  const arrayText = Object.entries(obj).filter(([, item]) => Array.isArray(item)).map(([key, item]) => `${key}: ${(item as unknown[]).filter((entry): entry is string => typeof entry === "string").join(" ")}`);
+  const current = [...(path ? [path] : []), ...own, ...arrayText].join(" | ");
   const nested = Object.entries(obj)
     .filter(([, item]) => item && typeof item === "object")
     .flatMap(([key, item]) => flattenKnowledge(item, source, key));
@@ -177,7 +178,8 @@ function findBusinessKnowledge(records: KnowledgeRecord[], query: string): Knowl
   const normalized = query.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
   const terms = normalized.split(/\s+/).filter((term) => term.length >= 2);
   const aliases: Record<string, string[]> = {
-    "باقة": ["plan", "package"], "باقات": ["plans", "packages"], "فريماكس": ["freemax", "free max"],\n    "فاتورة": ["postpaid", "invoice", "bill"], "الفاتورة": ["postpaid", "invoice", "bill"], "كنترول": ["control", "call and control"], "كارت": ["prepaid"], "تحويل": ["migration", "migrate", "transfer"], "ترحيل": ["migration", "migrate"], "الغاء": ["cancel", "cancellation"], "إيقاف": ["suspension", "suspend"], "استئناف": ["resume"],
+    "باقة": ["plan", "package"], "باقات": ["plans", "packages"], "فريماكس": ["freemax", "free max"],
+    "فاتورة": ["postpaid", "invoice", "bill"], "الفاتورة": ["postpaid", "invoice", "bill"], "كنترول": ["control", "call and control"], "كارت": ["prepaid"], "تحويل": ["migration", "migrate", "transfer"], "ترحيل": ["migration", "migrate"], "الغاء": ["cancel", "cancellation"], "إيقاف": ["suspension", "suspend"], "استئناف": ["resume"],
     "فري": ["free"], "ماكس": ["max"], "أرضي": ["dsl", "landline"], "ارضي": ["dsl", "landline"],
     "انترنت": ["internet", "data"], "إنترنت": ["internet", "data"], "سرعة": ["speed"],
     "ميجا": ["mbps", "mb"], "راوتر": ["router"], "إضافية": ["addon", "extra"],
