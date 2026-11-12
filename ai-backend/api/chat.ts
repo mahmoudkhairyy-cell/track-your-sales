@@ -299,6 +299,21 @@ export default async function handler(req: RequestLike, res: ResponseLike) {
   }
   history.push({ role: "user", parts: [{ text: message }] });
 
+  if (isPostpaidToControlQuery(message)) {
+    return send(res, 200, {
+      ok: true,
+      answer: [
+        "راجعت المراجع المتاحة، وخلّي بالك إن تحويل فاتورة (Postpaid) إلى كنترول (Control) مختلف عن التحويل إلى كارت (Prepaid).",
+        "الموجود حاليًا في المعرفة:",
+        "• SR 1104: استعلام عن إجراءات التحويل ورسومه وقنواته، لكنه لا يحتوي خطوات التنفيذ نفسها.",
+        "• SR 10707: خاص بإعادة تفعيل خط مستخدم بواسطة Shop and franchise، وليس تحويل فاتورة إلى كنترول.",
+        "• SR 10704: خاص بالتحويل من Prepaid، ووجهته غير مكتملة؛ لا ينطبق على طلبك.",
+        "• Postpaid Calculator: موصوف للتحويل من فاتورة إلى كارت (Prepaid)، وليس إلى كنترول.",
+        "بالتالي لا توجد حاليًا خطوات أو شروط أو رسوم أو مسار نظام موثّق لتحويل Postpaid إلى Control. مش هديك خطوات تخمينية ممكن تسبب تنفيذًا خاطئًا. الأكواد المذكورة أعلاه لا تُستخدم كبديل عن إجراء التحويل."
+      ].join("\\n\\n")
+    });
+  }
+
   try {
     const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`, {
       method: "POST",
