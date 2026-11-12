@@ -1,5 +1,9 @@
 {
   "name": "track-your-sales-ai-backend",
   "version": "1.0.0",
-  "private": true
+  "private": true,
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "typescript": "^5.9.3"
+  }
 }
