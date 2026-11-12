@@ -8,9 +8,7 @@
     "المعلومات التشغيلية والأسعار قد تتغير؛ اطلب تأكيد أحدث مصدر داخلي قبل التنفيذ.",
     "النماذج الفارغة ليست مصادر لإجراءات التشغيل.",
     "لا تعتبر عنوان SR وحده دليلاً على خطوات الإجراء.",
-    "افصل التحويل من Postpaid إلى Prepaid (كارت) عن التحويل إلى Control؛ لا تستخدم مستندات أو حاسبات أحد المسارين لإثبات إجراءات أو رسوم المسار الآخر.",
     "صنّف كل مرجع بحسب وظيفته: خطوات تنفيذ، استعلام/دعم، حاسبة، أو نموذج. وجود حاسبة أو نموذج لا يثبت خطوات Siebel أو شروط الأهلية.",
-    "حاسبة Postpaid تخص التحويل من فاتورة إلى كارت وفق وصف docs.json، ولا تنسبها إلى تحويل Control.",
     "في حاسبة إلغاء DSL، غرامة 227 تعتمد على مدة الاشتراك المحسوبة بالأيام/30 في ملف Excel (≤12 شهراً)، وليس عدد الفواتير؛ Deck يختلف عند حد 12 شهراً، فاذكر التعارض."
   ],
   "topics": [
@@ -245,23 +243,6 @@
         "727623"
       ],
       "content": "Siebel Lines Activation: Service Type=Data، Tariff Type=Prepaid، Bucket=GO Education. Wincash transaction PREPAID_1_1: EDUCATION LINE Article 711094 بسعر 300 جنيه؛ Document State Development Fees 1 Article 727623 بقيمة 3.57؛ Discount 100% بقيمة -3.57؛ الإجمالي 300 جنيه. ملف Websites يسرد مواقع تعليمية وبحثية ومدرسية وتقنية. مدة الاشتراك والأهلية والمستندات المطلوبة غير مؤكدة؛ لا تفترض أن مدة 3 سنوات مؤكدة."
-    },
-    {
-      "id": "postpaid-to-control",
-      "title": "التحويل من Postpaid إلى Control",
-      "status": "جزئي جداً — مرجع استعلام/دعم فقط، ولا توجد خطوات تنفيذ أو شروط أو رسوم مؤكدة",
-      "keywords": [
-        "فاتورة لكنترول",
-        "postpaid control",
-        "postpaid to control",
-        "star control",
-        "تحويل من فاتورة إلى كنترول",
-        "تحويل فاتورة لكنترول",
-        "10159",
-        "1104",
-        "star control assist"
-      ],
-      "content": "افصل هذا المسار تماماً عن التحويل من Postpaid إلى Prepaid (كارت). المرجع الأقرب هو SR 10159 بعنوان Acc Mod For Billing – Payment Agreement To Migrate، ووصفه for Migration from Star to Star control through CC cases Only؛ هذا يثبت أن المرجع يتناول Star إلى Star Control عبر حالات CC فقط، ولا يثبت أن موظف الفرع يستطيع تنفيذ الإجراء أو يوضح خطوات Siebel أو شروط الأهلية أو الرسوم. SR 1104 هو Request For Information – Migration Procedures للاستعلام عن إجراءات/رسوم/قنوات التحويل، وليس خطوات تنفيذ. بريد Star Control Assist الموجود في emails.json هو cs110starcontrolsupport-eg@orange.com ووصفه Egypt CC 110 Star Control Support؛ لا تفترض أنه قناة تواصل معتمدة للفرع أو أن الموظف يراسله مباشرة، واستخدمه فقط من خلال قنوات العمل المعتمدة. لا تستخدم Postpaid Calculator أو معادلاتها كدليل على رسوم أو خطوات تحويل Control؛ وصف الحاسبة يخص التحويل من فاتورة إلى كارت. اذكر SR 10159 وحدود دلالته، ووضّح النواقص، ولا تخترع خطوات أو أهلية أو رسوم."
     }
   ]
 }
