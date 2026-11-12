@@ -91,48 +91,62 @@ async function loadSRKnowledge(): Promise<SRRecord[]> {
   return srKnowledgeRequest;
 }
 
-function findSRKnowledge(records: SRRecord[], query: string): SRRecord[] {
-  const normalized = query.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
-  const terms = normalized.split(/\s+/).filter((term) => term.length >= 2);
-  const arabicToEnglish: Record<string, string[]> = {
-    "فاتورة": ["invoice", "bill"], "فواتير": ["invoice", "bill"], "رصيد": ["balance", "credit"],
-    "شحن": ["recharge", "topup"], "الشحن": ["recharge", "topup"], "دفع": ["payment", "payments"],
-    "مدفوعات": ["payment", "payments"], "تجديد": ["renewal", "renew"],
-    "تقسيط": ["installment", "installments"], "اقساط": ["installment", "installments"],
-    "تجوال": ["roaming"], "الانترنت": ["data", "internet"], "بيانات": ["data", "usage"],
-    "مكالمات": ["calls", "call"], "رسوم": ["charges", "fees"], "ضرايب": ["taxes", "tax"],
-    "ضرائب": ["taxes", "tax"], "تحويل": ["transfer"], "تعويض": ["compensation"],
-    "استعلام": ["inquiry", "information"], "الغاء": ["cancel", "deactivation"],
-    "إلغاء": ["cancel", "deactivation"], "تفعيل": ["activation", "addition"],
-    "اشتراك": ["subscription", "service addition"], "خدمة": ["service", "vas"],
-    "باقات": ["plans", "tariff", "packages"], "باقة": ["plan", "tariff", "package"],
-    "كنترول": ["control", "call and control"], "كارت": ["prepaid"], "فاتورة": ["postpaid", "invoice", "bill"], "فواتير": ["postpaid", "invoice", "bill"],
-    "تغيير": ["change", "migration", "migrate"], "أغير": ["change", "migration", "migrate"], "اغير": ["change", "migration", "migrate"], "نظام": ["tariff", "plan", "migration"], "النظام": ["tariff", "plan", "migration"], "تحويل": ["migration", "migrate", "transfer"], "ترحيل": ["migration", "migrate"],
-  };
-  const expandedTerms = [...terms, ...terms.flatMap((term) => arabicToEnglish[term] ?? [])];
-  const codeMatches = query.match(/\b\d{3,6}\b/g) ?? [];
+function isPostpaidToControlQuery(query: string): boolean {
+  const normalized = query.toLowerCase().normalize("NFKC").replace(/[\\u064B-\\u065F\\u0670]/g, "").replace(/[^\\p{L}\\p{N}]+/gu, " ").trim();
+  const hasPostpaid = /\\bpostpaid\\b/.test(normalized) || normalized.includes("فاتورة") || normalized.includes("فواتير");
+  const hasControl = /\\bcontrol\\b/.test(normalized) || normalized.includes("كنترول") || normalized.includes("كول اند كنترول");
+  const hasPrepaid = /\\bprepaid\\b/.test(normalized) || normalized.includes("كارت") || normalized.includes("كارت شحن");
+  return hasPostpaid && hasControl && !hasPrepaid;
+}
 
-  return records
-    .map((record) => {
-      const searchable = [record.id, record.title, record.titleAr, record.description, record.category, record.steps]
-        .filter(Boolean).join(" ").toLowerCase();
-      let score = codeMatches.some((code) => record.id === code) ? 100 : 0;
-      for (const term of expandedTerms) if (searchable.includes(term)) score += term.length >= 5 ? 3 : 1;
-      return { record, score };
-    })
-    .filter((item) => item.score > 0)
-    .sort((a, b) => b.score - a.score)
-    .slice(0, 7)
-    .map((item) => item.record);
+function findSRKnowledge(records: SRRecord[], query: string): SRRecord[] {
+  if (isPostpaidToControlQuery(query)) {
+    const normalized = query.toLowerCase();
+    const selectedIds = new Set(["1104"]);
+    if (normalized.includes("force") || normalized.includes("فورس")) selectedIds.add("1109");
+    if (normalized.includes("hold") || normalized.includes("هولد")) selectedIds.add("1110");
+    return records.filter((record) => selectedIds.has(record.id ?? ""));
+  }
+  const normalized = query.toLowerCase().normalize("NFKC").replace(/[\\u064B-\\u065F\\u0670]/g, "").replace(/[^\\p{L}\\p{N}]+/gu, " ").trim();
+  const terms = normalized.split(/\\s+/).filter((term) => term.length >= 3);
+  const arabicToEnglish: Record<string, string[]> = {
+    "فاتورة": ["invoice", "bill", "postpaid"], "فواتير": ["invoice", "bill", "postpaid"], "رصيد": ["balance", "credit"],
+    "شحن": ["recharge", "topup"], "دفع": ["payment", "payments"], "تجديد": ["renewal", "renew"],
+    "تقسيط": ["installment", "installments"], "تجوال": ["roaming"], "الانترنت": ["data", "internet"],
+    "بيانات": ["data", "usage"], "مكالمات": ["calls", "call"], "رسوم": ["charges", "fees"],
+    "ضرائب": ["taxes", "tax"], "تحويل": ["migration", "migrate", "transfer"], "ترحيل": ["migration", "migrate"],
+    "استعلام": ["inquiry", "information"], "الغاء": ["cancel", "deactivation"], "إلغاء": ["cancel", "deactivation"],
+    "تفعيل": ["activation", "addition"], "اشتراك": ["subscription"], "كنترول": ["control", "call and control"],
+    "كارت": ["prepaid"], "تغيير": ["change", "migration", "migrate"], "نظام": ["tariff", "plan", "migration"],
+  };
+  const expandedTerms = [...new Set([...terms, ...terms.flatMap((term) => arabicToEnglish[term] ?? [])])];
+  const codeMatches = query.match(/\\b\\d{3,6}\\b/g) ?? [];
+  return records.map((record) => {
+    const searchable = [record.id, record.title, record.titleAr, record.description, record.category, record.steps].filter(Boolean).join(" ").toLowerCase();
+    let score = codeMatches.some((code) => record.id === code) ? 100 : 0;
+    for (const term of expandedTerms) if (searchable.includes(term)) score += term.length >= 5 ? 3 : 1;
+    return { record, score };
+  }).filter((item) => item.score > 0).sort((a, b) => b.score - a.score).slice(0, 7).map((item) => item.record);
 }
 
 async function buildKnowledgeContext(query: string): Promise<string> {
   try {
     const records = await loadSRKnowledge();
     const matches = findSRKnowledge(records, query);
+    if (isPostpaidToControlQuery(query)) {
+      return [
+        "المقصود هنا تحويل Postpaid (فاتورة) إلى Control (كنترول)، وليس إلى Prepaid (كارت). لا تخلط المسارين.",
+        "نتيجة مراجعة موسوعة SR: SR 1104 هو استعلام عام عن خطوات وتفاصيل ورسوم وقنوات Migration، ولا يحتوي على خطوات تنفيذ. SR 1109 للاستعلام عن Force Migration، وSR 1110 للاستعلام عن Hold Migration؛ لا تعرضهما كأكواد تنفيذ للتحويل العادي.",
+        "SR 10707 عنوانه Acc Mod For Migration – From Call And Control To، ووصفه إعادة تفعيل خط مستخدم بواسطة Shop and franchise؛ لذلك لا يثبت إجراء Postpaid إلى Control.",
+        "SR 10704 عنوانه Acc Mod For Migration – From Prepaid To، ووجهة التحويل غير مكتملة؛ لذلك لا يثبت إجراء Postpaid إلى Control.",
+        "مستند Postpaid Calculator موصوف بأنه يساعد في التحويل من فاتورة إلى كارت (Prepaid)، وليس إلى Control؛ لا تطبق تعليماته على مسار الكنترول.",
+        "الخلاصة: قاعدة المعرفة الحالية لا تحتوي خطوات أو شروط أهلية أو رسوم أو مسار نظام مؤكد لتحويل Postpaid إلى Control. لا تخترع هذه التفاصيل. اذكر بوضوح أن المصدر المتاح غير كافٍ، ولا تنه الإجابة بسؤال عام عن موضوع آخر.",
+        ...matches.map((item) => `مرجع SR: ${item.id} — ${item.title ?? ""} — ${item.description ?? ""}`),
+      ].join("\\n\\n").slice(0, 9000);
+    }
     if (!matches.length) return "";
     return [
-      "مقتطفات مسترجعة من موسوعة SR المرفقة بالتطبيق. استخدمها كمصدر factual فقط، ولا تستنتج إجراءات غير مكتوبة:",
+      "مقتطفات مسترجعة من موسوعة SR. استخدمها كمصدر factual فقط، ولا تستنتج إجراءات غير مكتوبة:",
       ...matches.map((item) => [
         `SR: ${item.id ?? "غير محدد"}`,
         item.titleAr ? `الاسم العربي: ${item.titleAr}` : "",
@@ -140,17 +154,14 @@ async function buildKnowledgeContext(query: string): Promise<string> {
         item.category ? `التصنيف: ${item.category}` : "",
         item.description ? `الوصف: ${item.description}` : "",
         item.steps ? `التفاصيل: ${item.steps}` : "",
-      ].filter(Boolean).join("\n")),
+      ].filter(Boolean).join("\\n")),
       "إذا كانت المقتطفات لا تجيب عن السؤال بالكامل، وضّح حدود المعلومة ولا تخترع خطوات أو سياسات.",
-    ].join("\n\n").slice(0, 9000);
+    ].join("\\n\\n").slice(0, 9000);
   } catch (error) {
-    console.error("SR knowledge retrieval failed", {
-      errorName: error instanceof Error ? error.name : "UnknownError",
-    });
+    console.error("SR knowledge retrieval failed", { errorName: error instanceof Error ? error.name : "UnknownError" });
     return "";
   }
 }
-
 
 type KnowledgeRecord = { source: string; text: string };
 
@@ -176,12 +187,17 @@ async function loadBusinessKnowledge(): Promise<KnowledgeRecord[]> {
   if (businessKnowledgeCache && businessKnowledgeCache.expiresAt > Date.now()) return businessKnowledgeCache.records;
   if (businessKnowledgeRequest) return businessKnowledgeRequest;
   businessKnowledgeRequest = (async () => {
-    const files = ["plans.json", "freemax.json", "dsl.json", "docs.json", "knowledge-base.json", "hunts.json", "emails.json"];
+    const files = ["plans.json", "freemax.json", "dsl.json", "docs.json", "hunts.json", "emails.json", "premier-guide.json"];
     const results = await Promise.all(files.map(async (file) => {
-      const url = `https://raw.githubusercontent.com/mahmoudkhairyy-cell/track-your-sales/local-version/src/data/${file}`;
-      const response = await fetch(url, { signal: AbortSignal.timeout(3500) });
-      if (!response.ok) throw new Error(`Knowledge source ${file} returned ${response.status}`);
-      return flattenKnowledge(await response.json(), file);
+      try {
+        const url = `https://raw.githubusercontent.com/mahmoudkhairyy-cell/track-your-sales/local-version/src/data/${file}`;
+        const response = await fetch(url, { signal: AbortSignal.timeout(3500) });
+        if (!response.ok) throw new Error(`Knowledge source ${file} returned ${response.status}`);
+        return flattenKnowledge(await response.json(), file);
+      } catch (error) {
+        console.error("Optional knowledge source unavailable", { file, errorName: error instanceof Error ? error.name : "UnknownError" });
+        return [];
+      }
     }));
     const records = results.flat();
     businessKnowledgeCache = { records, expiresAt: Date.now() + 10 * 60 * 1000 };
