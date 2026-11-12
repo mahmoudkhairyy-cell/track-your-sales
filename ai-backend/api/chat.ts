@@ -101,7 +101,7 @@ function findSRKnowledge(records: SRRecord[], query: string): SRRecord[] {
     "بيانات": ["data", "usage"], "مكالمات": ["calls", "call"], "رسوم": ["charges", "fees"],
     "ضرائب": ["taxes", "tax"], "تحويل": ["migration", "migrate", "transfer"], "ترحيل": ["migration", "migrate"],
     "استعلام": ["inquiry", "information"], "الغاء": ["cancel", "deactivation"], "إلغاء": ["cancel", "deactivation"],
-    "تفعيل": ["activation", "addition"], "اشتراك": ["subscription"], "كنترول": ["control", "call and control"],
+    "تفعيل": ["activation", "addition"], "اشتراك": ["subscription"], "كنترول": ["control", "call and control"], "لكنترول": ["control", "call and control"], "للكنترول": ["control", "call and control"], "احول": ["migration", "migrate"], "حول": ["migration", "migrate"], "انقل": ["migration", "migrate"],
     "كارت": ["prepaid"], "تغيير": ["change", "migration", "migrate"], "نظام": ["tariff", "plan", "migration"],
   };
   const expandedTerms = [...new Set([...terms, ...terms.flatMap((term) => arabicToEnglish[term] ?? [])])];
@@ -195,12 +195,12 @@ function findBusinessKnowledge(records: KnowledgeRecord[], query: string): Knowl
     .replace(/[أإآ]/g, "ا").replace(/ة/g, "ه").replace(/ى/g, "ي")
     .replace(/[^\p{L}\p{N}]+/gu, " ").trim();
   const normalized = normalize(query);
-  const stopwords = new Set(["من", "الى", "إلى", "في", "على", "عن", "ازاي", "ازاى", "اعمل", "عاوز", "عايز", "ممكن", "هل", "هو", "هي", "ال"]);
+  const stopwords = new Set(["من", "الى", "إلى", "في", "على", "عن", "ازاي", "ازاى", "اعمل", "عاوز", "عاوزة", "عايز", "عايزة", "انا", "ممكن", "هل", "هو", "هي", "ال"]);
   const terms = normalized.split(/\s+/).filter((term) => term.length >= 2 && !stopwords.has(term));
   const aliases: Record<string, string[]> = {
     "باقة": ["plan", "package"], "باقات": ["plans", "packages"],
     "فريماكس": ["freemax", "free max"], "فاتورة": ["postpaid", "invoice", "bill"],
-    "فواتير": ["postpaid", "invoice", "bill"], "كنترول": ["control", "call and control", "star control"],
+    "فواتير": ["postpaid", "invoice", "bill"], "كنترول": ["control", "call and control", "star control"], "لكنترول": ["control", "call and control", "star control"], "للكنترول": ["control", "call and control", "star control"], "احول": ["migration", "migrate"], "حول": ["migration", "migrate"], "انقل": ["migration", "migrate"],
     "كارت": ["prepaid"], "تحويل": ["migration", "migrate", "transfer"], "ترحيل": ["migration", "migrate"],
     "تغيير": ["change", "migration", "migrate"], "الغاء": ["cancel", "cancellation"],
     "ايقاف": ["suspension", "suspend"], "استئناف": ["resume"], "ارضي": ["dsl", "landline"],
