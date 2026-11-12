@@ -80,6 +80,20 @@ async function loadSRKnowledge(): Promise<SRRecord[]> {
 function findSRKnowledge(records: SRRecord[], query: string): SRRecord[] {
   const normalized = query.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
   const terms = normalized.split(/\s+/).filter((term) => term.length >= 2);
+  const arabicToEnglish: Record<string, string[]> = {
+    "فاتورة": ["invoice", "bill"], "فواتير": ["invoice", "bill"], "رصيد": ["balance", "credit"],
+    "شحن": ["recharge", "topup"], "الشحن": ["recharge", "topup"], "دفع": ["payment", "payments"],
+    "مدفوعات": ["payment", "payments"], "تجديد": ["renewal", "renew"],
+    "تقسيط": ["installment", "installments"], "اقساط": ["installment", "installments"],
+    "تجوال": ["roaming"], "الانترنت": ["data", "internet"], "بيانات": ["data", "usage"],
+    "مكالمات": ["calls", "call"], "رسوم": ["charges", "fees"], "ضرايب": ["taxes", "tax"],
+    "ضرائب": ["taxes", "tax"], "تحويل": ["transfer"], "تعويض": ["compensation"],
+    "استعلام": ["inquiry", "information"], "الغاء": ["cancel", "deactivation"],
+    "إلغاء": ["cancel", "deactivation"], "تفعيل": ["activation", "addition"],
+    "اشتراك": ["subscription", "service addition"], "خدمة": ["service", "vas"],
+    "باقات": ["plans", "tariff", "packages"], "باقة": ["plan", "tariff", "package"],
+  };
+  const expandedTerms = [...terms, ...terms.flatMap((term) => arabicToEnglish[term] ?? [])];
   const codeMatches = query.match(/\b\d{3,6}\b/g) ?? [];
 
   return records
@@ -87,7 +101,7 @@ function findSRKnowledge(records: SRRecord[], query: string): SRRecord[] {
       const searchable = [record.id, record.title, record.titleAr, record.description, record.category, record.steps]
         .filter(Boolean).join(" ").toLowerCase();
       let score = codeMatches.some((code) => record.id === code) ? 100 : 0;
-      for (const term of terms) if (searchable.includes(term)) score += term.length >= 5 ? 3 : 1;
+      for (const term of expandedTerms) if (searchable.includes(term)) score += term.length >= 5 ? 3 : 1;
       return { record, score };
     })
     .filter((item) => item.score > 0)
