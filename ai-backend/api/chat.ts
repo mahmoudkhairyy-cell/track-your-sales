@@ -45,6 +45,82 @@ const SYSTEM_INSTRUCTION = `
 - إذا طلب المستخدم معلومة تشغيلية قد تتغير، نبّهه إلى ضرورة مراجعة أحدث مصدر داخلي معتمد قبل تنفيذها.
 `.trim();
 
+type SRRecord = {
+  id?: string;
+  title?: string;
+  titleAr?: string;
+  description?: string;
+  category?: string;
+  steps?: string;
+};
+
+let srKnowledgeCache: { records: SRRecord[]; expiresAt: number } | null = null;
+let srKnowledgeRequest: Promise<SRRecord[]> | null = null;
+
+async function loadSRKnowledge(): Promise<SRRecord[]> {
+  if (srKnowledgeCache && srKnowledgeCache.expiresAt > Date.now()) return srKnowledgeCache.records;
+  if (srKnowledgeRequest) return srKnowledgeRequest;
+
+  srKnowledgeRequest = (async () => {
+    const source = "https://raw.githubusercontent.com/mahmoudkhairyy-cell/track-your-sales/local-version/src/data/sr.json";
+    const response = await fetch(source, { signal: AbortSignal.timeout(3500) });
+    if (!response.ok) throw new Error(`SR knowledge source returned ${response.status}`);
+    const data = (await response.json()) as unknown;
+    if (!Array.isArray(data)) throw new Error("SR knowledge source format is invalid");
+    const records = data.filter((item): item is SRRecord => Boolean(item && typeof item === "object" && "id" in item));
+    srKnowledgeCache = { records, expiresAt: Date.now() + 10 * 60 * 1000 };
+    return records;
+  })().finally(() => {
+    srKnowledgeRequest = null;
+  });
+
+  return srKnowledgeRequest;
+}
+
+function findSRKnowledge(records: SRRecord[], query: string): SRRecord[] {
+  const normalized = query.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
+  const terms = normalized.split(/\s+/).filter((term) => term.length >= 2);
+  const codeMatches = query.match(/\b\d{3,6}\b/g) ?? [];
+
+  return records
+    .map((record) => {
+      const searchable = [record.id, record.title, record.titleAr, record.description, record.category, record.steps]
+        .filter(Boolean).join(" ").toLowerCase();
+      let score = codeMatches.some((code) => record.id === code) ? 100 : 0;
+      for (const term of terms) if (searchable.includes(term)) score += term.length >= 5 ? 3 : 1;
+      return { record, score };
+    })
+    .filter((item) => item.score > 0)
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 7)
+    .map((item) => item.record);
+}
+
+async function buildKnowledgeContext(query: string): Promise<string> {
+  try {
+    const records = await loadSRKnowledge();
+    const matches = findSRKnowledge(records, query);
+    if (!matches.length) return "";
+    return [
+      "مقتطفات مسترجعة من موسوعة SR المرفقة بالتطبيق. استخدمها كمصدر factual فقط، ولا تستنتج إجراءات غير مكتوبة:",
+      ...matches.map((item) => [
+        `SR: ${item.id ?? "غير محدد"}`,
+        item.titleAr ? `الاسم العربي: ${item.titleAr}` : "",
+        item.title ? `العنوان: ${item.title}` : "",
+        item.category ? `التصنيف: ${item.category}` : "",
+        item.description ? `الوصف: ${item.description}` : "",
+        item.steps ? `التفاصيل: ${item.steps}` : "",
+      ].filter(Boolean).join("\n")),
+      "إذا كانت المقتطفات لا تجيب عن السؤال بالكامل، وضّح حدود المعلومة ولا تخترع خطوات أو سياسات.",
+    ].join("\n\n").slice(0, 9000);
+  } catch (error) {
+    console.error("SR knowledge retrieval failed", {
+      errorName: error instanceof Error ? error.name : "UnknownError",
+    });
+    return "";
+  }
+}
+
 function send(res: ResponseLike, status: number, body: unknown) {
   res.status(status).json(body);
 }
@@ -103,7 +179,7 @@ export default async function handler(req: RequestLike, res: ResponseLike) {
         "x-goog-api-key": apiKey,
       },
       body: JSON.stringify({
-        systemInstruction: { parts: [{ text: SYSTEM_INSTRUCTION }] },
+        systemInstruction: { parts: [{ text: [SYSTEM_INSTRUCTION, await buildKnowledgeContext(message)].filter(Boolean).join("\n\n") }] },
         contents: history,
         generationConfig: { temperature: 0.65, maxOutputTokens: 700 },
       }),
