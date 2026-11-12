@@ -37,7 +37,7 @@ const SYSTEM_INSTRUCTION = `
 - مدرب المعرفة: أنشئ اختبارات قصيرة مع الإجابة والتفسير، وميّز بوضوح بين المعلومة المؤكدة والافتراض.
 
 قواعد الدقة:
-- لا تخترع أكواد SR أو أسماء باقات أو أسعارًا أو شروطًا أو سياسات تشغيلية.
+- لا تخترع أكواد SR أو أسماء باقات أو أسعارًا أو شروطًا أو سياسات تشغيلية. عند سؤال المستخدم عن التحويل من Postpaid إلى Prepaid أو Control، لا تعرض SR 10707 ككود لهذا التحويل؛ عنوانه From Call And Control To ووصفه متعارض. SR 10704 عنوانه مبتور ولا يثبت اتجاه التحويل. اذكر أن خطوات التحويل وشروطه ورسومه غير متاحة في قاعدة المعرفة.
 - عند غياب مصدر موثوق، قل بوضوح إن المعلومة غير متاحة لديك واطلب مرجعًا؛ لا تملأ الفراغ بالتخمين.
 - افصل دائمًا بين المعلومة المؤكدة والاقتراح أو المثال التدريبي.
 - عند تحليل التارجت، استخدم فقط الأرقام والأوزان والقواعد التي يرسلها المستخدم أو التي يوفرها التطبيق صراحةً في السياق. لا تعِد تعريف قواعد الحساب ولا تستبدلها بتقديراتك.
@@ -148,7 +148,7 @@ function flattenKnowledge(value: unknown, source: string, path = ""): KnowledgeR
   const own = Object.entries(obj)
     .filter(([, item]) => typeof item === "string" || typeof item === "number" || typeof item === "boolean")
     .map(([key, item]) => `${key}: ${String(item)}`);
-  const current = [...(path ? [path] : []), ...own].join(" | ");
+  const arrayText = Object.entries(obj).filter(([, item]) => Array.isArray(item)).map(([key, item]) => `${key}: ${(item as unknown[]).filter((entry): entry is string => typeof entry === "string").join(" ")}`);\n  const current = [...(path ? [path] : []), ...own, ...arrayText].join(" | ");
   const nested = Object.entries(obj)
     .filter(([, item]) => item && typeof item === "object")
     .flatMap(([key, item]) => flattenKnowledge(item, source, key));
@@ -159,7 +159,7 @@ async function loadBusinessKnowledge(): Promise<KnowledgeRecord[]> {
   if (businessKnowledgeCache && businessKnowledgeCache.expiresAt > Date.now()) return businessKnowledgeCache.records;
   if (businessKnowledgeRequest) return businessKnowledgeRequest;
   businessKnowledgeRequest = (async () => {
-    const files = ["plans.json", "freemax.json", "dsl.json", "docs.json"];
+    const files = ["plans.json", "freemax.json", "dsl.json", "docs.json", "knowledge-base.json"];
     const results = await Promise.all(files.map(async (file) => {
       const url = `https://raw.githubusercontent.com/mahmoudkhairyy-cell/track-your-sales/local-version/src/data/${file}`;
       const response = await fetch(url, { signal: AbortSignal.timeout(3500) });
@@ -177,7 +177,7 @@ function findBusinessKnowledge(records: KnowledgeRecord[], query: string): Knowl
   const normalized = query.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
   const terms = normalized.split(/\s+/).filter((term) => term.length >= 2);
   const aliases: Record<string, string[]> = {
-    "باقة": ["plan", "package"], "باقات": ["plans", "packages"], "فريماكس": ["freemax", "free max"],
+    "باقة": ["plan", "package"], "باقات": ["plans", "packages"], "فريماكس": ["freemax", "free max"],\n    "فاتورة": ["postpaid", "invoice", "bill"], "الفاتورة": ["postpaid", "invoice", "bill"], "كنترول": ["control", "call and control"], "كارت": ["prepaid"], "كارت": ["prepaid"], "تحويل": ["migration", "migrate", "transfer"], "ترحيل": ["migration", "migrate"], "الغاء": ["cancel", "cancellation"], "إيقاف": ["suspension", "suspend"], "استئناف": ["resume"],
     "فري": ["free"], "ماكس": ["max"], "أرضي": ["dsl", "landline"], "ارضي": ["dsl", "landline"],
     "انترنت": ["internet", "data"], "إنترنت": ["internet", "data"], "سرعة": ["speed"],
     "ميجا": ["mbps", "mb"], "راوتر": ["router"], "إضافية": ["addon", "extra"],
