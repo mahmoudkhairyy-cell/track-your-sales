@@ -14,7 +14,7 @@ type ResponseLike = {
 type ChatMessage = { role: "user" | "model"; parts: Array<{ text: string }> };
 
 const ALLOWED_ORIGIN = "https://mahmoudkhairyy-cell.github.io";
-const MODEL = "gemini-3.8-flash";
+const MODEL = "gemini-3.5-flash-lite";
 const MAX_MESSAGE_CHARS = 4000;
 const MAX_HISTORY_MESSAGES = 10;
 
