@@ -102,7 +102,7 @@ function isPostpaidToControlQuery(query: string): boolean {
 function findSRKnowledge(records: SRRecord[], query: string): SRRecord[] {
   if (isPostpaidToControlQuery(query)) {
     const normalized = query.toLowerCase();
-    const selectedIds = new Set(["1104"]);
+    const selectedIds = new Set(["1104", "10159"]);
     if (normalized.includes("force") || normalized.includes("فورس")) selectedIds.add("1109");
     if (normalized.includes("hold") || normalized.includes("هولد")) selectedIds.add("1110");
     return records.filter((record) => selectedIds.has(record.id ?? ""));
@@ -305,7 +305,9 @@ export default async function handler(req: RequestLike, res: ResponseLike) {
       answer: [
         "راجعت المراجع المتاحة، وخلّي بالك إن تحويل فاتورة (Postpaid) إلى كنترول (Control) مختلف عن التحويل إلى كارت (Prepaid).",
         "الموجود حاليًا في المعرفة:",
+        "• SR 10159: أقرب سجل مطابق؛ عنوانه Payment Agreement To Migrate، ووصفه يذكر التحويل من Star إلى Star Control من خلال CC cases فقط. لكنه لا يشرح الخطوات، ولا يثبت أن الإجراء متاح من الفرع.",
         "• SR 1104: استعلام عن إجراءات التحويل ورسومه وقنواته، لكنه لا يحتوي خطوات التنفيذ نفسها.",
+        "• جهة الدعم المدرجة باسم Star Control Assist: cs110starcontrolsupport-eg@orange.com. استخدمها فقط عبر قنوات العمل المعتمدة للاستفسار عن شروط ومسار الإجراء.",
         "• SR 10707: خاص بإعادة تفعيل خط مستخدم بواسطة Shop and franchise، وليس تحويل فاتورة إلى كنترول.",
         "• SR 10704: خاص بالتحويل من Prepaid، ووجهته غير مكتملة؛ لا ينطبق على طلبك.",
         "• Postpaid Calculator: موصوف للتحويل من فاتورة إلى كارت (Prepaid)، وليس إلى كنترول.",
