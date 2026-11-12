@@ -174,8 +174,8 @@ async function loadBusinessKnowledge(): Promise<KnowledgeRecord[]> {
 }
 
 function findBusinessKnowledge(records: KnowledgeRecord[], query: string): KnowledgeRecord[] {
-  const normalized = query.toLowerCase().replace(/[^\\p{L}\\p{N}]+/gu, " ").trim();
-  const terms = normalized.split(/\\s+/).filter((term) => term.length >= 2);
+  const normalized = query.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
+  const terms = normalized.split(/\s+/).filter((term) => term.length >= 2);
   const aliases: Record<string, string[]> = {
     "باقة": ["plan", "package"], "باقات": ["plans", "packages"], "فريماكس": ["freemax", "free max"],
     "فري": ["free"], "ماكس": ["max"], "أرضي": ["dsl", "landline"], "ارضي": ["dsl", "landline"],
@@ -203,9 +203,9 @@ async function buildBusinessKnowledgeContext(query: string): Promise<string> {
     if (!matches.length) return "";
     return [
       "بيانات مرجعية مسترجعة من ملفات التطبيق (الباقات، FreeMax، DSL، والمستندات). هذه بيانات التطبيق وليست ضمانًا بأنها أحدث سياسة تشغيلية:",
-      ...matches.map((item) => `المصدر: ${item.source}\\n${item.text}`),
+      ...matches.map((item) => `المصدر: ${item.source}\n${item.text}`),
       "اعرض الأرقام كما وردت دون تعديل، واذكر أن الأسعار والعروض قد تحتاج تأكيدًا من أحدث مصدر داخلي قبل التنفيذ.",
-    ].join("\\n\\n").slice(0, 10000);
+    ].join("\n\n").slice(0, 10000);
   } catch (error) {
     console.error("Business knowledge retrieval failed", {
       errorName: error instanceof Error ? error.name : "UnknownError",
