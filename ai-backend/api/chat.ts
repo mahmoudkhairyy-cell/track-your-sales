@@ -204,7 +204,7 @@ async function buildBusinessKnowledgeContext(query: string): Promise<string> {
     const matches = findBusinessKnowledge(records, query);
     if (!matches.length) return "";
     return [
-      "بيانات مرجعية مسترجعة من ملفات التطبيق (الباقات، FreeMax، DSL، والمستندات). هذه بيانات التطبيق وليست ضمانًا بأنها أحدث سياسة تشغيلية:",
+      "بيانات مرجعية مسترجعة من ملفات التطبيق وقاعدة المعرفة التشغيلية (الباقات، FreeMax، DSL، وإجراءات خدمة العملاء). التزم بحالة كل موضوع: مؤكد أو جزئي أو غير متاح، ولا تحوّل المعلومة الناقصة إلى إجراء مؤكد:",
       ...matches.map((item) => `المصدر: ${item.source}\n${item.text}`),
       "اعرض الأرقام كما وردت دون تعديل، واذكر أن الأسعار والعروض قد تحتاج تأكيدًا من أحدث مصدر داخلي قبل التنفيذ.",
     ].join("\n\n").slice(0, 10000);
