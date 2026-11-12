@@ -8,7 +8,7 @@ import { pushReport } from "@/lib/sync";
 import { api } from "@/lib/client";
 import { APP_DISCLAIMER, APP_NAME, AREA_MANAGERS, BRAND_BY, BRANCHES, OUTSIDE_BRANCHES } from "@/lib/constants";
 import { cairoYearMonth, isValidYearMonth, monthLabelAr, shiftYearMonth } from "@/lib/dates";
-import { BookIcon, ChevronIcon, HomeIcon, MoreIcon, PlusIcon, TargetIcon } from "@/components/icons";
+import { BookIcon, ChevronIcon, HomeIcon, MoreIcon, PlusIcon, StarIcon, TargetIcon } from "@/components/icons";
 import { ToastProvider, useToast } from "@/components/ui";
 
 const MonthContext = createContext(cairoYearMonth());
@@ -32,6 +32,7 @@ const NAV = [
   { href: "/target", label: "التارجت", icon: TargetIcon },
   { href: "/log", label: "تسجيل", icon: PlusIcon, emphasize: true },
   { href: "/wiki", label: "المرجع", icon: BookIcon },
+  { href: "/assistant", label: "المساعد", icon: StarIcon },
   { href: "/more", label: "المزيد", icon: MoreIcon },
 ];
 
@@ -502,7 +503,7 @@ function AppFrame({ children, blocked, month }: { children: ReactNode; blocked: 
           </div>
 
           <nav className="tys-mobile-nav fixed inset-x-0 bottom-0 z-40 border-t border-[#f2e4d8] bg-white/95 pb-[env(safe-area-inset-bottom)] shadow-[0_-8px_28px_rgba(115,58,20,0.07)] backdrop-blur-2xl lg:hidden" aria-label="التنقل الرئيسي">
-            <div className="grid grid-cols-5">
+            <div className="grid grid-cols-6">
               {NAV.map((item) => {
                 const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
                 const Icon = item.icon;
