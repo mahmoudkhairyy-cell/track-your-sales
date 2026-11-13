@@ -99,24 +99,31 @@ test("English Postpaid cancellation routes to the migration topic", () => {
 });
 
 
-test("general Postpaid migration answers suppress unverified calculator notes", () => {
-  const answer = [
-    "الخطوات الفعلية غير متاحة.",
-    "2. التنبيهات والمراجعة قبل التنفيذ:",
-    "   - مراجعة Tariff Lock على Siebel.",
-    "   - تسوية الأقساط على Wincash.",
-    "   - استرداد نقاط الولاء (Loyalty Points).",
-    "خطوات Siebel التفصيلية غير متاحة.",
-  ].join("\n");
-  const sanitized = sanitizePostpaidMigrationAnswer(answer, "عاوز أغير من فاتورة لكارت، أعملها إزاي؟");
-  assert.match(sanitized, /الخطوات الفعلية غير متاحة/);
-  assert.match(sanitized, /خطوات Siebel التفصيلية غير متاحة/);
-  assert.doesNotMatch(sanitized, /Tariff Lock|Wincash|Loyalty Points|نقاط الولاء|تنبيهات والمراجعة/);
+test("generic Arabic Postpaid-to-card questions get a deterministic grounded answer", () => {
+  for (const query of [
+    "عاوز أغير من فاتورة لكارت، أعملها إزاي؟",
+    "إلغاء الفاتورة",
+    "عايز احول خط بوستبيد لكارت",
+    "How do I change my postpaid bill to prepaid?",
+  ]) {
+    const answer = sanitizePostpaidMigrationAnswer(
+      "راجع Tariff Lock على Siebel ثم سوّي الأقساط على Wincash واسترد نقاط الولاء.",
+      query,
+    );
+    assert.match(answer, /خطوات التنفيذ داخل Siebel.*غير موثقة/);
+    assert.match(answer, /Postpaid Calculator/);
+    assert.doesNotMatch(answer, /Tariff Lock|Wincash|Loyalty Points|نقاط الولاء/);
+  }
 });
 
-test("explicit questions about calculator notes retain the source information for qualification", () => {
+test("explicit questions about calculator notes retain the model answer for qualification", () => {
   const answer = "الملف يذكر Tariff Lock وWincash وLoyalty Points كملاحظات.";
   assert.equal(sanitizePostpaidMigrationAnswer(answer, "هل Tariff Lock وWincash مطلوبين؟"), answer);
+});
+
+test("financial calculation requests are not replaced by the generic migration answer", () => {
+  const answer = "من فضلك ابعت قيم الحاسبة الخمسة.";
+  assert.equal(sanitizePostpaidMigrationAnswer(answer, "احسب مستحقات تحويل فاتورة لكارت"), answer);
 });
 
 test("answers without a calculator marker remain unchanged", () => {
