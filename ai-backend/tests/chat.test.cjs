@@ -118,7 +118,8 @@ test("explicit questions about calculator notes retain the source information fo
   const answer = "الملف يذكر Tariff Lock وWincash وLoyalty Points كملاحظات.";
   assert.equal(sanitizePostpaidMigrationAnswer(answer, "هل Tariff Lock وWincash مطلوبين؟"), answer);
 });
-\ntest("answers without a calculator marker remain unchanged", () => {
+
+test("answers without a calculator marker remain unchanged", () => {
   const answer = "الخطوات التفصيلية غير متاحة في المرجع الحالي.";
   assert.equal(applyCalcMarker(answer), answer);
 });
