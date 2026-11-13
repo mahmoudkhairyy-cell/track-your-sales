@@ -113,6 +113,11 @@ export default async function handler(req: any, res: any) {
       if (SUGGESTION_PREFIX.test(text)) {
         const body = text.replace(SUGGESTION_PREFIX, "").trim();
         const saved = body ? await saveSuggestion(to, body).catch(() => false) : false;
+        if (saved) {
+          // Forward to the manager. Outside the 24h window this needs an approved template instead.
+          const manager = process.env.WHATSAPP_MANAGER_PHONE;
+          if (manager) await sendText(manager, `اقتراح جديد من الموظفين:\n${body}`).catch(() => undefined);
+        }
         await sendText(to, saved ? "تم تسجيل اقتراحك، شكراً ليك." : "معلش، ما قدرتش أسجل الاقتراح دلوقتي. جرّب تاني بعد شوية.");
         continue;
       }
