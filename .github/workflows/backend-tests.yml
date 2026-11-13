@@ -24,6 +24,7 @@ jobs:
           node-version: 22
       - run: npm install
       - run: npm test
+      # Verify the deployed endpoint with the approved GitHub Pages origin.
       - name: Live assistant API smoke test
         working-directory: .
         run: |
