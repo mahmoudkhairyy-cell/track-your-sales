@@ -294,18 +294,18 @@ function formatEGP(value: number) {
 }
 
 export function sanitizePostpaidMigrationAnswer(answer: string, query: string): string {
-  const normalizedQuery = query.toLowerCase().normalize("NFKC").replace(/[\\u064B-\\u065F\\u0670]/g, "");
+  const normalizedQuery = query.toLowerCase().normalize("NFKC").replace(/[\u064B-\u065F\u0670]/g, "");
   const asksPostpaidMigration = /(?:postpaid|بوست|فاتور|فاتوره|invoice|bill)/i.test(normalizedQuery)
     && /(?:prepaid|كارت|تحويل|الغاء|الغى|الغي|انهاء|change|migration|migrate|cancel)/i.test(normalizedQuery);
-  const asksAboutCalculatorNotes = /(?:tariff\\s*lock|wincash|loyalty\\s*points|نقاط\\s*الولاء|الاقساط|الأقساط)/i.test(normalizedQuery);
+  const asksAboutCalculatorNotes = /(?:tariff\s*lock|wincash|loyalty\s*points|نقاط\s*الولاء|الاقساط|الأقساط)/i.test(normalizedQuery);
   if (!asksPostpaidMigration || asksAboutCalculatorNotes) return answer;
 
-  const unsupportedNote = /(?:tariff\\s*lock|wincash|loyalty\\s*points|نقاط\\s*الولاء|تسوية\\s*الأقساط|استرداد\\s*نقاط\\s*الولاء)/i;
-  const lines = answer.split(/\\r?\\n/).filter((line) => !unsupportedNote.test(line));
+  const unsupportedNote = /(?:tariff\s*lock|wincash|loyalty\s*points|نقاط\s*الولاء|تسوية\s*الأقساط|استرداد\s*نقاط\s*الولاء)/i;
+  const lines = answer.split(/\r?\n/).filter((line) => !unsupportedNote.test(line));
   return lines
-    .filter((line) => !/^\\s*(?:#{1,6}\\s*)?(?:\\*\\*)?تنبيهات.*(?:المراجعة|قبل التنفيذ).*(?:\\*\\*)?\\s*$/i.test(line))
-    .join("\\n")
-    .replace(/\\n{3,}/g, "\\n\\n")
+    .filter((line) => !/^\s*(?:#{1,6}\s*)?(?:\*\*)?تنبيهات.*(?:المراجعة|قبل التنفيذ).*(?:\*\*)?\s*$/i.test(line))
+    .join("\n")
+    .replace(/\n{3,}/g, "\n\n")
     .trim();
 }
 
