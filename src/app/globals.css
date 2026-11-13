@@ -4044,3 +4044,19 @@ html.dark .tys-page :is(th,td) {
 html.dark .tys-page :is(.skeleton-bone) {
   background: linear-gradient(90deg,#292522 0%,#37302b 50%,#292522 100%);
 }
+
+/* Neutral shell surfaces follow the theme; brand-colored panels are intentionally untouched. */
+html.dark .tys-sidebar [class*="bg-white"],
+html.dark .tys-sidebar [class*="bg-[#fff"],
+html.dark .tys-app-main > div[class*="bg-[#fffaf5"] {
+  background-color: #1b1b1b !important;
+  border-color: #39332f !important;
+}
+html.dark .tys-sidebar [class*="text-[#2d"],
+html.dark .tys-sidebar [class*="text-[#241"],
+html.dark .tys-sidebar [class*="text-[#887"],
+html.dark .tys-sidebar [class*="text-[#9a"],
+html.dark .tys-sidebar [class*="text-[#a1"],
+html.dark .tys-sidebar [class*="text-[#ad"] {
+  color: #c9bdb4 !important;
+}
