@@ -303,7 +303,7 @@ export function sanitizePostpaidMigrationAnswer(answer: string, query: string): 
   const unsupportedNote = /(?:tariff\s*lock|wincash|loyalty\s*points|نقاط\s*الولاء|تسوية\s*الأقساط|استرداد\s*نقاط\s*الولاء)/i;
   const lines = answer.split(/\r?\n/).filter((line) => !unsupportedNote.test(line));
   return lines
-    .filter((line) => !/^\s*(?:#{1,6}\s*)?(?:\*\*)?تنبيهات.*(?:المراجعة|قبل التنفيذ).*(?:\*\*)?\s*$/i.test(line))
+    .filter((line) => !/تنبيهات.*(?:المراجعة|قبل التنفيذ)/i.test(line))
     .join("\n")
     .replace(/\n{3,}/g, "\n\n")
     .trim();
