@@ -3901,3 +3901,22 @@ body {
   .tx-manager .tx-hero-card { border-radius: 22px !important; }
   .tx-manager .tx-overview { gap: 16px; }
 }
+
+/* الوضع الداكن: خلفية الصفحة والهيدر وشريط التنقل فقط. الكروت والألوان البرتقالية لم تتغير. */
+html.dark body {
+  background-color: #1a1410;
+}
+html.dark .tys-app-header {
+  background-color: rgba(26, 20, 16, 0.92);
+  border-color: #3a2c22;
+}
+html.dark .tys-app-header .text-\[\#2d2119\] {
+  color: #f5ebe2;
+}
+html.dark .tys-app-header .text-\[\#a17d65\] {
+  color: #c9ad98;
+}
+html.dark .tys-mobile-nav {
+  background-color: #201913 !important;
+  border-color: #3a2c22 !important;
+}
