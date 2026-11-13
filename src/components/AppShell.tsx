@@ -503,7 +503,7 @@ function AppFrame({ children, blocked, month }: { children: ReactNode; blocked: 
           </div>
 
           <nav className="tys-mobile-nav fixed inset-x-0 bottom-0 z-40 border-t border-[#f2e4d8] bg-white/95 pb-[env(safe-area-inset-bottom)] shadow-[0_-8px_28px_rgba(115,58,20,0.07)] backdrop-blur-2xl lg:hidden" aria-label="التنقل الرئيسي">
-            <div className="grid grid-cols-6">
+            <div className="grid" style={{ gridTemplateColumns: `repeat(${NAV.length}, minmax(0, 1fr))` }}>
               {NAV.map((item) => {
                 const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
                 const Icon = item.icon;
