@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { createContext, useContext, useEffect, useState, type FormEvent, type ReactNode } from "react";
-import { ThemeToggle } from "@/components/ThemeToggle";
 import { readProfile } from "@/lib/local-api";
 import { pushReport } from "@/lib/sync";
 import { api } from "@/lib/client";
@@ -493,7 +492,6 @@ function AppFrame({ children, blocked, month }: { children: ReactNode; blocked: 
                     <p className="text-sm font-black text-[#2d2119]">{pathname === "/home" ? "لوحة الأداء" : NAV.find((item) => pathname.startsWith(item.href))?.label || "مساحة العمل"}</p>
                     <p className="mt-1 text-[11px] text-[#a17d65]">تابع إنجازك وخطتك الشهرية من مكان واحد</p>
                   </div>
-                  <ThemeToggle />
                   {pathname === "/wiki" || pathname.startsWith("/wiki/") ? null : <MonthSwitcher />}
                 </div>
               </header>
