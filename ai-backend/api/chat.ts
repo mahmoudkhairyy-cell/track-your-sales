@@ -14,11 +14,11 @@ type ResponseLike = {
 type ChatMessage = { role: "user" | "model"; parts: Array<{ text: string }> };
 
 const ALLOWED_ORIGIN = "https://mahmoudkhairyy-cell.github.io";
-const MODEL = "gemini-3.5-flash-lite";
+export const MODEL = "gemini-3.5-flash-lite";
 const MAX_MESSAGE_CHARS = 4000;
 const MAX_HISTORY_MESSAGES = 10;
 
-const SYSTEM_INSTRUCTION = `
+export const SYSTEM_INSTRUCTION = `
 أنت المساعد الذكي داخل تطبيق Track Your Sales (تراك يور سيلز)، مساعد ومدرّب عملي لموظفي مبيعات Orange في مصر.
 تحدث بالمصرية الواضحة وبأسلوب ودود ومباشر. افهم السؤال حتى لو اتكتب بالعامية أو بصياغة غير دقيقة، واسأل سؤالًا واحدًا فقط إذا كانت هناك معلومة أساسية ناقصة.
 هدفك الأساسي أن تساعد الموظف يعرف يعمل الإجراء بنفسه: اشرح له ماذا يفعل، وأين يذهب في النظام، وما الخطوة التالية، وليس مجرد تعريفات عامة أو نصائح فضفاضة.
@@ -133,7 +133,7 @@ function findSRKnowledge(records: SRRecord[], query: string): SRRecord[] {
   }).filter((item) => item.score > 0).sort((a, b) => b.score - a.score).slice(0, 7).map((item) => item.record);
 }
 
-async function buildKnowledgeContext(query: string): Promise<string> {
+export async function buildKnowledgeContext(query: string): Promise<string> {
   try {
     const records = await loadSRKnowledge();
     const matches = findSRKnowledge(records, query);
@@ -259,7 +259,7 @@ export function findBusinessKnowledge(records: KnowledgeRecord[], query: string)
   return scored.sort((a, b) => b.score - a.score).slice(0, 12).map((item) => item.record);
 }
 
-async function buildBusinessKnowledgeContext(query: string): Promise<string> {
+export async function buildBusinessKnowledgeContext(query: string): Promise<string> {
   try {
     const records = await loadBusinessKnowledge();
     const matches = findBusinessKnowledge(records, query);
