@@ -60,6 +60,7 @@ test("missing, null, boolean, negative and invalid day values are rejected", () 
 test("non-finite calculation results are rejected", () => {
   const answer = applyCalcMarker(marker({
     ...validInput,
+    billed: Number.MAX_VALUE,
     monthly: Number.MAX_VALUE,
     daysPassed: 31,
   }));
