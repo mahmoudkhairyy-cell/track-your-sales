@@ -107,7 +107,7 @@ test("general Postpaid migration answers suppress unverified calculator notes", 
     "   - تسوية الأقساط على Wincash.",
     "   - استرداد نقاط الولاء (Loyalty Points).",
     "خطوات Siebel التفصيلية غير متاحة.",
-  ].join("\\n");
+  ].join("\n");
   const sanitized = sanitizePostpaidMigrationAnswer(answer, "عاوز أغير من فاتورة لكارت، أعملها إزاي؟");
   assert.match(sanitized, /الخطوات الفعلية غير متاحة/);
   assert.match(sanitized, /خطوات Siebel التفصيلية غير متاحة/);
