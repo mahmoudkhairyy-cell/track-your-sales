@@ -32,7 +32,7 @@ const NAV = [
   { href: "/target", label: "التارجت", icon: TargetIcon },
   { href: "/log", label: "تسجيل", icon: PlusIcon, emphasize: true },
   { href: "/wiki", label: "المرجع", icon: BookIcon },
-  { href: "/assistant", label: "المساعد", icon: StarIcon },
+  // المساعد مخفي مؤقتاً لحد ما يتظبط (ارجع السطر ده لما يكون جاهز)
   { href: "/more", label: "المزيد", icon: MoreIcon },
 ];
 
