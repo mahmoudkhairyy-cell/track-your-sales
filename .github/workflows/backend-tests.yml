@@ -82,7 +82,7 @@ jobs:
             console.error("Postpaid-to-prepaid migration test failed:", migrationResponse.status, migrationData);
             process.exit(1);
           }
-          const forbidden = ["10758", "10707", "10704", "live capture", "control", "tariff lock", "wincash", "loyalty points"];
+          const forbidden = ["10758", "10707", "10704", "live capture", "control", "tariff lock", "wincash", "loyalty points", "نقاط الولاء", "تسوية الأقساط", "استرداد نقاط الولاء"];
           const leaked = forbidden.filter(term => migrationData.answer.toLowerCase().includes(term));
           if (leaked.length) {
             console.error("Migration answer contains unsupported procedure references:", leaked, migrationData.answer);
