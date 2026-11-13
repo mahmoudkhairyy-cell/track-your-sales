@@ -47,4 +47,22 @@ jobs:
             process.exit(1);
           }
           console.log("Live assistant API smoke test passed; answer length:", data.answer.length);
+          const knowledgeResponse = await fetch("https://track-your-sales-ai-service.vercel.app/api/chat", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Origin": "https://mahmoudkhairyy-cell.github.io"
+            },
+            body: JSON.stringify({
+              message: "ما وظيفة SR 1104؟ وهل يحتوي على خطوات تنفيذ التحويل؟",
+              history: []
+            }),
+            signal: AbortSignal.timeout(45000)
+          });
+          const knowledgeData = await knowledgeResponse.json();
+          if (!knowledgeResponse.ok || knowledgeData.ok !== true || typeof knowledgeData.answer !== "string" || !knowledgeData.answer.trim()) {
+            console.error("Knowledge-grounding smoke test failed:", knowledgeResponse.status, knowledgeData);
+            process.exit(1);
+          }
+          console.log("Knowledge-grounding answer:", knowledgeData.answer);
           NODE
