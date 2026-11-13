@@ -1,10 +1,12 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
+const chatModule = require("../.test-build/chat.js");
 const {
   findBusinessKnowledge,
   computePostpaidTermination,
   applyCalcMarker,
-} = require("../.test-build/chat.js");
+} = chatModule;
+const handler = chatModule.default;
 
 const validInput = {
   phone: "غير مطلوب",
@@ -98,4 +100,63 @@ test("English Postpaid cancellation routes to the migration topic", () => {
 test("answers without a calculator marker remain unchanged", () => {
   const answer = "الخطوات التفصيلية غير متاحة في المرجع الحالي.";
   assert.equal(applyCalcMarker(answer), answer);
+});
+
+
+function makeResponse() {
+  return {
+    statusCode: 200,
+    headers: {},
+    body: undefined,
+    ended: false,
+    status(code) { this.statusCode = code; return this; },
+    setHeader(name, value) { this.headers[name] = value; },
+    json(value) { this.body = value; },
+    end() { this.ended = true; },
+  };
+}
+
+test("HTTP handler blocks requests from unapproved origins", async () => {
+  const res = makeResponse();
+  await handler({ method: "POST", headers: { origin: "https://example.com" }, body: { message: "hello" } }, res);
+  assert.equal(res.statusCode, 403);
+  assert.equal(res.body.ok, false);
+  assert.match(res.body.error, /المصدر غير مسموح/);
+});
+
+test("HTTP handler answers CORS preflight for the approved app origin", async () => {
+  const res = makeResponse();
+  await handler({ method: "OPTIONS", headers: { origin: "https://mahmoudkhairyy-cell.github.io" } }, res);
+  assert.equal(res.statusCode, 204);
+  assert.equal(res.ended, true);
+  assert.equal(res.headers["Access-Control-Allow-Origin"], "https://mahmoudkhairyy-cell.github.io");
+});
+
+test("HTTP handler rejects unsupported methods", async () => {
+  const previousKey = process.env.GEMINI_API_KEY;
+  delete process.env.GEMINI_API_KEY;
+  try {
+    const res = makeResponse();
+    await handler({ method: "GET", headers: { origin: "https://mahmoudkhairyy-cell.github.io" } }, res);
+    assert.equal(res.statusCode, 405);
+    assert.equal(res.body.ok, false);
+  } finally {
+    if (previousKey === undefined) delete process.env.GEMINI_API_KEY;
+    else process.env.GEMINI_API_KEY = previousKey;
+  }
+});
+
+test("HTTP handler reports missing Gemini configuration without exposing secrets", async () => {
+  const previousKey = process.env.GEMINI_API_KEY;
+  delete process.env.GEMINI_API_KEY;
+  try {
+    const res = makeResponse();
+    await handler({ method: "POST", headers: { origin: "https://mahmoudkhairyy-cell.github.io" }, body: { message: "اختبار" } }, res);
+    assert.equal(res.statusCode, 503);
+    assert.equal(res.body.ok, false);
+    assert.match(res.body.error, /مفتاح Gemini/);
+  } finally {
+    if (previousKey === undefined) delete process.env.GEMINI_API_KEY;
+    else process.env.GEMINI_API_KEY = previousKey;
+  }
 });
