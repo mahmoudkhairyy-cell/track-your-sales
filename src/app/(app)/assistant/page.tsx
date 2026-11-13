@@ -1,5 +1,5 @@
-import { notFound } from "next/navigation";
 "use client";
+import { notFound } from "next/navigation";
 
 import { FormEvent, useState } from "react";
 
@@ -7,9 +7,7 @@ type Message = { role: "user" | "model"; text: string };
 
 const API_URL = "https://track-your-sales-ai-service.vercel.app/api/chat";
 
-export default function AssistantPage() {
-  // مخفي مؤقتاً: المسار بيرجع 404 لحد ما المساعد يتظبط.
-  notFound();
+function AssistantChat() {
 
   const [messages, setMessages] = useState<Message[]>([
     { role: "model", text: "أهلاً بيك 👋 أنا مساعدك الذكي في Track Your Sales. اسألني عن تنظيم المبيعات أو التخطيط للتارجت أو استخدام التطبيق." },
@@ -91,4 +89,9 @@ export default function AssistantPage() {
       </section>
     </div>
   );
+}
+
+// مخفي مؤقتاً: المسار بيرجع 404 لحد ما المساعد يتظبط.
+export default function AssistantPage() {
+  notFound();
 }
