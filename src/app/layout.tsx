@@ -28,6 +28,11 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <link rel="apple-touch-icon" href="/track-your-sales/app-icon-192.png" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-title" content="Track Sales" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: "try{if(localStorage.getItem('tys-theme')==='dark')document.documentElement.classList.add('dark')}catch(e){}",
+          }}
+        />
       </head>
       <body className="min-h-screen bg-[#fffaf5] antialiased">
         {children}
