@@ -5,6 +5,7 @@ const {
   findBusinessKnowledge,
   computePostpaidTermination,
   applyCalcMarker,
+  sanitizePostpaidMigrationAnswer,
 } = chatModule;
 const handler = chatModule.default;
 
@@ -97,7 +98,27 @@ test("English Postpaid cancellation routes to the migration topic", () => {
   assert.match(matches[0].text, /postpaid-migration/);
 });
 
-test("answers without a calculator marker remain unchanged", () => {
+
+test("general Postpaid migration answers suppress unverified calculator notes", () => {
+  const answer = [
+    "الخطوات الفعلية غير متاحة.",
+    "2. التنبيهات والمراجعة قبل التنفيذ:",
+    "   - مراجعة Tariff Lock على Siebel.",
+    "   - تسوية الأقساط على Wincash.",
+    "   - استرداد نقاط الولاء (Loyalty Points).",
+    "خطوات Siebel التفصيلية غير متاحة.",
+  ].join("\\n");
+  const sanitized = sanitizePostpaidMigrationAnswer(answer, "عاوز أغير من فاتورة لكارت، أعملها إزاي؟");
+  assert.match(sanitized, /الخطوات الفعلية غير متاحة/);
+  assert.match(sanitized, /خطوات Siebel التفصيلية غير متاحة/);
+  assert.doesNotMatch(sanitized, /Tariff Lock|Wincash|Loyalty Points|نقاط الولاء|تنبيهات والمراجعة/);
+});
+
+test("explicit questions about calculator notes retain the source information for qualification", () => {
+  const answer = "الملف يذكر Tariff Lock وWincash وLoyalty Points كملاحظات.";
+  assert.equal(sanitizePostpaidMigrationAnswer(answer, "هل Tariff Lock وWincash مطلوبين؟"), answer);
+});
+\ntest("answers without a calculator marker remain unchanged", () => {
   const answer = "الخطوات التفصيلية غير متاحة في المرجع الحالي.";
   assert.equal(applyCalcMarker(answer), answer);
 });
