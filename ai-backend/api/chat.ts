@@ -301,11 +301,20 @@ function applyCalcMarker(answer: string): string {
     const keys = ["billed", "monthly", "daysPassed", "unbilledUsage", "unbilledOCC"] as const;
     const values: Record<string, number> = { tariffDays: 30, sdf: 10 };
     for (const key of keys) {
-      const num = Number(raw[key]);
-      if (!Number.isFinite(num) || num < 0) return cleaned;
+      const rawValue = raw[key];
+      if (rawValue === null || rawValue === undefined || rawValue === "" || typeof rawValue === "boolean") {
+        return [cleaned, "تعذر إجراء الحسبة لأن إحدى القيم المالية ناقصة أو غير صالحة. راجع القيم الخمسة المطلوبة وحاول تاني."].filter(Boolean).join("\n\n");
+      }
+      const num = Number(rawValue);
+      if (!Number.isFinite(num) || num < 0 || (key === "daysPassed" && (!Number.isInteger(num) || num > 31))) {
+        return [cleaned, "تعذر إجراء الحسبة لأن إحدى القيم خارج النطاق المقبول. عدد الأيام لازم يكون رقمًا صحيحًا من 0 إلى 31، وباقي القيم لا تكون سالبة."].filter(Boolean).join("\n\n");
+      }
       values[key] = num;
     }
     const r = computePostpaidTermination(values);
+    if (Object.values(r).some((value) => !Number.isFinite(value))) {
+      return [cleaned, "تعذر إجراء الحسبة بسبب تجاوز نطاق الأرقام المسموح."].filter(Boolean).join("\n\n");
+    }
 
     return [
       cleaned,
