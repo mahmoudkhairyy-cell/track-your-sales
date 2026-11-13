@@ -207,7 +207,7 @@ async function loadBusinessKnowledge(): Promise<KnowledgeRecord[]> {
   return businessKnowledgeRequest;
 }
 
-function findBusinessKnowledge(records: KnowledgeRecord[], query: string): KnowledgeRecord[] {
+export function findBusinessKnowledge(records: KnowledgeRecord[], query: string): KnowledgeRecord[] {
   const normalize = (value: string) => value.toLowerCase().normalize("NFKC")
     .replace(/[\u064B-\u065F\u0670]/g, "")
     .replace(/[أإآ]/g, "ا").replace(/ة/g, "ه").replace(/ى/g, "ي")
@@ -276,7 +276,7 @@ async function buildBusinessKnowledgeContext(query: string): Promise<string> {
   }
 }
 
-function computePostpaidTermination(v: Record<string, number>) {
+export function computePostpaidTermination(v: Record<string, number>) {
   const daily = v.monthly / v.tariffDays;
   const subscriptionTillDay = daily * v.daysPassed;
   const beforeTax = subscriptionTillDay + v.unbilledUsage + v.unbilledOCC + v.sdf;
@@ -292,7 +292,7 @@ function formatEGP(value: number) {
   return value.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
-function applyCalcMarker(answer: string): string {
+export function applyCalcMarker(answer: string): string {
   const match = answer.match(/<<CALC>>([\s\S]*?)<<END>>/);
   if (!match) return answer;
   const cleaned = answer.replace(match[0], "").trim();
