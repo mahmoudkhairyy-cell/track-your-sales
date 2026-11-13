@@ -232,7 +232,7 @@ function findBusinessKnowledge(records: KnowledgeRecord[], query: string): Knowl
     "مهاجره": ["migration"], "مايجريشن": ["migration"], "بوست": ["postpaid"],
   };
   const expanded = [...new Set([...terms, ...terms.flatMap((term) => (aliases[term] ?? []).flatMap(normalize))])];
-  const asksPostpaidCancellation = /(?:postpaid|بوست|فاتور|فاتوره)/i.test(normalized) && /(?:الغاء|الغى|الغي|انهاء|termination|cancel|cancellation)/i.test(normalized);
+  const asksPostpaidCancellation = /(?:postpaid|بوست|فاتور|فاتوره|invoice|bill)/i.test(normalized) && /(?:الغاء|الغى|الغي|انهاء|termination|cancel|cancellation)/i.test(normalized);
   const asksDsl = /(?:dsl|adsl|ارضي|ارضى)/i.test(normalized);
   const asksPrepaidMigration = /(?:prepaid|كارت)/i.test(normalized) && /(?:تحويل|migration|migrate|احول|انقل)/i.test(normalized);
   // In this Orange retail context, "cancel the bill/Postpaid line" means migrate
