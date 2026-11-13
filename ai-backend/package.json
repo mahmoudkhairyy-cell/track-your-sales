@@ -5,5 +5,9 @@
   "devDependencies": {
     "@types/node": "^24.0.0",
     "typescript": "^5.9.3"
+  },
+  "scripts": {
+    "test:compile": "tsc api/chat.ts --target ES2022 --module commonjs --moduleResolution node --esModuleInterop --skipLibCheck --types node --outDir .test-build",
+    "test": "npm run test:compile && node --test tests/*.test.cjs"
   }
 }
