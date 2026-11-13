@@ -3920,3 +3920,13 @@ html.dark .tys-mobile-nav {
   background-color: #201913 !important;
   border-color: #3a2c22 !important;
 }
+
+.tys-theme-icon-dark {
+  display: none;
+}
+html.dark .tys-theme-icon-dark {
+  display: inline;
+}
+html.dark .tys-theme-icon-light {
+  display: none;
+}
