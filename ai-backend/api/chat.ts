@@ -239,7 +239,6 @@ function findBusinessKnowledge(records: KnowledgeRecord[], query: string): Knowl
   // the line from Postpaid to Prepaid, not terminate the service.
   const asksPostpaidToPrepaid = asksPrepaidMigration || (asksPostpaidCancellation && !asksDsl);
 
-  const asksPrepaidMigration = /(?:prepaid|كارت)/i.test(normalized) && /(?:تحويل|migration|migrate|احول|انقل)/i.test(normalized);
   const scored = records.map((record) => {
     const haystack = normalize(record.text);
     const topicId = normalize(record.text.match(/id: ([^|]+)/)?.[1] ?? "");
@@ -307,11 +306,11 @@ function applyCalcMarker(answer: string): string {
       values[key] = num;
     }
     const r = computePostpaidTermination(values);
-    const phone = typeof raw.phone === "string" ? raw.phone : "غير مذكور";
+
     return [
       cleaned,
       "",
-      `**نتيجة حساب الخط ${phone}:**`,
+      "**نتيجة الحسبة التقديرية لإلغاء الفاتورة / التحويل إلى كارت:**",
       `- الاشتراك اليومي: ${formatEGP(r.daily)} ج.م`,
       `- الاشتراك حتى يوم الإلغاء/التحويل: ${formatEGP(r.subscriptionTillDay)} ج.م`,
       `- الإجمالي قبل الضريبة: ${formatEGP(r.beforeTax)} ج.م`,
@@ -320,7 +319,7 @@ function applyCalcMarker(answer: string): string {
       `- الاستخدام والـ OCC غير المفوتر بعد الضريبة: ${formatEGP(r.unbilledAfterTax)} ج.م`,
       `- **المبلغ المستحق (مع الفواتير الصادرة ${formatEGP(values.billed)} ج.م): ${formatEGP(r.total)} ج.م**`,
       "",
-      "الخطوة الجاية: بعد ما العميل يسدد المبلغ، افتح SR 10758 (إلغاء الفاتورة)، واملأ عقدًا فاضيًا ببيانات العميل واكتب نوع الـ Migration، وارفع البطاقة عن طريق Live Capture.",
+      "تنبيه: هذه حسبة مالية وفق ملف Postpaid Calculator وليست تأكيدًا للمبلغ النهائي أو خطوات تنفيذ Siebel. راجع أحدث إجراء داخلي قبل التنفيذ.",
     ].join("\n");
   } catch {
     return cleaned;
