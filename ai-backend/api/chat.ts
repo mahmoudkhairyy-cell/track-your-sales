@@ -293,6 +293,22 @@ function formatEGP(value: number) {
   return value.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
+export function sanitizePostpaidMigrationAnswer(answer: string, query: string): string {
+  const normalizedQuery = query.toLowerCase().normalize("NFKC").replace(/[\\u064B-\\u065F\\u0670]/g, "");
+  const asksPostpaidMigration = /(?:postpaid|بوست|فاتور|فاتوره|invoice|bill)/i.test(normalizedQuery)
+    && /(?:prepaid|كارت|تحويل|الغاء|الغى|الغي|انهاء|change|migration|migrate|cancel)/i.test(normalizedQuery);
+  const asksAboutCalculatorNotes = /(?:tariff\\s*lock|wincash|loyalty\\s*points|نقاط\\s*الولاء|الاقساط|الأقساط)/i.test(normalizedQuery);
+  if (!asksPostpaidMigration || asksAboutCalculatorNotes) return answer;
+
+  const unsupportedNote = /(?:tariff\\s*lock|wincash|loyalty\\s*points|نقاط\\s*الولاء|تسوية\\s*الأقساط|استرداد\\s*نقاط\\s*الولاء)/i;
+  const lines = answer.split(/\\r?\\n/).filter((line) => !unsupportedNote.test(line));
+  return lines
+    .filter((line) => !/^\\s*(?:#{1,6}\\s*)?(?:\\*\\*)?تنبيهات.*(?:المراجعة|قبل التنفيذ).*(?:\\*\\*)?\\s*$/i.test(line))
+    .join("\\n")
+    .replace(/\\n{3,}/g, "\\n\\n")
+    .trim();
+}
+
 export function applyCalcMarker(answer: string): string {
   const match = answer.match(/<<CALC>>([\s\S]*?)<<END>>/);
   if (!match) return answer;
@@ -429,7 +445,7 @@ export default async function handler(req: RequestLike, res: ResponseLike) {
       return send(res, 502, { ok: false, error: "Gemini مرجعش إجابة نصية. جرّب صياغة السؤال بطريقة تانية." });
     }
 
-    return send(res, 200, { ok: true, answer: applyCalcMarker(answer) });
+    return send(res, 200, { ok: true, answer: applyCalcMarker(sanitizePostpaidMigrationAnswer(answer, message)) });
   } catch (error) {
     console.error("Gemini network/request exception", {
       errorName: error instanceof Error ? error.name : "UnknownError",
