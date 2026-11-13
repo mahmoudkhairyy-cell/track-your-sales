@@ -294,19 +294,23 @@ function formatEGP(value: number) {
 }
 
 export function sanitizePostpaidMigrationAnswer(answer: string, query: string): string {
-  const normalizedQuery = query.toLowerCase().normalize("NFKC").replace(/[\u064B-\u065F\u0670]/g, "");
-  const asksPostpaidMigration = /(?:postpaid|بوست|فاتور|فاتوره|invoice|bill)/i.test(normalizedQuery)
-    && /(?:prepaid|كارت|تحويل|الغاء|الغى|الغي|انهاء|change|migration|migrate|cancel)/i.test(normalizedQuery);
-  const asksAboutCalculatorNotes = /(?:tariff\s*lock|wincash|loyalty\s*points|نقاط\s*الولاء|الاقساط|الأقساط)/i.test(normalizedQuery);
-  if (!asksPostpaidMigration || asksAboutCalculatorNotes) return answer;
+  const normalizedQuery = query.toLowerCase().normalize("NFKC")
+    .replace(/[\u064B-\u065F\u0670]/g, "")
+    .replace(/[أإآ]/g, "ا").replace(/ة/g, "ه").replace(/ى/g, "ي");
+  const mentionsPostpaid = /(?:postpaid|بوست|فاتور|invoice|bill)/i.test(normalizedQuery);
+  const mentionsDestinationOrAction = /(?:prepaid|كارت|تحويل|الغاء|الغى|الغي|انهاء|change|changed|migration|migrate|cancel|cancellation|اغير|تغيير|انقل|احول)/i.test(normalizedQuery)
+    || /(?:من\s+)?(?:فاتور|postpaid|invoice|bill)\s+(?:الى|ل|to)\s+(?:كارت|prepaid)/i.test(normalizedQuery);
+  const asksAboutCalculatorNotes = /(?:tariff\s*lock|wincash|loyalty\s*points|نقاط\s*الولاء|الاقساط)/i.test(normalizedQuery);
+  const asksForCalculation = /(?:احسب|حساب|الحسبه|المستحقات|المبلغ المستحق|calculator|calculate|calculation)/i.test(normalizedQuery);
+  if (!mentionsPostpaid || !mentionsDestinationOrAction || asksAboutCalculatorNotes || asksForCalculation) return answer;
 
-  const unsupportedNote = /(?:tariff\s*lock|wincash|loyalty\s*points|نقاط\s*الولاء|تسوية\s*الأقساط|استرداد\s*نقاط\s*الولاء)/i;
-  const lines = answer.split(/\r?\n/).filter((line) => !unsupportedNote.test(line));
-  return lines
-    .filter((line) => !/تنبيهات.*(?:المراجعة|قبل التنفيذ)/i.test(line))
-    .join("\n")
-    .replace(/\n{3,}/g, "\n\n")
-    .trim();
+  return [
+    "تحويل خط Postpaid (فاتورة) إلى Prepaid (كارت) هو الإجراء المقصود هنا، و«إلغاء الفاتورة» يُستخدم بنفس المعنى في هذا السياق.",
+    "",
+    "راجعت المعرفة المتاحة، لكن **خطوات التنفيذ داخل Siebel وشروط الأهلية والرسوم التفصيلية غير موثقة حاليًا**؛ لذلك مش هقدّم خطوات أو أسماء شاشات بالتخمين.",
+    "",
+    "المتاح حاليًا هو استخدام Postpaid Calculator لتقدير المستحقات المالية فقط، وهي لا تنفّذ التحويل ولا تثبت شروطه. لازم تأكيد خطوات التنفيذ من أحدث إجراء داخلي معتمد قبل تنفيذ الطلب.",
+  ].join("\n");
 }
 
 export function applyCalcMarker(answer: string): string {
