@@ -485,12 +485,12 @@ function AppFrame({ children, blocked, month }: { children: ReactNode; blocked: 
                       <img src="/track-your-sales/logo-mark.png" alt="" className="h-9 w-9 object-contain" />
                     </span>
                     <div className="min-w-0">
-                      <p className="truncate text-[13px] font-black tracking-tight text-[#2d2119]" dir="ltr">{APP_NAME}</p>
+                      <p className="tys-header-title truncate text-[13px] font-black tracking-tight text-[#2d2119]" dir="ltr">{APP_NAME}</p>
                       <p className="truncate text-[9px] font-semibold text-[#a17d65]">{user.name || "مساحة متابعة المبيعات"}</p>
                     </div>
                   </div>
                   <div className="hidden min-w-0 lg:block">
-                    <p className="text-sm font-black text-[#2d2119]">{pathname === "/home" ? "لوحة الأداء" : NAV.find((item) => pathname.startsWith(item.href))?.label || "مساحة العمل"}</p>
+                    <p className="tys-header-title text-sm font-black text-[#2d2119]">{pathname === "/home" ? "لوحة الأداء" : NAV.find((item) => pathname.startsWith(item.href))?.label || "مساحة العمل"}</p>
                     <p className="mt-1 text-[11px] text-[#a17d65]">تابع إنجازك وخطتك الشهرية من مكان واحد</p>
                   </div>
                   <ThemeToggle />
