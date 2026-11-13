@@ -65,4 +65,28 @@ jobs:
             process.exit(1);
           }
           console.log("Knowledge-grounding answer:", knowledgeData.answer);
+          const migrationResponse = await fetch("https://track-your-sales-ai-service.vercel.app/api/chat", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Origin": "https://mahmoudkhairyy-cell.github.io"
+            },
+            body: JSON.stringify({
+              message: "عاوز أغير من فاتورة لكارت، أعملها إزاي؟ اشرحلي الخطوات بالتفصيل.",
+              history: []
+            }),
+            signal: AbortSignal.timeout(45000)
+          });
+          const migrationData = await migrationResponse.json();
+          if (!migrationResponse.ok || migrationData.ok !== true || typeof migrationData.answer !== "string" || !migrationData.answer.trim()) {
+            console.error("Postpaid-to-prepaid migration test failed:", migrationResponse.status, migrationData);
+            process.exit(1);
+          }
+          const forbidden = ["10758", "10707", "10704", "live capture", "control"];
+          const leaked = forbidden.filter(term => migrationData.answer.toLowerCase().includes(term));
+          if (leaked.length) {
+            console.error("Migration answer contains unsupported procedure references:", leaked, migrationData.answer);
+            process.exit(1);
+          }
+          console.log("Postpaid-to-prepaid answer:", migrationData.answer);
           NODE
