@@ -127,7 +127,8 @@ async function pushReportOnce(): Promise<boolean> {
           kpi: e.nameEn,
           quantity: e.quantity,
           unit: e.unitAr,
-          note: e.note ?? "",
+          // الملاحظات الشخصية ما بتتبعتش للسيرفر (مفيش شاشة بتعرضها للمستخدم).
+          note: "",
           at: e.id,
         })),
         syncedAt: new Date().toISOString(),
