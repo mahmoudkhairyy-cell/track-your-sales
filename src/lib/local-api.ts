@@ -715,7 +715,13 @@ function restoreBackup(state: State, data: Record<string, unknown>) {
     state.months = {};
   }
 
+  let monthsSkipped = 0;
   for (const month of backup.months) {
+    // في الدمج ما نكتبش فوق شهر موجود: إعدادات الشهر الحالي أولى، والتعارض بيتعرض للمستخدم.
+    if (mode === "merge" && state.months[month.yearMonth]) {
+      monthsSkipped += 1;
+      continue;
+    }
     state.months[month.yearMonth] = {
       fullCommission: month.fullCommission,
       workingDays: month.workingDays,
@@ -769,7 +775,8 @@ function restoreBackup(state: State, data: Record<string, unknown>) {
     summary,
     entriesInserted: plan.entriesInserted,
     entriesSkipped: plan.entriesSkipped,
-    message: `✅ تمت الاستعادة. سجلات مضافة: ${plan.entriesInserted}، متخطاة: ${plan.entriesSkipped}`,
+    monthsSkipped,
+    message: `✅ تمت الاستعادة. سجلات مضافة: ${plan.entriesInserted}، متخطاة: ${plan.entriesSkipped}، شهور موجودة متخطاة: ${monthsSkipped}`,
   };
 }
 
