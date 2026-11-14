@@ -138,6 +138,13 @@ function parseWorkingDays(value: unknown): WorkingDays {
   return result;
 }
 
+/** أرقام الهدف والوزن والعمولة مش ممكن تبقى سالبة: بنوقف الاستعادة قبل أي كتابة. */
+function asNonNegative(value: unknown, field: string): number {
+  const n = asNumber(value, field);
+  if (n < 0) throw new Error(`القيمة لازم تكون صفر أو أكبر: ${field}`);
+  return n;
+}
+
 function parseKpi(value: unknown, index: number): BackupKpi {
   if (!isRecord(value)) throw new Error(`مؤشر رقم ${index + 1} شكله غلط`);
   const kpiKey = asString(value.kpiKey, `kpis[${index}].kpiKey`);
@@ -146,8 +153,8 @@ function parseKpi(value: unknown, index: number): BackupKpi {
   }
   return {
     kpiKey: kpiKey as KpiKey,
-    target: asNumber(value.target, `kpis[${index}].target`),
-    weight: asNumber(value.weight, `kpis[${index}].weight`),
+    target: asNonNegative(value.target, `kpis[${index}].target`),
+    weight: asNonNegative(value.weight, `kpis[${index}].weight`),
     unitAr: asString(value.unitAr, `kpis[${index}].unitAr`),
     sortOrder: asNumber(value.sortOrder, `kpis[${index}].sortOrder`),
   };
@@ -189,7 +196,7 @@ function parseMonth(value: unknown, index: number): BackupMonth {
   }
   return {
     yearMonth,
-    fullCommission: asNumber(value.fullCommission, `months[${index}].fullCommission`),
+    fullCommission: asNonNegative(value.fullCommission, `months[${index}].fullCommission`),
     workingDays: parseWorkingDays(value.workingDays),
     kpis: value.kpis.map((item, kpiIndex) => parseKpi(item, kpiIndex)),
     holidays: value.holidays.map((item, holidayIndex) => parseHoliday(item, holidayIndex)),
