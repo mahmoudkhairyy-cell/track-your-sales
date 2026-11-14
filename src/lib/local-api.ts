@@ -741,16 +741,22 @@ function restoreBackup(state: State, data: Record<string, unknown>) {
       }))
     : [];
   const plan = planEntryRestore(backup.entries, existing as never, mode);
+  // نحافظ على معرّف السجل من النسخة لو مش مستخدم، عشان الاستعادة المتكررة تتعدّى بالـ id.
+  const usedEntryIds = new Set(state.entries.map((row) => row.id));
   for (const entry of plan.toInsert) {
     const item = entry as unknown as {
+      id?: string;
       kpiKey: string;
       quantity: number;
       entryDate: string;
       note: string | null;
       createdAt?: string;
     };
+    const keepId = typeof item.id === "string" && item.id.length > 0 && !usedEntryIds.has(item.id);
+    const id = keepId ? (item.id as string) : newId();
+    usedEntryIds.add(id);
     state.entries.push({
-      id: newId(),
+      id,
       kpiKey: item.kpiKey,
       quantity: item.quantity,
       entryDate: item.entryDate,
