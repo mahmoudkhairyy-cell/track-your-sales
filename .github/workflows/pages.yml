@@ -32,7 +32,7 @@ jobs:
           path: out
 
   deploy:
-    needs: build
+    needs: [build, backend-test]
     runs-on: ubuntu-latest
     environment:
       name: github-pages
