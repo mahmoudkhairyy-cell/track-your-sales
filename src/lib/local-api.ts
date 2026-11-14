@@ -759,9 +759,15 @@ function restoreBackup(state: State, data: Record<string, unknown>) {
     });
   }
 
+  let articlesSkipped = 0;
   for (const article of backup.articles) {
     const item = article as unknown as { title: string; content: string; createdAt?: string; updatedAt?: string };
     const now = new Date().toISOString();
+    // مقالة بنفس العنوان والمحتوى موجودة بالفعل: ما نكرروهاش.
+    if (state.articles.some((existing) => existing.title === item.title && existing.content === item.content)) {
+      articlesSkipped += 1;
+      continue;
+    }
     state.articles.push({
       id: newId(),
       title: item.title,
@@ -776,7 +782,8 @@ function restoreBackup(state: State, data: Record<string, unknown>) {
     entriesInserted: plan.entriesInserted,
     entriesSkipped: plan.entriesSkipped,
     monthsSkipped,
-    message: `✅ تمت الاستعادة. سجلات مضافة: ${plan.entriesInserted}، متخطاة: ${plan.entriesSkipped}، شهور موجودة متخطاة: ${monthsSkipped}`,
+    articlesSkipped,
+    message: `✅ تمت الاستعادة. سجلات مضافة: ${plan.entriesInserted}، متخطاة: ${plan.entriesSkipped}، شهور موجودة متخطاة: ${monthsSkipped}، مقالات مكررة متخطاة: ${articlesSkipped}`,
   };
 }
 
