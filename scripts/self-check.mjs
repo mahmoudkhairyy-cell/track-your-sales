@@ -5,7 +5,7 @@
  *
  *   npm run selfcheck
  *
- * محتاج DATABASE_URL في .env و Postgres شغال.
+ * ما بيحتاجش قاعدة بيانات: كل الفحوص محلية (الحسابات والنسخ الاحتياطي ودمج السجلات).
  */
 import { spawn } from "node:child_process";
 import { createRequire } from "node:module";
