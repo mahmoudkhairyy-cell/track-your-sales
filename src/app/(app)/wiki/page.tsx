@@ -275,7 +275,8 @@ export default function WikiPage() {
   const initialSection = sectionParam && validSections.includes(sectionParam) ? sectionParam : "hub";
   const [section, setSection] = useHistoryView<SectionId>("hub", initialSection);
   const [query, setQuery] = useState(() => searchParams.get("q") ?? "");
-  const [srTopic, setSrTopic] = useState("الكل");
+  // المرجع بيفتح على الأكواد الأكثر استخدامًا، والمستخدم يقدر يفتح "كل الأكواد" من الفلتر.
+  const [srTopic, setSrTopic] = useState("الأكثر استخدامًا");
   const [articles, setArticles] = useState<Article[]>([]);
   const [loadingNotes, setLoadingNotes] = useState(false);
   const [notesError, setNotesError] = useState("");
