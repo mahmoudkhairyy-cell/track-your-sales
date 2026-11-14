@@ -31,20 +31,6 @@ import type { WorkingDays } from "@/lib/types";
 
 const STORAGE_KEY = "trackYourSales.local.v1";
 
-// مسح لمرة واحدة لكل جهاز: بيفضي البيانات المحلية وبيرجع التطبيق من الأول.
-const WIPE_FLAG = "tys.wipe.2026-11-09b";
-try {
-  if (typeof window !== "undefined" && !localStorage.getItem(WIPE_FLAG)) {
-    localStorage.removeItem(STORAGE_KEY);
-    localStorage.removeItem(`${STORAGE_KEY}.beforeRestore`);
-    localStorage.removeItem("tys.branchId");
-    localStorage.removeItem("tys.lastSync");
-    localStorage.setItem(WIPE_FLAG, "1");
-  }
-} catch {
-  // التخزين مقفول: التطبيق يشتغل عادي.
-}
-
 type Entry = {
   id: string;
   kpiKey: string;
@@ -354,7 +340,7 @@ function loadBundle(state: State, yearMonth: string): Bundle {
     saved: true,
     yearMonth,
     fullCommission: row.fullCommission,
-    workingDays: { ...DEFAULT_WORKING_DAYS },
+    workingDays: { ...(row.workingDays ?? DEFAULT_WORKING_DAYS) },
     kpis,
     holidays: [...row.holidays].sort((a, b) => a.date.localeCompare(b.date)),
     quality: row.quality ? qualityFromChecks(row.quality.checks) : { checks: { ...ZERO_QUALITY.checks } },
