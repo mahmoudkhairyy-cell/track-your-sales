@@ -3901,3 +3901,80 @@ body {
   .tx-manager .tx-hero-card { border-radius: 22px !important; }
   .tx-manager .tx-overview { gap: 16px; }
 }
+
+/* =========================================================
+   وضع أسود اختياري (linear): بيتفعّل بس لما المستخدم يختاره.
+   التوكنز من ملف التصميم: void/carbon/signal-orange.
+   ========================================================= */
+:root[data-theme="linear"] {
+  color-scheme: dark;
+  --brand-primary: #ff4800;
+  --brand-deep: #ca4e17;
+  --brand-warm: #ff5e23;
+  --brand-soft: #292929;
+  --brand-cream: #050505;
+  --brand-bg: #000000;
+  --brand-card: #050505;
+  --brand-text: #ffffff;
+  --brand-muted: #999999;
+  --brand-border: #292929;
+  --app-shadow: 0 12px 32px rgba(0, 0, 0, .5);
+  --color-primary-900: #ff5e23;
+  --color-primary-700: #ff4800;
+  --color-primary-600: #ff4800;
+  --color-primary-500: #ff5e23;
+  --color-primary-100: #292929;
+  --color-primary-50: #050505;
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #bfbfbf;
+  --color-text-muted: #999999;
+  --color-surface: #050505;
+  --color-surface-cream: #050505;
+  --color-border: #292929;
+}
+:root[data-theme="linear"] html,
+:root[data-theme="linear"] body {
+  background-color: #000000;
+  color: #ffffff;
+}
+:root[data-theme="linear"] body {
+  background-image: none;
+}
+
+/* ستايل Linearity على الوضع الأسود فقط: أزرار دائرية، حواف رفيعة، بدون ظلال ثقيلة. */
+:root[data-theme="linear"] button {
+  border-radius: 9999px;
+}
+:root[data-theme="linear"] .rounded-xl,
+:root[data-theme="linear"] .rounded-2xl,
+:root[data-theme="linear"] .rounded-3xl,
+:root[data-theme="linear"] [class*="rounded-[24px]"],
+:root[data-theme="linear"] [class*="rounded-[20px]"] {
+  border-color: var(--brand-border);
+  box-shadow: none;
+}
+
+/* الوضع الأسود: الأزرار والتنقل بخط Chivo Mono (العربي بيرجع للخط الأساسي تلقائيًا). */
+:root[data-theme="linear"] button,
+:root[data-theme="linear"] nav a,
+:root[data-theme="linear"] nav button {
+  font-family: "Chivo Mono", "Tajawal", ui-monospace, monospace;
+}
+
+/* الوضع الأسود: الخلفيات الفاتحة المكتوبة في الكلاسات بتتحول لدرجات داكنة. */
+:root[data-theme="linear"] .bg-white,
+:root[data-theme="linear"] [class*="bg-[#fff"],
+:root[data-theme="linear"] [class*="bg-[var(--color-surface-cream)]"],
+:root[data-theme="linear"] [class*="bg-[var(--color-surface)]"] {
+  background-color: var(--brand-card) !important;
+}
+:root[data-theme="linear"] [class*="bg-[var(--color-border)]"] {
+  background-color: #292929 !important;
+}
+:root[data-theme="linear"] .bg-amber-50,
+:root[data-theme="linear"] .bg-orange-50,
+:root[data-theme="linear"] .bg-amber-100,
+:root[data-theme="linear"] .bg-stone-100,
+:root[data-theme="linear"] .bg-neutral-50 {
+  background-color: #1a1a1a !important;
+}
