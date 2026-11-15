@@ -2,7 +2,7 @@
 
 :root {
   color-scheme: light;
-  --font-cairo: "IBM Plex Sans Arabic";
+  --font-cairo: "Tajawal";
   --brand-primary: #e96812;
   --brand-deep: #bd4b0a;
   --brand-warm: #ff9d38;
@@ -17,12 +17,12 @@
   --app-shadow: 0 12px 34px rgba(115, 58, 20, 0.07);
 
   /* Design tokens (مركزية): الألوان الجديدة، بدون استخدام لحد ما نطبقها تدريجياً */
-  --color-primary-900: #134e4a;
-  --color-primary-700: #0f766e;
-  --color-primary-600: #0d9488;
-  --color-primary-500: #14b8a6;
-  --color-primary-100: #ccfbf1;
-  --color-primary-50: #f0fdfa;
+  --color-primary-900: #7a2e00;
+  --color-primary-700: #c2410c;
+  --color-primary-600: #c2410c;
+  --color-primary-500: #f97316;
+  --color-primary-100: #ffedd5;
+  --color-primary-50: #fff7ed;
 
   --color-success-bg: #ecfdf5;
   --color-success-text: #047857;
@@ -34,12 +34,12 @@
   --color-danger-text: #b91c1c;
   --color-danger-ring: #ef4444;
 
-  --color-text-primary: #0f172a;
-  --color-text-secondary: #475569;
-  --color-text-muted: #64748b;
+  --color-text-primary: #1c1917;
+  --color-text-secondary: #57534e;
+  --color-text-muted: #78716c;
   --color-surface: #ffffff;
-  --color-surface-cream: #f0fdfa;
-  --color-border: #99f6e4;
+  --color-surface-cream: #fff7ed;
+  --color-border: #fed7aa;
 }
 
 html {
@@ -2353,17 +2353,17 @@ body {
    ========================================================= */
 :root {
   color-scheme: light;
-  --brand-primary: #0f766e;
-  --brand-deep: #115e59;
-  --brand-warm: #2dd4bf;
-  --brand-soft: #ccfbf1;
-  --brand-cream: #f0fdfa;
-  --brand-bg: #f5fbfa;
+  --brand-primary: #d95f12;
+  --brand-deep: #963b08;
+  --brand-warm: #ff9b45;
+  --brand-soft: #fff0e3;
+  --brand-cream: #fff8f1;
+  --brand-bg: #fffaf6;
   --brand-card: #ffffff;
-  --brand-text: #0f172a;
-  --brand-muted: #64748b;
-  --brand-border: #d5ece8;
-  --app-shadow: 0 12px 32px rgba(15, 60, 58, .06);
+  --brand-text: #2b211b;
+  --brand-muted: #88796e;
+  --brand-border: #efdfd2;
+  --app-shadow: 0 12px 32px rgba(91, 49, 23, .055);
   --tys-radius-xl: 26px;
   --tys-radius-lg: 20px;
   --tys-radius-md: 15px;
@@ -2372,9 +2372,9 @@ html, body { background-color: var(--brand-bg); }
 body {
   color: var(--brand-text);
   background:
-    radial-gradient(ellipse at 100% 0%, rgba(45, 212, 191, .14), transparent 34rem),
-    radial-gradient(ellipse at 0% 55%, rgba(204, 251, 241, .16), transparent 28rem),
-    #f5fbfa;
+    radial-gradient(ellipse at 100% 0%, rgba(255, 177, 112, .16), transparent 34rem),
+    radial-gradient(ellipse at 0% 55%, rgba(255, 224, 198, .13), transparent 28rem),
+    #fffaf6;
 }
 .tys-app-main {
   min-width: 0;
