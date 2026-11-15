@@ -3940,3 +3940,16 @@ body {
 :root[data-theme="linear"] body {
   background-image: none;
 }
+
+/* ستايل Linearity على الوضع الأسود فقط: أزرار دائرية، حواف رفيعة، بدون ظلال ثقيلة. */
+:root[data-theme="linear"] button {
+  border-radius: 9999px;
+}
+:root[data-theme="linear"] .rounded-xl,
+:root[data-theme="linear"] .rounded-2xl,
+:root[data-theme="linear"] .rounded-3xl,
+:root[data-theme="linear"] [class*="rounded-[24px]"],
+:root[data-theme="linear"] [class*="rounded-[20px]"] {
+  border-color: var(--brand-border);
+  box-shadow: none;
+}
