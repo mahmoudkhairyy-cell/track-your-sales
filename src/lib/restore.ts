@@ -43,7 +43,7 @@ export type RestoreState = {
 export type RestoreOptions = {
   newId: () => string;
   now: () => string;
-  qualityFromChecks: (checks: Record<string, boolean>) => unknown;
+  qualityFromChecks: (checks: unknown) => unknown;
   /** بيتنادى قبل أي مسح في وضع الاستبدال، ومعاه نسخة من الحالة القديمة. */
   beforeReplace?: (snapshot: string) => void;
 };

@@ -187,7 +187,7 @@ function restoreOptions() {
   return {
     newId: () => `new-${++counter}`,
     now: () => "2026-11-15T00:00:00.000Z",
-    qualityFromChecks: (checks: Record<string, boolean>) => ({ checks }),
+    qualityFromChecks: (checks: unknown) => ({ checks }),
   };
 }
 
