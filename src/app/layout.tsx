@@ -13,7 +13,7 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
-  themeColor: "#e96812",
+  themeColor: "#0f766e",
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
@@ -22,7 +22,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
-        <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
         <link rel="manifest" href="/track-your-sales/manifest.webmanifest" />
         <link rel="icon" href="/track-your-sales/logo-mark.png" type="image/png" />
         <link rel="apple-touch-icon" href="/track-your-sales/app-icon-192.png" />
