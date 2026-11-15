@@ -26,7 +26,8 @@ import {
 } from "@/lib/calculations";
 import { cairoISODate, cairoYearMonth, monthDateRange, monthLabelAr } from "@/lib/dates";
 import { validateQuantity } from "@/lib/quantity";
-import { backupSummary, parseBackup, planEntryRestore, type BackupFile } from "@/lib/backup";
+import { backupSummary, parseBackup, type BackupFile } from "@/lib/backup";
+import { applyBackupToState, checkRestoreRequest } from "@/lib/restore";
 import type { WorkingDays } from "@/lib/types";
 
 const STORAGE_KEY = "trackYourSales.local.v1";
@@ -693,103 +694,31 @@ function restoreBackup(state: State, data: Record<string, unknown>) {
     return { summary, message: "الملف مطابق للمخطط. مفيش أي تعديل اتعمل لسه." };
   }
 
-  const mode = data.mode === "replace" ? "replace" : data.mode === "merge" ? "merge" : null;
-  if (!mode) fail(400, "اختار نوع الاستعادة: دمج أو استبدال");
-  if (mode === "replace" && data.confirmReplace !== true) {
-    fail(400, "الاستبدال محتاج تأكيد صريح بعد تحميل نسخة احتياطية");
-  }
+  const request = checkRestoreRequest(data);
+  if (!request.ok) fail(400, request.message);
+  const { mode } = request;
 
-  // قبل الاستبدال بنحفظ نسخة من البيانات القديمة جنب الأصلية، عشان لو حصل خطأ ترجع منها.
-  if (mode === "replace") {
-    try {
-      localStorage.setItem(`${STORAGE_KEY}.beforeRestore`, JSON.stringify(state));
-    } catch {
-      // لو المساحة خلصت، نكمّل بالنسخة اللي اتنزلت للجهاز قبل الاستبدال (من الواجهة).
-    }
-  }
-
-  state.profile = { ...state.profile, name: backup.profile.name, branch: backup.profile.branch };
-  if (mode === "replace") {
-    state.entries = [];
-    state.articles = [];
-    state.months = {};
-  }
-
-  let monthsSkipped = 0;
-  for (const month of backup.months) {
-    // في الدمج ما نكتبش فوق شهر موجود: إعدادات الشهر الحالي أولى، والتعارض بيتعرض للمستخدم.
-    if (mode === "merge" && state.months[month.yearMonth]) {
-      monthsSkipped += 1;
-      continue;
-    }
-    state.months[month.yearMonth] = {
-      fullCommission: month.fullCommission,
-      workingDays: month.workingDays,
-      kpis: month.kpis.map((kpi, index) => ({ ...kpi, sortOrder: kpi.sortOrder ?? index })),
-      holidays: month.holidays.map((item) => ({ date: item.date, note: item.note })),
-      quality: month.quality ? qualityFromChecks(month.quality.checks) : state.months[month.yearMonth]?.quality,
-    };
-  }
-
-  const existing = mode === "merge"
-    ? state.entries.map((item) => ({
-        id: item.id,
-        kpiKey: item.kpiKey,
-        quantity: item.quantity,
-        entryDate: item.entryDate,
-        note: item.note,
-      }))
-    : [];
-  const plan = planEntryRestore(backup.entries, existing as never, mode);
-  // نحافظ على معرّف السجل من النسخة لو مش مستخدم، عشان الاستعادة المتكررة تتعدّى بالـ id.
-  const usedEntryIds = new Set(state.entries.map((row) => row.id));
-  for (const entry of plan.toInsert) {
-    const item = entry as unknown as {
-      id?: string;
-      kpiKey: string;
-      quantity: number;
-      entryDate: string;
-      note: string | null;
-      createdAt?: string;
-    };
-    const keepId = typeof item.id === "string" && item.id.length > 0 && !usedEntryIds.has(item.id);
-    const id = keepId ? (item.id as string) : newId();
-    usedEntryIds.add(id);
-    state.entries.push({
-      id,
-      kpiKey: item.kpiKey,
-      quantity: item.quantity,
-      entryDate: item.entryDate,
-      note: item.note ?? null,
-      createdAt: item.createdAt ?? new Date().toISOString(),
-    });
-  }
-
-  let articlesSkipped = 0;
-  for (const article of backup.articles) {
-    const item = article as unknown as { title: string; content: string; createdAt?: string; updatedAt?: string };
-    const now = new Date().toISOString();
-    // مقالة بنفس العنوان والمحتوى موجودة بالفعل: ما نكرروهاش.
-    if (state.articles.some((existing) => existing.title === item.title && existing.content === item.content)) {
-      articlesSkipped += 1;
-      continue;
-    }
-    state.articles.push({
-      id: newId(),
-      title: item.title,
-      content: item.content,
-      createdAt: item.createdAt ?? now,
-      updatedAt: item.updatedAt ?? now,
-    });
-  }
+  const result = applyBackupToState(state, backup, mode, {
+    newId,
+    now: () => new Date().toISOString(),
+    qualityFromChecks,
+    beforeReplace: (snapshot) => {
+      // قبل الاستبدال بنحفظ نسخة من البيانات القديمة جنب الأصلية، عشان لو حصل خطأ ترجع منها.
+      try {
+        localStorage.setItem(`${STORAGE_KEY}.beforeRestore`, snapshot);
+      } catch {
+        // لو المساحة خلصت، نكمّل بالنسخة اللي اتنزلت للجهاز قبل الاستبدال (من الواجهة).
+      }
+    },
+  });
 
   return {
     summary,
-    entriesInserted: plan.entriesInserted,
-    entriesSkipped: plan.entriesSkipped,
-    monthsSkipped,
-    articlesSkipped,
-    message: `✅ تمت الاستعادة. سجلات مضافة: ${plan.entriesInserted}، متخطاة: ${plan.entriesSkipped}، شهور موجودة متخطاة: ${monthsSkipped}، مقالات مكررة متخطاة: ${articlesSkipped}`,
+    entriesInserted: result.entriesInserted,
+    entriesSkipped: result.entriesSkipped,
+    monthsSkipped: result.monthsSkipped,
+    articlesSkipped: result.articlesSkipped,
+    message: `✅ تمت الاستعادة. سجلات مضافة: ${result.entriesInserted}، متخطاة: ${result.entriesSkipped}، شهور موجودة متخطاة: ${result.monthsSkipped}، مقالات مكررة متخطاة: ${result.articlesSkipped}`,
   };
 }
 
