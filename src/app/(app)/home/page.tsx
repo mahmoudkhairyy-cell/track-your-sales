@@ -38,6 +38,7 @@ type Dashboard = {
   empty: boolean;
   entriesCount: number;
   work: { total: number; elapsed: number; remaining: number };
+  overallExpectedPercent: number;
   pace: { remaining: number; remainingDays: number; perDay: number | null; message: string };
 };
 
@@ -123,7 +124,7 @@ export default function HomePage() {
     if (state.month !== month || !state.data) return;
     setSessionPhrase((current) => {
       if (current.month === month) return current;
-      const expected = state.data!.work.total > 0 ? (state.data!.work.elapsed / state.data!.work.total) * 100 : 0;
+      const expected = state.data!.overallExpectedPercent;
       const currentMood = overallMood({
         overall: state.data!.overall,
         expectedPercent: expected,
@@ -143,7 +144,7 @@ export default function HomePage() {
 
   const newLines = data.kpis.find((kpi) => kpi.kpiKey === "new_lines");
   const gap = Math.max(0, 100 - data.overall);
-  const expectedPercent = data.work.total > 0 ? (data.work.elapsed / data.work.total) * 100 : 0;
+  const expectedPercent = data.overallExpectedPercent;
   const mood = overallMood({
     overall: data.overall,
     expectedPercent,
