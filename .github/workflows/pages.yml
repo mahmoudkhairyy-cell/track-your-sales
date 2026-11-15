@@ -17,12 +17,16 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - run: npm install
+          cache: npm
+          cache-dependency-path: package.json
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund --prefer-offline --progress=false --fetch-retries=2 --fetch-timeout=120000
       - run: npm run selfcheck
       - run: npm run typecheck
       - run: npm run lint
@@ -43,6 +47,7 @@ jobs:
 
   backend-test:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     defaults:
       run:
         working-directory: ai-backend
@@ -51,5 +56,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - run: npm install
+          cache: npm
+          cache-dependency-path: ai-backend/package.json
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund --prefer-offline --progress=false --fetch-retries=2 --fetch-timeout=120000
       - run: npm test
