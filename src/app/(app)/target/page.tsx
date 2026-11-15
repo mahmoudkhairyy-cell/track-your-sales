@@ -163,7 +163,7 @@ export default function TargetPage() {
 
   return (
     <form className="tys-page tys-page-target mx-auto max-w-6xl space-y-5 pb-4" onSubmit={onSave}>
-      <section className="relative isolate overflow-hidden rounded-[28px] border border-[var(--color-border)] bg-[linear-gradient(118deg,#fff8f1_0%,#fff_52%,#ffead8_100%)] p-5 shadow-[0_10px_28px_rgba(126,65,24,0.055)] sm:p-6">
+      <section className="relative isolate overflow-hidden rounded-[28px] border border-white bg-white p-5 shadow-[0_1px_2px_rgba(43,20,0,.04)] sm:p-6">
         <div className="relative">
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div className="min-w-0">
@@ -189,16 +189,16 @@ export default function TargetPage() {
         </section>
       ) : null}
 
-      <section className="overflow-hidden rounded-[28px] border border-[var(--color-border)] bg-white p-4 shadow-[0_12px_30px_rgba(100,55,25,0.045)]">
+      <section className="overflow-hidden rounded-[28px] border border-white bg-white p-4 shadow-[0_1px_2px_rgba(43,20,0,.04)]">
         <div className="grid grid-cols-3 gap-2 text-center">
-          <div className="rounded-2xl border border-[#f4d7bf] bg-[linear-gradient(145deg,#fff8f1_0%,#ffead8_100%)] px-2 py-3 shadow-[0_4px_12px_rgba(126,65,24,0.06)]"><p className="text-2xl font-black tabular-nums text-[var(--color-text-primary)]">{monthDays.length}</p><p className="text-[11px] text-[var(--color-text-secondary)]">أيام الشهر</p></div>
-          <div className="rounded-2xl border border-[#f4d7bf] bg-[linear-gradient(145deg,#fff8f1_0%,#ffead8_100%)] px-2 py-3 shadow-[0_4px_12px_rgba(126,65,24,0.06)]"><p className="text-2xl font-black tabular-nums text-[var(--color-text-primary)]">{holidays.length}</p><p className="text-[11px] text-[var(--color-text-secondary)]">إجازات</p></div>
-          <div className="rounded-2xl border border-[#f4d7bf] bg-[linear-gradient(145deg,#fff8f1_0%,#ffead8_100%)] px-2 py-3 shadow-[0_4px_12px_rgba(126,65,24,0.06)]"><p className="text-2xl font-black tabular-nums text-[var(--color-text-primary)]">{workingDatesInMonth(month, workingDays, holidays.map((item) => item.date)).length}</p><p className="text-[11px] text-[var(--color-text-secondary)]">أيام شغل</p></div>
+          <div className="rounded-2xl border border-white bg-white px-2 py-3 shadow-[0_1px_2px_rgba(43,20,0,.04)]"><p className="text-2xl font-black tabular-nums text-[var(--color-text-primary)]">{monthDays.length}</p><p className="text-[11px] text-[var(--color-text-secondary)]">أيام الشهر</p></div>
+          <div className="rounded-2xl border border-white bg-white px-2 py-3 shadow-[0_1px_2px_rgba(43,20,0,.04)]"><p className="text-2xl font-black tabular-nums text-[var(--color-text-primary)]">{holidays.length}</p><p className="text-[11px] text-[var(--color-text-secondary)]">إجازات</p></div>
+          <div className="rounded-2xl border border-white bg-white px-2 py-3 shadow-[0_1px_2px_rgba(43,20,0,.04)]"><p className="text-2xl font-black tabular-nums text-[var(--color-text-primary)]">{workingDatesInMonth(month, workingDays, holidays.map((item) => item.date)).length}</p><p className="text-[11px] text-[var(--color-text-secondary)]">أيام شغل</p></div>
         </div>
       </section>
 
       {kpis.some((k) => k.weight > 0) ? (
-        <section className="rounded-[28px] border border-[#f2dfcf] bg-[linear-gradient(155deg,#fff_0%,#fffaf6_100%)] p-4 shadow-[0_10px_26px_rgba(126,65,24,0.055)]">
+        <section className="rounded-[28px] border border-white bg-white p-4 shadow-[0_1px_2px_rgba(43,20,0,.04)]">
           <p className="text-sm font-black text-[var(--color-text-primary)]">توزيع الأوزان</p>
           <div className="mt-3 flex h-3 w-full overflow-hidden rounded-full bg-[var(--color-surface-cream)]">
             {kpis.filter((k) => k.weight > 0).map((k, i) => (
@@ -217,7 +217,7 @@ export default function TargetPage() {
         </section>
       ) : null}
 
-      <section className="rounded-[28px] border border-[#f2dfcf] bg-[linear-gradient(155deg,#fff_0%,#fffaf6_100%)] p-4 shadow-[0_10px_26px_rgba(126,65,24,0.055)] sm:p-5">
+      <section className="rounded-[28px] border border-white bg-white p-4 shadow-[0_1px_2px_rgba(43,20,0,.04)] sm:p-5">
         <div className="mb-4 flex items-center justify-between gap-3">
           <div>
             <h2 className="text-sm font-black text-[var(--color-text-primary)]">تقويم الإجازات</h2>
@@ -268,7 +268,7 @@ export default function TargetPage() {
         {Math.abs(weightSum - 100) > 0.01 ? `⚠️ الأوزان ${weightSum}%: ${weightSum < 100 ? `ناقص ${Math.round((100 - weightSum) * 100) / 100}%` : `زيادة ${Math.round((weightSum - 100) * 100) / 100}%`} (لازم 100% عشان تتحفظ)` : "✓ الأوزان 100%"}
       </p>
 
-      <section className="rounded-[28px] border border-[#f2dfcf] bg-[linear-gradient(155deg,#fff_0%,#fffaf6_100%)] p-4 shadow-[0_10px_26px_rgba(126,65,24,0.055)] sm:p-5">
+      <section className="rounded-[28px] border border-white bg-white p-4 shadow-[0_1px_2px_rgba(43,20,0,.04)] sm:p-5">
         <Field label="💰 الكوميشن الكامل (جنيه)">
           <input
             className={`${inputClass} text-xl font-black`}
@@ -282,7 +282,7 @@ export default function TargetPage() {
         </Field>
       </section>
 
-      <section className="rounded-[28px] border border-[#f2dfcf] bg-[linear-gradient(155deg,#fff_0%,#fffaf6_100%)] p-4 shadow-[0_10px_26px_rgba(126,65,24,0.055)]">
+      <section className="rounded-[28px] border border-white bg-white p-4 shadow-[0_1px_2px_rgba(43,20,0,.04)]">
         <div className="mb-1 flex items-center justify-between">
           <h2 className="text-lg font-black">الإيتمز والأوزان</h2>
         </div>
@@ -332,7 +332,7 @@ export default function TargetPage() {
         })}
       </section>
 
-      <div className="sticky bottom-[calc(76px+env(safe-area-inset-bottom))] z-20 rounded-[24px] border border-[var(--color-border)] bg-[var(--color-surface-cream)]/95 p-2 shadow-[0_12px_30px_rgba(100,55,25,0.12)] backdrop-blur-xl lg:bottom-4">
+      <div className="sticky bottom-[calc(76px+env(safe-area-inset-bottom))] z-20 rounded-[24px] border border-white bg-[var(--color-surface-cream)]/95 p-2 shadow-[0_12px_30px_rgba(100,55,25,0.12)] backdrop-blur-xl lg:bottom-4">
       <PrimaryButton type="submit" disabled={saving || (saved && !dirty) || (!saved && !holidaysConfirmed)}>
         {saving ? "⏳ بنحفظ على السيرفر..." : "💾 احفظ إعدادات الشهر"}
       </PrimaryButton>

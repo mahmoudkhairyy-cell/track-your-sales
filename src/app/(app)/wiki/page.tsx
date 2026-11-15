@@ -89,7 +89,7 @@ function SearchBox({ value, onChange, placeholder }: { value: string; onChange: 
 
 function Back({ onClick, title }: { onClick: () => void; title: string }) {
   return (
-    <div className="mb-4 flex items-center justify-between gap-3 rounded-[24px] border border-[var(--color-border)] bg-gradient-to-l from-white via-white to-[var(--color-primary-50)] px-4 py-3 shadow-[0_10px_24px_rgba(126,65,24,0.045)]">
+    <div className="mb-4 flex items-center justify-between gap-3 rounded-[24px] border border-white bg-white px-4 py-3 shadow-[0_1px_2px_rgba(43,20,0,.04)]">
       <div className="min-w-0">
         <p className="text-[9px] font-black tracking-[0.18em] text-[var(--color-primary-700)]" dir="ltr">KNOWLEDGE CENTER</p>
         <h1 className="mt-1 truncate text-lg font-black tracking-tight text-[var(--color-text-primary)]">{title}</h1>
@@ -232,7 +232,7 @@ function SrCard({ item }: { item: SrItem }) {
   const toast = useToast();
   const [open, setOpen] = useState(false);
   return (
-    <div className="w-full rounded-[24px] border border-[var(--color-border)] bg-white p-4 text-right shadow-sm transition duration-300 hover:-translate-y-0.5 hover:shadow-md">
+    <div className="w-full rounded-[24px] border border-white bg-white p-4 text-right shadow-sm transition duration-300 hover:-translate-y-0.5 hover:shadow-md">
       <button type="button" onClick={() => setOpen((v) => !v)} aria-expanded={open} className="flex w-full items-start justify-between gap-3 text-right">
         <span className="min-w-0 flex-1">
           <span className="block text-xs font-extrabold text-[var(--color-primary-700)]">{item.id}</span>
@@ -422,7 +422,7 @@ export default function WikiPage() {
     <div className="tys-page tys-page-wiki mx-auto max-w-6xl space-y-5">
       {section === "hub" ? (
         <>
-          <section className="relative isolate overflow-hidden rounded-[30px] border border-[#f0d8c4] bg-[linear-gradient(118deg,#fff7ef_0%,#fff_48%,#ffead8_100%)] p-5 shadow-[0_16px_38px_rgba(126,65,24,0.07)] sm:p-6">
+          <section className="relative isolate overflow-hidden rounded-[30px] border border-white bg-white p-5 shadow-[0_1px_2px_rgba(43,20,0,.04)] sm:p-6">
             <div className="pointer-events-none absolute -left-8 -top-10 h-36 w-36 rounded-full border-[22px] border-[var(--color-primary-600)]/[0.06]" />
             <div className="relative flex items-start justify-between gap-3">
               <div>
@@ -449,7 +449,7 @@ export default function WikiPage() {
               </div>
             </div>
           </section>
-          <section className="rounded-[24px] border border-[var(--color-border)] bg-white p-3 shadow-[0_10px_24px_rgba(126,65,24,0.045)]">
+          <section className="rounded-[24px] border border-white bg-white p-3 shadow-[0_1px_2px_rgba(43,20,0,.04)]">
             <p className="mb-2 px-1 text-[10px] font-black tracking-[0.16em] text-[var(--color-primary-700)]" dir="ltr">SEARCH THE KNOWLEDGE BASE</p>
             <SearchBox value={query} onChange={setQuery} placeholder="ابحث بالكود أو الاسم أو الرقم..." />
           </section>
@@ -458,7 +458,7 @@ export default function WikiPage() {
             <div className="space-y-3">
               <p className="text-sm font-bold text-[var(--color-text-secondary)]">نتائج البحث</p>
               {globalHits.sr.length + globalHits.hunts.length + globalHits.emails.length + globalHits.fm.length + globalHits.plans.length + globalHits.dsl.length + globalHits.docs.length === 0 ? (
-                <p className="rounded-[24px] border border-[var(--color-border)] bg-white p-4 text-center text-sm font-bold text-[var(--color-text-secondary)]">مفيش نتايج للبحث ده. جرّب كود SR أو اسم باقة أو رقم.</p>
+                <p className="rounded-[24px] border border-white bg-white p-4 text-center text-sm font-bold text-[var(--color-text-secondary)]">مفيش نتايج للبحث ده. جرّب كود SR أو اسم باقة أو رقم.</p>
               ) : null}
               {globalHits.sr.length > 0 ? <p className="text-xs font-black text-[#b84700]">أكواد SR</p> : null}
               {globalHits.sr.map((item) => (
@@ -479,7 +479,7 @@ export default function WikiPage() {
               ))}
               {globalHits.emails.length > 0 ? <p className="text-xs font-black text-[#b84700]">إيميلات</p> : null}
               {globalHits.emails.map((item) => (
-                <button key={item.email} type="button" onClick={() => copyText(item.email, toast, "📋 الإيميل اتنسخ")} className="w-full rounded-[24px] border border-[var(--color-border)] bg-white p-4 text-right shadow-sm">
+                <button key={item.email} type="button" onClick={() => copyText(item.email, toast, "📋 الإيميل اتنسخ")} className="w-full rounded-[24px] border border-white bg-white p-4 text-right shadow-sm">
                   <p className="font-extrabold">{item.name}</p>
                   <p className="text-sm text-[var(--color-primary-700)]">{item.email}</p>
                 </button>
@@ -521,7 +521,7 @@ export default function WikiPage() {
             <>
               <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
                 {HUB.map((card, index) => (
-                  <button key={card.id} type="button" onClick={() => { setSection(card.id); setQuery(""); }} className="group flex min-h-[88px] w-full items-center gap-3 rounded-[24px] border border-[var(--color-border)] bg-white p-3.5 text-right shadow-[0_8px_22px_rgba(126,65,24,0.045)] transition duration-200 hover:-translate-y-0.5 hover:border-[#edc4a4] hover:shadow-[0_14px_28px_rgba(126,65,24,0.08)]">
+                  <button key={card.id} type="button" onClick={() => { setSection(card.id); setQuery(""); }} className="group flex min-h-[88px] w-full items-center gap-3 rounded-[24px] border border-white bg-white p-3.5 text-right shadow-[0_1px_2px_rgba(43,20,0,.04)] transition duration-200 hover:-translate-y-0.5 hover:border-[#edc4a4] hover:shadow-[0_1px_2px_rgba(43,20,0,.04)]">
                     <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-[#f6e5d7] bg-gradient-to-br from-[var(--color-surface-cream)] to-[var(--color-primary-50)]">{card.icon}</span>
                     <span className="min-w-0 flex-1">
                       <span className="block font-black text-[var(--color-text-primary)]">{card.title}</span>
@@ -635,7 +635,7 @@ export default function WikiPage() {
           </article>
           <div className="space-y-4">
             {PREMIER_PERKS.map((pkg) => (
-              <article key={pkg.name} className="rounded-[24px] border border-[var(--color-border)] bg-white p-4 shadow-sm">
+              <article key={pkg.name} className="rounded-[24px] border border-white bg-white p-4 shadow-sm">
                 <div className="flex items-center justify-between gap-3">
                   <p className="text-lg font-black">{pkg.name}</p>
                   <p className="rounded-xl bg-gradient-to-br from-[var(--color-primary-500)] to-[var(--color-primary-600)] px-3 py-1.5 text-center text-sm font-extrabold leading-5 text-white">
@@ -743,7 +743,7 @@ export default function WikiPage() {
           {FREEMAX.plans.map((plan) => {
             const kazeon = plan.perks.find((perk) => perk.includes("كازيون"));
             return (
-              <article key={plan.name} className="overflow-hidden rounded-[24px] border border-[var(--color-border)] bg-white p-4 shadow-sm">
+              <article key={plan.name} className="overflow-hidden rounded-[24px] border border-white bg-white p-4 shadow-sm">
                 <PlanBand title={plan.nameAr} big={`${plan.units} وحدة`} />
                 <div className="flex items-start justify-between gap-3">
                   <div>
@@ -809,7 +809,7 @@ export default function WikiPage() {
       {section === "educational" ? (
         <div className="space-y-3">
           <Back onClick={() => setSection("hub")} title="Educational GO" />
-          <article className="rounded-[24px] border border-[var(--color-border)] bg-white p-4 shadow-sm">
+          <article className="rounded-[24px] border border-white bg-white p-4 shadow-sm">
             <h2 className="mb-2 text-lg font-black tracking-tight">المواقع المشمولة</h2>
             <p className="mb-3 text-xs text-[var(--color-text-secondary)]">الباقة بتشمل المواقع دي فقط، والباقة الشهرية 2 جيجا مخصصة للمواقع التعليمية.</p>
             <p className="mb-3 text-xs font-extrabold text-[var(--color-primary-700)]">لمدة 3 سنين</p>
@@ -822,13 +822,13 @@ export default function WikiPage() {
               ))}
             </div>
           </article>
-          <article className="rounded-[24px] border border-[var(--color-border)] bg-white p-4 shadow-sm">
+          <article className="rounded-[24px] border border-white bg-white p-4 shadow-sm">
             <h2 className="mb-2 text-lg font-black tracking-tight">Siebel</h2>
             <ul className="list-disc space-y-1 pr-5 text-sm text-[#4d3829]">
               {EDU_SIEBEL_STEPS.map((step) => <li key={step}>{step}</li>)}
             </ul>
           </article>
-          <article className="rounded-[24px] border border-[var(--color-border)] bg-white p-4 shadow-sm">
+          <article className="rounded-[24px] border border-white bg-white p-4 shadow-sm">
             <h2 className="mb-2 text-lg font-black tracking-tight">Wincash</h2>
             <div className="space-y-2">
               {EDU_WINCASH_LINES.map((line) => (
@@ -846,7 +846,7 @@ export default function WikiPage() {
       {section === "go" ? (
         <div className="space-y-4">
           <Back onClick={() => setSection("hub")} title="Go" />
-          <section className="relative overflow-hidden rounded-[26px] border border-[#f2d7c0] bg-gradient-to-br from-[var(--color-surface-cream)] via-white to-[#ffead8] p-4 shadow-[0_10px_26px_rgba(126,65,25,0.06)]">
+          <section className="relative overflow-hidden rounded-[26px] border border-white bg-white p-4 shadow-[0_1px_2px_rgba(43,20,0,.04)]">
             <div className="absolute -left-8 -top-10 h-28 w-28 rounded-full bg-[var(--color-primary-500)]/15 blur-2xl" />
             <div className="relative flex items-center gap-3">
               <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-[#ff8a24] to-[#e85d0b] text-xl font-black text-white shadow-md shadow-orange-200">GO</div>
@@ -860,7 +860,7 @@ export default function WikiPage() {
             <section key={group.category} className="space-y-3">
               <div className="flex items-center justify-between gap-3 px-1">
                 <h3 className="text-base font-black tracking-tight text-[#71370f]">{group.category}</h3>
-                <span className="rounded-full border border-[#f2d7c0] bg-[#fff5ec] px-2.5 py-1 text-[10px] font-extrabold text-[#a45a27]">{group.plans.length} باقة</span>
+                <span className="rounded-full border border-white bg-[#fff5ec] px-2.5 py-1 text-[10px] font-extrabold text-[#a45a27]">{group.plans.length} باقة</span>
               </div>
               {group.plans.map((plan) => {
                 const after = Number.parseFloat(String(plan.fees ?? ""));
@@ -995,7 +995,7 @@ export default function WikiPage() {
         <div className="space-y-2">
           <Back onClick={() => setSection("hub")} title="الكبسولة" />
           {CAPSULE.map((item) => (
-            <div key={item.title} className="rounded-[22px] border border-[var(--color-border)] bg-white p-4 shadow-sm">
+            <div key={item.title} className="rounded-[22px] border border-white bg-white p-4 shadow-sm">
               <p className="text-sm font-black text-[var(--color-text-primary)]">{item.title}</p>
               <p className="mt-1 text-sm leading-7 text-[var(--color-text-secondary)]">{item.body}</p>
             </div>
