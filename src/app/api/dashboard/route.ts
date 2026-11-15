@@ -126,6 +126,8 @@ export async function GET(request: Request) {
       workingDays: bundle.workingDays,
       holidays: bundle.holidays,
       work,
+      // نفس أساس الأيام المنقضية المستخدم في expectedToDate للمؤشرات الفردية.
+      overallExpectedPercent: work.total > 0 ? (paceWork.elapsed / work.total) * 100 : 0,
       kpis,
       overall,
       overallLabel: formatPercent(overall),
