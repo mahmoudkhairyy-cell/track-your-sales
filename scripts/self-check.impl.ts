@@ -7,6 +7,7 @@ import {
   kpiContribution,
 } from "../src/lib/calculations";
 import { parseBackup, planEntryRestore, type BackupEntry } from "../src/lib/backup";
+import { applyBackupToState, checkRestoreRequest, type RestoreState } from "../src/lib/restore";
 import { validateQuantity } from "../src/lib/quantity";
 
 function check(name: string, run: () => void) {
@@ -156,6 +157,148 @@ check("الاستعادة بالدمج: إزالة التكرار مع الحف�
   assert.equal(plan.toInsert.length, 1);
   assert.equal(plan.skipped.length, 1);
   assert.equal(planEntryRestore(incoming, existing, "replace").entriesInserted, 2);
+});
+
+
+// ---------- اختبارات الاستعادة والدمج (specs/001-restore-merge-tests) ----------
+
+const WEEK_DAYS = { sat: true, sun: true, mon: true, tue: true, wed: true, thu: true, fri: true };
+
+function rawBackup(overrides: Record<string, unknown> = {}) {
+  return {
+    schemaVersion: 1,
+    exportedAt: "2026-11-08T12:00:00.000Z",
+    isEmpty: false,
+    emptyReason: null,
+    profile: { name: "Test User", branch: "Test Branch" },
+    months: [],
+    entries: [],
+    articles: [],
+    ...overrides,
+  };
+}
+
+function emptyRestoreState(): RestoreState {
+  return { profile: { name: "Old", branch: "Old" }, entries: [], months: {}, articles: [] };
+}
+
+function restoreOptions() {
+  let counter = 0;
+  return {
+    newId: () => `new-${++counter}`,
+    now: () => "2026-11-15T00:00:00.000Z",
+    qualityFromChecks: (checks: Record<string, boolean>) => ({ checks }),
+  };
+}
+
+check("استعادة: استيراد نفس الملف مرتين بالدمج ما يكررش السجلات (US1)", () => {
+  const entries = Array.from({ length: 10 }, (_, i) => ({
+    id: `e-${i + 1}`,
+    kpiKey: "new_lines",
+    quantity: 1,
+    entryDate: `2026-11-${String(i + 1).padStart(2, "0")}`,
+    note: null,
+  }));
+  const backup = parseBackup(rawBackup({ entries }));
+  const state = emptyRestoreState();
+  assert.equal(applyBackupToState(state, backup, "merge", restoreOptions()).entriesInserted, 10);
+  const second = applyBackupToState(state, backup, "merge", restoreOptions());
+  assert.equal(second.entriesInserted, 0);
+  assert.equal(second.entriesSkipped, 10);
+  assert.equal(state.entries.length, 10);
+});
+
+check("استعادة: سجلين متطابقين في نفس اليوم يفضلوا اتنين (US1)", () => {
+  const twin = { kpiKey: "new_lines", quantity: 2, entryDate: "2026-11-08", note: "shift" };
+  const backup = parseBackup(rawBackup({ entries: [twin, twin] }));
+  const state = emptyRestoreState();
+  applyBackupToState(state, backup, "merge", restoreOptions());
+  assert.equal(state.entries.length, 2);
+  const again = applyBackupToState(state, backup, "merge", restoreOptions());
+  assert.equal(again.entriesInserted, 0);
+  assert.equal(state.entries.length, 2);
+});
+
+const monthFixture = { yearMonth: "2026-11", fullCommission: 5000, workingDays: WEEK_DAYS, kpis: [], holidays: [] };
+
+check("استعادة بالدمج: الشهر الموجود ما يتكتبش فوقه (US2)", () => {
+  const state = emptyRestoreState();
+  state.months["2026-11"] = { fullCommission: 6000, workingDays: WEEK_DAYS, kpis: [], holidays: [] };
+  const result = applyBackupToState(state, parseBackup(rawBackup({ months: [monthFixture] })), "merge", restoreOptions());
+  assert.equal(result.monthsSkipped, 1);
+  assert.equal(state.months["2026-11"].fullCommission, 6000);
+});
+
+check("استعادة بالدمج: الشهر غير الموجود يتضاف (US2)", () => {
+  const state = emptyRestoreState();
+  const result = applyBackupToState(state, parseBackup(rawBackup({ months: [monthFixture] })), "merge", restoreOptions());
+  assert.equal(result.monthsSkipped, 0);
+  assert.equal(state.months["2026-11"].fullCommission, 5000);
+});
+
+check("استعادة: القيم السالبة ترفض الملف، والوزن صفر مسموح (US4)", () => {
+  assert.throws(() => parseBackup(rawBackup({ months: [{ ...monthFixture, fullCommission: -1 }] })), /صفر أو أكبر/);
+  const negativeTarget = {
+    ...monthFixture,
+    kpis: [{ kpiKey: "new_lines", target: -5, weight: 10, unitAr: "خط", sortOrder: 0 }],
+  };
+  assert.throws(() => parseBackup(rawBackup({ months: [negativeTarget] })), /صفر أو أكبر/);
+  const zeroWeight = {
+    ...monthFixture,
+    kpis: [{ kpiKey: "new_lines", target: 0, weight: 0, unitAr: "خط", sortOrder: 0 }],
+  };
+  assert.doesNotThrow(() => parseBackup(rawBackup({ months: [zeroWeight] })));
+});
+
+check("استعادة: مقالة بنفس العنوان والمحتوى ما تتضافش مرتين (US3)", () => {
+  const backup = parseBackup(rawBackup({ articles: [{ title: "SR", content: "نص" }] }));
+  const state = emptyRestoreState();
+  applyBackupToState(state, backup, "merge", restoreOptions());
+  const again = applyBackupToState(state, backup, "merge", restoreOptions());
+  assert.equal(again.articlesSkipped, 1);
+  assert.equal(state.articles.length, 1);
+});
+
+check("استعادة: مقالة بنفس العنوان ومحتوى مختلف تتضاف (US3)", () => {
+  const state = emptyRestoreState();
+  applyBackupToState(state, parseBackup(rawBackup({ articles: [{ title: "SR", content: "نص" }] })), "merge", restoreOptions());
+  const result = applyBackupToState(
+    state,
+    parseBackup(rawBackup({ articles: [{ title: "SR", content: "نص مختلف" }] })),
+    "merge",
+    restoreOptions(),
+  );
+  assert.equal(result.articlesSkipped, 0);
+  assert.equal(state.articles.length, 2);
+});
+
+check("استبدال: لازم تأكيد صريح قبل أي تنفيذ (US5)", () => {
+  assert.equal(checkRestoreRequest({ mode: "replace" }).ok, false);
+  assert.equal(checkRestoreRequest({ mode: "replace", confirmReplace: true }).ok, true);
+  assert.equal(checkRestoreRequest({ mode: "merge" }).ok, true);
+  assert.equal(checkRestoreRequest({}).ok, false);
+});
+
+check("استبدال: النسخة القديمة تتحفظ قبل المسح (US5)", () => {
+  const state = emptyRestoreState();
+  state.entries.push({
+    id: "old-1",
+    kpiKey: "new_lines",
+    quantity: 3,
+    entryDate: "2026-11-01",
+    note: "قديم",
+    createdAt: "2026-11-01T00:00:00.000Z",
+  });
+  let snapshot = "";
+  const backup = parseBackup(rawBackup({ profile: { name: "New", branch: "New" } }));
+  applyBackupToState(state, backup, "replace", {
+    ...restoreOptions(),
+    beforeReplace: (value) => {
+      snapshot = value;
+    },
+  });
+  assert.ok(snapshot.includes("old-1"));
+  assert.equal(state.entries.length, 0);
 });
 
 console.log("\nاكتملت اختبارات الحسابات والنسخ الاحتياطي والكميات بنجاح.");
