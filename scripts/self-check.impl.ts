@@ -301,4 +301,16 @@ check("استبدال: النسخة القديمة تتحفظ قبل المسح 
   assert.equal(state.entries.length, 0);
 });
 
+
+check("استعادة: الملف التالف أو الناقص يترفض قبل أي كتابة (quickstart)", () => {
+  assert.throws(() => parseBackup("not an object"), /مش كائن JSON/);
+  assert.throws(() => parseBackup({ schemaVersion: 1, profile: { name: "A", branch: "B" } }), /المخطط ناقص/);
+  assert.throws(() => parseBackup(rawBackup({ months: "oops" })), /المخطط ناقص|months/);
+});
+
+check("استعادة: نسخة بإصدار غير مدعوم أو أقدم تترفض بوضوح (quickstart)", () => {
+  assert.throws(() => parseBackup(rawBackup({ schemaVersion: 0 })), /إصدار الملف غير مدعوم/);
+  assert.throws(() => parseBackup(rawBackup({ schemaVersion: 99 })), /إصدار الملف غير مدعوم/);
+});
+
 console.log("\nاكتملت اختبارات الحسابات والنسخ الاحتياطي والكميات بنجاح.");
