@@ -110,7 +110,7 @@ export default function HomePage() {
     if (!valueNode || !barNode) return;
 
     const target = data ? Math.min(200, Math.max(0, data.overall)) : 0;
-    const duration = 2800;
+    const duration = 1400;
     let frame = 0;
     const start = performance.now();
     valueNode.textContent = formatPercent(0);

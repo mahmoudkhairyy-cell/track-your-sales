@@ -302,7 +302,7 @@ export default function MorePage() {
 
   return (
     <div className="tys-page tys-page-more mx-auto max-w-5xl space-y-5">
-      <section className="relative overflow-hidden rounded-[26px] border border-[#f2dfce] bg-gradient-to-br from-white via-[var(--color-surface-cream)] to-[var(--color-primary-50)] p-5 shadow-[0_12px_30px_rgba(126,65,24,0.06)]">
+      <section className="relative overflow-hidden rounded-[26px] border border-white bg-white p-5 shadow-[0_1px_2px_rgba(43,20,0,.04)]">
         <div className="absolute -left-10 -top-12 h-36 w-36 rounded-full bg-[#ffb36e]/20 blur-3xl" />
         <div className="relative flex flex-wrap items-center justify-between gap-3">
           <div>
@@ -357,7 +357,7 @@ export default function MorePage() {
               ],
             },
           ].map((group) => (
-            <section key={group.title} className="tys-more-group rounded-[22px] border border-[var(--color-border)] bg-white/80 p-3.5 shadow-[0_6px_18px_rgba(126,65,24,0.045)]">
+            <section key={group.title} className="tys-more-group rounded-[22px] border border-white bg-white/80 p-3.5 shadow-[0_1px_2px_rgba(43,20,0,.04)]">
               <div className="mb-3 flex items-center gap-2">
                 <span className="h-5 w-1 rounded-full bg-[var(--color-primary-600)]" />
                 <h2 className="text-sm font-black text-[var(--color-text-primary)]">{group.title}</h2>
@@ -368,7 +368,7 @@ export default function MorePage() {
                     key={item.key}
                     type="button"
                     onClick={() => setView(item.key as typeof view)}
-                    className="tys-more-item group flex min-h-[76px] w-full items-center gap-3 rounded-[17px] border border-[#f1dfce] bg-gradient-to-l from-white to-[#fff8f1] px-3 py-2.5 text-right transition-all duration-200 hover:border-[#edc4a4] hover:shadow-[0_6px_16px_rgba(126,65,24,0.07)] active:scale-[0.99]"
+                    className="tys-more-item group flex min-h-[76px] w-full items-center gap-3 rounded-[17px] border border-white bg-white px-3 py-2.5 text-right transition-all duration-200 hover:border-[#edc4a4] hover:shadow-[0_1px_2px_rgba(43,20,0,.04)] active:scale-[0.99]"
                   >
                     <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[13px] bg-gradient-to-br from-[#fff0df] to-[#ffe0c1] text-xl shadow-sm">{item.icon}</span>
                     <span className="min-w-0 flex-1">
@@ -404,7 +404,7 @@ export default function MorePage() {
       {view === "report" ? (
         <section className="space-y-4">
           <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[var(--color-primary-700)]">← رجوع للقائمة</button>
-          <div id="report-print" className="rounded-[24px] border border-[var(--color-border)] bg-white p-5 shadow-sm">
+          <div id="report-print" className="rounded-[24px] border border-white bg-white p-5 shadow-sm">
             <p className="text-xs font-bold text-[var(--color-text-secondary)]">تقرير الشهر · {monthLabelAr(month)}</p>
             <h2 className="mt-1 text-xl font-black">{profile.name || "—"}</h2>
             <p className="text-sm text-[var(--color-text-secondary)]">📍 {profile.branch || "—"}</p>
@@ -436,7 +436,7 @@ export default function MorePage() {
       {view === "about" ? (
         <div className="space-y-4">
           <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[var(--color-primary-700)]">← رجوع للقائمة</button>
-          <section className="rounded-[24px] border border-[var(--color-border)] bg-white p-5 shadow-sm">
+          <section className="rounded-[24px] border border-white bg-white p-5 shadow-sm">
             <p className="font-black">{APP_NAME}</p>
             <p className="mt-2 text-sm leading-7 text-[var(--color-text-secondary)]">أداة مساعدة مستقلة وغير رسمية، وليست تطبيقًا رسميًا تابعًا لشركة Orange.</p>
           </section>
@@ -446,7 +446,7 @@ export default function MorePage() {
       {view === "today" ? (
         <div className="space-y-4">
           <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[var(--color-primary-700)]">← رجوع للقائمة</button>
-      <section className="rounded-[24px] border border-[var(--color-border)] bg-white p-5 shadow-sm">
+      <section className="rounded-[24px] border border-white bg-white p-5 shadow-sm">
         <h2 className="text-lg font-black tracking-tight">📊 اللي عملته النهارده</h2>
         {todayItems.length === 0 ? (
           <p className="mt-3 text-sm text-[var(--color-text-secondary)]">لسه مسجلتش حاجة النهارده. يلا نبدأ! 💪</p>
@@ -474,7 +474,7 @@ export default function MorePage() {
       {view === "history" ? (
         <div className="space-y-4">
           <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[var(--color-primary-700)]">← رجوع للقائمة</button>
-      <section className="rounded-[24px] border border-[var(--color-border)] bg-white p-5 shadow-sm">
+      <section className="rounded-[24px] border border-white bg-white p-5 shadow-sm">
         <div className="flex items-center justify-between gap-3">
           <h2 className="text-lg font-black tracking-tight">🗂️ سجل عمليات {monthLabelAr(month)}</h2>
           <span className="text-sm text-[var(--color-text-secondary)]">{filteredEntries.length} من {entries.length} سجل</span>
@@ -547,7 +547,7 @@ export default function MorePage() {
         </button>
       </section>
 
-      <section className="rounded-[24px] border border-[var(--color-border)] bg-white p-5 shadow-sm">
+      <section className="rounded-[24px] border border-white bg-white p-5 shadow-sm">
         <h2 className="text-lg font-black tracking-tight">👤 بياناتك</h2>
         <div className="mt-4 space-y-3">
           <Field label="اسم الموظف">
@@ -564,7 +564,7 @@ export default function MorePage() {
       {view === "backup" ? (
         <div className="space-y-4">
           <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[var(--color-primary-700)]">← رجوع للقائمة</button>
-      <section className="rounded-[24px] border border-[var(--color-border)] bg-white p-5 shadow-sm">
+      <section className="rounded-[24px] border border-white bg-white p-5 shadow-sm">
         <h2 className="text-lg font-black tracking-tight">💾 نسخة احتياطية واستعادة</h2>
         <p className="mt-2 text-sm leading-7 text-[var(--color-text-secondary)]">التصدير بينزّل ملف JSON فيه بياناتك وإعدادات الشهور والسجلات والملاحظات. من غير أي مفاتيح أو أسرار.</p>
         <div className="mt-4 grid gap-3 sm:grid-cols-2">

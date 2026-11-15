@@ -33,7 +33,7 @@ export function EmptyState({
   action?: ReactNode;
 }) {
   return (
-    <div className="rounded-[28px] border border-dashed border-[#edc6a8] bg-gradient-to-br from-white to-[#fff8f1] px-5 py-10 text-center shadow-[0_12px_30px_rgba(126,65,24,0.05)]">
+    <div className="rounded-[28px] border border-dashed border-[#edc6a8] bg-white px-5 py-10 text-center shadow-[0_1px_2px_rgba(43,20,0,.04)]">
       <p className="text-lg font-extrabold text-[#2d2119]">{title}</p>
       <p className="mx-auto mt-2 max-w-md text-sm leading-7 text-[#927b69]">{text}</p>
       {action ? <div className="mt-5">{action}</div> : null}
