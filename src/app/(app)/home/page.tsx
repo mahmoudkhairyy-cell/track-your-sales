@@ -152,7 +152,7 @@ export default function HomePage() {
   const sarcastic = sarcasticLine(data.overall);
 
   return (
-    <div className="tys-page tys-page-home tys-premium-home mx-auto flex min-h-screen w-full max-w-6xl flex-col gap-4 rounded-[28px] bg-[#f5ecdf] p-3 pb-28 sm:p-4">
+    <div className="tys-page tys-page-home tys-premium-home mx-auto flex min-h-screen w-full max-w-6xl flex-col gap-4 pb-28">
       {sync ? (
         <p className={`text-[11px] font-bold ${sync.ok ? "text-emerald-700" : "text-red-600"}`} dir="rtl">
           {sync.ok
