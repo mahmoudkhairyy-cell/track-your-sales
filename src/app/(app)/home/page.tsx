@@ -161,7 +161,7 @@ export default function HomePage() {
         </p>
       ) : null}
 
-      <section className="tys-home-greeting flex items-end justify-between gap-3 rounded-[26px] border border-[#f5d9c2] bg-white px-4 py-4 shadow-[0_1px_2px_rgba(43,20,0,.04)] sm:px-5">
+      <section className="tys-home-greeting flex items-end justify-between gap-3 rounded-[26px] border border-white bg-white px-4 py-4 shadow-[0_1px_2px_rgba(43,20,0,.04)] sm:px-5">
         <div className="min-w-0">
           <p className="text-[10px] font-black tracking-[0.16em] text-[var(--color-primary-600)]">YOUR SALES OVERVIEW</p>
           <h1 className="mt-1 text-xl font-black tracking-tight text-[var(--color-text-primary)] sm:text-2xl">
@@ -173,11 +173,11 @@ export default function HomePage() {
       </section>
 
       {/* الهيرو الرئيسي — لوحة إنجاز دائرية */}
-      <section style={{ boxShadow: onTrack === null ? "0 5px 14px rgba(100,55,25,.13)" : onTrack ? "0 0 0 1px rgba(22,163,74,.06), 0 0 10px rgba(22,163,74,.08), 0 5px 14px rgba(100,55,25,.13)" : "0 0 0 1px rgba(220,38,38,.06), 0 0 10px rgba(220,38,38,.08), 0 5px 14px rgba(100,55,25,.13)" }} className="tys-home-hero relative isolate overflow-hidden rounded-[30px] border border-[#f2e4d8] bg-white p-5 shadow-[0_1px_2px_rgba(43,20,0,.04)] sm:p-7">
+      <section style={{ boxShadow: onTrack === null ? "0 5px 14px rgba(100,55,25,.13)" : onTrack ? "0 0 0 1px rgba(22,163,74,.06), 0 0 10px rgba(22,163,74,.08), 0 5px 14px rgba(100,55,25,.13)" : "0 0 0 1px rgba(220,38,38,.06), 0 0 10px rgba(220,38,38,.08), 0 5px 14px rgba(100,55,25,.13)" }} className="tys-home-hero relative isolate overflow-hidden rounded-[30px] border border-white bg-white p-5 shadow-[0_1px_2px_rgba(43,20,0,.04)] sm:p-7">
         <div className="pointer-events-none absolute -left-12 -top-16 h-52 w-52 rounded-full bg-[var(--color-primary-500)]/20 blur-3xl" />
         <div className="pointer-events-none absolute -bottom-24 right-1/3 h-52 w-52 rounded-full bg-[var(--color-primary-600)]/10 blur-3xl" />
         <div className="relative">
-          <div className="flex items-center justify-between gap-3 border-b border-[var(--color-border)] pb-3">
+          <div className="flex items-center justify-between gap-3 border-b border-white pb-3">
             <div className="flex min-w-0 items-center gap-2.5">
               <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-[var(--color-primary-500)] to-[var(--color-primary-600)] text-lg text-white shadow-md">◎</span>
               <div className="min-w-0">
@@ -185,7 +185,7 @@ export default function HomePage() {
                 <p className="mt-0.5 text-sm font-black text-[var(--color-text-primary)]">إجمالي التارجت الشهري</p>
               </div>
             </div>
-            <span className={`shrink-0 rounded-full border px-3 py-1.5 text-[10px] font-extrabold ${onTrack === null ? "border-[var(--color-border)] bg-white text-[var(--color-text-secondary)]" : onTrack ? "border-emerald-200 bg-emerald-50 text-emerald-700" : "border-orange-200 bg-orange-50 text-[var(--color-primary-700)]"}`}>
+            <span className={`shrink-0 rounded-full border px-3 py-1.5 text-[10px] font-extrabold ${onTrack === null ? "border-white bg-white text-[var(--color-text-secondary)]" : onTrack ? "border-emerald-200 bg-emerald-50 text-emerald-700" : "border-orange-200 bg-orange-50 text-[var(--color-primary-700)]"}`}>
               <span className={`ml-1.5 inline-block h-1.5 w-1.5 rounded-full ${onTrack === null ? "bg-[var(--color-text-muted)]" : onTrack ? "bg-emerald-500" : "bg-[var(--color-primary-600)]"}`} />
               {onTrack === null ? "Waiting for data" : onTrack ? "On track" : "Behind"}
             </span>
@@ -198,13 +198,13 @@ export default function HomePage() {
                 <span className="text-xl font-black text-[var(--color-primary-600)]">%</span>
               </div>
             </div>
-            <div className="inline-flex max-w-full shrink-0 flex-col items-end rounded-xl border border-[var(--color-border)] bg-white/85 px-3 py-2 shadow-sm">
+            <div className="inline-flex max-w-full shrink-0 flex-col items-end rounded-xl border border-white bg-white/85 px-3 py-2 shadow-sm">
               <span className="text-[10px] font-bold text-[var(--color-text-secondary)]">الكوميشن المحقق</span>
               <strong className={`truncate font-mono text-base font-black ${data.overall < 80 ? "text-red-600" : "text-emerald-700"}`}>{formatMoney(data.estimatedCommission)} جنيه</strong>
             </div>
           </div>
           <div>
-            <div className="relative h-2.5 overflow-hidden rounded-full bg-[var(--color-border)]">
+            <div className="relative h-2.5 overflow-hidden rounded-full bg-[#f2e4d8]">
               <div ref={overallBarRef} className="h-full rounded-full bg-gradient-to-l from-[var(--color-primary-500)] via-[var(--color-primary-600)] to-[var(--color-primary-700)] shadow-[0_1px_5px_rgba(189,75,10,0.22)]" style={{ width: "0%" }} />
             </div>
             <div className="mt-1 flex justify-between text-[9px] font-bold text-[var(--color-text-secondary)]" dir="ltr">
@@ -226,7 +226,7 @@ export default function HomePage() {
       </div>
 
       {/* المطلوب */}
-      <section className="tys-home-daily rounded-[20px] border border-[#f2e4d8] bg-white p-4 shadow-[0_1px_2px_rgba(43,20,0,.04)]">
+      <section className="tys-home-daily rounded-[20px] border border-white bg-white p-4 shadow-[0_1px_2px_rgba(43,20,0,.04)]">
         <div className="mb-3 flex items-center justify-between gap-2">
           <div>
             <h2 className="mt-0.5 text-sm font-extrabold text-[var(--color-text-primary)]">DAILY</h2>
@@ -241,10 +241,10 @@ export default function HomePage() {
             return (
               <div
                 key={k.kpiKey}
-                className="flex min-h-[46px] min-w-0 items-center justify-between gap-2 rounded-lg border border-[#f2e4d8] bg-white px-2.5 py-1.5 text-[#873b12] shadow-[0_1px_2px_rgba(43,20,0,.04)]"
+                className="flex min-h-[46px] min-w-0 items-center justify-between gap-2 rounded-lg border border-white bg-white px-2.5 py-1.5 text-[#873b12] shadow-[0_1px_2px_rgba(43,20,0,.04)]"
               >
                 <span className="min-w-0 truncate text-[9px] font-bold tracking-wide text-[#8b421d]" dir="ltr">{k.nameEn}</span>
-                <strong className="shrink-0 rounded-md border border-[#f2e4d8] bg-[#fffaf5] px-2 py-1 text-base font-black leading-none tabular-nums text-[#7c320d]">
+                <strong className="shrink-0 rounded-md border border-white bg-[#fffaf5] px-2 py-1 text-base font-black leading-none tabular-nums text-[#7c320d]">
                   {formatQty(dailyRequired)}
                 </strong>
               </div>
@@ -257,7 +257,7 @@ export default function HomePage() {
       </section>
 
       {/* المؤشرات */}
-      <section className="tys-home-kpis flex flex-col gap-3 rounded-[20px] border border-[#f2e4d8] bg-white p-5 shadow-[0_1px_2px_rgba(43,20,0,.04)]">
+      <section className="tys-home-kpis flex flex-col gap-3 rounded-[20px] border border-white bg-white p-5 shadow-[0_1px_2px_rgba(43,20,0,.04)]">
         <div className="flex items-center justify-between">
           <h2 className="text-base font-black tracking-tight text-[var(--color-text-primary)]">مؤشرات الأداء (KPIs)</h2>
           <span className="text-[11px] font-bold text-[var(--color-text-secondary)]">{data.kpis.length} مؤشر</span>
@@ -268,7 +268,7 @@ export default function HomePage() {
             const ringLen = 2 * Math.PI * 18;
             const pct = Math.min(100, Math.max(0, kpi.percent));
             return (
-              <article key={kpi.kpiKey} style={{ animationDelay: `${kpiIndex * 70}ms`, boxShadow: onTrackKpi ? "0 0 0 1px rgba(22,163,74,.06), 0 0 8px rgba(22,163,74,.07), 0 5px 14px rgba(100,55,25,.13)" : "0 0 0 1px rgba(220,38,38,.06), 0 0 8px rgba(220,38,38,.07), 0 5px 14px rgba(100,55,25,.13)" }} className={`tys-rise tys-home-kpi flex min-w-0 items-center gap-2.5 rounded-[20px] border p-3 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg sm:gap-3 sm:p-3 border-[#f2e4d8] bg-[#fffdfa]`}>
+              <article key={kpi.kpiKey} style={{ animationDelay: `${kpiIndex * 70}ms`, boxShadow: onTrackKpi ? "0 0 0 1px rgba(22,163,74,.06), 0 0 8px rgba(22,163,74,.07), 0 5px 14px rgba(100,55,25,.13)" : "0 0 0 1px rgba(220,38,38,.06), 0 0 8px rgba(220,38,38,.07), 0 5px 14px rgba(100,55,25,.13)" }} className={`tys-rise tys-home-kpi flex min-w-0 items-center gap-2.5 rounded-[20px] border p-3 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg sm:gap-3 sm:p-3 border-white bg-[#fffdfa]`}>
                 <div className="relative h-12 w-12 shrink-0 sm:h-14 sm:w-14">
                   <svg viewBox="0 0 44 44" className="h-full w-full -rotate-90">
                     <circle cx="22" cy="22" r="18" fill="none" stroke="var(--color-border)" strokeWidth="5" />
@@ -305,7 +305,7 @@ export default function HomePage() {
                     </span>
                     <span>المتبقي <strong className="font-mono text-[var(--color-text-primary)]">{formatQty(kpi.remaining)}</strong></span>
                   </div>
-                  <div className="h-1.5 w-full overflow-hidden rounded-full bg-[var(--color-border)]">
+                  <div className="h-1.5 w-full overflow-hidden rounded-full bg-[#f2e4d8]">
                     <div className="h-full rounded-full bg-gradient-to-r from-[var(--color-primary-600)] to-[var(--color-primary-500)] transition-all duration-700" style={{ width: `${pct}%` }} />
                   </div>
                   {kpi.overTarget ? <p className="text-[10px] font-bold text-[var(--color-primary-600)]">عدّيت التارجت 🎉</p> : null}
