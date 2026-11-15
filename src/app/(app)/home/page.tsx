@@ -161,7 +161,7 @@ export default function HomePage() {
         </p>
       ) : null}
 
-      <section className="tys-home-greeting flex items-end justify-between gap-3 rounded-[26px] border border-[#f5d9c2] bg-[linear-gradient(115deg,#fff8f1_0%,#fff_54%,#ffead8_100%)] px-4 py-4 shadow-[0_10px_28px_-12px_rgba(255,121,0,.20),0_2px_10px_-2px_rgba(43,20,0,.045)] sm:px-5">
+      <section className="tys-home-greeting flex items-end justify-between gap-3 rounded-[26px] border border-[#f5d9c2] bg-white px-4 py-4 shadow-[0_1px_2px_rgba(43,20,0,.04)] sm:px-5">
         <div className="min-w-0">
           <p className="text-[10px] font-black tracking-[0.16em] text-[var(--color-primary-600)]">YOUR SALES OVERVIEW</p>
           <h1 className="mt-1 text-xl font-black tracking-tight text-[var(--color-text-primary)] sm:text-2xl">
@@ -173,7 +173,7 @@ export default function HomePage() {
       </section>
 
       {/* الهيرو الرئيسي — لوحة إنجاز دائرية */}
-      <section style={{ boxShadow: onTrack === null ? "0 5px 14px rgba(100,55,25,.13)" : onTrack ? "0 0 0 1px rgba(22,163,74,.06), 0 0 10px rgba(22,163,74,.08), 0 5px 14px rgba(100,55,25,.13)" : "0 0 0 1px rgba(220,38,38,.06), 0 0 10px rgba(220,38,38,.08), 0 5px 14px rgba(100,55,25,.13)" }} className="tys-home-hero relative isolate overflow-hidden rounded-[30px] border border-[#FFE0C2] bg-[linear-gradient(125deg,#fff3e8_0%,#fffaf5_48%,#ffe2c7_100%)] p-4 sm:p-6">
+      <section style={{ boxShadow: onTrack === null ? "0 5px 14px rgba(100,55,25,.13)" : onTrack ? "0 0 0 1px rgba(22,163,74,.06), 0 0 10px rgba(22,163,74,.08), 0 5px 14px rgba(100,55,25,.13)" : "0 0 0 1px rgba(220,38,38,.06), 0 0 10px rgba(220,38,38,.08), 0 5px 14px rgba(100,55,25,.13)" }} className="tys-home-hero relative isolate overflow-hidden rounded-[30px] border border-[#f2e4d8] bg-white p-5 shadow-[0_1px_2px_rgba(43,20,0,.04)] sm:p-7">
         <div className="pointer-events-none absolute -left-12 -top-16 h-52 w-52 rounded-full bg-[var(--color-primary-500)]/20 blur-3xl" />
         <div className="pointer-events-none absolute -bottom-24 right-1/3 h-52 w-52 rounded-full bg-[var(--color-primary-600)]/10 blur-3xl" />
         <div className="relative">
@@ -194,7 +194,7 @@ export default function HomePage() {
             <div className="min-w-0">
               <p className="text-[10px] font-bold text-[var(--color-text-secondary)]">نسبة تحقيقك للتارجت</p>
               <div className="mt-1 flex items-baseline gap-1">
-                <span className="font-mono text-[52px] font-black leading-none tracking-[-0.065em] text-[var(--color-primary-700)] sm:text-[68px]" ref={overallValueRef}>{formatPercent(0)}</span>
+                <span className="font-mono text-[56px] font-black leading-none tracking-[-0.06em] text-[var(--color-primary-700)] sm:text-[76px]" ref={overallValueRef}>{formatPercent(0)}</span>
                 <span className="text-xl font-black text-[var(--color-primary-600)]">%</span>
               </div>
             </div>
@@ -226,7 +226,7 @@ export default function HomePage() {
       </div>
 
       {/* المطلوب */}
-      <section className="tys-home-daily rounded-[24px] border border-[#f2dfcf] bg-[linear-gradient(160deg,#fff_0%,#fffaf6_100%)] p-3 shadow-[0_8px_24px_-12px_rgba(255,121,0,.16),0_2px_10px_-2px_rgba(43,20,0,.045)] sm:p-4">
+      <section className="tys-home-daily rounded-[20px] border border-[#f2e4d8] bg-white p-4 shadow-[0_1px_2px_rgba(43,20,0,.04)]">
         <div className="mb-3 flex items-center justify-between gap-2">
           <div>
             <h2 className="mt-0.5 text-sm font-extrabold text-[var(--color-text-primary)]">DAILY</h2>
@@ -257,7 +257,7 @@ export default function HomePage() {
       </section>
 
       {/* المؤشرات */}
-      <section className="tys-home-kpis flex flex-col gap-3 rounded-[28px] border border-[#f2dfcf] bg-[linear-gradient(160deg,#fff_0%,#fffaf6_100%)] p-4 shadow-[0_8px_26px_-12px_rgba(255,121,0,.16),0_2px_10px_-2px_rgba(43,20,0,.045)] sm:p-5">
+      <section className="tys-home-kpis flex flex-col gap-3 rounded-[20px] border border-[#f2e4d8] bg-white p-5 shadow-[0_1px_2px_rgba(43,20,0,.04)]">
         <div className="flex items-center justify-between">
           <h2 className="text-base font-black tracking-tight text-[var(--color-text-primary)]">مؤشرات الأداء (KPIs)</h2>
           <span className="text-[11px] font-bold text-[var(--color-text-secondary)]">{data.kpis.length} مؤشر</span>
@@ -268,7 +268,7 @@ export default function HomePage() {
             const ringLen = 2 * Math.PI * 18;
             const pct = Math.min(100, Math.max(0, kpi.percent));
             return (
-              <article key={kpi.kpiKey} style={{ animationDelay: `${kpiIndex * 70}ms`, boxShadow: onTrackKpi ? "0 0 0 1px rgba(22,163,74,.06), 0 0 8px rgba(22,163,74,.07), 0 5px 14px rgba(100,55,25,.13)" : "0 0 0 1px rgba(220,38,38,.06), 0 0 8px rgba(220,38,38,.07), 0 5px 14px rgba(100,55,25,.13)" }} className={`tys-rise tys-home-kpi flex min-w-0 items-center gap-2.5 rounded-[20px] border p-3 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg sm:gap-3 sm:p-3 border-[#f1d8c3] bg-[linear-gradient(145deg,#fffaf6_0%,#fff0e3_100%)]`}>
+              <article key={kpi.kpiKey} style={{ animationDelay: `${kpiIndex * 70}ms`, boxShadow: onTrackKpi ? "0 0 0 1px rgba(22,163,74,.06), 0 0 8px rgba(22,163,74,.07), 0 5px 14px rgba(100,55,25,.13)" : "0 0 0 1px rgba(220,38,38,.06), 0 0 8px rgba(220,38,38,.07), 0 5px 14px rgba(100,55,25,.13)" }} className={`tys-rise tys-home-kpi flex min-w-0 items-center gap-2.5 rounded-[20px] border p-3 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg sm:gap-3 sm:p-3 border-[#f2e4d8] bg-[#fffdfa]`}>
                 <div className="relative h-12 w-12 shrink-0 sm:h-14 sm:w-14">
                   <svg viewBox="0 0 44 44" className="h-full w-full -rotate-90">
                     <circle cx="22" cy="22" r="18" fill="none" stroke="var(--color-border)" strokeWidth="5" />
