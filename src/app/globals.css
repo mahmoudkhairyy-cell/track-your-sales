@@ -3960,3 +3960,21 @@ body {
 :root[data-theme="linear"] nav button {
   font-family: "Chivo Mono", "Tajawal", ui-monospace, monospace;
 }
+
+/* الوضع الأسود: الخلفيات الفاتحة المكتوبة في الكلاسات بتتحول لدرجات داكنة. */
+:root[data-theme="linear"] .bg-white,
+:root[data-theme="linear"] [class*="bg-[#fff"],
+:root[data-theme="linear"] [class*="bg-[var(--color-surface-cream)]"],
+:root[data-theme="linear"] [class*="bg-[var(--color-surface)]"] {
+  background-color: var(--brand-card) !important;
+}
+:root[data-theme="linear"] [class*="bg-[var(--color-border)]"] {
+  background-color: #292929 !important;
+}
+:root[data-theme="linear"] .bg-amber-50,
+:root[data-theme="linear"] .bg-orange-50,
+:root[data-theme="linear"] .bg-amber-100,
+:root[data-theme="linear"] .bg-stone-100,
+:root[data-theme="linear"] .bg-neutral-50 {
+  background-color: #1a1a1a !important;
+}
