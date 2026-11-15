@@ -3953,3 +3953,10 @@ body {
   border-color: var(--brand-border);
   box-shadow: none;
 }
+
+/* الوضع الأسود: الأزرار والتنقل بخط Chivo Mono (العربي بيرجع للخط الأساسي تلقائيًا). */
+:root[data-theme="linear"] button,
+:root[data-theme="linear"] nav a,
+:root[data-theme="linear"] nav button {
+  font-family: "Chivo Mono", "Tajawal", ui-monospace, monospace;
+}
