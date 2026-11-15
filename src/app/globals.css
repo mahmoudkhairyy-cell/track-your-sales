@@ -3901,3 +3901,42 @@ body {
   .tx-manager .tx-hero-card { border-radius: 22px !important; }
   .tx-manager .tx-overview { gap: 16px; }
 }
+
+/* =========================================================
+   وضع أسود اختياري (linear): بيتفعّل بس لما المستخدم يختاره.
+   التوكنز من ملف التصميم: void/carbon/signal-orange.
+   ========================================================= */
+:root[data-theme="linear"] {
+  color-scheme: dark;
+  --brand-primary: #ff4800;
+  --brand-deep: #ca4e17;
+  --brand-warm: #ff5e23;
+  --brand-soft: #292929;
+  --brand-cream: #050505;
+  --brand-bg: #000000;
+  --brand-card: #050505;
+  --brand-text: #ffffff;
+  --brand-muted: #999999;
+  --brand-border: #292929;
+  --app-shadow: 0 12px 32px rgba(0, 0, 0, .5);
+  --color-primary-900: #ff5e23;
+  --color-primary-700: #ff4800;
+  --color-primary-600: #ff4800;
+  --color-primary-500: #ff5e23;
+  --color-primary-100: #292929;
+  --color-primary-50: #050505;
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #bfbfbf;
+  --color-text-muted: #999999;
+  --color-surface: #050505;
+  --color-surface-cream: #050505;
+  --color-border: #292929;
+}
+:root[data-theme="linear"] html,
+:root[data-theme="linear"] body {
+  background-color: #000000;
+  color: #ffffff;
+}
+:root[data-theme="linear"] body {
+  background-image: none;
+}

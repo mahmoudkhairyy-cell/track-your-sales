@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import { APP_DISCLAIMER, APP_NAME, BRAND_BY } from "@/lib/constants";
 import "./globals.css";
 import { PwaRegister } from "@/components/PwaRegister";
+import { ThemeSwitch } from "@/components/ThemeSwitch";
 
 export const metadata: Metadata = {
   title: `${APP_NAME} ${BRAND_BY}`,
@@ -20,6 +21,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="ar" dir="rtl">
       <head>
+        <script dangerouslySetInnerHTML={{ __html: 'try{if(localStorage.getItem("tys.theme")==="linear")document.documentElement.dataset.theme="linear"}catch(e){}' }} />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet" />
@@ -32,6 +34,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <body className="min-h-screen bg-[#fffaf5] antialiased">
         {children}
         <PwaRegister />
+        <ThemeSwitch />
       </body>
     </html>
   );
