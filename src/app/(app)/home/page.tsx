@@ -204,7 +204,14 @@ export default function HomePage() {
             </div>
           </div>
           <div>
-            <div className="relative h-2.5 overflow-hidden rounded-full bg-[#f2e4d8]">
+            <div
+              className="relative h-2.5 overflow-hidden rounded-full bg-[#f2e4d8]"
+              role="progressbar"
+              aria-label="نسبة تحقيق التارجت الشهري"
+              aria-valuemin={0}
+              aria-valuemax={100}
+              aria-valuenow={Math.min(100, Math.max(0, data.overall))}
+            >
               <div ref={overallBarRef} className="h-full rounded-full bg-gradient-to-l from-[var(--color-primary-500)] via-[var(--color-primary-600)] to-[var(--color-primary-700)] shadow-[0_1px_5px_rgba(189,75,10,0.22)]" style={{ width: "0%" }} />
             </div>
             <div className="mt-1 flex justify-between text-[9px] font-bold text-[var(--color-text-secondary)]" dir="ltr">
@@ -305,7 +312,14 @@ export default function HomePage() {
                     </span>
                     <span>المتبقي <strong className="font-mono text-[var(--color-text-primary)]">{formatQty(kpi.remaining)}</strong></span>
                   </div>
-                  <div className="h-1.5 w-full overflow-hidden rounded-full bg-[#f2e4d8]">
+                  <div
+                    className="h-1.5 w-full overflow-hidden rounded-full bg-[#f2e4d8]"
+                    role="progressbar"
+                    aria-label={`نسبة تحقيق ${kpi.nameEn}`}
+                    aria-valuemin={0}
+                    aria-valuemax={100}
+                    aria-valuenow={pct}
+                  >
                     <div className="h-full rounded-full bg-gradient-to-r from-[var(--color-primary-600)] to-[var(--color-primary-500)] transition-all duration-700" style={{ width: `${pct}%` }} />
                   </div>
                   {kpi.overTarget ? <p className="text-[10px] font-bold text-[var(--color-primary-600)]">عدّيت التارجت 🎉</p> : null}
