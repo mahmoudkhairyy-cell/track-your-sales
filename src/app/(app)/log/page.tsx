@@ -249,7 +249,7 @@ export default function LogPage() {
       <section className="rounded-[20px] border border-[#f3e6dc] bg-[#fff8f1] p-3">
         <div className="mb-2 flex items-center justify-between gap-2">
           <p className="text-xs font-black text-[var(--color-text-primary)]">وصول سريع للمؤشرات</p>
-          <span className="rounded-full bg-white px-2.5 py-1 text-[10px] font-extrabold text-[var(--color-primary-700)]">{filledCount} مدخل</span>
+          <span aria-live="polite" aria-atomic="true" className="rounded-full bg-white px-2.5 py-1 text-[10px] font-extrabold text-[var(--color-primary-700)]">{filledCount} مدخل</span>
         </div>
         <div className="flex gap-2 overflow-x-auto pb-1" aria-label="اختصارات حقول تسجيل الإنجاز">
           {entryItems.map((item) => {
@@ -386,7 +386,7 @@ export default function LogPage() {
       <div className="sticky bottom-[calc(68px+env(safe-area-inset-bottom)+0.5rem)] z-50 -mx-1 rounded-2xl border border-[#f0dfd2] bg-white/95 p-2 shadow-[0_-4px_20px_rgba(70,35,10,.10)] backdrop-blur sm:mx-0 lg:bottom-2 lg:z-20">
         <div className="mb-2 flex items-center justify-between gap-2 px-1 text-[11px] font-bold text-[var(--color-text-secondary)]">
           <span>جاهز للحفظ</span>
-          <span className="rounded-full bg-[var(--color-primary-50)] px-2.5 py-1 font-black text-[var(--color-primary-700)]">{filledCount} مؤشر</span>
+          <span aria-live="polite" aria-atomic="true" className="rounded-full bg-[var(--color-primary-50)] px-2.5 py-1 font-black text-[var(--color-primary-700)]">{filledCount} مؤشر</span>
         </div>
         <PrimaryButton type="submit" disabled={pending}>
           {pending ? "⏳ بنحفظ..." : "💾 احفظ الإنجاز"}
