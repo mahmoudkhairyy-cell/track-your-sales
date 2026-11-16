@@ -1,5 +1,6 @@
 "use client";
 
+import { Welcome } from "@/components/Welcome";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { createContext, useContext, useEffect, useState, type FormEvent, type ReactNode } from "react";
@@ -450,6 +451,7 @@ function AppFrame({ children, blocked, month }: { children: ReactNode; blocked: 
   return (
     <ToastProvider>
       <AppLock />
+      <Welcome />
       <StorageErrorListener />
       <MonthContext.Provider value={month}>
         <div className="min-h-screen bg-[#fffaf5] text-[#2d2119]">

@@ -11,6 +11,7 @@ import { useMonth } from "@/components/AppShell";
 import { KpiIcon } from "@/components/KpiIcon";
 import { DeltaChip, Sparkline } from "@/components/Sparkline";
 import { overallBandLines, overallLine, pickPhrase, sarcasticLine, timeLines } from "@/lib/phrases";
+import { shareAchievement } from "@/lib/sharecard";
 import { readSyncStatus, type SyncStatus } from "@/lib/sync";
 
 type KpiRow = {
@@ -244,6 +245,16 @@ export default function HomePage() {
             </p>
           ) : null}
 
+          {data.entriesCount > 0 ? (
+            <button
+              type="button"
+              onClick={() => void shareAchievement({ monthLabel: data.monthLabel, percent: Math.round(data.overall), commission: formatMoney(data.estimatedCommission) })}
+              className="mt-3 min-h-10 rounded-xl border border-[#f2e4d8] bg-white px-4 text-xs font-extrabold text-[var(--color-primary-700)]"
+            >
+              📤 شارك إنجازك
+            </button>
+          ) : null}
+
           {sarcastic ? <p className="mt-3 text-[11px] font-bold text-[var(--color-primary-700)]">{sarcastic}</p> : null}
         </div>
       </section>
@@ -342,6 +353,11 @@ export default function HomePage() {
                       <Sparkline values={kpi.series} color={onTrackKpi ? "#16a34a" : "#dc2626"} className="min-w-0 flex-1" />
                       <DeltaChip current={kpi.achieved} previous={kpi.previousToDate ?? null} />
                     </div>
+                  ) : null}
+                  {!kpi.overTarget && kpi.remaining > 0 && data.work.remaining > 0 ? (
+                    <p className="text-[11px] font-bold text-[var(--color-primary-700)]">
+                      محتاج {formatQty(Math.ceil(kpi.remaining / data.work.remaining))} يوميًا لباقي الشهر
+                    </p>
                   ) : null}
                   {kpi.overTarget ? <p className="text-[10px] font-bold text-[var(--color-primary-600)]">عدّيت التارجت 🎉</p> : null}
                 </div>
