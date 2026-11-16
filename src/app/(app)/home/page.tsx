@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { Banner } from "@/components/ui";
 import { HomeSkeleton } from "@/components/Skeleton";
 import { ApiError, api } from "@/lib/client";
-import { formatMoney, formatPercent, formatQty, linesWord } from "@/lib/calculations";
+import { formatMoney, formatPercent, formatQty, linesWord, weightedPacePercent } from "@/lib/calculations";
 import { useMonth } from "@/components/AppShell";
 import { KpiIcon } from "@/components/KpiIcon";
 import { overallBandLines, overallLine, pickPhrase, sarcasticLine, timeLines } from "@/lib/phrases";
@@ -138,7 +138,8 @@ export default function HomePage() {
   // اون تراك: الإجمالي وصل لنسبة الأيام اللي عدّت من الشهر (أيام الشغل). لو مفيش أيام، مبنحكمش.
   // النهارده مش محسوب في الأيام اللي عدّت.
   const doneDays = data.work.elapsedBeforeToday ?? data.work.elapsed;
-  const onTrack: boolean | null = data.work.total > 0 ? data.overall >= (doneDays / data.work.total) * 100 : null;
+  const paceOverall = weightedPacePercent(data.kpis);
+  const onTrack: boolean | null = data.work.total > 0 ? paceOverall >= (doneDays / data.work.total) * 100 : null;
   const employeeName = data.profile.name.trim().split(/\s+/)[0] || "يا نجم";
   const statusPhrase = pickPhrase(overallBandLines(data.overall), `overall|${data.yearMonth}`);
   const statusTextEgy = statusPhrase.replaceAll("{name}", employeeName);
