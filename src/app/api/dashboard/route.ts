@@ -14,7 +14,7 @@ import {
   sumWeights,
 } from "@/lib/calculations";
 import { KPI_CATALOG, YEAR_MONTH_RE, type KpiKey } from "@/lib/constants";
-import { cairoISODate, cairoYearMonth, monthDateRange, monthLabelAr } from "@/lib/dates";
+import { cairoISODate, cairoYearMonth, monthDateRange, monthLabelAr, shiftYearMonth } from "@/lib/dates";
 import { handleRouteError, jsonOk, HttpError } from "@/lib/http";
 import { loadMonthBundle } from "@/lib/settings";
 
@@ -42,6 +42,37 @@ export async function GET(request: Request) {
       .from(entries)
       .where(and(eq(entries.userId, user.id), gte(entries.entryDate, start), lte(entries.entryDate, end)))
       .orderBy(desc(entries.entryDate), desc(entries.createdAt));
+
+    // Load the immediately preceding month independently so comparisons use that month's saved targets and weights.
+    const previousYearMonth = shiftYearMonth(yearMonth, -1);
+    const previousBundle = await loadMonthBundle(user.id, previousYearMonth);
+    const { start: previousStart, end: previousEnd } = monthDateRange(previousYearMonth);
+    const previousEntries = await db
+      .select()
+      .from(entries)
+      .where(and(eq(entries.userId, user.id), gte(entries.entryDate, previousStart), lte(entries.entryDate, previousEnd)));
+
+    const previousAchieved = {} as Record<KpiKey, number>;
+    for (const kpi of KPI_CATALOG) previousAchieved[kpi.key] = 0;
+    const previousQualityValues: number[] = [];
+    for (const entry of previousEntries) {
+      const key = entry.kpiKey as KpiKey;
+      if (key === "quality") {
+        previousQualityValues.push(entry.quantity);
+        continue;
+      }
+      if (previousAchieved[key] === undefined) previousAchieved[key] = 0;
+      previousAchieved[key] += entry.quantity;
+    }
+    previousAchieved.quality = previousQualityValues.length
+      ? previousQualityValues.reduce((sum, value) => sum + value, 0) / previousQualityValues.length
+      : 0;
+    const previousOverall = computeOverall(previousBundle.kpis, previousAchieved);
+    const previousKpis = previousBundle.kpis.map((kpi) => ({
+      kpiKey: kpi.kpiKey,
+      achieved: previousAchieved[kpi.kpiKey] ?? 0,
+      percent: achievementPercent(previousAchieved[kpi.kpiKey] ?? 0, kpi.target),
+    }));
 
     const achieved = {} as Record<KpiKey, number>;
     for (const kpi of KPI_CATALOG) achieved[kpi.key] = 0;
@@ -128,6 +159,17 @@ export async function GET(request: Request) {
       work,
       // نفس أساس الأيام المنقضية المستخدم في expectedToDate للمؤشرات الفردية.
       overallExpectedPercent: work.total > 0 ? (paceWork.elapsed / work.total) * 100 : 0,
+      forecast: paceWork.elapsed > 0 && work.total > 0
+        ? Math.min(200, (overall / paceWork.elapsed) * work.total)
+        : null,
+      previousMonth: {
+        yearMonth: previousYearMonth,
+        monthLabel: monthLabelAr(previousYearMonth),
+        hasData: previousEntries.length > 0,
+        entriesCount: previousEntries.length,
+        overall: previousOverall,
+        kpis: previousKpis,
+      },
       kpis,
       overall,
       overallLabel: formatPercent(overall),
