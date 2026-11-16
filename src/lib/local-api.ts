@@ -604,6 +604,12 @@ function getDashboard(state: State, params: URLSearchParams) {
   const rules = applyCompanyRules(
     bundle.kpis.map((kpi) => ({ ...kpi, achieved: achievedTyped[kpi.kpiKey] ?? 0 })),
   );
+  // نفس قواعد الكوميشن بس بالإنجاز "المفروض لحد النهارده": عشان نقارن الإجمالي بالإجمالي (تفاح بتفاح).
+  const doneBefore = Math.max(0, work.elapsedBeforeToday ?? work.elapsed);
+  const expectedRules = work.total > 0
+    ? applyCompanyRules(bundle.kpis.map((kpi) => ({ ...kpi, achieved: expectedToDate(kpi.target, doneBefore, work.total) })))
+    : null;
+  const expectedOverall = expectedRules ? expectedRules.total : null;
   const overall = rules.total; // سقف 200% على الإجمالي بس، والمؤشرات الفردية بدون سقف
   // المحافظ الجديدة وزنها صفر، لكنها شرط استحقاق مستقل بجانب حد الـ80% للإجمالي.
   // الكوميشن بيظهر دايمًا (حتى تحت 80%)، والمعادلة نفسها ما اتغيرتش. شرط المحافظ مش مرتبط بالكوميشن، ومرتبط بالنيو لاين بس.
@@ -680,6 +686,7 @@ function getDashboard(state: State, params: URLSearchParams) {
     work,
     kpis,
     overall,
+    expectedOverall,
     overallLabel: formatPercent(overall),
     estimatedCommission: commission,
     rules: { belowKpis: rules.belowKpis, clawBacks: rules.clawBacks, belowOverall: rules.belowOverall, walletDone: rules.walletDone },

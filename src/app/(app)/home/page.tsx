@@ -38,6 +38,7 @@ type Dashboard = {
   settingsSaved: boolean;
   kpis: KpiRow[];
   overall: number;
+  expectedOverall?: number | null;
   estimatedCommission: number;
   rules: { belowKpis: string[]; clawBacks: string[]; belowOverall: boolean; walletDone: boolean };
   fullCommission: number;
@@ -158,14 +159,9 @@ export default function HomePage() {
 
   // اون تراك: الإجمالي وصل لنسبة الأيام اللي عدّت من الشهر (أيام الشغل). لو مفيش أيام، مبنحكمش.
   // النهارده مش محسوب في الأيام اللي عدّت.
-  const doneDays = data.work.elapsedBeforeToday ?? data.work.elapsed;
-  // الحالة العامة لازم تتطابق مع كروت المؤشرات: كل مؤشر عليه تارجت لازم يكون ماشي على الوتيرة.
-  // (الإجمالي بيتحسب بقواعد الكوميشن: المؤشر اللي تحت 90% أو الخطوط الجديدة قبل المحافظ بتتصفر، فمينفعش نقارنه بالوقت مباشرة.)
-  const targeted = data.kpis.filter((k) => k.target > 0);
-  const onTrack: boolean | null = data.work.total > 0
-    ? targeted.length > 0
-      ? targeted.every((k) => k.achieved >= k.expectedToDate)
-      : data.overall >= (doneDays / data.work.total) * 100
+  // الحالة العامة: الإجمالي الفعلي (بقواعد الشركة) مقابل الإجمالي المفروض لحد النهارده بنفس القواعد.
+  const onTrack: boolean | null = data.work.total > 0 && data.expectedOverall != null
+    ? data.overall >= data.expectedOverall
     : null;
   const employeeName = data.profile.name.trim().split(/\s+/)[0] || "يا نجم";
   const statusPhrase = pickPhrase(overallBandLines(data.overall), `overall|${data.yearMonth}`);
