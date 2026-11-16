@@ -496,7 +496,7 @@ function AppFrame({ children, blocked, month }: { children: ReactNode; blocked: 
                 </div>
               </header>
               <main className="tys-app-main flex-1 bg-[radial-gradient(ellipse_at_top_right,_rgba(255,220,190,0.22),_transparent_34rem)] px-4 py-5 pb-28 lg:px-8 lg:py-8 lg:pb-10">
-                {blocked ? <TargetGate month={month} /> : children}
+                <div key={month}>{blocked ? <TargetGate month={month} /> : children}</div>
               </main>
               <footer className="hidden px-8 pb-6 text-xs leading-6 text-[#ad9888] lg:block">{APP_DISCLAIMER}<span className="mr-2 font-bold text-[#bd6b39]">· تم تطوير Track Your Sales بواسطة {BRAND_BY}</span></footer>
             </div>
