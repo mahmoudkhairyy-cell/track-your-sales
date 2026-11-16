@@ -9,7 +9,7 @@ import { ApiError, api } from "@/lib/client";
 import { formatMoney, formatPercent, formatQty, linesWord } from "@/lib/calculations";
 import { useMonth } from "@/components/AppShell";
 import { KpiIcon } from "@/components/KpiIcon";
-import { DeltaChip, Sparkline } from "@/components/Sparkline";
+import { DeltaChip } from "@/components/Sparkline";
 import { overallBandLines, overallLine, pickPhrase, sarcasticLine, timeLines } from "@/lib/phrases";
 import { shareAchievement } from "@/lib/sharecard";
 import { readSyncStatus, type SyncStatus } from "@/lib/sync";
@@ -349,8 +349,7 @@ export default function HomePage() {
                     <div className="h-full rounded-full bg-gradient-to-r from-[var(--color-primary-600)] to-[var(--color-primary-500)] transition-all duration-700" style={{ width: `${pct}%` }} />
                   </div>
                   {kpi.series && kpi.series.length >= 2 ? (
-                    <div className="flex items-center gap-2">
-                      <Sparkline values={kpi.series} color={onTrackKpi ? "#16a34a" : "#dc2626"} className="min-w-0 flex-1" />
+                    <div className="flex justify-end">
                       <DeltaChip current={kpi.achieved} previous={kpi.previousToDate ?? null} />
                     </div>
                   ) : null}
