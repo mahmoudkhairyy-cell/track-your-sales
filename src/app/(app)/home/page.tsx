@@ -276,7 +276,7 @@ export default function HomePage() {
           </span>
         </div>
         <div className="grid grid-cols-2 gap-1.5 sm:grid-cols-3">
-          {data.kpis.filter((k) => k.remaining > 0).map((k) => {
+          {data.kpis.filter((k) => k.kpiKey !== "quality" && k.remaining > 0).map((k) => {
             const dailyRequired = data.work.remaining > 0 ? Math.ceil(k.remaining / data.work.remaining) : k.remaining;
             return (
               <div
@@ -290,7 +290,7 @@ export default function HomePage() {
               </div>
             );
           })}
-          {data.kpis.every((k) => k.remaining <= 0) ? (
+          {data.kpis.filter((k) => k.kpiKey !== "quality").every((k) => k.remaining <= 0) ? (
             <p className="col-span-full rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-center text-xs font-extrabold text-emerald-700">كل المؤشرات مكتملة ✓</p>
           ) : null}
         </div>
