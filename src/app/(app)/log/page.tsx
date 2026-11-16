@@ -133,7 +133,7 @@ export default function LogPage() {
     ? QUALITY_ITEMS.reduce((sum, item) => sum + (quality.checks?.[item.key] ? item.weight : 0), 0)
     : 0;
   const dashByKey = new Map((dash?.kpis ?? []).map((k) => [k.kpiKey, k]));
-  const dailyItems = (dash?.kpis ?? []).filter((k) => k.remaining > 0);
+  const dailyItems = (dash?.kpis ?? []).filter((k) => k.kpiKey !== "quality" && k.remaining > 0);
   const workLeft = dash?.work.remaining ?? 0;
   const doneDays = dash ? (dash.work.elapsedBeforeToday ?? dash.work.elapsed) : 0;
   const performanceOnTrack: boolean | null = dash && dash.work.total > 0
