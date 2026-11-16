@@ -40,6 +40,7 @@ type Dashboard = {
   work: { total: number; elapsed: number; remaining: number };
   overallExpectedPercent: number;
   forecast: number | null;
+  forecastElapsedDays: number;
   previousMonth: {
     yearMonth: string;
     monthLabel: string;
@@ -234,7 +235,7 @@ export default function HomePage() {
           ) : (
             <>
               <p className="mt-2 text-3xl font-black text-[#9d430d]">{formatPercent(data.forecast)}%</p>
-              <p className="mt-1 text-xs leading-5 text-[#80502f]">بناءً على معدل إنجازك الحالي خلال {data.work.elapsed} يوم عمل من إجمالي {data.work.total} يوم.</p>
+              <p className="mt-1 text-xs leading-5 text-[#80502f]">بناءً على معدل إنجازك الحالي خلال {data.forecastElapsedDays} يوم عمل من إجمالي {data.work.total} يوم.</p>
             </>
           )}
         </article>
