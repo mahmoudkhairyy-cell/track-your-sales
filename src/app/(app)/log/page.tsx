@@ -383,9 +383,15 @@ export default function LogPage() {
         />
       </section>
 
-      <PrimaryButton type="submit" disabled={pending}>
-        {pending ? "⏳ بنحفظ..." : "💾 احفظ الإنجاز"}
-      </PrimaryButton>
+      <div className="sticky bottom-2 z-20 -mx-1 rounded-2xl border border-[#f0dfd2] bg-white/95 p-2 shadow-[0_-4px_20px_rgba(70,35,10,.10)] backdrop-blur sm:mx-0">
+        <div className="mb-2 flex items-center justify-between gap-2 px-1 text-[11px] font-bold text-[var(--color-text-secondary)]">
+          <span>جاهز للحفظ</span>
+          <span className="rounded-full bg-[var(--color-primary-50)] px-2.5 py-1 font-black text-[var(--color-primary-700)]">{filledCount} مؤشر</span>
+        </div>
+        <PrimaryButton type="submit" disabled={pending}>
+          {pending ? "⏳ بنحفظ..." : "💾 احفظ الإنجاز"}
+        </PrimaryButton>
+      </div>
       <p className="text-center text-xs text-[var(--color-text-secondary)]">التاريخ اللي فوق هو اللي بيحدد الشهر · الشهر المعروض: {month}</p>
     </form>
   );
