@@ -165,6 +165,7 @@ check("النسخ الاحتياطي: رفض الشهر المكرر والتا�
 check("التحقق من الكميات: الكسور للـ Quality فقط", () => {
   assert.deepEqual(validateQuantity("quality", 97.5), { ok: true, value: 97.5 });
   assert.equal(validateQuantity("new_lines", 1.5).ok, false);
+  assert.equal(validateQuantity("productivity", 97.5).ok, false);
   assert.equal(validateQuantity("quality", 101).ok, false);
 });
 
