@@ -159,10 +159,9 @@ export default function HomePage() {
 
   // اون تراك: الإجمالي وصل لنسبة الأيام اللي عدّت من الشهر (أيام الشغل). لو مفيش أيام، مبنحكمش.
   // النهارده مش محسوب في الأيام اللي عدّت.
-  // الحالة العامة: الإجمالي الفعلي (بقواعد الشركة) مقابل الإجمالي المفروض لحد النهارده بنفس القواعد.
-  const onTrack: boolean | null = data.work.total > 0 && data.expectedOverall != null
-    ? data.overall >= data.expectedOverall
-    : null;
+  // نفس منطق شاشة المدير بالظبط: الإجمالي الفعلي مقابل نسبة الوقت المنقضي من الشهر (أيام الشغل اللي خلصت قبل النهارده).
+  const doneDays = data.work.elapsedBeforeToday ?? data.work.elapsed;
+  const onTrack: boolean | null = data.work.total > 0 ? data.overall >= (doneDays / data.work.total) * 100 : null;
   const employeeName = data.profile.name.trim().split(/\s+/)[0] || "يا نجم";
   const statusPhrase = pickPhrase(overallBandLines(data.overall), `overall|${data.yearMonth}`);
   const statusTextEgy = statusPhrase.replaceAll("{name}", employeeName);
