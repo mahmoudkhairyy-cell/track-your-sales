@@ -10,7 +10,7 @@ import { useMonth } from "@/components/AppShell";
 import { KpiIcon } from "@/components/KpiIcon";
 import { formatMoney, formatQty } from "@/lib/calculations";
 import { overallLine } from "@/lib/phrases";
-import { allowsFraction, quantityHint, quantityMax, quantityMin, quantityStep, validateQuantity } from "@/lib/quantity";
+import { quantityHint, quantityMax, quantityMin, quantityStep, validateQuantity } from "@/lib/quantity";
 
 
 type QualityKey = "kyc" | "visits" | "training" | "pos" | "csat";
@@ -316,7 +316,7 @@ export default function LogPage() {
                 id={`quantity-${item.key}`}
                 className={`${inputClass} text-lg font-black`}
                 type="number"
-                inputMode={allowsFraction(item.key) ? "decimal" : "numeric"}
+                inputMode="numeric"
                 step={quantityStep(item.key)}
                 min={quantityMin(item.key)}
                 max={quantityMax(item.key)}
