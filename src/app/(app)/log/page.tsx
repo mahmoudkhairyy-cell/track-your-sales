@@ -162,14 +162,16 @@ export default function LogPage() {
 
     setPending(true);
     let saved = 0;
+    const savedIds: string[] = [];
     try {
       for (const item of filled) {
         const check = validateQuantity(item.key, quantities[item.key]);
         if (!check.ok) continue;
-        await api<{ message: string }>("/api/entries", {
+        const created = await api<{ message: string; entry?: { id?: string } }>("/api/entries", {
           method: "POST",
           body: JSON.stringify({ kpiKey: item.key, quantity: check.value, entryDate, note }),
         });
+        if (created.entry?.id) savedIds.push(created.entry.id);
         saved += 1;
         // نشيل البند اللي اتحفظ من الحقول، عشان لو حصل خطأ بعده الإعادة ماتكررهوش.
         setQuantities((cur) => {
@@ -179,7 +181,20 @@ export default function LogPage() {
         });
       }
       haptic(18);
-      toast.push("success", `تم تسجيل الإنجاز (${saved})`);
+      toast.push("success", `تم تسجيل الإنجاز (${saved})`, savedIds.length > 0 ? {
+        label: "تراجع",
+        onClick: () => {
+          void (async () => {
+            try {
+              for (const id of savedIds) await api(`/api/entries/${id}`, { method: "DELETE" });
+              window.dispatchEvent(new Event("tys-data-changed"));
+              toast.push("info", "اتراجعنا عن التسجيل");
+            } catch {
+              toast.push("error", "ماقدرناش نتراجع. امسحه من صفحة المزيد.");
+            }
+          })();
+        },
+      } : undefined);
       window.dispatchEvent(new Event("tys-data-changed"));
       setQuantities({});
       setNote("");

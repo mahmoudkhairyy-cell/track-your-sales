@@ -2,6 +2,7 @@
 
 import { FormEvent, useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { LockSettings } from "@/components/LockSettings";
 import { Banner, EmptyState, Field, Modal, PageSkeleton, PrimaryButton, SecondaryButton, inputClass, useToast } from "@/components/ui";
 import { ApiError, api, downloadJson } from "@/lib/client";
 import { cairoISODate, formatDateAr, formatTimeCairo, monthLabelAr } from "@/lib/dates";
@@ -586,6 +587,7 @@ export default function MorePage() {
           </label>
         </div>
       </section>
+      <LockSettings />
         </div>
       ) : null}
 

@@ -2,12 +2,14 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { Banner } from "@/components/ui";
+import { Banner, useToast } from "@/components/ui";
+import { haptic } from "@/lib/prefs";
 import { HomeSkeleton } from "@/components/Skeleton";
 import { ApiError, api } from "@/lib/client";
 import { formatMoney, formatPercent, formatQty, linesWord } from "@/lib/calculations";
 import { useMonth } from "@/components/AppShell";
 import { KpiIcon } from "@/components/KpiIcon";
+import { DeltaChip, Sparkline } from "@/components/Sparkline";
 import { overallBandLines, overallLine, pickPhrase, sarcasticLine, timeLines } from "@/lib/phrases";
 import { readSyncStatus, type SyncStatus } from "@/lib/sync";
 
@@ -23,6 +25,8 @@ type KpiRow = {
   expectedToDate: number;
   remaining: number;
   overTarget: boolean;
+  series?: number[];
+  previousToDate?: number | null;
 };
 
 type Dashboard = {
@@ -42,6 +46,7 @@ type Dashboard = {
   entriesCount: number;
   work: { total: number; elapsed: number; elapsedBeforeToday?: number; remaining: number };
   pace: { remaining: number; remainingDays: number; perDay: number | null; message: string };
+  projection?: { overall: number; commission: number; basisDays: number } | null;
 };
 
 
@@ -73,6 +78,7 @@ export default function HomePage() {
     return () => window.removeEventListener("tys-sync-status", refresh);
   }, []);
   const month = useMonth();
+  const toast = useToast();
   // بنخزّن الشهر مع البيانات عشان نعرف إن اللي معروض يخص الشهر الحالي من غير setState متزامن جوه الـ effect.
   const [state, setState] = useState<{ month: string; data: Dashboard | null; error: string }>({
     month: "",
@@ -130,6 +136,20 @@ export default function HomePage() {
     frame = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(frame);
   }, [data?.yearMonth, data?.overall, loading]);
+
+  // احتفال هادي مرة واحدة في الشهر لما الإجمالي يوصل 100%.
+  useEffect(() => {
+    if (!data || loading || data.overall < 100) return;
+    const key = `tys.celebrated.${data.yearMonth}`;
+    try {
+      if (window.localStorage.getItem(key)) return;
+      window.localStorage.setItem(key, "1");
+    } catch {
+      return;
+    }
+    haptic([30, 50, 30]);
+    toast.push("success", "وصلت التارجت الشهري. عاش يا بطل 👏");
+  }, [data, loading, toast]);
 
   if (loading) return <HomeSkeleton />;
   if (error) return <Banner tone="error">{error}</Banner>;
@@ -214,6 +234,15 @@ export default function HomePage() {
           <div className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] font-semibold text-[var(--color-text-secondary)]">
             <span className="font-extrabold text-[var(--color-primary-700)]">{statusTextEgy}</span>{statusTextEgy && timeText ? <span className="text-[var(--color-border)]">•</span> : null}<span>{timeText}</span>
           </div>
+
+          {data.projection ? (
+            <p className="mt-3 rounded-xl border border-[#f2e4d8] bg-[#fffdfa] px-3 py-2 text-[11px] font-bold text-[var(--color-text-secondary)]">
+              لو كملت بنفس معدل آخر {data.projection.basisDays} أيام شغل، هتخلّص الشهر على تقريبًا{" "}
+              <strong className="font-mono text-[var(--color-primary-700)]">{formatPercent(data.projection.overall)}%</strong>
+              {" "}وكوميشن حوالي{" "}
+              <strong className="font-mono text-[var(--color-primary-700)]">{formatMoney(data.projection.commission)}</strong> جنيه.
+            </p>
+          ) : null}
 
           {sarcastic ? <p className="mt-3 text-[11px] font-bold text-[var(--color-primary-700)]">{sarcastic}</p> : null}
         </div>
@@ -308,6 +337,12 @@ export default function HomePage() {
                   <div className="h-1.5 w-full overflow-hidden rounded-full bg-[#f2e4d8]">
                     <div className="h-full rounded-full bg-gradient-to-r from-[var(--color-primary-600)] to-[var(--color-primary-500)] transition-all duration-700" style={{ width: `${pct}%` }} />
                   </div>
+                  {kpi.series && kpi.series.length >= 2 ? (
+                    <div className="flex items-center gap-2">
+                      <Sparkline values={kpi.series} color={onTrackKpi ? "#16a34a" : "#dc2626"} className="min-w-0 flex-1" />
+                      <DeltaChip current={kpi.achieved} previous={kpi.previousToDate ?? null} />
+                    </div>
+                  ) : null}
                   {kpi.overTarget ? <p className="text-[10px] font-bold text-[var(--color-primary-600)]">عدّيت التارجت 🎉</p> : null}
                 </div>
               </article>

@@ -149,20 +149,24 @@ export function Field({
 export const inputClass =
   "min-h-12 w-full rounded-2xl border border-[#f2e4d8] bg-white px-4 text-base text-[#241f1b] shadow-[0_2px_8px_rgba(115,58,20,0.025)] outline-none ring-[#bd4b0a] transition duration-150 placeholder:text-[#b5a69b] focus:border-[#e96812] focus:ring-2 focus:ring-[#e96812]/15";
 
-type Toast = { id: number; type: "success" | "error" | "info"; text: string };
+type ToastAction = { label: string; onClick: () => void };
+type Toast = { id: number; type: "success" | "error" | "info"; text: string; action?: ToastAction };
 
 const ToastContext = createContext<{
-  push: (type: Toast["type"], text: string) => void;
+  push: (type: Toast["type"], text: string, action?: ToastAction) => void;
 } | null>(null);
 
 export function ToastProvider({ children }: { children: ReactNode }) {
   const [toasts, setToasts] = useState<Toast[]>([]);
-  const push = useCallback((type: Toast["type"], text: string) => {
+  const push = useCallback((type: Toast["type"], text: string, action?: ToastAction) => {
     const id = Date.now() + Math.random();
-    setToasts((current) => [...current, { id, type, text }]);
+    setToasts((current) => [...current, { id, type, text, action }]);
     window.setTimeout(() => {
       setToasts((current) => current.filter((toast) => toast.id !== id));
-    }, 4200);
+    }, action ? 7000 : 4200);
+  }, []);
+  const dismiss = useCallback((id: number) => {
+    setToasts((current) => current.filter((toast) => toast.id !== id));
   }, []);
   const value = useMemo(() => ({ push }), [push]);
 
@@ -181,7 +185,21 @@ export function ToastProvider({ children }: { children: ReactNode }) {
                   : "bg-[#fff0e2] text-[#8b3d0a] ring-1 ring-[#f1d7c2]"
             }`}
           >
-            {toast.text}
+            <div className="flex items-center justify-between gap-3">
+              <span>{toast.text}</span>
+              {toast.action ? (
+                <button
+                  type="button"
+                  onClick={() => {
+                    toast.action?.onClick();
+                    dismiss(toast.id);
+                  }}
+                  className="pointer-events-auto shrink-0 rounded-full border border-white/70 px-3 py-1 text-xs font-extrabold text-white transition hover:bg-white/15"
+                >
+                  {toast.action.label}
+                </button>
+              ) : null}
+            </div>
           </div>
         ))}
       </div>

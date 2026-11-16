@@ -10,6 +10,7 @@ import { APP_DISCLAIMER, APP_NAME, AREA_MANAGERS, BRAND_BY, BRANCHES, OUTSIDE_BR
 import { cairoYearMonth, isValidYearMonth, monthLabelAr, shiftYearMonth } from "@/lib/dates";
 import { BookIcon, ChevronIcon, HomeIcon, MoreIcon, PlusIcon, StarIcon, TargetIcon } from "@/components/icons";
 import { ToastProvider, useToast } from "@/components/ui";
+import { AppLock } from "@/components/AppLock";
 
 const MonthContext = createContext(cairoYearMonth());
 
@@ -448,6 +449,7 @@ function AppFrame({ children, blocked, month }: { children: ReactNode; blocked: 
 
   return (
     <ToastProvider>
+      <AppLock />
       <StorageErrorListener />
       <MonthContext.Provider value={month}>
         <div className="min-h-screen bg-[#fffaf5] text-[#2d2119]">

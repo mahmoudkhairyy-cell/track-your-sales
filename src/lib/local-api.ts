@@ -24,7 +24,7 @@ import {
   newLinesDailyNeed,
   sumWeights,
 } from "@/lib/calculations";
-import { cairoISODate, cairoYearMonth, monthDateRange, monthLabelAr } from "@/lib/dates";
+import { cairoISODate, cairoYearMonth, listMonthDates, monthDateRange, monthLabelAr, shiftYearMonth } from "@/lib/dates";
 import { validateQuantity } from "@/lib/quantity";
 import { backupSummary, parseBackup, type BackupFile } from "@/lib/backup";
 import { applyBackupToState, checkRestoreRequest } from "@/lib/restore";
@@ -551,6 +551,39 @@ function updateProfile(state: State, data: Record<string, unknown>) {
   return { user: { id: "local", name, branch, role, areaManager }, message: "✅ بياناتك اتحدثت" };
 }
 
+/** مجموع تراكمي يومي لكل مؤشر، للرسم الصغير في كروت الصفحة الرئيسية. */
+function cumulativeSeries(entries: Entry[], yearMonth: string, today: string): Record<string, number[]> {
+  const dates = listMonthDates(yearMonth).filter((date) => date <= today);
+  const perKeyDay = new Map<string, Map<string, number>>();
+  for (const entry of entries) {
+    const days = perKeyDay.get(entry.kpiKey) ?? new Map<string, number>();
+    days.set(entry.entryDate, (days.get(entry.entryDate) ?? 0) + entry.quantity);
+    perKeyDay.set(entry.kpiKey, days);
+  }
+  const result: Record<string, number[]> = {};
+  for (const [key, days] of perKeyDay) {
+    let sum = 0;
+    result[key] = dates.map((date) => {
+      sum += days.get(date) ?? 0;
+      return sum;
+    });
+  }
+  return result;
+}
+
+/** إجمالي كل مؤشر في الشهر اللي فات لحد نفس رقم اليوم (مقارنة عادلة). */
+function previousMonthToDate(state: State, yearMonth: string, today: string): Record<string, number> {
+  const previous = shiftYearMonth(yearMonth, -1);
+  const isCurrent = yearMonth === cairoYearMonth();
+  const dayLimit = isCurrent ? Number(today.slice(8, 10)) : 31;
+  const totals: Record<string, number> = {};
+  for (const entry of entriesInMonth(state, previous)) {
+    if (Number(entry.entryDate.slice(8, 10)) > dayLimit) continue;
+    totals[entry.kpiKey] = (totals[entry.kpiKey] ?? 0) + entry.quantity;
+  }
+  return totals;
+}
+
 function getDashboard(state: State, params: URLSearchParams) {
   const raw = params.get("month");
   const yearMonth = raw ? requireYearMonth(raw) : cairoYearMonth();
@@ -578,6 +611,25 @@ function getDashboard(state: State, params: URLSearchParams) {
   const weightSum = sumWeights(bundle.kpis);
   const newLines = bundle.kpis.find((kpi) => kpi.kpiKey === "new_lines");
   const pace = newLinesDailyNeed(newLines?.target ?? 175, achieved.new_lines ?? 0, work.remaining);
+
+  const seriesByKpi = cumulativeSeries(monthEntries, yearMonth, today);
+  const prevToDate = previousMonthToDate(state, yearMonth, today);
+
+  // توقّع نهاية الشهر: بنفترض نفس معدل الأيام اللي عدّت. بنعرضه بس لو فيه 3 أيام شغل على الأقل وفاضل أيام.
+  let projection: { overall: number; commission: number; basisDays: number } | null = null;
+  if (yearMonth === cairoYearMonth() && work.elapsed >= 3 && work.remaining > 0 && work.total > 0) {
+    const factor = work.total / work.elapsed;
+    const projected = bundle.kpis.map((kpi) => ({
+      ...kpi,
+      achieved: kpi.kpiKey === "quality" ? (achievedTyped[kpi.kpiKey] ?? 0) : (achievedTyped[kpi.kpiKey] ?? 0) * factor,
+    }));
+    const projectedRules = applyCompanyRules(projected);
+    projection = {
+      overall: projectedRules.total,
+      commission: estimatedCommission(bundle.fullCommission, projectedRules.total),
+      basisDays: work.elapsed,
+    };
+  }
 
   const todayEntries = monthEntries.filter((entry) => entry.entryDate === today);
   const todaySummary = KPI_CATALOG.map((kpi) => {
@@ -609,6 +661,8 @@ function getDashboard(state: State, params: URLSearchParams) {
       expectedToDate: expectedToDate(kpi.target, work.elapsedBeforeToday, work.total),
       remaining: Math.max(0, kpi.target - value),
       overTarget: value > kpi.target,
+      series: seriesByKpi[kpi.kpiKey] ?? [],
+      previousToDate: kpi.kpiKey === "quality" ? null : (prevToDate[kpi.kpiKey] ?? 0),
     };
   });
 
@@ -632,6 +686,7 @@ function getDashboard(state: State, params: URLSearchParams) {
     weightSum,
     weightWarning: Math.abs(weightSum - 100) > 0.01,
     pace,
+    projection,
     todaySummary,
     entriesCount: monthEntries.length,
     empty: monthEntries.length === 0,
