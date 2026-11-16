@@ -5,6 +5,7 @@ import {
   applyCompanyRules,
   estimatedCommission,
   kpiContribution,
+  weightedPacePercent,
 } from "../src/lib/calculations";
 import { parseBackup, planEntryRestore, type BackupEntry } from "../src/lib/backup";
 import { applyBackupToState, checkRestoreRequest, type RestoreState } from "../src/lib/restore";
@@ -22,6 +23,30 @@ check("نسبة الإنجاز والتارجت الصفري", () => {
 
 check("المؤشر الفردي لا يتوقف عند 200%", () => {
   assert.equal(kpiContribution(300, 100, 40), 120);
+});
+
+check("مؤشر سرعة الإنجاز لا يتأثر ببوابات استحقاق الكوميشن", () => {
+  const rows = [
+    { achieved: 50, target: 100, weight: 40 },
+    { achieved: 50, target: 100, weight: 15 },
+    { achieved: 50, target: 100, weight: 10 },
+    { achieved: 50, target: 100, weight: 10 },
+    { achieved: 50, target: 100, weight: 10 },
+    { achieved: 50, target: 100, weight: 15 },
+    { achieved: 0, target: 100, weight: 0 },
+  ];
+  assert.equal(weightedPacePercent(rows), 50);
+  const heldBack = applyCompanyRules([
+    { kpiKey: "new_lines" as const, target: 100, achieved: 50, weight: 40, unitAr: "خط" },
+    { kpiKey: "new_orange_cash" as const, target: 100, achieved: 0, weight: 0, unitAr: "محفظة" },
+    { kpiKey: "existing_wallets" as const, target: 100, achieved: 50, weight: 15, unitAr: "محفظة" },
+    { kpiKey: "points" as const, target: 100, achieved: 50, weight: 10, unitAr: "نقطة" },
+    { kpiKey: "postpaid_lines" as const, target: 100, achieved: 50, weight: 10, unitAr: "خط" },
+    { kpiKey: "dsl" as const, target: 100, achieved: 50, weight: 10, unitAr: "خط" },
+    { kpiKey: "quality" as const, target: 100, achieved: 50, weight: 15, unitAr: "%" },
+  ]);
+  assert.equal(heldBack.total, 0);
+  assert.equal(weightedPacePercent(rows), 50);
 });
 
 check("المحافظ الجديدة شرط مستقل بنسبة 100% من تارجتها", () => {
