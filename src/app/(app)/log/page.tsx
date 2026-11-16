@@ -10,7 +10,7 @@ import { useMonth } from "@/components/AppShell";
 import { KpiIcon } from "@/components/KpiIcon";
 import { formatMoney, formatQty } from "@/lib/calculations";
 import { overallLine } from "@/lib/phrases";
-import { quantityHint, quantityMax, quantityMin, quantityStep, validateQuantity } from "@/lib/quantity";
+import { allowsFraction, quantityHint, quantityMax, quantityMin, quantityStep, validateQuantity } from "@/lib/quantity";
 
 
 type QualityKey = "kyc" | "visits" | "training" | "pos" | "csat";
@@ -316,7 +316,7 @@ export default function LogPage() {
                 id={`quantity-${item.key}`}
                 className={`${inputClass} text-lg font-black`}
                 type="number"
-                inputMode="numeric"
+                inputMode={allowsFraction(item.key) ? "decimal" : "numeric"}
                 step={quantityStep(item.key)}
                 min={quantityMin(item.key)}
                 max={quantityMax(item.key)}
@@ -383,7 +383,7 @@ export default function LogPage() {
         />
       </section>
 
-      <div className="sticky bottom-2 z-20 -mx-1 rounded-2xl border border-[#f0dfd2] bg-white/95 p-2 shadow-[0_-4px_20px_rgba(70,35,10,.10)] backdrop-blur sm:mx-0">
+      <div className="sticky bottom-[calc(68px+env(safe-area-inset-bottom)+0.5rem)] z-50 -mx-1 rounded-2xl border border-[#f0dfd2] bg-white/95 p-2 shadow-[0_-4px_20px_rgba(70,35,10,.10)] backdrop-blur sm:mx-0 lg:bottom-2 lg:z-20">
         <div className="mb-2 flex items-center justify-between gap-2 px-1 text-[11px] font-bold text-[var(--color-text-secondary)]">
           <span>جاهز للحفظ</span>
           <span className="rounded-full bg-[var(--color-primary-50)] px-2.5 py-1 font-black text-[var(--color-primary-700)]">{filledCount} مؤشر</span>
