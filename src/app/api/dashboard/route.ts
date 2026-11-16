@@ -162,6 +162,7 @@ export async function GET(request: Request) {
       forecast: paceWork.elapsed > 0 && work.total > 0
         ? Math.min(200, (overall / paceWork.elapsed) * work.total)
         : null,
+      forecastElapsedDays: paceWork.elapsed,
       previousMonth: {
         yearMonth: previousYearMonth,
         monthLabel: monthLabelAr(previousYearMonth),
