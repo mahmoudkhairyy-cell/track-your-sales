@@ -47,6 +47,7 @@ type Dashboard = {
     hasData: boolean;
     entriesCount: number;
     overall: number;
+    sameWeights: boolean;
     kpis: { kpiKey: string; achieved: number; percent: number }[];
   };
   pace: { remaining: number; remainingDays: number; perDay: number | null; message: string };
@@ -257,6 +258,7 @@ export default function HomePage() {
               <p className={`mt-2 text-sm font-extrabold ${data.overall >= data.previousMonth.overall ? "text-emerald-700" : "text-red-600"}`}>
                 {data.overall >= data.previousMonth.overall ? "▲" : "▼"} {formatPercent(Math.abs(data.overall - data.previousMonth.overall))} نقطة مئوية عن الشهر السابق
               </p>
+              {!data.previousMonth.sameWeights ? <p className="mt-2 text-[11px] leading-5 text-amber-700">تنبيه: أوزان المؤشرات اختلفت بين الشهرين، فمقارنة الإجمالي تقريبية. نسب كل مؤشر محسوبة على هدف شهرها.</p> : <p className="mt-2 text-[11px] text-neutral-500">نسب كل مؤشر محسوبة على هدف الشهر نفسه.</p>}
               <div className="mt-3 space-y-1.5 border-t border-[#f3e7dc] pt-2">
                 {data.kpis.filter((kpi) => kpi.weight > 0).map((kpi) => {
                   const previous = data.previousMonth.kpis.find((item) => item.kpiKey === kpi.kpiKey);
