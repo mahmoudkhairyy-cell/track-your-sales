@@ -39,6 +39,15 @@ type Dashboard = {
   entriesCount: number;
   work: { total: number; elapsed: number; remaining: number };
   overallExpectedPercent: number;
+  forecast: number | null;
+  previousMonth: {
+    yearMonth: string;
+    monthLabel: string;
+    hasData: boolean;
+    entriesCount: number;
+    overall: number;
+    kpis: { kpiKey: string; achieved: number; percent: number }[];
+  };
   pace: { remaining: number; remainingDays: number; perDay: number | null; message: string };
 };
 
@@ -215,6 +224,58 @@ export default function HomePage() {
           </div>
         </div>
         <p className="mt-2 text-xs text-neutral-500">المتوقع لحد النهارده: {formatPercent(expectedPercent)}%</p>
+      </section>
+
+      <section className="grid gap-3 sm:grid-cols-2">
+        <article className="rounded-[22px] border border-[#edc7a7] bg-gradient-to-br from-white to-[#fff3e7] p-4 shadow-[0_8px_22px_rgba(112,57,18,0.055)]">
+          <p className="text-sm font-extrabold text-[#80502f]">🔮 توقع نهاية الشهر</p>
+          {data.forecast === null ? (
+            <p className="mt-2 text-sm leading-6 text-neutral-500">لسه مفيش أيام عمل منقضية بإنجازات كفاية عشان نطلع توقع موثوق.</p>
+          ) : (
+            <>
+              <p className="mt-2 text-3xl font-black text-[#9d430d]">{formatPercent(data.forecast)}%</p>
+              <p className="mt-1 text-xs leading-5 text-[#80502f]">بناءً على معدل إنجازك الحالي خلال {data.work.elapsed} يوم عمل من إجمالي {data.work.total} يوم.</p>
+            </>
+          )}
+        </article>
+
+        <article className="rounded-[22px] border border-[#f0dfd0] bg-white p-4 shadow-[0_8px_22px_rgba(112,57,18,0.045)]">
+          <p className="text-sm font-extrabold text-[#80502f]">📊 مقارنة بالشهر السابق</p>
+          {data.previousMonth.hasData ? (
+            <>
+              <div className="mt-2 flex items-end justify-between gap-2">
+                <div>
+                  <p className="text-3xl font-black text-[#9d430d]">{formatPercent(data.overall)}%</p>
+                  <p className="text-[11px] text-neutral-500">الشهر الحالي</p>
+                </div>
+                <div className="text-left">
+                  <p className="text-xl font-black text-neutral-700">{formatPercent(data.previousMonth.overall)}%</p>
+                  <p className="text-[11px] text-neutral-500">{data.previousMonth.monthLabel}</p>
+                </div>
+              </div>
+              <p className={`mt-2 text-sm font-extrabold ${data.overall >= data.previousMonth.overall ? "text-emerald-700" : "text-red-600"}`}>
+                {data.overall >= data.previousMonth.overall ? "▲" : "▼"} {formatPercent(Math.abs(data.overall - data.previousMonth.overall))} نقطة مئوية عن الشهر السابق
+              </p>
+              <div className="mt-3 space-y-1.5 border-t border-[#f3e7dc] pt-2">
+                {data.kpis.filter((kpi) => kpi.weight > 0).map((kpi) => {
+                  const previous = data.previousMonth.kpis.find((item) => item.kpiKey === kpi.kpiKey);
+                  if (!previous) return null;
+                  const delta = kpi.percent - previous.percent;
+                  return (
+                    <div key={kpi.kpiKey} className="flex items-center justify-between gap-2 text-xs">
+                      <span className="font-bold text-neutral-600">{kpi.nameEn}</span>
+                      <span className={`font-extrabold ${delta > 0 ? "text-emerald-700" : delta < 0 ? "text-red-600" : "text-neutral-500"}`}>
+                        {delta > 0 ? "+" : ""}{formatPercent(delta)} نقطة
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            </>
+          ) : (
+            <p className="mt-2 text-sm leading-6 text-neutral-500">مفيش سجلات محفوظة في {data.previousMonth.monthLabel} للمقارنة.</p>
+          )}
+        </article>
       </section>
 
       <div className="grid grid-cols-2 gap-3">
