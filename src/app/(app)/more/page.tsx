@@ -487,6 +487,10 @@ export default function MorePage() {
           <div className="mt-4">
             <EmptyState title="لسه مفيش عمليات" text="ابدأ بتسجيل بيعة، وهتظهر هنا في الشهر ده." />
           </div>
+        ) : filteredEntries.length === 0 ? (
+          <div className="mt-4">
+            <EmptyState title="مفيش نتائج مطابقة" text="جرّب تغيّر كلمة البحث أو تختار كل المؤشرات من الفلتر." />
+          </div>
         ) : (
           <ul className="mt-4 space-y-2">
             {filteredEntries.map((entry) => (
