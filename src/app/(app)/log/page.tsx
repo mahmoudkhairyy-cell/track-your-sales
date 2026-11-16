@@ -133,6 +133,8 @@ export default function LogPage() {
     ? QUALITY_ITEMS.reduce((sum, item) => sum + (quality.checks?.[item.key] ? item.weight : 0), 0)
     : 0;
   const dashByKey = new Map((dash?.kpis ?? []).map((k) => [k.kpiKey, k]));
+  const entryItems = KPI_CATALOG.filter((item) => item.key !== "quality" && !(item.key === "productivity" && (dashByKey.get("productivity")?.weight ?? 0) === 0));
+  const filledCount = entryItems.filter((item) => (quantities[item.key] ?? "").trim() !== "").length;
   const dailyItems = (dash?.kpis ?? []).filter((k) => k.remaining > 0);
   const workLeft = dash?.work.remaining ?? 0;
   const doneDays = dash ? (dash.work.elapsedBeforeToday ?? dash.work.elapsed) : 0;
@@ -244,8 +246,37 @@ export default function LogPage() {
         <p className="mt-2 text-xs leading-6 text-[var(--color-text-secondary)]">تاريخ الإنجاز لازم يكون داخل شهر {monthLabelAr(month)} المحدد أعلى التطبيق.</p>
       </section>
 
+      <section className="rounded-[20px] border border-[#f3e6dc] bg-[#fff8f1] p-3">
+        <div className="mb-2 flex items-center justify-between gap-2">
+          <p className="text-xs font-black text-[var(--color-text-primary)]">وصول سريع للمؤشرات</p>
+          <span className="rounded-full bg-white px-2.5 py-1 text-[10px] font-extrabold text-[var(--color-primary-700)]">{filledCount} مدخل</span>
+        </div>
+        <div className="flex gap-2 overflow-x-auto pb-1" aria-label="اختصارات حقول تسجيل الإنجاز">
+          {entryItems.map((item) => {
+            const filled = (quantities[item.key] ?? "").trim() !== "";
+            return (
+              <button
+                key={item.key}
+                type="button"
+                onClick={() => {
+                  const field = document.getElementById(`quantity-${item.key}`);
+                  field?.scrollIntoView({ behavior: "smooth", block: "center" });
+                  if (field instanceof HTMLInputElement) field.focus({ preventScroll: true });
+                }}
+                className={`flex shrink-0 items-center gap-1.5 rounded-xl border px-3 py-2 text-xs font-extrabold transition-colors ${filled ? "border-[var(--color-primary-500)] bg-[var(--color-primary-50)] text-[var(--color-primary-700)]" : "border-white bg-white text-[var(--color-text-secondary)]"}`}
+              >
+                <KpiIcon kpiKey={item.key} className="h-4 w-4" />
+                {item.nameEn}
+                {filled ? <span aria-label="تم إدخال كمية">✓</span> : null}
+              </button>
+            );
+          })}
+        </div>
+        <p className="mt-1 text-[10px] text-[var(--color-text-secondary)]">اضغط على اسم المؤشر للانتقال لخانة الكمية مباشرة.</p>
+      </section>
+
       <section className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-      {KPI_CATALOG.filter((item) => item.key !== "quality" && !(item.key === "productivity" && (dashByKey.get("productivity")?.weight ?? 0) === 0)).map((item) => {
+      {entryItems.map((item) => {
         const d = dashByKey.get(item.key);
         // لو الإجمالي اتقص عند 200%، توزيع الكوميشن على المؤشرات بيتقص بنفس النسبة عشان الأرقام تتجمع صح.
         const commissionScale = dash && dash.rawOverall && dash.rawOverall > dash.overall ? dash.overall / dash.rawOverall : 1;
