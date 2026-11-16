@@ -30,6 +30,11 @@ export function kpiContribution(achieved: number, target: number, weight: number
   return (achieved / target) * weight;
 }
 
+/** سرعة الإنجاز الموزونة للمتابعة فقط، من غير بوابات استحقاق الكوميشن. */
+export function weightedPacePercent(kpis: { achieved: number; target: number; weight: number }[]): number {
+  return kpis.reduce((sum, kpi) => sum + kpiContribution(kpi.achieved, kpi.target, kpi.weight), 0);
+}
+
 export function estimatedCommission(fullCommission: number, overallPercent: number): number {
   // الكوميشن بيزيد مع الإنجاز لحد 200% بس، من غير ما يحتاج اختيار.
   const ratio = overallPercent / 100;
