@@ -68,6 +68,9 @@ export async function GET(request: Request) {
       ? previousQualityValues.reduce((sum, value) => sum + value, 0) / previousQualityValues.length
       : 0;
     const previousOverall = computeOverall(previousBundle.kpis, previousAchieved);
+    const sameWeights = bundle.kpis.every((current) =>
+      previousBundle.kpis.some((previous) => previous.kpiKey === current.kpiKey && Math.abs(previous.weight - current.weight) < 0.000001),
+    );
     const previousKpis = previousBundle.kpis.map((kpi) => ({
       kpiKey: kpi.kpiKey,
       achieved: previousAchieved[kpi.kpiKey] ?? 0,
@@ -169,6 +172,7 @@ export async function GET(request: Request) {
         hasData: previousEntries.length > 0,
         entriesCount: previousEntries.length,
         overall: previousOverall,
+        sameWeights,
         kpis: previousKpis,
       },
       kpis,
