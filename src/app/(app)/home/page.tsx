@@ -253,9 +253,11 @@ export default function HomePage() {
       {entryHistory.month === month && data.today ? (() => {
         const counts = new Map<string, number>();
         for (const entry of entryHistory.entries) counts.set(entry.entryDate, (counts.get(entry.entryDate) ?? 0) + 1);
+        const [monthYear, monthNumber] = month.split("-").map(Number);
+        const lastDay = new Date(monthYear, monthNumber, 0).getDate();
+        const anchorDay = month === data.today.slice(0, 7) ? Number(data.today.slice(8, 10)) : lastDay;
         const days = Array.from({ length: 7 }, (_, index) => {
-          const date = new Date(`${data.today}T12:00:00`);
-          date.setDate(date.getDate() - (6 - index));
+          const date = new Date(monthYear, monthNumber - 1, anchorDay - (6 - index), 12);
           const iso = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
           return { iso, label: String(date.getDate()), count: counts.get(iso) ?? 0 };
         }).filter((day) => day.iso.slice(0, 7) === month);
