@@ -14,7 +14,7 @@ export const MAX_QUANTITY = 1_000_000;
 export type QuantityResult = { ok: true; value: number } | { ok: false; message: string };
 
 export function allowsFraction(kpiKey: KpiKey): boolean {
-  return kpiKey === "quality" || kpiKey === "productivity";
+  return kpiKey === "quality";
 }
 
 export function quantityStep(kpiKey: KpiKey): string {
