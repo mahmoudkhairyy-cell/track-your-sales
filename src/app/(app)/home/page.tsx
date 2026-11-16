@@ -159,7 +159,14 @@ export default function HomePage() {
   // اون تراك: الإجمالي وصل لنسبة الأيام اللي عدّت من الشهر (أيام الشغل). لو مفيش أيام، مبنحكمش.
   // النهارده مش محسوب في الأيام اللي عدّت.
   const doneDays = data.work.elapsedBeforeToday ?? data.work.elapsed;
-  const onTrack: boolean | null = data.work.total > 0 ? data.overall >= (doneDays / data.work.total) * 100 : null;
+  // الحالة العامة لازم تتطابق مع كروت المؤشرات: كل مؤشر عليه تارجت لازم يكون ماشي على الوتيرة.
+  // (الإجمالي بيتحسب بقواعد الكوميشن: المؤشر اللي تحت 90% أو الخطوط الجديدة قبل المحافظ بتتصفر، فمينفعش نقارنه بالوقت مباشرة.)
+  const targeted = data.kpis.filter((k) => k.target > 0);
+  const onTrack: boolean | null = data.work.total > 0
+    ? targeted.length > 0
+      ? targeted.every((k) => k.achieved >= k.expectedToDate)
+      : data.overall >= (doneDays / data.work.total) * 100
+    : null;
   const employeeName = data.profile.name.trim().split(/\s+/)[0] || "يا نجم";
   const statusPhrase = pickPhrase(overallBandLines(data.overall), `overall|${data.yearMonth}`);
   const statusTextEgy = statusPhrase.replaceAll("{name}", employeeName);
