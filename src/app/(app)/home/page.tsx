@@ -115,7 +115,19 @@ export default function HomePage() {
     let cancelled = false;
     api<Dashboard>(`/api/dashboard?month=${month}`)
       .then((result) => {
-        if (!cancelled) setState({ month, data: result, error: "" });
+        if (!cancelled) {
+          setState({ month, data: result, error: "" });
+          setSessionPhrase((current) => {
+            if (current.month === month) return current;
+            const currentMood = overallMood({
+              overall: result.overall,
+              expectedPercent: result.overallExpectedPercent,
+              empty: result.empty,
+              remainingDays: result.work.remaining,
+            });
+            return { month, text: pickStatusPhrase(currentMood.tone, result.overall) };
+          });
+        }
       })
       .catch((err) => {
         if (!cancelled) {
@@ -130,21 +142,6 @@ export default function HomePage() {
       cancelled = true;
     };
   }, [month]);
-
-  useEffect(() => {
-    if (state.month !== month || !state.data) return;
-    setSessionPhrase((current) => {
-      if (current.month === month) return current;
-      const expected = state.data!.overallExpectedPercent;
-      const currentMood = overallMood({
-        overall: state.data!.overall,
-        expectedPercent: expected,
-        empty: state.data!.empty,
-        remainingDays: state.data!.work.remaining,
-      });
-      return { month, text: pickStatusPhrase(currentMood.tone, state.data!.overall) };
-    });
-  }, [state, month]);
 
   const loading = state.month !== month;
   const { data, error } = state;
