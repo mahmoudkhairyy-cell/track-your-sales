@@ -297,7 +297,7 @@ export default function MorePage() {
     if (historyKpi !== "all" && entry.kpiKey !== historyKpi) return false;
     const needle = historyQuery.trim().toLocaleLowerCase("ar");
     if (!needle) return true;
-    return [entry.nameEn, entry.note ?? "", entry.entryDate].join(" ").toLocaleLowerCase("en").includes(needle);
+    return [entry.nameEn, entry.nameAr, entry.note ?? "", entry.entryDate].join(" ").toLocaleLowerCase("ar").includes(needle);
   });
 
   return (
