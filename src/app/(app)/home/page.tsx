@@ -25,7 +25,10 @@ type KpiRow = {
   overTarget: boolean;
 };
 
+type EntryHistory = { entries: { entryDate: string }[] };
+
 type Dashboard = {
+  today: string;
   profile: { name: string; branch: string };
   yearMonth: string;
   monthLabel: string;
@@ -73,6 +76,19 @@ export default function HomePage() {
     return () => window.removeEventListener("tys-sync-status", refresh);
   }, []);
   const month = useMonth();
+  const [entryHistory, setEntryHistory] = useState<{ month: string; entries: { entryDate: string }[] }>({ month: "", entries: [] });
+  useEffect(() => {
+    let cancelled = false;
+    api<EntryHistory>(`/api/entries?month=${month}`)
+      .then((result) => {
+        if (!cancelled) setEntryHistory({ month, entries: result.entries ?? [] });
+      })
+      .catch(() => {
+        if (!cancelled) setEntryHistory({ month, entries: [] });
+      });
+    return () => { cancelled = true; };
+  }, [month]);
+
   // بنخزّن الشهر مع البيانات عشان نعرف إن اللي معروض يخص الشهر الحالي من غير setState متزامن جوه الـ effect.
   const [state, setState] = useState<{ month: string; data: Dashboard | null; error: string }>({
     month: "",
@@ -232,6 +248,43 @@ export default function HomePage() {
           <span aria-hidden="true" className="text-base leading-none">＋</span> تسجيل إنجاز
         </Link>
       </div>
+
+      {/* نشاط التسجيل اليومي: عدد السجلات فقط، من غير جمع كميات مؤشرات بوحدات مختلفة */}
+      {entryHistory.month === month && data.today ? (() => {
+        const counts = new Map<string, number>();
+        for (const entry of entryHistory.entries) counts.set(entry.entryDate, (counts.get(entry.entryDate) ?? 0) + 1);
+        const days = Array.from({ length: 7 }, (_, index) => {
+          const date = new Date(`${data.today}T12:00:00`);
+          date.setDate(date.getDate() - (6 - index));
+          const iso = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+          return { iso, label: String(date.getDate()), count: counts.get(iso) ?? 0 };
+        }).filter((day) => day.iso.slice(0, 7) === month);
+        const maxCount = Math.max(1, ...days.map((day) => day.count));
+        return (
+          <section className="rounded-[20px] border border-white bg-white p-4 shadow-[0_1px_2px_rgba(43,20,0,.04)]" aria-label="نشاط التسجيل اليومي">
+            <div className="mb-4 flex items-center justify-between gap-2">
+              <div>
+                <h2 className="text-sm font-black text-[var(--color-text-primary)]">نشاط التسجيل</h2>
+                <p className="mt-1 text-[10px] font-semibold text-[var(--color-text-secondary)]">عدد مرات تسجيل الإنجاز — آخر 7 أيام</p>
+              </div>
+              <span className="rounded-full bg-[var(--color-primary-50)] px-2.5 py-1 text-[10px] font-extrabold text-[var(--color-primary-700)]">{entryHistory.entries.length} سجل</span>
+            </div>
+            {days.length ? (
+              <div className="flex h-28 items-end justify-around gap-2" dir="ltr">
+                {days.map((day) => (
+                  <div key={day.iso} className="flex h-full min-w-0 flex-1 flex-col items-center justify-end gap-1">
+                    <span className="text-[10px] font-black tabular-nums text-[var(--color-text-secondary)]">{day.count || ""}</span>
+                    <div className="flex h-16 w-full items-end justify-center">
+                      <div className="w-full max-w-8 rounded-t-lg bg-gradient-to-t from-[var(--color-primary-700)] to-[var(--color-primary-400)] transition-all" style={{ height: `${Math.max(5, (day.count / maxCount) * 100)}%`, opacity: day.count ? 1 : 0.18 }} />
+                    </div>
+                    <span className="text-[10px] font-bold text-[var(--color-text-secondary)]">{day.label}</span>
+                  </div>
+                ))}
+              </div>
+            ) : <p className="py-5 text-center text-xs font-semibold text-[var(--color-text-secondary)]">لا توجد أيام مسجلة في هذا الشهر حتى الآن.</p>}
+          </section>
+        );
+      })() : null}
 
       {/* المطلوب */}
       <section className="tys-home-daily rounded-[20px] border border-white bg-white p-4 shadow-[0_1px_2px_rgba(43,20,0,.04)]">
