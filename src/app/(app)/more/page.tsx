@@ -481,7 +481,7 @@ export default function MorePage() {
         </div>
         <div className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-[minmax(0,1fr)_220px]">
           <label className="block"><span className="sr-only">ابحث في السجل</span><input className={inputClass} type="search" value={historyQuery} onChange={(e) => setHistoryQuery(e.target.value)} placeholder="ابحث في المؤشر أو الملاحظات..." /></label>
-          <label className="block"><span className="sr-only">فلترة حسب المؤشر</span><select className={inputClass} value={historyKpi} onChange={(e) => setHistoryKpi(e.target.value as KpiKey | "all")}><option value="all">كل المؤشرات</option>{KPI_CATALOG.map((item) => <option key={item.key} value={item.key}>{item.nameAr} ({item.nameEn})</option>)}</select></label>
+          <label className="block"><span className="sr-only">فلترة حسب المؤشر</span><select className={inputClass} value={historyKpi} onChange={(e) => setHistoryKpi(e.target.value as KpiKey | "all")}><option value="all">كل المؤشرات</option>{KPI_CATALOG.map((item) => <option key={item.key} value={item.key}>{item.nameEn}</option>)}</select></label>
         </div>
         {entries.length === 0 ? (
           <div className="mt-4">
