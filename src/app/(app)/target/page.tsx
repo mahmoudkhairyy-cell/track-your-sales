@@ -3,7 +3,7 @@
 import { FormEvent, useEffect, useState } from "react";
 import { KPI_CATALOG, WEEK_DAYS, kpiEmoji } from "@/lib/constants";
 import { sumWeights } from "@/lib/calculations";
-import { Banner, Field, PrimaryButton, SecondaryButton, Spinner, inputClass, useToast } from "@/components/ui";
+import { Banner, Field, PageSkeleton, PrimaryButton, SecondaryButton, inputClass, useToast } from "@/components/ui";
 import { ApiError, api } from "@/lib/client";
 import type { WorkingDays } from "@/lib/types";
 import type { KpiKey } from "@/lib/constants";
@@ -159,7 +159,7 @@ export default function TargetPage() {
     }
   }
 
-  if (loading) return <Spinner label="ثواني… بنحمّل إعدادات التارجت" />;
+  if (loading) return <PageSkeleton label="ثواني… بنحمّل إعدادات التارجت" rows={3} />;
 
   return (
     <form className="tys-page tys-page-target mx-auto max-w-6xl space-y-5 pb-4" onSubmit={onSave}>

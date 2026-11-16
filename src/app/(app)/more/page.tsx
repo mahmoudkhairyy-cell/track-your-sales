@@ -2,7 +2,7 @@
 
 import { FormEvent, useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Banner, EmptyState, Field, Modal, PrimaryButton, SecondaryButton, Spinner, inputClass, useToast } from "@/components/ui";
+import { Banner, EmptyState, Field, Modal, PageSkeleton, PrimaryButton, SecondaryButton, inputClass, useToast } from "@/components/ui";
 import { ApiError, api, downloadJson } from "@/lib/client";
 import { cairoISODate, formatDateAr, formatTimeCairo, monthLabelAr } from "@/lib/dates";
 import { formatQty } from "@/lib/calculations";
@@ -289,7 +289,7 @@ export default function MorePage() {
     }
   }
 
-  if (loading) return <Spinner label="ثواني… بنحمّل الصفحة" />;
+  if (loading) return <PageSkeleton label="ثواني… بنحمّل الصفحة" rows={4} />;
   if (error) return <Banner tone="error">{error}</Banner>;
 
   const todayItems = todaySummary.filter((item) => item.quantity > 0 || item.count > 0);

@@ -11,6 +11,7 @@ import {
   Modal,
   PrimaryButton,
   SecondaryButton,
+  PageSkeleton,
   Spinner,
   inputClass,
   useToast,
@@ -413,7 +414,7 @@ export default function WikiPage() {
     return (
       <div className="tys-page tys-page-wiki mx-auto max-w-6xl space-y-4">
         <Back onClick={() => setSection("hub")} title="مركز المعرفة" />
-        <Spinner label="بنحمّل بيانات المرجع..." />
+        <PageSkeleton label="بنحمّل بيانات المرجع..." rows={4} />
       </div>
     );
   }

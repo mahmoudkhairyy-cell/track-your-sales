@@ -23,6 +23,32 @@ export function Spinner({ label = "بيحمّل..." }: { label?: string }) {
   );
 }
 
+export function PageSkeleton({ label = "بيحمّل...", rows = 3 }: { label?: string; rows?: number }) {
+  return (
+    <div className="tys-page flex flex-col gap-4" role="status" aria-busy="true" aria-live="polite">
+      <span className="sr-only">{label}</span>
+      <section className="rounded-[24px] border bg-white p-5">
+        <div className="skeleton-bone h-3 w-24 rounded-full" />
+        <div className="skeleton-bone mt-3 h-7 w-48 rounded-xl" />
+        <div className="skeleton-bone mt-4 h-2 w-full rounded-full" />
+      </section>
+      {Array.from({ length: rows }).map((_, index) => (
+        <section key={index} className="rounded-[24px] border bg-white p-4">
+          <div className="flex items-center gap-3">
+            <div className="skeleton-bone h-11 w-11 shrink-0 rounded-2xl" />
+            <div className="flex-1">
+              <div className="skeleton-bone h-3.5 w-2/5 rounded-full" />
+              <div className="skeleton-bone mt-2 h-3 w-1/4 rounded-full" />
+            </div>
+            <div className="skeleton-bone h-12 w-12 shrink-0 rounded-full" />
+          </div>
+          <div className="skeleton-bone mt-4 h-2 w-full rounded-full" />
+        </section>
+      ))}
+    </div>
+  );
+}
+
 export function EmptyState({
   title,
   text,
