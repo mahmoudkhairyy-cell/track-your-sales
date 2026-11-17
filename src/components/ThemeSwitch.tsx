@@ -6,7 +6,7 @@ import { readTheme, saveTheme, type Theme } from "@/lib/theme";
 
 const OPTIONS: { key: Theme; icon: string; title: string; text: string; swatch: string[] }[] = [
   { key: "light", icon: "☀️", title: "فاتح", text: "الشكل الأساسي الدافي", swatch: ["#fff4eb", "#ffffff", "#e96812"] },
-  { key: "dark", icon: "🌙", title: "داكن", text: "مريح للعين بالليل", swatch: ["#101216", "#191D24", "#FF7900"] },
+  { key: "dark", icon: "🌙", title: "داكن بريميم", text: "Midnight Graphite · Orange Glow", swatch: ["#101216", "#191D24", "#FF7900"] },
   { key: "glass", icon: "🖤", title: "أسود زجاجي", text: "أسود تمامًا وبطاقات زجاجية", swatch: ["#000000", "#1b1b1b", "#FF7900"] },
 ];
 
