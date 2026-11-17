@@ -4144,7 +4144,7 @@ h1, h2 {
 
   /* النصوص الثابتة في الكود */
   html[data-theme="aurora-dark"] :is([class*="text-[#2d2119]"], [class*="text-[#241f1b]"], [class*="text-[#1c1917]"], [class*="text-[#514238]"], [class*="text-[#6e5543]"], [class*="text-[var(--color-text-primary)]"], [class*="text-black"]) { color: var(--d-ink) !important; }
-  html[data-theme="aurora-dark"] :is([class*="text-[#88796e]"], [class*="text-[#9b8b7f]"], [class*="text-[#a17d65]"], [class*="text-[#9a7963]"], [class*="text-[#ad9888]"], [class*="text-[#70513c]"], [class*="text-[var(--color-text-secondary)]"], [class*="text-[var(--color-text-muted)]"], [class*="text-gray-"], [class*="text-stone-"], [class*="text-slate-"]) { color: var(--d-mute) !important; }
+  html[data-theme="aurora-dark"] :is([class*="text-[#88796e]"], [class*="text-[#9b8b7f]"], [class*="text-[#a17d65]"], [class*="text-[#9a7963]"], [class*="text-[#ad9888]"], [class*="text-[#70513c]"], [class*="text-[#7d8693]"], [class*="text-[#8791b3]"], [class*="text-[var(--color-text-secondary)]"], [class*="text-[var(--color-text-muted)]"], [class*="text-gray-"], [class*="text-stone-"], [class*="text-slate-"]) { color: var(--d-mute) !important; }
   html[data-theme="aurora-dark"] :is([class*="text-[#bd4b0a]"], [class*="text-[#e96812]"], [class*="text-[#b76a3b]"], [class*="text-[#bd6b39]"], [class*="text-[var(--color-primary-700)]"], [class*="text-[var(--color-primary-600)]"], [class*="text-orange-"]) { color: var(--d-o2) !important; }
   html[data-theme="aurora-dark"] :is([class*="text-emerald-"], [class*="text-green-"]) { color: var(--d-good) !important; }
   html[data-theme="aurora-dark"] :is([class*="text-red-"], [class*="text-rose-"]) { color: var(--d-bad) !important; }
@@ -4165,7 +4165,7 @@ h1, h2 {
     color: var(--d-ink) !important;
     border: 1px solid var(--d-line) !important;
   }
-  html[data-theme="aurora-dark"] :is(input, textarea)::placeholder { color: #7d8693; }
+  html[data-theme="aurora-dark"] :is(input, textarea)::placeholder { color: #a3abc8; opacity: 1; }
   html[data-theme="aurora-dark"] option { background: #12172c; color: #fff; }
   html[data-theme="aurora-dark"] :is(input, select, textarea):focus { border-color: var(--d-o) !important; box-shadow: 0 0 0 3px rgba(255, 122, 48, .22) !important; }
 
