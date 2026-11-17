@@ -4212,6 +4212,38 @@ h1, h2 {
   }
   html[data-theme="aurora-dark"] .tys-mobile-nav-link-active::before { background: var(--d-o); }
 
+  /* تحسين الهيدر والتنقل في أورورا الداكن */
+  html[data-theme="aurora-dark"] .tys-app-header {
+    box-shadow: 0 6px 22px rgba(0, 0, 0, .22) !important;
+  }
+  html[data-theme="aurora-dark"] .tys-desktop-nav {
+    background: rgba(22, 27, 50, .72) !important;
+    border-color: var(--d-line) !important;
+  }
+  html[data-theme="aurora-dark"] .tys-desktop-nav-link {
+    color: var(--d-mute) !important;
+    border-color: transparent !important;
+  }
+  html[data-theme="aurora-dark"] .tys-desktop-nav-link-active {
+    color: var(--d-o2) !important;
+    background: linear-gradient(105deg, rgba(255, 122, 48, .16), rgba(255, 154, 85, .06)) !important;
+    border-color: rgba(255, 154, 85, .2) !important;
+    box-shadow: inset 0 0 0 1px rgba(255, 154, 85, .04), 0 5px 16px rgba(0, 0, 0, .16) !important;
+  }
+  html[data-theme="aurora-dark"] .tys-desktop-nav-link-active::before {
+    background: linear-gradient(180deg, var(--d-o2), var(--d-o)) !important;
+  }
+  html[data-theme="aurora-dark"] .tys-mobile-nav {
+    padding-bottom: max(7px, env(safe-area-inset-bottom));
+    border-top: 1px solid rgba(255, 154, 85, .16) !important;
+  }
+  html[data-theme="aurora-dark"] .tys-mobile-nav-link-active-primary .tys-mobile-nav-primary {
+    box-shadow: 0 7px 20px rgba(255, 122, 48, .28), 0 0 0 4px rgba(255, 122, 48, .12) !important;
+  }
+  html[data-theme="aurora-dark"] .tys-mobile-nav-link-active::before {
+    box-shadow: 0 0 10px rgba(255, 122, 48, .38);
+  }
+
   /* الأزرار الرئيسية البرتقالي تفضل برتقالي بنص غامق للوضوح */
   html[data-theme="aurora-dark"] :is(button, a)[class*="from-[var(--color-primary-6"],
   html[data-theme="aurora-dark"] :is(button, a)[class*="bg-[#e96812]"] { color: #1a0d00; }
