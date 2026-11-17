@@ -23,7 +23,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <script dangerouslySetInnerHTML={{ __html: "try{if(localStorage.getItem('tys.theme')==='aurora')document.documentElement.setAttribute('data-theme','aurora')}catch(e){}" }} />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
-        <link href="https://fonts.googleapis.com/css2?family=Mada:wght@400;500;700;800&family=Noto+Naskh+Arabic:wght@500;700&display=swap" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=Mada:wght@400;500;700;800&family=Noto+Naskh+Arabic:wght@500;700&family=Cairo:wght@500;700;900&display=swap" rel="stylesheet" />
         <link rel="manifest" href="/track-your-sales/manifest.webmanifest" />
         <link rel="icon" href="/track-your-sales/logo-mark.png" type="image/png" />
         <link rel="apple-touch-icon" href="/track-your-sales/app-icon-192.png" />
