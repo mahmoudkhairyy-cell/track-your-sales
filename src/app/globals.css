@@ -4394,4 +4394,24 @@ h1, h2 {
     color: var(--d-ink);
     cursor: pointer;
   }
+
+  /* تحسين تجربة الموبايل في Aurora Dark فقط */
+  @media (max-width: 640px) {
+    html[data-theme="aurora-dark"] .tys-page {
+      min-width: 0;
+      max-width: 100%;
+    }
+    html[data-theme="aurora-dark"] :is(input, select, textarea) {
+      font-size: 16px !important;
+    }
+    html[data-theme="aurora-dark"] [role="dialog"] > div {
+      max-height: calc(100dvh - 2rem);
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      -webkit-overflow-scrolling: touch;
+    }
+    html[data-theme="aurora-dark"] .tys-mobile-nav {
+      padding-bottom: max(8px, env(safe-area-inset-bottom));
+    }
+  }
 }
