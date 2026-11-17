@@ -1,6 +1,5 @@
 "use client";
 
-import { ThemeSwitch } from "@/components/ThemeSwitch";
 import { FormEvent, useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { LockSettings } from "@/components/LockSettings";
@@ -37,7 +36,7 @@ type TodayItem = {
 };
 
 export default function MorePage() {
-  const [view, setView] = useHistoryView<"menu" | "today" | "history" | "data" | "profile" | "backup" | "about" | "report" | "theme">("menu");
+  const [view, setView] = useHistoryView<"menu" | "today" | "history" | "data" | "profile" | "backup" | "about" | "report">("menu");
   const [reportData, setReportData] = useState<{ overall: number; estimatedCommission: number; fullCommission: number; kpis: { kpiKey: string; nameEn: string; achieved: number; target: number; percent: number; contribution: number }[] } | null>(null);
 
   const toast = useToast();
@@ -355,7 +354,6 @@ export default function MorePage() {
             {
               title: "التطبيق",
               items: [
-                { key: "theme", icon: "🌓", title: "المظهر", desc: "فاتح أو داكن" },
                 { key: "about", icon: "ℹ️", title: "حول التطبيق", desc: "معلومات عن الأداة" },
               ],
             },
@@ -385,17 +383,6 @@ export default function MorePage() {
             </section>
           ))}
         </div>
-      ) : null}
-
-      {view === "theme" ? (
-        <section className="space-y-4">
-          <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[var(--color-primary-700)]">← رجوع للقائمة</button>
-          <div className="rounded-[24px] border border-white bg-white p-5 shadow-sm">
-            <h2 className="text-lg font-black">🌓 المظهر</h2>
-            <p className="mt-1 text-sm text-[var(--color-text-secondary)]">اختار المظهر. بيتحفظ على جهازك وبيفضل بعد قفل التطبيق.</p>
-            <div className="mt-4"><ThemeSwitch /></div>
-          </div>
-        </section>
       ) : null}
 
       {view === "data" ? (
