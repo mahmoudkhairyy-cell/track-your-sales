@@ -4724,3 +4724,12 @@ html[data-theme="aurora-dark"] .tys-premium-home .tys-home-daily > div:last-chil
 html[data-theme="aurora-dark"] .tys-premium-home .tys-home-daily > div:last-child > div > strong { background: #1a2142 !important; background-image: none !important; color: var(--d-o2) !important; }
 }
 }
+
+/* Brand-orange app header across all themes */
+html[data-theme="aurora"] .tys-app-header,
+html[data-theme="aurora-dark"] .tys-app-header {
+  background: #e96812 !important;
+  background-image: none !important;
+  border-color: #d95708 !important;
+  color: #fff !important;
+}
