@@ -1,5 +1,6 @@
 "use client";
 
+import { LINES, pickLine } from "@/lib/mascot-lines";
 import { PageMascot } from "@/components/Mascot";
 import { BrandLogo, brandKeysFrom } from "@/components/BrandLogo";
 import { useHistoryView } from "@/lib/use-history-view";
@@ -422,7 +423,7 @@ export default function WikiPage() {
 
   return (
     <div className="tys-page tys-page-wiki mx-auto max-w-6xl space-y-5">
-      <PageMascot kind="elephant" say="الفيل ما بينساش! دليلك هنا 📚" />
+      <PageMascot kind="elephant" say={pickLine(LINES.wiki, "wiki")} />
       {section === "hub" ? (
         <>
           <section className="relative isolate overflow-hidden rounded-[30px] border border-white bg-white p-5 shadow-[0_1px_2px_rgba(43,20,0,.04)] sm:p-6">

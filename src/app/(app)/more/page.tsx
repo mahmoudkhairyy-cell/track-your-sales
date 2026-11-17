@@ -1,5 +1,6 @@
 "use client";
 
+import { LINES, pickLine } from "@/lib/mascot-lines";
 import { Mascot, MASCOTS, PageMascot, type MascotKind } from "@/components/Mascot";
 import { LookSwitch } from "@/components/LookSwitch";
 import { FormEvent, useCallback, useEffect, useState } from "react";
@@ -305,7 +306,7 @@ export default function MorePage() {
 
   return (
     <div className="tys-page tys-page-more mx-auto max-w-5xl space-y-5">
-      <PageMascot kind="owl" say="كل حاجة تانية عندي هنا 🦉" />
+      <PageMascot kind="owl" say={pickLine(LINES.more, "more")} />
       <section className="relative overflow-hidden rounded-[26px] border border-white bg-white p-5 shadow-[0_1px_2px_rgba(43,20,0,.04)]">
         <div className="absolute -left-10 -top-12 h-36 w-36 rounded-full bg-[#ffb36e]/20 blur-3xl" />
         <div className="relative flex flex-wrap items-center justify-between gap-3">

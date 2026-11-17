@@ -1,5 +1,6 @@
 "use client";
 
+import { LINES, pickLine } from "@/lib/mascot-lines";
 import { PageMascot } from "@/components/Mascot";
 import { FormEvent, useEffect, useState } from "react";
 import { KPI_CATALOG, kpiEmoji, type KpiKey } from "@/lib/constants";
@@ -211,7 +212,7 @@ export default function LogPage() {
 
   return (
     <form className="tys-page tys-page-log tys-premium-log mx-auto max-w-5xl space-y-5 pb-8" onSubmit={onSubmit}>
-      <PageMascot kind="bear" say="سجّل إنجازك هنا وأنا أحسبهولك 📝" />
+      <PageMascot kind="bear" say={pickLine(LINES.log, "log")} />
       <section className="flex items-end justify-between gap-3 rounded-[26px] border border-white bg-white px-4 py-4 shadow-[0_1px_2px_rgba(43,20,0,.04)] sm:px-5">
         <div>
           <p className="text-[10px] font-black tracking-[0.16em] text-[#c66b34]">DAILY SALES ENTRY</p>

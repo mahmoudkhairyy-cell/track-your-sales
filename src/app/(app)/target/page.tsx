@@ -1,5 +1,6 @@
 "use client";
 
+import { LINES, pickLine } from "@/lib/mascot-lines";
 import { PageMascot } from "@/components/Mascot";
 import { FormEvent, useEffect, useState } from "react";
 import { KPI_CATALOG, WEEK_DAYS, kpiEmoji } from "@/lib/constants";
@@ -164,7 +165,7 @@ export default function TargetPage() {
 
   return (
     <form className="tys-page tys-page-target mx-auto max-w-6xl space-y-5 pb-4" onSubmit={onSave}>
-      <PageMascot kind="bunny" say="حط هدفك وأنا أصوّب عليه 🎯" />
+      <PageMascot kind="bunny" say={pickLine(LINES.target, "target")} />
       <section className="relative isolate overflow-hidden rounded-[28px] border border-white bg-white p-5 shadow-[0_1px_2px_rgba(43,20,0,.04)] sm:p-6">
         <div className="relative">
           <div className="flex flex-wrap items-start justify-between gap-3">

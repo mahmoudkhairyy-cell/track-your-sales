@@ -1,6 +1,6 @@
 "use client";
 
-export type MascotKind = "cat" | "bear" | "bunny" | "owl" | "elephant" | "lion" | "frog" | "robot" | "pig" | "monkey" | "alien" | "dino";
+export type MascotKind = "cat" | "bear" | "bunny" | "owl" | "elephant" | "lion" | "frog" | "robot" | "pig" | "monkey" | "alien" | "dino" | "fox" | "koala" | "chick" | "ghost";
 export type Mood = "happy" | "sad" | "cheer";
 
 type Spec = { name: string; body: string; ears: "cat" | "round" | "bunny" | "owl" | "big" | "lion" | "none"; acc: "cap" | "bowtie" | "target" | "glasses" | "crown" | "antenna" | "none"; mane?: string };
@@ -18,6 +18,10 @@ export const MASCOTS: Record<MascotKind, Spec> = {
   monkey: { name: "قرقور", body: "#c58b52", ears: "round", acc: "cap" },
   alien: { name: "فضفض", body: "#b6f06a", ears: "none", acc: "antenna" },
   dino: { name: "ديدو", body: "#6fd3a0", ears: "round", acc: "bowtie" },
+  fox: { name: "فوكس", body: "#ff7a45", ears: "cat", acc: "bowtie" },
+  koala: { name: "كوكو", body: "#b9c0c9", ears: "round", acc: "glasses" },
+  chick: { name: "كتكوت", body: "#ffe14a", ears: "none", acc: "cap" },
+  ghost: { name: "شبشب", body: "#f4f1ff", ears: "none", acc: "crown" },
 };
 
 const INK = "#1b1209";
