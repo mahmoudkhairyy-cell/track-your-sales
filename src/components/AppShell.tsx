@@ -526,7 +526,7 @@ function AppFrame({ children, blocked, month }: { children: ReactNode; blocked: 
                           aria-expanded={themeMenuOpen}
                           className="flex h-10 w-10 items-center justify-center gap-0.5 rounded-full border border-white/35 bg-white/15 text-base shadow-sm backdrop-blur transition hover:bg-white/25 active:scale-95"
                         >
-                          <span aria-hidden="true">🌙</span><span aria-hidden="true">☀️</span>
+                          <span aria-hidden="true" className="flex h-6 w-6 overflow-hidden rounded-full ring-1 ring-white/50"><span className="flex w-1/2 items-center justify-center bg-[#342b50] text-[11px]">🌙</span><span className="flex w-1/2 items-center justify-center bg-[#fff0bd] text-[11px]">☀️</span></span>
                         </button>
                         {themeMenuOpen ? (
                           <div className="absolute left-0 top-full z-50 mt-2 w-44 rounded-2xl border border-[#f2e4d8] bg-white p-2 text-[#2d2119] shadow-xl" dir="rtl">
