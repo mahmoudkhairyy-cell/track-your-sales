@@ -20,7 +20,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="ar" dir="rtl" suppressHydrationWarning>
       <head>
-        <script dangerouslySetInnerHTML={{ __html: "try{var l=localStorage.getItem('tys.look');if(/^(toon|bank|dark|paper|retro|nature|gold|pastel|terminal|news)$/.test(l))document.documentElement.setAttribute('data-look',l)}catch(e){}" }} />
+        <script dangerouslySetInnerHTML={{ __html: "try{var l=localStorage.getItem('tys.look');if(/^(toon|bank|dark|paper|retro|nature|gold|pastel|terminal|news|sky|mint|coral|sand|lavender|lemon|ocean|rose|cream|mono|candy|steel|midnight|forest|wine|sunset|ice|coffee|cyber|amoled)$/.test(l)){var h=document.documentElement;h.setAttribute('data-look',l);if(l!=='toon'&&l!=='bank')h.setAttribute('data-lk','1')}}catch(e){}" }} />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         <link href="https://fonts.googleapis.com/css2?family=Mada:wght@400;500;700;800&family=Noto+Naskh+Arabic:wght@500;700&family=Lalezar&family=Aref+Ruqaa:wght@400;700&family=Amiri:wght@400;700&family=Orbitron:wght@700;900&display=swap" rel="stylesheet" />
