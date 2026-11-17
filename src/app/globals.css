@@ -4348,4 +4348,50 @@ h1, h2 {
     box-shadow: 0 0 0 3px rgba(255, 122, 48, .14) !important;
     outline: 0;
   }
+
+  /* الشاشات الداخلية: الجداول والتبويبات والأقسام القابلة للفتح */
+  html[data-theme="aurora-dark"] .tys-page :is(table) {
+    color: var(--d-ink) !important;
+    border-color: var(--d-line) !important;
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+  html[data-theme="aurora-dark"] .tys-page :is(thead, th) {
+    color: var(--d-o2) !important;
+    background: rgba(255, 255, 255, .045) !important;
+    border-color: var(--d-line) !important;
+  }
+  html[data-theme="aurora-dark"] .tys-page :is(td, th) {
+    border-color: var(--d-line) !important;
+  }
+  html[data-theme="aurora-dark"] .tys-page tbody tr {
+    background: transparent !important;
+  }
+  html[data-theme="aurora-dark"] .tys-page tbody tr:hover {
+    background: rgba(255, 255, 255, .035) !important;
+  }
+  html[data-theme="aurora-dark"] .tys-page :is([role="tablist"]) {
+    background: rgba(7, 12, 27, .58) !important;
+    border: 1px solid var(--d-line) !important;
+    border-radius: 14px;
+    padding: 4px;
+  }
+  html[data-theme="aurora-dark"] .tys-page [role="tab"] {
+    color: var(--d-mute) !important;
+    border-color: transparent !important;
+  }
+  html[data-theme="aurora-dark"] .tys-page [role="tab"][aria-selected="true"] {
+    color: var(--d-o2) !important;
+    background: rgba(255, 122, 48, .14) !important;
+    border-color: rgba(255, 154, 85, .22) !important;
+    box-shadow: inset 0 0 0 1px rgba(255, 154, 85, .05) !important;
+  }
+  html[data-theme="aurora-dark"] .tys-page details {
+    color: var(--d-ink);
+    border-color: var(--d-line) !important;
+  }
+  html[data-theme="aurora-dark"] .tys-page details > summary {
+    color: var(--d-ink);
+    cursor: pointer;
+  }
 }
