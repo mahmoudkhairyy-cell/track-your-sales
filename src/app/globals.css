@@ -4051,3 +4051,98 @@ h1, h2 {
   html[data-theme="dark"] .tys-theme-option[aria-checked="true"] { border-color: var(--d-o) !important; background: var(--d-raised) !important; }
   html[data-theme="dark"] img[src*="logo"] { filter: none; }
 }
+
+
+/* ==========================================================================
+   الأسود الزجاجي: skin فوق الوضع الداكن (data-theme="dark" + data-skin="glass").
+   أسود تمامًا، وبطاقات زجاجية شفافة، وتوهج برتقالي خفيف.
+   ========================================================================== */
+@media screen {
+  html[data-skin="glass"] {
+    --d-bg: #000000;
+    --d-card: rgba(255, 255, 255, .06);
+    --d-raised: rgba(255, 255, 255, .09);
+    --d-line: rgba(255, 255, 255, .13);
+    --d-mute: rgba(255, 255, 255, .62);
+    --color-primary-50: rgba(255, 255, 255, .06);
+    --color-primary-100: rgba(255, 255, 255, .09);
+    --brand-bg: #000000;
+    background: #000;
+    scrollbar-color: #2a2a2a #000;
+  }
+  html[data-skin="glass"] body {
+    background:
+      radial-gradient(circle at 88% -4%, rgba(255, 121, 0, .30), transparent 38%),
+      radial-gradient(circle at 0% 108%, rgba(255, 121, 0, .12), transparent 42%),
+      #000 !important;
+    background-attachment: fixed !important;
+  }
+  /* البطاقات الزجاجية */
+  html[data-skin="glass"] .tys-page :is(section, article, form)[class*="rounded-"],
+  html[data-skin="glass"] .tys-target-gate,
+  html[data-skin="glass"] .tys-login-screen > div {
+    background: var(--d-card) !important;
+    border: 1px solid var(--d-line) !important;
+    border-radius: 26px !important;
+    box-shadow: 0 14px 40px rgba(0, 0, 0, .65), inset 0 1px 0 rgba(255, 255, 255, .06) !important;
+    -webkit-backdrop-filter: blur(18px) saturate(140%);
+    backdrop-filter: blur(18px) saturate(140%);
+  }
+  html[data-skin="glass"] .tys-page-home > section:nth-of-type(2) {
+    background: radial-gradient(circle at 92% 0%, rgba(255, 121, 0, .30), transparent 58%), var(--d-card) !important;
+  }
+  /* العناصر الداخلية شفافة، مش صلبة */
+  html[data-skin="glass"] :is([class*="bg-white"], [class*="bg-[#fff"], [class*="from-white"], [class*="from-[#f"], [class*="to-[#f"], [class*="via-[#f"]):not([class*="from-[var(--color-primary-6"]):not([class*="from-[var(--color-primary-7"]):not([class*="bg-[#e96812]"]):not([class*="from-[#e96812]"]):not([class*="from-[#bd4b0a]"]) {
+    background-color: var(--d-raised) !important;
+  }
+  /* الحقول */
+  html[data-skin="glass"] :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea) {
+    background: rgba(255, 255, 255, .06) !important;
+    border: 1px solid var(--d-line) !important;
+    border-radius: 14px !important;
+  }
+  html[data-skin="glass"] option { background: #0a0a0a; color: #fff; }
+  /* الهيدر */
+  html[data-skin="glass"] .tys-app-header {
+    background: rgba(0, 0, 0, .55) !important;
+    border-bottom: 1px solid var(--d-line) !important;
+    -webkit-backdrop-filter: blur(18px);
+    backdrop-filter: blur(18px);
+  }
+  /* القائمة السفلية عايمة */
+  html[data-skin="glass"] .tys-mobile-nav {
+    left: 12px !important;
+    right: 12px !important;
+    width: auto !important;
+    bottom: calc(10px + env(safe-area-inset-bottom)) !important;
+    border: 1px solid var(--d-line) !important;
+    border-radius: 28px !important;
+    background: rgba(18, 18, 18, .72) !important;
+    box-shadow: 0 14px 40px rgba(0, 0, 0, .7) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(140%);
+    backdrop-filter: blur(20px) saturate(140%);
+  }
+  html[data-skin="glass"] aside {
+    background: rgba(10, 10, 10, .8) !important;
+    border-color: var(--d-line) !important;
+  }
+  /* توهج البرتقالي على أشرطة التقدم والأزرار الرئيسية */
+  html[data-skin="glass"] [class*="from-[var(--color-primary-6"],
+  html[data-skin="glass"] [class*="from-[var(--color-primary-7"],
+  html[data-skin="glass"] [class*="from-[#e96812]"],
+  html[data-skin="glass"] [class*="from-[#bd4b0a]"] {
+    box-shadow: 0 0 14px rgba(255, 121, 0, .45);
+  }
+  html[data-skin="glass"] :is(button, a)[class*="from-[var(--color-primary-6"],
+  html[data-skin="glass"] :is(button, a)[class*="from-[#e96812]"] {
+    box-shadow: 0 10px 28px rgba(255, 121, 0, .38);
+  }
+  /* التحميل وشاشة الترحيب */
+  html[data-skin="glass"] .skeleton-bone {
+    background: linear-gradient(90deg, rgba(255, 255, 255, .05) 25%, rgba(255, 255, 255, .11) 50%, rgba(255, 255, 255, .05) 75%);
+    background-size: 200% 100%;
+  }
+  html[data-skin="glass"] [role="dialog"] { background: rgba(0, 0, 0, .7) !important; -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
+  html[data-skin="glass"] [role="dialog"] > div { background: rgba(24, 24, 24, .9) !important; border: 1px solid var(--d-line); }
+  html[data-skin="glass"] .tys-theme-option[aria-checked="true"] { border-color: var(--d-o) !important; box-shadow: 0 0 0 3px rgba(255, 121, 0, .2); }
+}
