@@ -2,7 +2,6 @@ import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import { APP_DISCLAIMER, APP_NAME, BRAND_BY } from "@/lib/constants";
 import "./globals.css";
-import "./premium-dark.css";
 import { PwaRegister } from "@/components/PwaRegister";
 
 export const metadata: Metadata = {
@@ -21,7 +20,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="ar" dir="rtl" suppressHydrationWarning>
       <head>
-        <script dangerouslySetInnerHTML={{ __html: "try{var t=localStorage.getItem('tys.theme'),h=document.documentElement;if(t==='dark'||t==='glass'){h.setAttribute('data-theme','dark');h.removeAttribute('data-skin');if(t==='glass')localStorage.setItem('tys.theme','dark')}}catch(e){}" }} />
+        <script dangerouslySetInnerHTML={{ __html: "try{localStorage.removeItem('tys.theme');var h=document.documentElement;h.removeAttribute('data-theme');h.removeAttribute('data-skin')}catch(e){}" }} />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         <link href="https://fonts.googleapis.com/css2?family=Mada:wght@400;500;700;800&family=Noto+Naskh+Arabic:wght@500;700&display=swap" rel="stylesheet" />
