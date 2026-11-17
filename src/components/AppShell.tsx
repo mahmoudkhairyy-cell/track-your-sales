@@ -12,6 +12,7 @@ import { cairoYearMonth, isValidYearMonth, monthLabelAr, shiftYearMonth } from "
 import { BookIcon, ChevronIcon, HomeIcon, MoreIcon, PlusIcon, StarIcon, TargetIcon } from "@/components/icons";
 import { ToastProvider, useToast } from "@/components/ui";
 import { AppLock } from "@/components/AppLock";
+import { readTheme, saveTheme, type Theme } from "@/lib/theme";
 
 const MonthContext = createContext(cairoYearMonth());
 
@@ -447,6 +448,18 @@ export function AppShell({ children }: { children: ReactNode }) {
 function AppFrame({ children, blocked, month }: { children: ReactNode; blocked: boolean; month: string }) {
   const pathname = usePathname();
   const [user, setUser] = useState({ name: "", branch: "" });
+  const [theme, setTheme] = useState<Theme>("light");
+  const [themeMenuOpen, setThemeMenuOpen] = useState(false);
+
+  useEffect(() => {
+    queueMicrotask(() => setTheme(readTheme()));
+  }, []);
+
+  function chooseTheme(next: Theme) {
+    setTheme(next);
+    saveTheme(next);
+    setThemeMenuOpen(false);
+  }
   useEffect(() => {
     let cancelled = false;
     queueMicrotask(() => {
@@ -488,22 +501,56 @@ function AppFrame({ children, blocked, month }: { children: ReactNode; blocked: 
             </aside>
 
             <div className="flex min-w-0 flex-1 flex-col">
-              <header className="tys-app-header sticky top-0 z-30 border-b border-[#f1dfd0]/80 bg-[#fffaf5]/90 px-4 py-3 backdrop-blur-2xl lg:px-8">
+              <header className="tys-app-header sticky top-0 z-30 border-b border-[#d95708] bg-[#e96812] px-4 py-3 text-white shadow-[0_4px_18px_rgba(189,75,10,0.16)] backdrop-blur-2xl lg:px-8">
                 <div className="mx-auto flex max-w-6xl items-center justify-between gap-3">
                   <div className="flex min-w-0 items-center gap-3 lg:hidden">
                     <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white shadow-[0_4px_12px_rgba(217,104,18,0.12)] ring-1 ring-[#f2e4d8]">
                       <img src="/track-your-sales/logo-mark.png" alt="" className="h-9 w-9 object-contain" />
                     </span>
                     <div className="min-w-0">
-                      <p className="truncate text-[13px] font-black tracking-tight text-[#2d2119]" dir="ltr">{APP_NAME}</p>
-                      <p className="truncate text-[9px] font-semibold text-[#a17d65]">{user.name || "مساحة متابعة المبيعات"}</p>
+                      <p className="truncate text-[13px] font-black tracking-tight text-white" dir="ltr">{APP_NAME}</p>
+                      <p className="truncate text-[9px] font-semibold text-white/80">{user.name || "مساحة متابعة المبيعات"}</p>
                     </div>
                   </div>
                   <div className="hidden min-w-0 lg:block">
-                    <p className="text-sm font-black text-[#2d2119]">{pathname === "/home" ? "لوحة الأداء" : NAV.find((item) => pathname.startsWith(item.href))?.label || "مساحة العمل"}</p>
-                    <p className="mt-1 text-[11px] text-[#a17d65]">تابع إنجازك وخطتك الشهرية من مكان واحد</p>
+                    <p className="text-sm font-black text-white">{pathname === "/home" ? "لوحة الأداء" : NAV.find((item) => pathname.startsWith(item.href))?.label || "مساحة العمل"}</p>
+                    <p className="mt-1 text-[11px] text-white/80">تابع إنجازك وخطتك الشهرية من مكان واحد</p>
                   </div>
-                  {pathname === "/wiki" || pathname.startsWith("/wiki/") ? null : <MonthSwitcher />}
+                  <div className="flex shrink-0 items-center gap-2">
+                    {pathname === "/home" ? (
+                      <div className="relative">
+                        <button
+                          type="button"
+                          onClick={() => setThemeMenuOpen((open) => !open)}
+                          aria-label="تغيير المظهر"
+                          aria-expanded={themeMenuOpen}
+                          className="flex h-10 w-10 items-center justify-center gap-0.5 rounded-full border border-white/35 bg-white/15 text-base shadow-sm backdrop-blur transition hover:bg-white/25 active:scale-95"
+                        >
+                          <span aria-hidden="true" className="flex h-6 w-6 overflow-hidden rounded-full ring-1 ring-white/50"><span className="flex w-1/2 items-center justify-center bg-[#342b50] text-[11px]">🌙</span><span className="flex w-1/2 items-center justify-center bg-[#fff0bd] text-[11px]">☀️</span></span>
+                        </button>
+                        {themeMenuOpen ? (
+                          <div className="absolute left-0 top-full z-50 mt-2 w-44 rounded-2xl border border-[#f2e4d8] bg-white p-2 text-[#2d2119] shadow-xl" dir="rtl">
+                            {([
+                              ["light", "☀️", "الأساسي"],
+                              ["aurora", "🌌", "أورورا فاتح"],
+                              ["aurora-dark", "🌙", "أورورا داكن"],
+                            ] as [Theme, string, string][]).map(([key, icon, label]) => (
+                              <button
+                                key={key}
+                                type="button"
+                                onClick={() => chooseTheme(key)}
+                                className={`flex min-h-10 w-full items-center justify-between rounded-xl px-3 text-right text-xs font-extrabold transition ${theme === key ? "bg-[#fff0e2] text-[#bd4b0a]" : "text-[#514238] hover:bg-[#fff8f1]"}`}
+                              >
+                                <span>{icon} {label}</span>
+                                {theme === key ? <span aria-hidden="true">✓</span> : null}
+                              </button>
+                            ))}
+                          </div>
+                        ) : null}
+                      </div>
+                    ) : null}
+                    {pathname === "/wiki" || pathname.startsWith("/wiki/") ? null : <MonthSwitcher />}
+                  </div>
                 </div>
               </header>
               <main className="tys-app-main flex-1 bg-[radial-gradient(ellipse_at_top_right,_rgba(255,220,190,0.22),_transparent_34rem)] px-4 py-5 pb-28 lg:px-8 lg:py-8 lg:pb-10">
