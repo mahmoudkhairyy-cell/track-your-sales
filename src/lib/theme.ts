@@ -1,32 +1,21 @@
-export type Theme = "light" | "dark";
-const KEY = "tys.theme";
+export type Theme = "light";
 
+// Track Your Sales currently uses the original light appearance only.
 export function readTheme(): Theme {
   try {
-    const v = localStorage.getItem(KEY);
-    // Migrate the retired glass theme to the single supported premium dark theme.
-    if (v === "glass") {
-      localStorage.setItem(KEY, "dark");
-      return "dark";
-    }
-    return v === "dark" ? "dark" : "light";
-  } catch {
-    return "light";
-  }
+    localStorage.removeItem("tys.theme");
+  } catch {}
+  return "light";
 }
 
-export function applyTheme(theme: Theme) {
+export function applyTheme(_theme: Theme) {
   try {
-    const h = document.documentElement;
-    h.removeAttribute("data-skin");
-    if (theme === "light") h.removeAttribute("data-theme");
-    else h.setAttribute("data-theme", "dark");
+    const root = document.documentElement;
+    root.removeAttribute("data-theme");
+    root.removeAttribute("data-skin");
   } catch {}
 }
 
-export function saveTheme(theme: Theme) {
-  try {
-    localStorage.setItem(KEY, theme);
-  } catch {}
-  applyTheme(theme);
+export function saveTheme(_theme: Theme) {
+  applyTheme("light");
 }
