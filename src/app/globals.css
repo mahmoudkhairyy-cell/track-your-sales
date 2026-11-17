@@ -4167,7 +4167,29 @@ h1, h2 {
   }
   html[data-theme="aurora-dark"] :is(input, textarea)::placeholder { color: #a3abc8; opacity: 1; }
   html[data-theme="aurora-dark"] option { background: #12172c; color: #fff; }
-  html[data-theme="aurora-dark"] :is(input, select, textarea):focus { border-color: var(--d-o) !important; box-shadow: 0 0 0 3px rgba(255, 122, 48, .22) !important; }
+  html[data-theme="aurora-dark"] option:checked { background: #29314f; color: #fff; }
+  html[data-theme="aurora-dark"] :is(input, select, textarea):focus {
+    border-color: var(--d-o) !important;
+    box-shadow: 0 0 0 3px rgba(255, 122, 48, .22) !important;
+    outline: none;
+  }
+  html[data-theme="aurora-dark"] :is(input, select, textarea):disabled {
+    background-color: rgba(255, 255, 255, .035) !important;
+    color: #8791b3 !important;
+    border-color: rgba(255, 255, 255, .07) !important;
+    opacity: .72;
+    cursor: not-allowed;
+  }
+  html[data-theme="aurora-dark"] :is(input[type="checkbox"], input[type="radio"]) {
+    accent-color: var(--d-o);
+    color-scheme: dark;
+  }
+  html[data-theme="aurora-dark"] select {
+    cursor: pointer;
+  }
+  html[data-theme="aurora-dark"] select:disabled {
+    cursor: not-allowed;
+  }
 
   /* الهيدر والتنقل */
   html[data-theme="aurora-dark"] .tys-app-header {
