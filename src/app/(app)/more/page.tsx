@@ -1,5 +1,6 @@
 "use client";
 
+import { LookSwitch } from "@/components/LookSwitch";
 import { FormEvent, useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { LockSettings } from "@/components/LockSettings";
@@ -334,6 +335,7 @@ export default function MorePage() {
 
       {view === "menu" ? (
         <div className="tys-more-menu space-y-4">
+          <LookSwitch />
           {[
             {
               title: "متابعة الأداء",
