@@ -1,5 +1,6 @@
 "use client";
 
+import { Mascot, MASCOTS, PageMascot, type MascotKind } from "@/components/Mascot";
 import { LookSwitch } from "@/components/LookSwitch";
 import { FormEvent, useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -304,6 +305,7 @@ export default function MorePage() {
 
   return (
     <div className="tys-page tys-page-more mx-auto max-w-5xl space-y-5">
+      <PageMascot kind="owl" say="كل حاجة تانية عندي هنا 🦉" />
       <section className="relative overflow-hidden rounded-[26px] border border-white bg-white p-5 shadow-[0_1px_2px_rgba(43,20,0,.04)]">
         <div className="absolute -left-10 -top-12 h-36 w-36 rounded-full bg-[#ffb36e]/20 blur-3xl" />
         <div className="relative flex flex-wrap items-center justify-between gap-3">
@@ -355,7 +357,7 @@ export default function MorePage() {
             {
               title: "التطبيق",
               items: [
-                { key: "looks", icon: "🎨", title: "شكل التطبيق", desc: "اختار من ١١ شكل مختلف" },
+                { key: "looks", icon: "🎨", title: "شكل التطبيق", desc: "الهادي أو الكارتوني بشخصياته" },
                 { key: "about", icon: "ℹ️", title: "حول التطبيق", desc: "معلومات عن الأداة" },
               ],
             },
@@ -392,8 +394,18 @@ export default function MorePage() {
           <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[var(--color-primary-700)]">← رجوع للقائمة</button>
           <div className="rounded-[24px] border border-white bg-white p-5 shadow-sm">
             <h2 className="text-lg font-black">🎨 شكل التطبيق</h2>
-            <p className="mt-1 text-sm text-[var(--color-text-secondary)]">اختار الشكل اللي يريحك. بيتحفظ على جهازك وبيتغير فورًا.</p>
+            <p className="mt-1 text-sm text-[var(--color-text-secondary)]">اختار الشكل اللي يعجبك. بيتحفظ على جهازك وبيتغير فورًا.</p>
             <div className="mt-4"><LookSwitch /></div>
+            <h3 className="mt-6 text-sm font-black">شلة الشخصيات</h3>
+            <p className="mt-1 text-[11px] text-[var(--color-text-secondary)]">بتظهر في الشكل الكارتوني، وكل صفحة ليها شخصية.</p>
+            <div className="mt-3 grid grid-cols-3 gap-3 sm:grid-cols-4">
+              {(Object.keys(MASCOTS) as MascotKind[]).map((k) => (
+                <div key={k} className="flex flex-col items-center rounded-2xl border border-[#f2e4d8] bg-white p-2 text-center">
+                  <Mascot kind={k} size={64} />
+                  <span className="mt-1 text-[11px] font-black">{MASCOTS[k].name}</span>
+                </div>
+              ))}
+            </div>
           </div>
         </section>
       ) : null}

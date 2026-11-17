@@ -1,12 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { Mascot, type MascotKind } from "@/components/Mascot";
 
 const KEY = "tys.welcomed.v1";
 const STEPS = [
-  { icon: "🎯", title: "حدّد التارجت", text: "من صفحة التارجت اكتب هدفك الشهري لكل مؤشر." },
-  { icon: "✍️", title: "سجّل إنجازك", text: "كل ما تبيع، سجّله في ثواني من زر تسجيل إنجاز." },
-  { icon: "📈", title: "تابع نسبتك", text: "الرئيسية بتوريك نسبة التحقيق والعمولة المتوقعة." },
+  { kind: "bunny" as MascotKind, title: "حدّد التارجت", text: "من صفحة التارجت اكتب هدفك الشهري لكل مؤشر." },
+  { kind: "bear" as MascotKind, title: "سجّل إنجازك", text: "كل ما تبيع، سجّله في ثواني من زر تسجيل إنجاز." },
+  { kind: "cat" as MascotKind, title: "تابع نسبتك", text: "الرئيسية بتوريك نسبة التحقيق والعمولة المتوقعة." },
 ];
 
 export function Welcome() {
@@ -30,7 +31,7 @@ export function Welcome() {
   return (
     <div className="fixed inset-0 z-[90] flex items-end justify-center bg-black/40 p-4 sm:items-center" role="dialog" aria-modal="true" aria-label="مرحبًا">
       <div className="w-full max-w-sm rounded-[28px] bg-white p-6 text-center shadow-xl">
-        <div className="text-5xl" aria-hidden>{s.icon}</div>
+        <div className="flex justify-center"><Mascot kind={s.kind} size={96} mood="cheer" /></div>
         <h2 className="mt-3 text-xl font-black">{s.title}</h2>
         <p className="mt-2 text-sm text-[var(--color-text-secondary)]">{s.text}</p>
         <div className="mt-4 flex justify-center gap-1.5" aria-hidden>

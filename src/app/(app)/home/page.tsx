@@ -1,5 +1,6 @@
 "use client";
 
+import { PageMascot } from "@/components/Mascot";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { Banner, useToast } from "@/components/ui";
@@ -176,6 +177,7 @@ export default function HomePage() {
 
   return (
     <div className="tys-page tys-page-home tys-premium-home mx-auto flex min-h-screen w-full max-w-6xl flex-col gap-4 pb-28">
+      <PageMascot kind="cat" mood={onTrack === false ? "sad" : onTrack ? "cheer" : "happy"} say={onTrack === false ? "لسه ورا شوية، يلا نشد حيلنا! 💪" : onTrack ? "ماشي زي الفل! كمّل 🔥" : "يلا نبدأ الشهر! 🚀"} />
       {sync ? (
         <p className={`text-[11px] font-bold ${sync.ok ? "text-emerald-700" : "text-red-600"}`} dir="rtl">
           {sync.ok
