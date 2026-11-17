@@ -4140,6 +4140,7 @@ h1, h2 {
   html[data-theme="aurora-dark"] :is([class*="border-amber-"], [class*="border-orange-"], [class*="border-yellow-"]) { border-color: rgba(251, 191, 36, .35) !important; }
 
   /* الحقول والقوائم */
+  html[data-theme="aurora-dark"] :where(input, select, textarea) { color-scheme: dark; }
   html[data-theme="aurora-dark"] :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea) {
     background: var(--d-raised) !important;
     color: var(--d-ink) !important;
