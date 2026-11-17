@@ -181,3 +181,35 @@
   html[data-theme="dark"] :focus-visible { outline-color: rgba(255,157,56,.8) !important; }
   html[data-theme="dark"] ::selection { background: rgba(255,121,0,.32); color: #fff; }
 }
+
+/* First-run and manager authentication surfaces follow the same midnight palette. */
+@media screen {
+  html[data-theme="dark"] .tys-login-screen,
+  html[data-theme="dark"] .tys-landing {
+    background:
+      radial-gradient(ellipse at 92% 0%,rgba(255,121,0,.10),transparent 28rem),
+      #101216 !important;
+  }
+  html[data-theme="dark"] .tys-login-layout { background: transparent !important; border-color: #303743 !important; }
+  html[data-theme="dark"] .tys-login-card,
+  html[data-theme="dark"] .tys-page-manager .tys-manager-login {
+    background: #191D24 !important;
+    border-color: #303743 !important;
+    color: #F5F7FA !important;
+  }
+  html[data-theme="dark"] .tys-login-heading h1,
+  html[data-theme="dark"] .tys-login-card label,
+  html[data-theme="dark"] .tys-page-manager .tys-manager-login label {
+    color: #F5F7FA !important;
+  }
+  html[data-theme="dark"] .tys-login-heading p,
+  html[data-theme="dark"] .tys-login-brandline span { color: #A7AFBA !important; }
+  html[data-theme="dark"] .tys-login-card :is(input,select) {
+    background: #222832 !important;
+    color: #F5F7FA !important;
+    border-color: #384250 !important;
+  }
+  html[data-theme="dark"] .tys-page-manager .tys-manager-hero {
+    background: linear-gradient(125deg,#873507 0%,#bd4b0a 55%,#ed741d 100%) !important;
+  }
+}
