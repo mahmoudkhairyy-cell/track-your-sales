@@ -1,7 +1,5 @@
 "use client";
 
-import { LINES, pickLine } from "@/lib/mascot-lines";
-import { PageMascot } from "@/components/Mascot";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { Banner, useToast } from "@/components/ui";
@@ -178,11 +176,6 @@ export default function HomePage() {
 
   return (
     <div className="tys-page tys-page-home tys-premium-home mx-auto flex min-h-screen w-full max-w-6xl flex-col gap-4 pb-28">
-      <PageMascot
-        kind={data.overall >= 100 ? "lion" : "cat"}
-        mood={data.overall >= 100 ? "cheer" : onTrack === false ? "sad" : onTrack ? "cheer" : "happy"}
-        say={pickLine(data.overall >= 100 ? LINES.homeOver : onTrack === false ? LINES.homeBehind : onTrack ? LINES.homeOn : LINES.homeStart, "home")}
-      />
       {sync ? (
         <p className={`text-[11px] font-bold ${sync.ok ? "text-emerald-700" : "text-red-600"}`} dir="rtl">
           {sync.ok
