@@ -4414,4 +4414,25 @@ h1, h2 {
       padding-bottom: max(8px, env(safe-area-inset-bottom));
     }
   }
+
+  /* لمسات الوصول والاتساق البصري النهائية */
+  html[data-theme="aurora-dark"] .tys-page :is([role="tab"], details > summary):focus-visible {
+    outline: 2px solid var(--d-o2) !important;
+    outline-offset: 3px;
+    border-radius: 8px;
+  }
+  html[data-theme="aurora-dark"] ::selection {
+    color: #fff !important;
+    background: rgba(255, 122, 48, .42) !important;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html[data-theme="aurora-dark"] *,
+    html[data-theme="aurora-dark"] *::before,
+    html[data-theme="aurora-dark"] *::after {
+      scroll-behavior: auto !important;
+      animation-duration: .01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: .01ms !important;
+    }
+  }
 }
