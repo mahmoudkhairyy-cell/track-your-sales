@@ -1,0 +1,215 @@
+/* Track Your Sales — single Premium Dark theme.
+   Inspired by the approved Midnight Navy / Graphite preview.
+   Visual-only overrides: preserve all app behavior, values and calculations. */
+@media screen {
+  html[data-theme="dark"] {
+    color-scheme: dark;
+    --tys-dark-bg: #101216;
+    --tys-dark-panel: #191D24;
+    --tys-dark-raised: #222832;
+    --tys-dark-border: #303743;
+    --tys-dark-orange: #FF7900;
+    --tys-dark-orange-light: #FF9D38;
+    --tys-dark-text: #F5F7FA;
+    --tys-dark-muted: #A7AFBA;
+    --tys-dark-green: #34D399;
+    --tys-dark-red: #F87171;
+    background: var(--tys-dark-bg);
+    color-scheme: dark;
+    scrollbar-color: #3b4655 var(--tys-dark-bg);
+    --brand-bg: var(--tys-dark-bg);
+    --brand-card: var(--tys-dark-panel);
+    --brand-text: var(--tys-dark-text);
+    --brand-muted: var(--tys-dark-muted);
+    --brand-border: var(--tys-dark-border);
+    --color-surface: var(--tys-dark-panel);
+    --color-surface-cream: var(--tys-dark-panel);
+    --color-border: var(--tys-dark-border);
+    --color-text-primary: var(--tys-dark-text);
+    --color-text-secondary: var(--tys-dark-muted);
+    --color-text-muted: #8993A1;
+    --color-primary-900: #FFB877;
+    --color-primary-700: var(--tys-dark-orange-light);
+    --color-primary-600: var(--tys-dark-orange);
+    --color-primary-500: var(--tys-dark-orange-light);
+    --color-primary-100: var(--tys-dark-raised);
+    --color-primary-50: var(--tys-dark-panel);
+    --color-success-bg: rgba(52,211,153,.13);
+    --color-success-text: var(--tys-dark-green);
+    --color-success-ring: var(--tys-dark-green);
+    --color-danger-bg: rgba(248,113,113,.13);
+    --color-danger-text: var(--tys-dark-red);
+    --color-danger-ring: var(--tys-dark-red);
+  }
+  html[data-theme="dark"], html[data-theme="dark"] body {
+    background: var(--tys-dark-bg) !important;
+    color: var(--tys-dark-text);
+  }
+  html[data-theme="dark"] body {
+    background:
+      radial-gradient(ellipse at 92% -8%, rgba(255,121,0,.105), transparent 34rem),
+      radial-gradient(ellipse at 0% 80%, rgba(255,157,56,.035), transparent 30rem),
+      #101216 !important;
+    background-attachment: fixed !important;
+  }
+  html[data-theme="dark"] .tys-app-main {
+    background: radial-gradient(ellipse at 88% 0%, rgba(255,121,0,.045), transparent 30rem) !important;
+    color: var(--tys-dark-text);
+  }
+  html[data-theme="dark"] .tys-page,
+  html[data-theme="dark"] .tys-page :is(h1,h2,h3,h4,p,label,span) {
+    color: inherit;
+  }
+  html[data-theme="dark"] .tys-page :is(h1,h2,h3,h4) { color: var(--tys-dark-text) !important; }
+  html[data-theme="dark"] .tys-page :is(section,article,form)[class*="rounded-"],
+  html[data-theme="dark"] .tys-target-gate,
+  html[data-theme="dark"] .tys-login-card,
+  html[data-theme="dark"] .tys-page-manager .tys-manager-login {
+    background: linear-gradient(145deg,#1d222b 0%,#191D24 76%) !important;
+    border-color: var(--tys-dark-border) !important;
+    color: var(--tys-dark-text) !important;
+    box-shadow: 0 9px 26px rgba(0,0,0,.22), inset 0 1px 0 rgba(255,255,255,.025) !important;
+  }
+  html[data-theme="dark"] .tys-page :is([class*="bg-white"],[class*="bg-[#fff"],[class*="bg-[#fef"],[class*="bg-[#fdf"]) {
+    background-color: var(--tys-dark-raised) !important;
+  }
+  html[data-theme="dark"] .tys-page :is([class*="from-white"],[class*="from-[#f"],[class*="via-[#f"],[class*="to-[#f"],[class*="bg-gradient-to"]) {
+    background-image: none !important;
+    background-color: var(--tys-dark-raised) !important;
+  }
+  html[data-theme="dark"] .tys-page :is([class*="border-white"],[class*="border-[#f"],[class*="border-[#e"],[class*="ring-[#f"]) {
+    border-color: var(--tys-dark-border) !important;
+  }
+  html[data-theme="dark"] .tys-page :is([class*="text-black"],[class*="text-[#2d"],[class*="text-[#24"],[class*="text-[#1c"],[class*="text-[#3"],[class*="text-[#5"],[class*="text-[#6"]) {
+    color: var(--tys-dark-text) !important;
+  }
+  html[data-theme="dark"] .tys-page :is([class*="text-gray-"],[class*="text-stone-"],[class*="text-slate-"],[class*="text-[#8"],[class*="text-[#9"],[class*="text-[#a"]) {
+    color: var(--tys-dark-muted) !important;
+  }
+  html[data-theme="dark"] .tys-page :is([class*="text-orange-"],[class*="text-[#bd4b0a]"],[class*="text-[#e96812]"],[class*="text-[#c6530d]"]) {
+    color: var(--tys-dark-orange-light) !important;
+  }
+  html[data-theme="dark"] .tys-page :is([class*="text-emerald-"],[class*="text-green-"]) { color: var(--tys-dark-green) !important; }
+  html[data-theme="dark"] .tys-page :is([class*="text-red-"],[class*="text-rose-"]) { color: var(--tys-dark-red) !important; }
+  html[data-theme="dark"] .tys-page :is([class*="bg-emerald-"],[class*="bg-green-"]) { background-color: rgba(52,211,153,.13) !important; }
+  html[data-theme="dark"] .tys-page :is([class*="bg-red-"],[class*="bg-rose-"]) { background-color: rgba(248,113,113,.13) !important; }
+  html[data-theme="dark"] .tys-page :is([class*="border-emerald-"],[class*="border-green-"]) { border-color: rgba(52,211,153,.34) !important; }
+  html[data-theme="dark"] .tys-page :is([class*="border-red-"],[class*="border-rose-"]) { border-color: rgba(248,113,113,.34) !important; }
+
+  /* Main performance hero: one controlled orange focal point. */
+  html[data-theme="dark"] .tys-page-home .tys-home-hero,
+  html[data-theme="dark"] .tys-page-home > section:nth-of-type(2) {
+    border-color: rgba(255,121,0,.28) !important;
+    background:
+      radial-gradient(circle at 100% 0%,rgba(255,121,0,.19),transparent 58%),
+      linear-gradient(135deg,#252b35 0%,#191D24 68%,#211d1a 100%) !important;
+    box-shadow: 0 14px 34px rgba(0,0,0,.25), 0 0 24px rgba(255,121,0,.045) !important;
+  }
+  html[data-theme="dark"] .tys-page-home .tys-home-kpi,
+  html[data-theme="dark"] .tys-page-home article,
+  html[data-theme="dark"] .tys-page-log article,
+  html[data-theme="dark"] .tys-page-target article,
+  html[data-theme="dark"] .tys-page-wiki article {
+    background: linear-gradient(145deg,#242a34,#1b2028) !important;
+    border-color: #343d49 !important;
+    box-shadow: 0 5px 16px rgba(0,0,0,.18) !important;
+  }
+  html[data-theme="dark"] .tys-page-home .tys-home-daily > div:last-child > div {
+    background: #222832 !important;
+    border-color: #343d49 !important;
+  }
+
+  /* Navigation chrome */
+  html[data-theme="dark"] .tys-app-header {
+    background: rgba(25,29,36,.96) !important;
+    border-color: #303743 !important;
+    box-shadow: 0 7px 24px rgba(0,0,0,.2) !important;
+  }
+  html[data-theme="dark"] .tys-sidebar,
+  html[data-theme="dark"] .tys-mobile-nav,
+  html[data-theme="dark"] aside {
+    background: #191D24 !important;
+    border-color: #303743 !important;
+    box-shadow: 0 -8px 24px rgba(0,0,0,.28) !important;
+  }
+  html[data-theme="dark"] .tys-desktop-nav { background: #15191f !important; border-color: #303743 !important; }
+  html[data-theme="dark"] .tys-desktop-nav-link-active {
+    background: rgba(255,121,0,.12) !important;
+    border-color: rgba(255,121,0,.24) !important;
+    color: #FFB36A !important;
+    box-shadow: inset -3px 0 0 #FF7900 !important;
+  }
+  html[data-theme="dark"] .tys-mobile-nav-link { color: #A7AFBA !important; }
+  html[data-theme="dark"] .tys-mobile-nav-link-active { color: #FF9D38 !important; }
+  html[data-theme="dark"] .tys-mobile-nav-primary {
+    box-shadow: 0 7px 18px rgba(255,121,0,.24),0 0 0 4px #222832 !important;
+  }
+
+  /* Inputs, menus, dialogs */
+  html[data-theme="dark"] .tys-page :is(input:not([type="checkbox"]):not([type="radio"]),select,textarea),
+  html[data-theme="dark"] [role="dialog"] :is(input,select,textarea) {
+    background: #222832 !important;
+    color: #F5F7FA !important;
+    border-color: #384250 !important;
+    color-scheme: dark;
+  }
+  html[data-theme="dark"] .tys-page :is(input,select,textarea):focus {
+    border-color: #FF7900 !important;
+    box-shadow: 0 0 0 3px rgba(255,121,0,.17) !important;
+  }
+  html[data-theme="dark"] option { background: #191D24; color: #F5F7FA; }
+  html[data-theme="dark"] [role="dialog"] {
+    background: #191D24 !important;
+    border-color: #384250 !important;
+    color: #F5F7FA !important;
+    box-shadow: 0 22px 60px rgba(0,0,0,.48) !important;
+  }
+  html[data-theme="dark"] .tys-theme-option {
+    background: #191D24 !important;
+    border-color: #303743 !important;
+    color: #F5F7FA !important;
+  }
+  html[data-theme="dark"] .tys-theme-option[aria-checked="true"] {
+    border-color: #FF7900 !important;
+    background: linear-gradient(145deg,rgba(255,121,0,.13),#222832) !important;
+    box-shadow: 0 0 0 1px rgba(255,121,0,.16) !important;
+  }
+  html[data-theme="dark"] .skeleton-bone {
+    background: linear-gradient(90deg,#222832 25%,#2b3340 50%,#222832 75%);
+    background-size: 200% 100%;
+  }
+  html[data-theme="dark"] :focus-visible { outline-color: rgba(255,157,56,.8) !important; }
+  html[data-theme="dark"] ::selection { background: rgba(255,121,0,.32); color: #fff; }
+}
+
+/* First-run and manager authentication surfaces follow the same midnight palette. */
+@media screen {
+  html[data-theme="dark"] .tys-login-screen,
+  html[data-theme="dark"] .tys-landing {
+    background:
+      radial-gradient(ellipse at 92% 0%,rgba(255,121,0,.10),transparent 28rem),
+      #101216 !important;
+  }
+  html[data-theme="dark"] .tys-login-layout { background: transparent !important; border-color: #303743 !important; }
+  html[data-theme="dark"] .tys-login-card,
+  html[data-theme="dark"] .tys-page-manager .tys-manager-login {
+    background: #191D24 !important;
+    border-color: #303743 !important;
+    color: #F5F7FA !important;
+  }
+  html[data-theme="dark"] .tys-login-heading h1,
+  html[data-theme="dark"] .tys-login-card label,
+  html[data-theme="dark"] .tys-page-manager .tys-manager-login label {
+    color: #F5F7FA !important;
+  }
+  html[data-theme="dark"] .tys-login-heading p,
+  html[data-theme="dark"] .tys-login-brandline span { color: #A7AFBA !important; }
+  html[data-theme="dark"] .tys-login-card :is(input,select) {
+    background: #222832 !important;
+    color: #F5F7FA !important;
+    border-color: #384250 !important;
+  }
+  html[data-theme="dark"] .tys-page-manager .tys-manager-hero {
+    background: linear-gradient(125deg,#873507 0%,#bd4b0a 55%,#ed741d 100%) !important;
+  }
+}

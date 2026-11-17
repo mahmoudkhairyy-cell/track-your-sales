@@ -5,9 +5,8 @@ import { haptic } from "@/lib/prefs";
 import { readTheme, saveTheme, type Theme } from "@/lib/theme";
 
 const OPTIONS: { key: Theme; icon: string; title: string; text: string; swatch: string[] }[] = [
-  { key: "light", icon: "☀️", title: "فاتح", text: "الشكل الأساسي الدافي", swatch: ["#fff4eb", "#ffffff", "#e96812"] },
-  { key: "dark", icon: "🌙", title: "داكن بريميم", text: "Midnight Graphite · Orange Glow", swatch: ["#101216", "#191D24", "#FF7900"] },
-  { key: "glass", icon: "🖤", title: "أسود زجاجي", text: "أسود تمامًا وبطاقات زجاجية", swatch: ["#000000", "#1b1b1b", "#FF7900"] },
+  { key: "light", icon: "☀️", title: "فاتح", text: "المظهر الأساسي", swatch: ["#fff4eb", "#ffffff", "#e96812"] },
+  { key: "dark", icon: "🌙", title: "داكن بريميم", text: "Midnight Navy · Graphite · Orange", swatch: ["#101216", "#191D24", "#FF7900"] },
 ];
 
 export function ThemeSwitch() {
@@ -21,7 +20,7 @@ export function ThemeSwitch() {
     haptic(15);
   };
   return (
-    <div className="grid grid-cols-1 gap-3 sm:grid-cols-3" role="radiogroup" aria-label="المظهر">
+    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2" role="radiogroup" aria-label="المظهر">
       {OPTIONS.map((o) => {
         const active = theme === o.key;
         return (

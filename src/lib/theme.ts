@@ -1,10 +1,15 @@
-export type Theme = "light" | "dark" | "glass";
+export type Theme = "light" | "dark";
 const KEY = "tys.theme";
 
 export function readTheme(): Theme {
   try {
     const v = localStorage.getItem(KEY);
-    return v === "dark" || v === "glass" ? v : "light";
+    // Migrate the retired glass theme to the single supported premium dark theme.
+    if (v === "glass") {
+      localStorage.setItem(KEY, "dark");
+      return "dark";
+    }
+    return v === "dark" ? "dark" : "light";
   } catch {
     return "light";
   }
@@ -13,15 +18,9 @@ export function readTheme(): Theme {
 export function applyTheme(theme: Theme) {
   try {
     const h = document.documentElement;
-    // الزجاجي مبني فوق الداكن: بيشيل الألوان من الداكن ويضيف skin فوقه.
-    if (theme === "light") {
-      h.removeAttribute("data-theme");
-      h.removeAttribute("data-skin");
-    } else {
-      h.setAttribute("data-theme", "dark");
-      if (theme === "glass") h.setAttribute("data-skin", "glass");
-      else h.removeAttribute("data-skin");
-    }
+    h.removeAttribute("data-skin");
+    if (theme === "light") h.removeAttribute("data-theme");
+    else h.setAttribute("data-theme", "dark");
   } catch {}
 }
 
