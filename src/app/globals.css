@@ -3935,12 +3935,20 @@ h1, h2 {
     background: #e9ecf5;
   }
   html[data-theme="aurora"] body {
+    background: transparent !important;
+    color: var(--au-ink);
+  }
+  html[data-theme="aurora"] body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
     background:
       radial-gradient(circle at 100% 0%, #f0d4e0 0, transparent 46%),
       radial-gradient(circle at 0% 42%, #cfdaf6 0, transparent 52%),
-      linear-gradient(180deg, #e9ecf5 0%, #d0e2f0 72%, #bce0ec 100%) !important;
-    background-attachment: fixed !important;
-    color: var(--au-ink);
+      linear-gradient(180deg, #e9ecf5 0%, #d0e2f0 72%, #bce0ec 100%);
+    transform: translateZ(0);
   }
   html[data-theme="aurora"] :is(.tys-app-main, .tys-page) {
     background: transparent !important;
@@ -3950,12 +3958,10 @@ h1, h2 {
   /* البطاقات الزجاجية */
   html[data-theme="aurora"] .tys-page :is(section, article, form)[class*="rounded-"],
   html[data-theme="aurora"] .tys-target-gate {
-    background: var(--au-glass) !important;
-    border: 1px solid rgba(255, 255, 255, .92) !important;
+    background: rgba(255, 255, 255, .82) !important;
+    border: 1px solid rgba(255, 255, 255, .95) !important;
     border-radius: 24px !important;
-    box-shadow: 0 12px 32px rgba(110, 125, 190, .18), inset 0 1px 0 rgba(255, 255, 255, .9) !important;
-    -webkit-backdrop-filter: blur(14px) saturate(130%);
-    backdrop-filter: blur(14px) saturate(130%);
+    box-shadow: 0 6px 16px rgba(110, 125, 190, .14) !important;
   }
   html[data-theme="aurora"] .tys-page-home > section:nth-of-type(2) {
     background: radial-gradient(circle at 92% 0%, rgba(238, 106, 34, .16), transparent 55%), var(--au-glass) !important;
@@ -3979,17 +3985,13 @@ h1, h2 {
   }
   /* الهيدر والتنقل */
   html[data-theme="aurora"] .tys-app-header {
-    background: rgba(255, 255, 255, .6) !important;
+    background: rgba(255, 255, 255, .92) !important;
     border-bottom: 1px solid rgba(255, 255, 255, .85) !important;
-    -webkit-backdrop-filter: blur(16px);
-    backdrop-filter: blur(16px);
   }
   html[data-theme="aurora"] :is(.tys-mobile-nav, aside) {
-    background: rgba(255, 255, 255, .75) !important;
-    border-color: rgba(255, 255, 255, .9) !important;
-    box-shadow: 0 -10px 30px rgba(110, 125, 190, .16) !important;
-    -webkit-backdrop-filter: blur(18px);
-    backdrop-filter: blur(18px);
+    background: rgba(255, 255, 255, .94) !important;
+    border-color: rgba(255, 255, 255, .95) !important;
+    box-shadow: 0 -6px 16px rgba(110, 125, 190, .14) !important;
   }
   html[data-theme="aurora"] .tys-mobile-nav-link-active { color: var(--au-o) !important; }
   html[data-theme="aurora"] .tys-mobile-nav-link-active .tys-mobile-nav-icon:not(.tys-mobile-nav-primary) {
