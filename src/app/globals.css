@@ -4146,3 +4146,13 @@ h1, h2 {
   html[data-skin="glass"] [role="dialog"] > div { background: rgba(24, 24, 24, .9) !important; border: 1px solid var(--d-line); }
   html[data-skin="glass"] .tys-theme-option[aria-checked="true"] { border-color: var(--d-o) !important; box-shadow: 0 0 0 3px rgba(255, 121, 0, .2); }
 }
+
+
+/* دواير المؤشرات في الداكن والزجاجي: مسار شفاف وتوهج بلون الحالة */
+@media screen {
+  html[data-theme="dark"] svg circle[stroke="var(--color-border)"] { stroke: rgba(255, 255, 255, .12); }
+  html[data-theme="dark"] svg circle[stroke="var(--color-success-ring)"] { filter: drop-shadow(0 0 4px rgba(52, 211, 153, .75)); }
+  html[data-theme="dark"] svg circle[stroke="var(--color-danger-text)"] { filter: drop-shadow(0 0 4px rgba(248, 113, 113, .75)); }
+  html[data-theme="dark"] svg[class*="-rotate-90"] + span { color: var(--d-ink) !important; text-shadow: 0 0 8px rgba(255, 255, 255, .25); }
+  html[data-skin="glass"] svg circle[stroke="var(--color-border)"] { stroke: rgba(255, 255, 255, .09); }
+}
