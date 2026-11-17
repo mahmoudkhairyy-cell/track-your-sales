@@ -12,7 +12,7 @@ import { KpiIcon } from "@/components/KpiIcon";
 import { DeltaChip } from "@/components/Sparkline";
 import { overallBandLines, overallLine, pickPhrase, sarcasticLine, timeLines } from "@/lib/phrases";
 import { shareAchievement } from "@/lib/sharecard";
-import { readSyncStatus, type SyncStatus } from "@/lib/sync";
+import { pushReport, readSyncStatus, type SyncStatus } from "@/lib/sync";
 
 type KpiRow = {
   kpiKey: string;
@@ -180,7 +180,12 @@ export default function HomePage() {
         <p className={`text-[11px] font-bold ${sync.ok ? "text-emerald-700" : "text-red-600"}`} dir="rtl">
           {sync.ok
             ? `☁️ اتبعت للمدير ${new Date(sync.at).toLocaleTimeString("en-US", { timeZone: "Africa/Cairo", hour: "2-digit", minute: "2-digit", hour12: false })}`
-            : `⚠️ مااتبعتش للمدير: ${sync.error ?? ""}. حاول تاني لما النت يرجع.`}
+            : `⚠️ مااتبعتش للمدير: ${sync.error ?? ""}. `}
+          {sync.ok ? null : (
+            <button type="button" onClick={() => void pushReport()} className="min-h-8 rounded-lg px-2 font-black underline">
+              جرّب تبعت تاني
+            </button>
+          )}
         </p>
       ) : null}
 

@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { createContext, useContext, useEffect, useState, type FormEvent, type ReactNode } from "react";
 import { readProfile } from "@/lib/local-api";
-import { pushReport } from "@/lib/sync";
+import { pushReport, readSyncStatus } from "@/lib/sync";
 import { api } from "@/lib/client";
 import { APP_DISCLAIMER, APP_NAME, AREA_MANAGERS, BRAND_BY, BRANCHES, OUTSIDE_BRANCHES } from "@/lib/constants";
 import { cairoYearMonth, isValidYearMonth, monthLabelAr, shiftYearMonth } from "@/lib/dates";
@@ -381,11 +381,18 @@ export function AppShell({ children }: { children: ReactNode }) {
         void pushReport();
       }, 1200);
     };
+    // لو آخر محاولة فشلت، نعيد المحاولة لما التطبيق يفتح أو يرجع للواجهة (بدل ما الخطأ يفضل معلّق).
+    const retryIfFailed = () => {
+      if (document.visibilityState === "visible" && readSyncStatus()?.ok === false) schedulePush();
+    };
+    retryIfFailed();
+    document.addEventListener("visibilitychange", retryIfFailed);
     window.addEventListener("online", schedulePush);
     window.addEventListener("tys-data-changed", schedulePush);
     window.addEventListener("tys-settings-saved", schedulePush);
     return () => {
       if (timer !== undefined) window.clearTimeout(timer);
+      document.removeEventListener("visibilitychange", retryIfFailed);
       window.removeEventListener("online", schedulePush);
       window.removeEventListener("tys-data-changed", schedulePush);
       window.removeEventListener("tys-settings-saved", schedulePush);
