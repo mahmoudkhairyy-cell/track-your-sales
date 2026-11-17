@@ -37,7 +37,7 @@ type TodayItem = {
 };
 
 export default function MorePage() {
-  const [view, setView] = useHistoryView<"menu" | "today" | "history" | "data" | "profile" | "backup" | "about" | "report">("menu");
+  const [view, setView] = useHistoryView<"menu" | "today" | "history" | "data" | "profile" | "backup" | "about" | "report" | "looks">("menu");
   const [reportData, setReportData] = useState<{ overall: number; estimatedCommission: number; fullCommission: number; kpis: { kpiKey: string; nameEn: string; achieved: number; target: number; percent: number; contribution: number }[] } | null>(null);
 
   const toast = useToast();
@@ -335,7 +335,6 @@ export default function MorePage() {
 
       {view === "menu" ? (
         <div className="tys-more-menu space-y-4">
-          <LookSwitch />
           {[
             {
               title: "متابعة الأداء",
@@ -356,6 +355,7 @@ export default function MorePage() {
             {
               title: "التطبيق",
               items: [
+                { key: "looks", icon: "🎨", title: "شكل التطبيق", desc: "اختار من ١١ شكل مختلف" },
                 { key: "about", icon: "ℹ️", title: "حول التطبيق", desc: "معلومات عن الأداة" },
               ],
             },
@@ -385,6 +385,17 @@ export default function MorePage() {
             </section>
           ))}
         </div>
+      ) : null}
+
+      {view === "looks" ? (
+        <section className="space-y-4">
+          <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[var(--color-primary-700)]">← رجوع للقائمة</button>
+          <div className="rounded-[24px] border border-white bg-white p-5 shadow-sm">
+            <h2 className="text-lg font-black">🎨 شكل التطبيق</h2>
+            <p className="mt-1 text-sm text-[var(--color-text-secondary)]">اختار الشكل اللي يريحك. بيتحفظ على جهازك وبيتغير فورًا.</p>
+            <div className="mt-4"><LookSwitch /></div>
+          </div>
+        </section>
       ) : null}
 
       {view === "data" ? (
