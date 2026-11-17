@@ -3908,3 +3908,146 @@ h1, h2 {
   font-family: "Noto Naskh Arabic", "Mada", serif;
   letter-spacing: 0;
 }
+
+
+/* ==========================================================================
+   الوضع الداكن (Theme إضافي): html[data-theme="dark"]
+   الشكل الفاتح مابيتأثرش. كل القواعد جوه @media screen عشان الطباعة تفضل فاتحة.
+   ========================================================================== */
+@media screen {
+  html[data-theme="dark"] {
+    --d-bg: #101216;
+    --d-card: #191D24;
+    --d-raised: #222832;
+    --d-line: #303743;
+    --d-o: #FF7900;
+    --d-o2: #FF9D38;
+    --d-ink: #FFFFFF;
+    --d-mute: #A7AFBA;
+    --d-good: #34d399;
+    --d-warn: #fbbf24;
+    --d-bad: #f87171;
+    color-scheme: dark;
+    background: var(--d-bg);
+    scrollbar-color: #3a4352 #101216;
+    --color-primary-900: #FFB877;
+    --color-primary-700: #FF9D38;
+    --color-primary-600: #FF7900;
+    --color-primary-500: #FF9D38;
+    --color-primary-100: #222832;
+    --color-primary-50: #191D24;
+    --color-surface-cream: #191D24;
+    --color-border: #303743;
+    --color-text-primary: #FFFFFF;
+    --color-text-secondary: #A7AFBA;
+    --color-text-muted: #8a93a1;
+    --color-success-bg: rgba(52, 211, 153, .14);
+    --color-success-text: #34d399;
+    --color-success-ring: #34d399;
+    --color-danger-bg: rgba(248, 113, 113, .14);
+    --color-danger-text: #f87171;
+    --color-danger-ring: #f87171;
+    --brand-bg: #101216;
+    --brand-card: #191D24;
+    --brand-text: #FFFFFF;
+    --brand-muted: #A7AFBA;
+    --brand-border: #303743;
+    --brand-soft: #222832;
+    --brand-cream: #191D24;
+  }
+  html[data-theme="dark"] body {
+    background: var(--d-bg) !important;
+    color: var(--d-ink);
+  }
+  html[data-theme="dark"] :is(.tys-app-main, .tys-page) {
+    background: transparent !important;
+    color: var(--d-ink);
+  }
+  html[data-theme="dark"] .tys-page :is(h1, h2, h3) { color: var(--d-ink); }
+
+  /* البطاقات */
+  html[data-theme="dark"] .tys-page :is(section, article, form)[class*="rounded-"],
+  html[data-theme="dark"] .tys-target-gate,
+  html[data-theme="dark"] .tys-login-screen > div {
+    background: var(--d-card) !important;
+    border: 1px solid var(--d-line) !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, .35) !important;
+    color: var(--d-ink);
+  }
+  html[data-theme="dark"] .tys-page-home > section:nth-of-type(2) {
+    background: radial-gradient(circle at 92% 0%, rgba(255, 121, 0, .22), transparent 55%), var(--d-card) !important;
+  }
+
+  /* العناصر الداخلية: الخلفيات البيضا والفاتحة */
+  html[data-theme="dark"] :is([class*="bg-white"], [class*="bg-[#fff"], [class*="bg-[#fef"], [class*="bg-[#fdf"]):not([class*="from-[var(--color-primary-6"]):not([class*="bg-[#e96812]"]) {
+    background-color: var(--d-raised) !important;
+  }
+  html[data-theme="dark"] :is([class*="from-white"], [class*="from-[#f"], [class*="via-[#f"], [class*="to-[#f"], [class*="bg-[radial-gradient"], [class*="bg-gradient-to"]):not([class*="from-[var(--color-primary-6"]):not([class*="from-[var(--color-primary-7"]):not([class*="from-[#e96812]"]):not([class*="from-[#bd4b0a]"]):not([class*="from-[#e97824]"]) {
+    background-image: none !important;
+    background-color: var(--d-raised) !important;
+  }
+  html[data-theme="dark"] :is([class*="bg-[#f2e4d8]"], [class*="bg-[#f1dfd0]"], [class*="bg-[#ffe"], [class*="bg-[#fed"]) {
+    background-color: var(--d-line) !important;
+  }
+  html[data-theme="dark"] :is([class*="border-white"], [class*="border-[#f"], [class*="ring-[#f"], [class*="border-[var(--color-border)]"]) {
+    border-color: var(--d-line) !important;
+  }
+  html[data-theme="dark"] [class*="divide-"] > * { border-color: var(--d-line) !important; }
+
+  /* النصوص الثابتة في الكود */
+  html[data-theme="dark"] :is([class*="text-[#2d2119]"], [class*="text-[#241f1b]"], [class*="text-[#1c1917]"], [class*="text-[#514238]"], [class*="text-[#6e5543]"], [class*="text-[var(--color-text-primary)]"], [class*="text-black"]) { color: var(--d-ink) !important; }
+  html[data-theme="dark"] :is([class*="text-[#88796e]"], [class*="text-[#9b8b7f]"], [class*="text-[#a17d65]"], [class*="text-[#9a7963]"], [class*="text-[#ad9888]"], [class*="text-[#70513c]"], [class*="text-[var(--color-text-secondary)]"], [class*="text-[var(--color-text-muted)]"], [class*="text-gray-"], [class*="text-stone-"], [class*="text-slate-"]) { color: var(--d-mute) !important; }
+  html[data-theme="dark"] :is([class*="text-[#bd4b0a]"], [class*="text-[#e96812]"], [class*="text-[#b76a3b]"], [class*="text-[#bd6b39]"], [class*="text-[var(--color-primary-700)]"], [class*="text-[var(--color-primary-600)]"], [class*="text-orange-"]) { color: var(--d-o2) !important; }
+  html[data-theme="dark"] :is([class*="text-emerald-"], [class*="text-green-"]) { color: var(--d-good) !important; }
+  html[data-theme="dark"] :is([class*="text-red-"], [class*="text-rose-"]) { color: var(--d-bad) !important; }
+  html[data-theme="dark"] :is([class*="text-amber-"], [class*="text-yellow-"]) { color: var(--d-warn) !important; }
+
+  /* شارات الحالة */
+  html[data-theme="dark"] :is([class*="bg-emerald-"], [class*="bg-green-"]) { background-color: rgba(52, 211, 153, .14) !important; }
+  html[data-theme="dark"] :is([class*="bg-red-"], [class*="bg-rose-"]) { background-color: rgba(248, 113, 113, .14) !important; }
+  html[data-theme="dark"] :is([class*="bg-amber-"], [class*="bg-yellow-"], [class*="bg-orange-"]) { background-color: rgba(251, 191, 36, .14) !important; }
+  html[data-theme="dark"] :is([class*="border-emerald-"], [class*="border-green-"]) { border-color: rgba(52, 211, 153, .35) !important; }
+  html[data-theme="dark"] :is([class*="border-red-"], [class*="border-rose-"]) { border-color: rgba(248, 113, 113, .35) !important; }
+  html[data-theme="dark"] :is([class*="border-amber-"], [class*="border-orange-"], [class*="border-yellow-"]) { border-color: rgba(251, 191, 36, .35) !important; }
+
+  /* الحقول والقوائم */
+  html[data-theme="dark"] :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea) {
+    background: var(--d-raised) !important;
+    color: var(--d-ink) !important;
+    border: 1px solid var(--d-line) !important;
+  }
+  html[data-theme="dark"] :is(input, textarea)::placeholder { color: #7d8693; }
+  html[data-theme="dark"] option { background: #191D24; color: #fff; }
+  html[data-theme="dark"] :is(input, select, textarea):focus { border-color: var(--d-o) !important; box-shadow: 0 0 0 3px rgba(255, 121, 0, .2) !important; }
+
+  /* الهيدر والتنقل */
+  html[data-theme="dark"] .tys-app-header {
+    background: rgba(25, 29, 36, .92) !important;
+    border-bottom: 1px solid var(--d-line) !important;
+  }
+  html[data-theme="dark"] :is(.tys-mobile-nav, aside) {
+    background: var(--d-card) !important;
+    border-color: var(--d-line) !important;
+    box-shadow: 0 -8px 24px rgba(0, 0, 0, .4) !important;
+  }
+  html[data-theme="dark"] .tys-mobile-nav-link { color: var(--d-mute) !important; }
+  html[data-theme="dark"] .tys-mobile-nav-link-active { color: var(--d-o2) !important; }
+  html[data-theme="dark"] .tys-mobile-nav-link-active .tys-mobile-nav-icon:not(.tys-mobile-nav-primary) {
+    background: var(--d-raised) !important;
+    border-color: var(--d-line) !important;
+    box-shadow: none !important;
+  }
+  html[data-theme="dark"] .tys-mobile-nav-link-active::before { background: var(--d-o); }
+
+  /* الأزرار الرئيسية البرتقالي تفضل برتقالي بنص غامق للوضوح */
+  html[data-theme="dark"] :is(button, a)[class*="from-[var(--color-primary-6"],
+  html[data-theme="dark"] :is(button, a)[class*="bg-[#e96812]"] { color: #1a0d00; }
+
+  /* الهيكل العظمي أثناء التحميل */
+  html[data-theme="dark"] .skeleton-bone {
+    background: linear-gradient(90deg, #222832 25%, #2b3340 50%, #222832 75%);
+    background-size: 200% 100%;
+  }
+  html[data-theme="dark"] .tys-theme-option[aria-checked="true"] { border-color: var(--d-o) !important; background: var(--d-raised) !important; }
+  html[data-theme="dark"] img[src*="logo"] { filter: none; }
+}
