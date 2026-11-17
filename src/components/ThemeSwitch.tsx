@@ -6,7 +6,8 @@ import { readTheme, saveTheme, type Theme } from "@/lib/theme";
 
 const OPTIONS: { key: Theme; icon: string; title: string; text: string; swatch: string[] }[] = [
   { key: "light", icon: "☀️", title: "الأساسي", text: "الشكل الدافي الأصلي", swatch: ["#fff4eb", "#ffffff", "#e96812"] },
-  { key: "aurora", icon: "🌌", title: "أورورا", text: "خلفية متدرجة ناعمة وبطاقات زجاجية", swatch: ["#e9ecf5", "#f0d4e0", "#ee6a22"] },
+  { key: "aurora", icon: "🌌", title: "أورورا فاتح", text: "خلفية متدرجة ناعمة وبطاقات بيضا", swatch: ["#e9ecf5", "#f0d4e0", "#ee6a22"] },
+  { key: "aurora-dark", icon: "🌃", title: "أورورا داكن", text: "نفس الشكل بألوان ليلية هادية", swatch: ["#0b0f1e", "#3b4fb8", "#ff7a30"] },
 ];
 
 export function ThemeSwitch() {
@@ -20,7 +21,7 @@ export function ThemeSwitch() {
     haptic(15);
   };
   return (
-    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2" role="radiogroup" aria-label="المظهر">
+    <div className="grid grid-cols-1 gap-3 sm:grid-cols-3" role="radiogroup" aria-label="المظهر">
       {OPTIONS.map((o) => {
         const active = theme === o.key;
         return (

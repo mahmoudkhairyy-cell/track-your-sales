@@ -1,9 +1,10 @@
-export type Theme = "light" | "aurora";
+export type Theme = "light" | "aurora" | "aurora-dark";
 const KEY = "tys.theme";
 
 export function readTheme(): Theme {
   try {
-    return localStorage.getItem(KEY) === "aurora" ? "aurora" : "light";
+    const v = localStorage.getItem(KEY);
+    return v === "aurora" || v === "aurora-dark" ? v : "light";
   } catch {
     return "light";
   }
@@ -13,8 +14,8 @@ export function applyTheme(theme: Theme) {
   try {
     const h = document.documentElement;
     h.removeAttribute("data-skin");
-    if (theme === "aurora") h.setAttribute("data-theme", "aurora");
-    else h.removeAttribute("data-theme");
+    if (theme === "light") h.removeAttribute("data-theme");
+    else h.setAttribute("data-theme", theme);
   } catch {}
 }
 

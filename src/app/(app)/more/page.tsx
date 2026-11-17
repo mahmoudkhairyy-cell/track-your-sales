@@ -355,7 +355,7 @@ export default function MorePage() {
             {
               title: "التطبيق",
               items: [
-                { key: "theme", icon: "🌌", title: "المظهر", desc: "الأساسي أو أورورا" },
+                { key: "theme", icon: "🌌", title: "المظهر", desc: "الأساسي أو أورورا فاتح أو داكن" },
                 { key: "about", icon: "ℹ️", title: "حول التطبيق", desc: "معلومات عن الأداة" },
               ],
             },
