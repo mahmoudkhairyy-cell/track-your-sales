@@ -4205,3 +4205,291 @@ h1, h2 {
   html[data-theme="aurora-dark"] [role="dialog"] { background: rgba(5, 8, 20, .7) !important; }
   html[data-theme="aurora-dark"] [role="dialog"] > div { background: #131933 !important; border: 1px solid var(--d-line); }
 }
+
+
+/* أورورا داكن: تجاوزات مولّدة لكل قاعدة في الملف خلفيتها فاتحة (عشان مفيش عنصر يفضل أبيض) */
+@media screen {
+html[data-theme="aurora-dark"] ::-webkit-scrollbar-track { background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] ::-webkit-scrollbar-thumb { border-color: var(--d-line) !important; }
+html[data-theme="aurora-dark"] .skeleton-bone { background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-page input:not([type="checkbox"]):not([type="radio"]),
+html[data-theme="aurora-dark"] .tys-page select,
+html[data-theme="aurora-dark"] .tys-page textarea { border-color: var(--d-line) !important; background: #1a2142 !important; background-image: none !important; color: var(--d-ink) !important; }
+html[data-theme="aurora-dark"] .tys-sidebar { background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-page-manager { background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-page-manager > div > section,
+html[data-theme="aurora-dark"] .tys-page-manager form,
+html[data-theme="aurora-dark"] .tys-page-manager article { border-color: var(--d-line) !important; }
+html[data-theme="aurora-dark"] .tys-landing section { border-color: var(--d-line) !important; }
+html[data-theme="aurora-dark"] .tys-page-wiki article,
+html[data-theme="aurora-dark"] .tys-page-manager article { background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-page-wiki article:focus-within,
+html[data-theme="aurora-dark"] .tys-page-manager article:focus-within { border-color: var(--d-line) !important; }
+html[data-theme="aurora-dark"] .tys-login-card { border-color: var(--d-line) !important; }
+html[data-theme="aurora-dark"] .tys-login-card label { color: var(--d-ink) !important; }
+html[data-theme="aurora-dark"] .tys-login-card input,
+html[data-theme="aurora-dark"] .tys-login-card select { border-color: var(--d-line) !important; background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-mobile-nav { background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-mobile-nav-link-active .tys-mobile-nav-icon:not(.tys-mobile-nav-primary) { background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-page-log article:focus-within { border-color: var(--d-line) !important; }
+html[data-theme="aurora-dark"] .tys-page h1 { color: var(--d-ink) !important; }
+html[data-theme="aurora-dark"] .tys-page h2 { color: var(--d-ink) !important; }
+html[data-theme="aurora-dark"] .tys-page section[class*="rounded-"],
+html[data-theme="aurora-dark"] .tys-page article[class*="rounded-"] { border-color: var(--d-line) !important; }
+html[data-theme="aurora-dark"] .tys-page section[class*="rounded-"]:focus-within,
+html[data-theme="aurora-dark"] .tys-page article[class*="rounded-"]:focus-within { border-color: var(--d-line) !important; }
+html[data-theme="aurora-dark"] .tys-page :is(input,
+html[data-theme="aurora-dark"] select,
+html[data-theme="aurora-dark"] textarea)::placeholder { color: var(--d-mute) !important; }
+html[data-theme="aurora-dark"] .tys-app-header { background: #1a2142 !important; background-image: none !important; border-color: var(--d-line) !important; }
+html[data-theme="aurora-dark"] .tys-sidebar { border-color: var(--d-line) !important; background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-desktop-nav-link-active { background: #1a2142 !important; background-image: none !important; color: var(--d-o2) !important; }
+html[data-theme="aurora-dark"] .tys-mobile-nav { background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-mobile-nav-link-active .tys-mobile-nav-icon:not(.tys-mobile-nav-primary) { background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-page-home > section:first-of-type { background: #1a2142 !important; background-image: none !important; border-color: var(--d-line) !important; }
+html[data-theme="aurora-dark"] .tys-page-home > section:nth-of-type(2) { border-color: var(--d-line) !important; }
+html[data-theme="aurora-dark"] .tys-page-manager article,
+html[data-theme="aurora-dark"] .tys-page-wiki article { border-color: var(--d-line) !important; background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-page-manager form { border-color: var(--d-line) !important; background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-page-log article { border-color: var(--d-line) !important; background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-login-card { border-color: var(--d-line) !important; }
+html[data-theme="aurora-dark"] .tys-page-home > section:nth-of-type(2) [class*="rounded-2xl"][class*="bg-white"] { border-color: var(--d-line) !important; }
+html[data-theme="aurora-dark"] .tys-page-home > section:nth-of-type(3) { border-color: var(--d-line) !important; }
+html[data-theme="aurora-dark"] .tys-page-home > section:nth-of-type(5) { background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-page-home > section:nth-of-type(6) a { background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-page-home > section:last-of-type article > div:first-child { background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-page-manager > div > div:first-child { border-color: var(--d-line) !important; }
+html[data-theme="aurora-dark"] .tys-page-manager > div > div:first-child [class*="bg-white/10"] { border-color: var(--d-line) !important; background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-page-manager article [class*="rounded-xl"][class*="border"] { border-color: var(--d-line) !important; background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-page-wiki > section:not(:first-child) { border-color: var(--d-line) !important; }
+html[data-theme="aurora-dark"] .tys-page-log > section:first-of-type,
+html[data-theme="aurora-dark"] .tys-page-target > section:first-of-type,
+html[data-theme="aurora-dark"] .tys-page-more > section:first-of-type { border-color: var(--d-line) !important; }
+html[data-theme="aurora-dark"] .tys-page-log > section:nth-of-type(2) { border-color: var(--d-line) !important; }
+html[data-theme="aurora-dark"] .tys-page-log article { border-color: var(--d-line) !important; }
+html[data-theme="aurora-dark"] .tys-page-target input:not([type="checkbox"]),
+html[data-theme="aurora-dark"] .tys-page-target select { border-color: var(--d-line) !important; background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-page-more > section:not(:first-child) { border-color: var(--d-line) !important; }
+html[data-theme="aurora-dark"] .tys-mobile-nav { border-color: var(--d-line) !important; background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-landing > section { border-color: var(--d-line) !important; }
+html[data-theme="aurora-dark"] .tys-page :is(th,
+html[data-theme="aurora-dark"] [role="columnheader"]) { color: var(--d-mute) !important; }
+html[data-theme="aurora-dark"] .tys-page :is(input,
+html[data-theme="aurora-dark"] select,
+html[data-theme="aurora-dark"] textarea):disabled { background: #1a2142 !important; background-image: none !important; color: var(--d-o2) !important; }
+html[data-theme="aurora-dark"] .tys-login-screen { background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-login-card { background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-login-card > div:first-child img { border-color: var(--d-line) !important; background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-login-card input,
+html[data-theme="aurora-dark"] .tys-login-card select { border-color: var(--d-line) !important; background: #1a2142 !important; background-image: none !important; color: var(--d-ink) !important; }
+html[data-theme="aurora-dark"] .tys-login-card button[type="button"][class*="border-[#bd4b0a]"] { background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-target-gate { border-color: var(--d-line) !important; }
+html[data-theme="aurora-dark"] .tys-target-gate > div:first-child { border-color: var(--d-line) !important; background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-page [role="status"] .skeleton-bone { border-color: var(--d-line) !important; background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-page-manager { color: var(--d-ink) !important; }
+html[data-theme="aurora-dark"] .tys-page-manager article { border-color: var(--d-line) !important; }
+html[data-theme="aurora-dark"] .tys-login-layout { border-color: var(--d-line) !important; background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-login-intro::before,
+html[data-theme="aurora-dark"] .tys-login-intro::after { border-color: var(--d-line) !important; }
+html[data-theme="aurora-dark"] .tys-login-intro-foot span { background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-login-card { background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-login-step { border-color: var(--d-line) !important; color: var(--d-o2) !important; background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-login-heading h1 { color: var(--d-ink) !important; }
+html[data-theme="aurora-dark"] .tys-login-heading p { color: var(--d-mute) !important; }
+html[data-theme="aurora-dark"] .tys-login-card label { color: var(--d-ink) !important; }
+html[data-theme="aurora-dark"] .tys-login-card input,
+html[data-theme="aurora-dark"] .tys-login-card select { border-color: var(--d-line) !important; background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-manager-login { border-color: var(--d-line) !important; }
+html[data-theme="aurora-dark"] .tys-manager-login > div:first-child img { border-color: var(--d-line) !important; background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-manager-login > label { color: var(--d-ink) !important; }
+html[data-theme="aurora-dark"] .tys-page-manager section,
+html[data-theme="aurora-dark"] .tys-page-manager article { border-color: var(--d-line) !important; }
+html[data-theme="aurora-dark"] .tys-page :is(input,
+html[data-theme="aurora-dark"] select,
+html[data-theme="aurora-dark"] textarea) { border-color: var(--d-line) !important; background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-page-wiki [role="tablist"] { border-color: var(--d-line) !important; background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-sidebar { background: #1a2142 !important; background-image: none !important; border-color: var(--d-line) !important; }
+html[data-theme="aurora-dark"] .tys-sidebar > div:first-child { border-color: var(--d-line) !important; }
+html[data-theme="aurora-dark"] .tys-app-header { background: #1a2142 !important; background-image: none !important; border-color: var(--d-line) !important; }
+html[data-theme="aurora-dark"] .tys-app-main { background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-desktop-nav { border-color: var(--d-line) !important; background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-desktop-nav-link-active { background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-mobile-nav { border-color: var(--d-line) !important; background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-mobile-nav-link-active { color: var(--d-o2) !important; }
+html[data-theme="aurora-dark"] .tys-page-home > section:first-of-type { background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-page-home article:focus-within { border-color: var(--d-line) !important; }
+html[data-theme="aurora-dark"] .tys-page-log :is(input,
+html[data-theme="aurora-dark"] textarea),
+html[data-theme="aurora-dark"] .tys-page-target :is(input,
+html[data-theme="aurora-dark"] textarea),
+html[data-theme="aurora-dark"] .tys-page-more :is(input,
+html[data-theme="aurora-dark"] textarea) { border-color: var(--d-line) !important; background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-page-log :is(input,
+html[data-theme="aurora-dark"] textarea):focus,
+html[data-theme="aurora-dark"] .tys-page-target :is(input,
+html[data-theme="aurora-dark"] textarea):focus,
+html[data-theme="aurora-dark"] .tys-page-more :is(input,
+html[data-theme="aurora-dark"] textarea):focus { background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-page-target > section:has(input[type="checkbox"]) { border-color: var(--d-line) !important; }
+html[data-theme="aurora-dark"] .tys-page-log article { border-color: var(--d-line) !important; }
+html[data-theme="aurora-dark"] .tys-page-wiki article { border-color: var(--d-line) !important; }
+html[data-theme="aurora-dark"] .tys-page-manager .tys-manager-hero { border-color: var(--d-line) !important; }
+html[data-theme="aurora-dark"] .tys-login-card { border-color: var(--d-line) !important; background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-login-brandline span { color: var(--d-o2) !important; }
+html[data-theme="aurora-dark"] .tys-page-manager .tys-manager-login { border-color: var(--d-line) !important; background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-page-manager .tys-manager-login > label { color: var(--d-ink) !important; }
+html[data-theme="aurora-dark"] .tys-page-manager .tys-manager-login input { background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-page-manager .tys-manager-employee-card { border-color: var(--d-line) !important; background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-app-main { background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-app-header { border-color: var(--d-line) !important; background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-sidebar { border-color: var(--d-line) !important; background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-desktop-nav { border-color: var(--d-line) !important; background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-desktop-nav-link-active { background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-mobile-nav { border-color: var(--d-line) !important; background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-page :is(input,
+html[data-theme="aurora-dark"] select,
+html[data-theme="aurora-dark"] textarea) { border-color: var(--d-line) !important; background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-page-home > section:first-of-type { border-color: var(--d-line) !important; background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-page-home > section:nth-of-type(2) { background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-page-home > section:nth-of-type(n+3) { background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-page-home article { border-color: var(--d-line) !important; background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-page-target > section,
+html[data-theme="aurora-dark"] .tys-page-log > section { background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-page-target article,
+html[data-theme="aurora-dark"] .tys-page-log article { border-color: var(--d-line) !important; background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-page-target [class*="sticky"] { background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-page-more > section { background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-page-more > div.grid button { border-color: var(--d-line) !important; background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-page-more > div.grid button > span:first-child { background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-page-wiki > section:first-child { background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-page-wiki article { border-color: var(--d-line) !important; background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-page-manager .tys-manager-header { border-color: var(--d-line) !important; }
+html[data-theme="aurora-dark"] .tys-page-manager .tys-manager-hero { border-color: var(--d-line) !important; }
+html[data-theme="aurora-dark"] .tys-page-manager > div > section.grid:first-of-type > div { border-color: var(--d-line) !important; background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-page-manager .tys-manager-branch-card { border-color: var(--d-line) !important; background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-page-manager .tys-manager-employee-card { border-color: var(--d-line) !important; background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-page-manager .tys-manager-disclosure { border-color: var(--d-line) !important; background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-page-manager .tys-manager-login { border-color: var(--d-line) !important; background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-login-card { border-color: var(--d-line) !important; background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-page button[class*="border-[#f0dfd2]"],
+html[data-theme="aurora-dark"] .tys-page button[class*="border-[#f2e4d8]"] { border-color: var(--d-line) !important; }
+html[data-theme="aurora-dark"] .tys-target-gate { background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] [role="dialog"] { border-color: var(--d-line) !important; }
+html[data-theme="aurora-dark"] [role="dialog"] :is(input,
+html[data-theme="aurora-dark"] select,
+html[data-theme="aurora-dark"] textarea) { border-color: var(--d-line) !important; }
+html[data-theme="aurora-dark"] .tys-landing > section { border-color: var(--d-line) !important; }
+html[data-theme="aurora-dark"] .tys-page-manager > div > header { border-color: var(--d-line) !important; }
+html[data-theme="aurora-dark"] .tys-page-manager > div > section > div.overflow-hidden.rounded-2xl { border-color: var(--d-line) !important; }
+html[data-theme="aurora-dark"] .tys-page-manager details { border-color: var(--d-line) !important; background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-page-manager details > summary { color: var(--d-ink) !important; }
+html[data-theme="aurora-dark"] .tys-page-manager details[open] > summary { background: #1a2142 !important; background-image: none !important; border-color: var(--d-line) !important; }
+html[data-theme="aurora-dark"] .tys-page-manager .tys-manager-employee-card > div { border-color: var(--d-line) !important; }
+html[data-theme="aurora-dark"] .tys-page-manager > div > section.space-y-4 > article { border-color: var(--d-line) !important; }
+html[data-theme="aurora-dark"] .tys-page-more > section.space-y-4 > section,
+html[data-theme="aurora-dark"] .tys-page-more > div.space-y-4 > section { border-color: var(--d-line) !important; }
+html[data-theme="aurora-dark"] .tys-page-log > section article { border-color: var(--d-line) !important; }
+html[data-theme="aurora-dark"] .tys-page-log > section :is(input,
+html[data-theme="aurora-dark"] textarea) { border-color: var(--d-line) !important; }
+html[data-theme="aurora-dark"] .tys-page-manager > div > section.grid:first-of-type > div { border-color: var(--d-line) !important; background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-page-manager > div > section.grid:first-of-type > div p:first-child { color: var(--d-mute) !important; }
+html[data-theme="aurora-dark"] .tys-page-manager .tys-manager-branch-card > p:last-child { border-color: var(--d-line) !important; }
+html[data-theme="aurora-dark"] .tys-page-manager .tys-manager-disclosure[open] > summary { border-color: var(--d-line) !important; background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-page-manager .tys-manager-employee-card > button:first-child > div:last-child { background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-page-manager footer { color: var(--d-mute) !important; }
+html[data-theme="aurora-dark"] .tys-page-home > section:nth-of-type(2) > div.relative > div.grid + div + div + div > div { border-color: var(--d-line) !important; }
+html[data-theme="aurora-dark"] .tys-page-home > section:nth-of-type(3) { border-color: var(--d-line) !important; }
+html[data-theme="aurora-dark"] .tys-page-manager .tys-manager-branch-card { background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-page :is(section,
+html[data-theme="aurora-dark"] article)[class*="rounded-"],
+html[data-theme="aurora-dark"] .tys-page div[class*="rounded-"][class*="border"][class*="bg-white"],
+html[data-theme="aurora-dark"] .tys-page div[class*="rounded-"][class*="border"][class*="bg-[#fff"],
+html[data-theme="aurora-dark"] .tys-page-manager :is(section,
+html[data-theme="aurora-dark"] article)[class*="rounded-"],
+html[data-theme="aurora-dark"] .tys-page-manager div[class*="rounded-"][class*="border"][class*="bg-white"] { border-color: var(--d-line) !important; }
+html[data-theme="aurora-dark"] .tys-page :is(section,
+html[data-theme="aurora-dark"] article)[class*="rounded-"]:not([class*="bg-red"]):not([class*="bg-emerald"]):not([class*="bg-amber"]),
+html[data-theme="aurora-dark"] .tys-page div[class*="rounded-"][class*="border"][class*="bg-white"],
+html[data-theme="aurora-dark"] .tys-page div[class*="rounded-"][class*="border"][class*="bg-[#fff"],
+html[data-theme="aurora-dark"] .tys-page-manager :is(section,
+html[data-theme="aurora-dark"] article)[class*="rounded-"]:not([class*="bg-red"]):not([class*="bg-emerald"]):not([class*="bg-amber"]),
+html[data-theme="aurora-dark"] .tys-page-manager div[class*="rounded-"][class*="border"][class*="bg-white"] { background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-page :is(div,
+html[data-theme="aurora-dark"] article,
+html[data-theme="aurora-dark"] section)[class*="border-emerald"] { background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-page :is(div,
+html[data-theme="aurora-dark"] article,
+html[data-theme="aurora-dark"] section)[class*="border-red"] { background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-premium-home { color: var(--d-ink) !important; }
+html[data-theme="aurora-dark"] .tys-premium-home .tys-home-greeting,
+html[data-theme="aurora-dark"] .tys-premium-home .tys-home-hero,
+html[data-theme="aurora-dark"] .tys-premium-home .tys-home-daily,
+html[data-theme="aurora-dark"] .tys-premium-home .tys-home-kpis { border-color: var(--d-line) !important; }
+html[data-theme="aurora-dark"] .tys-premium-home .tys-home-daily { background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-premium-home .tys-home-daily > div:last-child > div { border-color: var(--d-line) !important; background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-premium-home .tys-home-hero { background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-premium-home .tys-home-hero > .relative > div:nth-child(2) > div:last-child { border-color: var(--d-line) !important; background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-premium-log { color: var(--d-ink) !important; }
+html[data-theme="aurora-dark"] .tys-premium-log > section { border-color: var(--d-line) !important; background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-premium-log > section:first-of-type { background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-premium-log > section:first-of-type h1 { color: var(--d-ink) !important; }
+html[data-theme="aurora-dark"] .tys-premium-log > section:first-of-type p:last-child { color: var(--d-ink) !important; }
+html[data-theme="aurora-dark"] .tys-premium-log > section:nth-of-type(2) { border-color: var(--d-line) !important; background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-premium-log > section:nth-of-type(2) > div:first-child > span { border-color: var(--d-line) !important; background: #1a2142 !important; background-image: none !important; color: var(--d-o2) !important; }
+html[data-theme="aurora-dark"] .tys-premium-log input[type="date"],
+html[data-theme="aurora-dark"] .tys-premium-log input[type="number"],
+html[data-theme="aurora-dark"] .tys-premium-log textarea { border-color: var(--d-line) !important; background: #1a2142 !important; background-image: none !important; color: var(--d-ink) !important; }
+html[data-theme="aurora-dark"] .tys-premium-log > section article { border-color: var(--d-line) !important; background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-premium-log > section article > div:first-child > div:first-child > span { border-color: var(--d-line) !important; background: #1a2142 !important; background-image: none !important; color: var(--d-o2) !important; }
+html[data-theme="aurora-dark"] .tys-premium-log > section article > div:nth-child(2) { border-color: var(--d-line) !important; background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-premium-log > section article > div:nth-child(2) p:first-child { color: var(--d-mute) !important; }
+html[data-theme="aurora-dark"] .tys-premium-log > section article > div:nth-child(2) p:last-child { color: var(--d-ink) !important; }
+html[data-theme="aurora-dark"] .tys-premium-log > section:nth-last-of-type(2) button[aria-pressed] { border-color: var(--d-line) !important; background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-premium-log > section:nth-last-of-type(2) button[aria-pressed="true"] { border-color: var(--d-line) !important; background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-premium-log > section:nth-last-of-type(2) button[aria-pressed="false"] { background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-premium-log > section:nth-last-of-type(2) > div:first-of-type { background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-premium-log > section:last-of-type { border-color: var(--d-line) !important; background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tx-manager { background: #1a2142 !important; background-image: none !important; color: var(--d-ink) !important; }
+html[data-theme="aurora-dark"] .tx-manager aside { border-color: var(--d-line) !important; background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tx-manager header { border-color: var(--d-line) !important; background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tx-manager .tx-text-action { color: var(--d-o2) !important; }
+html[data-theme="aurora-dark"] .tx-manager .tx-text-action:hover { color: var(--d-ink) !important; }
+html[data-theme="aurora-dark"] .tx-manager .tx-shortcut-card:hover { border-color: var(--d-line) !important; }
+@media (hover: hover) and (pointer: fine) {
+html[data-theme="aurora-dark"] .tys-page button:not(:disabled):not([type="submit"]):hover,
+html[data-theme="aurora-dark"] .tys-page a:hover { border-color: var(--d-line) !important; }
+html[data-theme="aurora-dark"] .tys-desktop-nav-link:not(.tys-desktop-nav-link-active):hover { background: #1a2142 !important; background-image: none !important; color: var(--d-ink) !important; }
+html[data-theme="aurora-dark"] .tys-page article[class*="rounded-"]:hover { border-color: var(--d-line) !important; }
+}
+@media (max-width: 420px) {
+html[data-theme="aurora-dark"] .tys-page-more li > div:first-child > div:last-child { border-color: var(--d-line) !important; }
+}
+@media (min-width: 1024px) {
+html[data-theme="aurora-dark"] .tys-page-log article:hover,
+html[data-theme="aurora-dark"] .tys-page-more > section button:hover { border-color: var(--d-line) !important; }
+}
+@media (hover: hover) and (min-width: 768px) {
+html[data-theme="aurora-dark"] .tys-page-manager article:hover { border-color: var(--d-line) !important; }
+}
+@media (hover:hover) and (min-width:768px) {
+html[data-theme="aurora-dark"] .tys-page-more > div > button:hover,
+html[data-theme="aurora-dark"] .tys-page-more [class*="grid"] > button:hover { border-color: var(--d-line) !important; }
+html[data-theme="aurora-dark"] .tys-page-home :is(button,
+html[data-theme="aurora-dark"] a):hover { border-color: var(--d-line) !important; }
+html[data-theme="aurora-dark"] .tys-page-log button[aria-pressed]:hover,
+html[data-theme="aurora-dark"] .tys-page-wiki button:hover { border-color: var(--d-line) !important; }
+html[data-theme="aurora-dark"] .tys-page-log article:hover,
+html[data-theme="aurora-dark"] .tys-page-wiki article:hover { border-color: var(--d-line) !important; }
+}
+@media (hover:hover) and (pointer:fine) {
+html[data-theme="aurora-dark"] .tys-page :is(article,
+html[data-theme="aurora-dark"] .tys-manager-branch-card):hover { border-color: var(--d-line) !important; }
+html[data-theme="aurora-dark"] .tys-page-more > div.grid button:hover { border-color: var(--d-line) !important; }
+}
+@media (max-width: 640px) {
+html[data-theme="aurora-dark"] .tys-premium-home .tys-home-daily > div:first-child > span { border-color: var(--d-line) !important; background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-premium-home .tys-home-daily > div:last-child > div { border-color: var(--d-line) !important; background: #1a2142 !important; background-image: none !important; }
+html[data-theme="aurora-dark"] .tys-premium-home .tys-home-daily > div:last-child > div > span { color: var(--d-ink) !important; }
+html[data-theme="aurora-dark"] .tys-premium-home .tys-home-daily > div:last-child > div > strong { background: #1a2142 !important; background-image: none !important; color: var(--d-o2) !important; }
+}
+}
