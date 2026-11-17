@@ -1,21 +1,26 @@
-export type Theme = "light";
+export type Theme = "light" | "aurora";
+const KEY = "tys.theme";
 
-// Track Your Sales currently uses the original light appearance only.
 export function readTheme(): Theme {
   try {
-    localStorage.removeItem("tys.theme");
-  } catch {}
-  return "light";
+    return localStorage.getItem(KEY) === "aurora" ? "aurora" : "light";
+  } catch {
+    return "light";
+  }
 }
 
-export function applyTheme(_theme: Theme) {
+export function applyTheme(theme: Theme) {
   try {
-    const root = document.documentElement;
-    root.removeAttribute("data-theme");
-    root.removeAttribute("data-skin");
+    const h = document.documentElement;
+    h.removeAttribute("data-skin");
+    if (theme === "aurora") h.setAttribute("data-theme", "aurora");
+    else h.removeAttribute("data-theme");
   } catch {}
 }
 
-export function saveTheme(_theme: Theme) {
-  applyTheme("light");
+export function saveTheme(theme: Theme) {
+  try {
+    localStorage.setItem(KEY, theme);
+  } catch {}
+  applyTheme(theme);
 }

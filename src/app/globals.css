@@ -3908,3 +3908,105 @@ h1, h2 {
   font-family: "Noto Naskh Arabic", "Mada", serif;
   letter-spacing: 0;
 }
+
+
+/* ==========================================================================
+   ثيم أورورا (إضافي): html[data-theme="aurora"]
+   خلفية متدرجة (لافندر/وردي فاتح/سماوي) وبطاقات زجاجية بيضا وبرتقالي #ee6a22.
+   الألوان مأخوذة من الصورة المرجعية. الشكل الأساسي مابيتأثرش.
+   ========================================================================== */
+@media screen {
+  html[data-theme="aurora"] {
+    --au-ink: #1a1d3a;
+    --au-mute: #5b6280;
+    --au-line: #d9e0f3;
+    --au-o: #ee6a22;
+    --au-o2: #f98a45;
+    --au-glass: rgba(255, 255, 255, .72);
+    --color-primary-700: #d9551a;
+    --color-primary-600: #ee6a22;
+    --color-primary-500: #f98a45;
+    --color-primary-100: #e9eefb;
+    --color-primary-50: #f3f6fd;
+    --color-border: #d9e0f3;
+    --color-text-primary: #1a1d3a;
+    --color-text-secondary: #5b6280;
+    --color-text-muted: #7a819c;
+    background: #e9ecf5;
+  }
+  html[data-theme="aurora"] body {
+    background:
+      radial-gradient(circle at 100% 0%, #f0d4e0 0, transparent 46%),
+      radial-gradient(circle at 0% 42%, #cfdaf6 0, transparent 52%),
+      linear-gradient(180deg, #e9ecf5 0%, #d0e2f0 72%, #bce0ec 100%) !important;
+    background-attachment: fixed !important;
+    color: var(--au-ink);
+  }
+  html[data-theme="aurora"] :is(.tys-app-main, .tys-page) {
+    background: transparent !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
+  }
+  /* البطاقات الزجاجية */
+  html[data-theme="aurora"] .tys-page :is(section, article, form)[class*="rounded-"],
+  html[data-theme="aurora"] .tys-target-gate {
+    background: var(--au-glass) !important;
+    border: 1px solid rgba(255, 255, 255, .92) !important;
+    border-radius: 24px !important;
+    box-shadow: 0 12px 32px rgba(110, 125, 190, .18), inset 0 1px 0 rgba(255, 255, 255, .9) !important;
+    -webkit-backdrop-filter: blur(14px) saturate(130%);
+    backdrop-filter: blur(14px) saturate(130%);
+  }
+  html[data-theme="aurora"] .tys-page-home > section:nth-of-type(2) {
+    background: radial-gradient(circle at 92% 0%, rgba(238, 106, 34, .16), transparent 55%), var(--au-glass) !important;
+  }
+  /* ألوان دافية ثابتة في الكود: نحوّلها لدرجات باردة متناسقة */
+  html[data-theme="aurora"] :is([class*="text-[#2d2119]"], [class*="text-[#241f1b]"], [class*="text-[#514238]"], [class*="text-[#6e5543]"]) { color: var(--au-ink) !important; }
+  html[data-theme="aurora"] :is([class*="text-[#88796e]"], [class*="text-[#9b8b7f]"], [class*="text-[#a17d65]"], [class*="text-[#9a7963]"], [class*="text-[#ad9888]"], [class*="text-[#70513c]"]) { color: var(--au-mute) !important; }
+  html[data-theme="aurora"] :is([class*="border-[#f2e4d8]"], [class*="border-[#f1dfd0]"], [class*="border-[#f3dfce]"]) { border-color: var(--au-line) !important; }
+  html[data-theme="aurora"] :is([class*="bg-[#fff0e2]"], [class*="bg-[#fff4eb]"], [class*="bg-[#fff6ed]"], [class*="bg-[#fffaf5]"], [class*="bg-[#fff8f1]"]) { background-color: rgba(255, 255, 255, .7) !important; }
+  html[data-theme="aurora"] :is([class*="bg-[#f2e4d8]"], [class*="bg-[#f1dfd0]"]) { background-color: #dfe6f6 !important; }
+  /* الحقول */
+  html[data-theme="aurora"] .tys-page :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea) {
+    background: rgba(255, 255, 255, .85) !important;
+    border: 1px solid var(--au-line) !important;
+    border-radius: 14px !important;
+    color: var(--au-ink);
+  }
+  html[data-theme="aurora"] .tys-page :is(input, select, textarea):focus {
+    border-color: var(--au-o) !important;
+    box-shadow: 0 0 0 3px rgba(238, 106, 34, .18) !important;
+  }
+  /* الهيدر والتنقل */
+  html[data-theme="aurora"] .tys-app-header {
+    background: rgba(255, 255, 255, .6) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, .85) !important;
+    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(16px);
+  }
+  html[data-theme="aurora"] :is(.tys-mobile-nav, aside) {
+    background: rgba(255, 255, 255, .75) !important;
+    border-color: rgba(255, 255, 255, .9) !important;
+    box-shadow: 0 -10px 30px rgba(110, 125, 190, .16) !important;
+    -webkit-backdrop-filter: blur(18px);
+    backdrop-filter: blur(18px);
+  }
+  html[data-theme="aurora"] .tys-mobile-nav-link-active { color: var(--au-o) !important; }
+  html[data-theme="aurora"] .tys-mobile-nav-link-active .tys-mobile-nav-icon:not(.tys-mobile-nav-primary) {
+    background: #fff !important;
+    border-color: var(--au-line) !important;
+    box-shadow: 0 4px 12px rgba(110, 125, 190, .2) !important;
+  }
+  html[data-theme="aurora"] .tys-mobile-nav-link-active::before { background: var(--au-o); }
+  /* الأزرار الرئيسية وأشرطة التقدم: برتقالي متدرج بتوهج ناعم */
+  html[data-theme="aurora"] :is(button, a)[class*="from-[var(--color-primary-6"],
+  html[data-theme="aurora"] :is(button, a)[class*="from-[#e96812]"] {
+    background-image: linear-gradient(135deg, var(--au-o2), var(--au-o)) !important;
+    box-shadow: 0 10px 24px rgba(238, 106, 34, .32) !important;
+  }
+  html[data-theme="aurora"] .skeleton-bone {
+    background: linear-gradient(90deg, rgba(255, 255, 255, .5) 25%, rgba(255, 255, 255, .85) 50%, rgba(255, 255, 255, .5) 75%);
+    background-size: 200% 100%;
+  }
+  html[data-theme="aurora"] .tys-theme-option[aria-checked="true"] { border-color: var(--au-o) !important; background: #fff !important; }
+}
