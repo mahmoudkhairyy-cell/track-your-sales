@@ -4322,6 +4322,30 @@ h1, h2 {
     background-image: linear-gradient(135deg, #ff9a55, #ff7a30) !important;
     box-shadow: 0 10px 24px rgba(255, 122, 48, .30) !important;
   }
-  html[data-theme="aurora-dark"] [role="dialog"] { background: rgba(5, 8, 20, .7) !important; }
-  html[data-theme="aurora-dark"] [role="dialog"] > div { background: #131933 !important; border: 1px solid var(--d-line); }
+  /* النوافذ المنبثقة والحوارات — Aurora Dark فقط */
+  html[data-theme="aurora-dark"] [role="dialog"] {
+    background: rgba(5, 8, 20, .76) !important;
+    backdrop-filter: blur(8px);
+  }
+  html[data-theme="aurora-dark"] [role="dialog"] > div {
+    color: var(--d-ink) !important;
+    background: linear-gradient(155deg, #171e3a 0%, #11172d 100%) !important;
+    border: 1px solid var(--d-line) !important;
+    border-radius: 22px;
+    box-shadow: 0 24px 70px rgba(0, 0, 0, .42), 0 0 0 1px rgba(255, 154, 85, .035) !important;
+  }
+  html[data-theme="aurora-dark"] [role="dialog"] :is(input, select, textarea) {
+    color: var(--d-ink) !important;
+    background: rgba(8, 13, 29, .72) !important;
+    border-color: var(--d-line) !important;
+  }
+  html[data-theme="aurora-dark"] [role="dialog"] :is(input, select, textarea)::placeholder {
+    color: var(--d-mute) !important;
+    opacity: .78;
+  }
+  html[data-theme="aurora-dark"] [role="dialog"] :is(input, select, textarea):focus {
+    border-color: rgba(255, 154, 85, .72) !important;
+    box-shadow: 0 0 0 3px rgba(255, 122, 48, .14) !important;
+    outline: 0;
+  }
 }
