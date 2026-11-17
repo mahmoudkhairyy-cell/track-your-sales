@@ -4153,10 +4153,12 @@ h1, h2 {
   /* شارات الحالة */
   html[data-theme="aurora-dark"] :is([class*="bg-emerald-"], [class*="bg-green-"]) { background-color: rgba(52, 211, 153, .14) !important; }
   html[data-theme="aurora-dark"] :is([class*="bg-red-"], [class*="bg-rose-"]) { background-color: rgba(248, 113, 113, .14) !important; }
-  html[data-theme="aurora-dark"] :is([class*="bg-amber-"], [class*="bg-yellow-"], [class*="bg-orange-"]) { background-color: rgba(251, 191, 36, .14) !important; }
+  html[data-theme="aurora-dark"] :is([class*="bg-amber-"], [class*="bg-yellow-"]) { background-color: rgba(251, 191, 36, .14) !important; }
+  html[data-theme="aurora-dark"] [class*="bg-orange-"] { background-color: rgba(255, 122, 48, .16) !important; }
   html[data-theme="aurora-dark"] :is([class*="border-emerald-"], [class*="border-green-"]) { border-color: rgba(52, 211, 153, .35) !important; }
   html[data-theme="aurora-dark"] :is([class*="border-red-"], [class*="border-rose-"]) { border-color: rgba(248, 113, 113, .35) !important; }
-  html[data-theme="aurora-dark"] :is([class*="border-amber-"], [class*="border-orange-"], [class*="border-yellow-"]) { border-color: rgba(251, 191, 36, .35) !important; }
+  html[data-theme="aurora-dark"] :is([class*="border-amber-"], [class*="border-yellow-"]) { border-color: rgba(251, 191, 36, .35) !important; }
+  html[data-theme="aurora-dark"] [class*="border-orange-"] { border-color: rgba(255, 154, 85, .38) !important; }
 
   /* الحقول والقوائم */
   html[data-theme="aurora-dark"] :where(input, select, textarea) { color-scheme: dark; }
