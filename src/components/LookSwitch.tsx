@@ -7,6 +7,7 @@ import { readLook, saveLook, type Look } from "@/lib/look";
 const OPTIONS: { key: Look; icon: string; title: string; text: string }[] = [
   { key: "classic", icon: "🎨", title: "الشكل الهادي", text: "الألوان الدافية والكروت الناعمة" },
   { key: "toon", icon: "🤪", title: "الشكل الكارتوني", text: "حدود سميكة وألوان جريئة" },
+  { key: "bank", icon: "🏦", title: "الشكل الرسمي", text: "أزرق غامق وأبيض، واضح ومنظم" },
 ];
 
 export function LookSwitch() {
@@ -22,7 +23,7 @@ export function LookSwitch() {
   return (
     <section className="rounded-[24px] border border-white bg-white p-4 shadow-sm" aria-label="شكل التطبيق">
       <h2 className="text-base font-black tracking-tight">شكل التطبيق</h2>
-      <div className="mt-3 grid grid-cols-2 gap-2">
+      <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-3">
         {OPTIONS.map((o) => (
           <button
             key={o.key}

@@ -1,9 +1,10 @@
-export type Look = "classic" | "toon";
+export type Look = "classic" | "toon" | "bank";
 const KEY = "tys.look";
 
 export function readLook(): Look {
   try {
-    return localStorage.getItem(KEY) === "toon" ? "toon" : "classic";
+    const v = localStorage.getItem(KEY);
+    return v === "toon" || v === "bank" ? v : "classic";
   } catch {
     return "classic";
   }
@@ -11,8 +12,8 @@ export function readLook(): Look {
 
 export function applyLook(look: Look) {
   try {
-    if (look === "toon") document.documentElement.setAttribute("data-look", "toon");
-    else document.documentElement.removeAttribute("data-look");
+    if (look === "classic") document.documentElement.removeAttribute("data-look");
+    else document.documentElement.setAttribute("data-look", look);
   } catch {}
 }
 

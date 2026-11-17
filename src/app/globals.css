@@ -4021,3 +4021,92 @@ html[data-look="toon"] aside {
     to { opacity: 1; transform: scale(1) translateY(0); }
   }
 }
+
+
+/* ==========================================================================
+   الشكل الرسمي (بنكي): data-look="bank". أزرق غامق وأبيض، من غير حدود تقيلة.
+   ========================================================================== */
+html[data-look="bank"] {
+  --color-primary-900: #0a1f47;
+  --color-primary-700: #0f2a5c;
+  --color-primary-600: #1d5fd1;
+  --color-primary-500: #3b82f6;
+  --color-primary-100: #dbe7fb;
+  --color-primary-50: #eef3fc;
+  --color-border: #dbe3f1;
+  --color-text-secondary: #4b5a78;
+  --brand-primary: #1d5fd1;
+  --brand-deep: #0f2a5c;
+  --brand-bg: #f3f6fb;
+  --brand-border: #dbe3f1;
+  background: #f3f6fb;
+  scrollbar-color: #7b93c4 #eef3fc;
+}
+html[data-look="bank"] body {
+  background: #f3f6fb !important;
+  color: #14213d;
+}
+html[data-look="bank"] .tys-app-main,
+html[data-look="bank"] .tys-page {
+  background: transparent !important;
+}
+html[data-look="bank"] .tys-page h1,
+html[data-look="bank"] .tys-page h2,
+html[data-look="bank"] .tys-page h3 {
+  font-family: "Mada", Tahoma, sans-serif !important;
+  color: #0f2a5c;
+  letter-spacing: 0;
+}
+html[data-look="bank"] .tys-page section[class*="rounded-"],
+html[data-look="bank"] .tys-page article[class*="rounded-"],
+html[data-look="bank"] .tys-page form[class*="rounded-"],
+html[data-look="bank"] .tys-target-gate {
+  border: 1px solid #dbe3f1 !important;
+  border-radius: 16px !important;
+  background-color: #fff;
+  box-shadow: 0 6px 18px rgba(15, 42, 92, .08) !important;
+}
+html[data-look="bank"] .tys-page-home > section:first-of-type {
+  background: #0f2a5c !important;
+  color: #fff;
+}
+html[data-look="bank"] .tys-page-home > section:first-of-type :is(h1, h2, p, span, strong) { color: #fff; }
+html[data-look="bank"] .tys-page input:not([type="checkbox"]):not([type="radio"]),
+html[data-look="bank"] .tys-page select,
+html[data-look="bank"] .tys-page textarea {
+  border: 1px solid #c5d2ea !important;
+  border-radius: 10px !important;
+  background: #fff !important;
+}
+/* ألوان البرتقالي المكتوبة ثابت: نحوّلها للأزرق */
+html[data-look="bank"] [class*="text-[#bd4b0a]"],
+html[data-look="bank"] [class*="text-[#e96812]"],
+html[data-look="bank"] [class*="text-[var(--color-primary-700)]"] { color: #0f2a5c !important; }
+html[data-look="bank"] [class*="bg-[#e96812]"],
+html[data-look="bank"] [class*="from-[#e96812]"],
+html[data-look="bank"] [class*="from-[#bd4b0a]"] {
+  background-image: none !important;
+  background-color: #1d5fd1 !important;
+}
+html[data-look="bank"] [class*="border-[#f2e4d8]"],
+html[data-look="bank"] [class*="border-[#f1dfd0]"],
+html[data-look="bank"] [class*="border-[#f3dfce]"] { border-color: #dbe3f1 !important; }
+html[data-look="bank"] .tys-app-header {
+  background: #0f2a5c !important;
+  border-bottom: 0 !important;
+  backdrop-filter: none;
+}
+html[data-look="bank"] .tys-app-header :is(p, span, button) { color: #fff !important; }
+html[data-look="bank"] .tys-mobile-nav {
+  background: #fff !important;
+  border-top: 1px solid #dbe3f1 !important;
+  box-shadow: 0 -6px 18px rgba(15, 42, 92, .08) !important;
+}
+html[data-look="bank"] .tys-mobile-nav-link-active .tys-mobile-nav-icon:not(.tys-mobile-nav-primary) {
+  background: #eef3fc !important;
+  border-color: #c5d2ea !important;
+  box-shadow: none !important;
+}
+html[data-look="bank"] .tys-mobile-nav-link-active::before { background: #1d5fd1; }
+html[data-look="bank"] .tys-mobile-nav-link-active,
+html[data-look="bank"] .tys-mobile-nav-link:hover { color: #1d5fd1 !important; }

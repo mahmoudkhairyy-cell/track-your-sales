@@ -20,7 +20,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="ar" dir="rtl" suppressHydrationWarning>
       <head>
-        <script dangerouslySetInnerHTML={{ __html: "try{if(localStorage.getItem('tys.look')==='toon')document.documentElement.setAttribute('data-look','toon')}catch(e){}" }} />
+        <script dangerouslySetInnerHTML={{ __html: "try{var l=localStorage.getItem('tys.look');if(l==='toon'||l==='bank')document.documentElement.setAttribute('data-look',l)}catch(e){}" }} />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         <link href="https://fonts.googleapis.com/css2?family=Mada:wght@400;500;700;800&family=Noto+Naskh+Arabic:wght@500;700&family=Lalezar&display=swap" rel="stylesheet" />
