@@ -4033,6 +4033,8 @@ h1, h2 {
   html[data-theme="aurora-dark"] {
     --d-bg: #0b0f1e;
     --d-card: rgba(22, 27, 50, .86);
+    --d-card-top: rgba(31, 38, 69, .96);
+    --d-card-bottom: rgba(18, 23, 44, .96);
     --d-raised: rgba(255, 255, 255, .07);
     --d-line: rgba(255, 255, 255, .10);
     --d-o: #ff7a30;
@@ -4104,7 +4106,24 @@ h1, h2 {
     color: var(--d-ink);
   }
   html[data-theme="aurora-dark"] .tys-page-home > section:nth-of-type(2) {
-    background: radial-gradient(circle at 92% 0%, rgba(255, 122, 48, .22), transparent 55%), var(--d-card) !important;
+    background: radial-gradient(circle at 92% 0%, rgba(255, 122, 48, .22), transparent 55%), linear-gradient(145deg, var(--d-card-top), var(--d-card-bottom)) !important;
+    border-color: rgba(255, 154, 85, .22) !important;
+    box-shadow: 0 14px 36px rgba(0, 0, 0, .38), inset 0 1px 0 rgba(255, 255, 255, .055) !important;
+  }
+
+  /* تدرج هادئ للبطاقات الأساسية مع إبقاء الأسطح الداخلية أفتح بدرجة واحدة */
+  html[data-theme="aurora-dark"] .tys-page :is(section, article, form)[class*="rounded-"],
+  html[data-theme="aurora-dark"] .tys-target-gate,
+  html[data-theme="aurora-dark"] .tys-login-screen > div {
+    background-image: linear-gradient(145deg, var(--d-card-top), var(--d-card-bottom)) !important;
+    border-color: var(--d-line) !important;
+  }
+  html[data-theme="aurora-dark"] .tys-page :is(section, article, form)[class*="rounded-"] :is([class*="bg-white"], [class*="bg-[#fff"], [class*="bg-[#fef"], [class*="bg-[#fdf"]) {
+    background-color: var(--d-raised) !important;
+    border-color: rgba(255, 255, 255, .09) !important;
+  }
+  html[data-theme="aurora-dark"] .tys-page :is(section, article, form)[class*="rounded-"] :is(hr, [class*="divide-"] > *) {
+    border-color: var(--d-line) !important;
   }
 
   /* العناصر الداخلية: الخلفيات البيضا والفاتحة */
