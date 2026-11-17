@@ -4259,10 +4259,29 @@ h1, h2 {
     letter-spacing: -0.01em;
     color: var(--d-ink);
   }
-  /* دواير المؤشرات */
-  html[data-theme="aurora-dark"] svg circle[stroke="var(--color-border)"] { stroke: rgba(255, 255, 255, .12); }
-  html[data-theme="aurora-dark"] svg circle[stroke="var(--color-success-ring)"] { filter: drop-shadow(0 0 3px rgba(52, 211, 153, .7)); }
-  html[data-theme="aurora-dark"] svg circle[stroke="var(--color-danger-text)"] { filter: drop-shadow(0 0 3px rgba(248, 113, 113, .7)); }
+  /* مؤشرات الأداء والرسوم البيانية */
+  html[data-theme="aurora-dark"] svg circle[stroke="var(--color-border)"],
+  html[data-theme="aurora-dark"] svg :is(line, polyline)[stroke="var(--color-border)"] {
+    stroke: rgba(255, 255, 255, .14);
+  }
+  html[data-theme="aurora-dark"] svg circle[stroke="var(--color-success-ring)"] {
+    filter: drop-shadow(0 0 3px rgba(52, 211, 153, .7));
+  }
+  html[data-theme="aurora-dark"] svg circle[stroke="var(--color-danger-text)"] {
+    filter: drop-shadow(0 0 3px rgba(248, 113, 113, .7));
+  }
+  html[data-theme="aurora-dark"] .tys-page [role="progressbar"],
+  html[data-theme="aurora-dark"] .tys-page .tys-progress {
+    background-color: rgba(255, 255, 255, .09) !important;
+  }
+  html[data-theme="aurora-dark"] .tys-page [role="progressbar"] > *,
+  html[data-theme="aurora-dark"] .tys-page .tys-progress > * {
+    border-radius: inherit;
+  }
+  html[data-theme="aurora-dark"] svg text[fill="var(--color-text-secondary)"],
+  html[data-theme="aurora-dark"] svg text[fill="var(--color-text-muted)"] {
+    fill: var(--d-mute);
+  }
   /* الأزرار الرئيسية: برتقالي متدرج */
   html[data-theme="aurora-dark"] :is(button, a)[class*="from-[var(--color-primary-6"],
   html[data-theme="aurora-dark"] :is(button, a)[class*="from-[#e96812]"] {
