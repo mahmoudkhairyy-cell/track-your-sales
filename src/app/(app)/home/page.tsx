@@ -153,7 +153,12 @@ export default function HomePage() {
   // النهارده مش محسوب في الأيام اللي عدّت.
   // نفس منطق شاشة المدير بالظبط: الإجمالي الفعلي مقابل نسبة الوقت المنقضي من الشهر (أيام الشغل اللي خلصت قبل النهارده).
   const doneDays = data.work.elapsedBeforeToday ?? data.work.elapsed;
-  const onTrack: boolean | null = data.work.total > 0 ? data.overall >= (doneDays / data.work.total) * 100 : null;
+  // نفس حساب صفحة المدير بالظبط: متوسط نسب المؤشرات بأوزانها (من غير الكواليتي) مقابل نسبة الأيام اللي عدّت.
+  // كده لو كل مؤشراتك On Track ما يطلعش "Behind" بسبب بند الكواليتي أو قواعد الكوميشن.
+  const tracked = data.kpis.filter((k) => k.kpiKey !== "quality" && !k.nameEn.trim().toLowerCase().startsWith("kyc") && k.weight > 0);
+  const trackedWeight = tracked.reduce((sum, k) => sum + k.weight, 0);
+  const trackPercent = trackedWeight > 0 ? tracked.reduce((sum, k) => sum + k.percent * k.weight, 0) / trackedWeight : data.overall;
+  const onTrack: boolean | null = data.work.total > 0 ? trackPercent >= (doneDays / data.work.total) * 100 : null;
   const employeeName = data.profile.name.trim().split(/\s+/)[0] || "يا نجم";
   const statusPhrase = pickPhrase(overallBandLines(data.overall), `overall|${data.yearMonth}`);
   const statusTextEgy = statusPhrase.replaceAll("{name}", employeeName);
