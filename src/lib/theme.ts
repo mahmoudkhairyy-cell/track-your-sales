@@ -1,10 +1,10 @@
-export type Theme = "light" | "aurora" | "aurora-dark";
+export type Theme = "light" | "aurora" | "aurora-dark" | "space";
 const KEY = "tys.theme";
 
 export function readTheme(): Theme {
   try {
     const v = localStorage.getItem(KEY);
-    return v === "aurora" || v === "aurora-dark" ? v : "light";
+    return v === "aurora" || v === "aurora-dark" || v === "space" ? v : "light";
   } catch {
     return "light";
   }
