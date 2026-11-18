@@ -534,6 +534,7 @@ function AppFrame({ children, blocked, month }: { children: ReactNode; blocked: 
                               ["light", "☀️", "الأساسي"],
                               ["aurora", "🌌", "أورورا فاتح"],
                               ["aurora-dark", "🌙", "أورورا داكن"],
+                              ["space", "🧑‍🚀", "فضاء"],
                             ] as [Theme, string, string][]).map(([key, icon, label]) => (
                               <button
                                 key={key}

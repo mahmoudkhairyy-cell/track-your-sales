@@ -4733,3 +4733,517 @@ html[data-theme="aurora-dark"] .tys-app-header {
   border-color: #d95708 !important;
   color: #fff !important;
 }
+
+/* ==== فضاء ==== */
+/* ==========================================================================
+   فضاء (أسود خالص + تيل): html[data-theme="space"]. نفس روح أورورا بألوان ليلية.
+   من غير ضبابية عشان الأداء. الأساسي وأورورا الفاتح مابيتأثروش.
+   ========================================================================== */
+@media screen {
+  html[data-theme="space"] {
+    --d-bg: #000000;
+    --d-card: rgba(10, 14, 15, .94);
+    --d-raised: rgba(255, 255, 255, .07);
+    --d-line: rgba(255, 255, 255, .10);
+    --d-o: #19c9c9;
+    --d-o2: #4fe3e0;
+    --d-ink: #FFFFFF;
+    --d-mute: #9aa6a8;
+    --d-good: #34d399;
+    --d-warn: #fbbf24;
+    --d-bad: #f87171;
+    color-scheme: dark;
+    background: var(--d-bg);
+    scrollbar-color: #2a3335 #000000;
+    --color-primary-900: #9ff3f0;
+    --color-primary-700: #4fe3e0;
+    --color-primary-600: #19c9c9;
+    --color-primary-500: #4fe3e0;
+    --color-primary-100: rgba(255,255,255,.08);
+    --color-primary-50: rgba(255,255,255,.06);
+    --color-surface-cream: rgba(10,14,15,.94);
+    --color-border: rgba(255,255,255,.10);
+    --color-text-primary: #FFFFFF;
+    --color-text-secondary: #9aa6a8;
+    --color-text-muted: #7f8b8d;
+    --color-success-bg: rgba(52, 211, 153, .14);
+    --color-success-text: #34d399;
+    --color-success-ring: #34d399;
+    --color-danger-bg: rgba(248, 113, 113, .14);
+    --color-danger-text: #f87171;
+    --color-danger-ring: #f87171;
+    --brand-bg: #000000;
+    --brand-card: rgba(10,14,15,.94);
+    --brand-text: #FFFFFF;
+    --brand-muted: #9aa6a8;
+    --brand-border: rgba(255,255,255,.10);
+    --brand-soft: rgba(255,255,255,.07);
+    --brand-cream: rgba(10,14,15,.94);
+  }
+  html[data-theme="space"] body {
+    background: transparent !important;
+    color: var(--d-ink);
+  }
+  html[data-theme="space"] body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background:
+      radial-gradient(circle at 100% 0%, rgba(240, 120, 170, .20) 0, transparent 46%),
+      radial-gradient(circle at 0% 42%, rgba(80, 110, 230, .24) 0, transparent 52%),
+      radial-gradient(circle at 80% 100%, rgba(40, 170, 200, .16) 0, transparent 50%),
+      linear-gradient(180deg, #0d1226 0%, #0a0e1c 100%);
+    transform: translateZ(0);
+  }
+  html[data-theme="space"] :is(.tys-app-main, .tys-page) {
+    background: transparent !important;
+    color: var(--d-ink);
+  }
+  html[data-theme="space"] .tys-page :is(h1, h2, h3) { color: var(--d-ink); }
+
+  /* البطاقات */
+  html[data-theme="space"] .tys-page :is(section, article, form)[class*="rounded-"],
+  html[data-theme="space"] .tys-target-gate,
+  html[data-theme="space"] .tys-login-screen > div {
+    background: var(--d-card) !important;
+    border: 1px solid var(--d-line) !important;
+    border-radius: 24px !important;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, .35) !important;
+    color: var(--d-ink);
+  }
+  html[data-theme="space"] .tys-page-home > section:nth-of-type(2) {
+    background: radial-gradient(circle at 92% 0%, rgba(25, 201, 201, .22), transparent 55%), var(--d-card) !important;
+  }
+
+  /* العناصر الداخلية: الخلفيات البيضا والفاتحة */
+  html[data-theme="space"] :is([class*="bg-white"], [class*="bg-[#fff"], [class*="bg-[#fef"], [class*="bg-[#fdf"]):not([class*="from-[var(--color-primary-6"]):not([class*="bg-[#e96812]"]) {
+    background-color: var(--d-raised) !important;
+  }
+  html[data-theme="space"] :is([class*="from-white"], [class*="from-[#f"], [class*="via-[#f"], [class*="to-[#f"], [class*="bg-[radial-gradient"], [class*="bg-gradient-to"]):not([class*="from-[var(--color-primary-6"]):not([class*="from-[var(--color-primary-7"]):not([class*="from-[#e96812]"]):not([class*="from-[#bd4b0a]"]):not([class*="from-[#e97824]"]) {
+    background-image: none !important;
+    background-color: var(--d-raised) !important;
+  }
+  html[data-theme="space"] :is([class*="bg-[#f2e4d8]"], [class*="bg-[#f1dfd0]"], [class*="bg-[#ffe"], [class*="bg-[#fed"]) {
+    background-color: var(--d-line) !important;
+  }
+  html[data-theme="space"] :is([class*="border-white"], [class*="border-[#f"], [class*="ring-[#f"], [class*="border-[var(--color-border)]"]) {
+    border-color: var(--d-line) !important;
+  }
+  html[data-theme="space"] [class*="divide-"] > * { border-color: var(--d-line) !important; }
+
+  /* النصوص الثابتة في الكود */
+  html[data-theme="space"] :is([class*="text-[#2d2119]"], [class*="text-[#241f1b]"], [class*="text-[#1c1917]"], [class*="text-[#514238]"], [class*="text-[#6e5543]"], [class*="text-[var(--color-text-primary)]"], [class*="text-black"]) { color: var(--d-ink) !important; }
+  html[data-theme="space"] :is([class*="text-[#88796e]"], [class*="text-[#9b8b7f]"], [class*="text-[#a17d65]"], [class*="text-[#9a7963]"], [class*="text-[#ad9888]"], [class*="text-[#70513c]"], [class*="text-[var(--color-text-secondary)]"], [class*="text-[var(--color-text-muted)]"], [class*="text-gray-"], [class*="text-stone-"], [class*="text-slate-"]) { color: var(--d-mute) !important; }
+  html[data-theme="space"] :is([class*="text-[#bd4b0a]"], [class*="text-[#e96812]"], [class*="text-[#b76a3b]"], [class*="text-[#bd6b39]"], [class*="text-[var(--color-primary-700)]"], [class*="text-[var(--color-primary-600)]"], [class*="text-orange-"]) { color: var(--d-o2) !important; }
+  html[data-theme="space"] :is([class*="text-emerald-"], [class*="text-green-"]) { color: var(--d-good) !important; }
+  html[data-theme="space"] :is([class*="text-red-"], [class*="text-rose-"]) { color: var(--d-bad) !important; }
+  html[data-theme="space"] :is([class*="text-amber-"], [class*="text-yellow-"]) { color: var(--d-warn) !important; }
+
+  /* شارات الحالة */
+  html[data-theme="space"] :is([class*="bg-emerald-"], [class*="bg-green-"]) { background-color: rgba(52, 211, 153, .14) !important; }
+  html[data-theme="space"] :is([class*="bg-red-"], [class*="bg-rose-"]) { background-color: rgba(248, 113, 113, .14) !important; }
+  html[data-theme="space"] :is([class*="bg-amber-"], [class*="bg-yellow-"], [class*="bg-orange-"]) { background-color: rgba(251, 191, 36, .14) !important; }
+  html[data-theme="space"] :is([class*="border-emerald-"], [class*="border-green-"]) { border-color: rgba(52, 211, 153, .35) !important; }
+  html[data-theme="space"] :is([class*="border-red-"], [class*="border-rose-"]) { border-color: rgba(248, 113, 113, .35) !important; }
+  html[data-theme="space"] :is([class*="border-amber-"], [class*="border-orange-"], [class*="border-yellow-"]) { border-color: rgba(251, 191, 36, .35) !important; }
+
+  /* الحقول والقوائم */
+  html[data-theme="space"] :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea) {
+    background: var(--d-raised) !important;
+    color: var(--d-ink) !important;
+    border: 1px solid var(--d-line) !important;
+  }
+  html[data-theme="space"] :is(input, textarea)::placeholder { color: #7d8693; }
+  html[data-theme="space"] option { background: #0a0e0f; color: #fff; }
+  html[data-theme="space"] :is(input, select, textarea):focus { border-color: var(--d-o) !important; box-shadow: 0 0 0 3px rgba(25, 201, 201, .22) !important; }
+
+  /* الهيدر والتنقل */
+  html[data-theme="space"] .tys-app-header {
+    background: rgba(0, 0, 0, .94) !important;
+    border-bottom: 1px solid var(--d-line) !important;
+  }
+  html[data-theme="space"] :is(.tys-mobile-nav, aside) {
+    background: var(--d-card) !important;
+    border-color: var(--d-line) !important;
+    box-shadow: 0 -8px 24px rgba(0, 0, 0, .4) !important;
+  }
+  html[data-theme="space"] .tys-mobile-nav-link { color: var(--d-mute) !important; }
+  html[data-theme="space"] .tys-mobile-nav-link-active { color: var(--d-o2) !important; }
+  html[data-theme="space"] .tys-mobile-nav-link-active .tys-mobile-nav-icon:not(.tys-mobile-nav-primary) {
+    background: var(--d-raised) !important;
+    border-color: var(--d-line) !important;
+    box-shadow: none !important;
+  }
+  html[data-theme="space"] .tys-mobile-nav-link-active::before { background: var(--d-o); }
+
+  /* الأزرار الرئيسية البرتقالي تفضل برتقالي بنص غامق للوضوح */
+  html[data-theme="space"] :is(button, a)[class*="from-[var(--color-primary-6"],
+  html[data-theme="space"] :is(button, a)[class*="bg-[#e96812]"] { color: #021516; }
+
+  /* الهيكل العظمي أثناء التحميل */
+  html[data-theme="space"] .skeleton-bone {
+    background: linear-gradient(90deg, rgba(255,255,255,.05) 25%, rgba(255,255,255,.11) 50%, rgba(255,255,255,.05) 75%);
+    background-size: 200% 100%;
+  }
+  html[data-theme="space"] .tys-theme-option[aria-checked="true"] { border-color: var(--d-o) !important; background: var(--d-raised) !important; }
+  html[data-theme="space"] img[src*="logo"] { filter: none; }
+}
+
+@media screen {
+  html[data-theme="space"] body,
+  html[data-theme="space"] :is(button, input, select, textarea) {
+    font-family: "Cairo", "Mada", system-ui, sans-serif;
+  }
+  html[data-theme="space"] .tys-page :is(h1, h2, h3) {
+    font-family: "Cairo", "Mada", sans-serif !important;
+    font-weight: 900;
+    letter-spacing: -0.01em;
+    color: var(--d-ink);
+  }
+  /* دواير المؤشرات */
+  html[data-theme="space"] svg circle[stroke="var(--color-border)"] { stroke: rgba(255, 255, 255, .12); }
+  html[data-theme="space"] svg circle[stroke="var(--color-success-ring)"] { filter: drop-shadow(0 0 3px rgba(52, 211, 153, .7)); }
+  html[data-theme="space"] svg circle[stroke="var(--color-danger-text)"] { filter: drop-shadow(0 0 3px rgba(248, 113, 113, .7)); }
+  /* الأزرار الرئيسية: برتقالي متدرج */
+  html[data-theme="space"] :is(button, a)[class*="from-[var(--color-primary-6"],
+  html[data-theme="space"] :is(button, a)[class*="from-[#e96812]"] {
+    background-image: linear-gradient(135deg, #4fe3e0, #19c9c9) !important;
+    box-shadow: 0 10px 24px rgba(25, 201, 201, .30) !important;
+  }
+  html[data-theme="space"] [role="dialog"] { background: rgba(0, 0, 0, .82) !important; }
+  html[data-theme="space"] [role="dialog"] > div { background: #0b1011 !important; border: 1px solid var(--d-line); }
+}
+
+
+/* فضاء (أسود خالص + تيل): تجاوزات مولّدة لكل قاعدة في الملف خلفيتها فاتحة (عشان مفيش عنصر يفضل أبيض) */
+@media screen {
+html[data-theme="space"] ::-webkit-scrollbar-track { background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] ::-webkit-scrollbar-thumb { border-color: var(--d-line) !important; }
+html[data-theme="space"] .skeleton-bone { background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-page input:not([type="checkbox"]):not([type="radio"]),
+html[data-theme="space"] .tys-page select,
+html[data-theme="space"] .tys-page textarea { border-color: var(--d-line) !important; background: #0f1415 !important; background-image: none !important; color: var(--d-ink) !important; }
+html[data-theme="space"] .tys-sidebar { background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-page-manager { background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-page-manager > div > section,
+html[data-theme="space"] .tys-page-manager form,
+html[data-theme="space"] .tys-page-manager article { border-color: var(--d-line) !important; }
+html[data-theme="space"] .tys-landing section { border-color: var(--d-line) !important; }
+html[data-theme="space"] .tys-page-wiki article,
+html[data-theme="space"] .tys-page-manager article { background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-page-wiki article:focus-within,
+html[data-theme="space"] .tys-page-manager article:focus-within { border-color: var(--d-line) !important; }
+html[data-theme="space"] .tys-login-card { border-color: var(--d-line) !important; }
+html[data-theme="space"] .tys-login-card label { color: var(--d-ink) !important; }
+html[data-theme="space"] .tys-login-card input,
+html[data-theme="space"] .tys-login-card select { border-color: var(--d-line) !important; background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-mobile-nav { background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-mobile-nav-link-active .tys-mobile-nav-icon:not(.tys-mobile-nav-primary) { background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-page-log article:focus-within { border-color: var(--d-line) !important; }
+html[data-theme="space"] .tys-page h1 { color: var(--d-ink) !important; }
+html[data-theme="space"] .tys-page h2 { color: var(--d-ink) !important; }
+html[data-theme="space"] .tys-page section[class*="rounded-"],
+html[data-theme="space"] .tys-page article[class*="rounded-"] { border-color: var(--d-line) !important; }
+html[data-theme="space"] .tys-page section[class*="rounded-"]:focus-within,
+html[data-theme="space"] .tys-page article[class*="rounded-"]:focus-within { border-color: var(--d-line) !important; }
+html[data-theme="space"] .tys-page :is(input,
+html[data-theme="space"] select,
+html[data-theme="space"] textarea)::placeholder { color: var(--d-mute) !important; }
+html[data-theme="space"] .tys-app-header { background: #0f1415 !important; background-image: none !important; border-color: var(--d-line) !important; }
+html[data-theme="space"] .tys-sidebar { border-color: var(--d-line) !important; background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-desktop-nav-link-active { background: #0f1415 !important; background-image: none !important; color: var(--d-o2) !important; }
+html[data-theme="space"] .tys-mobile-nav { background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-mobile-nav-link-active .tys-mobile-nav-icon:not(.tys-mobile-nav-primary) { background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-page-home > section:first-of-type { background: #0f1415 !important; background-image: none !important; border-color: var(--d-line) !important; }
+html[data-theme="space"] .tys-page-home > section:nth-of-type(2) { border-color: var(--d-line) !important; }
+html[data-theme="space"] .tys-page-manager article,
+html[data-theme="space"] .tys-page-wiki article { border-color: var(--d-line) !important; background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-page-manager form { border-color: var(--d-line) !important; background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-page-log article { border-color: var(--d-line) !important; background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-login-card { border-color: var(--d-line) !important; }
+html[data-theme="space"] .tys-page-home > section:nth-of-type(2) [class*="rounded-2xl"][class*="bg-white"] { border-color: var(--d-line) !important; }
+html[data-theme="space"] .tys-page-home > section:nth-of-type(3) { border-color: var(--d-line) !important; }
+html[data-theme="space"] .tys-page-home > section:nth-of-type(5) { background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-page-home > section:nth-of-type(6) a { background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-page-home > section:last-of-type article > div:first-child { background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-page-manager > div > div:first-child { border-color: var(--d-line) !important; }
+html[data-theme="space"] .tys-page-manager > div > div:first-child [class*="bg-white/10"] { border-color: var(--d-line) !important; background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-page-manager article [class*="rounded-xl"][class*="border"] { border-color: var(--d-line) !important; background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-page-wiki > section:not(:first-child) { border-color: var(--d-line) !important; }
+html[data-theme="space"] .tys-page-log > section:first-of-type,
+html[data-theme="space"] .tys-page-target > section:first-of-type,
+html[data-theme="space"] .tys-page-more > section:first-of-type { border-color: var(--d-line) !important; }
+html[data-theme="space"] .tys-page-log > section:nth-of-type(2) { border-color: var(--d-line) !important; }
+html[data-theme="space"] .tys-page-log article { border-color: var(--d-line) !important; }
+html[data-theme="space"] .tys-page-target input:not([type="checkbox"]),
+html[data-theme="space"] .tys-page-target select { border-color: var(--d-line) !important; background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-page-more > section:not(:first-child) { border-color: var(--d-line) !important; }
+html[data-theme="space"] .tys-mobile-nav { border-color: var(--d-line) !important; background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-landing > section { border-color: var(--d-line) !important; }
+html[data-theme="space"] .tys-page :is(th,
+html[data-theme="space"] [role="columnheader"]) { color: var(--d-mute) !important; }
+html[data-theme="space"] .tys-page :is(input,
+html[data-theme="space"] select,
+html[data-theme="space"] textarea):disabled { background: #0f1415 !important; background-image: none !important; color: var(--d-o2) !important; }
+html[data-theme="space"] .tys-login-screen { background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-login-card { background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-login-card > div:first-child img { border-color: var(--d-line) !important; background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-login-card input,
+html[data-theme="space"] .tys-login-card select { border-color: var(--d-line) !important; background: #0f1415 !important; background-image: none !important; color: var(--d-ink) !important; }
+html[data-theme="space"] .tys-login-card button[type="button"][class*="border-[#bd4b0a]"] { background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-target-gate { border-color: var(--d-line) !important; }
+html[data-theme="space"] .tys-target-gate > div:first-child { border-color: var(--d-line) !important; background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-page [role="status"] .skeleton-bone { border-color: var(--d-line) !important; background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-page-manager { color: var(--d-ink) !important; }
+html[data-theme="space"] .tys-page-manager article { border-color: var(--d-line) !important; }
+html[data-theme="space"] .tys-login-layout { border-color: var(--d-line) !important; background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-login-intro::before,
+html[data-theme="space"] .tys-login-intro::after { border-color: var(--d-line) !important; }
+html[data-theme="space"] .tys-login-intro-foot span { background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-login-card { background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-login-step { border-color: var(--d-line) !important; color: var(--d-o2) !important; background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-login-heading h1 { color: var(--d-ink) !important; }
+html[data-theme="space"] .tys-login-heading p { color: var(--d-mute) !important; }
+html[data-theme="space"] .tys-login-card label { color: var(--d-ink) !important; }
+html[data-theme="space"] .tys-login-card input,
+html[data-theme="space"] .tys-login-card select { border-color: var(--d-line) !important; background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-manager-login { border-color: var(--d-line) !important; }
+html[data-theme="space"] .tys-manager-login > div:first-child img { border-color: var(--d-line) !important; background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-manager-login > label { color: var(--d-ink) !important; }
+html[data-theme="space"] .tys-page-manager section,
+html[data-theme="space"] .tys-page-manager article { border-color: var(--d-line) !important; }
+html[data-theme="space"] .tys-page :is(input,
+html[data-theme="space"] select,
+html[data-theme="space"] textarea) { border-color: var(--d-line) !important; background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-page-wiki [role="tablist"] { border-color: var(--d-line) !important; background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-sidebar { background: #0f1415 !important; background-image: none !important; border-color: var(--d-line) !important; }
+html[data-theme="space"] .tys-sidebar > div:first-child { border-color: var(--d-line) !important; }
+html[data-theme="space"] .tys-app-header { background: #0f1415 !important; background-image: none !important; border-color: var(--d-line) !important; }
+html[data-theme="space"] .tys-app-main { background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-desktop-nav { border-color: var(--d-line) !important; background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-desktop-nav-link-active { background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-mobile-nav { border-color: var(--d-line) !important; background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-mobile-nav-link-active { color: var(--d-o2) !important; }
+html[data-theme="space"] .tys-page-home > section:first-of-type { background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-page-home article:focus-within { border-color: var(--d-line) !important; }
+html[data-theme="space"] .tys-page-log :is(input,
+html[data-theme="space"] textarea),
+html[data-theme="space"] .tys-page-target :is(input,
+html[data-theme="space"] textarea),
+html[data-theme="space"] .tys-page-more :is(input,
+html[data-theme="space"] textarea) { border-color: var(--d-line) !important; background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-page-log :is(input,
+html[data-theme="space"] textarea):focus,
+html[data-theme="space"] .tys-page-target :is(input,
+html[data-theme="space"] textarea):focus,
+html[data-theme="space"] .tys-page-more :is(input,
+html[data-theme="space"] textarea):focus { background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-page-target > section:has(input[type="checkbox"]) { border-color: var(--d-line) !important; }
+html[data-theme="space"] .tys-page-log article { border-color: var(--d-line) !important; }
+html[data-theme="space"] .tys-page-wiki article { border-color: var(--d-line) !important; }
+html[data-theme="space"] .tys-page-manager .tys-manager-hero { border-color: var(--d-line) !important; }
+html[data-theme="space"] .tys-login-card { border-color: var(--d-line) !important; background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-login-brandline span { color: var(--d-o2) !important; }
+html[data-theme="space"] .tys-page-manager .tys-manager-login { border-color: var(--d-line) !important; background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-page-manager .tys-manager-login > label { color: var(--d-ink) !important; }
+html[data-theme="space"] .tys-page-manager .tys-manager-login input { background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-page-manager .tys-manager-employee-card { border-color: var(--d-line) !important; background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-app-main { background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-app-header { border-color: var(--d-line) !important; background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-sidebar { border-color: var(--d-line) !important; background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-desktop-nav { border-color: var(--d-line) !important; background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-desktop-nav-link-active { background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-mobile-nav { border-color: var(--d-line) !important; background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-page :is(input,
+html[data-theme="space"] select,
+html[data-theme="space"] textarea) { border-color: var(--d-line) !important; background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-page-home > section:first-of-type { border-color: var(--d-line) !important; background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-page-home > section:nth-of-type(2) { background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-page-home > section:nth-of-type(n+3) { background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-page-home article { border-color: var(--d-line) !important; background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-page-target > section,
+html[data-theme="space"] .tys-page-log > section { background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-page-target article,
+html[data-theme="space"] .tys-page-log article { border-color: var(--d-line) !important; background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-page-target [class*="sticky"] { background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-page-more > section { background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-page-more > div.grid button { border-color: var(--d-line) !important; background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-page-more > div.grid button > span:first-child { background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-page-wiki > section:first-child { background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-page-wiki article { border-color: var(--d-line) !important; background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-page-manager .tys-manager-header { border-color: var(--d-line) !important; }
+html[data-theme="space"] .tys-page-manager .tys-manager-hero { border-color: var(--d-line) !important; }
+html[data-theme="space"] .tys-page-manager > div > section.grid:first-of-type > div { border-color: var(--d-line) !important; background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-page-manager .tys-manager-branch-card { border-color: var(--d-line) !important; background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-page-manager .tys-manager-employee-card { border-color: var(--d-line) !important; background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-page-manager .tys-manager-disclosure { border-color: var(--d-line) !important; background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-page-manager .tys-manager-login { border-color: var(--d-line) !important; background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-login-card { border-color: var(--d-line) !important; background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-page button[class*="border-[#f0dfd2]"],
+html[data-theme="space"] .tys-page button[class*="border-[#f2e4d8]"] { border-color: var(--d-line) !important; }
+html[data-theme="space"] .tys-target-gate { background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] [role="dialog"] { border-color: var(--d-line) !important; }
+html[data-theme="space"] [role="dialog"] :is(input,
+html[data-theme="space"] select,
+html[data-theme="space"] textarea) { border-color: var(--d-line) !important; }
+html[data-theme="space"] .tys-landing > section { border-color: var(--d-line) !important; }
+html[data-theme="space"] .tys-page-manager > div > header { border-color: var(--d-line) !important; }
+html[data-theme="space"] .tys-page-manager > div > section > div.overflow-hidden.rounded-2xl { border-color: var(--d-line) !important; }
+html[data-theme="space"] .tys-page-manager details { border-color: var(--d-line) !important; background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-page-manager details > summary { color: var(--d-ink) !important; }
+html[data-theme="space"] .tys-page-manager details[open] > summary { background: #0f1415 !important; background-image: none !important; border-color: var(--d-line) !important; }
+html[data-theme="space"] .tys-page-manager .tys-manager-employee-card > div { border-color: var(--d-line) !important; }
+html[data-theme="space"] .tys-page-manager > div > section.space-y-4 > article { border-color: var(--d-line) !important; }
+html[data-theme="space"] .tys-page-more > section.space-y-4 > section,
+html[data-theme="space"] .tys-page-more > div.space-y-4 > section { border-color: var(--d-line) !important; }
+html[data-theme="space"] .tys-page-log > section article { border-color: var(--d-line) !important; }
+html[data-theme="space"] .tys-page-log > section :is(input,
+html[data-theme="space"] textarea) { border-color: var(--d-line) !important; }
+html[data-theme="space"] .tys-page-manager > div > section.grid:first-of-type > div { border-color: var(--d-line) !important; background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-page-manager > div > section.grid:first-of-type > div p:first-child { color: var(--d-mute) !important; }
+html[data-theme="space"] .tys-page-manager .tys-manager-branch-card > p:last-child { border-color: var(--d-line) !important; }
+html[data-theme="space"] .tys-page-manager .tys-manager-disclosure[open] > summary { border-color: var(--d-line) !important; background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-page-manager .tys-manager-employee-card > button:first-child > div:last-child { background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-page-manager footer { color: var(--d-mute) !important; }
+html[data-theme="space"] .tys-page-home > section:nth-of-type(2) > div.relative > div.grid + div + div + div > div { border-color: var(--d-line) !important; }
+html[data-theme="space"] .tys-page-home > section:nth-of-type(3) { border-color: var(--d-line) !important; }
+html[data-theme="space"] .tys-page-manager .tys-manager-branch-card { background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-page :is(section,
+html[data-theme="space"] article)[class*="rounded-"],
+html[data-theme="space"] .tys-page div[class*="rounded-"][class*="border"][class*="bg-white"],
+html[data-theme="space"] .tys-page div[class*="rounded-"][class*="border"][class*="bg-[#fff"],
+html[data-theme="space"] .tys-page-manager :is(section,
+html[data-theme="space"] article)[class*="rounded-"],
+html[data-theme="space"] .tys-page-manager div[class*="rounded-"][class*="border"][class*="bg-white"] { border-color: var(--d-line) !important; }
+html[data-theme="space"] .tys-page :is(section,
+html[data-theme="space"] article)[class*="rounded-"]:not([class*="bg-red"]):not([class*="bg-emerald"]):not([class*="bg-amber"]),
+html[data-theme="space"] .tys-page div[class*="rounded-"][class*="border"][class*="bg-white"],
+html[data-theme="space"] .tys-page div[class*="rounded-"][class*="border"][class*="bg-[#fff"],
+html[data-theme="space"] .tys-page-manager :is(section,
+html[data-theme="space"] article)[class*="rounded-"]:not([class*="bg-red"]):not([class*="bg-emerald"]):not([class*="bg-amber"]),
+html[data-theme="space"] .tys-page-manager div[class*="rounded-"][class*="border"][class*="bg-white"] { background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-page :is(div,
+html[data-theme="space"] article,
+html[data-theme="space"] section)[class*="border-emerald"] { background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-page :is(div,
+html[data-theme="space"] article,
+html[data-theme="space"] section)[class*="border-red"] { background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-premium-home { color: var(--d-ink) !important; }
+html[data-theme="space"] .tys-premium-home .tys-home-greeting,
+html[data-theme="space"] .tys-premium-home .tys-home-hero,
+html[data-theme="space"] .tys-premium-home .tys-home-daily,
+html[data-theme="space"] .tys-premium-home .tys-home-kpis { border-color: var(--d-line) !important; }
+html[data-theme="space"] .tys-premium-home .tys-home-daily { background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-premium-home .tys-home-daily > div:last-child > div { border-color: var(--d-line) !important; background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-premium-home .tys-home-hero { background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-premium-home .tys-home-hero > .relative > div:nth-child(2) > div:last-child { border-color: var(--d-line) !important; background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-premium-log { color: var(--d-ink) !important; }
+html[data-theme="space"] .tys-premium-log > section { border-color: var(--d-line) !important; background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-premium-log > section:first-of-type { background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-premium-log > section:first-of-type h1 { color: var(--d-ink) !important; }
+html[data-theme="space"] .tys-premium-log > section:first-of-type p:last-child { color: var(--d-ink) !important; }
+html[data-theme="space"] .tys-premium-log > section:nth-of-type(2) { border-color: var(--d-line) !important; background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-premium-log > section:nth-of-type(2) > div:first-child > span { border-color: var(--d-line) !important; background: #0f1415 !important; background-image: none !important; color: var(--d-o2) !important; }
+html[data-theme="space"] .tys-premium-log input[type="date"],
+html[data-theme="space"] .tys-premium-log input[type="number"],
+html[data-theme="space"] .tys-premium-log textarea { border-color: var(--d-line) !important; background: #0f1415 !important; background-image: none !important; color: var(--d-ink) !important; }
+html[data-theme="space"] .tys-premium-log > section article { border-color: var(--d-line) !important; background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-premium-log > section article > div:first-child > div:first-child > span { border-color: var(--d-line) !important; background: #0f1415 !important; background-image: none !important; color: var(--d-o2) !important; }
+html[data-theme="space"] .tys-premium-log > section article > div:nth-child(2) { border-color: var(--d-line) !important; background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-premium-log > section article > div:nth-child(2) p:first-child { color: var(--d-mute) !important; }
+html[data-theme="space"] .tys-premium-log > section article > div:nth-child(2) p:last-child { color: var(--d-ink) !important; }
+html[data-theme="space"] .tys-premium-log > section:nth-last-of-type(2) button[aria-pressed] { border-color: var(--d-line) !important; background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-premium-log > section:nth-last-of-type(2) button[aria-pressed="true"] { border-color: var(--d-line) !important; background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-premium-log > section:nth-last-of-type(2) button[aria-pressed="false"] { background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-premium-log > section:nth-last-of-type(2) > div:first-of-type { background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-premium-log > section:last-of-type { border-color: var(--d-line) !important; background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tx-manager { background: #0f1415 !important; background-image: none !important; color: var(--d-ink) !important; }
+html[data-theme="space"] .tx-manager aside { border-color: var(--d-line) !important; background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tx-manager header { border-color: var(--d-line) !important; background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tx-manager .tx-text-action { color: var(--d-o2) !important; }
+html[data-theme="space"] .tx-manager .tx-text-action:hover { color: var(--d-ink) !important; }
+html[data-theme="space"] .tx-manager .tx-shortcut-card:hover { border-color: var(--d-line) !important; }
+@media (hover: hover) and (pointer: fine) {
+html[data-theme="space"] .tys-page button:not(:disabled):not([type="submit"]):hover,
+html[data-theme="space"] .tys-page a:hover { border-color: var(--d-line) !important; }
+html[data-theme="space"] .tys-desktop-nav-link:not(.tys-desktop-nav-link-active):hover { background: #0f1415 !important; background-image: none !important; color: var(--d-ink) !important; }
+html[data-theme="space"] .tys-page article[class*="rounded-"]:hover { border-color: var(--d-line) !important; }
+}
+@media (max-width: 420px) {
+html[data-theme="space"] .tys-page-more li > div:first-child > div:last-child { border-color: var(--d-line) !important; }
+}
+@media (min-width: 1024px) {
+html[data-theme="space"] .tys-page-log article:hover,
+html[data-theme="space"] .tys-page-more > section button:hover { border-color: var(--d-line) !important; }
+}
+@media (hover: hover) and (min-width: 768px) {
+html[data-theme="space"] .tys-page-manager article:hover { border-color: var(--d-line) !important; }
+}
+@media (hover:hover) and (min-width:768px) {
+html[data-theme="space"] .tys-page-more > div > button:hover,
+html[data-theme="space"] .tys-page-more [class*="grid"] > button:hover { border-color: var(--d-line) !important; }
+html[data-theme="space"] .tys-page-home :is(button,
+html[data-theme="space"] a):hover { border-color: var(--d-line) !important; }
+html[data-theme="space"] .tys-page-log button[aria-pressed]:hover,
+html[data-theme="space"] .tys-page-wiki button:hover { border-color: var(--d-line) !important; }
+html[data-theme="space"] .tys-page-log article:hover,
+html[data-theme="space"] .tys-page-wiki article:hover { border-color: var(--d-line) !important; }
+}
+@media (hover:hover) and (pointer:fine) {
+html[data-theme="space"] .tys-page :is(article,
+html[data-theme="space"] .tys-manager-branch-card):hover { border-color: var(--d-line) !important; }
+html[data-theme="space"] .tys-page-more > div.grid button:hover { border-color: var(--d-line) !important; }
+}
+@media (max-width: 640px) {
+html[data-theme="space"] .tys-premium-home .tys-home-daily > div:first-child > span { border-color: var(--d-line) !important; background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-premium-home .tys-home-daily > div:last-child > div { border-color: var(--d-line) !important; background: #0f1415 !important; background-image: none !important; }
+html[data-theme="space"] .tys-premium-home .tys-home-daily > div:last-child > div > span { color: var(--d-ink) !important; }
+html[data-theme="space"] .tys-premium-home .tys-home-daily > div:last-child > div > strong { background: #0f1415 !important; background-image: none !important; color: var(--d-o2) !important; }
+}
+}
+
+
+/* فضاء: خلفية سودا بكشاف من فوق وأرضية رمادي ناعمة من تحت (من غير blur) */
+@media screen {
+  html[data-theme="space"] body::before {
+    background:
+      radial-gradient(ellipse 52% 15% at 50% 0%, rgba(255, 255, 255, .20) 0, transparent 72%),
+      radial-gradient(ellipse 85% 16% at 50% 100%, rgba(130, 140, 145, .22) 0, transparent 72%),
+      #000000;
+  }
+  html[data-theme="space"] .tys-page-home > section:nth-of-type(2) {
+    background: radial-gradient(circle at 50% 0%, rgba(25, 201, 201, .14), transparent 60%), var(--d-card) !important;
+  }
+
+  /* حبل التقدم */
+  .tys-rope { display: none; }
+  html[data-theme="space"] .tys-rope { display: block; margin: 4px 0 2px; }
+  html[data-theme="space"] .tys-bar { display: none !important; }
+  html[data-theme="space"] .tys-rope-track {
+    position: relative;
+    display: flex;
+    align-items: center;
+    height: 40px;
+    background: linear-gradient(rgba(255, 255, 255, .10), rgba(255, 255, 255, .10)) center / 100% 2px no-repeat;
+  }
+  html[data-theme="space"] .tys-rope-fill {
+    height: 8px;
+    flex: none;
+    border-radius: 4px;
+    background: repeating-linear-gradient(135deg, #19c9c9 0 5px, #0b7f80 5px 10px);
+    box-shadow: 0 0 10px rgba(25, 201, 201, .45);
+    transition: width .8s ease;
+  }
+  html[data-theme="space"] .tys-rope-astro { flex: none; width: 30px; height: 40px; }
+  html[data-theme="space"] .tys-home-hero .tys-rope-track { height: 48px; }
+  html[data-theme="space"] .tys-home-hero .tys-rope-fill { height: 10px; }
+  html[data-theme="space"] .tys-home-hero .tys-rope-astro { width: 36px; height: 48px; }
+  /* النسبة الكبيرة بتوهج تيل */
+  html[data-theme="space"] .tys-home-hero .font-mono.font-black { text-shadow: 0 0 18px rgba(25, 201, 201, .45); }
+  html[data-theme="space"] .tys-theme-option[aria-checked="true"] { border-color: #19c9c9 !important; }
+}
+@media screen and (prefers-reduced-motion: reduce) {
+  html[data-theme="space"] .tys-rope-fill { transition: none; }
+}

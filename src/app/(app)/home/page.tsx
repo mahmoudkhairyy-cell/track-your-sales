@@ -12,6 +12,7 @@ import { KpiIcon } from "@/components/KpiIcon";
 import { DeltaChip } from "@/components/Sparkline";
 import { overallBandLines, overallLine, pickPhrase, sarcasticLine, timeLines } from "@/lib/phrases";
 import { shareAchievement } from "@/lib/sharecard";
+import { Rope } from "@/components/Rope";
 import { pushReport, readSyncStatus, type SyncStatus } from "@/lib/sync";
 
 type KpiRow = {
@@ -232,7 +233,8 @@ export default function HomePage() {
             </div>
           </div>
           <div>
-            <div className="relative h-2.5 overflow-hidden rounded-full bg-[#f2e4d8]">
+            <Rope pct={data.overall} label="نسبة تحقيق التارجت" />
+            <div className="tys-bar relative h-2.5 overflow-hidden rounded-full bg-[#f2e4d8]">
               <div ref={overallBarRef} className="h-full rounded-full bg-gradient-to-l from-[var(--color-primary-500)] via-[var(--color-primary-600)] to-[var(--color-primary-700)] shadow-[0_1px_5px_rgba(189,75,10,0.22)]" style={{ width: "0%" }} />
             </div>
             <div className="mt-1 flex justify-between text-[9px] font-bold text-[var(--color-text-secondary)]" dir="ltr">
@@ -316,7 +318,7 @@ export default function HomePage() {
             const pct = Math.min(100, Math.max(0, kpi.percent));
             return (
               <article key={kpi.kpiKey} style={{ animationDelay: `${kpiIndex * 70}ms`, boxShadow: onTrackKpi ? "0 0 0 1px rgba(22,163,74,.06), 0 0 8px rgba(22,163,74,.07), 0 5px 14px rgba(100,55,25,.13)" : "0 0 0 1px rgba(220,38,38,.06), 0 0 8px rgba(220,38,38,.07), 0 5px 14px rgba(100,55,25,.13)" }} className={`tys-rise tys-home-kpi flex min-w-0 items-center gap-2.5 rounded-[20px] border p-3 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg sm:gap-3 sm:p-3 border-white bg-[#fffdfa]`}>
-                <div className="relative h-12 w-12 shrink-0 sm:h-14 sm:w-14">
+                <div className="tys-ring relative h-12 w-12 shrink-0 sm:h-14 sm:w-14">
                   <svg viewBox="0 0 44 44" className="h-full w-full -rotate-90">
                     <circle cx="22" cy="22" r="18" fill="none" stroke="var(--color-border)" strokeWidth="5" />
                     <circle
@@ -352,7 +354,8 @@ export default function HomePage() {
                     </span>
                     <span>المتبقي <strong className="font-mono text-[var(--color-text-primary)]">{formatQty(kpi.remaining)}</strong></span>
                   </div>
-                  <div className="h-1.5 w-full overflow-hidden rounded-full bg-[#f2e4d8]">
+                  <Rope pct={pct} label={kpi.nameEn} />
+                  <div className="tys-bar h-1.5 w-full overflow-hidden rounded-full bg-[#f2e4d8]">
                     <div className="h-full rounded-full bg-gradient-to-r from-[var(--color-primary-600)] to-[var(--color-primary-500)] transition-all duration-700" style={{ width: `${pct}%` }} />
                   </div>
                   {kpi.series && kpi.series.length >= 2 ? (
