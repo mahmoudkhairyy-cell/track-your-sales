@@ -12,7 +12,7 @@ import { KpiIcon } from "@/components/KpiIcon";
 import { DeltaChip } from "@/components/Sparkline";
 import { overallBandLines, overallLine, pickPhrase, sarcasticLine, timeLines } from "@/lib/phrases";
 import { shareAchievement } from "@/lib/sharecard";
-import { Rope } from "@/components/Rope";
+import { Rope, SpaceScene } from "@/components/Rope";
 import { pushReport, readSyncStatus, type SyncStatus } from "@/lib/sync";
 
 type KpiRow = {
@@ -205,7 +205,8 @@ export default function HomePage() {
       <section style={{ boxShadow: onTrack === null ? "0 5px 14px rgba(100,55,25,.13)" : onTrack ? "0 0 0 1px rgba(22,163,74,.06), 0 0 10px rgba(22,163,74,.08), 0 5px 14px rgba(100,55,25,.13)" : "0 0 0 1px rgba(220,38,38,.06), 0 0 10px rgba(220,38,38,.08), 0 5px 14px rgba(100,55,25,.13)" }} className="tys-home-hero relative isolate overflow-hidden rounded-[30px] border border-white bg-white p-5 shadow-[0_1px_2px_rgba(43,20,0,.04)] sm:p-7">
         <div className="pointer-events-none absolute -left-12 -top-16 h-52 w-52 rounded-full bg-[var(--color-primary-500)]/20 blur-3xl" />
         <div className="pointer-events-none absolute -bottom-24 right-1/3 h-52 w-52 rounded-full bg-[var(--color-primary-600)]/10 blur-3xl" />
-        <div className="relative">
+        <SpaceScene pct={data.overall} />
+        <div className="tys-hero-body relative">
           <div className="flex items-center justify-between gap-3 border-b border-white pb-3">
             <div className="flex min-w-0 items-center gap-2.5">
               <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-[var(--color-primary-500)] to-[var(--color-primary-600)] text-lg text-white shadow-md">◎</span>

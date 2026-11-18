@@ -5247,3 +5247,47 @@ html[data-theme="space"] .tys-premium-home .tys-home-daily > div:last-child > di
 @media screen and (prefers-reduced-motion: reduce) {
   html[data-theme="space"] .tys-rope-fill { transition: none; }
 }
+
+/* فضاء: مشهد الكشاف والحبل والرائد في هيرو الرئيسية */
+.tys-scene { display: none; }
+@media screen {
+  html[data-theme="space"] .tys-scene {
+    display: block;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    inset-inline-end: 12px;
+    width: 40px;
+    pointer-events: none;
+    z-index: 1;
+  }
+  html[data-theme="space"] .tys-home-hero .tys-hero-body { padding-inline-end: 52px; }
+  html[data-theme="space"] .tys-scene-light {
+    position: absolute;
+    top: 6px;
+    left: 0;
+    width: 40px;
+    height: 9px;
+    border-radius: 50%;
+    background: radial-gradient(ellipse, #ffffff 0 45%, rgba(255, 255, 255, .25) 70%, transparent 72%);
+    box-shadow: 0 0 14px rgba(255, 255, 255, .35);
+  }
+  html[data-theme="space"] .tys-scene-rope {
+    position: absolute;
+    top: 10px;
+    left: 17px;
+    width: 6px;
+    border-radius: 3px;
+    background: repeating-linear-gradient(135deg, #19c9c9 0 4px, #0b7f80 4px 8px);
+    box-shadow: 0 0 8px rgba(25, 201, 201, .5);
+    transition: height .8s ease;
+  }
+  html[data-theme="space"] .tys-scene-astro {
+    position: absolute;
+    left: 5px;
+    width: 30px;
+    height: 40px;
+    margin-top: -4px;
+    transition: top .8s ease;
+  }
+}
