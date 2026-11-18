@@ -7,7 +7,6 @@ import {
   Modal,
   PrimaryButton,
   SecondaryButton,
-  Spinner,
   inputClass,
   useToast,
 } from "@/components/ui";
@@ -29,8 +28,11 @@ import { BookIcon, CallIcon, CardIcon, CheckIcon, PhoneIcon, StarIcon, WalletIco
 type Article = { id: string; title: string; content: string; updatedAt: string };
 type SectionId = "hub" | "sr" | "premier" | "freemax" | "go" | "hunts" | "home" | "dsl" | "docs" | "emails" | "notes";
 
+// ===== ستايل موحد =====
 const CARD = "rounded-[22px] bg-white p-4 shadow-sm";
-const HUB_CARD = "group flex flex-col rounded-[24px] border border-[#f1e2d6] bg-white/95 p-4 text-right shadow-[0_8px_24px_rgba(105,54,20,0.045)] transition duration-200 hover:-translate-y-1 hover:border-[#edc8aa] hover:shadow-[0_14px_30px_rgba(105,54,20,0.09)] active:scale-[.985]";
+const CARD_ROW = `flex items-center justify-between gap-3 ${CARD}`;
+const CHIP_BTN = "rounded-full px-3 py-2 text-xs font-extrabold transition motion-safe:active:scale-95";
+const HUB_CARD = "group flex min-h-[136px] flex-col rounded-[24px] border border-[#f1e2d6] bg-white/95 p-4 text-right shadow-[0_8px_24px_rgba(105,54,20,0.045)] transition duration-200 hover:border-[#edc8aa] hover:shadow-[0_14px_30px_rgba(105,54,20,0.09)] motion-safe:hover:-translate-y-1 motion-safe:active:scale-[.985]";
 const ICON_WRAP = "flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-[#fff0e4] to-[#ffe1c9] text-[#bd4b0a] shadow-inner";
 
 const HUB: { id: SectionId; title: string; desc: string; count: string; icon: ReactNode }[] = [
@@ -60,8 +62,15 @@ function money(value: number) {
 function SearchBox({ value, onChange, placeholder }: { value: string; onChange: (v: string) => void; placeholder: string }) {
   return (
     <div className="relative">
-      <input className={`${inputClass} rounded-full bg-white pr-4 pl-12`} value={value} onChange={(e) => onChange(e.target.value)} placeholder={placeholder} />
-      <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400">⌕</span>
+      <input
+        type="search"
+        aria-label={placeholder}
+        className={`${inputClass} rounded-full bg-white pr-4 pl-12`}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder={placeholder}
+      />
+      <span aria-hidden="true" className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400">⌕</span>
     </div>
   );
 }
@@ -69,7 +78,7 @@ function SearchBox({ value, onChange, placeholder }: { value: string; onChange: 
 function Back({ onClick, title }: { onClick: () => void; title: string }) {
   return (
     <button type="button" onClick={onClick} className="flex min-h-11 items-center gap-2 text-sm font-extrabold text-[#ff7900]">
-      ‹ رجوع
+      <span aria-hidden="true">‹</span> رجوع
       <span className="text-neutral-900">{title}</span>
     </button>
   );
@@ -77,6 +86,16 @@ function Back({ onClick, title }: { onClick: () => void; title: string }) {
 
 function SectionTitle({ children }: { children: ReactNode }) {
   return <h2 className="pt-2 text-lg font-black text-neutral-900">{children}</h2>;
+}
+
+function SkeletonList() {
+  return (
+    <div className="space-y-2" aria-hidden="true">
+      {[0, 1, 2].map((i) => (
+        <div key={i} className={`h-24 animate-pulse bg-neutral-100 ${CARD}`} />
+      ))}
+    </div>
+  );
 }
 
 export default function WikiPage() {
@@ -109,15 +128,12 @@ export default function WikiPage() {
 
   useEffect(() => {
     if (section !== "notes") return;
-    let cancelled = false;
-    async function run() {
-      await Promise.resolve();
-      if (!cancelled) await loadNotes(() => !cancelled);
-    }
-    void run();
+    let active = true;
+    void loadNotes(() => active);
     return () => {
-      cancelled = true;
+      active = false;
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [section]);
 
   const q = query.trim().toLowerCase();
@@ -196,15 +212,15 @@ export default function WikiPage() {
 
           {globalHits ? (
             <div className="space-y-3">
-              <p className="text-sm font-bold text-neutral-500">نتائج البحث</p>
+              <SectionTitle>نتائج البحث</SectionTitle>
               {globalHits.sr.map((item) => (
-                <button key={item.id + item.title} type="button" onClick={() => setOpenSr(item)} className="w-full rounded-[22px] bg-white p-4 text-right shadow-sm">
+                <button key={item.id + item.title} type="button" onClick={() => setOpenSr(item)} className={`w-full text-right ${CARD}`}>
                   <p className="text-xs font-extrabold text-[#ff7900]">{item.id}</p>
                   <p className="font-extrabold">{item.titleAr || item.title}</p>
                 </button>
               ))}
               {globalHits.hunts.map((item) => (
-                <a key={item.number + item.name} href={`tel:${item.number}`} className="block rounded-[22px] bg-white p-4 shadow-sm">
+                <a key={item.number + item.name} href={`tel:${item.number}`} className={`block ${CARD}`}>
                   <p className="font-extrabold">{item.name}</p>
                   <p className="text-[#ff7900]">{item.number}</p>
                 </a>
@@ -216,13 +232,13 @@ export default function WikiPage() {
                 </button>
               ))}
               {globalHits.fm.map((item) => (
-                <article key={item.name} className="rounded-[22px] bg-white p-4 shadow-sm">
+                <article key={item.name} className={CARD}>
                   <p className="font-extrabold">{item.nameAr}</p>
                   <p className="text-sm text-neutral-500">{item.units} وحدة · تجديد {money(item.renewalPrice)} ج</p>
                 </article>
               ))}
               {globalHits.plans.map((item) => (
-                <article key={item.group + item.name} className="rounded-[22px] bg-white p-4 shadow-sm">
+                <article key={item.group + item.name} className={CARD}>
                   <p className="text-xs text-[#ff7900]">{item.group}</p>
                   <p className="font-extrabold">{item.name}</p>
                   <p className="text-sm text-neutral-500">{item.fees || item.data}</p>
@@ -248,11 +264,17 @@ export default function WikiPage() {
             <>
               <div className="grid grid-cols-2 gap-3">
                 {HUB.map((card) => (
-                  <button key={card.id} type="button" onClick={() => { setSection(card.id); setQuery(""); }} className={HUB_CARD}>
+                  <button
+                    key={card.id}
+                    type="button"
+                    aria-label={`${card.title}: ${card.desc} (${card.count})`}
+                    onClick={() => { setSection(card.id); setQuery(""); }}
+                    className={HUB_CARD}
+                  >
                     <span className={ICON_WRAP}>{card.icon}</span>
                     <p className="mt-3 font-black">{card.title}</p>
                     <p className="mt-1 text-xs leading-5 text-neutral-400">{card.desc}</p>
-                    <p className="mt-2 text-[11px] font-bold text-[#ff7900]">{card.count}</p>
+                    <p className="mt-auto pt-2 text-[11px] font-bold text-[#ff7900]">{card.count}</p>
                   </button>
                 ))}
               </div>
@@ -271,8 +293,9 @@ export default function WikiPage() {
               <button
                 key={cat}
                 type="button"
+                aria-pressed={srCategory === cat}
                 onClick={() => setSrCategory(cat)}
-                className={`shrink-0 rounded-full px-3 py-2 text-xs font-extrabold ${srCategory === cat ? "bg-[#ff7900] text-white" : "bg-white text-neutral-500"}`}
+                className={`${CHIP_BTN} shrink-0 ${srCategory === cat ? "bg-[#ff7900] text-white" : "bg-white text-neutral-500 shadow-sm"}`}
               >
                 {cat}
               </button>
@@ -382,7 +405,7 @@ export default function WikiPage() {
             <div key={group.category}>
               <h2 className="mb-2 text-lg font-black">{group.category}</h2>
               {group.plans.map((plan) => (
-                <article key={plan.name} className="mb-2 flex items-center justify-between rounded-[22px] bg-white p-4 shadow-sm">
+                <article key={plan.name} className={CARD_ROW}>
                   <div>
                     <p className="font-black">{plan.name}</p>
                     <p className="text-xs text-neutral-400">{String(plan.data ?? "")}</p>
@@ -399,7 +422,7 @@ export default function WikiPage() {
         <div className="space-y-3">
           <Back onClick={() => setSection("hub")} title="Home Wireless" />
           {homePlans?.plans.map((plan) => (
-            <article key={plan.name} className="flex items-center justify-between rounded-[22px] bg-white p-4 shadow-sm">
+            <article key={plan.name} className={CARD_ROW}>
               <div>
                 <p className="font-black">{plan.name}</p>
                 <p className="text-xs text-neutral-400">{String(plan.data ?? "")}</p>
@@ -460,10 +483,10 @@ export default function WikiPage() {
                       <p className="text-sm text-[#ff7900]">{item.number}</p>
                     </div>
                     <div className="flex gap-2">
-                      <a href={`tel:${item.number}`} className="rounded-full bg-orange-50 px-3 py-2 text-xs font-extrabold text-[#ff7900]">
+                      <a href={`tel:${item.number}`} className={`${CHIP_BTN} bg-orange-50 text-[#ff7900]`}>
                         اتصال
                       </a>
-                      <button type="button" className="rounded-full bg-neutral-100 px-3 py-2 text-xs font-extrabold" onClick={() => copyText(item.number, toast, "📋 الرقم اتنسخ")}>
+                      <button type="button" className={`${CHIP_BTN} bg-neutral-100`} onClick={() => copyText(item.number, toast, "📋 الرقم اتنسخ")}>
                         نسخ
                       </button>
                     </div>
@@ -525,7 +548,7 @@ export default function WikiPage() {
           >
             إضافة ملاحظة
           </PrimaryButton>
-          {loadingNotes ? <Spinner label="بيحمّل ملاحظاتك..." /> : null}
+          {loadingNotes ? <SkeletonList /> : null}
           {!loadingNotes && articles.length === 0 ? <EmptyState title="مفيش ملاحظات" text="ضيف مرجع أو ملاحظة شغل من عندك." /> : null}
           {articles.map((article) => (
             <article key={article.id} className="rounded-[22px] bg-white p-4 shadow-sm">
