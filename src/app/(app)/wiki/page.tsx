@@ -2,7 +2,6 @@
 
 import { FormEvent, useEffect, useMemo, useState, type ReactNode } from "react";
 import {
-  Banner,
   EmptyState,
   Field,
   Modal,
@@ -30,6 +29,10 @@ import { BookIcon, CallIcon, CardIcon, CheckIcon, PhoneIcon, StarIcon, WalletIco
 type Article = { id: string; title: string; content: string; updatedAt: string };
 type SectionId = "hub" | "sr" | "premier" | "freemax" | "go" | "hunts" | "home" | "dsl" | "docs" | "emails" | "notes";
 
+const CARD = "rounded-[22px] bg-white p-4 shadow-sm";
+const HUB_CARD = "group flex flex-col rounded-[24px] border border-[#f1e2d6] bg-white/95 p-4 text-right shadow-[0_8px_24px_rgba(105,54,20,0.045)] transition duration-200 hover:-translate-y-1 hover:border-[#edc8aa] hover:shadow-[0_14px_30px_rgba(105,54,20,0.09)] active:scale-[.985]";
+const ICON_WRAP = "flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-[#fff0e4] to-[#ffe1c9] text-[#bd4b0a] shadow-inner";
+
 const HUB: { id: SectionId; title: string; desc: string; count: string; icon: ReactNode }[] = [
   { id: "freemax", title: "FREEmax", desc: "باقات فري ماكس والأسعار", count: `${FREEMAX.plans.length} باقة`, icon: <StarIcon className="text-[#ff7900]" /> },
   { id: "sr", title: "موسوعة الـ SR", desc: "أكواد Service Request", count: `${SR_ITEMS.length} كود`, icon: <BookIcon className="text-[#ff7900]" /> },
@@ -37,8 +40,10 @@ const HUB: { id: SectionId; title: string; desc: string; count: string; icon: Re
   { id: "premier", title: "Premier", desc: "Premier و Super Max", count: "باقات بوست بايد", icon: <StarIcon className="text-[#ff7900]" /> },
   { id: "hunts", title: "أرقام Hunts", desc: "جهات للتواصل السريع", count: `${HUNTS.length} جهة`, icon: <CallIcon className="text-[#ff7900]" /> },
   { id: "home", title: "Home Wireless", desc: "باقات الإنترنت اللاسلكي", count: "7 باقات", icon: <WifiIcon className="text-[#ff7900]" /> },
+  { id: "dsl", title: "Home Internet", desc: "باقات DSL والراوتر", count: `${DSL.plans.length} باقة`, icon: <WifiIcon className="text-[#ff7900]" /> },
   { id: "docs", title: "أهم المستندات", desc: "نماذج ومستندات", count: `${DOCS.length} ملف`, icon: <CardIcon className="text-[#ff7900]" /> },
   { id: "emails", title: "E-Mails", desc: "إيميلات للتواصل", count: `${EMAILS.length} إيميل`, icon: <WalletIcon className="text-[#ff7900]" /> },
+  { id: "notes", title: "ملاحظاتي", desc: "مرجع شخصي بتضيفه بنفسك", count: "ملاحظاتك", icon: <CheckIcon className="text-[#ff7900]" /> },
 ];
 
 function copyText(value: string, toast: { push: (t: "success" | "error" | "info", m: string) => void }, ok: string) {
@@ -63,11 +68,15 @@ function SearchBox({ value, onChange, placeholder }: { value: string; onChange: 
 
 function Back({ onClick, title }: { onClick: () => void; title: string }) {
   return (
-    <button type="button" onClick={onClick} className="mb-4 flex min-h-11 items-center gap-2 text-sm font-extrabold text-[#ff7900]">
+    <button type="button" onClick={onClick} className="flex min-h-11 items-center gap-2 text-sm font-extrabold text-[#ff7900]">
       ‹ رجوع
       <span className="text-neutral-900">{title}</span>
     </button>
   );
+}
+
+function SectionTitle({ children }: { children: ReactNode }) {
+  return <h2 className="pt-2 text-lg font-black text-neutral-900">{children}</h2>;
 }
 
 export default function WikiPage() {
@@ -239,29 +248,13 @@ export default function WikiPage() {
             <>
               <div className="grid grid-cols-2 gap-3">
                 {HUB.map((card) => (
-                  <button key={card.id} type="button" onClick={() => { setSection(card.id); setQuery(""); }} className="group rounded-[24px] border border-[#f1e2d6] bg-white/95 p-4 text-right shadow-[0_8px_24px_rgba(105,54,20,0.045)] transition duration-200 hover:-translate-y-1 hover:border-[#edc8aa] hover:shadow-[0_14px_30px_rgba(105,54,20,0.09)] active:scale-[.985]">
-                    <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-[#fff0e4] to-[#ffe1c9] text-[#bd4b0a] shadow-inner">{card.icon}</span>
+                  <button key={card.id} type="button" onClick={() => { setSection(card.id); setQuery(""); }} className={HUB_CARD}>
+                    <span className={ICON_WRAP}>{card.icon}</span>
                     <p className="mt-3 font-black">{card.title}</p>
                     <p className="mt-1 text-xs leading-5 text-neutral-400">{card.desc}</p>
                     <p className="mt-2 text-[11px] font-bold text-[#ff7900]">{card.count}</p>
                   </button>
                 ))}
-              </div>
-              <div className="grid grid-cols-2 gap-3">
-                <button type="button" onClick={() => setSection("dsl")} className="group rounded-[24px] border border-[#f1e2d6] bg-white/95 p-4 text-right shadow-[0_8px_24px_rgba(105,54,20,0.045)] transition duration-200 hover:-translate-y-1 hover:border-[#edc8aa] hover:shadow-[0_14px_30px_rgba(105,54,20,0.09)] active:scale-[.985]">
-                  <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-orange-50">
-                    <WifiIcon className="text-[#ff7900]" />
-                  </span>
-                  <p className="mt-3 font-black">Home Internet</p>
-                  <p className="mt-1 text-xs text-neutral-400">باقات DSL والراوتر</p>
-                </button>
-                <button type="button" onClick={() => setSection("notes")} className="rounded-[24px] bg-white p-4 text-right shadow-[0_8px_24px_rgba(255,121,0,0.06)]">
-                  <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-orange-50">
-                    <CheckIcon className="text-[#ff7900]" />
-                  </span>
-                  <p className="mt-3 font-black">ملاحظاتي</p>
-                  <p className="mt-1 text-xs text-neutral-400">مرجع شخصي بتضيفه بنفسك</p>
-                </button>
               </div>
               <p className="text-center text-[11px] leading-6 text-neutral-400">مرجع شغل داخلي للموظف. مش منتج رسمي أو معتمد من Orange.</p>
             </>
