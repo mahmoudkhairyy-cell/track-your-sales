@@ -9,6 +9,7 @@ import { useMonth } from "@/components/AppShell";
 import { kpiEmoji } from "@/lib/constants";
 import { MOOD_STYLES, kpiMood, overallMood } from "@/lib/motivation";
 import { pickStatusPhrase } from "@/lib/motivation-phrases";
+import AchievementShare from "@/components/AchievementShare";
 
 type KpiRow = {
   kpiKey: string;
@@ -195,6 +196,7 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+      <AchievementShare name={data.profile.name} branch={data.profile.branch} monthLabel={data.monthLabel} overall={data.overall} kpis={data.kpis} />
       <section className={`rounded-[26px] border p-4 shadow-[0_10px_28px_rgba(116,63,26,0.045)] ${moodStyle.box}`}>
         <p className={`text-base font-black ${moodStyle.title}`}>
           {mood.emoji} {mood.headline}
