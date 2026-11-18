@@ -6,11 +6,11 @@ import { Banner, useToast } from "@/components/ui";
 import { haptic } from "@/lib/prefs";
 import { HomeSkeleton } from "@/components/Skeleton";
 import { ApiError, api } from "@/lib/client";
-import { formatMoney, formatPercent, formatQty, linesWord } from "@/lib/calculations";
+import { formatMoney, formatPercent, formatQty } from "@/lib/calculations";
 import { useMonth } from "@/components/AppShell";
 import { KpiIcon } from "@/components/KpiIcon";
 import { DeltaChip } from "@/components/Sparkline";
-import { overallBandLines, overallLine, pickPhrase, sarcasticLine, timeLines } from "@/lib/phrases";
+import { overallBandLines, pickPhrase, sarcasticLine, timeLines } from "@/lib/phrases";
 import { shareAchievement } from "@/lib/sharecard";
 import { Rope, SpaceScene } from "@/components/Rope";
 import { pushReport, readSyncStatus, type SyncStatus } from "@/lib/sync";
@@ -58,15 +58,6 @@ function greeting() {
   if (hour >= 5 && hour < 12) return "صباح الخير يا";
   if (hour >= 12 && hour < 18) return "نهارك سعيد يا";
   return "مساء الخير يا";
-}
-
-const SHORT_KPI_NAMES: Record<string, string> = {
-  "New Orange Cash Wallets": "New",
-  Excite: "Excite",
-};
-
-function shortKpiName(name: string) {
-  return SHORT_KPI_NAMES[name] ?? name;
 }
 
 export default function HomePage() {

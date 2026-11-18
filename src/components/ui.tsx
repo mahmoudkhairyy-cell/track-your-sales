@@ -113,20 +113,6 @@ export function SecondaryButton({
   );
 }
 
-export function DangerButton({
-  children,
-  className = "",
-  ...props
-}: ButtonHTMLAttributes<HTMLButtonElement>) {
-  return (
-    <button
-      {...props}
-      className={`inline-flex min-h-12 items-center justify-center rounded-full bg-red-600 px-4 text-base font-extrabold text-white disabled:opacity-60 ${className}`}
-    >
-      {children}
-    </button>
-  );
-}
 
 export function Field({
   label,

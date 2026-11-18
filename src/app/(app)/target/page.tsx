@@ -1,9 +1,9 @@
 "use client";
 
 import { FormEvent, useEffect, useState } from "react";
-import { KPI_CATALOG, WEEK_DAYS, kpiEmoji } from "@/lib/constants";
+import { KPI_CATALOG, kpiEmoji } from "@/lib/constants";
 import { sumWeights } from "@/lib/calculations";
-import { Banner, Field, PageSkeleton, PrimaryButton, SecondaryButton, inputClass, useToast } from "@/components/ui";
+import { Banner, Field, PageSkeleton, PrimaryButton, inputClass, useToast } from "@/components/ui";
 import { ApiError, api } from "@/lib/client";
 import type { WorkingDays } from "@/lib/types";
 import type { KpiKey } from "@/lib/constants";
@@ -23,13 +23,6 @@ type Holiday = { date: string; note: string | null };
 type QualityKey = "kyc" | "visits" | "training" | "pos" | "csat";
 /** الكواليتي = الـChecklist بس، بأوزانه المعتمدة. */
 type Quality = { checks?: Partial<Record<QualityKey, boolean>> };
-const QUALITY_ITEMS: { key: QualityKey; label: string; weight: number }[] = [
-  { key: "kyc", label: "KYC & Compliance", weight: 5 },
-  { key: "visits", label: "Quality Visits", weight: 5 },
-  { key: "training", label: "Training & Quiz", weight: 2 },
-  { key: "pos", label: "POS machines", weight: 1 },
-  { key: "csat", label: "CSAT / Complaints", weight: 2 },
-];
 const ZERO_QUALITY_FORM: Quality = { checks: {} };
 
 

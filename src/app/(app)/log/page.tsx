@@ -1,15 +1,14 @@
 "use client";
 
 import { FormEvent, useEffect, useState } from "react";
-import { KPI_CATALOG, kpiEmoji, type KpiKey } from "@/lib/constants";
+import { KPI_CATALOG, type KpiKey } from "@/lib/constants";
 import { cairoISODate, cairoYearMonth, monthLabelAr } from "@/lib/dates";
 import { haptic } from "@/lib/prefs";
 import { Banner, PrimaryButton, inputClass, useToast } from "@/components/ui";
 import { ApiError, api } from "@/lib/client";
 import { useMonth } from "@/components/AppShell";
 import { KpiIcon } from "@/components/KpiIcon";
-import { formatMoney, formatQty } from "@/lib/calculations";
-import { overallLine } from "@/lib/phrases";
+import { formatQty } from "@/lib/calculations";
 import { quantityHint, quantityMax, quantityMin, quantityStep, validateQuantity } from "@/lib/quantity";
 
 
@@ -135,10 +134,6 @@ export default function LogPage() {
   const dashByKey = new Map((dash?.kpis ?? []).map((k) => [k.kpiKey, k]));
   const dailyItems = (dash?.kpis ?? []).filter((k) => k.kpiKey !== "quality" && k.remaining > 0);
   const workLeft = dash?.work.remaining ?? 0;
-  const doneDays = dash ? (dash.work.elapsedBeforeToday ?? dash.work.elapsed) : 0;
-  const performanceOnTrack: boolean | null = dash && dash.work.total > 0
-    ? dash.overall >= (doneDays / dash.work.total) * 100
-    : null;
 
   async function onSubmit(event: FormEvent) {
     event.preventDefault();

@@ -9,7 +9,7 @@ import { pushReport, readSyncStatus } from "@/lib/sync";
 import { api } from "@/lib/client";
 import { APP_DISCLAIMER, APP_NAME, AREA_MANAGERS, BRAND_BY, BRANCHES, OUTSIDE_BRANCHES } from "@/lib/constants";
 import { cairoYearMonth, isValidYearMonth, monthLabelAr, shiftYearMonth } from "@/lib/dates";
-import { BookIcon, ChevronIcon, HomeIcon, MoreIcon, PlusIcon, StarIcon, TargetIcon } from "@/components/icons";
+import { BookIcon, ChevronIcon, HomeIcon, MoreIcon, PlusIcon, TargetIcon } from "@/components/icons";
 import { ToastProvider, useToast } from "@/components/ui";
 import { AppLock } from "@/components/AppLock";
 import { readTheme, saveTheme, type Theme } from "@/lib/theme";

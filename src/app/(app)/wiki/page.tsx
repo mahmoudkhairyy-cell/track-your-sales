@@ -102,16 +102,6 @@ function Back({ onClick, title }: { onClick: () => void; title: string }) {
   );
 }
 
-/** لوجوهات باقات GO حسب اسمها (فيديو، سوشيال، بلاي...). */
-function goLogos(name: string): string[] {
-  const t = name.toLowerCase();
-  const keys = brandKeysFrom(name);
-  if (t.includes("video")) keys.push("tiktok", "youtube");
-  if (t.includes("social")) keys.push("facebook", "whatsapp", "instagram", "snapchat", "x");
-  if (t.includes("home")) keys.push("skype");
-  return Array.from(new Set(keys));
-}
-
 /** صف الاشتراكات الترفيهية بلوجوهاتها بس. */
 function EntertainRow({ keys }: { keys: string[] }) {
   if (!keys.length) return null;
@@ -129,30 +119,6 @@ function PlanBand({ title, big }: { title: string; big?: string }) {
     <div className="-mx-4 -mt-4 mb-2 flex items-center justify-between gap-2 rounded-t-[24px] bg-gradient-to-br from-[var(--color-primary-500)] via-[var(--color-primary-600)] to-[var(--color-primary-500)] px-3 py-1.5 text-white">
       <p className="min-w-0 truncate text-[10px] font-bold opacity-90">{title}</p>
       <p className="shrink-0 truncate text-sm font-black tabular-nums">{big ?? title}</p>
-    </div>
-  );
-}
-
-/**
- * السعر المكتوب في الداتا هو السعر بعد الضريبة (زي جدول FREEmax: NoTax = WithTax × 0.7).
- * الرقم قبل الضريبة محسوب بالمعادلة دي، والمرجع هو الأسعار المعتمدة من أورانج.
- */
-function TwoPrice({ fees }: { fees: string }) {
-  const after = parseFloat(fees);
-  if (!Number.isFinite(after)) return <p className="font-extrabold text-[var(--color-primary-700)]">{fees}</p>;
-  const before = Math.round(after * 0.7 * 100) / 100;
-  return (
-    <div className="space-y-1.5">
-      <div className="flex gap-2 text-center">
-        <div className="flex-1 rounded-xl bg-[var(--color-primary-50)] px-2.5 py-1.5">
-          <p className="text-[11px] font-bold text-[var(--color-text-secondary)]">السعر بعد الضريبة</p>
-          <p className="font-extrabold text-[#b84700]">{after.toFixed(2)} جنيه</p>
-        </div>
-        <div className="flex-1 rounded-xl bg-neutral-50 px-2.5 py-1.5">
-          <p className="text-[11px] font-bold text-[var(--color-text-secondary)]">قبل الضريبة</p>
-          <p className="font-extrabold text-neutral-700">{before.toFixed(2)} جنيه</p>
-        </div>
-      </div>
     </div>
   );
 }

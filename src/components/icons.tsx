@@ -68,10 +68,6 @@ export function ChevronIcon(props: IconProps) {
   );
 }
 
-export function LogoMark({ className }: { className?: string }) {
-  // eslint-disable-next-line @next/next/no-img-element
-  return <img src="/track-your-sales/logo-mark.png" alt="" width={36} height={36} aria-hidden className={className ?? "h-9 w-9 object-contain"} />;
-}
 
 export function PhoneIcon(props: IconProps) {
   return (

@@ -101,25 +101,6 @@ export default function MorePage() {
     queueMicrotask(() => { void load(); });
   }, [load]);
 
-  async function saveProfile(event: FormEvent) {
-    event.preventDefault();
-    setPending(true);
-    try {
-      const result = await api<{ message: string; user: { name: string; branch: string } }>("/api/profile", {
-        method: "PATCH",
-        body: JSON.stringify({ name, branch }),
-      });
-      toast.push("success", result.message);
-      window.dispatchEvent(new Event("tys-data-changed"));
-      setProfile((current) => ({ ...current, name: result.user.name, branch: result.user.branch }));
-      router.refresh();
-    } catch (err) {
-      toast.push("error", err instanceof Error ? err.message : "فشل تحديث الملف");
-    } finally {
-      setPending(false);
-    }
-  }
-
   function openEdit(entry: EntryRow) {
     setEditing(entry);
     setEditKpi(entry.kpiKey);
