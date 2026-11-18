@@ -2,7 +2,7 @@
 
 import { BrandLogo, brandKeysFrom } from "@/components/BrandLogo";
 import { useHistoryView } from "@/lib/use-history-view";
-import { Fragment, FormEvent, useEffect, useMemo, useState, type ReactNode } from "react";
+import { Fragment, FormEvent, createContext, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { useSearchParams } from "next/navigation";
 import {
   Banner,
@@ -88,17 +88,68 @@ function SearchBox({ value, onChange, placeholder }: { value: string; onChange: 
   );
 }
 
-function Back({ onClick, title }: { onClick: () => void; title: string }) {
+const NavCtx = createContext<{ section: SectionId; go: (s: SectionId) => void } | null>(null);
+
+const HUB_GROUPS: { title: string; ids: SectionId[] }[] = [
+  { title: "أساسيات الشيفت", ids: ["sr", "capsule", "hunts"] },
+  { title: "الباقات والأسعار", ids: ["freemax", "go", "educational", "premier", "home", "dsl"] },
+  { title: "مستندات وأدوات", ids: ["docs", "emails", "notes"] },
+];
+
+/** شريط أقسام أفقي: تنتقل بين الأقسام من غير ما ترجع للقائمة. */
+function SectionTabs() {
+  const nav = useContext(NavCtx);
+  const ref = useRef<HTMLDivElement>(null);
+  const current = nav?.section;
+  useEffect(() => {
+    const active = ref.current?.querySelector('[aria-current="true"]');
+    if (active instanceof HTMLElement) active.scrollIntoView({ inline: "center", block: "nearest" });
+  }, [current]);
+  if (!nav) return null;
   return (
-    <div className="mb-4 flex items-center justify-between gap-3 rounded-[24px] border border-white bg-white px-4 py-3 shadow-[0_1px_2px_rgba(43,20,0,.04)]">
-      <div className="min-w-0">
-        <p className="text-[9px] font-black tracking-[0.18em] text-[var(--color-primary-700)]" dir="ltr">KNOWLEDGE CENTER</p>
-        <h1 className="mt-1 truncate text-lg font-black tracking-tight text-[var(--color-text-primary)]">{title}</h1>
+    <nav aria-label="أقسام المرجع" className="-mx-1 overflow-x-auto px-1 pb-1">
+      <div ref={ref} className="flex w-max min-w-full gap-2">
+        {HUB_GROUPS.flatMap((g) => g.ids).map((id) => {
+          const card = HUB.find((c) => c.id === id);
+          if (!card) return null;
+          const active = id === nav.section;
+          return (
+            <button
+              key={id}
+              type="button"
+              aria-current={active ? "true" : undefined}
+              onClick={() => nav.go(id)}
+              className={`shrink-0 rounded-full border px-3.5 py-2 text-xs font-extrabold transition ${active ? "border-transparent bg-[var(--color-primary-600)] text-white shadow-sm" : "border-[var(--color-border)] bg-white text-[var(--color-text-secondary)]"}`}
+            >
+              {card.title}
+            </button>
+          );
+        })}
       </div>
-      <button type="button" onClick={onClick} className="flex min-h-10 shrink-0 items-center gap-2 rounded-full border border-[#f0d9c7] bg-white px-3 text-xs font-extrabold text-[var(--color-primary-700)] shadow-sm">
-        <span>رجوع</span><span aria-hidden="true">‹</span>
-      </button>
-    </div>
+    </nav>
+  );
+}
+
+function Back({ onClick, title }: { onClick: () => void; title: string }) {
+  const nav = useContext(NavCtx);
+  const card = nav ? HUB.find((c) => c.id === nav.section) : undefined;
+  const group = nav ? HUB_GROUPS.find((g) => g.ids.includes(nav.section))?.title : undefined;
+  return (
+    <>
+      <div className="flex items-center justify-between gap-3 rounded-[24px] border border-white bg-white px-4 py-3 shadow-[0_1px_2px_rgba(43,20,0,.04)]">
+        <div className="flex min-w-0 items-center gap-3">
+          {card ? <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border border-[#f6e5d7] bg-[var(--color-primary-50)]">{card.icon}</span> : null}
+          <div className="min-w-0">
+            {group ? <p className="text-[10px] font-bold text-[var(--color-text-secondary)]">{group}</p> : null}
+            <h1 className="truncate text-lg font-black tracking-tight text-[var(--color-text-primary)]">{title}</h1>
+          </div>
+        </div>
+        <button type="button" onClick={onClick} className="flex min-h-10 shrink-0 items-center gap-2 rounded-full border border-[#f0d9c7] bg-white px-3 text-xs font-extrabold text-[var(--color-primary-700)] shadow-sm">
+          <span>القائمة</span><span aria-hidden="true">‹</span>
+        </button>
+      </div>
+      <SectionTabs />
+    </>
   );
 }
 
@@ -386,39 +437,21 @@ export default function WikiPage() {
   }
 
   return (
-    <div className="tys-page tys-page-wiki mx-auto max-w-6xl space-y-5">
+    <NavCtx.Provider value={{ section, go: (next) => { setSection(next); setQuery(""); } }}>
+    <div className="tys-page tys-page-wiki mx-auto max-w-6xl space-y-4">
       {section === "hub" ? (
         <>
-          <section className="relative isolate overflow-hidden rounded-[30px] border border-white bg-white p-5 shadow-[0_1px_2px_rgba(43,20,0,.04)] sm:p-6">
-            <div className="pointer-events-none absolute -left-8 -top-10 h-36 w-36 rounded-full border-[22px] border-[var(--color-primary-600)]/[0.06]" />
-            <div className="relative flex items-start justify-between gap-3">
-              <div>
-                <p className="text-[10px] font-black tracking-[0.2em] text-[var(--color-primary-700)]" dir="ltr">KNOWLEDGE HUB</p>
-                <h1 className="mt-1 text-2xl font-black tracking-tight text-[var(--color-text-primary)] sm:text-3xl">مرجع أورانج</h1>
-                <p className="mt-1 text-[11px] font-bold text-[#8a3b0b]">مرجع غير رسمي — راجع أحدث التعليمات المعتمدة قبل تنفيذ أي إجراء.</p>
-                <p className="mt-1 text-[10px] text-[var(--color-text-secondary)]">المصدر وتاريخ آخر مراجعة غير محددين في بيانات المرجع الحالية.</p>
-                <p className="mt-2 max-w-lg text-xs leading-6 text-[var(--color-text-secondary)]">كل اللي تحتاجه في الشيفت: أكواد SR، الباقات، أرقام التواصل، والمستندات في مكان واحد.</p>
+          <section className="rounded-[28px] border border-white bg-white p-4 shadow-[0_1px_2px_rgba(43,20,0,.04)] sm:p-5">
+            <div className="flex items-start justify-between gap-3">
+              <div className="min-w-0">
+                <h1 className="text-2xl font-black tracking-tight text-[var(--color-text-primary)] sm:text-3xl">مرجع أورانج</h1>
+                <p className="mt-1 text-[11px] font-bold leading-5 text-[var(--color-primary-700)]">مرجع غير رسمي. راجع أحدث التعليمات المعتمدة قبل تنفيذ أي إجراء.</p>
               </div>
-              <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-white bg-white/90 text-2xl shadow-sm">📚</span>
+              <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-white bg-white/90 text-2xl shadow-sm" aria-hidden="true">📚</span>
             </div>
-            <div className="relative mt-4 grid grid-cols-3 gap-2 text-center">
-              <div className="rounded-2xl border border-[var(--color-border)] bg-white/90 px-2 py-2.5">
-                <p className="text-lg font-black tabular-nums text-[var(--color-primary-700)]">{wikiData ? wikiData.SR_ITEMS.length : "—"}</p>
-                <p className="text-[10px] font-bold text-[var(--color-text-secondary)]">كود SR</p>
-              </div>
-              <div className="rounded-2xl border border-[var(--color-border)] bg-white/90 px-2 py-2.5">
-                <p className="text-lg font-black tabular-nums text-[var(--color-primary-700)]">{HUB.length}</p>
-                <p className="text-[10px] font-bold text-[var(--color-text-secondary)]">قسم</p>
-              </div>
-              <div className="rounded-2xl border border-[var(--color-border)] bg-white/90 px-2 py-2.5">
-                <p className="text-lg font-black tabular-nums text-[var(--color-primary-700)]">{wikiData ? wikiData.DOCS.length : "—"}</p>
-                <p className="text-[10px] font-bold text-[var(--color-text-secondary)]">مستند</p>
-              </div>
+            <div className="mt-3">
+              <SearchBox value={query} onChange={setQuery} placeholder="ابحث بالكود أو الاسم أو الرقم..." />
             </div>
-          </section>
-          <section className="rounded-[24px] border border-white bg-white p-3 shadow-[0_1px_2px_rgba(43,20,0,.04)]">
-            <p className="mb-2 px-1 text-[10px] font-black tracking-[0.16em] text-[var(--color-primary-700)]" dir="ltr">SEARCH THE KNOWLEDGE BASE</p>
-            <SearchBox value={query} onChange={setQuery} placeholder="ابحث بالكود أو الاسم أو الرقم..." />
           </section>
 
           {globalHits ? (
@@ -486,20 +519,26 @@ export default function WikiPage() {
             </div>
           ) : (
             <>
-              <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-                {HUB.map((card, index) => (
-                  <button key={card.id} type="button" onClick={() => { setSection(card.id); setQuery(""); }} className="group flex min-h-[88px] w-full items-center gap-3 rounded-[24px] border border-white bg-white p-3.5 text-right shadow-[0_1px_2px_rgba(43,20,0,.04)] transition duration-200 hover:-translate-y-0.5 hover:border-[#edc4a4] hover:shadow-[0_1px_2px_rgba(43,20,0,.04)]">
-                    <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-[#f6e5d7] bg-gradient-to-br from-[var(--color-surface-cream)] to-[var(--color-primary-50)]">{card.icon}</span>
-                    <span className="min-w-0 flex-1">
-                      <span className="block font-black text-[var(--color-text-primary)]">{card.title}</span>
-                      <span className="mt-0.5 block truncate text-xs text-[var(--color-text-secondary)]">{card.desc}</span>
-                      <span className="mt-1 block text-[10px] font-extrabold text-[var(--color-primary-700)]">{card.count || "افتح القسم"}</span>
-                    </span>
-                    <span className="shrink-0 text-lg text-[#d18a58] transition-transform group-hover:-translate-x-1" aria-hidden="true">‹</span>
-                  </button>
-                ))}
-              </div>
-              <p className="text-center text-[11px] leading-6 text-[var(--color-text-secondary)]">مرجع شغل داخلي للموظف. مش منتج رسمي أو معتمد من Orange.</p>
+              {HUB_GROUPS.map((group) => (
+                <section key={group.title} className="space-y-2">
+                  <h2 className="px-1 text-sm font-black text-[var(--color-text-primary)]">{group.title}</h2>
+                  <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 xl:grid-cols-4">
+                    {group.ids.map((id) => {
+                      const card = HUB.find((c) => c.id === id);
+                      if (!card) return null;
+                      return (
+                        <button key={card.id} type="button" onClick={() => { setSection(card.id); setQuery(""); }} className="group flex min-h-[112px] w-full flex-col items-start gap-2 rounded-[22px] border border-white bg-white p-3.5 text-right shadow-[0_1px_2px_rgba(43,20,0,.04)] transition duration-200 hover:-translate-y-0.5 hover:border-[#edc4a4]">
+                          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border border-[#f6e5d7] bg-gradient-to-br from-[var(--color-surface-cream)] to-[var(--color-primary-50)]">{card.icon}</span>
+                          <span className="block w-full min-w-0">
+                            <span className="block font-black text-[var(--color-text-primary)]">{card.title}</span>
+                            <span className="mt-0.5 block text-[11px] leading-5 text-[var(--color-text-secondary)]">{card.desc}</span>
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </section>
+              ))}
             </>
           )}
         </>
@@ -525,8 +564,9 @@ export default function WikiPage() {
             </div>
           </div>
           {srTopic === "الأكثر استخدامًا" || srTopic === "الكل" ? (
-            <div className="grid gap-3 rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface-cream)] p-3 text-xs leading-6 text-[#70513c]">
-              <p className="font-black text-[var(--color-primary-700)]">أهم أكواد وإجراءات الفرع</p>
+            <details open={srTopic === "الأكثر استخدامًا"} className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface-cream)] text-xs leading-6 text-[#70513c]">
+              <summary className="cursor-pointer select-none p-3 text-sm font-black text-[var(--color-primary-700)]">أهم أكواد وإجراءات الفرع</summary>
+              <div className="grid gap-3 px-3 pb-3">
               <div className="rounded-xl border border-[#f0d8c5] bg-white p-3">
                 <p className="font-black text-[var(--color-primary-700)]">SR 31319 — رن الشكوى للفريق المختص <span className="text-[10px] text-[#c45a13]">• أولوية قصوى</span></p>
                 <p>اكتب تفاصيل الشكوى في Notes، وبعدها اعمل رن للفريق المختص. مناسب لشكاوى الشبكة، وخصم الرصيد بدون سبب، ومشكلات حساب الفاتورة.</p>
@@ -567,7 +607,8 @@ export default function WikiPage() {
                 <p>تحميل تطبيق Max it.</p>
               </div>
               <p className="text-[10px] text-[#9a7c66]">الأكواد التي لم تتوفر لها سجلات في قاعدة الأكواد معروضة هنا كمرجع مؤكد من إجراءات الفرع، وليست سجلات رسمية مضافة إلى قاعدة SR.</p>
-            </div>
+              </div>
+            </details>
           ) : null}
           <div className="flex items-center justify-between px-1">
             <p className="text-sm font-black text-[#4d3829]">{q ? "نتائج البحث" : srTopic === "الكل" ? "كل أكواد الخدمة" : `أكواد ${srTopic}`}</p>
@@ -1058,6 +1099,7 @@ export default function WikiPage() {
         </div>
       </Modal>
     </div>
+    </NavCtx.Provider>
   );
 }
 
