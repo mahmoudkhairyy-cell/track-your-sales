@@ -149,9 +149,11 @@ function loadState(): State {
     return { ...emptyState(), ...parsed };
   } catch {
     // البيانات المحفوظة بايظة: منمسحهاش، ننسخها جنب الأصلية قبل ما أي حفظ جديد يكتب فوقها.
+    // نسخة واحدة بس: loadState بيتنادى مع كل طلب، ولو كل مرة نكتب نسخة جديدة المساحة هتخلص.
     if (raw) {
       try {
-        localStorage.setItem(`${STORAGE_KEY}.corrupt.${Date.now()}`, raw);
+        const copyKey = `${STORAGE_KEY}.corrupt`;
+        if (localStorage.getItem(copyKey) === null) localStorage.setItem(copyKey, raw);
       } catch {
         // لو المساحة خلصت، مفيش أكتر من كده نعمله.
       }
@@ -291,11 +293,11 @@ function prefillBundle(state: State, yearMonth: string, role: Role): Bundle {
     .pop();
   const prev = previous ? state.months[previous] : undefined;
   if (!prev) return base;
-  const prevMap = new Map(prev.kpis.map((item) => [item.kpiKey, item]));
+  const prevMap = new Map((prev.kpis ?? []).map((item) => [item.kpiKey, item]));
   // الإجازات بتتنقل حسب أيام الأسبوع: لو اختار التلات، كل التلاتات في الشهر الجديد إجازة.
   const [year, month] = yearMonth.split("-").map(Number);
   const daysInMonth = new Date(Date.UTC(year, month, 0)).getUTCDate();
-  const weekdays = new Set(prev.holidays.map((item) => {
+  const weekdays = new Set((prev.holidays ?? []).map((item) => {
     const [y, m, d] = item.date.split("-").map(Number);
     return new Date(Date.UTC(y, m - 1, d)).getUTCDay();
   }));
@@ -322,7 +324,7 @@ function loadBundle(state: State, yearMonth: string): Bundle {
   const role = roleOf(state);
   if (!row) return prefillBundle(state, yearMonth, role);
 
-  const savedMap = new Map(row.kpis.map((item) => [item.kpiKey, item]));
+  const savedMap = new Map((row.kpis ?? []).map((item) => [item.kpiKey, item]));
   const kpis = KPI_CATALOG.map((kpi, index) => {
     const saved = savedMap.get(kpi.key);
     // تارجت المحافظ الجديدة بيدخله الموظف بإيده.
@@ -343,7 +345,7 @@ function loadBundle(state: State, yearMonth: string): Bundle {
     fullCommission: row.fullCommission,
     workingDays: { ...(row.workingDays ?? DEFAULT_WORKING_DAYS) },
     kpis,
-    holidays: [...row.holidays].sort((a, b) => a.date.localeCompare(b.date)),
+    holidays: [...(row.holidays ?? [])].sort((a, b) => a.date.localeCompare(b.date)),
     quality: row.quality ? qualityFromChecks(row.quality.checks) : { checks: { ...ZERO_QUALITY.checks } },
     monthSettingsId: null,
   };
@@ -707,7 +709,7 @@ function exportBackup(state: State) {
     fullCommission: row.fullCommission,
     workingDays: { ...(row.workingDays ?? DEFAULT_WORKING_DAYS) },
     kpis: loadBundle(state, yearMonth).kpis,
-    holidays: row.holidays.map((item) => ({ date: item.date, note: item.note })),
+    holidays: (row.holidays ?? []).map((item) => ({ date: item.date, note: item.note })),
     quality: row.quality ? { checks: { ...row.quality.checks } } : undefined,
   }));
   const isEmpty = months.length === 0 && state.entries.length === 0 && state.articles.length === 0;

@@ -45,8 +45,9 @@ export function validateQuantity(kpiKey: KpiKey, raw: unknown): QuantityResult {
   }
 
   if (allowsFraction(kpiKey)) {
-    if (quantity < 0 || quantity > 100) {
-      return { ok: false, message: "Quality لازم تكون بين 0 و 100" };
+    // الإنتاجية ممكن تعدي 100%، والكواليتي بس سقفها 100.
+    if (quantity < 0 || quantity > quantityMax(kpiKey)) {
+      return { ok: false, message: kpiKey === "quality" ? "Quality لازم تكون بين 0 و 100" : "الإنتاجية لازم تكون رقم موجب" };
     }
     return { ok: true, value: Math.round(quantity * 100) / 100 };
   }

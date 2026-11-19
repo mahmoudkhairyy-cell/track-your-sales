@@ -437,7 +437,7 @@ export default function WikiPage() {
   }
 
   return (
-    <NavCtx.Provider value={{ section, go: (next) => { setSection(next); setQuery(""); } }}>
+    <NavCtx.Provider value={{ section, go: (next) => { setSection(next, { replace: section !== "hub" }); setQuery(""); } }}>
     <div className="tys-page tys-page-wiki mx-auto max-w-6xl space-y-4">
       {section === "hub" ? (
         <>

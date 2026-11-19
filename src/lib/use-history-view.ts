@@ -8,7 +8,7 @@ export function useHistoryView<T extends string>(defaultValue: T, initialValue: 
   const viewRef = useRef<T>(initialValue);
 
   const setView = useCallback(
-    (next: T) => {
+    (next: T, options?: { replace?: boolean }) => {
       const currentView = viewRef.current;
       if (next === currentView) return;
 
@@ -24,7 +24,7 @@ export function useHistoryView<T extends string>(defaultValue: T, initialValue: 
       const replaceTopLevel = isTopLevelNavigation && currentView !== "overview";
 
       // إغلاق شاشة فرع/موظف أو التنقل بين الأقسام يستبدل سجل الشاشة الحالية.
-      if (isClosingEmployee || isClosingBranch || replaceTopLevel) {
+      if (isClosingEmployee || isClosingBranch || replaceTopLevel || options?.replace) {
         window.history.replaceState({ ...current, tysView: next }, "");
       } else {
         // التنقل العادي يضيف خطوة، مع الحفاظ على حالة Next.js (زي __NA).
