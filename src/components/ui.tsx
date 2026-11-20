@@ -298,15 +298,16 @@ export function BulletChart({
   const expectedCapped = Math.min(100, Math.max(0, expected));
 
   return (
-    <div
-      className={`relative ${className}`}
-      role="img"
-      aria-label={`نسبة الإنجاز ${Math.round(percent)} بالمئة، والمتوقع النهارده ${Math.round(expected)} بالمئة`}
-      aria-valuenow={Math.round(capped)}
-      aria-valuemin={0}
-      aria-valuemax={100}
-    >
-      <div className="h-3 w-full overflow-hidden rounded-full bg-surface-2 dark:bg-surface-2-dark">
+    <div className={`relative ${className}`}>
+      <div
+        role="progressbar"
+        aria-label="نسبة إنجاز التارجت الشهري"
+        aria-valuenow={Math.round(capped)}
+        aria-valuemin={0}
+        aria-valuemax={100}
+        aria-valuetext={`${Math.round(percent)} بالمئة، والمتوقع النهارده ${Math.round(expected)} بالمئة`}
+        className="h-3 w-full overflow-hidden rounded-full bg-surface-2 dark:bg-surface-2-dark"
+      >
         <div
           className="h-full rounded-full bg-gradient-to-l from-brand-500 to-brand-600 transition-all duration-700 ease-out dark:from-brand-500-dark dark:to-brand-600-dark"
           style={{ width: `${capped}%` }}
