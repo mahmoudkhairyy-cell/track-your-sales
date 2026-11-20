@@ -57,6 +57,30 @@ check("شرط المحافظ يمنع الكوميشن والخطوط الجدي
   assert.equal(eligible.commissionEligible, true);
 });
 
+check("المدير لا يخضع لشرط المحافظ الجديدة، والموظف يظل خاضعًا له", () => {
+  const managerKpis = [
+    { kpiKey: "new_lines" as const, target: 100, achieved: 90, weight: 30, unitAr: "خط" },
+    { kpiKey: "new_orange_cash" as const, target: 0, achieved: 0, weight: 0, unitAr: "محفظة" },
+    { kpiKey: "existing_wallets" as const, target: 100, achieved: 90, weight: 15, unitAr: "محفظة" },
+    { kpiKey: "points" as const, target: 100, achieved: 90, weight: 5, unitAr: "نقطة" },
+    { kpiKey: "postpaid_lines" as const, target: 100, achieved: 90, weight: 10, unitAr: "خط" },
+    { kpiKey: "dsl" as const, target: 100, achieved: 90, weight: 10, unitAr: "خط" },
+    { kpiKey: "productivity" as const, target: 100, achieved: 90, weight: 15, unitAr: "%" },
+    { kpiKey: "quality" as const, target: 100, achieved: 90, weight: 15, unitAr: "%" },
+  ];
+  const manager = applyCompanyRules(managerKpis, { newLinesNeedWallets: false });
+  assert.equal(manager.total, 90);
+  assert.equal(manager.walletDone, true);
+  assert.equal(manager.commissionEligible, true);
+  const employee = applyCompanyRules([
+    { kpiKey: "new_lines" as const, target: 100, achieved: 90, weight: 40, unitAr: "خط" },
+    { kpiKey: "new_orange_cash" as const, target: 100, achieved: 0, weight: 0, unitAr: "محفظة" },
+  ]);
+  assert.equal(employee.total, 0);
+  assert.equal(employee.walletDone, false);
+  assert.equal(employee.commissionEligible, false);
+});
+
 check("المحافظ لا تضيف وزنًا إلى إجمالي الإنجاز", () => {
   const result = applyCompanyRules([
     { kpiKey: "new_lines", target: 100, achieved: 100, weight: 40, unitAr: "خط" },
