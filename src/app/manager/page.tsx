@@ -61,20 +61,13 @@ export default function ManagerPage() {
       setReports(Array.isArray(data) ? data as Report[] : []);
       setPassword(secret);
       setLoggedIn(true);
-      sessionStorage.setItem("tys.manager.session", secret);
     } catch (err) {
       setError(err instanceof Error ? err.message : "تعذر تحميل التقارير");
       setLoggedIn(false);
-      sessionStorage.removeItem("tys.manager.session");
-    } finally {
+      } finally {
       setLoading(false);
     }
   }, []);
-
-  useEffect(() => {
-    const saved = sessionStorage.getItem("tys.manager.session");
-    if (saved) void loadReports(saved);
-  }, [loadReports]);
 
   async function login(event: FormEvent) {
     event.preventDefault();
@@ -103,7 +96,6 @@ export default function ManagerPage() {
     try {
       await managerRequest("change_password", password, { newPassword });
       setPassword(newPassword);
-      sessionStorage.setItem("tys.manager.session", newPassword);
       setNewPassword("");
       setError("");
       await loadReports(newPassword);
