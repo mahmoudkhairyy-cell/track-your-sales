@@ -69,16 +69,10 @@ export default function MorePage() {
   const [restoreMode, setRestoreMode] = useState<"merge" | "replace" | "">("");
   const [restoreOpen, setRestoreOpen] = useState(false);
   const [replaceReady, setReplaceReady] = useState(false);
-  const [lastBackupAt, setLastBackupAt] = useState<string | null>(null);
   const [cloudSyncEnabled, setCloudSyncEnabledState] = useState(false);
   const [syncStatus, setSyncStatus] = useState<ReturnType<typeof readSyncStatus>>(null);
 
   useEffect(() => {
-    try {
-      setLastBackupAt(localStorage.getItem("tys.lastBackupAt"));
-    } catch {
-      // التخزين المحلي غير متاح.
-    }
     const refreshSyncState = () => {
       setCloudSyncEnabledState(isCloudSyncEnabled());
       setSyncStatus(readSyncStatus());
@@ -91,16 +85,6 @@ export default function MorePage() {
       window.removeEventListener("tys-sync-consent", refreshSyncState);
     };
   }, []);
-
-  function rememberBackup() {
-    const savedAt = new Date().toISOString();
-    try {
-      localStorage.setItem("tys.lastBackupAt", savedAt);
-    } catch {
-      // النسخة اتنزّلت حتى لو تعذر حفظ تاريخها.
-    }
-    setLastBackupAt(savedAt);
-  }
 
   function changeCloudSync(enabled: boolean) {
     try {
@@ -236,7 +220,6 @@ export default function MorePage() {
         throw new Error("التصدير ناقص، الملف متنزلش");
       }
       downloadJson(`track-your-sales-backup-${cairoISODate()}.json`, result.backup);
-      rememberBackup();
       toast.push("info", result.message);
     } catch (err) {
       toast.push("error", err instanceof Error ? err.message : "فشل التصدير");
@@ -281,8 +264,7 @@ export default function MorePage() {
       if (!result.backup || !Array.isArray(result.backup.entries)) {
         throw new Error("النسخة الاحتياطية الحالية ناقصة، الاستبدال متوقف");
       }
-      downloadJson(`track-your-sales-backup-before-replace-${cairoISODate()}.json`, result.backup);
-      rememberBackup();
+      downloadJson(`track-your-sales-before-replace-${cairoISODate()}.json`, result.backup);
       setReplaceReady(true);
       toast.push("info", "اتنزّلت نسخة احتياطية من بياناتك الحالية. تقدر تكمل الاستبدال.");
     } catch (err) {
@@ -632,11 +614,7 @@ export default function MorePage() {
       <section className="rounded-[24px] border border-white bg-white p-5 shadow-sm">
         <h2 className="text-lg font-black tracking-tight">💾 نسخة احتياطية واستعادة</h2>
         <p className="mt-2 text-sm leading-7 text-[var(--color-text-secondary)]">التصدير بينزّل ملف JSON فيه بياناتك وإعدادات الشهور والسجلات والملاحظات. من غير أي مفاتيح أو أسرار.</p>
-        <div className="mt-4 rounded-2xl border border-[var(--color-border)] bg-[var(--color-primary-50)] p-4 text-sm">
-          <p className="font-black">📅 آخر نسخة احتياطية</p>
-          <p className="mt-1 font-bold">{lastBackupAt ? `${formatDateAr(lastBackupAt.slice(0, 10))} · ${formatTimeCairo(lastBackupAt)}` : "لم يتم إنشاء نسخة احتياطية على هذا الجهاز بعد."}</p>
-          <p className="mt-1 text-[var(--color-text-secondary)]">{!lastBackupAt ? "تذكير: نزّل نسخة احتياطية الآن لحماية بياناتك." : Date.now() - new Date(lastBackupAt).getTime() > 7 * 24 * 60 * 60 * 1000 ? "مرّ أكثر من 7 أيام على آخر نسخة. يُفضّل تنزيل نسخة جديدة." : "تذكير: احتفظ بنسخة حديثة من بياناتك بشكل دوري."}</p>
-        </div>
+
         <div className="mt-4 grid gap-3 sm:grid-cols-2">
           <PrimaryButton type="button" disabled={pending} onClick={() => void exportBackup()}>
             ⬇️ نزّل نسخة JSON
