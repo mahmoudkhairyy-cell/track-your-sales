@@ -628,13 +628,15 @@ function getDashboard(state: State, params: URLSearchParams) {
 
   const holidayDates = bundle.holidays.map((item) => item.date);
   const work = buildWorkdayStats(yearMonth, bundle.workingDays, holidayDates, today);
+  const companyRuleOptions = { newLinesNeedWallets: roleOf(state) !== "manager" };
   const rules = applyCompanyRules(
     bundle.kpis.map((kpi) => ({ ...kpi, achieved: achievedTyped[kpi.kpiKey] ?? 0 })),
+    companyRuleOptions,
   );
   // نفس قواعد الكوميشن بس بالإنجاز "المفروض لحد النهارده": عشان نقارن الإجمالي بالإجمالي (تفاح بتفاح).
   const doneBefore = Math.max(0, work.elapsedBeforeToday ?? work.elapsed);
   const expectedRules = work.total > 0
-    ? applyCompanyRules(bundle.kpis.map((kpi) => ({ ...kpi, achieved: expectedToDate(kpi.target, doneBefore, work.total) })))
+    ? applyCompanyRules(bundle.kpis.map((kpi) => ({ ...kpi, achieved: expectedToDate(kpi.target, doneBefore, work.total) })), companyRuleOptions)
     : null;
   const expectedOverall = expectedRules ? expectedRules.total : null;
   const overall = rules.total; // سقف 200% على الإجمالي بس، والمؤشرات الفردية بدون سقف
@@ -656,7 +658,7 @@ function getDashboard(state: State, params: URLSearchParams) {
       ...kpi,
       achieved: kpi.kpiKey === "quality" ? (achievedTyped[kpi.kpiKey] ?? 0) : (achievedTyped[kpi.kpiKey] ?? 0) * factor,
     }));
-    const projectedRules = applyCompanyRules(projected);
+    const projectedRules = applyCompanyRules(projected, companyRuleOptions);
     projection = {
       overall: projectedRules.total,
       commission: estimatedCommission(bundle.fullCommission, projectedRules.total),
