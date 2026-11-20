@@ -17,7 +17,7 @@ type Report = {
     overall?: number;
     monthLabel?: string;
     kpis?: Kpi[];
-    entries?: { date: string; kpi: string; quantity: number; unit: string }[];
+    entries?: { date: string; kpi: string; quantity: number; unit: string; at?: string }[];
     managerQuality?: { quality: Quality; updatedBy?: string; updatedAt?: string };
   };
 };
