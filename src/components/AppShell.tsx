@@ -301,6 +301,14 @@ export function AppShell({ children }: { children: ReactNode }) {
   const raw = params.get("month");
   // الشهر الحالي بيتحدّث لوحده لو التطبيق فضل مفتوح (مثلاً لحد بعد نص الليل) أو رجع للواجهة.
   const [currentMonth, setCurrentMonth] = useState(() => cairoYearMonth());
+  useEffect(() => {
+    if (typeof navigator === "undefined") return;
+    const storageManager = navigator.storage;
+    if (storageManager && typeof storageManager.persist === "function") {
+      void storageManager.persist().catch(() => false);
+    }
+  }, []);
+
   // تنظيف مرة واحدة: مفاتيح كاش لميزات اتشالت (مالهاش بيانات مبيعات). البيانات الحقيقية مش بتتلمس.
   useEffect(() => {
     try {
