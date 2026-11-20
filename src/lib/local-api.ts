@@ -574,7 +574,7 @@ function updateProfile(state: State, data: Record<string, unknown>) {
   const branch = typeof data.branch === "string" ? data.branch.trim().slice(0, 80) : "";
   const role = data.role === "manager" || data.role === "agent" || data.role === "team_leader" || data.role === "area_manager" ? data.role : state.profile.role;
   const areaManager = typeof data.areaManager === "string" ? data.areaManager.trim() : "";
-  if (role !== "manager" && branch !== "خارج الفروع" && !AREA_MANAGERS.includes(areaManager as (typeof AREA_MANAGERS)[number])) {
+  if (role !== "manager" && role !== "area_manager" && branch !== "خارج الفروع" && !AREA_MANAGERS.includes(areaManager as (typeof AREA_MANAGERS)[number])) {
     fail(400, "اختار مدير المنطقة قبل حفظ بياناتك");
   }
   state.profile = { ...state.profile, name, branch, role, areaManager };
