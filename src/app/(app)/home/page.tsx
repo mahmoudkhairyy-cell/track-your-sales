@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { Banner, useToast } from "@/components/ui";
+import { SearchableCombobox } from "@/components/ui/SearchableCombobox";
+import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { haptic } from "@/lib/prefs";
 import { HomeSkeleton } from "@/components/Skeleton";
 import { ApiError, api } from "@/lib/client";
@@ -53,6 +55,8 @@ type Dashboard = {
 };
 
 
+const DEMO_BRANCH_OPTIONS = ["فرع التحرير", "فرع المعادي", "فرع مدينة نصر"];
+
 function greeting() {
   const hour = Number(new Intl.DateTimeFormat("en-GB", { hour: "2-digit", hour12: false, timeZone: "Africa/Cairo" }).format(new Date()));
   if (hour >= 5 && hour < 12) return "صباح الخير يا";
@@ -62,6 +66,7 @@ function greeting() {
 
 export default function HomePage() {
   const [copied, setCopied] = useState(false);
+  const [demoBranch, setDemoBranch] = useState("");
   const overallValueRef = useRef<HTMLSpanElement | null>(null);
   const overallBarRef = useRef<HTMLDivElement | null>(null);
   const [sync, setSync] = useState<SyncStatus | null>(null);
@@ -186,7 +191,7 @@ export default function HomePage() {
         </p>
       ) : null}
 
-      <section className="tys-home-greeting flex items-end justify-between gap-3 rounded-[26px] border border-white bg-white px-4 py-4 shadow-[0_1px_2px_rgba(43,20,0,.04)] sm:px-5">
+      <section className="tys-home-greeting flex items-end justify-between gap-3 rounded-[26px] border border-white bg-white px-4 py-4 shadow-[0_1px_2px_rgba(43,20,0,.04)] sm:px-5" dir="rtl">
         <div className="min-w-0">
           <p className="text-xs font-black tracking-[0.16em] text-[var(--color-primary-600)]">YOUR SALES OVERVIEW</p>
           <h1 className="mt-1 text-xl font-black tracking-tight text-[var(--color-text-primary)] sm:text-2xl">
@@ -194,8 +199,25 @@ export default function HomePage() {
           </h1>
           <p className="mt-1 text-xs font-semibold text-[var(--color-text-secondary)]">📍 {data.profile.branch}</p>
         </div>
-        <div className="hidden h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[var(--color-primary-50)] text-2xl sm:flex">📈</div>
+        <div className="flex shrink-0 items-center gap-2">
+          <div className="hidden h-12 w-12 items-center justify-center rounded-2xl bg-[var(--color-primary-50)] text-2xl sm:flex">📈</div>
+          <ThemeToggle />
+        </div>
       </section>
+
+      <details className="rounded-2xl border border-orange-200 bg-white/80 px-4 py-3 shadow-sm" dir="rtl">
+        <summary className="cursor-pointer text-sm font-bold text-orange-800">تجربة البحث عن فرع (مثال للمكون الجديد)</summary>
+        <div className="mt-3 max-w-md">
+          <SearchableCombobox
+            options={DEMO_BRANCH_OPTIONS}
+            value={demoBranch}
+            onChange={setDemoBranch}
+            placeholder="— اختر الفرع —"
+            label="اسم الفرع"
+          />
+          {demoBranch ? <p className="mt-2 text-xs font-semibold text-neutral-600">الفرع المختار للتجربة: {demoBranch}</p> : null}
+        </div>
+      </details>
 
       {/* الهيرو الرئيسي — لوحة إنجاز دائرية */}
       <section style={{ boxShadow: onTrack === null ? "0 5px 14px rgba(100,55,25,.13)" : onTrack ? "0 0 0 1px rgba(22,163,74,.06), 0 0 10px rgba(22,163,74,.08), 0 5px 14px rgba(100,55,25,.13)" : "0 0 0 1px rgba(220,38,38,.06), 0 0 10px rgba(220,38,38,.08), 0 5px 14px rgba(100,55,25,.13)" }} className="tys-home-hero relative isolate overflow-hidden rounded-[30px] border border-white bg-white p-5 shadow-[0_1px_2px_rgba(43,20,0,.04)] sm:p-7">
