@@ -380,12 +380,6 @@ export function AppShell({ children }: { children: ReactNode }) {
     return () => window.removeEventListener("tys-settings-saved", bump);
   }, []);
 
-  // طلب الاحتفاظ بالتخزين المحلي حتى لا يحذف المتصفح بيانات التطبيق تلقائيًا.
-  useEffect(() => {
-    if (typeof navigator === "undefined" || !navigator.storage?.persist) return;
-    void navigator.storage.persist().catch(() => false);
-  }, []);
-
   // المزامنة في الخلفية بعد تغيّر البيانات أو رجوع الإنترنت، من غير طلبات عند فتح التطبيق.
   useEffect(() => {
     let timer: number | undefined;
