@@ -12,8 +12,8 @@ import {
 
 export function Spinner({ label = "بيحمّل..." }: { label?: string }) {
   return (
-    <div role="status" aria-live="polite" className="flex items-center justify-center gap-3 py-10 text-[#8c7b6e]">
-      <span className="h-5 w-5 animate-spin rounded-full border-2 border-[#e96812] border-t-transparent" />
+    <div role="status" aria-live="polite" className="flex items-center justify-center gap-3 py-10 text-ink-muted-3">
+      <span className="h-5 w-5 animate-spin rounded-full border-2 border-spinner border-t-transparent" />
       <span>{label}</span>
     </div>
   );
@@ -29,10 +29,10 @@ export function EmptyState({
   action?: ReactNode;
 }) {
   return (
-    <section className="tx-empty-state rounded-[30px] border border-[#f1e2d6] bg-gradient-to-b from-white to-[#fff8f1] px-5 py-10 text-center shadow-[0_12px_30px_rgba(105,54,20,.045)]">
-      <div aria-hidden="true" className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-[22px] border border-[#f7dfcc] bg-[#fff0e4] text-3xl text-[#bd4b0a] shadow-[0_8px_20px_rgba(189,75,10,.08)]">⌕</div>
-      <p className="text-lg font-extrabold text-[#2d1d13]">{title}</p>
-      <p className="mx-auto mt-2 max-w-md text-sm leading-7 text-[#8c7b6e]">{text}</p>
+    <section className="tx-empty-state rounded-hero border border-line bg-gradient-to-b from-white to-[#fff8f1] px-5 py-10 text-center shadow-empty">
+      <div aria-hidden="true" className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-card border border-light bg-brand-200 text-3xl text-brand-deep shadow-empty-inner">⌕</div>
+      <p className="text-lg font-extrabold text-ink-3">{title}</p>
+      <p className="mx-auto mt-2 max-w-md text-sm leading-7 text-ink-muted-3">{text}</p>
       {action ? <div className="mx-auto mt-5 w-full max-w-xs">{action}</div> : null}
     </section>
   );
@@ -46,13 +46,13 @@ export function Banner({
   children: ReactNode;
 }) {
   const config = {
-    info: { icon: "ⓘ", style: "border-[#e9ddd3] border-r-[#c6530b] text-[#75401f]", iconStyle: "bg-[#fff0e4] text-[#bd4b0a]" },
-    error: { icon: "!", style: "border-[#ecd7d3] border-r-[#dc6254] text-[#913b31]", iconStyle: "bg-[#fff0ed] text-[#c44b3d]" },
-    success: { icon: "✓", style: "border-[#d7e7dc] border-r-[#329565] text-[#286345]", iconStyle: "bg-[#edf8f0] text-[#258253]" },
-    warn: { icon: "⚠", style: "border-[#eee2c9] border-r-[#d99a24] text-[#78551c]", iconStyle: "bg-[#fff7e6] text-[#b77a10]" },
+    info: { icon: "ⓘ", style: "border-line border-r-line-accent text-info-deep", iconStyle: "bg-brand-200 text-brand-deep" },
+    error: { icon: "!", style: "border-line-risk border-r-line-risk-strong text-risk-deep", iconStyle: "bg-risk-soft text-risk-light" },
+    success: { icon: "✓", style: "border-line-ok border-r-line-ok-strong text-ok-deep", iconStyle: "bg-ok-soft text-ok-light" },
+    warn: { icon: "⚠", style: "border-line-warn border-r-line-warn-strong text-warn-deep", iconStyle: "bg-warn-soft text-warn-light" },
   }[tone];
   return (
-    <div role={tone === "error" ? "alert" : "status"} aria-live={tone === "error" ? "assertive" : "polite"} className={`flex items-start gap-3 rounded-[18px] border border-r-4 bg-white px-4 py-3 text-sm leading-7 shadow-[0_6px_20px_rgba(70,43,24,.055)] ${config.style}`}>
+    <div role={tone === "error" ? "alert" : "status"} aria-live={tone === "error" ? "assertive" : "polite"} className={`flex items-start gap-3 rounded-card border border-r-4 bg-white px-4 py-3 text-sm leading-7 shadow-banner ${config.style}`}>
       <span aria-hidden="true" className={`mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-xl text-sm font-black ${config.iconStyle}`}>{config.icon}</span>
       <div className="min-w-0 flex-1">{children}</div>
     </div>
@@ -67,7 +67,7 @@ export function PrimaryButton({
   return (
     <button
       {...props}
-      className={`tx-btn-primary inline-flex min-h-12 w-full items-center justify-center rounded-full border border-[#e9782c]/35 bg-gradient-to-l from-[#c6530b] via-[#f07818] to-[#ff963f] px-4 text-base font-extrabold text-white shadow-[0_10px_24px_rgba(198,83,11,0.24),inset_0_1px_0_rgba(255,255,255,0.28)] transition duration-200 hover:-translate-y-0.5 hover:brightness-105 hover:shadow-[0_14px_28px_rgba(198,83,11,0.29)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#f07818]/25 enabled:active:translate-y-0 enabled:active:scale-[0.985] disabled:cursor-not-allowed disabled:opacity-55 disabled:saturate-50 ${className}`}
+      className={`tx-btn-primary inline-flex min-h-12 w-full items-center justify-center rounded-full border border-focus/35 bg-gradient-to-l from-[#c6530b] via-[#f07818] to-[#ff963f] px-4 text-base font-extrabold text-white shadow-button-primary transition duration-200 hover:-translate-y-0.5 hover:brightness-105 hover:shadow-button-primary-hover focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand-500/25 enabled:active:translate-y-0 enabled:active:scale-[0.985] disabled:cursor-not-allowed disabled:opacity-55 disabled:saturate-50 ${className}`}
     >
       {children}
     </button>
@@ -82,7 +82,7 @@ export function SecondaryButton({
   return (
     <button
       {...props}
-      className={`inline-flex min-h-12 items-center justify-center rounded-full border border-[#ead8ca] bg-white px-4 text-base font-bold text-[#5c4030] shadow-sm transition hover:border-[#e7b990] hover:bg-[#fffaf6] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#e96812]/15 disabled:opacity-60 ${className}`}
+      className={`inline-flex min-h-12 items-center justify-center rounded-full border border-line bg-white px-4 text-base font-bold text-ink-muted-deep shadow-sm transition hover:border-line-strong hover:bg-surface-hover focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-spinner/15 disabled:opacity-60 ${className}`}
     >
       {children}
     </button>
@@ -123,7 +123,7 @@ export function Field({
 }
 
 export const inputClass =
-  "min-h-12 w-full rounded-2xl border border-[#ead8ca] bg-white px-3 text-base text-[#2b1c12] outline-none transition placeholder:text-[#aa998d] focus:border-[#e9782c] focus:bg-white focus:ring-4 focus:ring-[#e96812]/10";
+  "min-h-12 w-full rounded-2xl border border-line bg-white px-3 text-base text-ink-deep outline-none transition placeholder:text-muted-placeholder focus:border-[#e9782c] focus:bg-white focus:ring-4 focus:ring-[#e96812]/10";
 
 type Toast = { id: number; type: "success" | "error" | "info"; text: string };
 
@@ -148,18 +148,18 @@ export function ToastProvider({ children }: { children: ReactNode }) {
       <div aria-live="polite" aria-relevant="additions" className="pointer-events-none fixed left-1/2 top-4 z-[70] flex w-[min(92vw,420px)] -translate-x-1/2 flex-col gap-2">
         {toasts.map((toast) => {
           const tone = toast.type === "success"
-            ? "border-[#d7e7dc] border-r-[#329565] text-[#286345]"
+            ? "border-line-ok border-r-line-ok-strong text-ok-deep"
             : toast.type === "error"
-              ? "border-[#ecd7d3] border-r-[#dc6254] text-[#913b31]"
-              : "border-[#e9ddd3] border-r-[#c6530b] text-[#75401f]";
+              ? "border-line-risk border-r-line-risk-strong text-risk-deep"
+              : "border-line border-r-line-accent text-info-deep";
           const icon = toast.type === "success" ? "✓" : toast.type === "error" ? "!" : "ⓘ";
           const iconTone = toast.type === "success"
-            ? "bg-[#edf8f0] text-[#258253]"
+            ? "bg-ok-soft text-ok-light"
             : toast.type === "error"
-              ? "bg-[#fff0ed] text-[#c44b3d]"
-              : "bg-[#fff0e4] text-[#bd4b0a]";
+              ? "bg-risk-soft text-risk-light"
+              : "bg-brand-200 text-brand-deep";
           return (
-            <div key={toast.id} role={toast.type === "error" ? "alert" : "status"} className={`flex items-center gap-3 rounded-[18px] border border-r-4 bg-white px-4 py-3 text-sm font-bold shadow-[0_10px_28px_rgba(75,42,20,.11)] ${tone}`}>
+            <div key={toast.id} role={toast.type === "error" ? "alert" : "status"} className={`flex items-center gap-3 rounded-card border border-r-4 bg-white px-4 py-3 text-sm font-bold shadow-toast ${tone}`}>
               <span aria-hidden="true" className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-xl ${iconTone}`}>{icon}</span>
               <span className="min-w-0 flex-1">{toast.text}</span>
             </div>
@@ -189,13 +189,13 @@ export function Modal({
 }) {
   if (!open) return null;
   return (
-    <div className="fixed inset-0 z-[80] flex items-end justify-center bg-[#24180f]/35 p-2 backdrop-blur-[3px] sm:items-center sm:p-3">
+    <div className="fixed inset-0 z-[80] flex items-end justify-center bg-backdrop/35 p-2 backdrop-blur-[3px] sm:items-center sm:p-3">
       <button type="button" className="absolute inset-0" aria-label="إغلاق النافذة" onClick={onClose} />
-      <div role="dialog" aria-modal="true" aria-labelledby="tx-modal-title" className="relative max-h-[88dvh] w-full max-w-lg overflow-y-auto rounded-t-[30px] border border-[#f1e2d6] bg-gradient-to-b from-white to-[#fffaf6] p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] shadow-[0_24px_70px_rgba(48,27,13,.22)] sm:rounded-[28px]">
-        <div className="mx-auto mb-4 h-1.5 w-12 rounded-full bg-[#ead8ca] sm:hidden" />
+      <div role="dialog" aria-modal="true" aria-labelledby="tx-modal-title" className="relative max-h-[88dvh] w-full max-w-lg overflow-y-auto rounded-t-[30px] border border-line bg-gradient-to-b from-white to-[#fffaf6] p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] shadow-modal sm:rounded-[28px]">
+        <div className="mx-auto mb-4 h-1.5 w-12 rounded-full bg-line sm:hidden" />
         <div className="mb-4 flex items-start justify-between gap-3">
-          <h2 id="tx-modal-title" className="text-lg font-extrabold text-[#2d1d13]">{title}</h2>
-          <button type="button" onClick={onClose} aria-label="إغلاق النافذة" className="min-h-10 min-w-10 rounded-full text-xl text-neutral-500 transition hover:bg-[#fff0e4] hover:text-[#bd4b0a] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#e96812]/20">
+          <h2 id="tx-modal-title" className="text-lg font-extrabold text-ink-3">{title}</h2>
+          <button type="button" onClick={onClose} aria-label="إغلاق النافذة" className="min-h-10 min-w-10 rounded-full text-xl text-neutral-500 transition hover:bg-brand-200 hover:text-brand-deep focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-spinner/20">
             ×
           </button>
         </div>

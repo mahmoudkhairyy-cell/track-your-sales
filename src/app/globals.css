@@ -54,9 +54,46 @@
   --color-ink-muted-3: #8c7b6e;
   --shadow-accent: 0 12px 30px rgba(166, 76, 16, 0.07);
   --shadow-deep: 0 12px 28px rgba(189, 75, 10, 0.22);
-}
+  /* جلسة 2ب — توكنز مكونات ui.tsx */
+  /* ألوان الحالات (Banner + Toast) */
+  --color-info-deep: #75401f;
+  --color-risk-soft: #fff0ed;
+  --color-risk-deep: #913b31;
+  --color-risk-light: #c44b3d;
+  --color-ok-deep: #286345;
+  --color-ok-light: #258253;
+  --color-warn-deep: #78551c;
+  --color-warn-light: #b77a10;
 
-:root {
+  /* حدود الحالات */
+  --color-line-risk: #ecd7d3;
+  --color-line-ok: #d7e7dc;
+  --color-line-warn: #eee2c9;
+  --color-line-accent: #c6530b;
+  --color-line-risk-strong: #dc6254;
+  --color-line-ok-strong: #329565;
+  --color-line-warn-strong: #d99a24;
+
+  /* ألوان مكونات تانية */
+  --color-ink-deep: #2b1c12;
+  --color-ink-muted-deep: #5c4030;
+  --color-muted-placeholder: #aa998d;
+  --color-spinner: #e96812;
+  --color-border-light: #f7dfcc;
+  --color-border-focus: #e9782c;
+  --color-backdrop: #24180f;
+  --color-surface-hover: #fffaf6;
+
+  /* ظلال المكونات */
+  --shadow-button-primary: 0 10px 24px rgba(198, 83, 11, 0.24), inset 0 1px 0 rgba(255, 255, 255, 0.28);
+  --shadow-button-primary-hover: 0 14px 28px rgba(198, 83, 11, 0.29);
+  --shadow-modal: 0 24px 70px rgba(48, 27, 13, 0.22);
+  --shadow-toast: 0 10px 28px rgba(75, 42, 20, 0.11);
+  --shadow-empty: 0 12px 30px rgba(105, 54, 20, 0.045);
+  --shadow-empty-inner: 0 8px 20px rgba(189, 75, 10, 0.08);
+  --shadow-banner: 0 6px 20px rgba(70, 43, 24, 0.055);
+
+}:root {
   color-scheme: light;
 
   --tx-orange: #f07818;
@@ -93,9 +130,39 @@
   --tx-ink-muted-3: var(--color-ink-muted-3);
   --tx-shadow-accent: var(--shadow-accent);
   --tx-shadow-deep: var(--shadow-deep);
-}
+  /* جلسة 2ب — متغيرات توافقية */
+  --tx-info-deep: var(--color-info-deep);
+  --tx-risk-soft: var(--color-risk-soft);
+  --tx-risk-deep: var(--color-risk-deep);
+  --tx-risk-light: var(--color-risk-light);
+  --tx-ok-deep: var(--color-ok-deep);
+  --tx-ok-light: var(--color-ok-light);
+  --tx-warn-deep: var(--color-warn-deep);
+  --tx-warn-light: var(--color-warn-light);
+  --tx-line-risk: var(--color-line-risk);
+  --tx-line-ok: var(--color-line-ok);
+  --tx-line-warn: var(--color-line-warn);
+  --tx-line-accent: var(--color-line-accent);
+  --tx-line-risk-strong: var(--color-line-risk-strong);
+  --tx-line-ok-strong: var(--color-line-ok-strong);
+  --tx-line-warn-strong: var(--color-line-warn-strong);
+  --tx-ink-deep: var(--color-ink-deep);
+  --tx-ink-muted-deep: var(--color-ink-muted-deep);
+  --tx-muted-placeholder: var(--color-muted-placeholder);
+  --tx-spinner: var(--color-spinner);
+  --tx-border-light: var(--color-border-light);
+  --tx-border-focus: var(--color-border-focus);
+  --tx-backdrop: var(--color-backdrop);
+  --tx-surface-hover: var(--color-surface-hover);
+  --tx-shadow-button-primary: var(--shadow-button-primary);
+  --tx-shadow-button-primary-hover: var(--shadow-button-primary-hover);
+  --tx-shadow-modal: var(--shadow-modal);
+  --tx-shadow-toast: var(--shadow-toast);
+  --tx-shadow-empty: var(--shadow-empty);
+  --tx-shadow-empty-inner: var(--shadow-empty-inner);
+  --tx-shadow-banner: var(--shadow-banner);
 
-html {
+}html {
   direction: rtl;
   --font-cairo: "Cairo Variable";
   background: var(--color-bg);
