@@ -295,7 +295,7 @@ export default function MorePage() {
           </div>
           <img src="/track-your-sales/logo-mark.png" alt="Track Your Sales" className="h-14 w-14 object-contain" />
         </div>
-        <p className="relative mt-3 text-[11px] leading-6 text-[var(--color-text-secondary)]">أداة مساعدة مستقلة وغير رسمية، وليست تطبيقًا رسميًا تابعًا لشركة Orange.</p>
+        <p className="relative mt-3 text-[11px] leading-6 text-[var(--color-text-secondary)]">أداة مستقلة وغير رسمية لمتابعة الأداء، وليست تطبيقًا رسميًا تابعًا لشركة Orange.</p>
         {reportData ? (
           <div className="relative mt-4 grid grid-cols-3 gap-2 text-center">
             <div className="rounded-2xl border border-[var(--color-border)] bg-white/90 px-2 py-3">
@@ -433,7 +433,7 @@ export default function MorePage() {
           <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[var(--color-primary-700)]">← رجوع للقائمة</button>
           <section className="rounded-[24px] border border-white bg-white p-5 shadow-sm">
             <p className="font-black">{APP_NAME}</p>
-            <p className="mt-2 text-sm leading-7 text-[var(--color-text-secondary)]">أداة مساعدة مستقلة وغير رسمية، وليست تطبيقًا رسميًا تابعًا لشركة Orange.</p>
+            <p className="mt-2 text-sm leading-7 text-[var(--color-text-secondary)]">أداة مستقلة وغير رسمية لمتابعة الأداء، وليست تطبيقًا رسميًا تابعًا لشركة Orange.</p>
           </section>
         </div>
       ) : null}
