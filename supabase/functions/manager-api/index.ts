@@ -1,108 +1,130 @@
-// دالة خادم لشاشة المدير: بتتحقق من كلمة المرور وبتنفذ العمليات بصلاحية الخادم،
-// والدوال نفسها مش مفتوحة للزوار. فيها حد لعدد المحاولات الفاشلة لكل عنوان IP.
-
+// Employee report sync + authenticated manager actions.
 const ALLOWED_ORIGIN = "https://mahmoudkhairyy-cell.github.io";
 const MAX_FAILS = 5;
 const WINDOW_MS = 15 * 60 * 1000;
-
-// ملاحظة: الحد ده في الذاكرة، وبيتصفر لما الدالة تتعاد تشغيلها. ده تحسين مش حماية كاملة.
 const failures = new Map<string, { count: number; first: number }>();
 
-function corsHeaders(_origin: string | null) {
+function corsHeaders() {
   return {
     "Access-Control-Allow-Origin": ALLOWED_ORIGIN,
     "Access-Control-Allow-Headers": "content-type, apikey, authorization",
     "Access-Control-Allow-Methods": "POST, OPTIONS",
+    "Vary": "Origin",
   };
 }
-
-function json(body: unknown, status: number, origin: string | null) {
-  return new Response(JSON.stringify(body), {
-    status,
-    headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
-  });
+function json(body: unknown, status: number) {
+  return new Response(JSON.stringify(body), { status, headers: { "Content-Type": "application/json", ...corsHeaders() } });
 }
-
 function clientKey(req: Request): string {
   return req.headers.get("x-forwarded-for")?.split(",")[0].trim() || "unknown";
 }
-
 function isBlocked(key: string): boolean {
   const entry = failures.get(key);
   if (!entry) return false;
-  if (Date.now() - entry.first > WINDOW_MS) {
-    failures.delete(key);
-    return false;
-  }
+  if (Date.now() - entry.first > WINDOW_MS) { failures.delete(key); return false; }
   return entry.count >= MAX_FAILS;
 }
-
 function recordFailure(key: string) {
   const now = Date.now();
   const entry = failures.get(key);
-  if (!entry || now - entry.first > WINDOW_MS) {
-    failures.set(key, { count: 1, first: now });
-  } else {
-    entry.count += 1;
-  }
+  if (!entry || now - entry.first > WINDOW_MS) failures.set(key, { count: 1, first: now });
+  else entry.count += 1;
 }
-
-const ACTIONS: Record<string, { rpc: string; args: (b: Record<string, string>) => Record<string, string> }> = {
-  reports: { rpc: "get_reports_for_password", args: (b) => ({ p_password: b.password }) },
-  manager_name: { rpc: "get_manager_name", args: (b) => ({ p_password: b.password }) },
-  delete: { rpc: "delete_report", args: (b) => ({ p_password: b.password, p_branch_id: b.branchId }) },
-  change_password: { rpc: "change_password_any", args: (b) => ({ p_old: b.password, p_new: b.newPassword }) },
-};
+async function rpc(url: string, serviceKey: string, name: string, args: Record<string, unknown>) {
+  return await fetch(`${url}/rest/v1/rpc/${name}`, {
+    method: "POST",
+    headers: { apikey: serviceKey, Authorization: "Bearer " + serviceKey, "Content-Type": "application/json" },
+    body: JSON.stringify(args),
+  });
+}
 
 Deno.serve(async (req: Request) => {
   const origin = req.headers.get("origin");
-  if (req.method === "OPTIONS") return new Response(null, { status: 204, headers: corsHeaders(origin) });
-  if (req.method !== "POST") return json({ error: "method not allowed" }, 405, origin);
+  if (req.method === "OPTIONS") return new Response(null, { status: 204, headers: corsHeaders() });
+  if (origin !== ALLOWED_ORIGIN) return json({ error: "origin not allowed" }, 403);
+  if (req.method !== "POST") return json({ error: "method not allowed" }, 405);
 
   const key = clientKey(req);
-  if (isBlocked(key)) return json({ error: "too many attempts, try later" }, 429, origin);
+  if (isBlocked(key)) return json({ error: "too many attempts, try later" }, 429);
 
-  let body: Record<string, string>;
+  let body: Record<string, unknown>;
   try {
-    body = await req.json();
-  } catch {
-    return json({ error: "bad json" }, 400, origin);
-  }
-
-  const action = ACTIONS[body.action];
-  if (!action) return json({ error: "unknown action" }, 400, origin);
-  if (typeof body.password !== "string" || body.password.length === 0 || body.password.length > 200) {
-    return json({ error: "bad password" }, 400, origin);
-  }
-  if (body.action === "change_password") {
-    if (typeof body.newPassword !== "string" || body.newPassword.length < 8 || body.newPassword.length > 200) {
-      return json({ error: "new password must be 8 to 200 characters" }, 400, origin);
-    }
-  }
+    const parsed = await req.json();
+    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) return json({ error: "bad json" }, 400);
+    body = parsed as Record<string, unknown>;
+  } catch { return json({ error: "bad json" }, 400); }
 
   const url = Deno.env.get("SUPABASE_URL");
   const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
-  if (!url || !serviceKey) return json({ error: "server misconfigured" }, 500, origin);
+  if (!url || !serviceKey) return json({ error: "server misconfigured" }, 500);
 
-  const res = await fetch(`${url}/rest/v1/rpc/${action.rpc}`, {
-    method: "POST",
-    headers: {
-      apikey: serviceKey,
-      Authorization: `Bearer ${serviceKey}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(action.args(body)),
-  });
-
-  const text = await res.text();
-  if (!res.ok) {
-    if (text.includes("wrong password")) {
-      recordFailure(key);
-      return json({ error: "wrong password" }, 401, origin);
+  if (body.action === "submit_report") {
+    const branchId = body.branchId;
+    const employee = body.employee;
+    const branch = body.branch;
+    const payload = body.payload;
+    if (typeof branchId !== "string" || branchId.length < 8 || branchId.length > 80 ||
+        typeof employee !== "string" || employee.trim().length < 2 ||
+        typeof branch !== "string" || branch.trim().length < 2 ||
+        !payload || typeof payload !== "object" || Array.isArray(payload) ||
+        new TextEncoder().encode(JSON.stringify(payload)).length > 190000) {
+      return json({ error: "invalid report" }, 400);
     }
-    return json({ error: "request failed" }, 500, origin);
+
+    // Reuse the employee's existing report row when name + branch match, avoiding duplicates.
+    let effectiveBranchId = branchId;
+    const query = new URLSearchParams({
+      select: "branch_id",
+      employee_name: `eq.${employee.trim().slice(0, 80)}`,
+      branch_name: `eq.${branch.trim().slice(0, 80)}`,
+      order: "updated_at.desc",
+      limit: "1",
+    });
+    const existing = await fetch(`${url}/rest/v1/branch_reports?${query.toString()}`, {
+      headers: { apikey: serviceKey, Authorization: "Bearer " + serviceKey },
+    });
+    if (existing.ok) {
+      const matches = await existing.json();
+      if (Array.isArray(matches) && typeof matches[0]?.branch_id === "string") {
+        effectiveBranchId = matches[0].branch_id;
+      }
+    }
+
+    const res = await rpc(url, serviceKey, "submit_report", {
+      p_branch_id: effectiveBranchId,
+      p_employee: employee.trim().slice(0, 80),
+      p_branch: branch.trim().slice(0, 80),
+      p_payload: payload,
+    });
+    if (!res.ok) return json({ error: "report sync failed" }, 500);
+    return json({ ok: true }, 200);
   }
 
+  const actions: Record<string, { rpc: string; args: (b: Record<string, unknown>) => Record<string, unknown> }> = {
+    reports: { rpc: "get_reports_for_password", args: (b) => ({ p_password: b.password }) },
+    manager_name: { rpc: "get_manager_name", args: (b) => ({ p_password: b.password }) },
+    delete: { rpc: "delete_report", args: (b) => ({ p_password: b.password, p_branch_id: b.branchId }) },
+    change_password: { rpc: "change_password_any", args: (b) => ({ p_old: b.password, p_new: b.newPassword }) },
+  };
+  const action = typeof body.action === "string" ? actions[body.action] : undefined;
+  if (!action) return json({ error: "unknown action" }, 400);
+  if (typeof body.password !== "string" || body.password.length === 0 || body.password.length > 200) {
+    return json({ error: "bad password" }, 400);
+  }
+  if (body.action === "change_password" &&
+      (typeof body.newPassword !== "string" || body.newPassword.length < 8 || body.newPassword.length > 200)) {
+    return json({ error: "new password must be 8 to 200 characters" }, 400);
+  }
+
+  const res = await rpc(url, serviceKey, action.rpc, action.args(body));
+  const responseText = await res.text();
+  if (!res.ok) {
+    if (responseText.includes("wrong password")) {
+      recordFailure(key);
+      return json({ error: "wrong password" }, 401);
+    }
+    return json({ error: "request failed" }, 500);
+  }
   failures.delete(key);
-  return json(text ? JSON.parse(text) : null, 200, origin);
+  return json(responseText ? JSON.parse(responseText) : null, 200);
 });
