@@ -178,7 +178,7 @@ function SearchableSelect({
                 setEditing(false);
                 setOpen(false);
               }}
-              className={\`block w-full rounded-xl px-3 py-2.5 text-right text-sm font-bold transition hover:bg-[#fff1e5] hover:text-[#bd4b0a] \${value === item ? "bg-[#fff1e5] text-[#bd4b0a]" : "text-[#514238]"}\`}
+              className={`block w-full rounded-xl px-3 py-2.5 text-right text-sm font-bold transition hover:bg-[#fff1e5] hover:text-[#bd4b0a] ${value === item ? "bg-[#fff1e5] text-[#bd4b0a]" : "text-[#514238]"}`}
             >
               {item}
             </button>
