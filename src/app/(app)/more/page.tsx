@@ -635,7 +635,7 @@ export default function MorePage() {
 
         <div className="mt-4 rounded-2xl border border-[var(--color-border)] bg-[var(--color-primary-50)] p-4 text-sm">
           <p className="font-black">📅 آخر نسخة احتياطية</p>
-          <p className="mt-1 font-bold">{lastBackupAt ? \`\${formatDateAr(lastBackupAt.slice(0, 10))} · \${formatTimeCairo(lastBackupAt)}\` : "لم يتم إنشاء نسخة احتياطية على هذا الجهاز بعد."}</p>
+          <p className="mt-1 font-bold">{lastBackupAt ? `${formatDateAr(lastBackupAt.slice(0, 10))} · ${formatTimeCairo(lastBackupAt)}` : "لم يتم إنشاء نسخة احتياطية على هذا الجهاز بعد."}</p>
           <p className="mt-1 text-[var(--color-text-secondary)]">{!lastBackupAt ? "تذكير: نزّل نسخة احتياطية الآن لحماية بياناتك." : "تذكير: يُفضّل تحديث النسخة الاحتياطية مرة كل أسبوع."}</p>
         </div>
         <div className="mt-4 grid gap-3 sm:grid-cols-2">
