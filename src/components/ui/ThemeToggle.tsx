@@ -30,8 +30,15 @@ export function ThemeToggle() {
     }
 
     applyTheme(initialTheme);
-    setTheme(initialTheme);
-    setReady(true);
+
+    // Defer React state synchronization to the next frame; keep the theme
+    // applied immediately to avoid a flash while satisfying React 19 lint rules.
+    const frame = window.requestAnimationFrame(() => {
+      setTheme(initialTheme);
+      setReady(true);
+    });
+
+    return () => window.cancelAnimationFrame(frame);
   }, []);
 
   function toggleTheme() {
