@@ -454,34 +454,31 @@ main tbody tr:hover { background: var(--color-brand-50); }
     color: var(--color-ink-dark);
   }
 
-  :root:not(.light) main article,
-  :root:not(.light) main section {
+  :root:not(.light) :where(main article, main section) {
     background: var(--color-surface-dark);
     border-color: var(--color-line-dark);
   }
 
-  :root:not(.light) main input:not([type="checkbox"]):not([type="radio"]),
-  :root:not(.light) main select,
-  :root:not(.light) main textarea {
+  :root:not(.light) :where(main input:not([type="checkbox"]):not([type="radio"]), main select, main textarea) {
     background: var(--color-surface-dark);
     border-color: var(--color-line-strong-dark);
     color: var(--color-ink-dark);
   }
 
-  :root:not(.light) main table {
+  :root:not(.light) :where(main table) {
     background: var(--color-surface-dark);
     border-color: var(--color-line-dark);
   }
 
-  :root:not(.light) main tbody tr:nth-child(even) {
+  :root:not(.light) :where(main tbody tr:nth-child(even)) {
     background: var(--color-surface-2-dark);
   }
 
-  :root:not(.light) main tbody tr:nth-child(odd) {
+  :root:not(.light) :where(main tbody tr:nth-child(odd)) {
     background: var(--color-surface-dark);
   }
 
-  :root:not(.light) main tbody tr:hover {
+  :root:not(.light) :where(main tbody tr:hover) {
     background: var(--color-surface-2-dark);
   }
 }
