@@ -130,6 +130,26 @@
   --shadow-wiki: 0 14px 30px rgba(105, 54, 20, 0.09);
   --shadow-wiki-deep: 0 12px 32px rgba(105, 54, 20, 0.055);
   --shadow-wiki-strong: 0 8px 20px rgba(189, 75, 10, 0.22);
+  /* المرحلة 3 — توكنز الـ Dark Mode */
+  --color-bg-dark: #1a1410;
+  --color-surface-dark: #241d17;
+  --color-surface-2-dark: #2d251d;
+  --color-line-dark: #3a3129;
+  --color-line-strong-dark: #4a4038;
+  --color-ink-dark: #f5f0eb;
+  --color-ink-2-dark: #b8a99a;
+  --color-brand-500-dark: #ff963f;
+  --color-brand-600-dark: #f07818;
+
+  /* المرحلة 3 — توكنز الـ Skeleton */
+  --color-skeleton: #e8ddd2;
+  --color-skeleton-dark: #3a3129;
+  --color-skeleton-shine: #f5efe8;
+  --color-skeleton-shine-dark: #4a4038;
+
+  /* المرحلة 3 — توكنز الـ Animation */
+  --duration-count-up: 400ms;
+  --duration-skeleton: 1.4s;
 }:root {
   color-scheme: light;
 
@@ -238,6 +258,22 @@
   --tx-shadow-wiki: var(--shadow-wiki);
   --tx-shadow-wiki-deep: var(--shadow-wiki-deep);
   --tx-shadow-wiki-strong: var(--shadow-wiki-strong);
+  /* المرحلة 3 — متغيرات توافقية */
+  --tx-bg-dark: var(--color-bg-dark);
+  --tx-surface-dark: var(--color-surface-dark);
+  --tx-surface-2-dark: var(--color-surface-2-dark);
+  --tx-line-dark: var(--color-line-dark);
+  --tx-line-strong-dark: var(--color-line-strong-dark);
+  --tx-ink-dark: var(--color-ink-dark);
+  --tx-ink-2-dark: var(--color-ink-2-dark);
+  --tx-brand-500-dark: var(--color-brand-500-dark);
+  --tx-brand-600-dark: var(--color-brand-600-dark);
+  --tx-skeleton: var(--color-skeleton);
+  --tx-skeleton-dark: var(--color-skeleton-dark);
+  --tx-skeleton-shine: var(--color-skeleton-shine);
+  --tx-skeleton-shine-dark: var(--color-skeleton-shine-dark);
+  --tx-duration-count-up: var(--duration-count-up);
+  --tx-duration-skeleton: var(--duration-skeleton);
 }html {
   direction: rtl;
   --font-cairo: "Cairo Variable";
