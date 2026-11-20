@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useMemo, useState } from "react";
-import { BRANCHES, MANAGER_FIXED_SALARY, MANAGER_FULL_COMMISSION, MANAGER_KPI_WEIGHTS } from "@/lib/constants";
+import { BRANCHES, MANAGER_FIXED_SALARY, MANAGER_FULL_COMMISSION } from "@/lib/constants";
 import { managerApi } from "@/lib/cloud";
 import { cairoYearMonth, monthLabelAr } from "@/lib/dates";
 
