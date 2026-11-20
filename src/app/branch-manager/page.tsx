@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState, type FormEvent } from "react";
-import { readProfile } from "@/lib/local-api";
+import { logoutBranchManager, readProfile } from "@/lib/local-api";
 import { BRANCHES, MANAGER_FULL_COMMISSION, MANAGER_KPI_WEIGHTS } from "@/lib/constants";
 import { managerApi } from "@/lib/cloud";
 import { cairoYearMonth } from "@/lib/dates";
@@ -165,6 +165,21 @@ export default function BranchManagerPage() {
     return { rows, quality, productivity, productivityContribution, rawTotal, total: Math.min(200, rawTotal) };
   }, [reports, qualityMap, data?.productivity]);
 
+  function logout() {
+    if (!window.confirm("Log out of the Branch Manager dashboard?")) return;
+    try { sessionStorage.removeItem("tys.mgrPass"); } catch { /* Storage may be unavailable. */ }
+    if (!logoutBranchManager()) {
+      setError("Could not complete logout. Please try again.");
+      return;
+    }
+    setActive(false);
+    setManagerName("");
+    setBranch("");
+    setData(null);
+    setError("");
+    setNotice("");
+  }
+
   async function enter(event: FormEvent) {
     event.preventDefault();
     if (managerName.trim().length < 2 || !branch) { setError("Enter your name and select your branch."); return; }
@@ -232,7 +247,10 @@ export default function BranchManagerPage() {
             <h1 className="mt-1 text-xl font-black tracking-tight text-[#2d2119] sm:text-2xl">Good to see you, {managerName} 👋</h1>
             <p className="mt-1 text-xs font-semibold text-[#88796e]">📍 {branch} · {new Date(`${month}-01T12:00:00`).toLocaleDateString("en-US", { month: "long", year: "numeric" })}</p>
           </div>
-          <button onClick={() => load(branch)} disabled={loading} className="shrink-0 rounded-xl border border-orange-100 bg-orange-50 px-3 py-2 text-xs font-bold text-[#bd4b0a]">{loading ? "Refreshing..." : "Refresh ↻"}</button>
+          <div className="flex shrink-0 items-center gap-2">
+            <button onClick={() => load(branch)} disabled={loading} className="rounded-xl border border-orange-100 bg-orange-50 px-3 py-2 text-xs font-bold text-[#bd4b0a]">{loading ? "Refreshing..." : "Refresh ↻"}</button>
+            <button onClick={logout} className="rounded-xl border border-red-200 bg-white px-3 py-2 text-xs font-bold text-red-600 transition hover:bg-red-50">Log out ↗</button>
+          </div>
         </header>
         {error ? <p className="rounded-xl border border-red-200 bg-red-50 p-3 text-sm font-bold text-red-700">{error}</p> : null}
         {notice ? <p className="rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm font-bold text-emerald-800">{notice}</p> : null}
