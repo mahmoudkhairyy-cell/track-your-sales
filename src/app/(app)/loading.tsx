@@ -1,9 +1,9 @@
 export default function Loading() {
   return (
     <div className="mx-auto flex min-h-[55vh] w-full max-w-2xl flex-col items-center justify-center px-4 text-center" role="status" aria-live="polite">
-      <div className="relative mb-5 flex h-16 w-16 items-center justify-center rounded-[22px] bg-gradient-to-br from-[#f58a3c] to-[#bd4b0a] text-2xl text-white shadow-[0_12px_28px_rgba(189,75,10,0.22)]">
+      <div className="relative mb-5 flex h-16 w-16 items-center justify-center rounded-card bg-gradient-to-br from-[#f58a3c] to-[#bd4b0a] text-2xl text-white shadow-[0_12px_28px_rgba(189,75,10,0.22)]">
         🍊
-        <span className="absolute -inset-2 animate-ping rounded-[26px] border border-[#e96812]/20" />
+        <span className="absolute -inset-2 animate-ping rounded-card border border-[#e96812]/20" />
       </div>
       <p className="text-base font-black text-[#2d1d13]" dir="ltr">Track Your Sales</p>
       <p className="mt-2 text-sm text-[#8c7b6e]">بنجهّز الصفحة… لحظة واحدة</p>
