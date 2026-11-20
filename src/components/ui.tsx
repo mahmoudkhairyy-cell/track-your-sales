@@ -229,8 +229,17 @@ export function AnimatedCounter({
 }) {
   const [display, setDisplay] = useState(0);
   const prevValue = useRef(0);
+  const rafId = useRef<number | null>(null);
 
   useEffect(() => {
+    // لو المستخدم مفعّل تقليل الحركة، اعرض القيمة مباشرة بدون أنيميشن
+    const motionMedia = window.matchMedia("(prefers-reduced-motion: reduce)");
+    if (motionMedia.matches) {
+      setDisplay(value);
+      prevValue.current = value;
+      return;
+    }
+
     const start = prevValue.current;
     const end = value;
     const startTime = performance.now();
@@ -243,13 +252,28 @@ export function AnimatedCounter({
       setDisplay(Math.round(current));
 
       if (progress < 1) {
-        requestAnimationFrame(animate);
+        rafId.current = requestAnimationFrame(animate);
       } else {
         prevValue.current = end;
+        rafId.current = null;
       }
     };
 
-    requestAnimationFrame(animate);
+    // إلغاء أي حركة سابقة قبل بدء حركة جديدة
+    if (rafId.current !== null) {
+      cancelAnimationFrame(rafId.current);
+      rafId.current = null;
+    }
+
+    rafId.current = requestAnimationFrame(animate);
+
+    // cleanup: إلغاء الحركة عند إزالة المكوّن أو تغيير القيمة
+    return () => {
+      if (rafId.current !== null) {
+        cancelAnimationFrame(rafId.current);
+        rafId.current = null;
+      }
+    };
   }, [value, duration]);
 
   return <span className={className}>{display.toLocaleString("ar-EG")}</span>;
