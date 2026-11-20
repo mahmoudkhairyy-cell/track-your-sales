@@ -302,6 +302,9 @@ export function BulletChart({
       className={`relative ${className}`}
       role="img"
       aria-label={`نسبة الإنجاز ${Math.round(percent)} بالمئة، والمتوقع النهارده ${Math.round(expected)} بالمئة`}
+      aria-valuenow={Math.round(capped)}
+      aria-valuemin={0}
+      aria-valuemax={100}
     >
       <div className="h-3 w-full overflow-hidden rounded-full bg-surface-2 dark:bg-surface-2-dark">
         <div
