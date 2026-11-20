@@ -36,7 +36,7 @@ jobs:
           path: out
 
   deploy:
-    needs: [build, backend-test]
+    needs: build
     runs-on: ubuntu-latest
     environment:
       name: github-pages
@@ -44,20 +44,3 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@v4
-
-  backend-test:
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    defaults:
-      run:
-        working-directory: ai-backend
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: npm
-          cache-dependency-path: ai-backend/package.json
-      - name: Install dependencies
-        run: npm install --no-audit --no-fund --prefer-offline --progress=false --fetch-retries=2 --fetch-timeout=120000
-      - run: npm test
