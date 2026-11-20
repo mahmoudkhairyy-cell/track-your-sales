@@ -249,7 +249,6 @@ export default function BranchManagerPage() {
           </div>
           <div className="flex shrink-0 items-center gap-2">
             <button onClick={() => load(branch)} disabled={loading} className="rounded-xl border border-orange-100 bg-orange-50 px-3 py-2 text-xs font-bold text-[#bd4b0a]">{loading ? "Refreshing..." : "Refresh ↻"}</button>
-            <button onClick={logout} className="rounded-xl border border-red-200 bg-white px-3 py-2 text-xs font-bold text-red-600 transition hover:bg-red-50">Log out ↗</button>
           </div>
         </header>
         {error ? <p className="rounded-xl border border-red-200 bg-red-50 p-3 text-sm font-bold text-red-700">{error}</p> : null}
@@ -348,6 +347,9 @@ export default function BranchManagerPage() {
           </div>
         </section>
         ) : null}
+        <div className="pb-8 pt-3">
+          <button onClick={logout} className="mx-auto flex min-h-12 w-full max-w-sm items-center justify-center gap-2 rounded-2xl border border-red-200 bg-white px-4 py-3 text-sm font-black text-red-600 shadow-sm transition hover:bg-red-50">↪ Log out</button>
+        </div>
         <footer className="pb-6 text-center text-[11px] text-[#a18b7b]">Track Your Sales · Independent Branch Manager Dashboard</footer>
       </div>
     </main>
