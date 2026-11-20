@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { AnimatedCounter, Banner, BulletChart, EmptyState, Skeleton } from "@/components/ui";
 import { ApiError, api } from "@/lib/client";
-import { formatMoney, formatPercent, formatQty } from "@/lib/calculations";
+import { formatPercent, formatQty } from "@/lib/calculations";
 import { useMonth } from "@/components/AppShell";
 import { kpiEmoji } from "@/lib/constants";
 import { MOOD_STYLES, kpiMood, overallMood } from "@/lib/motivation";
