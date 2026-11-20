@@ -121,7 +121,7 @@ function FirstRunProfile({ onDone }: { onDone: () => void }) {
         setError("اختار إنت موظف ولا مدير");
         return;
       }
-      if (role === "area_manager" && (!name.trim() || !managerPassword)) {
+      if (role === "area_manager" && (!AREA_MANAGERS.some((item) => item === name.trim()) || !managerPassword)) {
         setError("اختار اسمك واكتب كلمة السر");
         return;
       }
@@ -148,7 +148,7 @@ function FirstRunProfile({ onDone }: { onDone: () => void }) {
       return;
     }
     if (role === "area_manager") {
-      if (!name.trim() || !managerPassword) {
+      if (!AREA_MANAGERS.some((item) => item === name.trim()) || !managerPassword) {
         setError("اختار اسمك واكتب كلمة السر");
         return;
       }
