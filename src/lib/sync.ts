@@ -1,5 +1,5 @@
 import { api } from "@/lib/client";
-import { cloudRpc } from "@/lib/cloud";
+import { managerApi } from "@/lib/cloud";
 import { cairoYearMonth } from "@/lib/dates";
 import { readProfile } from "@/lib/local-api";
 import { OUTSIDE_BRANCHES } from "@/lib/constants";
@@ -95,11 +95,11 @@ async function pushReportOnce(): Promise<boolean> {
       api<{ settings: SettingsSnapshot }>(`/api/months/${month}`),
       api<{ entries: EntrySnapshot[] }>(`/api/entries?month=${month}`),
     ]);
-    await cloudRpc("submit_report", {
-      p_branch_id: id,
-      p_employee: profile.name,
-      p_branch: profile.branch,
-      p_payload: {
+    await managerApi("submit_report", {
+      branchId: id,
+      employee: profile.name,
+      branch: profile.branch,
+      payload: {
         role: profile.role,
         areaManager: profile.areaManager,
         monthLabel: data.monthLabel,
