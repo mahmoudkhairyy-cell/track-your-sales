@@ -193,9 +193,13 @@ export default function BranchManagerPage() {
   return (
     <main className="min-h-screen bg-[#fffaf5] px-3 py-5 text-[#2d2119] sm:px-6" dir="ltr">
       <div className="mx-auto max-w-6xl space-y-5">
-        <header className="flex flex-wrap items-center justify-between gap-3 rounded-3xl bg-gradient-to-l from-[#bd4b0a] via-[#e96812] to-[#ff9d38] p-5 text-white shadow-lg">
-          <div><p className="text-xs font-bold text-white/80">Branch Manager Dashboard</p><h1 className="mt-1 text-xl font-black">{branch}</h1><p className="mt-1 text-xs text-white/85">{managerName} · {new Date(`${month}-01T12:00:00`).toLocaleDateString("en-US", { month: "long", year: "numeric" })}</p></div>
-          <button onClick={() => load(branch)} disabled={loading} className="rounded-xl border border-white/40 bg-white/15 px-4 py-2 text-sm font-bold">{loading ? "Refreshing..." : "Refresh Data ↻"}</button>
+        <header className="flex items-end justify-between gap-3 rounded-[26px] border border-white bg-white px-4 py-4 shadow-[0_1px_2px_rgba(43,20,0,.04)] sm:px-5">
+          <div className="min-w-0">
+            <p className="text-xs font-black tracking-[0.16em] text-[#bd4b0a]">BRANCH PERFORMANCE OVERVIEW</p>
+            <h1 className="mt-1 text-xl font-black tracking-tight text-[#2d2119] sm:text-2xl">Good to see you, ${managerName} 👋</h1>
+            <p className="mt-1 text-xs font-semibold text-[#88796e]">📍 ${branch} · ${new Date(`${month}-01T12:00:00`).toLocaleDateString("en-US", { month: "long", year: "numeric" })}</p>
+          </div>
+          <button onClick={() => load(branch)} disabled={loading} className="shrink-0 rounded-xl border border-orange-100 bg-orange-50 px-3 py-2 text-xs font-bold text-[#bd4b0a]">{loading ? "Refreshing..." : "Refresh ↻"}</button>
         </header>
         {error ? <p className="rounded-xl border border-red-200 bg-red-50 p-3 text-sm font-bold text-red-700">{error}</p> : null}
         {notice ? <p className="rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm font-bold text-emerald-800">{notice}</p> : null}
@@ -225,15 +229,11 @@ export default function BranchManagerPage() {
               </div>
             </div>
             <div className="h-3 overflow-hidden rounded-full bg-orange-100">
-              <div className="h-full rounded-full bg-gradient-to-r from-[#bd4b0a] via-[#e96812] to-[#ff9d38] transition-all duration-700" style={{ width: `${Math.min(100, metrics.total / 2)}%` }} />
+              <div className="h-full rounded-full bg-gradient-to-r from-[#bd4b0a] via-[#e96812] to-[#ff9d38] transition-all duration-700" style={{ width: `${Math.min(100, metrics.total)}%` }} />
             </div>
-            <div className="mt-2 flex justify-between text-[10px] font-bold text-[#88796e]" dir="ltr"><span>0%</span><span>Achievement</span><span>200%</span></div>
+            <div className="mt-2 flex justify-between text-[10px] font-bold text-[#88796e]" dir="ltr"><span>0%</span><span>100%</span></div>
 
           </div>
-        </section>
-        <section className="grid gap-3 sm:grid-cols-2">
-          <div className="rounded-2xl border border-[#f1dfd0] bg-white p-4"><p className="text-xs font-bold text-[#88796e]">Branch Average</p><p className="mt-2 text-3xl font-black text-[#bd4b0a]">{fmt(reports.length ? reports.reduce((sum,row)=>sum+(row.payload.overall??0),0)/reports.length : 0)}</p><p className="mt-1 text-xs text-[#88796e]">Average of employees and team leaders</p></div>
-          
         </section>
         <section className="rounded-3xl border border-[#f1dfd0] bg-white p-4 sm:p-5">
           <h2 className="text-lg font-black">Manager KPI Contributions</h2>
