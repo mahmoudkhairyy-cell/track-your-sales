@@ -70,6 +70,10 @@ function aggregatePercent(rows: Report[], key: string) {
   }
   return target > 0 ? achieved / target * 100 : 0;
 }
+function displayUnit(value: string) {
+  const units: Record<string, string> = { "خط": "lines", "نقطة": "points", "محفظة": "wallets", "%": "%" };
+  return units[value] ?? value;
+}
 function timeLabel(value: string) {
   try { return new Date(value).toLocaleString("en-US", { timeZone: "Africa/Cairo", dateStyle: "medium", timeStyle: "short" }); }
   catch { return value; }
@@ -263,7 +267,7 @@ export default function BranchManagerPage() {
               </div>
               <details className="mt-3 rounded-xl border border-[#f2e4d8] bg-[#fffdfb] p-3">
                 <summary className="cursor-pointer text-xs font-black text-[#8a4b20]">Daily Achievement Log ({row.payload.entries?.length ?? 0})</summary>
-                <div className="mt-3 space-y-2">{(row.payload.entries ?? []).map((entry, index) => <div key={entry.at ?? `${entry.date}-${index}`} className="flex flex-wrap justify-between gap-2 rounded-lg bg-white px-3 py-2 text-xs"><span>{entry.date} · {entry.kpi}</span><b>{entry.quantity} {entry.unit}</b></div>)}</div>
+                <div className="mt-3 space-y-2">{(row.payload.entries ?? []).map((entry, index) => <div key={entry.at ?? `${entry.date}-${index}`} className="flex flex-wrap justify-between gap-2 rounded-lg bg-white px-3 py-2 text-xs"><span>{entry.date} · {entry.kpi}</span><b>{entry.quantity} {displayUnit(entry.unit)}</b></div>)}</div>
               </details>
               <div className="mt-4 rounded-2xl border border-[#f2e4d8] p-3">
                 <div className="flex flex-wrap items-center justify-between gap-2"><div><h4 className="font-black">Quality Approval</h4><p className="text-xs text-[#88796e]">Employees keep their own entries; manager-approved percentages are recorded here.</p></div><span className="text-sm font-black text-[#bd4b0a]">Result {fmt(qualityPercent(q))}</span></div>
