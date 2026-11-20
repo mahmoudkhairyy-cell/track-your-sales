@@ -14,6 +14,7 @@ import { useMonth } from "@/components/AppShell";
 import { KpiIcon } from "@/components/KpiIcon";
 import { useHistoryView } from "@/lib/use-history-view";
 import { quantityHint, quantityMax, quantityMin, quantityStep, validateQuantity } from "@/lib/quantity";
+import { logoutProfile } from "@/lib/local-api";
 
 type EntryRow = {
   id: string;
@@ -299,6 +300,15 @@ export default function MorePage() {
   if (error) return <Banner tone="error">{error}</Banner>;
 
   const todayItems = todaySummary.filter((item) => item.quantity > 0 || item.count > 0);
+  function handleLogout() {
+    if (!window.confirm("متأكد إنك عايز تسجل خروج؟ بياناتك وإنجازاتك هتفضل محفوظة.")) return;
+    if (!logoutProfile()) {
+      toast.push("error", "تعذر تسجيل الخروج. حاول تاني.");
+      return;
+    }
+    window.location.assign("/track-your-sales/");
+  }
+
   const filteredEntries = entries.filter((entry) => {
     if (historyKpi !== "all" && entry.kpiKey !== historyKpi) return false;
     const needle = historyQuery.trim().toLocaleLowerCase("ar");
@@ -744,6 +754,11 @@ export default function MorePage() {
         </PrimaryButton>
       </Modal>
 
+      <div className="pb-8 pt-2">
+        <button type="button" onClick={handleLogout} className="flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl border border-red-200 bg-white px-4 py-3 text-sm font-extrabold text-red-600 shadow-sm transition hover:bg-red-50">
+          <span aria-hidden="true">↪</span> تسجيل الخروج
+        </button>
+      </div>
     </div>
   );
 }
