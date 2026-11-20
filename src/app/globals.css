@@ -149,7 +149,6 @@
   --color-skeleton-shine-dark: #4a4038;
 
   /* المرحلة 3 — توكنز الـ Animation */
-  --duration-count-up: 400ms;
   --duration-skeleton: 1.4s;
 }:root {
   color-scheme: light;
@@ -273,7 +272,6 @@
   --tx-skeleton-dark: var(--color-skeleton-dark);
   --tx-skeleton-shine: var(--color-skeleton-shine);
   --tx-skeleton-shine-dark: var(--color-skeleton-shine-dark);
-  --tx-duration-count-up: var(--duration-count-up);
   --tx-duration-skeleton: var(--duration-skeleton);
 }html {
   direction: rtl;
@@ -527,4 +525,50 @@ main tbody tr:hover { background: var(--color-brand-50); }
 
 .dark main tbody tr:nth-child(odd) {
   background: var(--color-surface-dark);
+}
+
+/* المرحلة 3 — Skeleton shine animation */
+@keyframes skeleton-shine {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.skeleton-shine {
+  background: linear-gradient(
+    90deg,
+    var(--color-skeleton) 25%,
+    var(--color-skeleton-shine) 50%,
+    var(--color-skeleton) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shine var(--duration-skeleton) ease-in-out infinite;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not(.light) .skeleton-shine {
+    background: linear-gradient(
+      90deg,
+      var(--color-skeleton-dark) 25%,
+      var(--color-skeleton-shine-dark) 50%,
+      var(--color-skeleton-dark) 75%
+    );
+    background-size: 200% 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton-shine {
+    animation: none;
+    background: var(--color-skeleton);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not(.light) .skeleton-shine {
+      background: var(--color-skeleton-dark);
+    }
+  }
 }

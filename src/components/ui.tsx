@@ -212,7 +212,7 @@ export function Modal({
 export function Skeleton({ className = "", ...props }: HTMLAttributes<HTMLDivElement>) {
   return (
     <div
-      className={`animate-pulse rounded-xl bg-skeleton dark:bg-skeleton-dark ${className}`}
+      className={`skeleton-shine rounded-xl bg-skeleton dark:bg-skeleton-dark ${className}`}
       {...props}
     />
   );
@@ -295,7 +295,7 @@ export function BulletChart({
     <div className={`relative ${className}`}>
       <div className="h-3 w-full overflow-hidden rounded-full bg-surface-2 dark:bg-surface-2-dark">
         <div
-          className="h-full rounded-full bg-gradient-to-l from-brand-500 to-brand-600 transition-all duration-700 ease-out"
+          className="h-full rounded-full bg-gradient-to-l from-brand-500 to-brand-600 transition-all duration-700 ease-out dark:from-brand-500-dark dark:to-brand-600-dark"
           style={{ width: `${capped}%` }}
         />
       </div>
