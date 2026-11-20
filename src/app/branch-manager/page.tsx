@@ -196,8 +196,8 @@ export default function BranchManagerPage() {
         <header className="flex items-end justify-between gap-3 rounded-[26px] border border-white bg-white px-4 py-4 shadow-[0_1px_2px_rgba(43,20,0,.04)] sm:px-5">
           <div className="min-w-0">
             <p className="text-xs font-black tracking-[0.16em] text-[#bd4b0a]">BRANCH PERFORMANCE OVERVIEW</p>
-            <h1 className="mt-1 text-xl font-black tracking-tight text-[#2d2119] sm:text-2xl">Good to see you, ${managerName} 👋</h1>
-            <p className="mt-1 text-xs font-semibold text-[#88796e]">📍 ${branch} · ${new Date(`${month}-01T12:00:00`).toLocaleDateString("en-US", { month: "long", year: "numeric" })}</p>
+            <h1 className="mt-1 text-xl font-black tracking-tight text-[#2d2119] sm:text-2xl">Good to see you, {managerName} 👋</h1>
+            <p className="mt-1 text-xs font-semibold text-[#88796e]">📍 {branch} · {new Date(`${month}-01T12:00:00`).toLocaleDateString("en-US", { month: "long", year: "numeric" })}</p>
           </div>
           <button onClick={() => load(branch)} disabled={loading} className="shrink-0 rounded-xl border border-orange-100 bg-orange-50 px-3 py-2 text-xs font-bold text-[#bd4b0a]">{loading ? "Refreshing..." : "Refresh ↻"}</button>
         </header>
