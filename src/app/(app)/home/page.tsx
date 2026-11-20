@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Banner, EmptyState, Spinner } from "@/components/ui";
+import { AnimatedCounter, Banner, BulletChart, EmptyState, Skeleton } from "@/components/ui";
 import { ApiError, api } from "@/lib/client";
-import { formatMoney, formatPercent, formatQty } from "@/lib/calculations";
+import { formatPercent, formatQty } from "@/lib/calculations";
 import { useMonth } from "@/components/AppShell";
 import { kpiEmoji } from "@/lib/constants";
 import { MOOD_STYLES, kpiMood, overallMood } from "@/lib/motivation";
@@ -139,7 +139,16 @@ export default function HomePage() {
   const loading = state.month !== month;
   const { data, error } = state;
 
-  if (loading) return <Spinner label="ثواني… بنحمّل لوحة الأداء" />;
+  if (loading) {
+    return (
+      <div className="space-y-4 p-4">
+        <Skeleton className="h-40 w-full" />
+        <Skeleton className="h-20 w-full" />
+        <Skeleton className="h-60 w-full" />
+        <span className="sr-only">ثواني… بنحمّل لوحة الأداء</span>
+      </div>
+    );
+  }
   if (error) return <Banner tone="error">{error}</Banner>;
   if (!data) return <Banner tone="error">مفيش بيانات نعرضها</Banner>;
 
@@ -165,39 +174,45 @@ export default function HomePage() {
         <h1 className="mt-2 text-[1.65rem] font-black leading-10 text-neutral-900">
           {greeting()} {data.profile.name.split(" ")[0]} 👋
         </h1>
-        <p className="mt-1 text-sm text-neutral-400">
+        <p className="mt-1 text-sm text-ink-2">
           📍 {data.profile.branch} · {data.monthLabel}
         </p>
       </section>
 
-      <section className="relative isolate overflow-hidden rounded-[30px] border border-[#edc7a7] bg-gradient-to-br from-[#fffaf5] via-[#fff2e4] to-[#ffe4ca] p-4 shadow-[0_18px_42px_rgba(112,57,18,0.11)] sm:p-6">
-        <div aria-hidden="true" className="pointer-events-none absolute -left-12 -top-16 h-52 w-52 rounded-full bg-[#ff963f]/20 blur-3xl" />
+      <section className="relative isolate overflow-hidden rounded-hero border border-hero bg-gradient-to-br from-[#fffaf5] via-[#fff2e4] to-[#ffe4ca] p-4 shadow-pop sm:p-6">
+        <div aria-hidden="true" className="pointer-events-none absolute -left-12 -top-16 h-52 w-52 rounded-full bg-brand-glow/20 blur-3xl" />
         <div aria-hidden="true" className="pointer-events-none absolute -bottom-20 right-1/4 h-48 w-48 rounded-full bg-white/80 blur-3xl" />
         <div className="relative flex items-center gap-4 sm:gap-6">
-          <div className="flex h-28 w-28 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#ff9a45] via-[#f07818] to-[#c6530b] p-1 shadow-[0_12px_28px_rgba(198,83,11,0.22)] sm:h-36 sm:w-36">
+          <div className="flex h-28 w-28 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#ff9a45] via-[#f07818] to-[#c6530b] p-1 shadow-glow sm:h-36 sm:w-36">
             <div className="flex h-full w-full items-center justify-center rounded-full border border-white/40 bg-white/10">
               <ScoreRing value={data.overall} />
             </div>
           </div>
           <div className="min-w-0 flex-1">
-            <p className="text-sm font-extrabold text-[#80502f]">إجمالي التارجت الشهري</p>
-            <p className="mt-1 text-3xl font-black tracking-tight text-[#9d430d] sm:text-4xl">{formatPercent(data.overall)}%</p>
-            <p className="mt-1 text-sm font-bold text-[#80502f]">{gap > 0 ? `فاضل ${formatPercent(gap)}%` : "مفيش فاضل، قفلت الشهر"}</p>
+            <p className="text-sm font-extrabold text-ink-warm">إجمالي التارجت الشهري</p>
+            <p className="mt-1 text-3xl font-black tracking-tight text-brand-ink sm:text-4xl"><AnimatedCounter value={Math.round(data.overall)} className="text-3xl font-black tracking-tight sm:text-4xl" />%</p>
+            <p className="mt-1 text-sm font-bold text-ink-warm">{gap > 0 ? `فاضل ${formatPercent(gap)}%` : "مفيش فاضل، قفلت الشهر"}</p>
           </div>
+        </div>
+        <div className="relative mt-4 px-1">
+          <BulletChart percent={data.overall} expected={expectedPercent} className="mt-4" />
+          <p className="mt-2 text-sm text-ink-2 dark:text-ink-2-dark">
+            المتوقع النهارده: {Math.round(expectedPercent)}%
+          </p>
         </div>
         <div className="relative mt-4 grid grid-cols-2 gap-2">
           <div className="rounded-2xl border border-white/80 bg-white/75 p-3 shadow-sm backdrop-blur-sm">
-            <p className="text-[11px] font-bold text-[#897466]">الكوميشن المتوقع</p>
-            <p className="mt-1 text-lg font-black text-[#9d430d]">{formatMoney(data.estimatedCommission)} <span className="text-[10px] font-bold text-[#897466]">جنيه</span></p>
+            <p className="text-[11px] font-bold text-ink-2">الكوميشن المتوقع</p>
+            <p className="mt-1 text-lg font-black text-brand-ink"><AnimatedCounter value={Math.round(data.estimatedCommission)} /> <span className="text-[10px] font-bold text-ink-2">جنيه</span></p>
           </div>
           <div className="rounded-2xl border border-white/80 bg-white/75 p-3 shadow-sm backdrop-blur-sm">
-            <p className="text-[11px] font-bold text-[#897466]">الكوميشن الكامل</p>
-            <p className="mt-1 text-lg font-black text-[#2b1b12]">{formatMoney(data.fullCommission)} <span className="text-[10px] font-bold text-[#897466]">جنيه</span></p>
+            <p className="text-[11px] font-bold text-ink-2">الكوميشن الكامل</p>
+            <p className="mt-1 text-lg font-black text-ink"><AnimatedCounter value={Math.round(data.fullCommission)} /> <span className="text-[10px] font-bold text-ink-2">جنيه</span></p>
           </div>
         </div>
       </section>
       <AchievementShare name={data.profile.name} branch={data.profile.branch} monthLabel={data.monthLabel} overall={data.overall} kpis={data.kpis} />
-      <section className={`rounded-[26px] border p-4 shadow-[0_10px_28px_rgba(116,63,26,0.045)] ${moodStyle.box}`}>
+      <section className={`rounded-card border p-4 shadow-card ${moodStyle.box}`}>
         <p className={`text-base font-black ${moodStyle.title}`}>
           {mood.emoji} {mood.headline}
         </p>
@@ -205,30 +220,30 @@ export default function HomePage() {
         <div className="mt-3 grid grid-cols-3 gap-2 text-center">
           <div className="rounded-2xl border border-white/70 bg-white/75 p-2 shadow-sm">
             <p className="text-lg font-black text-neutral-900">{data.work.total}</p>
-            <p className="text-[11px] text-neutral-500">أيام الشغل</p>
+            <p className="text-[11px] text-ink-2">أيام الشغل</p>
           </div>
           <div className="rounded-2xl bg-white/70 p-2">
             <p className="text-lg font-black text-neutral-900">{data.work.elapsed}</p>
-            <p className="text-[11px] text-neutral-500">عدّت</p>
+            <p className="text-[11px] text-ink-2">عدّت</p>
           </div>
           <div className="rounded-2xl bg-white/70 p-2">
             <p className="text-lg font-black text-neutral-900">{data.work.remaining}</p>
-            <p className="text-[11px] text-neutral-500">فاضلة</p>
+            <p className="text-[11px] text-ink-2">فاضلة</p>
           </div>
         </div>
-        <p className="mt-2 text-xs text-neutral-500">المتوقع لحد النهارده: {formatPercent(expectedPercent)}%</p>
+        <p className="mt-2 text-xs text-ink-2">المتوقع لحد النهارده: {formatPercent(expectedPercent)}%</p>
       </section>
 
       <div className="grid grid-cols-2 gap-3">
-        <article className="group relative overflow-hidden rounded-[22px] border border-[#edc7a7] bg-gradient-to-br from-white via-white to-[#fff6ed] p-3 shadow-[0_10px_26px_rgba(112,57,18,0.075)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_14px_30px_rgba(198,83,11,0.12)] before:absolute before:inset-y-3 before:right-0 before:w-1 before:rounded-l-full before:bg-gradient-to-b before:from-[#ff963f] before:to-[#c6530b]">
-          <p className="text-sm font-bold text-neutral-500">📱 الخطوط اللي عملتها</p>
-          <p className="mt-2 text-3xl font-black tracking-tight text-[#c6530b]">{formatQty(newLines?.achieved ?? 0)}</p>
-          <p className="text-xs text-neutral-400">من {formatQty(newLines?.target ?? 0)}</p>
+        <article className="group relative overflow-hidden rounded-card border border-hero bg-gradient-to-br from-white via-white to-[#fff6ed] p-3 shadow-card transition-all duration-200 hover:-translate-y-0.5 hover:shadow-pop before:absolute before:inset-y-3 before:right-0 before:w-1 before:rounded-l-full before:bg-gradient-to-b before:from-[#ff963f] before:to-[#c6530b]">
+          <p className="text-sm font-bold text-ink-2">📱 الخطوط اللي عملتها</p>
+          <p className="mt-2 text-3xl font-black tracking-tight text-brand-600">{formatQty(newLines?.achieved ?? 0)}</p>
+          <p className="text-xs text-ink-2">من {formatQty(newLines?.target ?? 0)}</p>
         </article>
-        <article className="group relative overflow-hidden rounded-[22px] border border-[#edc7a7] bg-gradient-to-br from-white via-white to-[#fff6ed] p-3 shadow-[0_10px_26px_rgba(112,57,18,0.075)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_14px_30px_rgba(198,83,11,0.12)] before:absolute before:inset-y-3 before:right-0 before:w-1 before:rounded-l-full before:bg-gradient-to-b before:from-[#ff963f] before:to-[#c6530b]">
-          <p className="text-sm font-bold text-neutral-500">🎯 الفاضل في الخطوط</p>
-          <p className="mt-2 text-3xl font-black tracking-tight text-[#c6530b]">{formatQty(newLines?.remaining ?? 0)}</p>
-          <p className="text-xs text-neutral-400">خط</p>
+        <article className="group relative overflow-hidden rounded-card border border-hero bg-gradient-to-br from-white via-white to-[#fff6ed] p-3 shadow-card transition-all duration-200 hover:-translate-y-0.5 hover:shadow-pop before:absolute before:inset-y-3 before:right-0 before:w-1 before:rounded-l-full before:bg-gradient-to-b before:from-[#ff963f] before:to-[#c6530b]">
+          <p className="text-sm font-bold text-ink-2">🎯 الفاضل في الخطوط</p>
+          <p className="mt-2 text-3xl font-black tracking-tight text-brand-600">{formatQty(newLines?.remaining ?? 0)}</p>
+          <p className="text-xs text-ink-2">خط</p>
         </article>
       </div>
 
@@ -236,7 +251,7 @@ export default function HomePage() {
         <Banner tone="warn">⚠️ مجموع الأوزان {formatPercent(data.weightSum)}% مش 100%. راجع صفحة التارجت.</Banner>
       ) : null}
 
-      <section className="rounded-[24px] bg-orange-50 p-4 text-sm leading-7 text-[#c45e00]">
+      <section className="rounded-card bg-brand-50 p-4 text-sm leading-7 text-brand-ink">
         <p className="font-extrabold">⚡ المطلوب منك النهارده عشان تفضل ON TRACK:</p>
         {behindKpis.length === 0 ? (
           <p className="mt-1 font-bold">كل المؤشرات تمام. مفيش حاجة ضاغطة النهارده 👌</p>
@@ -263,22 +278,22 @@ export default function HomePage() {
           title="ابدأ الشهر بقوة 🚀"
           text="لسه مفيش سجلات الشهر ده. الأرقام اللي تحت من إعدادات التارجت بس، والمحقق صفر عشان مفيش عمليات محفوظة."
           action={
-            <Link href={`/log?month=${month}`} className="inline-flex min-h-12 items-center rounded-full bg-[#ff7900] px-5 font-extrabold text-white">
+            <Link href={`/log?month=${month}`} className="inline-flex min-h-12 items-center rounded-full bg-brand-600 px-5 font-extrabold text-white">
               ➕ سجّل أول إنجاز
             </Link>
           }
         />
       ) : (
-        <p className="text-sm text-neutral-500">عدد العمليات المحفوظة الشهر ده: {data.entriesCount}</p>
+        <p className="text-sm text-ink-2">عدد العمليات المحفوظة الشهر ده: {data.entriesCount}</p>
       )}
 
       <section className="space-y-3">
         <div className="flex items-end justify-between gap-3">
           <div>
-            <h2 className="text-xl font-black text-[#2b1b12]">مؤشرات الأداء</h2>
-            <p className="mt-1 text-xs text-[#897466]">نظرة سريعة على كل مؤشر من مؤشراتك</p>
+            <h2 className="text-xl font-black text-ink">مؤشرات الأداء</h2>
+            <p className="mt-1 text-xs text-ink-2">نظرة سريعة على كل مؤشر من مؤشراتك</p>
           </div>
-          <span className="rounded-full border border-[#f0dfd0] bg-white/80 px-3 py-1 text-[11px] font-extrabold text-[#c6530b]">{data.kpis.length} مؤشرات</span>
+          <span className="rounded-full border border-line-shell bg-white/80 px-3 py-1 text-[11px] font-extrabold text-brand-600">{data.kpis.length} مؤشرات</span>
         </div>
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4">
           {data.kpis.map((kpi) => {
@@ -287,7 +302,7 @@ export default function HomePage() {
             const kpiExpected = kpi.target > 0 ? (kpi.expectedToDate / kpi.target) * 100 : 0;
             const m = kpiMood({ percent: kpi.percent, expectedPercent: kpiExpected, weight: kpi.weight });
             const moodColor =
-              m.tone === "good" ? "text-emerald-700" : m.tone === "warn" ? "text-yellow-700" : m.tone === "bad" ? "text-red-600" : "text-neutral-400";
+              m.tone === "good" ? "text-ok" : m.tone === "warn" ? "text-warn" : m.tone === "bad" ? "text-risk" : "text-ink-2";
             const progressGradient =
               m.tone === "good"
                 ? "linear-gradient(90deg, #34d399 0%, #059669 100%)"
@@ -297,23 +312,23 @@ export default function HomePage() {
                     ? "linear-gradient(90deg, #fb7185 0%, #dc2626 100%)"
                     : "linear-gradient(90deg, #ffad68 0%, #f07818 52%, #c6530b 100%)";
             const progressTrack =
-              m.tone === "good" ? "bg-emerald-50" : m.tone === "warn" ? "bg-amber-50" : m.tone === "bad" ? "bg-rose-50" : "bg-[#f2e6dc]";
+              m.tone === "good" ? "bg-ok-soft" : m.tone === "warn" ? "bg-warn-soft" : m.tone === "bad" ? "bg-risk-soft" : "bg-surface-progress";
             return (
               <article
                 key={kpi.kpiKey}
-                className={`relative overflow-hidden rounded-[22px] border p-3.5 shadow-[0_10px_26px_rgba(112,57,18,0.055)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_16px_32px_rgba(112,57,18,0.10)] sm:p-4 ${featured ? "col-span-2 border-[#edc7a7] bg-gradient-to-br from-white via-[#fffaf5] to-[#fff0df] sm:col-span-2" : "border-[#f0dfd0] bg-white/95"}`}
+                className={`relative overflow-hidden rounded-card border p-3.5 shadow-card transition-all duration-200 hover:-translate-y-0.5 hover:shadow-pop sm:p-4 ${featured ? "col-span-2 border-hero bg-gradient-to-br from-white via-[#fffaf5] to-[#fff0df] sm:col-span-2" : "border-line-shell bg-white/95"}`}
               >
-                {featured ? <span aria-hidden="true" className="pointer-events-none absolute -left-8 -top-10 h-28 w-28 rounded-full bg-[#ff963f]/10 blur-2xl" /> : null}
+                {featured ? <span aria-hidden="true" className="pointer-events-none absolute -left-8 -top-10 h-28 w-28 rounded-full bg-brand-300/10 blur-2xl" /> : null}
                 <div className="relative flex items-center justify-between gap-2">
                   <div className="flex items-center gap-2">
-                    <span className={`flex h-9 w-9 items-center justify-center rounded-xl ${featured ? "bg-gradient-to-br from-[#ff9a45] to-[#c6530b] text-xl text-white shadow-md shadow-orange-900/10" : "bg-[#fff0df] text-xl"}`}>{kpiEmoji(kpi.kpiKey)}</span>
-                    <h3 className="text-sm font-extrabold text-[#2b1b12]" dir="ltr">{kpi.nameEn}</h3>
+                    <span className={`flex h-9 w-9 items-center justify-center rounded-xl ${featured ? "bg-gradient-to-br from-[#ff9a45] to-[#c6530b] text-xl text-white shadow-md shadow-orange-900/10" : "bg-brand-50 text-xl"}`}>{kpiEmoji(kpi.kpiKey)}</span>
+                    <h3 className="text-sm font-extrabold text-ink" dir="ltr">{kpi.nameEn}</h3>
                   </div>
-                  <p className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-black ${featured ? "bg-white/85 text-[#c6530b]" : "bg-[#fff5eb] text-[#c6530b]"}`}>{formatPercent(kpi.percent)}%</p>
+                  <p className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-black ${featured ? "bg-white/85 text-brand-600" : "bg-brand-surface text-brand-600"}`}>{formatPercent(kpi.percent)}%</p>
                 </div>
                 <div className="relative mt-3 flex items-baseline gap-1.5">
-                  <p className={`font-black tracking-tight text-[#2b1b12] ${featured ? "text-3xl sm:text-4xl" : "text-2xl"}`}>{formatQty(kpi.achieved)}</p>
-                  <span className="text-xs text-[#897466]">من {formatQty(kpi.target)} {kpi.unitAr}</span>
+                  <p className={`font-black tracking-tight text-ink ${featured ? "text-3xl sm:text-4xl" : "text-2xl"}`}>{formatQty(kpi.achieved)}</p>
+                  <span className="text-xs text-ink-2">من {formatQty(kpi.target)} {kpi.unitAr}</span>
                 </div>
                 <div
                   role="progressbar"
@@ -330,7 +345,7 @@ export default function HomePage() {
                 </div>
                 <div className="relative mt-2 flex flex-wrap items-center justify-between gap-1">
                   <p className={`text-[11px] font-bold ${moodColor}`}>{m.emoji} {m.text}</p>
-                  <p className="text-[11px] text-[#897466]">فاضل {formatQty(kpi.remaining)}</p>
+                  <p className="text-[11px] text-ink-2">فاضل {formatQty(kpi.remaining)}</p>
                 </div>
               </article>
             );

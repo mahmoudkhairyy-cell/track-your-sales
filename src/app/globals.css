@@ -1,28 +1,291 @@
 @import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
 
-:root {
+/* Track Your Sales — Design System v1 */
+
+@theme {
+  --color-bg: #faf7f4;
+  --color-surface: #ffffff;
+  --color-surface-2: #fffaf5;
+  --color-line: #efe3d8;
+  --color-line-strong: #e3cdb8;
+
+  --color-ink: #241a13;
+  --color-ink-2: #6f5b4d;
+
+  --color-brand-50: #fff4ea;
+  --color-brand-300: #ff9a45;
+  --color-brand-500: #f07818;
+  --color-brand-600: #c6530b;
+  --color-brand-ink: #9a3f06;
+
+  --color-ok: #15803d;
+  --color-ok-soft: #e8f5ee;
+  --color-warn: #a16207;
+  --color-warn-soft: #fdf3e0;
+  --color-risk: #b91c1c;
+  --radius-card: 20px;
+  --radius-hero: 24px;
+  --radius-field: 14px;
+
+  --shadow-card: 0 1px 2px rgba(60, 30, 10, 0.05), 0 8px 24px rgba(60, 30, 10, 0.05);
+  --shadow-pop: 0 2px 6px rgba(60, 30, 10, 0.07), 0 18px 40px rgba(60, 30, 10, 0.1);
+
+  --font-sans: "Cairo Variable", Tahoma, "Segoe UI", Arial, sans-serif;
+  /* جلسة 1.5 — توكنز للقيم التزيينية */
+  --color-ink-warm: #80502f;
+  --color-brand-glow: #ff963f;
+
+  --shadow-soft: 0 8px 24px rgba(105, 54, 20, 0.045);
+  --shadow-medium: 0 10px 28px rgba(105, 54, 20, 0.045);
+  --shadow-glow: 0 12px 28px rgba(198, 83, 11, 0.22);
+  /* جلسة 1.5ب — توكنز إضافية */
+  --color-brand-ink-strong: #74340d;
+  --color-brand-ink-soft: #a94708;
+  --color-brand-200: #fff0e2;
+  --color-brand-surface: #fff5eb;
+  --color-brand-400: #f58a3c;
+  --color-brand-deep: #bd4b0a;
+  --color-ink-3: #2d1d13;
+  --color-ink-muted-3: #8c7b6e;
+  --shadow-accent: 0 12px 30px rgba(166, 76, 16, 0.07);
+  --shadow-deep: 0 12px 28px rgba(189, 75, 10, 0.22);
+  /* جلسة 2ب — توكنز مكونات ui.tsx */
+  /* ألوان الحالات (Banner + Toast) */
+  --color-info-deep: #75401f;
+  --color-risk-soft: #fff0ed;
+  --color-risk-deep: #913b31;
+  --color-risk-light: #c44b3d;
+  --color-ok-deep: #286345;
+  --color-ok-light: #258253;
+  --color-warn-deep: #78551c;
+  --color-warn-light: #b77a10;
+
+  /* حدود الحالات */
+  --color-line-risk: #ecd7d3;
+  --color-line-ok: #d7e7dc;
+  --color-line-warn: #eee2c9;
+  --color-line-accent: #c6530b;
+  --color-line-risk-strong: #dc6254;
+  --color-line-ok-strong: #329565;
+  --color-line-warn-strong: #d99a24;
+
+  /* ألوان مكونات تانية */
+  --color-ink-deep: #2b1c12;
+  --color-ink-muted-deep: #5c4030;
+  --color-muted-placeholder: #aa998d;
+  --color-spinner: #e96812;
+  --color-border-light: #f7dfcc;
+  --color-border-focus: #e9782c;
+  --color-backdrop: #24180f;
+  --color-surface-hover: #fffaf6;
+
+  /* ظلال المكونات */
+  --shadow-button-primary: 0 10px 24px rgba(198, 83, 11, 0.24), inset 0 1px 0 rgba(255, 255, 255, 0.28);
+  --shadow-button-primary-hover: 0 14px 28px rgba(198, 83, 11, 0.29);
+  --shadow-modal: 0 24px 70px rgba(48, 27, 13, 0.22);
+  --shadow-toast: 0 10px 28px rgba(75, 42, 20, 0.11);
+  --shadow-empty: 0 12px 30px rgba(105, 54, 20, 0.045);
+  --shadow-empty-inner: 0 8px 20px rgba(189, 75, 10, 0.08);
+  --shadow-banner: 0 6px 20px rgba(70, 43, 24, 0.055);
+
+  /* جلسة 2ج — توكنز AppShell.tsx */
+  /* ألوان Shell */
+  --color-ink-shell: #24180f;
+  --color-ink-title: #3a2416;
+  --color-muted-by: #a58b77;
+  --color-muted-disclaimer: #9b8878;
+  --color-nav-active-bg: #fff0df;
+  --color-surface-95: #fffaf5;
+  --color-surface-72: #fffaf5;
+  --color-line-shell: #f0dfd0;
+
+  /* ظلال Shell */
+  --shadow-navlink: 0 4px 14px rgba(198, 83, 11, 0.08);
+  --shadow-sidebar: 8px 0 36px rgba(116, 63, 26, 0.035);
+  --shadow-sidebar-mobile: 0 14px 28px rgba(189, 75, 10, 0.20);
+  --shadow-month-switcher: 0 8px 28px rgba(198, 83, 11, 0.09);
+  --shadow-month-switcher-sm: 0 3px 12px rgba(198, 83, 11, 0.10);
+  --shadow-bottom-nav: 0 12px 36px rgba(112, 57, 18, 0.14);
+  --shadow-bottom-nav-emph: 0 5px 14px rgba(198, 83, 11, 0.20);
+
+
+  /* جلسة 3 — توكنز للبقايا */
+  --color-border-hero: #edc7a7;
+  --color-border-form: #f2d8c3;
+  --color-border-form-2: #f1e3d8;
+  --color-border-accent-strong: #ff7900;
+  --color-border-section: #f0d8c4;
+  --color-border-section-2: #f1d2b8;
+  --color-border-section-3: #f5e2d1;
+  --color-border-section-4: #f1dfcf;
+  --color-border-section-5: #e9bd99;
+  --color-border-wiki: #f1e2d6;
+  --color-border-wiki-strong: #edc8aa;
+  --color-border-wiki-deep: #f4d8c2;
+  --color-surface-progress: #f2e6dc;
+  --color-surface-loading: #f4e6dc;
+  --shadow-section: 0 12px 30px rgba(166, 76, 16, 0.08);
+  --shadow-section-sm: 0 3px 10px rgba(166, 76, 16, 0.04);
+  --shadow-section-xs: 0 3px 12px rgba(105, 54, 20, 0.035);
+  --shadow-wiki: 0 14px 30px rgba(105, 54, 20, 0.09);
+  --shadow-wiki-deep: 0 12px 32px rgba(105, 54, 20, 0.055);
+  --shadow-wiki-strong: 0 8px 20px rgba(189, 75, 10, 0.22);
+  /* المرحلة 3 — توكنز الـ Dark Mode */
+  --color-bg-dark: #1a1410;
+  --color-surface-dark: #241d17;
+  --color-surface-2-dark: #2d251d;
+  --color-line-dark: #3a3129;
+  --color-line-strong-dark: #4a4038;
+  --color-ink-dark: #f5f0eb;
+  --color-ink-2-dark: #b8a99a;
+  --color-brand-500-dark: #ff963f;
+  --color-brand-600-dark: #f07818;
+
+  /* المرحلة 3 — توكنز الـ Skeleton */
+  --color-skeleton: #e8ddd2;
+  --color-skeleton-dark: #3a3129;
+  --color-skeleton-shine: #f5efe8;
+  --color-skeleton-shine-dark: #4a4038;
+
+  /* المرحلة 3 — توكنز الـ Animation */
+  --duration-skeleton: 1.4s;
+}:root {
   color-scheme: light;
-  --tx-orange: #f07818;
-  --tx-orange-deep: #c6530b;
-  --tx-orange-soft: #fff0df;
-  --tx-cream: #fff8f0;
-  --tx-ink: #2b1b12;
-  --tx-muted: #897466;
-  --tx-line: #f0dfd0;
-}
 
-html {
+  --tx-orange: var(--color-brand-500);
+  --tx-orange-deep: var(--color-brand-600);
+  --tx-orange-soft: var(--color-brand-50);
+  --tx-orange-bright: var(--color-brand-300);
+  --tx-orange-glow: rgba(240, 120, 24, 0.22);
+  --tx-cream: var(--color-bg);
+  --tx-cream-deep: var(--color-brand-50);
+  --tx-ink: var(--color-ink);
+  --tx-muted: var(--color-ink-2);
+  --tx-line: var(--color-line);
+  --tx-surface: var(--color-surface);
+  --tx-surface-soft: var(--color-surface-2);
+  --tx-border-strong: var(--color-line-strong);
+  --tx-gradient-brand: linear-gradient(125deg, var(--color-brand-300) 0%, var(--color-brand-500) 48%, var(--color-brand-600) 100%);
+  --tx-gradient-soft: linear-gradient(135deg, var(--color-surface-2) 0%, var(--color-bg) 52%, var(--color-brand-50) 100%);
+  --tx-card-shadow: var(--shadow-card);
+  --tx-card-shadow-hover: var(--shadow-pop);
+  /* جلسة 1.5 — متغيرات قديمة للقيم التزيينية */
+  --tx-ink-warm: var(--color-ink-warm);
+  --tx-brand-glow: var(--color-brand-glow);
+  --tx-shadow-soft: var(--shadow-soft);
+  --tx-shadow-medium: var(--shadow-medium);
+  --tx-shadow-glow: var(--shadow-glow);
+  /* جلسة 1.5ب — متغيرات قديمة */
+  --tx-brand-ink-strong: var(--color-brand-ink-strong);
+  --tx-brand-ink-soft: var(--color-brand-ink-soft);
+  --tx-brand-200: var(--color-brand-200);
+  --tx-brand-surface: var(--color-brand-surface);
+  --tx-brand-400: var(--color-brand-400);
+  --tx-brand-deep: var(--color-brand-deep);
+  --tx-ink-3: var(--color-ink-3);
+  --tx-ink-muted-3: var(--color-ink-muted-3);
+  --tx-shadow-accent: var(--shadow-accent);
+  --tx-shadow-deep: var(--shadow-deep);
+  /* جلسة 2ب — متغيرات توافقية */
+  --tx-info-deep: var(--color-info-deep);
+  --tx-risk-soft: var(--color-risk-soft);
+  --tx-risk-deep: var(--color-risk-deep);
+  --tx-risk-light: var(--color-risk-light);
+  --tx-ok-deep: var(--color-ok-deep);
+  --tx-ok-light: var(--color-ok-light);
+  --tx-warn-deep: var(--color-warn-deep);
+  --tx-warn-light: var(--color-warn-light);
+  --tx-line-risk: var(--color-line-risk);
+  --tx-line-ok: var(--color-line-ok);
+  --tx-line-warn: var(--color-line-warn);
+  --tx-line-accent: var(--color-line-accent);
+  --tx-line-risk-strong: var(--color-line-risk-strong);
+  --tx-line-ok-strong: var(--color-line-ok-strong);
+  --tx-line-warn-strong: var(--color-line-warn-strong);
+  --tx-ink-deep: var(--color-ink-deep);
+  --tx-ink-muted-deep: var(--color-ink-muted-deep);
+  --tx-muted-placeholder: var(--color-muted-placeholder);
+  --tx-spinner: var(--color-spinner);
+  --tx-border-light: var(--color-border-light);
+  --tx-border-focus: var(--color-border-focus);
+  --tx-backdrop: var(--color-backdrop);
+  --tx-surface-hover: var(--color-surface-hover);
+  --tx-shadow-button-primary: var(--shadow-button-primary);
+  --tx-shadow-button-primary-hover: var(--shadow-button-primary-hover);
+  --tx-shadow-modal: var(--shadow-modal);
+  --tx-shadow-toast: var(--shadow-toast);
+  --tx-shadow-empty: var(--shadow-empty);
+  --tx-shadow-empty-inner: var(--shadow-empty-inner);
+  --tx-shadow-banner: var(--shadow-banner);
+
+  /* جلسة 2ج — متغيرات توافقية */
+  --tx-ink-shell: var(--color-ink-shell);
+  --tx-ink-title: var(--color-ink-title);
+  --tx-muted-by: var(--color-muted-by);
+  --tx-muted-disclaimer: var(--color-muted-disclaimer);
+  --tx-nav-active-bg: var(--color-nav-active-bg);
+  --tx-surface-95: var(--color-surface-95);
+  --tx-surface-72: var(--color-surface-72);
+  --tx-line-shell: var(--color-line-shell);
+  --tx-shadow-navlink: var(--shadow-navlink);
+  --tx-shadow-sidebar: var(--shadow-sidebar);
+  --tx-shadow-sidebar-mobile: var(--shadow-sidebar-mobile);
+  --tx-shadow-month-switcher: var(--shadow-month-switcher);
+  --tx-shadow-month-switcher-sm: var(--shadow-month-switcher-sm);
+  --tx-shadow-bottom-nav: var(--shadow-bottom-nav);
+  --tx-shadow-bottom-nav-emph: var(--shadow-bottom-nav-emph);
+
+
+  /* جلسة 3 — متغيرات توافقية للبقايا */
+  --tx-border-hero: var(--color-border-hero);
+  --tx-border-form: var(--color-border-form);
+  --tx-border-form-2: var(--color-border-form-2);
+  --tx-border-accent-strong: var(--color-border-accent-strong);
+  --tx-border-section: var(--color-border-section);
+  --tx-border-section-2: var(--color-border-section-2);
+  --tx-border-section-3: var(--color-border-section-3);
+  --tx-border-section-4: var(--color-border-section-4);
+  --tx-border-section-5: var(--color-border-section-5);
+  --tx-border-wiki: var(--color-border-wiki);
+  --tx-border-wiki-strong: var(--color-border-wiki-strong);
+  --tx-border-wiki-deep: var(--color-border-wiki-deep);
+  --tx-surface-progress: var(--color-surface-progress);
+  --tx-surface-loading: var(--color-surface-loading);
+  --tx-shadow-section: var(--shadow-section);
+  --tx-shadow-section-sm: var(--shadow-section-sm);
+  --tx-shadow-section-xs: var(--shadow-section-xs);
+  --tx-shadow-wiki: var(--shadow-wiki);
+  --tx-shadow-wiki-deep: var(--shadow-wiki-deep);
+  --tx-shadow-wiki-strong: var(--shadow-wiki-strong);
+  /* المرحلة 3 — متغيرات توافقية */
+  --tx-bg-dark: var(--color-bg-dark);
+  --tx-surface-dark: var(--color-surface-dark);
+  --tx-surface-2-dark: var(--color-surface-2-dark);
+  --tx-line-dark: var(--color-line-dark);
+  --tx-line-strong-dark: var(--color-line-strong-dark);
+  --tx-ink-dark: var(--color-ink-dark);
+  --tx-ink-2-dark: var(--color-ink-2-dark);
+  --tx-brand-500-dark: var(--color-brand-500-dark);
+  --tx-brand-600-dark: var(--color-brand-600-dark);
+  --tx-skeleton: var(--color-skeleton);
+  --tx-skeleton-dark: var(--color-skeleton-dark);
+  --tx-skeleton-shine: var(--color-skeleton-shine);
+  --tx-skeleton-shine-dark: var(--color-skeleton-shine-dark);
+  --tx-duration-skeleton: var(--duration-skeleton);
+}html {
   direction: rtl;
   --font-cairo: "Cairo Variable";
-  background: var(--tx-cream);
+  background: var(--color-bg);
   scroll-behavior: smooth;
 }
 
 body {
   margin: 0;
-  background: linear-gradient(135deg, #fffaf5 0%, #fff6ee 52%, #fff0e4 100%);
-  color: var(--tx-ink);
+  background: var(--color-bg);
+  color: var(--color-ink);
   font-family: var(--font-cairo), Tahoma, "Segoe UI", Arial, sans-serif;
+  font-variant-numeric: tabular-nums lining-nums;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
 }
@@ -31,14 +294,127 @@ body {
 
 input, select, textarea, button { font-family: inherit; }
 textarea { resize: vertical; }
+a { text-decoration: none; }
+button, a { -webkit-tap-highlight-color: transparent; }
+
 ::selection { background: #ffd8bd; color: #5d2a0d; }
 
-button, a { -webkit-tap-highlight-color: transparent; }
-a { text-decoration: none; }
-
 :focus-visible {
-  outline: 3px solid rgba(233, 104, 18, .38);
+  outline: 3px solid rgba(198, 83, 11, 0.55);
   outline-offset: 3px;
+}
+
+html, body { accent-color: var(--tx-orange-deep); }
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-brand-300) var(--color-brand-50);
+}
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: var(--color-brand-50); }
+::-webkit-scrollbar-thumb {
+  border: 2px solid var(--color-brand-50);
+  border-radius: 999px;
+  background: linear-gradient(180deg, #ff9a45, #c6530b);
+}
+::-webkit-scrollbar-thumb:hover { background: linear-gradient(180deg, #f07818, #9a3f06); }
+::-webkit-scrollbar-corner { background: var(--color-brand-50); }
+
+main { color: var(--color-ink); }
+main h1, main h2, main h3 { letter-spacing: -0.025em; }
+main h1 { text-wrap: balance; }
+main p { text-wrap: pretty; }
+
+main article, main section { scroll-margin-top: 88px; }
+
+main article {
+  box-shadow: var(--shadow-card);
+  transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease;
+}
+main article:hover {
+  border-color: var(--color-line-strong);
+  box-shadow: var(--shadow-pop);
+}
+
+main input:not([type="checkbox"]):not([type="radio"]),
+main select,
+main textarea {
+  min-height: 48px;
+  border: 1px solid var(--color-line-strong);
+  border-radius: var(--radius-field);
+  background: var(--color-surface);
+  color: var(--color-ink);
+  box-shadow: 0 1px 2px rgba(60, 30, 10, 0.04);
+  transition: border-color .18s ease, box-shadow .18s ease, background .18s ease;
+}
+
+main textarea { min-height: 104px; padding-top: 12px; }
+
+main input::placeholder,
+main textarea::placeholder { color: var(--color-ink-2); opacity: 1; }
+
+main input:not([type="checkbox"]):not([type="radio"]):focus,
+main select:focus,
+main textarea:focus {
+  border-color: var(--color-brand-600);
+  background: var(--color-surface);
+  box-shadow: 0 0 0 4px rgba(198, 83, 11, 0.16);
+  outline: none;
+}
+
+main button { transition: transform .16s ease, box-shadow .16s ease, filter .16s ease; }
+main button:active { transform: translateY(1px) scale(.985); }
+
+main a:focus-visible,
+main button:focus-visible {
+  outline: 3px solid rgba(198, 83, 11, 0.55);
+  outline-offset: 3px;
+}
+
+main :where(button, [role="button"]):not(:disabled):focus-visible {
+  box-shadow: 0 0 0 4px var(--tx-orange-glow);
+}
+
+@media (max-width: 640px) {
+  main { padding-top: 18px; }
+  main h1 { font-size: clamp(1.35rem, 6vw, 1.7rem); line-height: 1.45; }
+  main h2 { font-size: 1.15rem; }
+  main article { min-width: 0; }
+  main input:not([type="checkbox"]):not([type="radio"]), main select { font-size: 16px; }
+}
+
+main table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  overflow: hidden;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-card);
+  background: var(--color-surface);
+}
+main thead th {
+  background: var(--color-brand-50);
+  color: var(--color-brand-ink);
+  font-weight: 800;
+}
+main tbody tr:nth-child(even) { background: var(--color-surface-2); }
+main tbody tr:nth-child(odd) { background: var(--color-surface); }
+main th, main td { border-bottom: 1px solid var(--color-line); }
+main tbody tr:last-child td { border-bottom: 0; }
+main tbody tr { transition: background .16s ease; }
+main tbody tr:hover { background: var(--color-brand-50); }
+
+@media (max-width: 1023px) {
+  nav[aria-label="التنقل الرئيسي للموبايل"] {
+    inset-inline: 12px;
+    bottom: max(10px, env(safe-area-inset-bottom));
+    overflow: hidden;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-hero);
+    background: rgba(255, 255, 255, 0.96);
+    box-shadow: var(--shadow-pop);
+  }
+  nav[aria-label="التنقل الرئيسي للموبايل"] > div { padding-inline: 4px; }
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -47,97 +423,10 @@ a { text-decoration: none; }
     from { opacity: 0; transform: translateY(7px); }
     to { opacity: 1; transform: translateY(0); }
   }
-}
-
-
-/* Shared interface polish */
-:root {
-  --tx-card-shadow: 0 12px 32px rgba(112, 57, 18, .065);
-  --tx-card-shadow-hover: 0 18px 38px rgba(112, 57, 18, .12);
-}
-
-main {
-  color: var(--tx-ink);
-}
-
-main h1, main h2, main h3 {
-  letter-spacing: -.025em;
-}
-
-main h1 {
-  text-wrap: balance;
-}
-
-main article {
-  transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease;
-}
-
-main article:hover {
-  border-color: #edc8aa;
-  box-shadow: var(--tx-card-shadow-hover);
-}
-
-main input:not([type="checkbox"]):not([type="radio"]),
-main select,
-main textarea {
-  min-height: 46px;
-  border: 1px solid #ead8ca;
-  border-radius: 14px;
-  background: rgba(255, 255, 255, .96);
-  color: #2b1c12;
-  box-shadow: 0 2px 8px rgba(105, 54, 20, .025);
-  transition: border-color .18s ease, box-shadow .18s ease, background .18s ease;
-}
-
-main textarea {
-  min-height: 104px;
-  padding-top: 12px;
-}
-
-main input:not([type="checkbox"]):not([type="radio"]):focus,
-main select:focus,
-main textarea:focus {
-  border-color: #e9782c;
-  background: #fff;
-  box-shadow: 0 0 0 4px rgba(233, 104, 18, .11);
-  outline: none;
-}
-
-main button {
-  transition: transform .16s ease, box-shadow .16s ease, filter .16s ease;
-}
-
-main button:active {
-  transform: translateY(1px) scale(.985);
-}
-
-main a:focus-visible,
-main button:focus-visible {
-  outline: 3px solid rgba(233, 104, 18, .32);
-  outline-offset: 3px;
-}
-
-@media (max-width: 640px) {
-  main {
-    padding-top: 18px;
-  }
-
-  main h1 {
-    font-size: clamp(1.35rem, 6vw, 1.7rem);
-    line-height: 1.45;
-  }
-
-  main h2 {
-    font-size: 1.15rem;
-  }
-
-  main article {
-    min-width: 0;
-  }
-
-  main input:not([type="checkbox"]):not([type="radio"]),
-  main select {
-    font-size: 16px;
+  .tx-empty-state { animation: tx-empty-in .28s ease-out both; }
+  @keyframes tx-empty-in {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
   }
 }
 
@@ -150,90 +439,133 @@ main button:focus-visible {
   }
 }
 
-
-/* Track Your Sales — premium striped tables and shared states */
-main table {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
-  overflow: hidden;
-  border: 1px solid #f1e2d6;
-  border-radius: 18px;
-  background: #fff;
-}
-main thead th {
-  background: linear-gradient(110deg, #fff4e9, #fffaf6);
-  color: #75401f;
-  font-weight: 800;
-}
-main tbody tr:nth-child(even) { background: #fff8f1; }
-main tbody tr:nth-child(odd) { background: #fff; }
-main th, main td {
-  border-bottom: 1px solid #f3e7dd;
-}
-main tbody tr:last-child td { border-bottom: 0; }
-main tbody tr { transition: background .16s ease; }
-main tbody tr:hover { background: #fff0e4; }
-
-@media (max-width: 1023px) {
-  nav[aria-label="التنقل الرئيسي للموبايل"] {
-    inset-inline: 12px;
-    bottom: max(10px, env(safe-area-inset-bottom));
-    overflow: hidden;
-    border: 1px solid rgba(241, 226, 214, .95);
-    border-radius: 24px;
-    background: rgba(255, 255, 255, .94);
-    box-shadow: 0 12px 34px rgba(80, 43, 20, .13);
+/* المرحلة 3 — Dark Mode */
+@media (prefers-color-scheme: dark) {
+  :where(:root:not(.light)) {
+    color-scheme: dark;
   }
-  nav[aria-label="التنقل الرئيسي للموبايل"] > div {
-    padding-inline: 4px;
-  }
-}
 
-@media (prefers-reduced-motion: no-preference) {
-  .tx-empty-state { animation: tx-empty-in .28s ease-out both; }
-  @keyframes tx-empty-in {
-    from { opacity: 0; transform: translateY(5px); }
-    to { opacity: 1; transform: translateY(0); }
+  :where(:root:not(.light)) body {
+    background: var(--color-bg-dark);
+    color: var(--color-ink-dark);
+  }
+
+  :where(:root:not(.light)) main {
+    color: var(--color-ink-dark);
+  }
+
+  :where(:root:not(.light)) :is(main article, main section) {
+    background: var(--color-surface-dark);
+    border-color: var(--color-line-dark);
+  }
+
+  :where(:root:not(.light)) :is(main input:not([type="checkbox"]):not([type="radio"]), main select, main textarea) {
+    background: var(--color-surface-dark);
+    border-color: var(--color-line-strong-dark);
+    color: var(--color-ink-dark);
+  }
+
+  :where(:root:not(.light)) main table {
+    background: var(--color-surface-dark);
+    border-color: var(--color-line-dark);
+  }
+
+  :where(:root:not(.light)) main tbody tr:nth-child(even) {
+    background: var(--color-surface-2-dark);
+  }
+
+  :where(:root:not(.light)) main tbody tr:nth-child(odd) {
+    background: var(--color-surface-dark);
+  }
+
+  :where(:root:not(.light)) main tbody tr:hover {
+    background: var(--color-surface-2-dark);
   }
 }
 
-
-/* Neo-Tech Orange identity foundation */
-:root {
-  --tx-orange-bright: #ff963f;
-  --tx-orange-glow: rgba(240, 120, 24, .16);
-  --tx-cream-deep: #fff0e1;
-  --tx-surface: rgba(255, 255, 255, .94);
-  --tx-surface-soft: #fffaf5;
-  --tx-border-strong: #edc7a7;
-  --tx-gradient-brand: linear-gradient(125deg, #ff9a45 0%, #f07818 48%, #c6530b 100%);
-  --tx-gradient-soft: linear-gradient(135deg, #fffaf5 0%, #fff6ee 52%, #fff0e4 100%);
+.dark {
+  color-scheme: dark;
 }
 
-html, body {
-  accent-color: var(--tx-orange);
+.dark body {
+  background: var(--color-bg-dark);
+  color: var(--color-ink-dark);
 }
 
-body {
-  background-attachment: fixed;
+.dark main {
+  color: var(--color-ink-dark);
 }
 
-main article,
-main section {
-  scroll-margin-top: 88px;
+.dark main article,
+.dark main section {
+  background: var(--color-surface-dark);
+  border-color: var(--color-line-dark);
 }
 
-main article {
-  box-shadow: var(--tx-card-shadow);
+.dark main input:not([type="checkbox"]):not([type="radio"]),
+.dark main select,
+.dark main textarea {
+  background: var(--color-surface-dark);
+  border-color: var(--color-line-strong-dark);
+  color: var(--color-ink-dark);
 }
 
-main :where(button, [role="button"]):not(:disabled):focus-visible {
-  box-shadow: 0 0 0 4px var(--tx-orange-glow);
+.dark main table {
+  background: var(--color-surface-dark);
+  border-color: var(--color-line-dark);
 }
 
-@media (max-width: 640px) {
-  body {
-    background-attachment: scroll;
+.dark main tbody tr:nth-child(even),
+.dark main tbody tr:hover {
+  background: var(--color-surface-2-dark);
+}
+
+.dark main tbody tr:nth-child(odd) {
+  background: var(--color-surface-dark);
+}
+
+/* المرحلة 3 — Skeleton shine animation */
+@keyframes skeleton-shine {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.skeleton-shine {
+  background: linear-gradient(
+    90deg,
+    var(--color-skeleton) 25%,
+    var(--color-skeleton-shine) 50%,
+    var(--color-skeleton) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shine var(--duration-skeleton) ease-in-out infinite;
+}
+
+@media (prefers-color-scheme: dark) {
+  :where(:root:not(.light)) .skeleton-shine {
+    background: linear-gradient(
+      90deg,
+      var(--color-skeleton-dark) 25%,
+      var(--color-skeleton-shine-dark) 50%,
+      var(--color-skeleton-dark) 75%
+    );
+    background-size: 200% 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton-shine {
+    animation: none;
+    background: var(--color-skeleton);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :where(:root:not(.light)) .skeleton-shine {
+      background: var(--color-skeleton-dark);
+    }
   }
 }

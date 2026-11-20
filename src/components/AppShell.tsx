@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { createContext, useContext, type ReactNode } from "react";
+import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import { APP_DISCLAIMER, APP_NAME, BRAND_BY } from "@/lib/constants";
 import { cairoYearMonth, isValidYearMonth, monthLabelAr, shiftYearMonth } from "@/lib/dates";
 import { BookIcon, ChevronIcon, HomeIcon, LogoMark, MoreIcon, PlusIcon, TargetIcon } from "@/components/icons";
@@ -35,7 +35,7 @@ function MonthSwitcher() {
   }
 
   return (
-    <div className="flex items-center gap-1 rounded-full border border-[#f0dfd0] bg-white/95 p-1 shadow-sm">
+    <div className="flex items-center gap-1 rounded-full border border-line-shell bg-white/95 p-1 shadow-sm">
       <button
         type="button"
         onClick={() => go(shiftYearMonth(month, -1))}
@@ -71,7 +71,7 @@ function NavLinks({ pathname, month }: { pathname: string; month: string }) {
             href={`${item.href}?month=${month}`}
             aria-current={active ? "page" : undefined}
             className={`flex min-h-12 items-center gap-3 rounded-2xl px-3 text-sm font-bold transition ${
-              active ? "bg-[#fff0df] text-[#c6530b] shadow-[0_4px_14px_rgba(198,83,11,0.08)]" : "text-[#8c7b6e] hover:bg-[#fff5eb] hover:text-[#c6530b]"
+              active ? "bg-nav-active-bg text-brand-600 shadow-navlink" : "text-ink-muted-3 hover:bg-brand-surface hover:text-brand-600"
             }`}
           >
             <Icon />
@@ -88,17 +88,32 @@ export function AppShell({ user, children }: { user: SafeUser; children: ReactNo
   const params = useSearchParams();
   const raw = params.get("month");
   const month = raw && isValidYearMonth(raw) ? raw : cairoYearMonth();
+  const [isDark, setIsDark] = useState(false);
+
+  useEffect(() => {
+    const media = window.matchMedia("(prefers-color-scheme: dark)");
+    setIsDark(media.matches);
+
+    const listener = (e: MediaQueryListEvent) => setIsDark(e.matches);
+    media.addEventListener("change", listener);
+    return () => media.removeEventListener("change", listener);
+  }, []);
+
+  useEffect(() => {
+    document.documentElement.classList.toggle("dark", isDark);
+    document.documentElement.classList.toggle("light", !isDark);
+  }, [isDark]);
 
   return (
     <ToastProvider>
       <MonthContext.Provider value={month}>
-        <div className="min-h-screen bg-transparent text-[#24180f]">
-          <a href="#main-content" className="sr-only z-[60] rounded-xl bg-white px-4 py-3 font-bold text-[#c6530b] shadow-lg focus:not-sr-only focus:fixed focus:right-4 focus:top-4">
+        <div className="min-h-screen bg-transparent text-ink-shell">
+          <a href="#main-content" className="sr-only z-[60] rounded-xl bg-white px-4 py-3 font-bold text-brand-600 shadow-lg focus:not-sr-only focus:fixed focus:right-4 focus:top-4">
             تخطي إلى المحتوى
           </a>
           <div className="h-1.5 bg-gradient-to-l from-[#c6530b] via-[#f07818] to-[#ffb36e]" />
           <div className="mx-auto flex min-h-screen max-w-7xl">
-            <aside className="sticky top-0 hidden h-screen w-72 shrink-0 flex-col border-l border-[#f0dfd0] bg-[#fffaf5]/95 p-5 shadow-[8px_0_36px_rgba(116,63,26,0.035)] backdrop-blur-xl lg:flex">
+            <aside className="sticky top-0 hidden h-screen w-72 shrink-0 flex-col border-l border-line-shell bg-surface-95/95 p-5 shadow-sidebar backdrop-blur-xl lg:flex">
               <div className="flex items-center gap-3">
                 <LogoMark />
                 <div>
@@ -106,7 +121,7 @@ export function AppShell({ user, children }: { user: SafeUser; children: ReactNo
                   <p className="text-xs text-neutral-400" dir="ltr">{BRAND_BY}</p>
                 </div>
               </div>
-              <div className="mt-6 overflow-hidden rounded-[26px] bg-gradient-to-br from-[#ff9a45] via-[#f07818] to-[#c6530b] p-4 text-white shadow-[0_14px_28px_rgba(189,75,10,0.20)]">
+              <div className="mt-6 overflow-hidden rounded-hero bg-gradient-to-br from-[#ff9a45] via-[#f07818] to-[#c6530b] p-4 text-white shadow-sidebar-mobile">
                 <p className="text-sm font-extrabold">{user.name}</p>
                 <p className="text-xs text-white/80">📍 {user.branch}</p>
               </div>
@@ -117,19 +132,28 @@ export function AppShell({ user, children }: { user: SafeUser; children: ReactNo
             </aside>
 
             <div className="flex min-w-0 flex-1 flex-col">
-              <header className="sticky top-0 z-30 border-b border-white/70 bg-[#fffaf5]/72 px-3 py-3 backdrop-blur-2xl sm:px-4">
-                <div className="relative mx-auto flex max-w-[1440px] items-center justify-between gap-3 overflow-hidden rounded-[22px] border border-white/90 bg-gradient-to-l from-white/95 via-[#fffaf5]/95 to-[#fff0df]/90 px-3 py-2.5 shadow-[0_8px_28px_rgba(198,83,11,0.09)] ring-1 ring-[#f0dfd0]/60 sm:px-4">
+              <header className="sticky top-0 z-30 border-b border-white/70 bg-surface-72/72 px-3 py-3 backdrop-blur-2xl sm:px-4">
+                <div className="relative mx-auto flex max-w-[1440px] items-center justify-between gap-3 overflow-hidden rounded-card border border-white/90 bg-gradient-to-l from-white/95 via-[#fffaf5]/95 to-[#fff0df]/90 px-3 py-2.5 shadow-month-switcher ring-1 ring-[#f0dfd0]/60 sm:px-4">
                   <span aria-hidden="true" className="pointer-events-none absolute inset-y-0 right-0 w-1 bg-gradient-to-b from-[#ffb36e] via-[#f07818] to-[#c6530b]" />
                   <div className="relative flex min-w-0 items-center gap-2.5">
-                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-[#fff0df] to-white shadow-[0_3px_12px_rgba(198,83,11,0.10)] ring-1 ring-[#edc7a7]/70">
+                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-[#fff0df] to-white shadow-month-switcher-sm ring-1 ring-[#edc7a7]/70">
                       <LogoMark />
                     </span>
                     <div className="min-w-0">
-                      <p className="truncate text-sm font-black leading-none text-[#3a2416]" dir="ltr">{APP_NAME}</p>
-                      <p className="mt-1 truncate text-[10px] font-semibold text-[#a58b77]" dir="ltr">{BRAND_BY}</p>
+                      <p className="truncate text-sm font-black leading-none text-ink-title" dir="ltr">{APP_NAME}</p>
+                      <p className="mt-1 truncate text-[10px] font-semibold text-muted-by" dir="ltr">{BRAND_BY}</p>
                     </div>
                   </div>
-                  <div className="relative shrink-0">
+                  <div className="relative flex shrink-0 items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setIsDark(!isDark)}
+                      className="flex items-center gap-2 rounded-lg border border-line px-3 py-2 text-sm transition-colors hover:bg-brand-50 dark:hover:bg-surface-2-dark"
+                      aria-label={isDark ? "التبديل للوضع الفاتح" : "التبديل للوضع الداكن"}
+                    >
+                      {isDark ? "☀️" : "🌙"}
+                      <span>{isDark ? "الوضع الفاتح" : "الوضع الداكن"}</span>
+                    </button>
                     <MonthSwitcher />
                   </div>
                 </div>
@@ -139,7 +163,7 @@ export function AppShell({ user, children }: { user: SafeUser; children: ReactNo
             </div>
           </div>
 
-          <nav aria-label="التنقل الرئيسي للموبايل" className="fixed inset-x-3 bottom-[calc(env(safe-area-inset-bottom)+12px)] z-40 mx-auto max-w-xl rounded-[26px] border border-[#f0dfd0] bg-white/95 p-2 shadow-[0_12px_36px_rgba(112,57,18,0.14)] backdrop-blur-2xl lg:hidden">
+          <nav aria-label="التنقل الرئيسي للموبايل" className="fixed inset-x-3 bottom-[calc(env(safe-area-inset-bottom)+12px)] z-40 mx-auto max-w-xl rounded-hero border border-line-shell bg-white/95 p-2 shadow-bottom-nav backdrop-blur-2xl lg:hidden">
             <div className="grid grid-cols-5 items-center gap-1">
               {NAV.map((item) => {
                 const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
@@ -150,10 +174,10 @@ export function AppShell({ user, children }: { user: SafeUser; children: ReactNo
                     key={item.href}
                     href={`${item.href}?month=${month}`}
                     aria-current={active ? "page" : undefined}
-                    className={`flex min-h-12 flex-col items-center justify-center gap-1 rounded-[18px] px-1 py-1.5 text-[10px] font-extrabold transition-all duration-200 sm:min-h-14 sm:text-[11px] ${
+                    className={`flex min-h-12 flex-col items-center justify-center gap-1 rounded-card px-1 py-1.5 text-[10px] font-extrabold transition-all duration-200 sm:min-h-14 sm:text-[11px] ${
                       highlighted
-                        ? "bg-gradient-to-br from-[#ff9a45] via-[#f07818] to-[#c6530b] text-white shadow-[0_5px_14px_rgba(198,83,11,0.20)]"
-                        : "text-[#9b8878] hover:bg-[#fff5eb] hover:text-[#c6530b]"
+                        ? "bg-gradient-to-br from-[#ff9a45] via-[#f07818] to-[#c6530b] text-white shadow-bottom-nav-emph"
+                        : "text-muted-disclaimer hover:bg-brand-surface hover:text-brand-600"
                     }`}
                   >
                     <span className="flex h-6 w-6 items-center justify-center"><Icon /></span>

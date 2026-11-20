@@ -290,23 +290,23 @@ export default function MorePage() {
   return (
     <div className="space-y-5 pb-4">
       <section>
-        <div className="relative overflow-hidden rounded-[28px] border border-[#f0d8c4] bg-gradient-to-br from-[#fff8f0] via-white to-[#ffe9d5] p-5 shadow-[0_12px_30px_rgba(166,76,16,0.08)]"><div className="absolute -left-8 -top-10 h-32 w-32 rounded-full bg-[#f07818]/10 blur-2xl" /><div className="relative"><div className="mb-2 inline-flex items-center gap-2 rounded-full border border-[#f1d2b8] bg-white/80 px-3 py-1 text-xs font-extrabold text-[#a94708]"><span>⚙️</span><span>إدارة التطبيق</span></div><h1 className="text-2xl font-black tracking-tight text-[#74340d]">المزيد</h1></div></div>
-        <p className="mt-1 text-sm text-neutral-500">ملخص النهارده، سجل الشهر، النسخة الاحتياطية، والمساعد.</p>
+        <div className="relative overflow-hidden rounded-hero border border-section bg-gradient-to-br from-[#fff8f0] via-white to-[#ffe9d5] p-5 shadow-section"><div className="absolute -left-8 -top-10 h-32 w-32 rounded-full bg-brand-500/10 blur-2xl" /><div className="relative"><div className="mb-2 inline-flex items-center gap-2 rounded-full border border-section-2 bg-white/80 px-3 py-1 text-xs font-extrabold text-brand-ink-soft"><span>⚙️</span><span>إدارة التطبيق</span></div><h1 className="text-2xl font-black tracking-tight text-brand-ink-strong">المزيد</h1></div></div>
+        <p className="mt-1 text-sm text-ink-2">ملخص النهارده، سجل الشهر، النسخة الاحتياطية، والمساعد.</p>
       </section>
 
-      <section className="relative overflow-hidden rounded-[28px] border border-[#f0d8c4] bg-gradient-to-br from-white via-white to-[#fff5eb] p-5 shadow-[0_12px_30px_rgba(166,76,16,0.07)] ring-1 ring-white">
-        <h2 className="flex items-center gap-2 text-lg font-black text-[#74340d]"><span className="flex h-9 w-9 items-center justify-center rounded-2xl bg-[#fff0e2] text-lg">📊</span>اللي عملته النهارده</h2>
+      <section className="relative overflow-hidden rounded-hero border border-section bg-gradient-to-br from-white via-white to-brand-surface p-5 shadow-accent ring-1 ring-white">
+        <h2 className="flex items-center gap-2 text-lg font-black text-brand-ink-strong"><span className="flex h-9 w-9 items-center justify-center rounded-2xl bg-brand-200 text-lg">📊</span>اللي عملته النهارده</h2>
         {todayItems.length === 0 ? (
-          <p className="mt-3 text-sm text-neutral-400">لسه مسجلتش حاجة النهارده. يلا نبدأ! 💪</p>
+          <p className="mt-3 text-sm text-ink-2">لسه مسجلتش حاجة النهارده. يلا نبدأ! 💪</p>
         ) : (
           <ul className="mt-3 space-y-2">
             {todayItems.map((item) => (
-              <li key={item.kpiKey} className="flex items-center justify-between rounded-2xl border border-[#f5e2d1] bg-gradient-to-l from-[#fff4e9] to-white px-3 py-3 text-sm shadow-[0_3px_10px_rgba(166,76,16,0.04)]">
+              <li key={item.kpiKey} className="flex items-center justify-between rounded-2xl border border-section-3 bg-gradient-to-l from-[#fff4e9] to-white px-3 py-3 text-sm shadow-section-sm">
                 <span className="flex items-center gap-2">
                   <span className="text-xl">{kpiEmoji(item.kpiKey)}</span>
                   <span>
                     <span dir="ltr" className="font-extrabold">{item.nameEn}</span>
-                    <span className="block text-xs text-neutral-500">{item.count} عملية</span>
+                    <span className="block text-xs text-ink-2">{item.count} عملية</span>
                   </span>
                 </span>
                 <strong>
@@ -318,10 +318,10 @@ export default function MorePage() {
         )}
       </section>
 
-      <section className="relative overflow-hidden rounded-[28px] border border-[#f0d8c4] bg-gradient-to-br from-white via-white to-[#fff5eb] p-5 shadow-[0_12px_30px_rgba(166,76,16,0.07)] ring-1 ring-white">
+      <section className="relative overflow-hidden rounded-hero border border-section bg-gradient-to-br from-white via-white to-brand-surface p-5 shadow-accent ring-1 ring-white">
         <div className="flex items-center justify-between gap-3">
-          <h2 className="flex items-center gap-2 text-lg font-black text-[#74340d]"><span className="flex h-9 w-9 items-center justify-center rounded-2xl bg-[#fff0e2] text-lg">🗂️</span>سجل عمليات {monthLabelAr(month)}</h2>
-          <span className="text-sm text-neutral-400">{entries.length} سجل</span>
+          <h2 className="flex items-center gap-2 text-lg font-black text-brand-ink-strong"><span className="flex h-9 w-9 items-center justify-center rounded-2xl bg-brand-200 text-lg">🗂️</span>سجل عمليات {monthLabelAr(month)}</h2>
+          <span className="text-sm text-ink-2">{entries.length} سجل</span>
         </div>
         {entries.length === 0 ? (
           <div className="mt-4">
@@ -330,24 +330,24 @@ export default function MorePage() {
         ) : (
           <ul className="mt-4 space-y-2">
             {entries.map((entry) => (
-              <li key={entry.id} className="rounded-2xl border border-[#f1dfcf] bg-white/80 p-3 shadow-[0_3px_12px_rgba(105,54,20,0.035)] transition-colors hover:border-[#e9bd99]">
+              <li key={entry.id} className="rounded-2xl border border-section-4 bg-white/80 p-3 shadow-section-xs transition-colors hover:border-section-5">
                 <div className="flex items-start justify-between gap-3">
                   <div>
                     <p className="font-extrabold">
                       <span className="ml-1">{kpiEmoji(entry.kpiKey)}</span>
                       <span dir="ltr">{entry.nameEn}</span>
                     </p>
-                    <p className="text-xs text-neutral-500">
+                    <p className="text-xs text-ink-2">
                       {formatDateAr(entry.entryDate)} · {formatQty(entry.quantity)} {entry.unitAr}
                     </p>
                     {entry.note ? <p className="mt-1 text-sm text-neutral-700">{entry.note}</p> : null}
-                    <p className="mt-1 text-[11px] text-neutral-400">اتسجل {formatTimeCairo(entry.createdAt)}</p>
+                    <p className="mt-1 text-[11px] text-ink-2">اتسجل {formatTimeCairo(entry.createdAt)}</p>
                   </div>
                   <div className="flex shrink-0 items-center gap-3">
-                    <button type="button" className="min-h-10 font-extrabold text-[#ff7900]" onClick={() => openEdit(entry)}>
+                    <button type="button" className="min-h-10 font-extrabold text-brand-600" onClick={() => openEdit(entry)}>
                       ✏️ عدّل
                     </button>
-                    <button type="button" className="min-h-10 font-extrabold text-red-600" onClick={() => setDeleteId(entry.id)}>
+                    <button type="button" className="min-h-10 font-extrabold text-risk" onClick={() => setDeleteId(entry.id)}>
                       🗑️ شيل
                     </button>
                   </div>
@@ -365,8 +365,8 @@ export default function MorePage() {
         </button>
       </section>
 
-      <section className="relative overflow-hidden rounded-[28px] border border-[#f0d8c4] bg-gradient-to-br from-white via-white to-[#fff5eb] p-5 shadow-[0_12px_30px_rgba(166,76,16,0.07)] ring-1 ring-white">
-        <h2 className="flex items-center gap-2 text-lg font-black text-[#74340d]"><span className="flex h-9 w-9 items-center justify-center rounded-2xl bg-[#fff0e2] text-lg">👤</span>بياناتك</h2>
+      <section className="relative overflow-hidden rounded-hero border border-section bg-gradient-to-br from-white via-white to-brand-surface p-5 shadow-accent ring-1 ring-white">
+        <h2 className="flex items-center gap-2 text-lg font-black text-brand-ink-strong"><span className="flex h-9 w-9 items-center justify-center rounded-2xl bg-brand-200 text-lg">👤</span>بياناتك</h2>
         <form className="mt-4 space-y-3" onSubmit={saveProfile}>
           <Field label="اسم الموظف">
             <input className={inputClass} value={name} onChange={(e) => setName(e.target.value)} required />
@@ -378,17 +378,17 @@ export default function MorePage() {
             {pending ? "⏳ بنحفظ..." : "💾 احفظ الاسم والفرع"}
           </PrimaryButton>
         </form>
-        <p className="mt-3 text-xs leading-6 text-neutral-400">تقدر تغيّر اسمك والفرع في أي وقت من هنا.</p>
+        <p className="mt-3 text-xs leading-6 text-ink-2">تقدر تغيّر اسمك والفرع في أي وقت من هنا.</p>
       </section>
 
-      <section className="relative overflow-hidden rounded-[28px] border border-[#f0d8c4] bg-gradient-to-br from-white via-white to-[#fff5eb] p-5 shadow-[0_12px_30px_rgba(166,76,16,0.07)] ring-1 ring-white">
-        <h2 className="flex items-center gap-2 text-lg font-black text-[#74340d]"><span className="flex h-9 w-9 items-center justify-center rounded-2xl bg-[#fff0e2] text-lg">💾</span>نسخة احتياطية واستعادة</h2>
-        <p className="mt-2 text-sm leading-7 text-neutral-500">التصدير بينزّل ملف JSON فيه بياناتك وإعدادات الشهور والسجلات والملاحظات. من غير أي مفاتيح أو أسرار.</p>
+      <section className="relative overflow-hidden rounded-hero border border-section bg-gradient-to-br from-white via-white to-brand-surface p-5 shadow-accent ring-1 ring-white">
+        <h2 className="flex items-center gap-2 text-lg font-black text-brand-ink-strong"><span className="flex h-9 w-9 items-center justify-center rounded-2xl bg-brand-200 text-lg">💾</span>نسخة احتياطية واستعادة</h2>
+        <p className="mt-2 text-sm leading-7 text-ink-2">التصدير بينزّل ملف JSON فيه بياناتك وإعدادات الشهور والسجلات والملاحظات. من غير أي مفاتيح أو أسرار.</p>
         <div className="mt-4 grid gap-3 sm:grid-cols-2">
           <PrimaryButton type="button" disabled={pending} onClick={() => void exportBackup()}>
             ⬇️ نزّل نسخة JSON
           </PrimaryButton>
-          <label className="inline-flex min-h-12 cursor-pointer items-center justify-center rounded-full border border-[#edc7a7] bg-white px-4 font-extrabold text-[#a94708] shadow-sm transition hover:bg-[#fff5eb]">
+          <label className="inline-flex min-h-12 cursor-pointer items-center justify-center rounded-full border border-hero bg-white px-4 font-extrabold text-brand-ink-soft shadow-sm transition hover:bg-brand-surface">
             ⬆️ اختار ملف للاستعادة
             <input
               type="file"
@@ -418,7 +418,7 @@ export default function MorePage() {
                     type="button"
                     onClick={() => setEditKpi(kpi.key)}
                     className={`flex min-h-12 items-center gap-2 rounded-2xl border px-3 text-right text-xs font-extrabold transition ${
-                      active ? "border-[#ff7900] bg-orange-50 text-[#c45e00]" : "border-neutral-200 bg-white text-neutral-700"
+                      active ? "border-accent-strong bg-brand-50 text-brand-ink" : "border-neutral-200 bg-white text-neutral-700"
                     }`}
                   >
                     <span className="text-lg">{kpi.emoji}</span>

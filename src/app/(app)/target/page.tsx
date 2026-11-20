@@ -121,9 +121,9 @@ export default function TargetPage() {
   return (
     <form className="space-y-5" onSubmit={onSave}>
       <section>
-        <div className="rounded-[26px] border border-[#f2d8c3] bg-gradient-to-br from-[#fff2e6] via-white to-[#fff9f4] p-5 shadow-[0_10px_28px_rgba(105,54,20,0.045)]"><h1 className="text-2xl font-black tracking-tight text-[#2d1d13]">التارجت 🎯</h1>
+        <div className="rounded-card border border-form bg-gradient-to-br from-[#fff2e6] via-white to-[#fff9f4] p-5 shadow-medium"><h1 className="text-2xl font-black tracking-tight text-ink-3">التارجت 🎯</h1>
         <p className="mt-2 text-sm leading-6 text-neutral-600">كل شهر محفوظ لوحده. لما تغيّر الشهر مش هيتكتب فوق شهر تاني.</p>
-        <p className="mt-2 text-xs font-semibold text-neutral-500">{saved ? "✅ الإعدادات دي محفوظة في قاعدة البيانات." : "⚠️ لسه مش محفوظة. الأرقام اللي شايفها افتراضية لحد ما تدوس حفظ."}</p></div>
+        <p className="mt-2 text-xs font-semibold text-ink-2">{saved ? "✅ الإعدادات دي محفوظة في قاعدة البيانات." : "⚠️ لسه مش محفوظة. الأرقام اللي شايفها افتراضية لحد ما تدوس حفظ."}</p></div>
       </section>
 
       {error ? <Banner tone="error">❌ {error}</Banner> : null}
@@ -133,7 +133,7 @@ export default function TargetPage() {
         <Banner tone="success">👌 مجموع الأوزان 100% تمام.</Banner>
       )}
 
-      <section className="rounded-[26px] border border-[#f1e3d8] bg-white p-5 shadow-[0_8px_24px_rgba(105,54,20,0.045)]">
+      <section className="rounded-card border border-form-2 bg-white p-5 shadow-soft">
         <Field label="💰 الكوميشن الكامل (جنيه)">
           <input
             className={`${inputClass} text-xl font-black`}
@@ -155,14 +155,14 @@ export default function TargetPage() {
         {kpis.map((kpi, index) => {
           const catalog = KPI_CATALOG.find((item) => item.key === kpi.kpiKey);
           return (
-            <div key={kpi.kpiKey} className="rounded-[24px] border border-[#f1e3d8] bg-white p-4 shadow-[0_8px_24px_rgba(105,54,20,0.045)]">
+            <div key={kpi.kpiKey} className="rounded-card border border-form-2 bg-white p-4 shadow-soft">
               <div className="flex items-center gap-3">
-                <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-orange-50 text-2xl">{catalog?.emoji ?? "🎯"}</span>
+                <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-brand-50 text-2xl">{catalog?.emoji ?? "🎯"}</span>
                 <div>
                   <p className="font-extrabold" dir="ltr">
                     {catalog?.nameEn}
                   </p>
-                  <p className="text-xs text-neutral-400">الوحدة: {kpi.unitAr}</p>
+                  <p className="text-xs text-ink-2">الوحدة: {kpi.unitAr}</p>
                 </div>
               </div>
               <div className="mt-3 grid grid-cols-2 gap-3">
@@ -198,9 +198,9 @@ export default function TargetPage() {
         })}
       </section>
 
-      <section className="rounded-[26px] border border-[#f1e3d8] bg-white p-5 shadow-[0_8px_24px_rgba(105,54,20,0.045)]">
+      <section className="rounded-card border border-form-2 bg-white p-5 shadow-soft">
         <h2 className="text-lg font-black">📅 أيام الشغل</h2>
-        <p className="mt-1 text-xs text-neutral-400">الحسابات بتعتمد على أيام الشغل الفعلية، مش الأيام التقويمية.</p>
+        <p className="mt-1 text-xs text-ink-2">الحسابات بتعتمد على أيام الشغل الفعلية، مش الأيام التقويمية.</p>
         <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
           {WEEK_DAYS.map((day) => (
             <button
@@ -208,7 +208,7 @@ export default function TargetPage() {
               type="button"
               onClick={() => setWorkingDays((current) => ({ ...current, [day.key]: !current[day.key] }))}
               className={`min-h-12 rounded-2xl border text-sm font-extrabold ${
-                workingDays[day.key] ? "border-[#ff7900] bg-orange-50 text-[#c45e00]" : "border-neutral-200 bg-neutral-50 text-neutral-400"
+                workingDays[day.key] ? "border-accent-strong bg-brand-50 text-brand-ink" : "border-neutral-200 bg-neutral-50 text-ink-2"
               }`}
             >
               {workingDays[day.key] ? "✅ " : ""}
@@ -218,7 +218,7 @@ export default function TargetPage() {
         </div>
       </section>
 
-      <section className="rounded-[26px] border border-[#f1e3d8] bg-white p-5 shadow-[0_8px_24px_rgba(105,54,20,0.045)]">
+      <section className="rounded-card border border-form-2 bg-white p-5 shadow-soft">
         <h2 className="text-lg font-black">🏖️ إجازات الشهر</h2>
         <div className="mt-3 grid gap-3 sm:grid-cols-[1fr_1fr_auto]">
           <input className={inputClass} type="date" value={holidayDate} onChange={(e) => setHolidayDate(e.target.value)} />
@@ -228,16 +228,16 @@ export default function TargetPage() {
           </SecondaryButton>
         </div>
         {holidays.length === 0 ? (
-          <p className="mt-4 text-sm text-neutral-400">مفيش إجازات متسجلة للشهر ده.</p>
+          <p className="mt-4 text-sm text-ink-2">مفيش إجازات متسجلة للشهر ده.</p>
         ) : (
           <ul className="mt-4 space-y-2">
             {holidays.map((item) => (
-              <li key={item.date} className="flex items-center justify-between rounded-2xl bg-orange-50 px-3 py-2 text-sm">
+              <li key={item.date} className="flex items-center justify-between rounded-2xl bg-brand-50 px-3 py-2 text-sm">
                 <span className="font-bold">
                   {item.date}
                   {item.note ? ` · ${item.note}` : ""}
                 </span>
-                <button type="button" className="font-extrabold text-red-600" onClick={() => setHolidays((current) => current.filter((row) => row.date !== item.date))}>
+                <button type="button" className="font-extrabold text-risk" onClick={() => setHolidays((current) => current.filter((row) => row.date !== item.date))}>
                   شيل
                 </button>
               </li>
