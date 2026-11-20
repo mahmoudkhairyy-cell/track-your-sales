@@ -5386,7 +5386,7 @@ html[data-theme="space"] .tys-premium-home .tys-home-daily > div:last-child > di
 
 /* System dark mode affects semantic utility tokens only; explicit app themes remain intact. */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not(.light):not(.dark) {
     color-scheme: dark;
     --color-background: #171717;
     --color-foreground: #f5f5f5;
@@ -5399,4 +5399,72 @@ html[data-theme="space"] .tys-premium-home .tys-home-daily > div:last-child > di
     --color-danger-bg: #450a0a;
     --color-danger-text: #fca5a5;
   }
+}
+
+
+/* Tailwind CSS v4: class-based dark mode. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Explicit dark theme tokens and app surfaces. */
+html.dark {
+  color-scheme: dark;
+  --color-background: #171717;
+  --color-foreground: #f5f5f5;
+  --color-surface: #262626;
+  --color-border: #404040;
+  --color-success-bg: #052e22;
+  --color-success-text: #6ee7b7;
+  --color-warning-bg: #422006;
+  --color-warning-text: #fcd34d;
+  --color-danger-bg: #450a0a;
+  --color-danger-text: #fca5a5;
+  --brand-bg: #11100f;
+  --brand-card: #1c1a18;
+  --brand-text: #f5eee8;
+  --brand-muted: #c1b2a6;
+  --brand-border: #49372b;
+  --brand-soft: #38271c;
+  --brand-cream: #241d18;
+  --app-shadow: 0 12px 34px rgba(0, 0, 0, .28);
+}
+
+html.dark body {
+  background:
+    radial-gradient(ellipse at 100% 0%, rgba(233, 104, 18, .10), transparent 34rem),
+    linear-gradient(180deg, #11100f 0%, #171513 48%, #11100f 100%);
+  color: var(--brand-text);
+}
+
+html.dark .tys-home-greeting,
+html.dark .tys-home-hero,
+html.dark .tys-page section[class*="rounded-"],
+html.dark .tys-page article[class*="rounded-"],
+html.dark .tys-page-manager article,
+html.dark .tys-page-wiki article,
+html.dark .tys-page-log article {
+  background-color: var(--color-surface);
+  border-color: var(--color-border);
+  color: var(--color-foreground);
+}
+
+html.dark .tys-app-header,
+html.dark .tys-mobile-nav,
+html.dark .tys-sidebar {
+  background: #1c1a18;
+  border-color: var(--color-border);
+}
+
+html.dark .tys-page :is(input, select, textarea) {
+  background-color: #201d1a;
+  border-color: #594330;
+  color: #f5eee8;
+}
+
+html.dark .tys-page :is(input, select, textarea)::placeholder {
+  color: #a99a8e;
+}
+
+/* Explicit light choice overrides a dark operating-system preference. */
+html.light {
+  color-scheme: light;
 }
