@@ -61,7 +61,7 @@ function qualityPercent(q: Quality) {
 function contribution(percent: number, weight: number) {
   return percent < 90 ? 0 : percent * weight / 100;
 }
-function aggregatePercent(rows: Report[], key: string) {
+function aggregateKpi(rows: Report[], key: string) {
   let achieved = 0, target = 0;
   for (const row of rows) {
     const k = kpiFor(row, key);
@@ -69,7 +69,10 @@ function aggregatePercent(rows: Report[], key: string) {
     achieved += Number(k.achieved) || 0;
     target += Number(k.target) || 0;
   }
-  return target > 0 ? achieved / target * 100 : 0;
+  return { achieved, target, percent: target > 0 ? achieved / target * 100 : 0 };
+}
+function formatCount(value: number) {
+  return Number(value || 0).toLocaleString("en-US", { maximumFractionDigits: 2 });
 }
 function displayUnit(value: string) {
   const units: Record<string, string> = { "خط": "lines", "نقطة": "points", "محفظة": "wallets", "%": "%" };
@@ -149,13 +152,13 @@ export default function BranchManagerPage() {
       { key: "dsl", label: "Home ADSL", weight: MANAGER_KPI_WEIGHTS.dsl },
     ];
     const rows = definitions.map((item) => {
-      const percent = aggregatePercent(reports, item.key);
-      return { ...item, percent, contribution: contribution(percent, item.weight) };
+      const totals = aggregateKpi(reports, item.key);
+      return { ...item, ...totals, contribution: contribution(totals.percent, item.weight) };
     });
     const quality = reports.length
       ? reports.reduce((sum, row) => sum + qualityPercent(employeeQuality(row, qualityMap.get(row.employee_name))), 0) / reports.length
       : 0;
-    rows.push({ key: "quality", label: "Quality", weight: MANAGER_KPI_WEIGHTS.quality, percent: quality, contribution: contribution(quality, MANAGER_KPI_WEIGHTS.quality) });
+    rows.push({ key: "quality", label: "Quality", weight: MANAGER_KPI_WEIGHTS.quality, achieved: quality, target: 100, percent: quality, contribution: contribution(quality, MANAGER_KPI_WEIGHTS.quality) });
     const productivity = safePercent(data?.productivity?.productivity_percent);
     const productivityContribution = contribution(productivity, MANAGER_KPI_WEIGHTS.productivity);
     const rawTotal = rows.reduce((sum, item) => sum + item.contribution, 0) + productivityContribution;
@@ -274,7 +277,7 @@ export default function BranchManagerPage() {
         <section className="rounded-3xl border border-[#f1dfd0] bg-white p-4 sm:p-5">
           <h2 className="text-lg font-black">Manager KPI Contributions</h2>
           <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {metrics.rows.map((item) => <div key={item.key} className="rounded-2xl bg-[#fff8f1] p-3"><div className="flex justify-between gap-2 text-sm font-bold"><span>{item.label}</span><span>{fmt(item.percent)}</span></div><div className="mt-2 h-2 overflow-hidden rounded-full bg-[#f2e4d8]"><div className="h-full rounded-full bg-[#e96812]" style={{ width: `${Math.min(100,item.percent)}%` }} /></div><p className="mt-2 text-xs text-[#88796e]">Weight {item.weight}% · Contribution {item.contribution.toFixed(2)}%</p></div>)}
+            {metrics.rows.map((item) => <div key={item.key} className="rounded-2xl bg-[#fff8f1] p-3"><div className="flex justify-between gap-2 text-sm font-bold"><span>{item.label}</span><span>{fmt(item.percent)}</span></div><div className="mt-2 h-2 overflow-hidden rounded-full bg-[#f2e4d8]"><div className="h-full rounded-full bg-[#e96812]" style={{ width: `${Math.min(100,item.percent)}%` }} /></div>{item.key !== "quality" ? <p className="mt-2 text-xs font-bold text-[#6e5543]">Achieved {formatCount(item.achieved)} / {formatCount(item.target)}</p> : null}<p className="mt-2 text-xs text-[#88796e]">Weight {item.weight}% · Contribution {item.contribution.toFixed(2)}%</p></div>)}
             <div className="rounded-2xl border border-[#f2c9a7] bg-[#fff1e4] p-3"><div className="flex justify-between text-sm font-bold"><span>Productivity</span><span>{fmt(metrics.productivity)}</span></div><div className="mt-2 h-2 overflow-hidden rounded-full bg-white"><div className="h-full rounded-full bg-[#bd4b0a]" style={{ width: `${Math.min(100,metrics.productivity)}%` }} /></div><p className="mt-2 text-xs text-[#88796e]">Weight {MANAGER_KPI_WEIGHTS.productivity}% · Contribution {metrics.productivityContribution.toFixed(2)}%</p></div>
           </div>
         </section>
