@@ -5,7 +5,6 @@ build/
 .env
 .env.*
 !.env.example
-.vercel/
 *.zip
 *.sql.gz
 backups/

@@ -10,7 +10,7 @@
 
 https://mahmoudkhairyy-cell.github.io/track-your-sales/
 
-ملف النشر: `.github/workflows/pages.yml`. لا يعتمد مسار النشر على Vercel أو قاعدة PostgreSQL لتشغيل الوظائف المحلية الأساسية.
+ملف النشر: `.github/workflows/pages.yml`. لا يعتمد مسار النشر على قاعدة PostgreSQL لتشغيل الوظائف المحلية الأساسية.
 
 ## تخزين البيانات والمزامنة
 
