@@ -34,8 +34,8 @@ async function syncManagerReport(): Promise<void> {
       syncAgain = false;
       const snapshot = buildManagerSnapshot();
       if (!snapshot) break;
-      const serialized = JSON.stringify(snapshot);
-      if (localStorage.getItem(LAST_SYNC_KEY) === serialized) break;
+      const signature = JSON.stringify({ ...snapshot, payload: { ...snapshot.payload, syncedAt: null } });
+      if (localStorage.getItem(LAST_SYNC_KEY) === signature) break;
 
       const response = await fetch(MANAGER_SYNC_URL, {
         method: "POST",
@@ -49,7 +49,7 @@ async function syncManagerReport(): Promise<void> {
         }),
       });
       if (!response.ok) break;
-      localStorage.setItem(LAST_SYNC_KEY, serialized);
+      localStorage.setItem(LAST_SYNC_KEY, signature);
     } while (syncAgain);
   } catch {
     // يفضل التقرير محليًا، والمحاولة التالية تحصل عند أي فتح/تفاعل لاحق.
