@@ -167,10 +167,9 @@ Deno.serve(async (req: Request) => {
       const reportQuery = new URLSearchParams({
         select: "branch_id,employee_name,branch_name,payload,updated_at",
         branch_name: `eq.${branch}`,
-        "payload->>yearMonth": `eq.${month}`,
         order: "employee_name.asc",
       });
-      const [reports, monthly, overrides, audit] = await Promise.all([
+      const [allBranchReports, monthly, overrides, audit] = await Promise.all([
         restRows(url, serviceKey, "branch_reports", reportQuery),
         restRows(url, serviceKey, "branch_manager_monthly", new URLSearchParams({
           select: "productivity_percent,updated_by,updated_at",
@@ -191,6 +190,15 @@ Deno.serve(async (req: Request) => {
           limit: "100",
         })),
       ]);
+      // Legacy reports created before yearMonth was added are included only
+      // when their last sync timestamp falls inside the selected month.
+      const reports = allBranchReports.filter((row) => {
+        const payload = row?.payload && typeof row.payload === "object"
+          ? row.payload as Record<string, unknown>
+          : {};
+        return payload.yearMonth === month ||
+          (!payload.yearMonth && String(row?.updated_at ?? "").slice(0, 7) === month);
+      });
       return json({ reports, productivity: monthly[0] ?? null, qualityOverrides: overrides, audit }, 200);
     } catch {
       return json({ error: "تعذر تحميل بيانات الفرع" }, 500);
