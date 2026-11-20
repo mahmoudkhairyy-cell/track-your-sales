@@ -329,3 +329,18 @@ check("استعادة بالاستبدال تستعيد الاسم والفرع 
   applyBackupToState(state, backup, "replace", restoreOptions());
   assert.deepEqual(state.profile, { name: "Imported Name", branch: "Imported Branch" });
 });
+
+
+check("النسخة الاحتياطية تطابق حدود local-api للتواريخ والملاحظات والمقالات", () => {
+  const month = {
+    yearMonth: "2026-11",
+    fullCommission: 6000,
+    workingDays: WEEK_DAYS,
+    kpis: [],
+    holidays: [],
+  };
+  assert.throws(() => parseBackup(rawBackup({ months: [{ ...month, holidays: [{ date: "2026-10-31", note: null }] }] })));
+  assert.throws(() => parseBackup(rawBackup({ entries: [{ kpiKey: "new_lines", quantity: 1, entryDate: "2041-01-01", note: null }] })));
+  assert.throws(() => parseBackup(rawBackup({ entries: [{ kpiKey: "new_lines", quantity: 1, entryDate: "2026-11-08", note: "x".repeat(501) }] })));
+  assert.throws(() => parseBackup(rawBackup({ articles: [{ title: "SR", content: "x".repeat(8001) }] })));
+});
