@@ -4,7 +4,11 @@ import { cairoYearMonth } from "@/lib/dates";
 import { readProfile } from "@/lib/local-api";
 import { AREA_MANAGERS, OUTSIDE_BRANCHES } from "@/lib/constants";
 
-const BRANCH_KEY = "tys.branchId";
+// معرّف تقرير مستقل لكل ملف موظف على نفس الجهاز؛ يمنع مستخدمًا من الكتابة فوق تقرير مستخدم آخر.
+function reportStorageKey(profile: { name: string; branch: string; areaManager: string; role: string }): string {
+  const identity = [profile.name.trim().toLocaleLowerCase(), profile.branch.trim(), profile.areaManager.trim(), profile.role].join("|");
+  return `tys.branchId:${encodeURIComponent(identity)}`;
+}
 
 type EntrySnapshot = {
   id: string;
@@ -35,15 +39,16 @@ type DashboardSnapshot = {
 };
 
 /** معرّف ثابت للجهاز/الفرع، بيتولّد مرة واحدة ويتخزن. */
-function branchId(): string {
+function branchId(profile: { name: string; branch: string; areaManager: string; role: string }): string {
   try {
-    let id = localStorage.getItem(BRANCH_KEY);
+    const key = reportStorageKey(profile);
+    let id = localStorage.getItem(key);
     if (!id) {
       id =
         typeof crypto !== "undefined" && typeof crypto.randomUUID === "function"
           ? crypto.randomUUID()
           : `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 12)}`;
-      localStorage.setItem(BRANCH_KEY, id);
+      localStorage.setItem(key, id);
     }
     return id;
   } catch {
@@ -89,7 +94,7 @@ async function pushReportOnce(): Promise<boolean> {
     saveStatus({ ok: false, at: new Date().toISOString(), error: "اختار مدير المنطقة من صفحة بياناتك قبل المزامنة" });
     return false;
   }
-  const id = branchId();
+  const id = branchId(profile);
   if (!id || !profile.name.trim() || !profile.branch.trim()) {
     saveStatus({ ok: false, at: new Date().toISOString(), error: "بيانات الموظف أو الفرع غير مكتملة" });
     return false;
