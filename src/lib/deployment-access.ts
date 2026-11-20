@@ -2,7 +2,6 @@ import { createHash, timingSafeEqual } from "node:crypto";
 
 export type DeploymentEnvironment = {
   [key: string]: string | undefined;
-  VERCEL?: string;
   PUBLIC_DEPLOYMENT?: string;
   WORKSPACE_USERNAME?: string;
   WORKSPACE_PASSWORD?: string;
@@ -14,11 +13,10 @@ export type DeploymentAccess =
 
 /**
  * Public deployments must never silently fall back to the open preview mode.
- * Vercel is detected independently of PUBLIC_DEPLOYMENT, including preview deployments.
  * Supplying a password also enables the gate on a self-hosted server.
  */
 export function deploymentProtectionEnabled(env: DeploymentEnvironment = process.env): boolean {
-  return env.VERCEL === "1" || env.PUBLIC_DEPLOYMENT === "true" || Boolean(env.WORKSPACE_PASSWORD);
+  return env.PUBLIC_DEPLOYMENT === "true" || Boolean(env.WORKSPACE_PASSWORD);
 }
 
 export function deploymentAccess(
