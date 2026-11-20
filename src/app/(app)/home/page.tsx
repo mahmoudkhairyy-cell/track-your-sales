@@ -271,7 +271,7 @@ export default function HomePage() {
       </section>
 
       <div className="fixed inset-x-4 bottom-[calc(76px+env(safe-area-inset-bottom))] z-30 flex flex-col gap-2 sm:static sm:flex-row">
-        <Link href={`/log?month=${month}`} className="inline-flex min-h-10 w-auto flex-none self-start items-center justify-center gap-1.5 rounded-full bg-orange-600 px-4 py-2 text-sm font-extrabold text-white shadow-sm transition-colors hover:bg-orange-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-700">
+        <Link href={`/log?month=${month}`} className="inline-flex min-h-10 w-auto flex-none self-start items-center justify-center gap-1.5 rounded-full border border-white/80 bg-[rgba(255,255,255,0.58)] px-4 py-2 text-sm font-extrabold text-[#a9430b] shadow-[0_4px_14px_rgba(126,65,24,0.10),inset_0_1px_0_rgba(255,255,255,0.9)] backdrop-blur-xl transition hover:bg-[rgba(255,255,255,0.78)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#bd4b0a]">
           <span aria-hidden="true" className="text-base leading-none">＋</span> تسجيل إنجاز
         </Link>
       </div>
