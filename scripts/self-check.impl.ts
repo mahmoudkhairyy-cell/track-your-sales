@@ -343,5 +343,7 @@ check("النسخة الاحتياطية تطابق حدود local-api للتو�
   assert.throws(() => parseBackup(rawBackup({ entries: [{ kpiKey: "new_lines", quantity: 1, entryDate: "2041-01-01", note: null }] })));
   assert.throws(() => parseBackup(rawBackup({ entries: [{ kpiKey: "new_lines", quantity: -1, entryDate: "2026-11-08", note: null }] })));
   assert.throws(() => parseBackup(rawBackup({ entries: [{ kpiKey: "new_lines", quantity: 1, entryDate: "2026-11-08", note: "x".repeat(501) }] })));
+  assert.throws(() => parseBackup(rawBackup({ articles: [{ title: "S", content: "xx" }] })));
+  assert.throws(() => parseBackup(rawBackup({ articles: [{ title: "SR", content: "x" }] })));
   assert.throws(() => parseBackup(rawBackup({ articles: [{ title: "SR", content: "x".repeat(8001) }] })));
 });
