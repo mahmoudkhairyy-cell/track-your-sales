@@ -12,6 +12,7 @@ import { cairoYearMonth, isValidYearMonth, monthLabelAr, shiftYearMonth } from "
 import { BookIcon, ChevronIcon, HomeIcon, MoreIcon, PlusIcon, TargetIcon } from "@/components/icons";
 import { ToastProvider, useToast } from "@/components/ui";
 import { AppLock } from "@/components/AppLock";
+import { BottomNav } from "@/components/ui/BottomNav";
 import { readTheme, saveTheme, type Theme } from "@/lib/theme";
 
 const MonthContext = createContext(cairoYearMonth());
@@ -561,33 +562,7 @@ function AppFrame({ children, blocked, month }: { children: ReactNode; blocked: 
             </div>
           </div>
 
-          <nav className="tys-mobile-nav fixed inset-x-0 bottom-0 z-40 border-t border-[#f2e4d8] bg-white/95 pb-[env(safe-area-inset-bottom)] shadow-[0_-8px_28px_rgba(115,58,20,0.07)] backdrop-blur-2xl lg:hidden" aria-label="التنقل الرئيسي">
-            <div className="grid" style={{ gridTemplateColumns: `repeat(${NAV.length}, minmax(0, 1fr))` }}>
-              {NAV.map((item) => {
-                const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
-                const Icon = item.icon;
-                return (
-                  <Link
-                    key={item.href}
-                    href={`${item.href}?month=${month}`} prefetch={false}
-                    aria-current={active ? "page" : undefined}
-                    className={`tys-mobile-nav-link flex min-h-[68px] flex-col items-center justify-center gap-1.5 px-1 pt-1 text-[10px] font-extrabold transition-colors ${
-                      active ? (item.emphasize ? "tys-mobile-nav-link-active-primary text-[#bd4b0a]" : "tys-mobile-nav-link-active text-[#bd4b0a]") : "text-[#9b8b7f] hover:text-[#bd4b0a]"
-                    }`}
-                  >
-                    <span
-                      className={`tys-mobile-nav-icon flex h-9 w-12 items-center justify-center rounded-2xl transition-all ${
-                        item.emphasize ? "tys-mobile-nav-primary h-11 w-11 -translate-y-1 rounded-[18px] bg-gradient-to-br from-[#e96812] to-[#ff9d38] text-white shadow-[0_7px_18px_rgba(217,104,18,0.24)] ring-4 ring-[#fff0e2]" : active ? "bg-[#fff0e2] text-[#bd4b0a]" : "text-[#a99687]"
-                      }`}
-                    >
-                      <Icon />
-                    </span>
-                    {item.label}
-                  </Link>
-                );
-              })}
-            </div>
-          </nav>
+          <BottomNav month={month} />
         </div>
       </MonthContext.Provider>
     </ToastProvider>
