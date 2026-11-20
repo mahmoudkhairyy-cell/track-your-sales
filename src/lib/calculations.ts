@@ -1,4 +1,4 @@
-import { KPI_CATALOG, type KpiKey, managerKpiWeight } from "@/lib/constants";
+import { KPI_CATALOG, KPI_MIN_PERCENT, type KpiKey, managerKpiWeight } from "@/lib/constants";
 import {
   elapsedWorkingDates,
   remainingWorkingDates,
