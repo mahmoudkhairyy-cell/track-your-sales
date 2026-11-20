@@ -3,8 +3,7 @@
 import { FormEvent, useEffect, useRef, useState } from "react";
 import { useHistoryView } from "@/lib/use-history-view";
 import { managerApi } from "@/lib/cloud";
-import { applyCompanyRules } from "@/lib/calculations";
-import { KPI_CATALOG, type KpiKey } from "@/lib/constants";
+import { KPI_CATALOG } from "@/lib/constants";
 import { cairoISODate } from "@/lib/dates";
 
 type ReportRow = {
