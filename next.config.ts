@@ -1,11 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  output: 'export',
-  basePath: '/track-your-sales',
-  images: {
-    unoptimized: true,
-  },
+  output: "export",
+  basePath: "/track-your-sales",
+  trailingSlash: true,
+  images: { unoptimized: true },
 };
 
 export default nextConfig;

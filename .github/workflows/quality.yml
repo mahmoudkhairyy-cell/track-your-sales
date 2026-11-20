@@ -1,6 +1,8 @@
 name: Quality checks
 
 on:
+  push:
+    branches: [main, github-pages-static]
   pull_request:
     branches: [main]
   workflow_dispatch:
@@ -14,32 +16,21 @@ concurrency:
 
 jobs:
   validate:
-    name: Lint, typecheck and production build
+    name: Lint, typecheck and static build
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    env:
-      DATABASE_URL: postgresql://ci:ci@127.0.0.1:5432/track_your_sales
-      AUTH_MODE: single-workspace
-      PUBLIC_DEPLOYMENT: "true"
-      WORKSPACE_USERNAME: ci
-      WORKSPACE_PASSWORD: ci-only-placeholder-password-not-for-deployment
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
-
       - name: Install dependencies
         run: npm install --no-audit --no-fund
-
       - name: Lint
         run: npm run lint
-
       - name: Typecheck
         run: npm run typecheck
-
-      - name: Production build
+      - name: Static production build
         run: npm run build
