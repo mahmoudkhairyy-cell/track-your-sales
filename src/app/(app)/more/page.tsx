@@ -9,7 +9,7 @@ import { ApiError, api, downloadJson } from "@/lib/client";
 import { cairoISODate, formatDateAr, formatTimeCairo, monthLabelAr } from "@/lib/dates";
 import { formatQty } from "@/lib/calculations";
 import { parseBackup, type BackupFile } from "@/lib/backup";
-import { APP_NAME, AREA_MANAGERS, KPI_CATALOG, kpiEmoji, type KpiKey } from "@/lib/constants";
+import { APP_NAME, AREA_MANAGERS, OUTSIDE_BRANCHES, KPI_CATALOG, kpiEmoji, type KpiKey } from "@/lib/constants";
 import { useMonth } from "@/components/AppShell";
 import { KpiIcon } from "@/components/KpiIcon";
 import { useHistoryView } from "@/lib/use-history-view";
@@ -574,7 +574,7 @@ export default function MorePage() {
           <Field label="الفرع">
             <input className={`${inputClass} bg-[#fdf6f0]`} value={branch} readOnly />
           </Field>
-          <Field label="مدير المنطقة">
+          {profile.branch !== OUTSIDE_BRANCHES ? <Field label="مدير المنطقة">
             {areaManager ? (
               <input className={`${inputClass} bg-[#fdf6f0]`} value={areaManager} readOnly />
             ) : (
@@ -583,16 +583,16 @@ export default function MorePage() {
                 {AREA_MANAGERS.map((manager) => <option key={manager} value={manager}>{manager}</option>)}
               </select>
             )}
-          </Field>
-          {!areaManager ? (
+          </Field> : null}
+          {profile.branch !== OUTSIDE_BRANCHES && !areaManager ? (
             <PrimaryButton type="button" disabled={pending} onClick={() => void saveAreaManager()}>
               {pending ? "بيحفظ..." : "حفظ مدير المنطقة"}
             </PrimaryButton>
-          ) : (
+          ) : profile.branch !== OUTSIDE_BRANCHES ? (
             <p className="text-xs leading-6 text-[var(--color-text-secondary)]">مدير المنطقة اتحدد. التقارير بتوصل للمدير ده فقط، ومش بنغيّره تلقائيًا عشان ما ننقلش تقاريرك القديمة.</p>
-          )}
+          ) : null}
         </div>
-        <p className="mt-3 text-xs leading-6 text-[var(--color-text-secondary)]">الاسم والفرع ثابتين بعد التسجيل. تعيين مدير المنطقة مطلوب عشان تقاريرك تتزامن وتظهر عند مديرك فقط.</p>
+        <p className="mt-3 text-xs leading-6 text-[var(--color-text-secondary)]">{profile.branch === OUTSIDE_BRANCHES ? "الاسم والفرع ثابتين بعد التسجيل. فرع خارج الفروع لا يرسل تقارير إلى لوحة المدير." : "الاسم والفرع ثابتين بعد التسجيل. تعيين مدير المنطقة مطلوب عشان تقاريرك تتزامن وتظهر عند مديرك فقط."}</p>
       </section>
         </div>
       ) : null}
