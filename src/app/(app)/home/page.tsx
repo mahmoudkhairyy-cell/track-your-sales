@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { Banner, useToast } from "@/components/ui";
+import { ErrorState } from "@/components/ui/ErrorState";
+import { EmptyState } from "@/components/ui/EmptyState";
 import { SearchableCombobox } from "@/components/ui/SearchableCombobox";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { haptic } from "@/lib/prefs";
@@ -151,8 +153,8 @@ export default function HomePage() {
   }, [data, loading, toast]);
 
   if (loading) return <HomeSkeleton />;
-  if (error) return <Banner tone="error">{error}</Banner>;
-  if (!data) return <Banner tone="error">مفيش بيانات لسه. ابدأ بتسجيل أول بيعة النهارده.</Banner>;
+  if (error) return <ErrorState title="حصلت مشكلة في تحميل البيانات" description={error} onRetry={() => window.location.reload()} />;
+  if (!data) return <EmptyState title="لسه مفيش بيانات" description="ابدأ بتسجيل أول بيعة ليك، وهتظهر مؤشرات أدائك هنا." actionLabel="تسجيل أول إنجاز" onAction={() => window.location.assign(`/log?month=${month}`)} />;
 
   // اون تراك: الإجمالي وصل لنسبة الأيام اللي عدّت من الشهر (أيام الشغل). لو مفيش أيام، مبنحكمش.
   // النهارده مش محسوب في الأيام اللي عدّت.
@@ -177,7 +179,7 @@ export default function HomePage() {
   const sarcastic = sarcasticLine(data.overall);
 
   return (
-    <div className="tys-page tys-page-home tys-premium-home mx-auto flex min-h-screen w-full max-w-6xl flex-col gap-4 pb-28">
+    <div className="tys-page tys-page-home tys-premium-home mx-auto flex min-h-screen w-full max-w-6xl translate-y-0 flex-col gap-4 pb-28 opacity-100 transition-all duration-500 ease-out" style={{ animation: "tys-page-enter 500ms ease-out backwards" }}>
       {sync ? (
         <p className={`text-xs font-bold ${sync.ok ? "text-emerald-700" : "text-red-600"}`} dir="rtl">
           {sync.ok
@@ -277,7 +279,7 @@ export default function HomePage() {
             <button
               type="button"
               onClick={() => void shareAchievement({ monthLabel: data.monthLabel, percent: Math.round(data.overall), commission: formatMoney(data.estimatedCommission) })}
-              className="mt-3 min-h-10 rounded-xl bg-orange-600 px-4 text-xs font-extrabold text-white transition-colors hover:bg-orange-700"
+              className={`mt-3 min-h-10 rounded-xl bg-orange-600 px-4 text-xs font-extrabold text-white transition-colors hover:bg-orange-700 ${data.overall >= 100 ? "animate-pulse shadow-[0_0_0_4px_rgba(234,88,12,0.14),0_0_22px_rgba(234,88,12,0.3)]" : ""}`}
             >
               📤 شارك إنجازك
             </button>
@@ -336,7 +338,7 @@ export default function HomePage() {
             const ringLen = 2 * Math.PI * 18;
             const pct = Math.min(100, Math.max(0, kpi.percent));
             return (
-              <article key={kpi.kpiKey} style={{ animationDelay: `${kpiIndex * 70}ms`, boxShadow: onTrackKpi ? "0 0 0 1px rgba(22,163,74,.06), 0 0 8px rgba(22,163,74,.07), 0 5px 14px rgba(100,55,25,.13)" : "0 0 0 1px rgba(220,38,38,.06), 0 0 8px rgba(220,38,38,.07), 0 5px 14px rgba(100,55,25,.13)" }} className={`tys-rise tys-home-kpi flex min-w-0 items-center gap-2.5 rounded-[20px] border p-3 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg sm:gap-3 sm:p-3 border-white bg-orange-50/50`}>
+              <article key={kpi.kpiKey} style={{ animationDelay: `${kpiIndex * 100}ms`, boxShadow: onTrackKpi ? "0 0 0 1px rgba(22,163,74,.06), 0 0 8px rgba(22,163,74,.07), 0 5px 14px rgba(100,55,25,.13)" : "0 0 0 1px rgba(220,38,38,.06), 0 0 8px rgba(220,38,38,.07), 0 5px 14px rgba(100,55,25,.13)" }} className={`tys-rise tys-home-kpi flex min-w-0 items-center gap-2.5 rounded-[20px] border p-3 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg sm:gap-3 sm:p-3 border-white bg-orange-50/50`}>
                 <div className="tys-ring relative h-12 w-12 shrink-0 sm:h-14 sm:w-14">
                   <svg viewBox="0 0 44 44" className="h-full w-full -rotate-90">
                     <circle cx="22" cy="22" r="18" fill="none" stroke="var(--color-border)" strokeWidth="5" />
