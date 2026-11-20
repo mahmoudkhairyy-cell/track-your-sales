@@ -44,7 +44,7 @@ const KPI_KEYS: Record<string, string> = {
   "Home ADSL": "dsl", "DSL": "dsl", "KYC & Compliance": "quality", "Quality": "quality",
 };
 const EMPTY_QUALITY: Quality = { kyc: 0, visits: 0, training: 0, pos: 0, csat: 0 };
-const fmt = (value: number) => `${Number.isFinite(value) ? value.toFixed(1).replace(/\\.0$/, "") : "0"}%`;
+const fmt = (value: number) => `${Number.isFinite(value) ? value.toFixed(1).replace(/\.0$/, "") : "0"}%`;
 const safePercent = (value: unknown) => typeof value === "number" && Number.isFinite(value) ? Math.max(0, Math.min(1000, value)) : 0;
 function kpiFor(report: Report, key: string) {
   return (report.payload.kpis ?? []).find((item) => KPI_KEYS[item.name] === key);
@@ -110,9 +110,9 @@ export default function BranchManagerPage() {
   const qualityMap = useMemo(() => new Map((data?.qualityOverrides ?? []).map((item) => [item.employee_name, item.quality] as const)), [data]);
   const metrics = useMemo(() => {
     const definitions = [
-      { key: "new_lines", label: "GAs / GAs", weight: MANAGER_KPI_WEIGHTS.new_lines },
-      { key: "points", label: "Points / Points", weight: MANAGER_KPI_WEIGHTS.points },
-      { key: "existing_wallets", label: "Excite / Wallets", weight: MANAGER_KPI_WEIGHTS.existing_wallets },
+      { key: "new_lines", label: "GAs", weight: MANAGER_KPI_WEIGHTS.new_lines },
+      { key: "points", label: "Points", weight: MANAGER_KPI_WEIGHTS.points },
+      { key: "existing_wallets", label: "Excite", weight: MANAGER_KPI_WEIGHTS.existing_wallets },
       { key: "postpaid_lines", label: "Postpaid", weight: MANAGER_KPI_WEIGHTS.postpaid_lines },
       { key: "dsl", label: "Home ADSL", weight: MANAGER_KPI_WEIGHTS.dsl },
     ];
@@ -123,7 +123,7 @@ export default function BranchManagerPage() {
     const quality = reports.length
       ? reports.reduce((sum, row) => sum + qualityPercent(employeeQuality(row, qualityMap.get(row.employee_name))), 0) / reports.length
       : 0;
-    rows.push({ key: "quality", label: "Quality / Quality", weight: MANAGER_KPI_WEIGHTS.quality, percent: quality, contribution: contribution(quality, MANAGER_KPI_WEIGHTS.quality) });
+    rows.push({ key: "quality", label: "Quality", weight: MANAGER_KPI_WEIGHTS.quality, percent: quality, contribution: contribution(quality, MANAGER_KPI_WEIGHTS.quality) });
     const productivity = safePercent(data?.productivity?.productivity_percent);
     const productivityContribution = contribution(productivity, MANAGER_KPI_WEIGHTS.productivity);
     const rawTotal = rows.reduce((sum, item) => sum + item.contribution, 0) + productivityContribution;
@@ -240,7 +240,7 @@ export default function BranchManagerPage() {
           <h2 className="text-lg font-black">Manager KPI Contributions</h2>
           <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {metrics.rows.map((item) => <div key={item.key} className="rounded-2xl bg-[#fff8f1] p-3"><div className="flex justify-between gap-2 text-sm font-bold"><span>{item.label}</span><span>{fmt(item.percent)}</span></div><div className="mt-2 h-2 overflow-hidden rounded-full bg-[#f2e4d8]"><div className="h-full rounded-full bg-[#e96812]" style={{ width: `${Math.min(100,item.percent)}%` }} /></div><p className="mt-2 text-xs text-[#88796e]">Weight {item.weight}% · Contribution {item.contribution.toFixed(2)}%</p></div>)}
-            <div className="rounded-2xl border border-[#f2c9a7] bg-[#fff1e4] p-3"><div className="flex justify-between text-sm font-bold"><span>Productivity / Productivity</span><span>{fmt(metrics.productivity)}</span></div><div className="mt-2 h-2 overflow-hidden rounded-full bg-white"><div className="h-full rounded-full bg-[#bd4b0a]" style={{ width: `${Math.min(100,metrics.productivity)}%` }} /></div><p className="mt-2 text-xs text-[#88796e]">Weight {MANAGER_KPI_WEIGHTS.productivity}% · Contribution {metrics.productivityContribution.toFixed(2)}%</p></div>
+            <div className="rounded-2xl border border-[#f2c9a7] bg-[#fff1e4] p-3"><div className="flex justify-between text-sm font-bold"><span>Productivity</span><span>{fmt(metrics.productivity)}</span></div><div className="mt-2 h-2 overflow-hidden rounded-full bg-white"><div className="h-full rounded-full bg-[#bd4b0a]" style={{ width: `${Math.min(100,metrics.productivity)}%` }} /></div><p className="mt-2 text-xs text-[#88796e]">Weight {MANAGER_KPI_WEIGHTS.productivity}% · Contribution {metrics.productivityContribution.toFixed(2)}%</p></div>
           </div>
         </section>
         <section className="rounded-3xl border border-[#f1dfd0] bg-white p-4 sm:p-5">
