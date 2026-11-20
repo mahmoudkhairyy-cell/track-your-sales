@@ -115,6 +115,7 @@ async function pushReportOnce(): Promise<boolean> {
         role: profile.role,
         areaManager: profile.areaManager,
         monthLabel: data.monthLabel,
+        yearMonth: month,
         overall: data.overall,
         estimatedCommission: data.estimatedCommission,
         fullCommission: data.fullCommission,
