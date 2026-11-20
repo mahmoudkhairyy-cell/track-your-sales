@@ -9,7 +9,7 @@ import { ApiError, api, downloadJson } from "@/lib/client";
 import { cairoISODate, formatDateAr, formatTimeCairo, monthLabelAr } from "@/lib/dates";
 import { formatQty } from "@/lib/calculations";
 import { parseBackup, type BackupFile } from "@/lib/backup";
-import { APP_NAME, KPI_CATALOG, kpiEmoji, type KpiKey } from "@/lib/constants";
+import { APP_NAME, AREA_MANAGERS, KPI_CATALOG, kpiEmoji, type KpiKey } from "@/lib/constants";
 import { useMonth } from "@/components/AppShell";
 import { KpiIcon } from "@/components/KpiIcon";
 import { useHistoryView } from "@/lib/use-history-view";
@@ -53,6 +53,7 @@ export default function MorePage() {
   const [profile, setProfile] = useState({ name: "", branch: "", role: "user" });
   const [name, setName] = useState("");
   const [branch, setBranch] = useState("");
+  const [areaManager, setAreaManager] = useState("");
   const [pending, setPending] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [editing, setEditing] = useState<EntryRow | null>(null);
@@ -76,7 +77,7 @@ export default function MorePage() {
       const [entryData, dash] = await Promise.all([
         api<{ entries: EntryRow[] }>(`/api/entries?month=${month}`),
         api<{
-          profile: { name: string; branch: string; role: string };
+          profile: { name: string; branch: string; role: string; areaManager?: string };
           todaySummary: TodayItem[];
           overall: number;
           estimatedCommission: number;
@@ -90,6 +91,7 @@ export default function MorePage() {
       setProfile({ name: dash.profile.name, branch: dash.profile.branch, role: dash.profile.role });
       setName(dash.profile.name);
       setBranch(dash.profile.branch);
+      setAreaManager(dash.profile.areaManager ?? "");
     } catch (err) {
       setError(err instanceof ApiError || err instanceof Error ? err.message : "ماقدرناش نحمّل الصفحة. اتأكد من النت وحاول تاني.");
     } finally {
@@ -237,6 +239,27 @@ export default function MorePage() {
       toast.push("info", "اتنزّلت نسخة احتياطية من بياناتك الحالية. تقدر تكمل الاستبدال.");
     } catch (err) {
       toast.push("error", err instanceof Error ? err.message : "فشل تجهيز نسخة قبل الاستبدال");
+    } finally {
+      setPending(false);
+    }
+  }
+
+  async function saveAreaManager() {
+    if (!AREA_MANAGERS.includes(areaManager as (typeof AREA_MANAGERS)[number])) {
+      toast.push("error", "اختار مدير المنطقة من القائمة");
+      return;
+    }
+    setPending(true);
+    try {
+      const result = await api<{ message: string }>("/api/profile", {
+        method: "PATCH",
+        body: JSON.stringify({ areaManager }),
+      });
+      toast.push("success", result.message);
+      await load();
+      window.dispatchEvent(new Event("tys-data-changed"));
+    } catch (err) {
+      toast.push("error", err instanceof Error ? err.message : "ماقدرناش نحفظ مدير المنطقة");
     } finally {
       setPending(false);
     }
@@ -551,8 +574,25 @@ export default function MorePage() {
           <Field label="الفرع">
             <input className={`${inputClass} bg-[#fdf6f0]`} value={branch} readOnly />
           </Field>
+          <Field label="مدير المنطقة">
+            {areaManager ? (
+              <input className={`${inputClass} bg-[#fdf6f0]`} value={areaManager} readOnly />
+            ) : (
+              <select className={inputClass} value={areaManager} onChange={(event) => setAreaManager(event.target.value)} disabled={pending}>
+                <option value="">اختار مدير المنطقة</option>
+                {AREA_MANAGERS.map((manager) => <option key={manager} value={manager}>{manager}</option>)}
+              </select>
+            )}
+          </Field>
+          {!areaManager ? (
+            <PrimaryButton type="button" disabled={pending} onClick={() => void saveAreaManager()}>
+              {pending ? "بيحفظ..." : "حفظ مدير المنطقة"}
+            </PrimaryButton>
+          ) : (
+            <p className="text-xs leading-6 text-[var(--color-text-secondary)]">مدير المنطقة اتحدد. التقارير بتوصل للمدير ده فقط، ومش بنغيّره تلقائيًا عشان ما ننقلش تقاريرك القديمة.</p>
+          )}
         </div>
-        <p className="mt-3 text-xs leading-6 text-[var(--color-text-secondary)]">بياناتك اتسجلت أول مرة، ومينفعش تتغير من التطبيق.</p>
+        <p className="mt-3 text-xs leading-6 text-[var(--color-text-secondary)]">الاسم والفرع ثابتين بعد التسجيل. تعيين مدير المنطقة مطلوب عشان تقاريرك تتزامن وتظهر عند مديرك فقط.</p>
       </section>
         </div>
       ) : null}

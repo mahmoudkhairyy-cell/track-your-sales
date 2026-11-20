@@ -71,7 +71,37 @@ Deno.serve(async (req: Request) => {
       return json({ error: "invalid report" }, 400);
     }
 
-    // Reuse the employee's existing report row when name + branch match, avoiding duplicates.
+    const areaManager = typeof (payload as Record<string, unknown>).areaManager === "string"
+      ? ((payload as Record<string, unknown>).areaManager as string).trim()
+      : "";
+    if (!areaManager) return json({ error: "اختار مدير المنطقة قبل المزامنة" }, 400);
+
+    // مدير المنطقة لازم يكون اسمًا حقيقيًا من جدول المديرين، مش قيمة يرسلها العميل وخلاص.
+    const managerQuery = new URLSearchParams({ select: "name", name: `eq.${areaManager}`, limit: "1" });
+    const managerRes = await fetch(`${url}/rest/v1/manager_areas?${managerQuery.toString()}`, {
+      headers: { apikey: serviceKey, Authorization: "Bearer " + serviceKey },
+    });
+    if (!managerRes.ok) return json({ error: "تعذر التحقق من مدير المنطقة" }, 500);
+    const managerRows = await managerRes.json();
+    if (!Array.isArray(managerRows) || !managerRows.some((row) => row?.name === areaManager)) {
+      return json({ error: "مدير المنطقة المختار غير موجود" }, 400);
+    }
+
+    // لا نسمح بإعادة استخدام معرّف محفوظ تحت مدير مختلف أو تقرير قديم بلا مدير.
+    const idQuery = new URLSearchParams({ select: "payload", branch_id: `eq.${branchId}`, limit: "1" });
+    const idRes = await fetch(`${url}/rest/v1/branch_reports?${idQuery.toString()}`, {
+      headers: { apikey: serviceKey, Authorization: "Bearer " + serviceKey },
+    });
+    if (!idRes.ok) return json({ error: "تعذر التحقق من ملكية التقرير الحالي" }, 500);
+    const idRows = await idRes.json();
+    if (Array.isArray(idRows) && idRows.length > 0) {
+      const existingManager = typeof idRows[0]?.payload?.areaManager === "string" ? idRows[0].payload.areaManager : "";
+      if (existingManager !== areaManager) {
+        return json({ error: "التقرير مرتبط بمدير آخر أو غير محدد المدير. تواصل مع المسؤول قبل نقله." }, 409);
+      }
+    }
+
+    // Reuse an existing row only when employee + branch + manager all match.
     let effectiveBranchId = branchId;
     const query = new URLSearchParams({
       select: "branch_id",
@@ -80,6 +110,7 @@ Deno.serve(async (req: Request) => {
       order: "updated_at.desc",
       limit: "1",
     });
+    query.set("payload->>areaManager", `eq.${areaManager}`);
     const existing = await fetch(`${url}/rest/v1/branch_reports?${query.toString()}`, {
       headers: { apikey: serviceKey, Authorization: "Bearer " + serviceKey },
     });

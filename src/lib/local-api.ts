@@ -3,6 +3,7 @@
  * الصفحات بتكلم "/api/..." زي ما كانت، وهنا بنرد عليها محلياً بنفس الشكل.
  */
 import {
+  AREA_MANAGERS,
   DEFAULT_WORKING_DAYS,
   ISO_DATE_RE,
   KPI_CATALOG,
@@ -546,14 +547,33 @@ function deleteArticle(state: State, id: string) {
 }
 
 function updateProfile(state: State, data: Record<string, unknown>) {
-  // بعد أول تسجيل البيانات بتتقفل: الاسم والفرع والوظيفة مش بيتعدلوا.
+  const has = (key: string) => Object.prototype.hasOwnProperty.call(data, key);
+  const managerOnly = has("areaManager") && !has("name") && !has("branch") && !has("role");
+
+  // الاسم والفرع والوظيفة بيتقفلوا بعد التسجيل، لكن نسمح بتعيين مدير المنطقة مرة واحدة للملفات القديمة.
   if (state.profile.name && state.profile.role) {
-    throw new Error("بياناتك اتسجلت قبل كده ومينفعش تتغير");
+    if (!managerOnly) throw new Error("بياناتك اتسجلت قبل كده ومينفعش تتغير");
+    const areaManager = typeof data.areaManager === "string" ? data.areaManager.trim() : "";
+    if (!AREA_MANAGERS.includes(areaManager as (typeof AREA_MANAGERS)[number])) {
+      fail(400, "اختار مدير المنطقة من القائمة");
+    }
+    if (state.profile.areaManager && state.profile.areaManager !== areaManager) {
+      fail(409, "مدير المنطقة متحدد بالفعل. تغيير المدير يحتاج مراجعة عشان التقارير القديمة ما تنتقلش تلقائيًا.");
+    }
+    state.profile.areaManager = areaManager;
+    return {
+      user: { id: "local", ...state.profile, areaManager },
+      message: "✅ تم حفظ مدير المنطقة. المزامنة هتبدأ مع التحديث القادم.",
+    };
   }
+
   const name = trimText(data.name, "اسم الموظف", 2, 80);
   const branch = typeof data.branch === "string" ? data.branch.trim().slice(0, 80) : "";
   const role = data.role === "manager" || data.role === "agent" || data.role === "team_leader" || data.role === "area_manager" ? data.role : state.profile.role;
-  const areaManager = typeof data.areaManager === "string" ? data.areaManager.trim().slice(0, 80) : (state.profile.areaManager ?? "");
+  const areaManager = typeof data.areaManager === "string" ? data.areaManager.trim() : "";
+  if (branch !== "خارج الفروع" && !AREA_MANAGERS.includes(areaManager as (typeof AREA_MANAGERS)[number])) {
+    fail(400, "اختار مدير المنطقة قبل حفظ بياناتك");
+  }
   state.profile = { ...state.profile, name, branch, role, areaManager };
   return { user: { id: "local", name, branch, role, areaManager }, message: "✅ بياناتك اتحدثت" };
 }
