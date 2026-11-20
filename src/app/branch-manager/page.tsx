@@ -115,18 +115,23 @@ export default function BranchManagerPage() {
   }, [month]);
 
   useEffect(() => {
-    const profile = readProfile();
-    if (profile.role !== "manager") {
-      window.location.replace(profile.role === "area_manager" ? "/track-your-sales/manager/" : "/track-your-sales/");
-      return;
-    }
-    if (profile.name.trim() && profile.branch.trim()) {
-      setManagerName(profile.name);
-      setBranch(profile.branch);
-      setActive(true);
-      void load(profile.branch);
-    }
-    setAccessChecked(true);
+    let cancelled = false;
+    queueMicrotask(() => {
+      if (cancelled) return;
+      const profile = readProfile();
+      if (profile.role !== "manager") {
+        window.location.replace(profile.role === "area_manager" ? "/track-your-sales/manager/" : "/track-your-sales/");
+        return;
+      }
+      if (profile.name.trim() && profile.branch.trim()) {
+        setManagerName(profile.name);
+        setBranch(profile.branch);
+        setActive(true);
+        void load(profile.branch);
+      }
+      setAccessChecked(true);
+    });
+    return () => { cancelled = true; };
   }, [load]);
 
   const reports = data?.reports ?? [];
