@@ -101,6 +101,93 @@ function NavLinks({ pathname, month }: { pathname: string; month: string }) {
   );
 }
 
+function normalizeSearchText(value: string) {
+  return value
+    .toLocaleLowerCase("ar")
+    .replace(/[\u064B-\u065F\u0670ـ]/g, "")
+    .replace(/[أإآ]/g, "ا")
+    .replace(/ى/g, "ي")
+    .replace(/ة/g, "ه")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function SearchableSelect({
+  label,
+  value,
+  options,
+  placeholder,
+  onChange,
+}: {
+  label: string;
+  value: string;
+  options: string[];
+  placeholder: string;
+  onChange: (value: string) => void;
+}) {
+  const [query, setQuery] = useState(value);
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    setQuery(value);
+  }, [value]);
+
+  const normalizedQuery = normalizeSearchText(query);
+  const matches = options.filter((item) => normalizeSearchText(item).includes(normalizedQuery)).slice(0, 8);
+
+  return (
+    <div className="relative mb-4 text-sm font-bold text-[#6e5543]">
+      <label className="block">{label}</label>
+      <input
+        type="search"
+        value={query}
+        onFocus={() => setOpen(true)}
+        onChange={(event) => {
+          setQuery(event.target.value);
+          setOpen(true);
+          if (value) onChange("");
+        }}
+        onKeyDown={(event) => {
+          if (event.key === "Escape") setOpen(false);
+          if (event.key === "Enter" && open && matches.length === 1) {
+            event.preventDefault();
+            onChange(matches[0]);
+            setQuery(matches[0]);
+            setOpen(false);
+          }
+        }}
+        placeholder={placeholder}
+        autoComplete="off"
+        className="mt-1 w-full rounded-2xl border border-[#f2e4d8] bg-[#fffdfb] px-4 py-3 font-semibold text-[#241f1b] outline-none transition placeholder:text-[#b6a79c] focus:border-[#e96812] focus:ring-2 focus:ring-[#e96812]/10"
+        aria-label={label}
+        aria-expanded={open && matches.length > 0}
+      />
+      {open ? (
+        <div className="absolute inset-x-0 top-full z-30 mt-1 max-h-56 overflow-y-auto rounded-2xl border border-[#f0dfd1] bg-white p-1.5 shadow-[0_12px_30px_rgba(75,42,20,0.14)]">
+          {matches.length ? matches.map((item) => (
+            <button
+              key={item}
+              type="button"
+              onMouseDown={(event) => event.preventDefault()}
+              onClick={() => {
+                onChange(item);
+                setQuery(item);
+                setOpen(false);
+              }}
+              className={\`block w-full rounded-xl px-3 py-2.5 text-right text-sm font-bold transition hover:bg-[#fff1e5] hover:text-[#bd4b0a] \${value === item ? "bg-[#fff1e5] text-[#bd4b0a]" : "text-[#514238]"}\`}
+            >
+              {item}
+            </button>
+          )) : (
+            <p className="px-3 py-3 text-center text-xs font-semibold text-[#9a887b]">مفيش نتائج مطابقة، جرّب تكتب جزء تاني من الاسم</p>
+          )}
+        </div>
+      ) : null}
+      {value ? <p className="mt-1.5 text-[11px] font-semibold text-[#8b7667]">تم الاختيار: {value}</p> : null}
+    </div>
+  );
+}
+
 type GateStatus = "checking" | "profile" | "target" | "ready";
 
 function FirstRunProfile({ onDone }: { onDone: () => void }) {
@@ -220,13 +307,7 @@ function FirstRunProfile({ onDone }: { onDone: () => void }) {
         ) : (
           <>
         {role === "area_manager" ? (
-          <label className="mb-3 block text-sm font-bold text-[#514238]">
-            اسم مدير المنطقة
-            <select value={name} onChange={(e) => setName(e.target.value)} className="mt-1 w-full rounded-2xl border border-[#f2e4d8] bg-[#fffdfb] px-4 py-3 outline-none transition focus:border-[#e96812] focus:ring-2 focus:ring-[#e96812]/10">
-              <option value="">— اختار اسمك —</option>
-              {AREA_MANAGERS.map((item) => <option key={item} value={item}>{item}</option>)}
-            </select>
-          </label>
+          <SearchableSelect label="اسم مدير المنطقة" value={name} options={AREA_MANAGERS} placeholder="اكتب اسمك، مثال: عبد الرحمن" onChange={setName} />
         ) : (
           <label className="mb-3 block text-sm font-bold text-[#514238]">
             الاسم
@@ -260,27 +341,19 @@ function FirstRunProfile({ onDone }: { onDone: () => void }) {
           </div>
         </div>
         {role !== "area_manager" ? (
-        <label className="mb-4 block text-sm font-bold text-[#6e5543]">
-          اسم الفرع
-          <select value={branch} onChange={(e) => setBranch(e.target.value)} className="mt-1 w-full rounded-2xl border border-[#f2e4d8] bg-[#fffdfb] px-4 py-3 outline-none transition focus:border-[#e96812] focus:ring-2 focus:ring-[#e96812]/10">
-            <option value="">— اختار الفرع —</option>
-            {BRANCHES.map((item) => (
-              <option key={item} value={item}>{item}</option>
-            ))}
-            <option value={OUTSIDE_BRANCHES}>{OUTSIDE_BRANCHES}</option>
-          </select>
-        </label>
+        <SearchableSelect
+          label="اسم الفرع"
+          value={branch}
+          options={[...BRANCHES, OUTSIDE_BRANCHES]}
+          placeholder="ابحث باسم الفرع، مثال: حجر أو OB حجر النواتية"
+          onChange={(value) => {
+            setBranch(value);
+            setAreaManager("");
+          }}
+        />
         ) : null}
         {role !== "area_manager" && role !== "manager" && branch !== OUTSIDE_BRANCHES ? (
-        <label className="mb-4 block text-sm font-bold text-[#6e5543]">
-          مدير المنطقة (الأريا مانجر)
-          <select value={areaManager} onChange={(e) => setAreaManager(e.target.value)} className="mt-1 w-full rounded-2xl border border-[#f2e4d8] bg-white px-4 py-3 outline-none focus:border-[#bd4b0a]">
-            <option value="">— اختار مديرك —</option>
-            {AREA_MANAGERS.map((item) => (
-              <option key={item} value={item}>{item}</option>
-            ))}
-          </select>
-        </label>
+        <SearchableSelect label="مدير المنطقة (الأريا مانجر)" value={areaManager} options={AREA_MANAGERS} placeholder="ابحث باسم مدير المنطقة، مثال: عبد الرحمن" onChange={setAreaManager} />
         ) : null}
           </>
         )}
