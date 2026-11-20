@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { Banner, useToast } from "@/components/ui";
+import { useToast } from "@/components/ui";
 import { ErrorState } from "@/components/ui/ErrorState";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { SearchableCombobox } from "@/components/ui/SearchableCombobox";
