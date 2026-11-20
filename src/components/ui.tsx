@@ -292,7 +292,11 @@ export function BulletChart({
   const expectedCapped = Math.min(100, Math.max(0, expected));
 
   return (
-    <div className={`relative ${className}`}>
+    <div
+      className={`relative ${className}`}
+      role="img"
+      aria-label={`نسبة الإنجاز ${Math.round(percent)} بالمئة، والمتوقع النهارده ${Math.round(expected)} بالمئة`}
+    >
       <div className="h-3 w-full overflow-hidden rounded-full bg-surface-2 dark:bg-surface-2-dark">
         <div
           className="h-full rounded-full bg-gradient-to-l from-brand-500 to-brand-600 transition-all duration-700 ease-out dark:from-brand-500-dark dark:to-brand-600-dark"
@@ -303,6 +307,7 @@ export function BulletChart({
         className="absolute top-1/2 h-5 w-0.5 -translate-y-1/2 rounded-full bg-ink dark:bg-ink-dark"
         style={{ left: `${expectedCapped}%` }}
         title={`المتوقع النهارده: ${Math.round(expected)}%`}
+        aria-hidden="true"
       />
     </div>
   );
