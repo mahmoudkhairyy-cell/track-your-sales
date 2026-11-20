@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useMemo, useState, type FormEvent } from "react";
-import { BRANCHES, MANAGER_FIXED_SALARY, MANAGER_FULL_COMMISSION, MANAGER_KPI_WEIGHTS } from "@/lib/constants";
+import { BRANCHES, MANAGER_FULL_COMMISSION, MANAGER_KPI_WEIGHTS } from "@/lib/constants";
 import { managerApi } from "@/lib/cloud";
 import { cairoYearMonth } from "@/lib/dates";
 
@@ -220,20 +220,15 @@ export default function BranchManagerPage() {
                 </div>
               </div>
               <div className="rounded-2xl border border-orange-100 bg-orange-50/80 px-4 py-3 shadow-sm">
-                <p className="text-xs font-bold text-[#88796e]">Estimated Commission</p>
+                <p className="text-xs font-bold text-[#88796e]">Commission</p>
                 <strong className="mt-1 block font-mono text-2xl font-black text-emerald-700">{Math.round(MANAGER_FULL_COMMISSION * metrics.total / 100).toLocaleString("en-US")} EGP</strong>
               </div>
             </div>
             <div className="h-3 overflow-hidden rounded-full bg-orange-100">
               <div className="h-full rounded-full bg-gradient-to-r from-[#bd4b0a] via-[#e96812] to-[#ff9d38] transition-all duration-700" style={{ width: `${Math.min(100, metrics.total / 2)}%` }} />
             </div>
-            <div className="mt-2 flex justify-between text-[10px] font-bold text-[#88796e]" dir="ltr"><span>0%</span><span>100% achievement = full commission</span><span>200%</span></div>
-            <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
-              <div className="rounded-2xl border border-[#f1dfd0] bg-white/90 p-3"><p className="text-[11px] font-bold text-[#88796e]">Base Salary</p><p className="mt-1 text-xl font-black text-[#2d2119]">{MANAGER_FIXED_SALARY.toLocaleString("en-US")} EGP</p></div>
-              <div className="rounded-2xl border border-[#f1dfd0] bg-white/90 p-3"><p className="text-[11px] font-bold text-[#88796e]">Commission</p><p className="mt-1 text-xl font-black text-emerald-700">{Math.round(MANAGER_FULL_COMMISSION * metrics.total / 100).toLocaleString("en-US")} EGP</p></div>
-              <div className="rounded-2xl border border-[#f1dfd0] bg-white/90 p-3"><p className="text-[11px] font-bold text-[#88796e]">Total Earnings</p><p className="mt-1 text-xl font-black text-[#bd4b0a]">{Math.round(MANAGER_FIXED_SALARY + MANAGER_FULL_COMMISSION * metrics.total / 100).toLocaleString("en-US")} EGP</p></div>
-              <div className="rounded-2xl border border-[#f1dfd0] bg-white/90 p-3"><p className="text-[11px] font-bold text-[#88796e]">Team Members</p><p className="mt-1 text-xl font-black text-[#2d2119]">{reports.length}</p></div>
-            </div>
+            <div className="mt-2 flex justify-between text-[10px] font-bold text-[#88796e]" dir="ltr"><span>0%</span><span>Achievement</span><span>200%</span></div>
+
           </div>
         </section>
         <section className="grid gap-3 sm:grid-cols-2">
