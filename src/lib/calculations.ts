@@ -141,10 +141,10 @@ export type RulesKpi = KpiSettingInput & { achieved: number };
 export function applyCompanyRules(kpis: RulesKpi[], options: { newLinesNeedWallets?: boolean } = {}) {
   const newLinesNeedWallets = options.newLinesNeedWallets ?? true;
   const newWallets = kpis.find((kpi) => kpi.kpiKey === "new_orange_cash");
-  const walletDone = Boolean(newWallets && newWallets.target > 0 && newWallets.achieved >= newWallets.target);
-  // الخطوط الجديدة (40%) ماتتحسبش غير لما بند المحافظ يكمل 100%. المدير مالوش بند محافظ مستقل فمابيتأثرش.
+  // المدير لا يخضع لشرط المحافظ؛ الموظف يخضع له إذا كان بند المحافظ موجودًا ومفعّلًا.
   const walletRequired = Boolean(newWallets && newLinesNeedWallets);
-  const newLinesOpen = !walletRequired || walletDone;
+  const walletDone = !walletRequired || Boolean(newWallets && newWallets.target > 0 && newWallets.achieved >= newWallets.target);
+  const newLinesOpen = walletDone;
 
   const counted: { kpiKey: KpiKey; contribution: number; percent: number; gated: boolean }[] = kpis.map((kpi) => {
     const percent = achievementPercent(kpi.achieved, kpi.target);
