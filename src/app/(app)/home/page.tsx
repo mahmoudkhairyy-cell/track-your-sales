@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useToast } from "@/components/ui";
 import { ErrorState } from "@/components/ui/ErrorState";
@@ -64,6 +64,7 @@ function greeting() {
 }
 
 export default function HomePage() {
+  const router = useRouter();
   const [copied, setCopied] = useState(false);
   const overallValueRef = useRef<HTMLSpanElement | null>(null);
   const overallBarRef = useRef<HTMLDivElement | null>(null);
@@ -150,7 +151,7 @@ export default function HomePage() {
 
   if (loading) return <HomeSkeleton />;
   if (error) return <ErrorState title="حصلت مشكلة في تحميل البيانات" description={error} onRetry={() => window.location.reload()} />;
-  if (!data) return <EmptyState title="لسه مفيش بيانات" description="ابدأ بتسجيل أول بيعة ليك، وهتظهر مؤشرات أدائك هنا." actionLabel="تسجيل أول إنجاز" onAction={() => window.location.assign(`/log?month=${month}`)} />;
+  if (!data) return <EmptyState title="لسه مفيش بيانات" description="ابدأ بتسجيل أول بيعة ليك، وهتظهر مؤشرات أدائك هنا." actionLabel="تسجيل أول إنجاز" onAction={() => router.push(`/log?month=${month}`)} />;
 
   // اون تراك: الإجمالي وصل لنسبة الأيام اللي عدّت من الشهر (أيام الشغل). لو مفيش أيام، مبنحكمش.
   // النهارده مش محسوب في الأيام اللي عدّت.
