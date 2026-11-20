@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState, type FormEvent } from "react";
-import { readProfile } from "@/lib/local-api";
+import { logoutBranchManager, readProfile } from "@/lib/local-api";
 import { BRANCHES, MANAGER_FULL_COMMISSION, MANAGER_KPI_WEIGHTS } from "@/lib/constants";
 import { managerApi } from "@/lib/cloud";
 import { cairoYearMonth } from "@/lib/dates";
@@ -61,7 +61,7 @@ function qualityPercent(q: Quality) {
 function contribution(percent: number, weight: number) {
   return percent < 90 ? 0 : percent * weight / 100;
 }
-function aggregatePercent(rows: Report[], key: string) {
+function aggregateKpi(rows: Report[], key: string) {
   let achieved = 0, target = 0;
   for (const row of rows) {
     const k = kpiFor(row, key);
@@ -69,7 +69,10 @@ function aggregatePercent(rows: Report[], key: string) {
     achieved += Number(k.achieved) || 0;
     target += Number(k.target) || 0;
   }
-  return target > 0 ? achieved / target * 100 : 0;
+  return { achieved, target, percent: target > 0 ? achieved / target * 100 : 0 };
+}
+function formatCount(value: number) {
+  return Number(value || 0).toLocaleString("en-US", { maximumFractionDigits: 2 });
 }
 function displayUnit(value: string) {
   const units: Record<string, string> = { "خط": "lines", "نقطة": "points", "محفظة": "wallets", "%": "%" };
@@ -149,18 +152,33 @@ export default function BranchManagerPage() {
       { key: "dsl", label: "Home ADSL", weight: MANAGER_KPI_WEIGHTS.dsl },
     ];
     const rows = definitions.map((item) => {
-      const percent = aggregatePercent(reports, item.key);
-      return { ...item, percent, contribution: contribution(percent, item.weight) };
+      const totals = aggregateKpi(reports, item.key);
+      return { ...item, ...totals, contribution: contribution(totals.percent, item.weight) };
     });
     const quality = reports.length
       ? reports.reduce((sum, row) => sum + qualityPercent(employeeQuality(row, qualityMap.get(row.employee_name))), 0) / reports.length
       : 0;
-    rows.push({ key: "quality", label: "Quality", weight: MANAGER_KPI_WEIGHTS.quality, percent: quality, contribution: contribution(quality, MANAGER_KPI_WEIGHTS.quality) });
+    rows.push({ key: "quality", label: "Quality", weight: MANAGER_KPI_WEIGHTS.quality, achieved: quality, target: 100, percent: quality, contribution: contribution(quality, MANAGER_KPI_WEIGHTS.quality) });
     const productivity = safePercent(data?.productivity?.productivity_percent);
     const productivityContribution = contribution(productivity, MANAGER_KPI_WEIGHTS.productivity);
     const rawTotal = rows.reduce((sum, item) => sum + item.contribution, 0) + productivityContribution;
     return { rows, quality, productivity, productivityContribution, rawTotal, total: Math.min(200, rawTotal) };
   }, [reports, qualityMap, data?.productivity]);
+
+  function logout() {
+    if (!window.confirm("Log out of the Branch Manager dashboard?")) return;
+    try { sessionStorage.removeItem("tys.mgrPass"); } catch { /* Storage may be unavailable. */ }
+    if (!logoutBranchManager()) {
+      setError("Could not complete logout. Please try again.");
+      return;
+    }
+    setActive(false);
+    setManagerName("");
+    setBranch("");
+    setData(null);
+    setError("");
+    setNotice("");
+  }
 
   async function enter(event: FormEvent) {
     event.preventDefault();
@@ -229,7 +247,10 @@ export default function BranchManagerPage() {
             <h1 className="mt-1 text-xl font-black tracking-tight text-[#2d2119] sm:text-2xl">Good to see you, {managerName} 👋</h1>
             <p className="mt-1 text-xs font-semibold text-[#88796e]">📍 {branch} · {new Date(`${month}-01T12:00:00`).toLocaleDateString("en-US", { month: "long", year: "numeric" })}</p>
           </div>
-          <button onClick={() => load(branch)} disabled={loading} className="shrink-0 rounded-xl border border-orange-100 bg-orange-50 px-3 py-2 text-xs font-bold text-[#bd4b0a]">{loading ? "Refreshing..." : "Refresh ↻"}</button>
+          <div className="flex shrink-0 items-center gap-2">
+            <button onClick={() => load(branch)} disabled={loading} className="rounded-xl border border-orange-100 bg-orange-50 px-3 py-2 text-xs font-bold text-[#bd4b0a]">{loading ? "Refreshing..." : "Refresh ↻"}</button>
+            <button onClick={logout} className="rounded-xl border border-red-200 bg-white px-3 py-2 text-xs font-bold text-red-600 transition hover:bg-red-50">Log out ↗</button>
+          </div>
         </header>
         {error ? <p className="rounded-xl border border-red-200 bg-red-50 p-3 text-sm font-bold text-red-700">{error}</p> : null}
         {notice ? <p className="rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm font-bold text-emerald-800">{notice}</p> : null}
@@ -274,7 +295,7 @@ export default function BranchManagerPage() {
         <section className="rounded-3xl border border-[#f1dfd0] bg-white p-4 sm:p-5">
           <h2 className="text-lg font-black">Manager KPI Contributions</h2>
           <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {metrics.rows.map((item) => <div key={item.key} className="rounded-2xl bg-[#fff8f1] p-3"><div className="flex justify-between gap-2 text-sm font-bold"><span>{item.label}</span><span>{fmt(item.percent)}</span></div><div className="mt-2 h-2 overflow-hidden rounded-full bg-[#f2e4d8]"><div className="h-full rounded-full bg-[#e96812]" style={{ width: `${Math.min(100,item.percent)}%` }} /></div><p className="mt-2 text-xs text-[#88796e]">Weight {item.weight}% · Contribution {item.contribution.toFixed(2)}%</p></div>)}
+            {metrics.rows.map((item) => <div key={item.key} className="rounded-2xl bg-[#fff8f1] p-3"><div className="flex justify-between gap-2 text-sm font-bold"><span>{item.label}</span><span>{fmt(item.percent)}</span></div><div className="mt-2 h-2 overflow-hidden rounded-full bg-[#f2e4d8]"><div className="h-full rounded-full bg-[#e96812]" style={{ width: `${Math.min(100,item.percent)}%` }} /></div>{item.key !== "quality" ? <p className="mt-2 text-xs font-bold text-[#6e5543]">Achieved {formatCount(item.achieved)} / {formatCount(item.target)}</p> : null}<p className="mt-2 text-xs text-[#88796e]">Weight {item.weight}% · Contribution {item.contribution.toFixed(2)}%</p></div>)}
             <div className="rounded-2xl border border-[#f2c9a7] bg-[#fff1e4] p-3"><div className="flex justify-between text-sm font-bold"><span>Productivity</span><span>{fmt(metrics.productivity)}</span></div><div className="mt-2 h-2 overflow-hidden rounded-full bg-white"><div className="h-full rounded-full bg-[#bd4b0a]" style={{ width: `${Math.min(100,metrics.productivity)}%` }} /></div><p className="mt-2 text-xs text-[#88796e]">Weight {MANAGER_KPI_WEIGHTS.productivity}% · Contribution {metrics.productivityContribution.toFixed(2)}%</p></div>
           </div>
         </section>

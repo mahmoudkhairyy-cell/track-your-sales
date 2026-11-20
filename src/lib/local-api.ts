@@ -197,6 +197,14 @@ export function readProfile(): { name: string; branch: string; role: Role | ""; 
   return { name: state.profile.name, branch: state.profile.branch, areaManager: state.profile.areaManager ?? "", role: role === "manager" || role === "agent" || role === "team_leader" || role === "area_manager" ? role : "" };
 }
 
+/** تسجيل خروج مدير الفرع فقط مع الاحتفاظ بكل بيانات المبيعات والتقارير والإعدادات. */
+export function logoutBranchManager(): boolean {
+  const state = loadState();
+  if (state.profile.role !== "manager") return true;
+  state.profile = { name: "", branch: "", role: "", areaManager: "" };
+  return saveState(state);
+}
+
 /* ---------- تحقق من المدخلات ---------- */
 
 function requireYearMonth(value: unknown): string {
