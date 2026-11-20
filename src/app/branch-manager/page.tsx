@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useMemo, useState, type FormEvent } from "react";
-import { BRANCHES, MANAGER_FIXED_SALARY, MANAGER_FULL_COMMISSION } from "@/lib/constants";
+import { BRANCHES, MANAGER_FIXED_SALARY, MANAGER_FULL_COMMISSION, MANAGER_KPI_WEIGHTS } from "@/lib/constants";
 import { managerApi } from "@/lib/cloud";
 import { cairoYearMonth, monthLabelAr } from "@/lib/dates";
 
@@ -107,14 +107,14 @@ export default function BranchManagerPage() {
   }, [month]);
 
   const reports = data?.reports ?? [];
-  const qualityMap = useMemo(() => new Map((data?.qualityOverrides ?? []).map((item) => [item.employee_name, item.quality])), [data]);
+  const qualityMap = useMemo(() => new Map((data?.qualityOverrides ?? []).map((item) => [item.employee_name, item.quality] as const)), [data]);
   const metrics = useMemo(() => {
     const definitions = [
-      { key: "new_lines", label: "GAs / الخطوط", weight: 30 },
-      { key: "points", label: "Points / النقاط", weight: 10 },
-      { key: "existing_wallets", label: "Excite / المحافظ", weight: 10 },
-      { key: "postpaid_lines", label: "Postpaid", weight: 10 },
-      { key: "dsl", label: "Home ADSL", weight: 10 },
+      { key: "new_lines", label: "GAs / الخطوط", weight: MANAGER_KPI_WEIGHTS.new_lines },
+      { key: "points", label: "Points / النقاط", weight: MANAGER_KPI_WEIGHTS.points },
+      { key: "existing_wallets", label: "Excite / المحافظ", weight: MANAGER_KPI_WEIGHTS.existing_wallets },
+      { key: "postpaid_lines", label: "Postpaid", weight: MANAGER_KPI_WEIGHTS.postpaid_lines },
+      { key: "dsl", label: "Home ADSL", weight: MANAGER_KPI_WEIGHTS.dsl },
     ];
     const rows = definitions.map((item) => {
       const percent = aggregatePercent(reports, item.key);
@@ -123,9 +123,9 @@ export default function BranchManagerPage() {
     const quality = reports.length
       ? reports.reduce((sum, row) => sum + qualityPercent(employeeQuality(row, qualityMap.get(row.employee_name))), 0) / reports.length
       : 0;
-    rows.push({ key: "quality", label: "Quality / الجودة", weight: 15, percent: quality, contribution: contribution(quality, 15) });
+    rows.push({ key: "quality", label: "Quality / الجودة", weight: MANAGER_KPI_WEIGHTS.quality, percent: quality, contribution: contribution(quality, MANAGER_KPI_WEIGHTS.quality) });
     const productivity = safePercent(data?.productivity?.productivity_percent);
-    const productivityContribution = contribution(productivity, 15);
+    const productivityContribution = contribution(productivity, MANAGER_KPI_WEIGHTS.productivity);
     const rawTotal = rows.reduce((sum, item) => sum + item.contribution, 0) + productivityContribution;
     return { rows, quality, productivity, productivityContribution, rawTotal, total: Math.min(200, rawTotal) };
   }, [reports, qualityMap, data?.productivity]);
@@ -205,7 +205,7 @@ export default function BranchManagerPage() {
           <h2 className="text-lg font-black">مساهمة مؤشرات حافز المدير</h2>
           <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {metrics.rows.map((item) => <div key={item.key} className="rounded-2xl bg-[#fff8f1] p-3"><div className="flex justify-between gap-2 text-sm font-bold"><span>{item.label}</span><span>{fmt(item.percent)}</span></div><div className="mt-2 h-2 overflow-hidden rounded-full bg-[#f2e4d8]"><div className="h-full rounded-full bg-[#e96812]" style={{ width: `${Math.min(100,item.percent)}%` }} /></div><p className="mt-2 text-xs text-[#88796e]">الوزن {item.weight}% · المساهمة {item.contribution.toFixed(2)}%</p></div>)}
-            <div className="rounded-2xl border border-[#f2c9a7] bg-[#fff1e4] p-3"><div className="flex justify-between text-sm font-bold"><span>Productivity / الإنتاجية</span><span>{fmt(metrics.productivity)}</span></div><div className="mt-2 h-2 overflow-hidden rounded-full bg-white"><div className="h-full rounded-full bg-[#bd4b0a]" style={{ width: `${Math.min(100,metrics.productivity)}%` }} /></div><p className="mt-2 text-xs text-[#88796e]">الوزن 15% · المساهمة {metrics.productivityContribution.toFixed(2)}%</p></div>
+            <div className="rounded-2xl border border-[#f2c9a7] bg-[#fff1e4] p-3"><div className="flex justify-between text-sm font-bold"><span>Productivity / الإنتاجية</span><span>{fmt(metrics.productivity)}</span></div><div className="mt-2 h-2 overflow-hidden rounded-full bg-white"><div className="h-full rounded-full bg-[#bd4b0a]" style={{ width: `${Math.min(100,metrics.productivity)}%` }} /></div><p className="mt-2 text-xs text-[#88796e]">الوزن {MANAGER_KPI_WEIGHTS.productivity}% · المساهمة {metrics.productivityContribution.toFixed(2)}%</p></div>
           </div>
         </section>
         <section className="rounded-3xl border border-[#f1dfd0] bg-white p-4 sm:p-5">
