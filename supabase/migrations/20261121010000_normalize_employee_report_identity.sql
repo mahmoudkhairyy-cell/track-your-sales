@@ -63,6 +63,13 @@ begin
     raise exception 'manager assignment mismatch';
   end if;
 
+  -- Serialize concurrent saves for the same normalized employee identity.
+  perform pg_advisory_xact_lock(hashtextextended(
+    lower(regexp_replace(btrim(p_employee), '[[:space:]]+', ' ', 'g')) || '|' ||
+    left(btrim(p_branch), 80) || '|' || manager_name,
+    0
+  ));
+
   -- Resolve the canonical row using a normalized employee name.
   select branch_id into existing_branch_id
   from public.branch_reports
