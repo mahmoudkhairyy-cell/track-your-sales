@@ -2,7 +2,7 @@
 export const CLOUD_URL = "https://fjhjqrgolqqtaokrlezd.supabase.co";
 export const CLOUD_KEY = "sb_publishable_6cLV7KQHG3RNeAenIUcKFg_qpWHumZq";
 
-export async function cloudRpc<T>(name: string, body: Record<string, unknown>): Promise<T | null> {
+export async function cloudRpc<T>(name: string, body: Record<string, unknown>, signal?: AbortSignal): Promise<T | null> {
   const response = await fetch(`${CLOUD_URL}/rest/v1/rpc/${name}`, {
     method: "POST",
     headers: {
@@ -11,6 +11,7 @@ export async function cloudRpc<T>(name: string, body: Record<string, unknown>): 
       "Content-Type": "application/json",
     },
     body: JSON.stringify(body),
+    signal,
   });
   const text = await response.text();
   if (!response.ok) {

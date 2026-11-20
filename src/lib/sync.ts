@@ -5,13 +5,13 @@ import { readProfile } from "@/lib/local-api";
 import { OUTSIDE_BRANCHES } from "@/lib/constants";
 
 const BRANCH_KEY = "tys.branchId";
+export const SYNC_CONSENT_KEY = "tys.cloudSyncConsent.v1";
 
 type EntrySnapshot = {
   id: string;
   kpiKey: string;
   quantity: number;
   entryDate: string;
-  note: string | null;
   nameEn: string;
   unitAr: string;
 };
@@ -20,7 +20,7 @@ type SettingsSnapshot = {
   saved: boolean;
   fullCommission: number;
   kpis: { kpiKey: string; target: number; weight: number; unitAr: string }[];
-  holidays: { date: string; note?: string | null }[];
+  holidays: { date: string }[];
   workingDays: Record<string, boolean>;
 };
 
@@ -53,6 +53,27 @@ function branchId(): string {
 
 let activeSync: Promise<boolean> | null = null;
 let syncRequestedAgain = false;
+let activeRequestController: AbortController | null = null;
+
+export function isCloudSyncEnabled(): boolean {
+  try {
+    return typeof localStorage !== "undefined" && localStorage.getItem(SYNC_CONSENT_KEY) === "true";
+  } catch {
+    return false;
+  }
+}
+
+export function setCloudSyncEnabled(enabled: boolean): void {
+  try {
+    localStorage.setItem(SYNC_CONSENT_KEY, enabled ? "true" : "false");
+    window.dispatchEvent(new Event("tys-sync-consent"));
+  } finally {
+    if (!enabled) {
+      syncRequestedAgain = false;
+      activeRequestController?.abort();
+    }
+  }
+}
 
 export type SyncStatus = { ok: boolean; at: string; error?: string };
 export const SYNC_STATUS_KEY = "tys.lastSync";
@@ -77,6 +98,7 @@ export function readSyncStatus(): SyncStatus | null {
 
 /** محاولة واحدة لرفع أحدث ملخص محفوظ. */
 async function pushReportOnce(): Promise<boolean> {
+  if (!isCloudSyncEnabled()) return false;
   if (typeof navigator !== "undefined" && !navigator.onLine) {
     saveStatus({ ok: false, at: new Date().toISOString(), error: "مفيش نت" });
     return false;
@@ -88,6 +110,7 @@ async function pushReportOnce(): Promise<boolean> {
   if (profile.branch === OUTSIDE_BRANCHES) return false;
   if (!id || !profile.name.trim()) return false;
 
+  let requestController: AbortController | null = null;
   try {
     const month = cairoYearMonth();
     const [data, settings, entriesResult] = await Promise.all([
@@ -95,13 +118,15 @@ async function pushReportOnce(): Promise<boolean> {
       api<{ settings: SettingsSnapshot }>(`/api/months/${month}`),
       api<{ entries: EntrySnapshot[] }>(`/api/entries?month=${month}`),
     ]);
+    if (!isCloudSyncEnabled()) return false;
+    requestController = new AbortController();
+    activeRequestController = requestController;
     await cloudRpc("submit_report", {
       p_branch_id: id,
       p_employee: profile.name,
       p_branch: profile.branch,
       p_payload: {
         role: profile.role,
-        areaManager: profile.areaManager,
         monthLabel: data.monthLabel,
         overall: data.overall,
         estimatedCommission: data.estimatedCommission,
@@ -119,7 +144,7 @@ async function pushReportOnce(): Promise<boolean> {
         settings: {
           fullCommission: settings.settings.fullCommission,
           kpis: settings.settings.kpis,
-          holidays: settings.settings.holidays,
+          holidays: settings.settings.holidays.map((holiday) => ({ date: holiday.date })),
           workingDays: settings.settings.workingDays,
         },
         entries: entriesResult.entries.map((e) => ({
@@ -127,18 +152,19 @@ async function pushReportOnce(): Promise<boolean> {
           kpi: e.nameEn,
           quantity: e.quantity,
           unit: e.unitAr,
-          // الملاحظات الشخصية ما بتتبعتش للسيرفر (مفيش شاشة بتعرضها للمستخدم).
-          note: "",
           at: e.id,
         })),
         syncedAt: new Date().toISOString(),
       },
-    });
+    }, requestController.signal);
     saveStatus({ ok: true, at: new Date().toISOString() });
     return true;
   } catch (err) {
+    if (requestController?.signal.aborted || !isCloudSyncEnabled()) return false;
     saveStatus({ ok: false, at: new Date().toISOString(), error: err instanceof Error ? err.message.slice(0, 160) : "خطأ" });
     return false;
+  } finally {
+    if (activeRequestController === requestController) activeRequestController = null;
   }
 }
 
@@ -147,6 +173,7 @@ async function pushReportOnce(): Promise<boolean> {
  * كده الضغطات/الحفظات المتتابعة مش بتضيع بسبب تجاهل الطلب أثناء running.
  */
 export function pushReport(): Promise<boolean> {
+  if (!isCloudSyncEnabled()) return Promise.resolve(false);
   if (activeSync) {
     syncRequestedAgain = true;
     return activeSync;
