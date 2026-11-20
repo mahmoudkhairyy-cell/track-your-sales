@@ -4,9 +4,12 @@ import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
+  useRef,
   useState,
   type ButtonHTMLAttributes,
+  type HTMLAttributes,
   type ReactNode,
 } from "react";
 
@@ -201,6 +204,82 @@ export function Modal({
         </div>
         {children}
       </div>
+    </div>
+  );
+}
+
+
+export function Skeleton({ className = "", ...props }: HTMLAttributes<HTMLDivElement>) {
+  return (
+    <div
+      className={`animate-pulse rounded-xl bg-skeleton dark:bg-skeleton-dark ${className}`}
+      {...props}
+    />
+  );
+}
+
+export function AnimatedCounter({
+  value,
+  duration = 400,
+  className = "",
+}: {
+  value: number;
+  duration?: number;
+  className?: string;
+}) {
+  const [display, setDisplay] = useState(0);
+  const prevValue = useRef(0);
+
+  useEffect(() => {
+    const start = prevValue.current;
+    const end = value;
+    const startTime = performance.now();
+
+    const animate = (currentTime: number) => {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const current = start + (end - start) * eased;
+      setDisplay(Math.round(current));
+
+      if (progress < 1) {
+        requestAnimationFrame(animate);
+      } else {
+        prevValue.current = end;
+      }
+    };
+
+    requestAnimationFrame(animate);
+  }, [value, duration]);
+
+  return <span className={className}>{display.toLocaleString("ar-EG")}</span>;
+}
+
+export function BulletChart({
+  percent,
+  expected,
+  className = "",
+}: {
+  percent: number;
+  expected: number;
+  className?: string;
+}) {
+  const capped = Math.min(100, Math.max(0, percent));
+  const expectedCapped = Math.min(100, Math.max(0, expected));
+
+  return (
+    <div className={`relative ${className}`}>
+      <div className="h-3 w-full overflow-hidden rounded-full bg-surface-2 dark:bg-surface-2-dark">
+        <div
+          className="h-full rounded-full bg-gradient-to-l from-brand-500 to-brand-600 transition-all duration-700 ease-out"
+          style={{ width: `${capped}%` }}
+        />
+      </div>
+      <div
+        className="absolute top-1/2 h-5 w-0.5 -translate-y-1/2 rounded-full bg-ink dark:bg-ink-dark"
+        style={{ left: `${expectedCapped}%` }}
+        title={`المتوقع النهارده: ${Math.round(expected)}%`}
+      />
     </div>
   );
 }
