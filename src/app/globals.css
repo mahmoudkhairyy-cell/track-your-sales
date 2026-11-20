@@ -5291,3 +5291,112 @@ html[data-theme="space"] .tys-premium-home .tys-home-daily > div:last-child > di
     transition: top .8s ease;
   }
 }
+
+/* TargetX design tokens v1 — additive layer; preserves existing page/theme rules. */
+@theme {
+  /* Orange: #ff7900 is the canonical brand color. */
+  --color-orange-50: #fff7ed;
+  --color-orange-100: #ffedd5;
+  --color-orange-200: #fed7aa;
+  --color-orange-300: #fdba74;
+  --color-orange-400: #fb923c;
+  --color-orange-500: #ff7900;
+  --color-orange-600: #ea580c;
+  --color-orange-700: #c2410c;
+  --color-orange-800: #9a3412;
+  --color-orange-900: #7c2d12;
+  --color-orange-950: #431407;
+
+  /* Neutral scale. */
+  --color-neutral-50: #fafafa;
+  --color-neutral-100: #f5f5f5;
+  --color-neutral-200: #e5e5e5;
+  --color-neutral-300: #d4d4d4;
+  --color-neutral-400: #a3a3a3;
+  --color-neutral-500: #737373;
+  --color-neutral-600: #525252;
+  --color-neutral-700: #404040;
+  --color-neutral-800: #262626;
+  --color-neutral-900: #171717;
+  --color-neutral-950: #0a0a0a;
+
+  /* Semantic colors and soft surfaces. */
+  --color-success: #10b981;
+  --color-success-bg: #ecfdf5;
+  --color-success-text: #047857;
+  --color-warning: #f59e0b;
+  --color-warning-bg: #fffbeb;
+  --color-warning-text: #92400e;
+  --color-danger: #ef4444;
+  --color-danger-bg: #fef2f2;
+  --color-danger-text: #b91c1c;
+
+  /* Type scale. */
+  --font-cairo: "Cairo", Tahoma, "Segoe UI", Arial, sans-serif;
+  --text-xs: 12px;
+  --text-sm: 14px;
+  --text-base: 16px;
+  --text-lg: 20px;
+  --text-xl: 24px;
+  --text-2xl: 32px;
+  --text-3xl: 40px;
+  --text-4xl: 48px;
+
+  /* 4px spacing scale. */
+  --spacing-1: 4px;
+  --spacing-2: 8px;
+  --spacing-3: 12px;
+  --spacing-4: 16px;
+  --spacing-6: 24px;
+  --spacing-8: 32px;
+  --spacing-10: 40px;
+  --spacing-12: 48px;
+  --spacing-16: 64px;
+
+  /* Shape and elevation. */
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-2xl: 24px;
+  --radius-full: 9999px;
+  --shadow-sm: 0 1px 2px rgb(23 23 23 / 5%);
+  --shadow-md: 0 4px 10px rgb(23 23 23 / 8%);
+  --shadow-lg: 0 10px 24px rgb(23 23 23 / 10%);
+  --shadow-xl: 0 20px 40px rgb(23 23 23 / 12%);
+  --shadow-orange: 0 8px 24px rgb(255 121 0 / 22%);
+
+  /* Theme-aware utility tokens. */
+  --color-background: #fafafa;
+  --color-foreground: #262626;
+  --color-surface: #ffffff;
+  --color-border: #e5e5e5;
+}
+
+@layer base {
+  html {
+    font-family: var(--font-cairo);
+  }
+
+  body {
+    font-family: var(--font-cairo);
+    color: var(--color-foreground);
+  }
+}
+
+/* System dark mode affects semantic utility tokens only; explicit app themes remain intact. */
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --color-background: #171717;
+    --color-foreground: #f5f5f5;
+    --color-surface: #262626;
+    --color-border: #404040;
+    --color-success-bg: #052e22;
+    --color-success-text: #6ee7b7;
+    --color-warning-bg: #422006;
+    --color-warning-text: #fcd34d;
+    --color-danger-bg: #450a0a;
+    --color-danger-text: #fca5a5;
+  }
+}
