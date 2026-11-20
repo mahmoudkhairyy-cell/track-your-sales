@@ -2,7 +2,7 @@ import { api } from "@/lib/client";
 import { managerApi } from "@/lib/cloud";
 import { cairoYearMonth } from "@/lib/dates";
 import { readProfile } from "@/lib/local-api";
-import { OUTSIDE_BRANCHES } from "@/lib/constants";
+import { AREA_MANAGERS, OUTSIDE_BRANCHES } from "@/lib/constants";
 
 const BRANCH_KEY = "tys.branchId";
 
@@ -82,11 +82,18 @@ async function pushReportOnce(): Promise<boolean> {
     return false;
   }
 
-  const id = branchId();
   const profile = readProfile();
   // الموظف "خارج الفروع" مش بيظهر في لوحة المدير، فمايبعتش ملخصه.
   if (profile.branch === OUTSIDE_BRANCHES) return false;
-  if (!id || !profile.name.trim()) return false;
+  if (!profile.areaManager || !AREA_MANAGERS.includes(profile.areaManager as (typeof AREA_MANAGERS)[number])) {
+    saveStatus({ ok: false, at: new Date().toISOString(), error: "اختار مدير المنطقة من صفحة بياناتك قبل المزامنة" });
+    return false;
+  }
+  const id = branchId();
+  if (!id || !profile.name.trim() || !profile.branch.trim()) {
+    saveStatus({ ok: false, at: new Date().toISOString(), error: "بيانات الموظف أو الفرع غير مكتملة" });
+    return false;
+  }
 
   try {
     const month = cairoYearMonth();
