@@ -314,3 +314,18 @@ check("استعادة: نسخة بإصدار غير مدعوم أو أقدم ت�
 });
 
 console.log("\nاكتملت اختبارات الحسابات والنسخ الاحتياطي والكميات بنجاح.");
+
+
+check("استعادة بالدمج لا تغيّر اسم الموظف أو فرعه", () => {
+  const state = emptyRestoreState();
+  const backup = parseBackup(rawBackup({ profile: { name: "Imported Name", branch: "Imported Branch" } }));
+  applyBackupToState(state, backup, "merge", restoreOptions());
+  assert.deepEqual(state.profile, { name: "Old", branch: "Old" });
+});
+
+check("استعادة بالاستبدال تستعيد الاسم والفرع من النسخة", () => {
+  const state = emptyRestoreState();
+  const backup = parseBackup(rawBackup({ profile: { name: "Imported Name", branch: "Imported Branch" } }));
+  applyBackupToState(state, backup, "replace", restoreOptions());
+  assert.deepEqual(state.profile, { name: "Imported Name", branch: "Imported Branch" });
+});
