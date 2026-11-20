@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Banner, EmptyState, Spinner } from "@/components/ui";
+import { AnimatedCounter, Banner, BulletChart, EmptyState, Skeleton } from "@/components/ui";
 import { ApiError, api } from "@/lib/client";
 import { formatMoney, formatPercent, formatQty } from "@/lib/calculations";
 import { useMonth } from "@/components/AppShell";
@@ -139,7 +139,16 @@ export default function HomePage() {
   const loading = state.month !== month;
   const { data, error } = state;
 
-  if (loading) return <Spinner label="ثواني… بنحمّل لوحة الأداء" />;
+  if (loading) {
+    return (
+      <div className="space-y-4 p-4">
+        <Skeleton className="h-40 w-full" />
+        <Skeleton className="h-20 w-full" />
+        <Skeleton className="h-60 w-full" />
+        <span className="sr-only">ثواني… بنحمّل لوحة الأداء</span>
+      </div>
+    );
+  }
   if (error) return <Banner tone="error">{error}</Banner>;
   if (!data) return <Banner tone="error">مفيش بيانات نعرضها</Banner>;
 
@@ -181,18 +190,24 @@ export default function HomePage() {
           </div>
           <div className="min-w-0 flex-1">
             <p className="text-sm font-extrabold text-ink-warm">إجمالي التارجت الشهري</p>
-            <p className="mt-1 text-3xl font-black tracking-tight text-brand-ink sm:text-4xl">{formatPercent(data.overall)}%</p>
+            <p className="mt-1 text-3xl font-black tracking-tight text-brand-ink sm:text-4xl"><AnimatedCounter value={Math.round(data.overall)} className="text-3xl font-black tracking-tight sm:text-4xl" />%</p>
             <p className="mt-1 text-sm font-bold text-ink-warm">{gap > 0 ? `فاضل ${formatPercent(gap)}%` : "مفيش فاضل، قفلت الشهر"}</p>
           </div>
+        </div>
+        <div className="relative mt-4 px-1">
+          <BulletChart percent={data.overall} expected={expectedPercent} className="mt-4" />
+          <p className="mt-2 text-sm text-ink-2 dark:text-ink-2-dark">
+            المتوقع النهارده: {Math.round(expectedPercent)}%
+          </p>
         </div>
         <div className="relative mt-4 grid grid-cols-2 gap-2">
           <div className="rounded-2xl border border-white/80 bg-white/75 p-3 shadow-sm backdrop-blur-sm">
             <p className="text-[11px] font-bold text-ink-2">الكوميشن المتوقع</p>
-            <p className="mt-1 text-lg font-black text-brand-ink">{formatMoney(data.estimatedCommission)} <span className="text-[10px] font-bold text-ink-2">جنيه</span></p>
+            <p className="mt-1 text-lg font-black text-brand-ink"><AnimatedCounter value={Math.round(data.estimatedCommission)} /> <span className="text-[10px] font-bold text-ink-2">جنيه</span></p>
           </div>
           <div className="rounded-2xl border border-white/80 bg-white/75 p-3 shadow-sm backdrop-blur-sm">
             <p className="text-[11px] font-bold text-ink-2">الكوميشن الكامل</p>
-            <p className="mt-1 text-lg font-black text-ink">{formatMoney(data.fullCommission)} <span className="text-[10px] font-bold text-ink-2">جنيه</span></p>
+            <p className="mt-1 text-lg font-black text-ink"><AnimatedCounter value={Math.round(data.fullCommission)} /> <span className="text-[10px] font-bold text-ink-2">جنيه</span></p>
           </div>
         </div>
       </section>
