@@ -14,14 +14,14 @@ function check(name: string, fn: () => void) {
 // Random ephemeral fixture, never written to a file, database, or log.
 const password = randomBytes(32).toString("base64url");
 const authorization = `Basic ${Buffer.from(`mahmoud:${password}`).toString("base64")}`;
-const hosted = { VERCEL: "1", WORKSPACE_USERNAME: "mahmoud", WORKSPACE_PASSWORD: password };
+const hosted = { PUBLIC_DEPLOYMENT: "true", WORKSPACE_USERNAME: "mahmoud", WORKSPACE_PASSWORD: password };
 
 check("Local use is unchanged unless protection is enabled", () => {
   assert.deepEqual(deploymentAccess(null, {}), { allowed: true, protected: false });
 });
-check("Vercel always enables the gate, even with PUBLIC_DEPLOYMENT=false", () => {
-  assert.equal(deploymentProtectionEnabled({ VERCEL: "1", PUBLIC_DEPLOYMENT: "false" }), true);
-  const result = deploymentAccess(null, { VERCEL: "1", PUBLIC_DEPLOYMENT: "false" });
+check("Public deployment always enables the gate", () => {
+  assert.equal(deploymentProtectionEnabled({ PUBLIC_DEPLOYMENT: "true" }), true);
+  const result = deploymentAccess(null, { PUBLIC_DEPLOYMENT: "true" });
   assert.ok(!result.allowed && result.status === 503);
 });
 check("Missing or weak hosting credentials fail closed", () => {
@@ -49,10 +49,9 @@ check("Cross-origin browser writes are rejected", () => {
   })), true);
 });
 
-const keys = ["VERCEL", "PUBLIC_DEPLOYMENT", "WORKSPACE_USERNAME", "WORKSPACE_PASSWORD"] as const;
+const keys = ["PUBLIC_DEPLOYMENT", "WORKSPACE_USERNAME", "WORKSPACE_PASSWORD"] as const;
 const before = Object.fromEntries(keys.map((key) => [key, process.env[key]]));
 try {
-  process.env.VERCEL = "1";
   process.env.PUBLIC_DEPLOYMENT = "true";
   process.env.WORKSPACE_USERNAME = "mahmoud";
   process.env.WORKSPACE_PASSWORD = password;
