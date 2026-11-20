@@ -96,20 +96,6 @@ export default function BranchManagerPage() {
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
 
-  useEffect(() => {
-    const profile = readProfile();
-    if (profile.role !== "manager") {
-      window.location.replace(profile.role === "area_manager" ? "/track-your-sales/manager/" : "/track-your-sales/");
-      return;
-    }
-    if (profile.name.trim() && profile.branch.trim()) {
-      setManagerName(profile.name);
-      setBranch(profile.branch);
-      setActive(true);
-    }
-    setAccessChecked(true);
-  }, []);
-
   const load = useCallback(async (selectedBranch: string) => {
     setLoading(true); setError("");
     try {
@@ -127,6 +113,21 @@ export default function BranchManagerPage() {
       setError(e instanceof Error ? e.message : "Could not load branch data");
     } finally { setLoading(false); }
   }, [month]);
+
+  useEffect(() => {
+    const profile = readProfile();
+    if (profile.role !== "manager") {
+      window.location.replace(profile.role === "area_manager" ? "/track-your-sales/manager/" : "/track-your-sales/");
+      return;
+    }
+    if (profile.name.trim() && profile.branch.trim()) {
+      setManagerName(profile.name);
+      setBranch(profile.branch);
+      setActive(true);
+      void load(profile.branch);
+    }
+    setAccessChecked(true);
+  }, [load]);
 
   const reports = data?.reports ?? [];
   const visibleReports = useMemo(() => reports.filter((row) => {
@@ -321,11 +322,6 @@ export default function BranchManagerPage() {
           </div>
         </section>
         ) : null}
-        <footer className="pb-6 text-center text-[11px] text-[#a18b7b]">Track Your Sales · Independent Branch Manager Dashboard</footer>
-      </div>
-    </main>
-  );
-}
         <footer className="pb-6 text-center text-[11px] text-[#a18b7b]">Track Your Sales · Independent Branch Manager Dashboard</footer>
       </div>
     </main>
