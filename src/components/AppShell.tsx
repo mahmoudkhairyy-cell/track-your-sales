@@ -121,7 +121,7 @@ function SearchableSelect({
 }: {
   label: string;
   value: string;
-  options: string[];
+  options: readonly string[];
   placeholder: string;
   onChange: (value: string) => void;
 }) {
