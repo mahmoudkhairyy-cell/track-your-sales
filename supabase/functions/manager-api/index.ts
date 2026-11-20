@@ -60,6 +60,10 @@ async function restUpsert(url: string, serviceKey: string, table: string, row: R
   });
   if (!res.ok) throw new Error(`database write failed: ${table}`);
 }
+function normalizeEmployeeIdentity(value: string): string {
+  return value.trim().replace(/\s+/g, " ").toLocaleLowerCase("en-US");
+}
+
 function validPercent(value: unknown, max = 1000): value is number {
   return typeof value === "number" && Number.isFinite(value) && value >= 0 && value <= max;
 }
@@ -127,24 +131,29 @@ Deno.serve(async (req: Request) => {
       }
     }
 
-    // Reuse an existing row only when employee + branch + manager all match.
+    // Reuse the same employee row even if the entered name differs only by
+    // letter casing or repeated/leading/trailing whitespace.
     let effectiveBranchId = branchId;
     const query = new URLSearchParams({
-      select: "branch_id",
-      employee_name: `eq.${employee.trim().slice(0, 80)}`,
+      select: "branch_id,employee_name",
       branch_name: `eq.${branch.trim().slice(0, 80)}`,
       order: "updated_at.desc",
-      limit: "1",
+      limit: "100",
     });
     query.set("payload->>areaManager", `eq.${areaManager}`);
     const existing = await fetch(`${url}/rest/v1/branch_reports?${query.toString()}`, {
       headers: { apikey: serviceKey, Authorization: "Bearer " + serviceKey },
     });
-    if (existing.ok) {
-      const matches = await existing.json();
-      if (Array.isArray(matches) && typeof matches[0]?.branch_id === "string") {
-        effectiveBranchId = matches[0].branch_id;
-      }
+    if (!existing.ok) return json({ error: "تعذر التحقق من سجل الموظف الحالي" }, 500);
+    const matches = await existing.json();
+    if (Array.isArray(matches)) {
+      const normalizedEmployee = normalizeEmployeeIdentity(employee);
+      const match = matches.find((row) =>
+        typeof row?.branch_id === "string" &&
+        typeof row?.employee_name === "string" &&
+        normalizeEmployeeIdentity(row.employee_name) === normalizedEmployee
+      );
+      if (match?.branch_id) effectiveBranchId = match.branch_id;
     }
 
     const res = await rpc(url, serviceKey, "submit_report", {
