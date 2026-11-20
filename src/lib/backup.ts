@@ -254,7 +254,9 @@ function parseArticle(value: unknown, index: number): BackupArticle {
   if (!isRecord(value)) throw new Error(`مقال رقم ${index + 1} شكله غلط`);
   const title = asString(value.title, `articles[${index}].title`);
   const content = asString(value.content, `articles[${index}].content`);
+  if (title.length < 2) throw new Error(`عنوان المقال رقم ${index + 1} قصير جدًا`);
   if (title.length > 160) throw new Error(`عنوان المقال رقم ${index + 1} أطول من 160 حرف`);
+  if (content.length < 2) throw new Error(`محتوى المقال رقم ${index + 1} قصير جدًا`);
   if (content.length > 8000) throw new Error(`محتوى المقال رقم ${index + 1} أطول من 8000 حرف`);
   return {
     id: value.id === undefined ? undefined : asString(value.id, `articles[${index}].id`),
