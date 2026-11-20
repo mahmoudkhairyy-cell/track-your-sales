@@ -414,6 +414,10 @@ export function AppShell({ children }: { children: ReactNode }) {
   useEffect(() => {
     let cancelled = false;
     const profile = readProfile();
+    if (profile.role === "manager") {
+      window.location.assign("/track-your-sales/branch-manager/");
+      return () => { cancelled = true; };
+    }
     if (!profile.name.trim() || (!profile.areaManager && profile.role !== "area_manager" && profile.role !== "manager" && profile.branch !== OUTSIDE_BRANCHES) || (profile.role !== "agent" && profile.role !== "team_leader" && profile.role !== "manager" && profile.role !== "area_manager")) {
       queueMicrotask(() => {
         if (!cancelled) setStatus("profile");
