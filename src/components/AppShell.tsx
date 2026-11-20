@@ -119,7 +119,7 @@ function FirstRunProfile({ onDone }: { onDone: () => void }) {
         setError("اختار إنت موظف ولا مدير");
         return;
       }
-      if (role !== "area_manager") {
+      if (role !== "area_manager" && role !== "manager") {
         if (name.trim().length < 2) {
           setError("اكتب اسمك (حرفين على الأقل)");
           return;
@@ -128,7 +128,7 @@ function FirstRunProfile({ onDone }: { onDone: () => void }) {
           setError("اختار الفرع بتاعك");
           return;
         }
-        if (branch !== OUTSIDE_BRANCHES && !areaManager.trim()) {
+        if (role !== "manager" && branch !== OUTSIDE_BRANCHES && !areaManager.trim()) {
           setError("اختار مدير المنطقة بتاعك");
           return;
         }
@@ -166,7 +166,7 @@ function FirstRunProfile({ onDone }: { onDone: () => void }) {
     }
     setPending(true);
     try {
-      await api("/api/profile", { method: "PATCH", body: JSON.stringify({ name: name.trim(), branch: branch.trim(), role, areaManager: branch === OUTSIDE_BRANCHES ? "" : areaManager.trim() }) });
+      await api("/api/profile", { method: "PATCH", body: JSON.stringify({ name: name.trim(), branch: branch.trim(), role, areaManager: branch === OUTSIDE_BRANCHES || role === "manager" ? "" : areaManager.trim() }) });
       if (role === "manager") {
         window.location.assign("/track-your-sales/branch-manager/");
         return;
@@ -198,7 +198,7 @@ function FirstRunProfile({ onDone }: { onDone: () => void }) {
             <p>👤 الاسم: <b>{name.trim()}</b></p>
             <p>🏷️ الوظيفة: <b>{role === "agent" ? "Agent" : role === "team_leader" ? "Team Leader" : role === "manager" ? "Manager" : "Area Manager"}</b></p>
             {role !== "area_manager" ? <p>🏢 الفرع: <b>{branch}</b></p> : null}
-            {role !== "area_manager" && branch !== OUTSIDE_BRANCHES ? <p>🗺️ مدير المنطقة: <b>{areaManager}</b></p> : null}
+            {role !== "area_manager" && role !== "manager" && branch !== OUTSIDE_BRANCHES ? <p>🗺️ مدير المنطقة: <b>{areaManager}</b></p> : null}
             <p className="pt-2 text-xs leading-5 text-[#88796e]">بعد الموافقة مينفعش تغيّر الاسم أو الفرع أو الوظيفة.</p>
           </div>
         ) : (
@@ -239,7 +239,7 @@ function FirstRunProfile({ onDone }: { onDone: () => void }) {
           </select>
         </label>
         ) : null}
-        {role !== "area_manager" && branch !== OUTSIDE_BRANCHES ? (
+        {role !== "area_manager" && role !== "manager" && branch !== OUTSIDE_BRANCHES ? (
         <label className="mb-4 block text-sm font-bold text-[#6e5543]">
           مدير المنطقة (الأريا مانجر)
           <select value={areaManager} onChange={(e) => setAreaManager(e.target.value)} className="mt-1 w-full rounded-2xl border border-[#f2e4d8] bg-white px-4 py-3 outline-none focus:border-[#bd4b0a]">
