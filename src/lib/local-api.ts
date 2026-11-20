@@ -667,3 +667,70 @@ export function runLocalApi(url: string, method: string, body: unknown): LocalRe
     return { ok: false, status: 500, message: "حصل خطأ غير متوقع" };
   }
 }
+
+
+/** Snapshot متوافق مع صيغة تقارير المدير القديمة، من غير ما يغيّر بيانات الموظف المحلية. */
+export function buildManagerSnapshot() {
+  const state = loadState();
+  const profile = state.profile;
+  if (!profile.name.trim() || profile.name === "موظف المبيعات" || !profile.branch.trim() || profile.branch === "الفرع") return null;
+
+  const yearMonth = cairoYearMonth();
+  const dashboard = getDashboard(state, new URLSearchParams(`month=${yearMonth}`));
+  const rows = entriesInMonth(state, yearMonth);
+  const legacyNames: Record<string, string> = {
+    new_lines: "GAs",
+    new_orange_cash: "New Orange Cash Wallets",
+    existing_wallets: "Excite",
+    points: "Points",
+    postpaid_lines: "Postpaid",
+    dsl: "Home ADSL",
+    quality: "KYC & Compliance",
+  };
+
+  const payload = {
+    role: "agent",
+    kpis: dashboard.kpis.map((item) => ({
+      name: legacyNames[item.kpiKey] ?? item.nameEn,
+      target: item.target,
+      weight: item.weight,
+      percent: item.percent,
+      achieved: item.achieved,
+      expectedPercent: item.target > 0 ? (item.expectedToDate / item.target) * 100 : 0,
+    })),
+    entries: rows.map((item) => ({
+      at: item.id,
+      kpi: legacyNames[item.kpiKey] ?? item.kpiKey,
+      date: item.entryDate,
+      note: item.note ?? "",
+      unit: catalogByKey(item.kpiKey)?.unitAr ?? "",
+      quantity: item.quantity,
+    })),
+    overall: dashboard.overall,
+    settings: {
+      kpis: dashboard.kpis.map((item) => ({
+        kpiKey: item.kpiKey,
+        target: item.target,
+        unitAr: item.unitAr,
+        weight: item.weight,
+        sortOrder: item.sortOrder,
+      })),
+      holidays: dashboard.holidays,
+      workingDays: dashboard.workingDays,
+      fullCommission: dashboard.fullCommission,
+    },
+    syncedAt: new Date().toISOString(),
+    monthLabel: dashboard.monthLabel,
+    areaManager: "Abd Elrahman Mahmoud",
+    todaySummary: dashboard.todaySummary.map((item) => ({
+      kpi: item.kpiKey,
+      count: item.count,
+      quantity: item.quantity,
+    })),
+    fullCommission: dashboard.fullCommission,
+    expectedPercent: dashboard.overallExpectedPercent,
+    estimatedCommission: dashboard.estimatedCommission,
+  };
+
+  return { employee: profile.name, branch: profile.branch, payload };
+}
