@@ -174,7 +174,7 @@ export default function HomePage() {
   return (
     <div className="tys-page tys-page-home tys-premium-home mx-auto flex min-h-screen w-full max-w-6xl flex-col gap-4 pb-28">
       {sync ? (
-        <p className={`text-[11px] font-bold ${sync.ok ? "text-emerald-700" : "text-red-600"}`} dir="rtl">
+        <p className={`text-xs font-bold ${sync.ok ? "text-emerald-700" : "text-red-600"}`} dir="rtl">
           {sync.ok
             ? `☁️ اتبعت للمدير ${new Date(sync.at).toLocaleTimeString("en-US", { timeZone: "Africa/Cairo", hour: "2-digit", minute: "2-digit", hour12: false })}`
             : `⚠️ مااتبعتش للمدير: ${sync.error ?? ""}. `}
@@ -188,7 +188,7 @@ export default function HomePage() {
 
       <section className="tys-home-greeting flex items-end justify-between gap-3 rounded-[26px] border border-white bg-white px-4 py-4 shadow-[0_1px_2px_rgba(43,20,0,.04)] sm:px-5">
         <div className="min-w-0">
-          <p className="text-[10px] font-black tracking-[0.16em] text-[var(--color-primary-600)]">YOUR SALES OVERVIEW</p>
+          <p className="text-xs font-black tracking-[0.16em] text-[var(--color-primary-600)]">YOUR SALES OVERVIEW</p>
           <h1 className="mt-1 text-xl font-black tracking-tight text-[var(--color-text-primary)] sm:text-2xl">
             {greeting()} {data.profile.name.split(" ")[0]} 👋
           </h1>
@@ -207,25 +207,25 @@ export default function HomePage() {
             <div className="flex min-w-0 items-center gap-2.5">
               <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-[var(--color-primary-500)] to-[var(--color-primary-600)] text-lg text-white shadow-md">◎</span>
               <div className="min-w-0">
-                <p className="text-[10px] font-black tracking-[0.14em] text-[var(--color-primary-700)]">MONTHLY PERFORMANCE</p>
+                <p className="text-xs font-black tracking-[0.14em] text-[var(--color-primary-700)]">MONTHLY PERFORMANCE</p>
                 <p className="mt-0.5 text-sm font-black text-[var(--color-text-primary)]">إجمالي التارجت الشهري</p>
               </div>
             </div>
-            <span className={`shrink-0 rounded-full border px-3 py-1.5 text-[10px] font-extrabold ${onTrack === null ? "border-white bg-white text-[var(--color-text-secondary)]" : onTrack ? "border-emerald-200 bg-emerald-50 text-emerald-700" : "border-orange-200 bg-orange-50 text-[var(--color-primary-700)]"}`}>
+            <span className={`shrink-0 rounded-full border px-3 py-1.5 text-xs font-extrabold ${onTrack === null ? "border-white bg-white text-[var(--color-text-secondary)]" : onTrack ? "border-emerald-200 bg-emerald-50 text-emerald-700" : "border-orange-200 bg-orange-50 text-[var(--color-primary-700)]"}`}>
               <span className={`ml-1.5 inline-block h-1.5 w-1.5 rounded-full ${onTrack === null ? "bg-[var(--color-text-muted)]" : onTrack ? "bg-emerald-500" : "bg-[var(--color-primary-600)]"}`} />
               {onTrack === null ? "Waiting for data" : onTrack ? "On track" : "Behind"}
             </span>
           </div>
           <div className="flex flex-wrap items-end justify-between gap-3 py-4 sm:py-5">
             <div className="min-w-0">
-              <p className="text-[10px] font-bold text-[var(--color-text-secondary)]">نسبة تحقيقك للتارجت</p>
+              <p className="text-xs font-bold text-[var(--color-text-secondary)]">نسبة تحقيقك للتارجت</p>
               <div className="mt-1 flex items-baseline gap-1">
                 <span className="font-mono text-[56px] font-black leading-none tracking-[-0.06em] text-[var(--color-primary-700)] sm:text-[76px]" ref={overallValueRef}>{formatPercent(0)}</span>
                 <span className="text-xl font-black text-[var(--color-primary-600)]">%</span>
               </div>
             </div>
             <div className="inline-flex max-w-full shrink-0 flex-col items-end rounded-xl border border-white bg-white/85 px-3 py-2 shadow-sm">
-              <span className="text-[10px] font-bold text-[var(--color-text-secondary)]">الكوميشن المحقق</span>
+              <span className="text-xs font-bold text-[var(--color-text-secondary)]">الكوميشن المحقق</span>
               <strong className={`truncate font-mono text-base font-black ${data.overall < 80 ? "text-red-600" : "text-emerald-700"}`}>{formatMoney(data.estimatedCommission)} جنيه</strong>
             </div>
           </div>
@@ -238,12 +238,12 @@ export default function HomePage() {
               <span>100% target</span><span>0%</span>
             </div>
           </div>
-          <div className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] font-semibold text-[var(--color-text-secondary)]">
+          <div className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs font-semibold text-[var(--color-text-secondary)]">
             <span className="font-extrabold text-[var(--color-primary-700)]">{statusTextEgy}</span>{statusTextEgy && timeText ? <span className="text-[var(--color-border)]">•</span> : null}<span>{timeText}</span>
           </div>
 
           {data.projection ? (
-            <p className="mt-3 rounded-xl border border-[#f2e4d8] bg-[#fffdfa] px-3 py-2 text-[11px] font-bold text-[var(--color-text-secondary)]">
+            <p className="mt-3 rounded-xl border border-[#f2e4d8] bg-[#fffdfa] px-3 py-2 text-xs font-bold text-[var(--color-text-secondary)]">
               لو كملت بنفس معدل آخر {data.projection.basisDays} أيام شغل، هتخلّص الشهر على تقريبًا{" "}
               <strong className="font-mono text-[var(--color-primary-700)]">{formatPercent(data.projection.overall)}%</strong>
               {" "}وكوميشن حوالي{" "}
@@ -261,7 +261,7 @@ export default function HomePage() {
             </button>
           ) : null}
 
-          {sarcastic ? <p className="mt-3 text-[11px] font-bold text-[var(--color-primary-700)]">{sarcastic}</p> : null}
+          {sarcastic ? <p className="mt-3 text-xs font-bold text-[var(--color-primary-700)]">{sarcastic}</p> : null}
         </div>
       </section>
 
@@ -277,7 +277,7 @@ export default function HomePage() {
           <div>
             <h2 className="mt-0.5 text-sm font-extrabold text-[var(--color-text-primary)]">DAILY</h2>
           </div>
-          <span className="shrink-0 rounded-full bg-[var(--color-primary-50)] px-2.5 py-1 text-[11px] font-extrabold text-[var(--color-primary-700)]">
+          <span className="shrink-0 rounded-full bg-[var(--color-primary-50)] px-2.5 py-1 text-xs font-extrabold text-[var(--color-primary-700)]">
             فاضل {formatQty(data.work.remaining)} يوم عمل
           </span>
         </div>
@@ -306,7 +306,7 @@ export default function HomePage() {
       <section className="tys-home-kpis flex flex-col gap-3 rounded-[20px] border border-white bg-white p-5 shadow-[0_1px_2px_rgba(43,20,0,.04)]">
         <div className="flex items-center justify-between">
           <h2 className="text-base font-black tracking-tight text-[var(--color-text-primary)]">مؤشرات الأداء (KPIs)</h2>
-          <span className="text-[11px] font-bold text-[var(--color-text-secondary)]">{data.kpis.length} مؤشر</span>
+          <span className="text-xs font-bold text-[var(--color-text-secondary)]">{data.kpis.length} مؤشر</span>
         </div>
         <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
           {data.kpis.map((kpi, kpiIndex) => {
@@ -341,11 +341,11 @@ export default function HomePage() {
                       </span>
                       <span className="truncate text-xs font-black text-[var(--color-text-primary)]" dir="ltr">{kpi.nameEn}</span>
                     </span>
-                    <span className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-extrabold ${onTrackKpi ? "bg-emerald-50 text-emerald-700" : "bg-red-50 text-red-600"}`}>
+                    <span className={`shrink-0 rounded-full px-2 py-0.5 text-xs font-extrabold ${onTrackKpi ? "bg-emerald-50 text-emerald-700" : "bg-red-50 text-red-600"}`}>
                       {onTrackKpi ? "On Track" : `ناقص ${formatQty(Math.max(0, Math.ceil(kpi.expectedToDate - kpi.achieved)))}`}
                     </span>
                   </div>
-                  <div className="flex items-center justify-between text-[11px] font-semibold text-[var(--color-text-secondary)]">
+                  <div className="flex items-center justify-between text-xs font-semibold text-[var(--color-text-secondary)]">
                     <span>
                       <strong className="font-mono text-[var(--color-text-primary)]">{formatQty(kpi.achieved)}</strong> / {formatQty(kpi.target)}
                     </span>
@@ -361,11 +361,11 @@ export default function HomePage() {
                     </div>
                   ) : null}
                   {!kpi.overTarget && kpi.remaining > 0 && data.work.remaining > 0 ? (
-                    <p className="text-[11px] font-bold text-[var(--color-primary-700)]">
+                    <p className="text-xs font-bold text-[var(--color-primary-700)]">
                       محتاج {formatQty(Math.ceil(kpi.remaining / data.work.remaining))} يوميًا لباقي الشهر
                     </p>
                   ) : null}
-                  {kpi.overTarget ? <p className="text-[10px] font-bold text-[var(--color-primary-600)]">عدّيت التارجت 🎉</p> : null}
+                  {kpi.overTarget ? <p className="text-xs font-bold text-[var(--color-primary-600)]">عدّيت التارجت 🎉</p> : null}
                 </div>
               </article>
             );
