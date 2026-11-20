@@ -128,7 +128,7 @@ function FirstRunProfile({ onDone }: { onDone: () => void }) {
           setError("اختار الفرع بتاعك");
           return;
         }
-        if (!areaManager.trim()) {
+        if (branch !== OUTSIDE_BRANCHES && !areaManager.trim()) {
           setError("اختار مدير المنطقة بتاعك");
           return;
         }
@@ -160,13 +160,13 @@ function FirstRunProfile({ onDone }: { onDone: () => void }) {
       setError("اختار الفرع بتاعك");
       return;
     }
-    if (!areaManager.trim()) {
+    if (branch !== OUTSIDE_BRANCHES && !areaManager.trim()) {
       setError("اختار مدير المنطقة بتاعك");
       return;
     }
     setPending(true);
     try {
-      await api("/api/profile", { method: "PATCH", body: JSON.stringify({ name: name.trim(), branch: branch.trim(), role, areaManager: areaManager.trim() }) });
+      await api("/api/profile", { method: "PATCH", body: JSON.stringify({ name: name.trim(), branch: branch.trim(), role, areaManager: branch === OUTSIDE_BRANCHES ? "" : areaManager.trim() }) });
       onDone();
     } catch (err) {
       setError(err instanceof Error ? err.message : "تعذر الحفظ");
@@ -194,7 +194,7 @@ function FirstRunProfile({ onDone }: { onDone: () => void }) {
             <p>👤 الاسم: <b>{name.trim()}</b></p>
             <p>🏷️ الوظيفة: <b>{role === "agent" ? "Agent" : role === "team_leader" ? "Team Leader" : role === "manager" ? "Manager" : "Area Manager"}</b></p>
             {role !== "area_manager" ? <p>🏢 الفرع: <b>{branch}</b></p> : null}
-            {role !== "area_manager" ? <p>🗺️ مدير المنطقة: <b>{areaManager}</b></p> : null}
+            {role !== "area_manager" && branch !== OUTSIDE_BRANCHES ? <p>🗺️ مدير المنطقة: <b>{areaManager}</b></p> : null}
             <p className="pt-2 text-xs leading-5 text-[#88796e]">بعد الموافقة مينفعش تغيّر الاسم أو الفرع أو الوظيفة.</p>
           </div>
         ) : (
@@ -235,7 +235,7 @@ function FirstRunProfile({ onDone }: { onDone: () => void }) {
           </select>
         </label>
         ) : null}
-        {role !== "area_manager" ? (
+        {role !== "area_manager" && branch !== OUTSIDE_BRANCHES ? (
         <label className="mb-4 block text-sm font-bold text-[#6e5543]">
           مدير المنطقة (الأريا مانجر)
           <select value={areaManager} onChange={(e) => setAreaManager(e.target.value)} className="mt-1 w-full rounded-2xl border border-[#f2e4d8] bg-white px-4 py-3 outline-none focus:border-[#bd4b0a]">
@@ -410,7 +410,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   useEffect(() => {
     let cancelled = false;
     const profile = readProfile();
-    if (!profile.name.trim() || (!profile.areaManager && profile.role !== "area_manager") || (profile.role !== "agent" && profile.role !== "team_leader" && profile.role !== "manager" && profile.role !== "area_manager")) {
+    if (!profile.name.trim() || (!profile.areaManager && profile.role !== "area_manager" && profile.branch !== OUTSIDE_BRANCHES) || (profile.role !== "agent" && profile.role !== "team_leader" && profile.role !== "manager" && profile.role !== "area_manager")) {
       queueMicrotask(() => {
         if (!cancelled) setStatus("profile");
       });
