@@ -127,10 +127,11 @@ function SearchableSelect({
 }) {
   const [query, setQuery] = useState(value);
   const [open, setOpen] = useState(false);
+  const [editing, setEditing] = useState(false);
 
   useEffect(() => {
-    setQuery(value);
-  }, [value]);
+    if (!editing) setQuery(value);
+  }, [value, editing]);
 
   const normalizedQuery = normalizeSearchText(query);
   const matches = options.filter((item) => normalizeSearchText(item).includes(normalizedQuery)).slice(0, 8);
@@ -144,6 +145,7 @@ function SearchableSelect({
         onFocus={() => setOpen(true)}
         onChange={(event) => {
           setQuery(event.target.value);
+          setEditing(true);
           setOpen(true);
           if (value) onChange("");
         }}
@@ -153,6 +155,7 @@ function SearchableSelect({
             event.preventDefault();
             onChange(matches[0]);
             setQuery(matches[0]);
+            setEditing(false);
             setOpen(false);
           }
         }}
@@ -172,6 +175,7 @@ function SearchableSelect({
               onClick={() => {
                 onChange(item);
                 setQuery(item);
+                setEditing(false);
                 setOpen(false);
               }}
               className={\`block w-full rounded-xl px-3 py-2.5 text-right text-sm font-bold transition hover:bg-[#fff1e5] hover:text-[#bd4b0a] \${value === item ? "bg-[#fff1e5] text-[#bd4b0a]" : "text-[#514238]"}\`}
