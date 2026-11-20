@@ -6,6 +6,7 @@ type ThemeMode = "light" | "dark";
 
 function applyTheme(mode: ThemeMode) {
   document.documentElement.classList.toggle("dark", mode === "dark");
+  document.documentElement.classList.toggle("light", mode === "light");
 }
 
 export function ThemeToggle() {
