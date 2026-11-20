@@ -166,6 +166,11 @@ function loadState(): State {
 function saveState(state: State): boolean {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    // Notify the app shell after every successful local mutation so the latest
+    // complete report is queued for cloud sync.
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new Event("tys-data-changed"));
+    }
     return true;
   } catch {
     // لو المتصفح منعنا من الحفظ، نبلغ المستخدم عشان ما يفتكرش إن الإنجاز اتحفظ.

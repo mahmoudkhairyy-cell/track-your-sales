@@ -373,7 +373,13 @@ export function AppShell({ children }: { children: ReactNode }) {
     return () => window.removeEventListener("tys-settings-saved", bump);
   }, []);
 
-  // المزامنة في الخلفية بعد تغيّر البيانات أو رجوع الإنترنت، من غير طلبات عند فتح التطبيق.
+  // ارفع أحدث لقطة محفوظة عند فتح مساحة العمل؛ ده يضمن مزامنة البيانات القديمة
+  // حتى لو اتسجلت قبل تفعيل المزامنة أو قبل تثبيت مستمع أحداث الحفظ.
+  useEffect(() => {
+    void pushReport();
+  }, []);
+
+  // المزامنة في الخلفية بعد تغيّر البيانات أو رجوع الإنترنت.
   useEffect(() => {
     let timer: number | undefined;
     const schedulePush = () => {
