@@ -77,8 +77,8 @@ export function applyBackupToState(
     options.beforeReplace?.(JSON.stringify(state));
   }
 
-  state.profile = { ...state.profile, name: backup.profile.name, branch: backup.profile.branch };
   if (mode === "replace") {
+    state.profile = { ...state.profile, name: backup.profile.name, branch: backup.profile.branch };
     state.entries = [];
     state.articles = [];
     state.months = {};
