@@ -209,9 +209,15 @@ export function Modal({
 }
 
 
-export function Skeleton({ className = "", ...props }: HTMLAttributes<HTMLDivElement>) {
+export function Skeleton({
+  className = "",
+  "aria-label": ariaLabel = "جاري التحميل...",
+  ...props
+}: React.HTMLAttributes<HTMLDivElement> & { "aria-label"?: string }) {
   return (
     <div
+      role="status"
+      aria-label={ariaLabel}
       className={`skeleton-shine rounded-xl bg-skeleton dark:bg-skeleton-dark ${className}`}
       {...props}
     />
