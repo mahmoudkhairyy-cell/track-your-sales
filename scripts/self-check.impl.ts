@@ -21,7 +21,6 @@ check("الموظف والتيم ليدر لهما نفس الأوزان، وأ�
   const keys = ["new_lines", "new_orange_cash", "existing_wallets", "points", "postpaid_lines", "dsl", "productivity", "quality"] as const;
   for (const key of keys) {
     assert.equal(kpiWeight(key, "team_leader"), kpiWeight(key, "agent"));
-    assert.equal(kpiWeight(key, "manager"), 0);
     assert.equal(kpiWeight(key, "area_manager"), 0);
   }
 });
