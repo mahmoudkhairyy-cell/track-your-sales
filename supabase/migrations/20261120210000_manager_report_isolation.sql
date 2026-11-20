@@ -74,6 +74,7 @@ as $function$
 declare
   manager_name text;
   existing_manager text;
+  affected_rows integer;
 begin
   if p_branch_id is null or length(p_branch_id) < 8 or length(p_branch_id) > 80 then
     raise exception 'invalid branch id';
@@ -116,6 +117,12 @@ begin
     set employee_name = excluded.employee_name,
         branch_name = excluded.branch_name,
         payload = excluded.payload,
-        updated_at = now();
+        updated_at = now()
+    where nullif(btrim(public.branch_reports.payload->>'areaManager'), '') = manager_name;
+
+  get diagnostics affected_rows = row_count;
+  if affected_rows = 0 then
+    raise exception 'manager assignment mismatch';
+  end if;
 end
 $function$;
