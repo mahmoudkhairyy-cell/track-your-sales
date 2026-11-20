@@ -88,6 +88,8 @@ async function pushReportOnce(): Promise<boolean> {
   }
 
   const profile = readProfile();
+  // مدير الفرع لا يرفع تقرير مبيعات شخصي؛ بياناته تدخل من لوحة الفرع المستقلة.
+  if (profile.role === "manager") return false;
   // الموظف "خارج الفروع" مش بيظهر في لوحة المدير، فمايبعتش ملخصه.
   if (profile.branch === OUTSIDE_BRANCHES) return false;
   if (!profile.areaManager || !AREA_MANAGERS.includes(profile.areaManager as (typeof AREA_MANAGERS)[number])) {
@@ -115,6 +117,7 @@ async function pushReportOnce(): Promise<boolean> {
         role: profile.role,
         areaManager: profile.areaManager,
         monthLabel: data.monthLabel,
+        yearMonth: month,
         overall: data.overall,
         estimatedCommission: data.estimatedCommission,
         fullCommission: data.fullCommission,

@@ -5,8 +5,9 @@ import {
   applyCompanyRules,
   estimatedCommission,
   kpiContribution,
+  managerKpiContribution,
 } from "../src/lib/calculations";
-import { kpiWeight } from "../src/lib/constants";
+import { kpiWeight, managerKpiWeight, MANAGER_FIXED_SALARY, MANAGER_FULL_COMMISSION } from "../src/lib/constants";
 import { parseBackup, planEntryRestore, type BackupEntry } from "../src/lib/backup";
 import { applyBackupToState, checkRestoreRequest, type RestoreState } from "../src/lib/restore";
 import { validateQuantity } from "../src/lib/quantity";
@@ -20,9 +21,25 @@ check("الموظف والتيم ليدر لهما نفس الأوزان، وأ�
   const keys = ["new_lines", "new_orange_cash", "existing_wallets", "points", "postpaid_lines", "dsl", "productivity", "quality"] as const;
   for (const key of keys) {
     assert.equal(kpiWeight(key, "team_leader"), kpiWeight(key, "agent"));
-    assert.equal(kpiWeight(key, "manager"), 0);
     assert.equal(kpiWeight(key, "area_manager"), 0);
   }
+});
+
+check("أوزان مدير الفرع مستقلة وإجماليها 100% مع مرتب وعمولة 10 آلاف", () => {
+  const keys = ["new_lines", "new_orange_cash", "existing_wallets", "points", "postpaid_lines", "dsl", "productivity", "quality"] as const;
+  assert.equal(keys.reduce((sum, key) => sum + managerKpiWeight(key), 0), 100);
+  assert.deepEqual(keys.map((key) => managerKpiWeight(key)), [30, 0, 10, 10, 10, 10, 15, 15]);
+  assert.equal(MANAGER_FIXED_SALARY, 10_000);
+  assert.equal(MANAGER_FULL_COMMISSION, 10_000);
+});
+
+check("بوابة مدير الفرع: أقل من 90% صفر، و90% يبدأ الاحتساب بلا سقف فردي", () => {
+  assert.equal(managerKpiContribution("existing_wallets", 89, 100), 0);
+  assert.equal(managerKpiContribution("existing_wallets", 90, 100), 9);
+  assert.equal(managerKpiContribution("existing_wallets", 100, 100), 10);
+  assert.equal(managerKpiContribution("existing_wallets", 150, 100), 15);
+  assert.equal(managerKpiContribution("productivity", 150, 100), 22.5);
+  assert.equal(managerKpiContribution("new_orange_cash", 100, 100), 0);
 });
 
 check("نسبة الإنجاز والتارجت الصفري", () => {

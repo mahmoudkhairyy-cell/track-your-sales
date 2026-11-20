@@ -1,4 +1,4 @@
-import { KPI_CATALOG, type KpiKey } from "@/lib/constants";
+import { KPI_CATALOG, type KpiKey, managerKpiWeight } from "@/lib/constants";
 import {
   elapsedWorkingDates,
   remainingWorkingDates,
@@ -28,6 +28,14 @@ export function kpiContribution(achieved: number, target: number, weight: number
   if (weight === 0) return 0;
   if (target <= 0) return 0;
   return (achieved / target) * weight;
+}
+
+/** حصة مدير الفرع من مؤشر فريقه: أقل من 90% = صفر، ومن 90% تُحتسب النسبة الفعلية بلا سقف للمؤشر. */
+export function managerKpiContribution(key: KpiKey, achieved: number, target: number): number {
+  const weight = managerKpiWeight(key);
+  if (weight <= 0 || target <= 0) return 0;
+  const percent = achievementPercent(achieved, target);
+  return percent < KPI_MIN_PERCENT ? 0 : kpiContribution(achieved, target, weight);
 }
 
 export function estimatedCommission(fullCommission: number, overallPercent: number): number {
