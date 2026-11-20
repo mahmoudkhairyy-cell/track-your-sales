@@ -520,12 +520,12 @@ export default function MorePage() {
       <section className="rounded-[24px] border border-red-200 bg-white p-5">
         <h2 className="text-lg font-black tracking-tight">🚪 تسجيل خروج (نقل لفرع تاني)</h2>
         <p className="mt-1 text-xs leading-5 text-[var(--color-text-secondary)]">
-          ده بيمسح بيانات الجهاز كلها (الإنجازات والتارجت) وبيرجع لشاشة التسجيل. لو عايز تحتفظ بالبيانات، اطلع نسخة احتياطية الأول.
+          ده بيمسح بيانات الإنجازات والتارجت المحفوظة على الجهاز، وبيفصل الفرع الحالي، وبيرجع لشاشة التسجيل. إعدادات تانية ممكن تفضل محفوظة. لو عايز تحتفظ ببياناتك، اطلع نسخة احتياطية الأول.
         </p>
         <button
           type="button"
           onClick={() => {
-            if (!window.confirm("متأكد؟ هيتمسح كل بيانات الجهاز. اطلعت نسخة احتياطية؟")) return;
+            if (!window.confirm("متأكد؟ هيتمسح سجل الإنجازات والتارجت المحفوظ على الجهاز، وهيتم فصل الفرع الحالي. اطلعت نسخة احتياطية؟")) return;
             try {
               localStorage.removeItem("trackYourSales.local.v1");
               localStorage.removeItem("trackYourSales.local.v1.beforeRestore");
