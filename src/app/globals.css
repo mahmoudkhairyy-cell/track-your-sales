@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
 
 /* Track Your Sales — Design System v1 */
 
@@ -438,4 +439,92 @@ main tbody tr:hover { background: var(--color-brand-50); }
     animation-iteration-count: 1 !important;
     transition-duration: .01ms !important;
   }
+}
+
+/* المرحلة 3 — Dark Mode */
+@media (prefers-color-scheme: dark) {
+  :root:not(.light) {
+    color-scheme: dark;
+  }
+
+  :root:not(.light) body {
+    background: var(--color-bg-dark);
+    color: var(--color-ink-dark);
+  }
+
+  :root:not(.light) main {
+    color: var(--color-ink-dark);
+  }
+
+  :root:not(.light) main article,
+  :root:not(.light) main section {
+    background: var(--color-surface-dark);
+    border-color: var(--color-line-dark);
+  }
+
+  :root:not(.light) main input:not([type="checkbox"]):not([type="radio"]),
+  :root:not(.light) main select,
+  :root:not(.light) main textarea {
+    background: var(--color-surface-dark);
+    border-color: var(--color-line-strong-dark);
+    color: var(--color-ink-dark);
+  }
+
+  :root:not(.light) main table {
+    background: var(--color-surface-dark);
+    border-color: var(--color-line-dark);
+  }
+
+  :root:not(.light) main tbody tr:nth-child(even) {
+    background: var(--color-surface-2-dark);
+  }
+
+  :root:not(.light) main tbody tr:nth-child(odd) {
+    background: var(--color-surface-dark);
+  }
+
+  :root:not(.light) main tbody tr:hover {
+    background: var(--color-surface-2-dark);
+  }
+}
+
+.dark {
+  color-scheme: dark;
+}
+
+.dark body {
+  background: var(--color-bg-dark);
+  color: var(--color-ink-dark);
+}
+
+.dark main {
+  color: var(--color-ink-dark);
+}
+
+.dark main article,
+.dark main section {
+  background: var(--color-surface-dark);
+  border-color: var(--color-line-dark);
+}
+
+.dark main input:not([type="checkbox"]):not([type="radio"]),
+.dark main select,
+.dark main textarea {
+  background: var(--color-surface-dark);
+  border-color: var(--color-line-strong-dark);
+  color: var(--color-ink-dark);
+}
+
+.dark main table {
+  background: var(--color-surface-dark);
+  border-color: var(--color-line-dark);
+}
+
+.dark main tbody tr:nth-child(even),
+.dark main tbody tr:hover {
+  background: var(--color-surface-2-dark);
+}
+
+.dark main tbody tr:nth-child(odd) {
+  background: var(--color-surface-dark);
 }

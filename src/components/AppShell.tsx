@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { createContext, useContext, type ReactNode } from "react";
+import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import { APP_DISCLAIMER, APP_NAME, BRAND_BY } from "@/lib/constants";
 import { cairoYearMonth, isValidYearMonth, monthLabelAr, shiftYearMonth } from "@/lib/dates";
 import { BookIcon, ChevronIcon, HomeIcon, LogoMark, MoreIcon, PlusIcon, TargetIcon } from "@/components/icons";
@@ -88,6 +88,21 @@ export function AppShell({ user, children }: { user: SafeUser; children: ReactNo
   const params = useSearchParams();
   const raw = params.get("month");
   const month = raw && isValidYearMonth(raw) ? raw : cairoYearMonth();
+  const [isDark, setIsDark] = useState(false);
+
+  useEffect(() => {
+    const media = window.matchMedia("(prefers-color-scheme: dark)");
+    setIsDark(media.matches);
+
+    const listener = (e: MediaQueryListEvent) => setIsDark(e.matches);
+    media.addEventListener("change", listener);
+    return () => media.removeEventListener("change", listener);
+  }, []);
+
+  useEffect(() => {
+    document.documentElement.classList.toggle("dark", isDark);
+    document.documentElement.classList.toggle("light", !isDark);
+  }, [isDark]);
 
   return (
     <ToastProvider>
@@ -129,7 +144,16 @@ export function AppShell({ user, children }: { user: SafeUser; children: ReactNo
                       <p className="mt-1 truncate text-[10px] font-semibold text-muted-by" dir="ltr">{BRAND_BY}</p>
                     </div>
                   </div>
-                  <div className="relative shrink-0">
+                  <div className="relative flex shrink-0 items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setIsDark(!isDark)}
+                      className="flex items-center gap-2 rounded-lg border border-line px-3 py-2 text-sm transition-colors hover:bg-brand-50 dark:hover:bg-surface-2-dark"
+                      aria-label={isDark ? "التبديل للوضع الفاتح" : "التبديل للوضع الداكن"}
+                    >
+                      {isDark ? "☀️" : "🌙"}
+                      <span>{isDark ? "الوضع الفاتح" : "الوضع الداكن"}</span>
+                    </button>
                     <MonthSwitcher />
                   </div>
                 </div>
