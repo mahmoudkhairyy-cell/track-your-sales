@@ -4,7 +4,7 @@ import {
   remainingWorkingDates,
   workingDatesInMonth,
 } from "@/lib/dates";
-import type { WorkingDays } from "@/db/schema";
+import type { WorkingDays } from "@/lib/types";
 
 export type KpiSettingInput = {
   kpiKey: KpiKey;

@@ -1,4 +1,4 @@
-import type { WorkingDays } from "@/db/schema";
+import type { WorkingDays } from "@/lib/types";
 
 export const APP_NAME = "Track Your Sales";
 export const BRAND_BY = "by Mahmoud Khairy";

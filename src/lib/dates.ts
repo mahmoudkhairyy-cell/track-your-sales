@@ -1,5 +1,5 @@
 import { ARABIC_MONTHS, CAIRO_TZ, YEAR_MONTH_RE, type WeekKey } from "@/lib/constants";
-import type { WorkingDays } from "@/db/schema";
+import type { WorkingDays } from "@/lib/types";
 
 export function cairoISODate(date = new Date()): string {
   const parts = new Intl.DateTimeFormat("en-US", {

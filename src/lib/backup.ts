@@ -1,7 +1,7 @@
 import { DEFAULT_WORKING_DAYS, ISO_DATE_RE, KPI_KEYS, SCHEMA_VERSION, YEAR_MONTH_RE } from "@/lib/constants";
 import type { KpiKey } from "@/lib/constants";
 import { validateQuantity } from "@/lib/quantity";
-import type { WorkingDays } from "@/db/schema";
+import type { WorkingDays } from "@/lib/types";
 
 export type BackupKpi = {
   kpiKey: KpiKey;

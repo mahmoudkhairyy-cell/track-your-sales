@@ -7,7 +7,7 @@ import { APP_DISCLAIMER, APP_NAME, BRAND_BY } from "@/lib/constants";
 import { cairoYearMonth, isValidYearMonth, monthLabelAr, shiftYearMonth } from "@/lib/dates";
 import { BookIcon, ChevronIcon, HomeIcon, LogoMark, MoreIcon, PlusIcon, TargetIcon } from "@/components/icons";
 import { ToastProvider } from "@/components/ui";
-import type { SafeUser } from "@/lib/auth";
+import { readProfile } from "@/lib/local-api";
 
 const MonthContext = createContext(cairoYearMonth());
 
@@ -83,7 +83,8 @@ function NavLinks({ pathname, month }: { pathname: string; month: string }) {
   );
 }
 
-export function AppShell({ user, children }: { user: SafeUser; children: ReactNode }) {
+export function AppShell({ children }: { children: ReactNode }) {
+  const [user, setUser] = useState({ name: "موظف المبيعات", branch: "الفرع" });
   const pathname = usePathname();
   const params = useSearchParams();
   const raw = params.get("month");
@@ -103,6 +104,16 @@ export function AppShell({ user, children }: { user: SafeUser; children: ReactNo
     document.documentElement.classList.toggle("dark", isDark);
     document.documentElement.classList.toggle("light", !isDark);
   }, [isDark]);
+
+  useEffect(() => {
+    const refreshProfile = () => {
+      const profile = readProfile();
+      setUser({ name: profile.name || "موظف المبيعات", branch: profile.branch || "الفرع" });
+    };
+    refreshProfile();
+    window.addEventListener("tys-profile-updated", refreshProfile);
+    return () => window.removeEventListener("tys-profile-updated", refreshProfile);
+  }, []);
 
   return (
     <ToastProvider>
