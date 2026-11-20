@@ -306,7 +306,8 @@ export default function ManagerPage() {
     if (newPw !== newPw2) return setPwMsg("الباسورد الجديد مش متطابق.");
     try {
       await managerApi("change_password", { password: oldPw, newPassword: newPw });
-      localStorage.setItem("tys.mgrPass", newPw);
+      try { sessionStorage.setItem("tys.mgrPass", newPw); } catch { /* الجلسة الحالية تفضل شغالة حتى لو التخزين مقفول. */ }
+      try { localStorage.removeItem("tys.mgrPass"); } catch { /* إزالة النسخة القديمة اختيارية. */ }
       setPassword(newPw);
       setOldPw("");
       setNewPw("");
@@ -354,16 +355,9 @@ export default function ManagerPage() {
     setError("");
     try {
       const data = await managerApi<ReportRow[]>("reports", { password: pw });
-      // الباسورد بيفضل في الجلسة عشان الريفريش ما يطلبوش تاني.
-      try {
-        localStorage.setItem("tys.mgrPass", pw);
-      } catch {
-        try {
-          sessionStorage.setItem("tys.mgrPass", pw);
-        } catch {
-          // التخزين غير متاح في المتصفح.
-        }
-      }
+      // احتفظ بكلمة المرور في الجلسة الحالية فقط، ولا تتركها في تخزين دائم.
+      try { sessionStorage.setItem("tys.mgrPass", pw); } catch { /* التخزين غير متاح في المتصفح. */ }
+      try { localStorage.removeItem("tys.mgrPass"); } catch { /* إزالة النسخة القديمة اختيارية. */ }
       setRows(data ?? []);
       setLastLoaded(new Date());
       managerApi<string>("manager_name", { password: pw }).then((name) => setManagerName(name ?? "")).catch(() => setManagerName(""));
@@ -392,11 +386,14 @@ export default function ManagerPage() {
     let cancelled = false;
     let saved: string | null = null;
     try {
-      saved = localStorage.getItem("tys.mgrPass");
-      // ترحيل كلمة السر المحفوظة من الجلسات القديمة مرة واحدة.
+      saved = sessionStorage.getItem("tys.mgrPass");
+      // ترحيل النسخ القديمة من التخزين الدائم إلى الجلسة الحالية ثم حذفها.
       if (!saved) {
-        saved = sessionStorage.getItem("tys.mgrPass");
-        if (saved) localStorage.setItem("tys.mgrPass", saved);
+        saved = localStorage.getItem("tys.mgrPass");
+        if (saved) {
+          try { sessionStorage.setItem("tys.mgrPass", saved); } catch { /* يظل الدخول متاحًا في الذاكرة الحالية. */ }
+          localStorage.removeItem("tys.mgrPass");
+        }
       }
     } catch {
       saved = null;
@@ -427,7 +424,7 @@ export default function ManagerPage() {
     setPending(true);
     setError("");
     try {
-      const pw = password || localStorage.getItem("tys.mgrPass") || "";
+      const pw = password || sessionStorage.getItem("tys.mgrPass") || "";
       await managerApi("delete", { password: pw, branchId: row.branch_id });
       setRows((cur) => (cur ?? []).filter((r) => r.branch_id !== row.branch_id));
       setOpenId(null);
