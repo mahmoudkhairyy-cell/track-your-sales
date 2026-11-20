@@ -7,6 +7,7 @@ import { createContext, useContext, useEffect, useState, type FormEvent, type Re
 import { readProfile } from "@/lib/local-api";
 import { pushReport, readSyncStatus } from "@/lib/sync";
 import { api } from "@/lib/client";
+import { managerApi } from "@/lib/cloud";
 import { APP_DISCLAIMER, APP_NAME, AREA_MANAGERS, BRAND_BY, BRANCHES, OUTSIDE_BRANCHES } from "@/lib/constants";
 import { cairoYearMonth, isValidYearMonth, monthLabelAr, shiftYearMonth } from "@/lib/dates";
 import { BookIcon, ChevronIcon, HomeIcon, MoreIcon, PlusIcon, TargetIcon } from "@/components/icons";
@@ -106,6 +107,7 @@ function FirstRunProfile({ onDone }: { onDone: () => void }) {
   const [name, setName] = useState("");
   const [branch, setBranch] = useState("");
   const [areaManager, setAreaManager] = useState("");
+  const [managerPassword, setManagerPassword] = useState("");
   const [error, setError] = useState("");
   const [pending, setPending] = useState(false);
   const [role, setRole] = useState<"agent" | "team_leader" | "manager" | "area_manager" | "">("");
@@ -117,6 +119,10 @@ function FirstRunProfile({ onDone }: { onDone: () => void }) {
     if (!review) {
       if (!role) {
         setError("اختار إنت موظف ولا مدير");
+        return;
+      }
+      if (role === "area_manager" && (!name.trim() || !managerPassword)) {
+        setError("اختار اسمك واكتب كلمة السر");
         return;
       }
       if (role !== "area_manager" && role !== "manager") {
@@ -142,12 +148,21 @@ function FirstRunProfile({ onDone }: { onDone: () => void }) {
       return;
     }
     if (role === "area_manager") {
+      if (!name.trim() || !managerPassword) {
+        setError("اختار اسمك واكتب كلمة السر");
+        return;
+      }
       setPending(true);
       try {
-        await api("/api/profile", { method: "PATCH", body: JSON.stringify({ name: name.trim() || "Area Manager", branch: "", role, areaManager: "" }) });
+        const authenticatedName = await managerApi<string>("manager_name", { password: managerPassword });
+        if (!authenticatedName || authenticatedName.trim() !== name.trim()) {
+          throw new Error("اسم مدير المنطقة أو كلمة السر غير صحيحة");
+        }
+        await api("/api/profile", { method: "PATCH", body: JSON.stringify({ name: name.trim(), branch: "", role, areaManager: "" }) });
+        try { sessionStorage.setItem("tys.mgrPass", managerPassword); } catch { /* الدخول اليدوي يظل متاحًا لو التخزين غير متاح. */ }
         window.location.assign("/track-your-sales/manager/");
       } catch (err) {
-        setError(err instanceof Error ? err.message : "تعذر الحفظ");
+        setError(err instanceof Error ? err.message : "تعذر التحقق من بيانات مدير المنطقة");
         setPending(false);
       }
       return;
@@ -196,6 +211,7 @@ function FirstRunProfile({ onDone }: { onDone: () => void }) {
           <div className="mb-4 space-y-2 rounded-2xl border border-[#f2e4d8] bg-[#fffdfb] p-4 text-sm text-[#514238]">
             <p className="font-black text-[#241f1b]">راجع بياناتك قبل ما تكمّل:</p>
             <p>👤 الاسم: <b>{name.trim()}</b></p>
+            {role === "area_manager" ? <p>🔐 كلمة السر: <b>••••••••</b></p> : null}
             <p>🏷️ الوظيفة: <b>{role === "agent" ? "Agent" : role === "team_leader" ? "Team Leader" : role === "manager" ? "Manager" : "Area Manager"}</b></p>
             {role !== "area_manager" ? <p>🏢 الفرع: <b>{branch}</b></p> : null}
             {role !== "area_manager" && role !== "manager" && branch !== OUTSIDE_BRANCHES ? <p>🗺️ مدير المنطقة: <b>{areaManager}</b></p> : null}
@@ -203,10 +219,26 @@ function FirstRunProfile({ onDone }: { onDone: () => void }) {
           </div>
         ) : (
           <>
-        <label className="mb-3 block text-sm font-bold text-[#514238]">
-          الاسم
-          <input value={name} onChange={(e) => setName(e.target.value)} className="mt-1 w-full rounded-2xl border border-[#f2e4d8] bg-[#fffdfb] px-4 py-3 outline-none transition focus:border-[#e96812] focus:ring-2 focus:ring-[#e96812]/10" maxLength={80} />
-        </label>
+        {role === "area_manager" ? (
+          <label className="mb-3 block text-sm font-bold text-[#514238]">
+            اسم مدير المنطقة
+            <select value={name} onChange={(e) => setName(e.target.value)} className="mt-1 w-full rounded-2xl border border-[#f2e4d8] bg-[#fffdfb] px-4 py-3 outline-none transition focus:border-[#e96812] focus:ring-2 focus:ring-[#e96812]/10">
+              <option value="">— اختار اسمك —</option>
+              {AREA_MANAGERS.map((item) => <option key={item} value={item}>{item}</option>)}
+            </select>
+          </label>
+        ) : (
+          <label className="mb-3 block text-sm font-bold text-[#514238]">
+            الاسم
+            <input value={name} onChange={(e) => setName(e.target.value)} className="mt-1 w-full rounded-2xl border border-[#f2e4d8] bg-[#fffdfb] px-4 py-3 outline-none transition focus:border-[#e96812] focus:ring-2 focus:ring-[#e96812]/10" maxLength={80} />
+          </label>
+        )}
+        {role === "area_manager" ? (
+          <label className="mb-4 block text-sm font-bold text-[#514238]">
+            كلمة السر
+            <input type="password" autoComplete="current-password" value={managerPassword} onChange={(e) => setManagerPassword(e.target.value)} className="mt-1 w-full rounded-2xl border border-[#f2e4d8] bg-[#fffdfb] px-4 py-3 outline-none transition focus:border-[#e96812] focus:ring-2 focus:ring-[#e96812]/10" placeholder="اكتب كلمة السر الخاصة بك" />
+          </label>
+        ) : null}
         <div className="mb-4">
           <p className="mb-2 text-sm font-bold text-[#6e5543]">إنت إيه؟</p>
           <div className="grid grid-cols-2 gap-2">
