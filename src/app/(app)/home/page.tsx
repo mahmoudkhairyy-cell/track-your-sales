@@ -231,7 +231,7 @@ export default function HomePage() {
           </div>
           <div>
             <Rope pct={data.overall} label="نسبة تحقيق التارجت" />
-            <div className="tys-bar relative h-2.5 overflow-hidden rounded-full bg-[#f2e4d8]">
+            <div className="tys-bar relative h-2.5 overflow-hidden rounded-full bg-orange-100">
               <div ref={overallBarRef} className="h-full rounded-full bg-gradient-to-l from-[var(--color-primary-500)] via-[var(--color-primary-600)] to-[var(--color-primary-700)] shadow-[0_1px_5px_rgba(189,75,10,0.22)]" style={{ width: "0%" }} />
             </div>
             <div className="mt-1 flex justify-between text-[9px] font-bold text-[var(--color-text-secondary)]" dir="ltr">
@@ -243,7 +243,7 @@ export default function HomePage() {
           </div>
 
           {data.projection ? (
-            <p className="mt-3 rounded-xl border border-[#f2e4d8] bg-[#fffdfa] px-3 py-2 text-xs font-bold text-[var(--color-text-secondary)]">
+            <p className="mt-3 rounded-xl border border-orange-200 bg-orange-50/50 px-3 py-2 text-xs font-bold text-[var(--color-text-secondary)]">
               لو كملت بنفس معدل آخر {data.projection.basisDays} أيام شغل، هتخلّص الشهر على تقريبًا{" "}
               <strong className="font-mono text-[var(--color-primary-700)]">{formatPercent(data.projection.overall)}%</strong>
               {" "}وكوميشن حوالي{" "}
@@ -255,7 +255,7 @@ export default function HomePage() {
             <button
               type="button"
               onClick={() => void shareAchievement({ monthLabel: data.monthLabel, percent: Math.round(data.overall), commission: formatMoney(data.estimatedCommission) })}
-              className="mt-3 min-h-10 rounded-xl border border-[#f2e4d8] bg-white px-4 text-xs font-extrabold text-[var(--color-primary-700)]"
+              className="mt-3 min-h-10 rounded-xl bg-orange-600 px-4 text-xs font-extrabold text-white transition-colors hover:bg-orange-700"
             >
               📤 شارك إنجازك
             </button>
@@ -266,7 +266,7 @@ export default function HomePage() {
       </section>
 
       <div className="fixed inset-x-4 bottom-[calc(76px+env(safe-area-inset-bottom))] z-30 flex flex-col gap-2 sm:static sm:flex-row">
-        <Link href={`/log?month=${month}`} className="inline-flex min-h-10 w-auto flex-none self-start items-center justify-center gap-1.5 rounded-full border border-white/80 bg-[rgba(255,255,255,0.58)] px-4 py-2 text-sm font-extrabold text-[#a9430b] shadow-[0_4px_14px_rgba(126,65,24,0.10),inset_0_1px_0_rgba(255,255,255,0.9)] backdrop-blur-xl transition hover:bg-[rgba(255,255,255,0.78)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#bd4b0a]">
+        <Link href={`/log?month=${month}`} className="inline-flex min-h-10 w-auto flex-none self-start items-center justify-center gap-1.5 rounded-full bg-orange-600 px-4 py-2 text-sm font-extrabold text-white shadow-sm transition-colors hover:bg-orange-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-700">
           <span aria-hidden="true" className="text-base leading-none">＋</span> تسجيل إنجاز
         </Link>
       </div>
@@ -287,10 +287,10 @@ export default function HomePage() {
             return (
               <div
                 key={k.kpiKey}
-                className="flex min-h-[46px] min-w-0 items-center justify-between gap-2 rounded-lg border border-white bg-white px-2.5 py-1.5 text-[#873b12] shadow-[0_1px_2px_rgba(43,20,0,.04)]"
+                className="flex min-h-[46px] min-w-0 items-center justify-between gap-2 rounded-lg border border-white bg-white px-2.5 py-1.5 text-orange-800 shadow-[0_1px_2px_rgba(43,20,0,.04)]"
               >
-                <span className="min-w-0 truncate text-[9px] font-bold tracking-wide text-[#8b421d]" dir="ltr">{k.nameEn}</span>
-                <strong className="shrink-0 rounded-md border border-white bg-[#fffaf5] px-2 py-1 text-base font-black leading-none tabular-nums text-[#7c320d]">
+                <span className="min-w-0 truncate text-[9px] font-bold tracking-wide text-orange-800" dir="ltr">{k.nameEn}</span>
+                <strong className="shrink-0 rounded-md border border-white bg-orange-50 px-2 py-1 text-base font-black leading-none tabular-nums text-orange-800">
                   {formatQty(dailyRequired)}
                 </strong>
               </div>
@@ -314,7 +314,7 @@ export default function HomePage() {
             const ringLen = 2 * Math.PI * 18;
             const pct = Math.min(100, Math.max(0, kpi.percent));
             return (
-              <article key={kpi.kpiKey} style={{ animationDelay: `${kpiIndex * 70}ms`, boxShadow: onTrackKpi ? "0 0 0 1px rgba(22,163,74,.06), 0 0 8px rgba(22,163,74,.07), 0 5px 14px rgba(100,55,25,.13)" : "0 0 0 1px rgba(220,38,38,.06), 0 0 8px rgba(220,38,38,.07), 0 5px 14px rgba(100,55,25,.13)" }} className={`tys-rise tys-home-kpi flex min-w-0 items-center gap-2.5 rounded-[20px] border p-3 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg sm:gap-3 sm:p-3 border-white bg-[#fffdfa]`}>
+              <article key={kpi.kpiKey} style={{ animationDelay: `${kpiIndex * 70}ms`, boxShadow: onTrackKpi ? "0 0 0 1px rgba(22,163,74,.06), 0 0 8px rgba(22,163,74,.07), 0 5px 14px rgba(100,55,25,.13)" : "0 0 0 1px rgba(220,38,38,.06), 0 0 8px rgba(220,38,38,.07), 0 5px 14px rgba(100,55,25,.13)" }} className={`tys-rise tys-home-kpi flex min-w-0 items-center gap-2.5 rounded-[20px] border p-3 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg sm:gap-3 sm:p-3 border-white bg-orange-50/50`}>
                 <div className="tys-ring relative h-12 w-12 shrink-0 sm:h-14 sm:w-14">
                   <svg viewBox="0 0 44 44" className="h-full w-full -rotate-90">
                     <circle cx="22" cy="22" r="18" fill="none" stroke="var(--color-border)" strokeWidth="5" />
@@ -352,7 +352,7 @@ export default function HomePage() {
                     <span>المتبقي <strong className="font-mono text-[var(--color-text-primary)]">{formatQty(kpi.remaining)}</strong></span>
                   </div>
                   <Rope pct={pct} label={kpi.nameEn} />
-                  <div className="tys-bar h-1.5 w-full overflow-hidden rounded-full bg-[#f2e4d8]">
+                  <div className="tys-bar h-1.5 w-full overflow-hidden rounded-full bg-orange-100">
                     <div className="h-full rounded-full bg-gradient-to-r from-[var(--color-primary-600)] to-[var(--color-primary-500)] transition-all duration-700" style={{ width: `${pct}%` }} />
                   </div>
                   {kpi.series && kpi.series.length >= 2 ? (
