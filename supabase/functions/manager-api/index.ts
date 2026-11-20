@@ -61,7 +61,7 @@ async function restUpsert(url: string, serviceKey: string, table: string, row: R
   if (!res.ok) throw new Error(`database write failed: ${table}`);
 }
 function normalizeEmployeeIdentity(value: string): string {
-  return value.trim().replace(/\\s+/g, " ").toLocaleLowerCase("en-US");
+  return value.trim().replace(/\s+/g, " ").toLocaleLowerCase("en-US");
 }
 
 function validPercent(value: unknown, max = 1000): value is number {
