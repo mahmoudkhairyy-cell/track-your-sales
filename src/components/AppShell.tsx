@@ -167,6 +167,10 @@ function FirstRunProfile({ onDone }: { onDone: () => void }) {
     setPending(true);
     try {
       await api("/api/profile", { method: "PATCH", body: JSON.stringify({ name: name.trim(), branch: branch.trim(), role, areaManager: branch === OUTSIDE_BRANCHES ? "" : areaManager.trim() }) });
+      if (role === "manager") {
+        window.location.assign("/track-your-sales/branch-manager/");
+        return;
+      }
       onDone();
     } catch (err) {
       setError(err instanceof Error ? err.message : "تعذر الحفظ");
