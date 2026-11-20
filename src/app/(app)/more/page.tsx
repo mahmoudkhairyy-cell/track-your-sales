@@ -74,11 +74,13 @@ export default function MorePage() {
   const [syncStatus, setSyncStatus] = useState<ReturnType<typeof readSyncStatus>>(null);
 
   useEffect(() => {
+    let storedBackupAt: string | null = null;
     try {
-      setLastBackupAt(localStorage.getItem("tys.lastBackupAt"));
+      storedBackupAt = localStorage.getItem("tys.lastBackupAt");
     } catch {
       // التخزين المحلي غير متاح.
     }
+    queueMicrotask(() => setLastBackupAt(storedBackupAt));
     const refreshSyncState = () => {
       setCloudSyncEnabledState(isCloudSyncEnabled());
       setSyncStatus(readSyncStatus());
