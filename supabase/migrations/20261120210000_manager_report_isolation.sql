@@ -111,14 +111,14 @@ begin
     raise exception 'manager assignment mismatch';
   end if;
 
-  insert into public.branch_reports (branch_id, employee_name, branch_name, payload, updated_at)
+  insert into public.branch_reports as current_report (branch_id, employee_name, branch_name, payload, updated_at)
   values (p_branch_id, left(btrim(p_employee), 80), left(btrim(p_branch), 80), p_payload, now())
   on conflict (branch_id) do update
     set employee_name = excluded.employee_name,
         branch_name = excluded.branch_name,
         payload = excluded.payload,
         updated_at = now()
-    where nullif(btrim(public.branch_reports.payload->>'areaManager'), '') = manager_name;
+    where nullif(btrim(current_report.payload->>'areaManager'), '') = manager_name;
 
   get diagnostics affected_rows = row_count;
   if affected_rows = 0 then
