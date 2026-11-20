@@ -592,7 +592,7 @@ export default function MorePage() {
             <p className="text-xs leading-6 text-[var(--color-text-secondary)]">مدير المنطقة اتحدد. التقارير بتوصل للمدير ده فقط، ومش بنغيّره تلقائيًا عشان ما ننقلش تقاريرك القديمة.</p>
           ) : null}
         </div>
-        <p className="mt-3 text-xs leading-6 text-[var(--color-text-secondary)]">الاسم والفرع ثابتين بعد التسجيل. تعيين مدير المنطقة مطلوب عشان تقاريرك تتزامن وتظهر عند مديرك فقط.</p>
+        <p className="mt-3 text-xs leading-6 text-[var(--color-text-secondary)]">{profile.branch === OUTSIDE_BRANCHES ? "الاسم والفرع ثابتين بعد التسجيل. فرع خارج الفروع لا يرسل تقارير إلى لوحة المدير." : "الاسم والفرع ثابتين بعد التسجيل. تعيين مدير المنطقة مطلوب عشان تقاريرك تتزامن وتظهر عند مديرك فقط."}</p>
       </section>
         </div>
       ) : null}
