@@ -171,28 +171,28 @@ export default function HomePage() {
       </section>
 
       <section className="relative isolate overflow-hidden rounded-hero border border-[#edc7a7] bg-gradient-to-br from-[#fffaf5] via-[#fff2e4] to-[#ffe4ca] p-4 shadow-pop sm:p-6">
-        <div aria-hidden="true" className="pointer-events-none absolute -left-12 -top-16 h-52 w-52 rounded-full bg-[#ff963f]/20 blur-3xl" />
+        <div aria-hidden="true" className="pointer-events-none absolute -left-12 -top-16 h-52 w-52 rounded-full bg-brand-glow/20 blur-3xl" />
         <div aria-hidden="true" className="pointer-events-none absolute -bottom-20 right-1/4 h-48 w-48 rounded-full bg-white/80 blur-3xl" />
         <div className="relative flex items-center gap-4 sm:gap-6">
-          <div className="flex h-28 w-28 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#ff9a45] via-[#f07818] to-[#c6530b] p-1 shadow-[0_12px_28px_rgba(198,83,11,0.22)] sm:h-36 sm:w-36">
+          <div className="flex h-28 w-28 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#ff9a45] via-[#f07818] to-[#c6530b] p-1 shadow-glow sm:h-36 sm:w-36">
             <div className="flex h-full w-full items-center justify-center rounded-full border border-white/40 bg-white/10">
               <ScoreRing value={data.overall} />
             </div>
           </div>
           <div className="min-w-0 flex-1">
-            <p className="text-sm font-extrabold text-[#80502f]">إجمالي التارجت الشهري</p>
-            <p className="mt-1 text-3xl font-black tracking-tight text-[#9d430d] sm:text-4xl">{formatPercent(data.overall)}%</p>
-            <p className="mt-1 text-sm font-bold text-[#80502f]">{gap > 0 ? `فاضل ${formatPercent(gap)}%` : "مفيش فاضل، قفلت الشهر"}</p>
+            <p className="text-sm font-extrabold text-ink-warm">إجمالي التارجت الشهري</p>
+            <p className="mt-1 text-3xl font-black tracking-tight text-brand-ink sm:text-4xl">{formatPercent(data.overall)}%</p>
+            <p className="mt-1 text-sm font-bold text-ink-warm">{gap > 0 ? `فاضل ${formatPercent(gap)}%` : "مفيش فاضل، قفلت الشهر"}</p>
           </div>
         </div>
         <div className="relative mt-4 grid grid-cols-2 gap-2">
           <div className="rounded-2xl border border-white/80 bg-white/75 p-3 shadow-sm backdrop-blur-sm">
             <p className="text-[11px] font-bold text-ink-2">الكوميشن المتوقع</p>
-            <p className="mt-1 text-lg font-black text-[#9d430d]">{formatMoney(data.estimatedCommission)} <span className="text-[10px] font-bold text-ink-2">جنيه</span></p>
+            <p className="mt-1 text-lg font-black text-brand-ink">{formatMoney(data.estimatedCommission)} <span className="text-[10px] font-bold text-ink-2">جنيه</span></p>
           </div>
           <div className="rounded-2xl border border-white/80 bg-white/75 p-3 shadow-sm backdrop-blur-sm">
             <p className="text-[11px] font-bold text-ink-2">الكوميشن الكامل</p>
-            <p className="mt-1 text-lg font-black text-[#2b1b12]">{formatMoney(data.fullCommission)} <span className="text-[10px] font-bold text-ink-2">جنيه</span></p>
+            <p className="mt-1 text-lg font-black text-ink">{formatMoney(data.fullCommission)} <span className="text-[10px] font-bold text-ink-2">جنيه</span></p>
           </div>
         </div>
       </section>
@@ -275,7 +275,7 @@ export default function HomePage() {
       <section className="space-y-3">
         <div className="flex items-end justify-between gap-3">
           <div>
-            <h2 className="text-xl font-black text-[#2b1b12]">مؤشرات الأداء</h2>
+            <h2 className="text-xl font-black text-ink">مؤشرات الأداء</h2>
             <p className="mt-1 text-xs text-ink-2">نظرة سريعة على كل مؤشر من مؤشراتك</p>
           </div>
           <span className="rounded-full border border-[#f0dfd0] bg-white/80 px-3 py-1 text-[11px] font-extrabold text-[#c6530b]">{data.kpis.length} مؤشرات</span>
@@ -307,12 +307,12 @@ export default function HomePage() {
                 <div className="relative flex items-center justify-between gap-2">
                   <div className="flex items-center gap-2">
                     <span className={`flex h-9 w-9 items-center justify-center rounded-xl ${featured ? "bg-gradient-to-br from-[#ff9a45] to-[#c6530b] text-xl text-white shadow-md shadow-orange-900/10" : "bg-[#fff0df] text-xl"}`}>{kpiEmoji(kpi.kpiKey)}</span>
-                    <h3 className="text-sm font-extrabold text-[#2b1b12]" dir="ltr">{kpi.nameEn}</h3>
+                    <h3 className="text-sm font-extrabold text-ink" dir="ltr">{kpi.nameEn}</h3>
                   </div>
                   <p className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-black ${featured ? "bg-white/85 text-[#c6530b]" : "bg-[#fff5eb] text-[#c6530b]"}`}>{formatPercent(kpi.percent)}%</p>
                 </div>
                 <div className="relative mt-3 flex items-baseline gap-1.5">
-                  <p className={`font-black tracking-tight text-[#2b1b12] ${featured ? "text-3xl sm:text-4xl" : "text-2xl"}`}>{formatQty(kpi.achieved)}</p>
+                  <p className={`font-black tracking-tight text-ink ${featured ? "text-3xl sm:text-4xl" : "text-2xl"}`}>{formatQty(kpi.achieved)}</p>
                   <span className="text-xs text-ink-2">من {formatQty(kpi.target)} {kpi.unitAr}</span>
                 </div>
                 <div
