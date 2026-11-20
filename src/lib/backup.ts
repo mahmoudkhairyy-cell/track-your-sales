@@ -172,7 +172,7 @@ function parseKpi(value: unknown, index: number): BackupKpi {
     target: asNonNegative(value.target, `kpis[${index}].target`),
     weight: asNonNegative(value.weight, `kpis[${index}].weight`),
     unitAr: asString(value.unitAr, `kpis[${index}].unitAr`),
-    sortOrder: asNumber(value.sortOrder, `kpis[${index}].sortOrder`),
+    sortOrder: asNonNegative(value.sortOrder, `kpis[${index}].sortOrder`),
   };
 }
 
