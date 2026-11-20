@@ -162,16 +162,14 @@ function KpiTile({ kpi }: { kpi: AggKpi }) {
 
 type TopRow = { rank: number; name: string; branch: string; branchId: string; percent: number };
 
-/** نسبة الفرع: كل بند نسبته الكلية للفرع (مجموع المحقق ÷ مجموع التارجت) × وزن البند من الشيت. */
-// نفس قواعد الموظف بالظبط (applyCompanyRules) على مجموع الفرع، عشان الفرع اللي فيه موظف واحد يطلع نفس رقم الموظف.
+/** إجمالي الفرع = متوسط نسب الإنجاز النهائية للأفراد؛ كل موظف وتيم ليدر له نفس الحصة. */
 function groupAverage(group: ReportRow[]): number {
-  const rulesKpis = aggregateKpis(group).flatMap((k) => {
-    const catalog = KPI_CATALOG.find((item) => item.nameEn === k.name);
-    if (!catalog) return [];
-    return [{ kpiKey: catalog.key as KpiKey, target: k.target, weight: k.weight, unitAr: catalog.unitAr, achieved: k.achieved }];
-  });
-  if (!rulesKpis.length) return 0;
-  return applyCompanyRules(rulesKpis).total;
+  const contributors = group.filter((row) =>
+    row.payload.role !== "manager" && row.payload.role !== "area_manager" &&
+    typeof row.payload.overall === "number" && Number.isFinite(row.payload.overall)
+  );
+  if (!contributors.length) return 0;
+  return contributors.reduce((sum, row) => sum + (row.payload.overall ?? 0), 0) / contributors.length;
 }
 
 function groupExpected(group: ReportRow[]): number | undefined {
