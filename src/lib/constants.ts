@@ -166,21 +166,9 @@ export type KpiKey = (typeof KPI_CATALOG)[number]["key"];
 
 export type Role = "agent" | "team_leader" | "manager" | "area_manager";
 
-// أوزان المدير من شيت الـ KPIs (Agent & Store Manager). المدير مش بيتحسب عليه الـ Existing ولا الـ New Orange Cash كبنود مستقلة بوزن مختلف.
-const MANAGER_WEIGHTS: Partial<Record<KpiKey, number>> = {
-  new_lines: 30,
-  existing_wallets: 15,
-  points: 5,
-  postpaid_lines: 10,
-  dsl: 10,
-  productivity: 15,
-  quality: 15,
-};
-
-/** الوزن الثابت للمؤشر حسب الدور. الأوزان مش بتتعدل من التطبيق، بتتغير من الكود بس. */
+/** الموظف والتيم ليدر لهما نفس التارجت والأوزان. المدير والأريا مانجر أدوار متابعة بلا تارجت شخصي. */
 export function kpiWeight(key: KpiKey, role: Role): number {
-  // التيم ليدر أوزانه زي الموظف بالظبط.
-  if (role === "manager") return MANAGER_WEIGHTS[key] ?? 0;
+  if (role === "manager" || role === "area_manager") return 0;
   return KPI_CATALOG.find((item) => item.key === key)?.defaultWeight ?? 0;
 }
 

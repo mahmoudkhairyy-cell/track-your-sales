@@ -6,6 +6,7 @@ import {
   estimatedCommission,
   kpiContribution,
 } from "../src/lib/calculations";
+import { kpiWeight } from "../src/lib/constants";
 import { parseBackup, planEntryRestore, type BackupEntry } from "../src/lib/backup";
 import { applyBackupToState, checkRestoreRequest, type RestoreState } from "../src/lib/restore";
 import { validateQuantity } from "../src/lib/quantity";
@@ -14,6 +15,15 @@ function check(name: string, run: () => void) {
   run();
   console.log(`✓ ${name}`);
 }
+
+check("الموظف والتيم ليدر لهما نفس الأوزان، وأدوار الإدارة بلا تارجت", () => {
+  const keys = ["new_lines", "new_orange_cash", "existing_wallets", "points", "postpaid_lines", "dsl", "productivity", "quality"] as const;
+  for (const key of keys) {
+    assert.equal(kpiWeight(key, "team_leader"), kpiWeight(key, "agent"));
+    assert.equal(kpiWeight(key, "manager"), 0);
+    assert.equal(kpiWeight(key, "area_manager"), 0);
+  }
+});
 
 check("نسبة الإنجاز والتارجت الصفري", () => {
   assert.equal(achievementPercent(90, 100), 90);

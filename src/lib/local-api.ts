@@ -267,6 +267,7 @@ function requireWorkingDays(value: unknown): WorkingDays {
 
 function roleOf(state: State): Role {
   if (state.profile.role === "manager") return "manager";
+  if (state.profile.role === "area_manager") return "area_manager";
   if (state.profile.role === "team_leader") return "team_leader";
   return "agent";
 }
@@ -293,6 +294,8 @@ function defaultBundle(yearMonth: string, role: Role): Bundle {
 /** شهر جديد: بنعتمد تارجت وأوزان وكومشن آخر شهر اتحفظ قبله، والموظف يقدر يغيّر بعدين. الإجازات والكواليتي بتبدأ فاضية. */
 function prefillBundle(state: State, yearMonth: string, role: Role): Bundle {
   const base = defaultBundle(yearMonth, role);
+  // أدوار الإدارة للمتابعة فقط؛ لا ترث تارجت أو أوزانًا شخصية من شهر سابق.
+  if (role === "manager" || role === "area_manager") return base;
   const previous = Object.keys(state.months)
     .filter((key) => key < yearMonth)
     .sort()
