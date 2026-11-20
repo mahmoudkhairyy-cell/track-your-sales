@@ -32,7 +32,7 @@ export function EmptyState({
   action?: ReactNode;
 }) {
   return (
-    <section className="tx-empty-state rounded-hero border border-line bg-gradient-to-b from-white to-[#fff8f1] px-5 py-10 text-center shadow-empty">
+    <section className="tx-empty-state rounded-hero border border-line bg-gradient-to-b from-white to-brand-50 px-5 py-10 text-center shadow-empty">
       <div aria-hidden="true" className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-card border border-light bg-brand-200 text-3xl text-brand-deep shadow-empty-inner">⌕</div>
       <p className="text-lg font-extrabold text-ink-3">{title}</p>
       <p className="mx-auto mt-2 max-w-md text-sm leading-7 text-ink-muted-3">{text}</p>
@@ -70,7 +70,7 @@ export function PrimaryButton({
   return (
     <button
       {...props}
-      className={`tx-btn-primary inline-flex min-h-12 w-full items-center justify-center rounded-full border border-focus/35 bg-gradient-to-l from-[#c6530b] via-[#f07818] to-[#ff963f] px-4 text-base font-extrabold text-white shadow-button-primary transition duration-200 hover:-translate-y-0.5 hover:brightness-105 hover:shadow-button-primary-hover focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand-500/25 enabled:active:translate-y-0 enabled:active:scale-[0.985] disabled:cursor-not-allowed disabled:opacity-55 disabled:saturate-50 ${className}`}
+      className={`tx-btn-primary inline-flex min-h-12 w-full items-center justify-center rounded-full border border-focus/35 bg-gradient-to-l from-brand-600 via-brand-500 to-brand-300 px-4 text-base font-extrabold text-white shadow-button-primary transition duration-200 hover:-translate-y-0.5 hover:brightness-105 hover:shadow-button-primary-hover focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand-500/25 enabled:active:translate-y-0 enabled:active:scale-[0.985] disabled:cursor-not-allowed disabled:opacity-55 disabled:saturate-50 ${className}`}
     >
       {children}
     </button>
@@ -118,7 +118,7 @@ export function Field({
 }) {
   return (
     <label className="block">
-      <span className="mb-2 block text-sm font-bold text-neutral-800">{label}</span>
+      <span className="mb-2 block text-sm font-bold text-ink">{label}</span>
       {children}
       {hint ? <span className="mt-1 block text-xs leading-6 text-ink-2">{hint}</span> : null}
     </label>
