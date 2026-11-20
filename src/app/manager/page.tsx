@@ -298,6 +298,33 @@ export default function ManagerPage() {
   const [greeting, setGreeting] = useState("");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  function logout() {
+    if (!window.confirm("تسجيل الخروج من لوحة مدير المنطقة؟")) return;
+    try {
+      sessionStorage.removeItem("tys.mgrPass");
+      localStorage.removeItem("tys.mgrPass");
+    } catch {
+      // لو التخزين غير متاح، نمسح حالة الدخول من الواجهة الحالية على الأقل.
+    }
+    setPassword("");
+    setRows(null);
+    setManagerName("");
+    setError("");
+    setLastLoaded(null);
+    setPwOpen(false);
+    setOldPw("");
+    setNewPw("");
+    setNewPw2("");
+    setPwMsg("");
+    setDetailsId(null);
+    setOpenId(null);
+    setDashboardDetail(null);
+    setBranchPreview(null);
+    setBranchOpenFor(null);
+    setView("overview");
+    setAuthChecking(false);
+  }
+
   async function changePassword(event: FormEvent) {
     event.preventDefault();
     setPwMsg("");
@@ -640,7 +667,7 @@ export default function ManagerPage() {
                   <p className="mt-0.5 truncate text-[11px] text-[var(--color-text-secondary)]">متابعة أداء الفريق</p>
                 </div>
               </div>
-              <div className="flex shrink-0 items-center gap-2"><div className="flex items-center gap-2 rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface-cream)] py-1 pl-1 pr-1 sm:py-1.5 sm:pl-3 sm:pr-1.5"><span className="hidden max-w-[120px] truncate text-[11px] font-extrabold text-[var(--color-text-primary)] sm:inline">{managerName || "المدير"}</span></div><button type="button" disabled={pending} onClick={() => load()} className="shrink-0 rounded-xl border border-[#eee0d5] bg-white px-3 py-2.5 text-xs font-extrabold text-[var(--color-primary-700)] disabled:opacity-50">{pending ? "تحديث..." : "↻ تحديث"}</button></div>
+              <div className="flex shrink-0 items-center gap-2"><div className="flex items-center gap-2 rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface-cream)] py-1 pl-1 pr-1 sm:py-1.5 sm:pl-3 sm:pr-1.5"><span className="hidden max-w-[120px] truncate text-[11px] font-extrabold text-[var(--color-text-primary)] sm:inline">{managerName || "المدير"}</span></div><button type="button" disabled={pending} onClick={() => load()} className="shrink-0 rounded-xl border border-[#eee0d5] bg-white px-3 py-2.5 text-xs font-extrabold text-[var(--color-primary-700)] disabled:opacity-50">{pending ? "تحديث..." : "↻ تحديث"}</button><button type="button" onClick={logout} className="shrink-0 rounded-xl border border-red-200 bg-white px-3 py-2.5 text-xs font-extrabold text-red-600 transition hover:bg-red-50">خروج ↗</button></div>
             </header>
             {error ? <p className="rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-xs font-bold text-red-700">{error}</p> : null}
 
