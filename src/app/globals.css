@@ -13,7 +13,6 @@
   --color-ink-2: #6f5b4d;
 
   --color-brand-50: #fff4ea;
-  --color-brand-100: #ffe6d2;
   --color-brand-300: #ff9a45;
   --color-brand-500: #f07818;
   --color-brand-600: #c6530b;
@@ -24,10 +23,6 @@
   --color-warn: #a16207;
   --color-warn-soft: #fdf3e0;
   --color-risk: #b91c1c;
-  --color-risk-soft: #fdeceb;
-  --color-info: #1d4ed8;
-  --color-info-soft: #e9f2fb;
-
   --radius-card: 20px;
   --radius-hero: 24px;
   --radius-field: 14px;
@@ -113,24 +108,46 @@
   --shadow-bottom-nav: 0 12px 36px rgba(112, 57, 18, 0.14);
   --shadow-bottom-nav-emph: 0 5px 14px rgba(198, 83, 11, 0.20);
 
+
+  /* جلسة 3 — توكنز للبقايا */
+  --color-border-hero: #edc7a7;
+  --color-border-form: #f2d8c3;
+  --color-border-form-2: #f1e3d8;
+  --color-border-accent-strong: #ff7900;
+  --color-border-section: #f0d8c4;
+  --color-border-section-2: #f1d2b8;
+  --color-border-section-3: #f5e2d1;
+  --color-border-section-4: #f1dfcf;
+  --color-border-section-5: #e9bd99;
+  --color-border-wiki: #f1e2d6;
+  --color-border-wiki-strong: #edc8aa;
+  --color-border-wiki-deep: #f4d8c2;
+  --color-surface-progress: #f2e6dc;
+  --color-surface-loading: #f4e6dc;
+  --shadow-section: 0 12px 30px rgba(166, 76, 16, 0.08);
+  --shadow-section-sm: 0 3px 10px rgba(166, 76, 16, 0.04);
+  --shadow-section-xs: 0 3px 12px rgba(105, 54, 20, 0.035);
+  --shadow-wiki: 0 14px 30px rgba(105, 54, 20, 0.09);
+  --shadow-wiki-deep: 0 12px 32px rgba(105, 54, 20, 0.055);
+  --shadow-wiki-strong: 0 8px 20px rgba(189, 75, 10, 0.22);
 }:root {
   color-scheme: light;
 
-  --tx-orange: #f07818;
-  --tx-orange-deep: #c6530b;
-  --tx-orange-soft: #fff0df;
-  --tx-orange-bright: #ff963f;
+  --tx-orange: var(--color-brand-500);
+  --tx-orange-deep: var(--color-brand-600);
+  --tx-orange-soft: var(--color-brand-50);
+  --tx-orange-bright: var(--color-brand-300);
   --tx-orange-glow: rgba(240, 120, 24, 0.22);
-  --tx-cream: #faf7f4;
-  --tx-cream-deep: #fff0e1;
-  --tx-ink: #241a13;
-  --tx-muted: #6f5b4d;
-  --tx-line: #efe3d8;
-  --tx-surface: #ffffff;
-  --tx-surface-soft: #fffaf5;
-  --tx-border-strong: #e3cdb8;
-  --tx-gradient-brand: linear-gradient(125deg, #ff9a45 0%, #f07818 48%, #c6530b 100%);
-  --tx-gradient-soft: linear-gradient(135deg, #fffaf5 0%, #fff6ee 52%, #fff0e4 100%);
+  --tx-cream: var(--color-bg);
+  --tx-cream-deep: var(--color-brand-50);
+  --tx-ink: var(--color-ink);
+  --tx-muted: var(--color-ink-2);
+  --tx-line: var(--color-line);
+  --tx-surface: var(--color-surface);
+  --tx-surface-soft: var(--color-surface-2);
+  --tx-border-strong: var(--color-line-strong);
+  --tx-gradient-brand: linear-gradient(125deg, var(--color-brand-300) 0%, var(--color-brand-500) 48%, var(--color-brand-600) 100%);
+  --tx-gradient-soft: linear-gradient(135deg, var(--color-surface-2) 0%, var(--color-bg) 52%, var(--color-brand-50) 100%);
   --tx-card-shadow: var(--shadow-card);
   --tx-card-shadow-hover: var(--shadow-pop);
   /* جلسة 1.5 — متغيرات قديمة للقيم التزيينية */
@@ -199,6 +216,28 @@
   --tx-shadow-bottom-nav: var(--shadow-bottom-nav);
   --tx-shadow-bottom-nav-emph: var(--shadow-bottom-nav-emph);
 
+
+  /* جلسة 3 — متغيرات توافقية للبقايا */
+  --tx-border-hero: var(--color-border-hero);
+  --tx-border-form: var(--color-border-form);
+  --tx-border-form-2: var(--color-border-form-2);
+  --tx-border-accent-strong: var(--color-border-accent-strong);
+  --tx-border-section: var(--color-border-section);
+  --tx-border-section-2: var(--color-border-section-2);
+  --tx-border-section-3: var(--color-border-section-3);
+  --tx-border-section-4: var(--color-border-section-4);
+  --tx-border-section-5: var(--color-border-section-5);
+  --tx-border-wiki: var(--color-border-wiki);
+  --tx-border-wiki-strong: var(--color-border-wiki-strong);
+  --tx-border-wiki-deep: var(--color-border-wiki-deep);
+  --tx-surface-progress: var(--color-surface-progress);
+  --tx-surface-loading: var(--color-surface-loading);
+  --tx-shadow-section: var(--shadow-section);
+  --tx-shadow-section-sm: var(--shadow-section-sm);
+  --tx-shadow-section-xs: var(--shadow-section-xs);
+  --tx-shadow-wiki: var(--shadow-wiki);
+  --tx-shadow-wiki-deep: var(--shadow-wiki-deep);
+  --tx-shadow-wiki-strong: var(--shadow-wiki-strong);
 }html {
   direction: rtl;
   --font-cairo: "Cairo Variable";

@@ -32,7 +32,7 @@ type SectionId = "hub" | "sr" | "premier" | "freemax" | "go" | "hunts" | "home" 
 const CARD = "rounded-card bg-white p-4 shadow-sm";
 const CARD_ROW = `flex items-center justify-between gap-3 ${CARD}`;
 const CHIP_BTN = "rounded-full px-3 py-2 text-xs font-extrabold transition motion-safe:active:scale-95";
-const HUB_CARD = "group flex min-h-[136px] flex-col rounded-card border border-[#f1e2d6] bg-white/95 p-4 text-right shadow-soft transition duration-200 hover:border-[#edc8aa] hover:shadow-[0_14px_30px_rgba(105,54,20,0.09)] motion-safe:hover:-translate-y-1 motion-safe:active:scale-[.985]";
+const HUB_CARD = "group flex min-h-[136px] flex-col rounded-card border border-wiki bg-white/95 p-4 text-right shadow-soft transition duration-200 hover:border-wiki-strong hover:shadow-wiki motion-safe:hover:-translate-y-1 motion-safe:active:scale-[.985]";
 const ICON_WRAP = "flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-[#fff0e4] to-[#ffe1c9] text-brand-deep shadow-inner";
 
 const HUB: { id: SectionId; title: string; desc: string; count: string; icon: ReactNode }[] = [
@@ -202,8 +202,8 @@ export default function WikiPage() {
     <div className="space-y-5">
       {section === "hub" ? (
         <>
-          <section className="relative isolate overflow-hidden rounded-hero border border-[#f4d8c2] bg-gradient-to-br from-[#fff3e8] via-white to-[#fff8f2] px-5 py-6 text-center shadow-[0_12px_32px_rgba(105,54,20,0.055)] before:absolute before:-left-10 before:-top-14 before:-z-10 before:h-40 before:w-40 before:rounded-full before:bg-brand-600/10">
-            <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-card bg-gradient-to-br from-brand-400 to-brand-deep text-2xl text-white shadow-[0_8px_20px_rgba(189,75,10,0.22)]">🍊</span>
+          <section className="relative isolate overflow-hidden rounded-hero border border-wiki-deep bg-gradient-to-br from-[#fff3e8] via-white to-[#fff8f2] px-5 py-6 text-center shadow-wiki-deep before:absolute before:-left-10 before:-top-14 before:-z-10 before:h-40 before:w-40 before:rounded-full before:bg-brand-600/10">
+            <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-card bg-gradient-to-br from-brand-400 to-brand-deep text-2xl text-white shadow-wiki-strong">🍊</span>
             <h1 className="mt-3 text-2xl font-black text-neutral-900">موسوعة أورانج</h1>
             <p className="mt-2 text-sm leading-6 text-ink-2">كل اللي تحتاجه في الشغل… في مكان واحد</p>
             <p className="mt-1 text-xs text-ink-2">أكواد SR · الباقات · الأرقام · الإيميلات</p>

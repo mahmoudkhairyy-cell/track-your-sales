@@ -170,7 +170,7 @@ export default function HomePage() {
         </p>
       </section>
 
-      <section className="relative isolate overflow-hidden rounded-hero border border-[#edc7a7] bg-gradient-to-br from-[#fffaf5] via-[#fff2e4] to-[#ffe4ca] p-4 shadow-pop sm:p-6">
+      <section className="relative isolate overflow-hidden rounded-hero border border-hero bg-gradient-to-br from-[#fffaf5] via-[#fff2e4] to-[#ffe4ca] p-4 shadow-pop sm:p-6">
         <div aria-hidden="true" className="pointer-events-none absolute -left-12 -top-16 h-52 w-52 rounded-full bg-brand-glow/20 blur-3xl" />
         <div aria-hidden="true" className="pointer-events-none absolute -bottom-20 right-1/4 h-48 w-48 rounded-full bg-white/80 blur-3xl" />
         <div className="relative flex items-center gap-4 sm:gap-6">
@@ -220,14 +220,14 @@ export default function HomePage() {
       </section>
 
       <div className="grid grid-cols-2 gap-3">
-        <article className="group relative overflow-hidden rounded-card border border-[#edc7a7] bg-gradient-to-br from-white via-white to-[#fff6ed] p-3 shadow-card transition-all duration-200 hover:-translate-y-0.5 hover:shadow-pop before:absolute before:inset-y-3 before:right-0 before:w-1 before:rounded-l-full before:bg-gradient-to-b before:from-[#ff963f] before:to-[#c6530b]">
+        <article className="group relative overflow-hidden rounded-card border border-hero bg-gradient-to-br from-white via-white to-[#fff6ed] p-3 shadow-card transition-all duration-200 hover:-translate-y-0.5 hover:shadow-pop before:absolute before:inset-y-3 before:right-0 before:w-1 before:rounded-l-full before:bg-gradient-to-b before:from-[#ff963f] before:to-[#c6530b]">
           <p className="text-sm font-bold text-ink-2">📱 الخطوط اللي عملتها</p>
-          <p className="mt-2 text-3xl font-black tracking-tight text-[#c6530b]">{formatQty(newLines?.achieved ?? 0)}</p>
+          <p className="mt-2 text-3xl font-black tracking-tight text-brand-600">{formatQty(newLines?.achieved ?? 0)}</p>
           <p className="text-xs text-ink-2">من {formatQty(newLines?.target ?? 0)}</p>
         </article>
-        <article className="group relative overflow-hidden rounded-card border border-[#edc7a7] bg-gradient-to-br from-white via-white to-[#fff6ed] p-3 shadow-card transition-all duration-200 hover:-translate-y-0.5 hover:shadow-pop before:absolute before:inset-y-3 before:right-0 before:w-1 before:rounded-l-full before:bg-gradient-to-b before:from-[#ff963f] before:to-[#c6530b]">
+        <article className="group relative overflow-hidden rounded-card border border-hero bg-gradient-to-br from-white via-white to-[#fff6ed] p-3 shadow-card transition-all duration-200 hover:-translate-y-0.5 hover:shadow-pop before:absolute before:inset-y-3 before:right-0 before:w-1 before:rounded-l-full before:bg-gradient-to-b before:from-[#ff963f] before:to-[#c6530b]">
           <p className="text-sm font-bold text-ink-2">🎯 الفاضل في الخطوط</p>
-          <p className="mt-2 text-3xl font-black tracking-tight text-[#c6530b]">{formatQty(newLines?.remaining ?? 0)}</p>
+          <p className="mt-2 text-3xl font-black tracking-tight text-brand-600">{formatQty(newLines?.remaining ?? 0)}</p>
           <p className="text-xs text-ink-2">خط</p>
         </article>
       </div>
@@ -278,7 +278,7 @@ export default function HomePage() {
             <h2 className="text-xl font-black text-ink">مؤشرات الأداء</h2>
             <p className="mt-1 text-xs text-ink-2">نظرة سريعة على كل مؤشر من مؤشراتك</p>
           </div>
-          <span className="rounded-full border border-[#f0dfd0] bg-white/80 px-3 py-1 text-[11px] font-extrabold text-[#c6530b]">{data.kpis.length} مؤشرات</span>
+          <span className="rounded-full border border-line-shell bg-white/80 px-3 py-1 text-[11px] font-extrabold text-brand-600">{data.kpis.length} مؤشرات</span>
         </div>
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4">
           {data.kpis.map((kpi) => {
@@ -297,19 +297,19 @@ export default function HomePage() {
                     ? "linear-gradient(90deg, #fb7185 0%, #dc2626 100%)"
                     : "linear-gradient(90deg, #ffad68 0%, #f07818 52%, #c6530b 100%)";
             const progressTrack =
-              m.tone === "good" ? "bg-ok-soft" : m.tone === "warn" ? "bg-warn-soft" : m.tone === "bad" ? "bg-risk-soft" : "bg-[#f2e6dc]";
+              m.tone === "good" ? "bg-ok-soft" : m.tone === "warn" ? "bg-warn-soft" : m.tone === "bad" ? "bg-risk-soft" : "bg-surface-progress";
             return (
               <article
                 key={kpi.kpiKey}
-                className={`relative overflow-hidden rounded-card border p-3.5 shadow-card transition-all duration-200 hover:-translate-y-0.5 hover:shadow-pop sm:p-4 ${featured ? "col-span-2 border-[#edc7a7] bg-gradient-to-br from-white via-[#fffaf5] to-[#fff0df] sm:col-span-2" : "border-[#f0dfd0] bg-white/95"}`}
+                className={`relative overflow-hidden rounded-card border p-3.5 shadow-card transition-all duration-200 hover:-translate-y-0.5 hover:shadow-pop sm:p-4 ${featured ? "col-span-2 border-hero bg-gradient-to-br from-white via-[#fffaf5] to-[#fff0df] sm:col-span-2" : "border-line-shell bg-white/95"}`}
               >
-                {featured ? <span aria-hidden="true" className="pointer-events-none absolute -left-8 -top-10 h-28 w-28 rounded-full bg-[#ff963f]/10 blur-2xl" /> : null}
+                {featured ? <span aria-hidden="true" className="pointer-events-none absolute -left-8 -top-10 h-28 w-28 rounded-full bg-brand-300/10 blur-2xl" /> : null}
                 <div className="relative flex items-center justify-between gap-2">
                   <div className="flex items-center gap-2">
-                    <span className={`flex h-9 w-9 items-center justify-center rounded-xl ${featured ? "bg-gradient-to-br from-[#ff9a45] to-[#c6530b] text-xl text-white shadow-md shadow-orange-900/10" : "bg-[#fff0df] text-xl"}`}>{kpiEmoji(kpi.kpiKey)}</span>
+                    <span className={`flex h-9 w-9 items-center justify-center rounded-xl ${featured ? "bg-gradient-to-br from-[#ff9a45] to-[#c6530b] text-xl text-white shadow-md shadow-orange-900/10" : "bg-brand-50 text-xl"}`}>{kpiEmoji(kpi.kpiKey)}</span>
                     <h3 className="text-sm font-extrabold text-ink" dir="ltr">{kpi.nameEn}</h3>
                   </div>
-                  <p className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-black ${featured ? "bg-white/85 text-[#c6530b]" : "bg-[#fff5eb] text-[#c6530b]"}`}>{formatPercent(kpi.percent)}%</p>
+                  <p className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-black ${featured ? "bg-white/85 text-brand-600" : "bg-brand-surface text-brand-600"}`}>{formatPercent(kpi.percent)}%</p>
                 </div>
                 <div className="relative mt-3 flex items-baseline gap-1.5">
                   <p className={`font-black tracking-tight text-ink ${featured ? "text-3xl sm:text-4xl" : "text-2xl"}`}>{formatQty(kpi.achieved)}</p>

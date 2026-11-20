@@ -71,13 +71,13 @@ export default function LogPage() {
   return (
     <form className="space-y-5" onSubmit={onSubmit}>
       <section>
-        <div className="rounded-card border border-[#f2d8c3] bg-gradient-to-br from-[#fff2e6] via-white to-[#fff9f4] p-5 shadow-medium"><h1 className="text-2xl font-black tracking-tight text-[#2d1d13]">إنجاز اليوم ✍️</h1>
+        <div className="rounded-card border border-form bg-gradient-to-br from-[#fff2e6] via-white to-[#fff9f4] p-5 shadow-medium"><h1 className="text-2xl font-black tracking-tight text-ink-3">إنجاز اليوم ✍️</h1>
         <p className="mt-2 text-sm leading-6 text-neutral-600">سجّل اللي بعته النهارده — كل حفظة بتتسجل لوحدها وبتتجمع في الرئيسية.</p></div>
       </section>
 
       {error ? <Banner tone="error">❌ {error}</Banner> : null}
 
-      <section className="space-y-4 rounded-card border border-[#f1e3d8] bg-white p-5 shadow-soft">
+      <section className="space-y-4 rounded-card border border-form-2 bg-white p-5 shadow-soft">
         <div>
           <p className="mb-2 block text-sm font-bold text-neutral-800">اختار الإيتم</p>
           <div className="grid grid-cols-2 gap-2">
@@ -89,7 +89,7 @@ export default function LogPage() {
                   type="button"
                   onClick={() => setKpiKey(kpi.key)}
                   className={`flex min-h-14 items-center gap-2 rounded-2xl border px-3 text-right text-sm font-extrabold transition ${
-                    active ? "border-[#ff7900] bg-brand-50 text-brand-ink" : "border-neutral-200 bg-white text-neutral-700"
+                    active ? "border-accent-strong bg-brand-50 text-brand-ink" : "border-neutral-200 bg-white text-neutral-700"
                   }`}
                 >
                   <span className="text-xl">{kpi.emoji}</span>

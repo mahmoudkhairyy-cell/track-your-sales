@@ -117,13 +117,13 @@ export function Field({
     <label className="block">
       <span className="mb-2 block text-sm font-bold text-neutral-800">{label}</span>
       {children}
-      {hint ? <span className="mt-1 block text-xs leading-6 text-neutral-500">{hint}</span> : null}
+      {hint ? <span className="mt-1 block text-xs leading-6 text-ink-2">{hint}</span> : null}
     </label>
   );
 }
 
 export const inputClass =
-  "min-h-12 w-full rounded-2xl border border-line bg-white px-3 text-base text-ink-deep outline-none transition placeholder:text-muted-placeholder focus:border-[#e9782c] focus:bg-white focus:ring-4 focus:ring-[#e96812]/10";
+  "min-h-12 w-full rounded-2xl border border-line bg-white px-3 text-base text-ink-deep outline-none transition placeholder:text-muted-placeholder focus:border-focus focus:bg-white focus:ring-4 focus:ring-[#e96812]/10";
 
 type Toast = { id: number; type: "success" | "error" | "info"; text: string };
 
@@ -195,7 +195,7 @@ export function Modal({
         <div className="mx-auto mb-4 h-1.5 w-12 rounded-full bg-line sm:hidden" />
         <div className="mb-4 flex items-start justify-between gap-3">
           <h2 id="tx-modal-title" className="text-lg font-extrabold text-ink-3">{title}</h2>
-          <button type="button" onClick={onClose} aria-label="إغلاق النافذة" className="min-h-10 min-w-10 rounded-full text-xl text-neutral-500 transition hover:bg-brand-200 hover:text-brand-deep focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-spinner/20">
+          <button type="button" onClick={onClose} aria-label="إغلاق النافذة" className="min-h-10 min-w-10 rounded-full text-xl text-ink-2 transition hover:bg-brand-200 hover:text-brand-deep focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-spinner/20">
             ×
           </button>
         </div>
