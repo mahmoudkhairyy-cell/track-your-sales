@@ -3,7 +3,7 @@
 
 create unique index if not exists branch_reports_employee_identity_uidx
 on public.branch_reports (
-  lower(regexp_replace(btrim(employee_name), '\\s+', ' ', 'g')),
+  lower(regexp_replace(btrim(employee_name), '[[:space:]]+', ' ', 'g')),
   branch_name,
   (payload ->> 'areaManager')
 )
@@ -73,8 +73,8 @@ begin
   -- Resolve the canonical row using a normalized employee name.
   select branch_id into existing_branch_id
   from public.branch_reports
-  where lower(regexp_replace(btrim(employee_name), '\\s+', ' ', 'g')) =
-        lower(regexp_replace(btrim(p_employee), '\\s+', ' ', 'g'))
+  where lower(regexp_replace(btrim(employee_name), '[[:space:]]+', ' ', 'g')) =
+        lower(regexp_replace(btrim(p_employee), '[[:space:]]+', ' ', 'g'))
     and branch_name = left(btrim(p_branch), 80)
     and payload->>'areaManager' = manager_name
   order by updated_at desc
