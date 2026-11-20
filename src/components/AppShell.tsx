@@ -125,13 +125,9 @@ function SearchableSelect({
   placeholder: string;
   onChange: (value: string) => void;
 }) {
-  const [query, setQuery] = useState(value);
+  const [draft, setDraft] = useState({ value, query: value });
   const [open, setOpen] = useState(false);
-  const [editing, setEditing] = useState(false);
-
-  useEffect(() => {
-    if (!editing) setQuery(value);
-  }, [value, editing]);
+  const query = draft.value === value ? draft.query : value;
 
   const normalizedQuery = normalizeSearchText(query);
   const matches = options.filter((item) => normalizeSearchText(item).includes(normalizedQuery)).slice(0, 8);
@@ -144,8 +140,7 @@ function SearchableSelect({
         value={query}
         onFocus={() => setOpen(true)}
         onChange={(event) => {
-          setQuery(event.target.value);
-          setEditing(true);
+          setDraft({ value: "", query: event.target.value });
           setOpen(true);
           if (value) onChange("");
         }}
@@ -154,8 +149,7 @@ function SearchableSelect({
           if (event.key === "Enter" && open && matches.length === 1) {
             event.preventDefault();
             onChange(matches[0]);
-            setQuery(matches[0]);
-            setEditing(false);
+            setDraft({ value: matches[0], query: matches[0] });
             setOpen(false);
           }
         }}
@@ -163,7 +157,6 @@ function SearchableSelect({
         autoComplete="off"
         className="mt-1 w-full rounded-2xl border border-[#f2e4d8] bg-[#fffdfb] px-4 py-3 font-semibold text-[#241f1b] outline-none transition placeholder:text-[#b6a79c] focus:border-[#e96812] focus:ring-2 focus:ring-[#e96812]/10"
         aria-label={label}
-        aria-expanded={open && matches.length > 0}
       />
       {open ? (
         <div className="absolute inset-x-0 top-full z-30 mt-1 max-h-56 overflow-y-auto rounded-2xl border border-[#f0dfd1] bg-white p-1.5 shadow-[0_12px_30px_rgba(75,42,20,0.14)]">
@@ -174,8 +167,7 @@ function SearchableSelect({
               onMouseDown={(event) => event.preventDefault()}
               onClick={() => {
                 onChange(item);
-                setQuery(item);
-                setEditing(false);
+                setDraft({ value: item, query: item });
                 setOpen(false);
               }}
               className={`block w-full rounded-xl px-3 py-2.5 text-right text-sm font-bold transition hover:bg-[#fff1e5] hover:text-[#bd4b0a] ${value === item ? "bg-[#fff1e5] text-[#bd4b0a]" : "text-[#514238]"}`}
