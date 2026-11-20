@@ -20,7 +20,7 @@ type SettingsSnapshot = {
   saved: boolean;
   fullCommission: number;
   kpis: { kpiKey: string; target: number; weight: number; unitAr: string }[];
-  holidays: { date: string; note?: string | null }[];
+  holidays: { date: string }[];
   workingDays: Record<string, boolean>;
 };
 
@@ -144,7 +144,7 @@ async function pushReportOnce(): Promise<boolean> {
         settings: {
           fullCommission: settings.settings.fullCommission,
           kpis: settings.settings.kpis,
-          holidays: settings.settings.holidays,
+          holidays: settings.settings.holidays.map((holiday) => ({ date: holiday.date })),
           workingDays: settings.settings.workingDays,
         },
         entries: entriesResult.entries.map((e) => ({
