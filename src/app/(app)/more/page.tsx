@@ -290,12 +290,12 @@ export default function MorePage() {
   return (
     <div className="space-y-5 pb-4">
       <section>
-        <div className="relative overflow-hidden rounded-hero border border-[#f0d8c4] bg-gradient-to-br from-[#fff8f0] via-white to-[#ffe9d5] p-5 shadow-[0_12px_30px_rgba(166,76,16,0.08)]"><div className="absolute -left-8 -top-10 h-32 w-32 rounded-full bg-[#f07818]/10 blur-2xl" /><div className="relative"><div className="mb-2 inline-flex items-center gap-2 rounded-full border border-[#f1d2b8] bg-white/80 px-3 py-1 text-xs font-extrabold text-[#a94708]"><span>⚙️</span><span>إدارة التطبيق</span></div><h1 className="text-2xl font-black tracking-tight text-[#74340d]">المزيد</h1></div></div>
+        <div className="relative overflow-hidden rounded-hero border border-[#f0d8c4] bg-gradient-to-br from-[#fff8f0] via-white to-[#ffe9d5] p-5 shadow-[0_12px_30px_rgba(166,76,16,0.08)]"><div className="absolute -left-8 -top-10 h-32 w-32 rounded-full bg-brand-500/10 blur-2xl" /><div className="relative"><div className="mb-2 inline-flex items-center gap-2 rounded-full border border-[#f1d2b8] bg-white/80 px-3 py-1 text-xs font-extrabold text-brand-ink-soft"><span>⚙️</span><span>إدارة التطبيق</span></div><h1 className="text-2xl font-black tracking-tight text-brand-ink-strong">المزيد</h1></div></div>
         <p className="mt-1 text-sm text-ink-2">ملخص النهارده، سجل الشهر، النسخة الاحتياطية، والمساعد.</p>
       </section>
 
-      <section className="relative overflow-hidden rounded-hero border border-[#f0d8c4] bg-gradient-to-br from-white via-white to-[#fff5eb] p-5 shadow-[0_12px_30px_rgba(166,76,16,0.07)] ring-1 ring-white">
-        <h2 className="flex items-center gap-2 text-lg font-black text-[#74340d]"><span className="flex h-9 w-9 items-center justify-center rounded-2xl bg-[#fff0e2] text-lg">📊</span>اللي عملته النهارده</h2>
+      <section className="relative overflow-hidden rounded-hero border border-[#f0d8c4] bg-gradient-to-br from-white via-white to-brand-surface p-5 shadow-accent ring-1 ring-white">
+        <h2 className="flex items-center gap-2 text-lg font-black text-brand-ink-strong"><span className="flex h-9 w-9 items-center justify-center rounded-2xl bg-brand-200 text-lg">📊</span>اللي عملته النهارده</h2>
         {todayItems.length === 0 ? (
           <p className="mt-3 text-sm text-ink-2">لسه مسجلتش حاجة النهارده. يلا نبدأ! 💪</p>
         ) : (
@@ -318,9 +318,9 @@ export default function MorePage() {
         )}
       </section>
 
-      <section className="relative overflow-hidden rounded-hero border border-[#f0d8c4] bg-gradient-to-br from-white via-white to-[#fff5eb] p-5 shadow-[0_12px_30px_rgba(166,76,16,0.07)] ring-1 ring-white">
+      <section className="relative overflow-hidden rounded-hero border border-[#f0d8c4] bg-gradient-to-br from-white via-white to-brand-surface p-5 shadow-accent ring-1 ring-white">
         <div className="flex items-center justify-between gap-3">
-          <h2 className="flex items-center gap-2 text-lg font-black text-[#74340d]"><span className="flex h-9 w-9 items-center justify-center rounded-2xl bg-[#fff0e2] text-lg">🗂️</span>سجل عمليات {monthLabelAr(month)}</h2>
+          <h2 className="flex items-center gap-2 text-lg font-black text-brand-ink-strong"><span className="flex h-9 w-9 items-center justify-center rounded-2xl bg-brand-200 text-lg">🗂️</span>سجل عمليات {monthLabelAr(month)}</h2>
           <span className="text-sm text-ink-2">{entries.length} سجل</span>
         </div>
         {entries.length === 0 ? (
@@ -365,8 +365,8 @@ export default function MorePage() {
         </button>
       </section>
 
-      <section className="relative overflow-hidden rounded-hero border border-[#f0d8c4] bg-gradient-to-br from-white via-white to-[#fff5eb] p-5 shadow-[0_12px_30px_rgba(166,76,16,0.07)] ring-1 ring-white">
-        <h2 className="flex items-center gap-2 text-lg font-black text-[#74340d]"><span className="flex h-9 w-9 items-center justify-center rounded-2xl bg-[#fff0e2] text-lg">👤</span>بياناتك</h2>
+      <section className="relative overflow-hidden rounded-hero border border-[#f0d8c4] bg-gradient-to-br from-white via-white to-brand-surface p-5 shadow-accent ring-1 ring-white">
+        <h2 className="flex items-center gap-2 text-lg font-black text-brand-ink-strong"><span className="flex h-9 w-9 items-center justify-center rounded-2xl bg-brand-200 text-lg">👤</span>بياناتك</h2>
         <form className="mt-4 space-y-3" onSubmit={saveProfile}>
           <Field label="اسم الموظف">
             <input className={inputClass} value={name} onChange={(e) => setName(e.target.value)} required />
@@ -381,14 +381,14 @@ export default function MorePage() {
         <p className="mt-3 text-xs leading-6 text-ink-2">تقدر تغيّر اسمك والفرع في أي وقت من هنا.</p>
       </section>
 
-      <section className="relative overflow-hidden rounded-hero border border-[#f0d8c4] bg-gradient-to-br from-white via-white to-[#fff5eb] p-5 shadow-[0_12px_30px_rgba(166,76,16,0.07)] ring-1 ring-white">
-        <h2 className="flex items-center gap-2 text-lg font-black text-[#74340d]"><span className="flex h-9 w-9 items-center justify-center rounded-2xl bg-[#fff0e2] text-lg">💾</span>نسخة احتياطية واستعادة</h2>
+      <section className="relative overflow-hidden rounded-hero border border-[#f0d8c4] bg-gradient-to-br from-white via-white to-brand-surface p-5 shadow-accent ring-1 ring-white">
+        <h2 className="flex items-center gap-2 text-lg font-black text-brand-ink-strong"><span className="flex h-9 w-9 items-center justify-center rounded-2xl bg-brand-200 text-lg">💾</span>نسخة احتياطية واستعادة</h2>
         <p className="mt-2 text-sm leading-7 text-ink-2">التصدير بينزّل ملف JSON فيه بياناتك وإعدادات الشهور والسجلات والملاحظات. من غير أي مفاتيح أو أسرار.</p>
         <div className="mt-4 grid gap-3 sm:grid-cols-2">
           <PrimaryButton type="button" disabled={pending} onClick={() => void exportBackup()}>
             ⬇️ نزّل نسخة JSON
           </PrimaryButton>
-          <label className="inline-flex min-h-12 cursor-pointer items-center justify-center rounded-full border border-[#edc7a7] bg-white px-4 font-extrabold text-[#a94708] shadow-sm transition hover:bg-[#fff5eb]">
+          <label className="inline-flex min-h-12 cursor-pointer items-center justify-center rounded-full border border-[#edc7a7] bg-white px-4 font-extrabold text-brand-ink-soft shadow-sm transition hover:bg-brand-surface">
             ⬆️ اختار ملف للاستعادة
             <input
               type="file"

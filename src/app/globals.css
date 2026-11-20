@@ -43,6 +43,17 @@
   --shadow-soft: 0 8px 24px rgba(105, 54, 20, 0.045);
   --shadow-medium: 0 10px 28px rgba(105, 54, 20, 0.045);
   --shadow-glow: 0 12px 28px rgba(198, 83, 11, 0.22);
+  /* جلسة 1.5ب — توكنز إضافية */
+  --color-brand-ink-strong: #74340d;
+  --color-brand-ink-soft: #a94708;
+  --color-brand-200: #fff0e2;
+  --color-brand-surface: #fff5eb;
+  --color-brand-400: #f58a3c;
+  --color-brand-deep: #bd4b0a;
+  --color-ink-3: #2d1d13;
+  --color-ink-muted-3: #8c7b6e;
+  --shadow-accent: 0 12px 30px rgba(166, 76, 16, 0.07);
+  --shadow-deep: 0 12px 28px rgba(189, 75, 10, 0.22);
 }
 
 :root {
@@ -71,6 +82,17 @@
   --tx-shadow-soft: var(--shadow-soft);
   --tx-shadow-medium: var(--shadow-medium);
   --tx-shadow-glow: var(--shadow-glow);
+  /* جلسة 1.5ب — متغيرات قديمة */
+  --tx-brand-ink-strong: var(--color-brand-ink-strong);
+  --tx-brand-ink-soft: var(--color-brand-ink-soft);
+  --tx-brand-200: var(--color-brand-200);
+  --tx-brand-surface: var(--color-brand-surface);
+  --tx-brand-400: var(--color-brand-400);
+  --tx-brand-deep: var(--color-brand-deep);
+  --tx-ink-3: var(--color-ink-3);
+  --tx-ink-muted-3: var(--color-ink-muted-3);
+  --tx-shadow-accent: var(--shadow-accent);
+  --tx-shadow-deep: var(--shadow-deep);
 }
 
 html {
