@@ -1,6 +1,7 @@
 "use client";
 
-import { useCallback, useMemo, useState, type FormEvent } from "react";
+import { useCallback, useEffect, useMemo, useState, type FormEvent } from "react";
+import { readProfile } from "@/lib/local-api";
 import { BRANCHES, MANAGER_FULL_COMMISSION, MANAGER_KPI_WEIGHTS } from "@/lib/constants";
 import { managerApi } from "@/lib/cloud";
 import { cairoYearMonth } from "@/lib/dates";
@@ -84,6 +85,9 @@ export default function BranchManagerPage() {
   const [managerName, setManagerName] = useState("");
   const [branch, setBranch] = useState("");
   const [active, setActive] = useState(false);
+  const [accessChecked, setAccessChecked] = useState(false);
+  const [activeTab, setActiveTab] = useState<"overview" | "team">("overview");
+  const [teamFilter, setTeamFilter] = useState<"all" | "agent" | "team_leader">("all");
   const [data, setData] = useState<BranchData | null>(null);
   const [productivityInput, setProductivityInput] = useState("0");
   const [qualityInputs, setQualityInputs] = useState<Record<string, Quality>>({});
@@ -91,6 +95,20 @@ export default function BranchManagerPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
+
+  useEffect(() => {
+    const profile = readProfile();
+    if (profile.role !== "manager") {
+      window.location.replace(profile.role === "area_manager" ? "/track-your-sales/manager/" : "/track-your-sales/");
+      return;
+    }
+    if (profile.name.trim() && profile.branch.trim()) {
+      setManagerName(profile.name);
+      setBranch(profile.branch);
+      setActive(true);
+    }
+    setAccessChecked(true);
+  }, []);
 
   const load = useCallback(async (selectedBranch: string) => {
     setLoading(true); setError("");
@@ -111,6 +129,10 @@ export default function BranchManagerPage() {
   }, [month]);
 
   const reports = data?.reports ?? [];
+  const visibleReports = useMemo(() => reports.filter((row) => {
+    const role = row.payload.role === "team_leader" ? "team_leader" : "agent";
+    return teamFilter === "all" || role === teamFilter;
+  }), [reports, teamFilter]);
   const qualityMap = useMemo(() => new Map((data?.qualityOverrides ?? []).map((item) => [item.employee_name, item.quality] as const)), [data]);
   const metrics = useMemo(() => {
     const definitions = [
@@ -165,6 +187,8 @@ export default function BranchManagerPage() {
     finally { setSaving(""); }
   }
 
+  if (!accessChecked) return <main className="flex min-h-screen items-center justify-center bg-[#fffaf5] text-sm font-bold text-[#bd4b0a]">Loading your manager workspace...</main>;
+
   if (!active) return (
     <main className="min-h-screen bg-[radial-gradient(ellipse_at_top,_#fff0e2_0%,_#fffaf5_60%,_#fff_100%)] px-4 py-10" dir="ltr">
       <section className="mx-auto max-w-md rounded-[28px] border border-[#f1dfd0] bg-white p-6 shadow-[0_18px_55px_rgba(126,65,24,.10)]">
@@ -203,6 +227,12 @@ export default function BranchManagerPage() {
         </header>
         {error ? <p className="rounded-xl border border-red-200 bg-red-50 p-3 text-sm font-bold text-red-700">{error}</p> : null}
         {notice ? <p className="rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm font-bold text-emerald-800">{notice}</p> : null}
+        <nav className="grid grid-cols-2 gap-2 rounded-2xl border border-[#f1dfd0] bg-white p-2 shadow-sm" aria-label="Manager sections">
+          <button onClick={() => setActiveTab("overview")} className={`rounded-xl px-3 py-3 text-sm font-black transition ${activeTab === "overview" ? "bg-[#bd4b0a] text-white shadow-sm" : "text-[#88796e] hover:bg-[#fff4e9]"}`}>Overview</button>
+          <button onClick={() => setActiveTab("team")} className={`rounded-xl px-3 py-3 text-sm font-black transition ${activeTab === "team" ? "bg-[#bd4b0a] text-white shadow-sm" : "text-[#88796e] hover:bg-[#fff4e9]"}`}>Team Tracking ({reports.length})</button>
+        </nav>
+        {activeTab === "overview" ? (
+          <>
         <section className="relative isolate overflow-hidden rounded-[30px] border border-white bg-white p-5 shadow-[0_8px_28px_rgba(126,65,24,.10)] sm:p-7">
           <div className="pointer-events-none absolute -left-12 -top-16 h-52 w-52 rounded-full bg-[#ff9d38]/20 blur-3xl" />
           <div className="pointer-events-none absolute -bottom-24 right-1/3 h-52 w-52 rounded-full bg-[#bd4b0a]/10 blur-3xl" />
@@ -249,11 +279,17 @@ export default function BranchManagerPage() {
           </label><button onClick={saveProductivity} disabled={saving==="productivity"} className="rounded-xl bg-[#bd4b0a] px-5 py-3 font-bold text-white disabled:opacity-60">{saving==="productivity"?"Saving...":"Save Productivity"}</button></div>
           {data?.productivity ? <p className="mt-2 text-xs text-[#88796e]">Last updated by {data.productivity.updated_by} · {timeLabel(data.productivity.updated_at)}</p> : null}
         </section>
+          </>
+        ) : null}
+        {activeTab === "team" ? (
         <section className="space-y-3">
-          <div><h2 className="text-lg font-black">Branch Team Details</h2><p className="text-xs text-[#88796e]">Achievement, target and percentage for each team member, including all five quality fields.</p></div>
+          <div><h2 className="text-lg font-black">Employee & Team Leader Tracking</h2><p className="text-xs text-[#88796e]">Review each team member’s achievement, targets, daily activity and manager-approved quality.</p>
+            <div className="mt-3 grid grid-cols-3 gap-2">
+              {([{key:"all",label:"All",count:reports.length},{key:"agent",label:"Employees",count:reports.filter((r)=>r.payload.role!=="team_leader").length},{key:"team_leader",label:"Team Leaders",count:reports.filter((r)=>r.payload.role==="team_leader").length}] as const).map((item)=><button key={item.key} onClick={() => setTeamFilter(item.key)} className={`rounded-xl border px-2 py-2 text-xs font-black ${teamFilter===item.key?"border-[#bd4b0a] bg-[#fff0e2] text-[#bd4b0a]":"border-[#f1dfd0] bg-white text-[#88796e]"}`}>{item.label} <span className="opacity-70">({item.count})</span></button>)}
+            </div></div>
           {loading && !data ? <p className="rounded-2xl bg-white p-6 text-center">Loading branch data...</p> : null}
-          {!loading && reports.length===0 ? <p className="rounded-2xl border border-dashed border-[#e7cdb8] bg-white p-6 text-center text-sm text-[#88796e]">No synchronized reports for this branch this month yet.</p> : null}
-          {reports.map((row) => {
+          {!loading && visibleReports.length===0 ? <p className="rounded-2xl border border-dashed border-[#e7cdb8] bg-white p-6 text-center text-sm text-[#88796e]">No synchronized reports for this branch this month yet.</p> : null}
+          {visibleReports.map((row) => {
             const q = qualityInputs[row.employee_name] ?? employeeQuality(row, qualityMap.get(row.employee_name));
             return <article key={row.branch_id} className="rounded-3xl border border-[#f1dfd0] bg-white p-4 shadow-sm">
               <div className="flex flex-wrap items-center justify-between gap-2"><div><h3 className="font-black">{row.employee_name}</h3><p className="mt-1 text-xs text-[#88796e]">{row.payload.role==="team_leader"?"Team Leader":"Employee"} · Last sync {timeLabel(row.updated_at)}</p></div><span className="rounded-full bg-[#fff0e2] px-3 py-1 text-sm font-black text-[#bd4b0a]">{fmt(row.payload.overall ?? 0)}</span></div>
@@ -276,12 +312,20 @@ export default function BranchManagerPage() {
             </article>;
           })}
         </section>
+        ) : null}
+        {activeTab === "overview" ? (
         <section className="rounded-3xl border border-[#f1dfd0] bg-white p-4 sm:p-5">
           <h2 className="text-lg font-black">Audit Log</h2><p className="mt-1 text-xs text-[#88796e]">Latest 100 productivity and quality changes.</p>
           <div className="mt-3 space-y-2">
             {(data?.audit ?? []).length===0 ? <p className="text-sm text-[#9a7963]">No changes recorded this month.</p> : data!.audit.map((item) => <div key={item.id} className="flex flex-wrap justify-between gap-2 rounded-xl bg-[#fff8f1] p-3 text-xs"><div><p className="font-black">{item.employee_name ?? "Branch"} · {item.field_name}</p><p className="mt-1 text-[#88796e]">{String(item.old_value ?? "—")} ← {String(item.new_value)} · by {item.updated_by}</p></div><time className="text-[#9a7963]">{timeLabel(item.updated_at)}</time></div>)}
           </div>
         </section>
+        ) : null}
+        <footer className="pb-6 text-center text-[11px] text-[#a18b7b]">Track Your Sales · Independent Branch Manager Dashboard</footer>
+      </div>
+    </main>
+  );
+}
         <footer className="pb-6 text-center text-[11px] text-[#a18b7b]">Track Your Sales · Independent Branch Manager Dashboard</footer>
       </div>
     </main>
