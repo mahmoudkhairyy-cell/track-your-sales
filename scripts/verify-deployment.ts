@@ -23,7 +23,7 @@ async function main() {
     throw new Error("DATABASE_URL must use postgres:// or postgresql://.");
   }
   if (["localhost", "127.0.0.1", "0.0.0.0", "[::1]", "::1"].includes(url.hostname)) {
-    throw new Error("The sandbox database cannot be used from Vercel. Use a hosted PostgreSQL database.");
+    throw new Error("The local sandbox database cannot be used from a public deployment. Use a hosted PostgreSQL database.");
   }
   if (!["require", "verify-ca", "verify-full"].includes(url.searchParams.get("sslmode") || "")) {
     throw new Error("Use the provider's TLS connection URL with sslmode=require (or verify-full). Do not disable certificate checks.");
