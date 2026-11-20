@@ -175,7 +175,7 @@ function FirstRunProfile({ onDone }: { onDone: () => void }) {
       setError("اختار الفرع بتاعك");
       return;
     }
-    if (role !== "manager" && role !== "area_manager" && branch !== OUTSIDE_BRANCHES && !areaManager.trim()) {
+    if (role !== "manager" && branch !== OUTSIDE_BRANCHES && !areaManager.trim()) {
       setError("اختار مدير المنطقة بتاعك");
       return;
     }
