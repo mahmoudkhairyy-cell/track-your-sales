@@ -5,8 +5,6 @@ import { useEffect, useRef, useState } from "react";
 import { useToast } from "@/components/ui";
 import { ErrorState } from "@/components/ui/ErrorState";
 import { EmptyState } from "@/components/ui/EmptyState";
-import { SearchableCombobox } from "@/components/ui/SearchableCombobox";
-import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { haptic } from "@/lib/prefs";
 import { HomeSkeleton } from "@/components/Skeleton";
 import { ApiError, api } from "@/lib/client";
@@ -57,7 +55,6 @@ type Dashboard = {
 };
 
 
-const DEMO_BRANCH_OPTIONS = ["فرع التحرير", "فرع المعادي", "فرع مدينة نصر"];
 
 function greeting() {
   const hour = Number(new Intl.DateTimeFormat("en-GB", { hour: "2-digit", hour12: false, timeZone: "Africa/Cairo" }).format(new Date()));
@@ -68,7 +65,6 @@ function greeting() {
 
 export default function HomePage() {
   const [copied, setCopied] = useState(false);
-  const [demoBranch, setDemoBranch] = useState("");
   const overallValueRef = useRef<HTMLSpanElement | null>(null);
   const overallBarRef = useRef<HTMLDivElement | null>(null);
   const [sync, setSync] = useState<SyncStatus | null>(null);
@@ -203,23 +199,8 @@ export default function HomePage() {
         </div>
         <div className="flex shrink-0 items-center gap-2">
           <div className="hidden h-12 w-12 items-center justify-center rounded-2xl bg-[var(--color-primary-50)] text-2xl sm:flex">📈</div>
-          <ThemeToggle />
         </div>
       </section>
-
-      <details className="rounded-2xl border border-orange-200 bg-white/80 px-4 py-3 shadow-sm" dir="rtl">
-        <summary className="cursor-pointer text-sm font-bold text-orange-800">تجربة البحث عن فرع (مثال للمكون الجديد)</summary>
-        <div className="mt-3 max-w-md">
-          <SearchableCombobox
-            options={DEMO_BRANCH_OPTIONS}
-            value={demoBranch}
-            onChange={setDemoBranch}
-            placeholder="— اختر الفرع —"
-            label="اسم الفرع"
-          />
-          {demoBranch ? <p className="mt-2 text-xs font-semibold text-neutral-600">الفرع المختار للتجربة: {demoBranch}</p> : null}
-        </div>
-      </details>
 
       {/* الهيرو الرئيسي — لوحة إنجاز دائرية */}
       <section style={{ boxShadow: onTrack === null ? "0 5px 14px rgba(100,55,25,.13)" : onTrack ? "0 0 0 1px rgba(22,163,74,.06), 0 0 10px rgba(22,163,74,.08), 0 5px 14px rgba(100,55,25,.13)" : "0 0 0 1px rgba(220,38,38,.06), 0 0 10px rgba(220,38,38,.08), 0 5px 14px rgba(100,55,25,.13)" }} className="tys-home-hero relative isolate overflow-hidden rounded-[30px] border border-white bg-white p-5 shadow-[0_1px_2px_rgba(43,20,0,.04)] sm:p-7">
@@ -338,7 +319,7 @@ export default function HomePage() {
             const ringLen = 2 * Math.PI * 18;
             const pct = Math.min(100, Math.max(0, kpi.percent));
             return (
-              <article key={kpi.kpiKey} style={{ animationDelay: `${kpiIndex * 100}ms`, boxShadow: onTrackKpi ? "0 0 0 1px rgba(22,163,74,.06), 0 0 8px rgba(22,163,74,.07), 0 5px 14px rgba(100,55,25,.13)" : "0 0 0 1px rgba(220,38,38,.06), 0 0 8px rgba(220,38,38,.07), 0 5px 14px rgba(100,55,25,.13)" }} className={`tys-rise tys-home-kpi flex min-w-0 items-center gap-2.5 rounded-[20px] border p-3 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg sm:gap-3 sm:p-3 border-white bg-orange-50/50`}>
+              <article key={kpi.kpiKey} style={{ animationDelay: `${kpiIndex * 100}ms`, boxShadow: kpi.percent >= 100 ? "0 0 0 1px rgba(234,88,12,.12), 0 0 16px rgba(234,88,12,.20), 0 5px 14px rgba(100,55,25,.13)" : onTrackKpi ? "0 0 0 1px rgba(22,163,74,.06), 0 0 8px rgba(22,163,74,.07), 0 5px 14px rgba(100,55,25,.13)" : "0 0 0 1px rgba(220,38,38,.06), 0 0 8px rgba(220,38,38,.07), 0 5px 14px rgba(100,55,25,.13)" }} className={`tys-rise tys-home-kpi flex min-w-0 items-center gap-2.5 rounded-[20px] border p-3 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg sm:gap-3 sm:p-3 border-white bg-orange-50/50`}>
                 <div className="tys-ring relative h-12 w-12 shrink-0 sm:h-14 sm:w-14">
                   <svg viewBox="0 0 44 44" className="h-full w-full -rotate-90">
                     <circle cx="22" cy="22" r="18" fill="none" stroke="var(--color-border)" strokeWidth="5" />
