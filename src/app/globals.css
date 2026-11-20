@@ -93,6 +93,26 @@
   --shadow-empty-inner: 0 8px 20px rgba(189, 75, 10, 0.08);
   --shadow-banner: 0 6px 20px rgba(70, 43, 24, 0.055);
 
+  /* جلسة 2ج — توكنز AppShell.tsx */
+  /* ألوان Shell */
+  --color-ink-shell: #24180f;
+  --color-ink-title: #3a2416;
+  --color-muted-by: #a58b77;
+  --color-muted-disclaimer: #9b8878;
+  --color-nav-active-bg: #fff0df;
+  --color-surface-95: #fffaf5;
+  --color-surface-72: #fffaf5;
+  --color-line-shell: #f0dfd0;
+
+  /* ظلال Shell */
+  --shadow-navlink: 0 4px 14px rgba(198, 83, 11, 0.08);
+  --shadow-sidebar: 8px 0 36px rgba(116, 63, 26, 0.035);
+  --shadow-sidebar-mobile: 0 14px 28px rgba(189, 75, 10, 0.20);
+  --shadow-month-switcher: 0 8px 28px rgba(198, 83, 11, 0.09);
+  --shadow-month-switcher-sm: 0 3px 12px rgba(198, 83, 11, 0.10);
+  --shadow-bottom-nav: 0 12px 36px rgba(112, 57, 18, 0.14);
+  --shadow-bottom-nav-emph: 0 5px 14px rgba(198, 83, 11, 0.20);
+
 }:root {
   color-scheme: light;
 
@@ -161,6 +181,23 @@
   --tx-shadow-empty: var(--shadow-empty);
   --tx-shadow-empty-inner: var(--shadow-empty-inner);
   --tx-shadow-banner: var(--shadow-banner);
+
+  /* جلسة 2ج — متغيرات توافقية */
+  --tx-ink-shell: var(--color-ink-shell);
+  --tx-ink-title: var(--color-ink-title);
+  --tx-muted-by: var(--color-muted-by);
+  --tx-muted-disclaimer: var(--color-muted-disclaimer);
+  --tx-nav-active-bg: var(--color-nav-active-bg);
+  --tx-surface-95: var(--color-surface-95);
+  --tx-surface-72: var(--color-surface-72);
+  --tx-line-shell: var(--color-line-shell);
+  --tx-shadow-navlink: var(--shadow-navlink);
+  --tx-shadow-sidebar: var(--shadow-sidebar);
+  --tx-shadow-sidebar-mobile: var(--shadow-sidebar-mobile);
+  --tx-shadow-month-switcher: var(--shadow-month-switcher);
+  --tx-shadow-month-switcher-sm: var(--shadow-month-switcher-sm);
+  --tx-shadow-bottom-nav: var(--shadow-bottom-nav);
+  --tx-shadow-bottom-nav-emph: var(--shadow-bottom-nav-emph);
 
 }html {
   direction: rtl;
