@@ -648,6 +648,7 @@ export default function ManagerPage() {
             <div className="mt-auto rounded-2xl border border-[var(--color-border)] bg-gradient-to-br from-[var(--color-surface-cream)] to-[var(--color-primary-50)]/70 p-3">
               <p className="truncate text-xs font-extrabold">{managerName || "إدارة الفريق"}</p><p className="mt-1 text-[10px] text-[var(--color-text-secondary)]">متابعة الأداء اليومي</p>
               <button type="button" onClick={() => { setPwOpen((v) => !v); setPwMsg(""); setMobileMenuOpen(false); }} className="mt-3 w-full rounded-xl border border-[#eadbce] bg-white px-3 py-2 text-xs font-bold text-[var(--color-primary-700)]">⚙ تغيير كلمة السر</button>
+              <button type="button" onClick={() => { setMobileMenuOpen(false); logout(); }} className="mt-2 flex min-h-11 w-full items-center justify-center gap-2 rounded-xl border border-red-200 bg-white px-3 py-2 text-xs font-extrabold text-red-600 transition hover:bg-red-50">↪ تسجيل الخروج</button>
             </div>
           </aside>
 
@@ -667,7 +668,7 @@ export default function ManagerPage() {
                   <p className="mt-0.5 truncate text-[11px] text-[var(--color-text-secondary)]">متابعة أداء الفريق</p>
                 </div>
               </div>
-              <div className="flex shrink-0 items-center gap-2"><div className="flex items-center gap-2 rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface-cream)] py-1 pl-1 pr-1 sm:py-1.5 sm:pl-3 sm:pr-1.5"><span className="hidden max-w-[120px] truncate text-[11px] font-extrabold text-[var(--color-text-primary)] sm:inline">{managerName || "المدير"}</span></div><button type="button" disabled={pending} onClick={() => load()} className="shrink-0 rounded-xl border border-[#eee0d5] bg-white px-3 py-2.5 text-xs font-extrabold text-[var(--color-primary-700)] disabled:opacity-50">{pending ? "تحديث..." : "↻ تحديث"}</button><button type="button" onClick={logout} className="shrink-0 rounded-xl border border-red-200 bg-white px-3 py-2.5 text-xs font-extrabold text-red-600 transition hover:bg-red-50">خروج ↗</button></div>
+              <div className="flex shrink-0 items-center gap-2"><div className="flex items-center gap-2 rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface-cream)] py-1 pl-1 pr-1 sm:py-1.5 sm:pl-3 sm:pr-1.5"><span className="hidden max-w-[120px] truncate text-[11px] font-extrabold text-[var(--color-text-primary)] sm:inline">{managerName || "المدير"}</span></div><button type="button" disabled={pending} onClick={() => load()} className="shrink-0 rounded-xl border border-[#eee0d5] bg-white px-3 py-2.5 text-xs font-extrabold text-[var(--color-primary-700)] disabled:opacity-50">{pending ? "تحديث..." : "↻ تحديث"}</button></div>
             </header>
             {error ? <p className="rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-xs font-bold text-red-700">{error}</p> : null}
 

@@ -197,6 +197,13 @@ export function readProfile(): { name: string; branch: string; role: Role | ""; 
   return { name: state.profile.name, branch: state.profile.branch, areaManager: state.profile.areaManager ?? "", role: role === "manager" || role === "agent" || role === "team_leader" || role === "area_manager" ? role : "" };
 }
 
+/** تسجيل خروج الموظف أو التيم ليدر مع الاحتفاظ بكل الإنجازات والتارجت والنسخ الاحتياطية. */
+export function logoutProfile(): boolean {
+  const state = loadState();
+  state.profile = { name: "", branch: "", role: "", areaManager: "" };
+  return saveState(state);
+}
+
 /** تسجيل خروج مدير الفرع فقط مع الاحتفاظ بكل بيانات المبيعات والتقارير والإعدادات. */
 export function logoutBranchManager(): boolean {
   const state = loadState();
