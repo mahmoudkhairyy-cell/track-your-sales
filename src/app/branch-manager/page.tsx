@@ -110,7 +110,7 @@ export default function BranchManagerPage() {
   const qualityMap = useMemo(() => new Map((data?.qualityOverrides ?? []).map((item) => [item.employee_name, item.quality] as const)), [data]);
   const metrics = useMemo(() => {
     const definitions = [
-      { key: "new_lines", label: "GAs / الخطوط", weight: MANAGER_KPI_WEIGHTS.new_lines },
+      { key: "new_lines", label: "GAs / GAs", weight: MANAGER_KPI_WEIGHTS.new_lines },
       { key: "points", label: "Points / Points", weight: MANAGER_KPI_WEIGHTS.points },
       { key: "existing_wallets", label: "Excite / Wallets", weight: MANAGER_KPI_WEIGHTS.existing_wallets },
       { key: "postpaid_lines", label: "Postpaid", weight: MANAGER_KPI_WEIGHTS.postpaid_lines },
@@ -169,19 +169,19 @@ export default function BranchManagerPage() {
         <h1 className="mt-2 text-center text-2xl font-black text-[#2d2119]">Branch Manager</h1>
         <p className="mt-2 text-center text-sm leading-6 text-[#88796e]">Enter your name and select your branch to review team performance and update productivity and quality.</p>
         <form onSubmit={enter} className="mt-6 space-y-4">
-          <label className="block text-sm font-bold text-[#514238]">اسم Branch Manager
+          <label className="block text-sm font-bold text-[#514238]">Manager Name
             <input value={managerName} onChange={(e) => setManagerName(e.target.value)} maxLength={80} className="mt-2 w-full rounded-2xl border border-[#f2e4d8] bg-[#fffdfb] px-4 py-3 outline-none focus:border-[#e96812]" placeholder="Enter your name" />
           </label>
           <label className="block text-sm font-bold text-[#514238]">Branch
             <select value={branch} onChange={(e) => setBranch(e.target.value)} className="mt-2 w-full rounded-2xl border border-[#f2e4d8] bg-[#fffdfb] px-4 py-3 outline-none focus:border-[#e96812]">
-              <option value="">اختار Branch</option>
+              <option value="">Select a branch</option>
               {BRANCHES.map((item) => <option key={item} value={item}>{item}</option>)}
             </select>
           </label>
           {error ? <p className="text-sm font-bold text-red-600">{error}</p> : null}
-          <button disabled={loading} className="w-full rounded-2xl bg-gradient-to-l from-[#bd4b0a] to-[#ff9d38] py-3 font-black text-white disabled:opacity-60">{loading ? "Loading..." : "دخول لوحة Branch"}</button>
+          <button disabled={loading} className="w-full rounded-2xl bg-gradient-to-l from-[#bd4b0a] to-[#ff9d38] py-3 font-black text-white disabled:opacity-60">{loading ? "Loading..." : "Open Dashboard"}</button>
         </form>
-        <p className="mt-5 text-center text-[11px] leading-5 text-[#a18b7b]">لوحة متابعة مستقلة. Branch Manager لا يدخل مبيعات شخصية.</p>
+        <p className="mt-5 text-center text-[11px] leading-5 text-[#a18b7b]">Independent dashboard. Branch managers do not enter personal sales.</p>
       </section>
     </main>
   );
@@ -190,7 +190,7 @@ export default function BranchManagerPage() {
     <main className="min-h-screen bg-[#fffaf5] px-3 py-5 text-[#2d2119] sm:px-6" dir="ltr">
       <div className="mx-auto max-w-6xl space-y-5">
         <header className="flex flex-wrap items-center justify-between gap-3 rounded-3xl bg-gradient-to-l from-[#bd4b0a] via-[#e96812] to-[#ff9d38] p-5 text-white shadow-lg">
-          <div><p className="text-xs font-bold text-white/80">لوحة Branch Manager</p><h1 className="mt-1 text-xl font-black">{branch}</h1><p className="mt-1 text-xs text-white/85">{managerName} · {new Date(`${month}-01T12:00:00`).toLocaleDateString("en-US", { month: "long", year: "numeric" })}</p></div>
+          <div><p className="text-xs font-bold text-white/80">Branch Manager Dashboard</p><h1 className="mt-1 text-xl font-black">{branch}</h1><p className="mt-1 text-xs text-white/85">{managerName} · {new Date(`${month}-01T12:00:00`).toLocaleDateString("en-US", { month: "long", year: "numeric" })}</p></div>
           <button onClick={() => load(branch)} disabled={loading} className="rounded-xl border border-white/40 bg-white/15 px-4 py-2 text-sm font-bold">{loading ? "Refreshing..." : "Refresh Data ↻"}</button>
         </header>
         {error ? <p className="rounded-xl border border-red-200 bg-red-50 p-3 text-sm font-bold text-red-700">{error}</p> : null}
@@ -234,7 +234,7 @@ export default function BranchManagerPage() {
         </section>
         <section className="grid gap-3 sm:grid-cols-2">
           <div className="rounded-2xl border border-[#f1dfd0] bg-white p-4"><p className="text-xs font-bold text-[#88796e]">Branch Average</p><p className="mt-2 text-3xl font-black text-[#bd4b0a]">{fmt(reports.length ? reports.reduce((sum,row)=>sum+(row.payload.overall??0),0)/reports.length : 0)}</p><p className="mt-1 text-xs text-[#88796e]">Average of employees and team leaders</p></div>
-          <div className="rounded-2xl border border-[#f1dfd0] bg-white p-4"><p className="text-xs font-bold text-[#88796e]">Team Members</p><p className="mt-2 text-3xl font-black">{reports.length}</p><p className="mt-1 text-xs text-[#88796e]">Employees and team leaders</p></div>
+          
         </section>
         <section className="rounded-3xl border border-[#f1dfd0] bg-white p-4 sm:p-5">
           <h2 className="text-lg font-black">Manager KPI Contributions</h2>
@@ -244,15 +244,15 @@ export default function BranchManagerPage() {
           </div>
         </section>
         <section className="rounded-3xl border border-[#f1dfd0] bg-white p-4 sm:p-5">
-          <div className="flex flex-wrap items-center justify-between gap-2"><div><h2 className="text-lg font-black">إدخال إنتاEGPية Branch</h2><p className="text-xs text-[#88796e]">One productivity percentage for the entire branch, not per employee.</p></div><span className="rounded-full bg-[#fff0e2] px-3 py-1 text-xs font-black text-[#bd4b0a]">15% Weight</span></div>
-          <div className="mt-4 flex flex-wrap items-end gap-3"><label className="min-w-44 flex-1 text-sm font-bold">نسبة Productivity %
+          <div className="flex flex-wrap items-center justify-between gap-2"><div><h2 className="text-lg font-black">Branch Productivity</h2><p className="text-xs text-[#88796e]">One productivity percentage for the entire branch, not per employee.</p></div><span className="rounded-full bg-[#fff0e2] px-3 py-1 text-xs font-black text-[#bd4b0a]">15% Weight</span></div>
+          <div className="mt-4 flex flex-wrap items-end gap-3"><label className="min-w-44 flex-1 text-sm font-bold">Productivity %
             <input type="number" min="0" max="1000" step="0.01" value={productivityInput} onChange={(e) => setProductivityInput(e.target.value)} className="mt-2 w-full rounded-xl border border-[#f2e4d8] px-3 py-3" />
-          </label><button onClick={saveProductivity} disabled={saving==="productivity"} className="rounded-xl bg-[#bd4b0a] px-5 py-3 font-bold text-white disabled:opacity-60">{saving==="productivity"?"Saving...":"حفظ Productivity"}</button></div>
+          </label><button onClick={saveProductivity} disabled={saving==="productivity"} className="rounded-xl bg-[#bd4b0a] px-5 py-3 font-bold text-white disabled:opacity-60">{saving==="productivity"?"Saving...":"Save Productivity"}</button></div>
           {data?.productivity ? <p className="mt-2 text-xs text-[#88796e]">Last updated by {data.productivity.updated_by} · {timeLabel(data.productivity.updated_at)}</p> : null}
         </section>
         <section className="space-y-3">
-          <div><h2 className="text-lg font-black">فريق Branch بالتفصيل</h2><p className="text-xs text-[#88796e]">Achievement, target and percentage for each team member, including all five quality fields.</p></div>
-          {loading && !data ? <p className="rounded-2xl bg-white p-6 text-center">جاري تحميل بيانات Branch...</p> : null}
+          <div><h2 className="text-lg font-black">Branch Team Details</h2><p className="text-xs text-[#88796e]">Achievement, target and percentage for each team member, including all five quality fields.</p></div>
+          {loading && !data ? <p className="rounded-2xl bg-white p-6 text-center">Loading branch data...</p> : null}
           {!loading && reports.length===0 ? <p className="rounded-2xl border border-dashed border-[#e7cdb8] bg-white p-6 text-center text-sm text-[#88796e]">No synchronized reports for this branch this month yet.</p> : null}
           {reports.map((row) => {
             const q = qualityInputs[row.employee_name] ?? employeeQuality(row, qualityMap.get(row.employee_name));
@@ -278,12 +278,12 @@ export default function BranchManagerPage() {
           })}
         </section>
         <section className="rounded-3xl border border-[#f1dfd0] bg-white p-4 sm:p-5">
-          <h2 className="text-lg font-black">Audit Log</h2><p className="mt-1 text-xs text-[#88796e]">آخر 100 تعديل على Productivity وQuality.</p>
+          <h2 className="text-lg font-black">Audit Log</h2><p className="mt-1 text-xs text-[#88796e]">Latest 100 productivity and quality changes.</p>
           <div className="mt-3 space-y-2">
             {(data?.audit ?? []).length===0 ? <p className="text-sm text-[#9a7963]">No changes recorded this month.</p> : data!.audit.map((item) => <div key={item.id} className="flex flex-wrap justify-between gap-2 rounded-xl bg-[#fff8f1] p-3 text-xs"><div><p className="font-black">{item.employee_name ?? "Branch"} · {item.field_name}</p><p className="mt-1 text-[#88796e]">{String(item.old_value ?? "—")} ← {String(item.new_value)} · by {item.updated_by}</p></div><time className="text-[#9a7963]">{timeLabel(item.updated_at)}</time></div>)}
           </div>
         </section>
-        <footer className="pb-6 text-center text-[11px] text-[#a18b7b]">Track Your Sales · لوحة مستقلة لBranch Manager</footer>
+        <footer className="pb-6 text-center text-[11px] text-[#a18b7b]">Track Your Sales · Independent Branch Manager Dashboard</footer>
       </div>
     </main>
   );
