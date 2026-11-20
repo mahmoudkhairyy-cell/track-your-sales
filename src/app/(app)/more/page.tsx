@@ -232,7 +232,7 @@ export default function MorePage() {
       if (!result.backup || !Array.isArray(result.backup.entries)) {
         throw new Error("النسخة الاحتياطية الحالية ناقصة، الاستبدال متوقف");
       }
-      downloadJson(`track-your-sales-before-replace-${cairoISODate()}.json`, result.backup);
+      downloadJson(`track-your-sales-backup-before-replace-${cairoISODate()}.json`, result.backup);
       setReplaceReady(true);
       toast.push("info", "اتنزّلت نسخة احتياطية من بياناتك الحالية. تقدر تكمل الاستبدال.");
     } catch (err) {
