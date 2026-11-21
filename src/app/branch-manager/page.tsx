@@ -287,7 +287,7 @@ export default function BranchManagerPage() {
             <div className="h-3 overflow-hidden rounded-full bg-orange-100">
               <div className="h-full rounded-full bg-gradient-to-r from-[#bd4b0a] via-[#e96812] to-[#ff9d38] transition-all duration-700" style={{ width: `${Math.min(100, metrics.total)}%` }} />
             </div>
-            <div className="mt-2 flex justify-between text-[10px] font-bold text-[#88796e]" dir="ltr"><span>0%</span><span>100%</span></div>
+            <div className="mt-2 flex justify-between text-[11px] font-bold text-[#88796e]" dir="ltr"><span>0%</span><span>100%</span></div>
 
           </div>
         </section>
@@ -320,7 +320,7 @@ export default function BranchManagerPage() {
             return <article key={row.branch_id} className="rounded-3xl border border-[#f1dfd0] bg-white p-4 shadow-sm">
               <div className="flex flex-wrap items-center justify-between gap-2"><div><h3 className="font-black">{row.employee_name}</h3><p className="mt-1 text-xs text-[#88796e]">{row.payload.role==="team_leader"?"Team Leader":"Employee"} · Last sync {timeLabel(row.updated_at)}</p></div><span className="rounded-full bg-[#fff0e2] px-3 py-1 text-sm font-black text-[#bd4b0a]">{fmt(row.payload.overall ?? 0)}</span></div>
               <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-6">
-                {(row.payload.kpis ?? []).map((k) => <div key={k.name} className="rounded-xl bg-[#fff8f1] p-2"><p className="truncate text-[10px] font-bold text-[#88796e]">{k.name}</p><p className="mt-1 text-lg font-black">{fmt(k.percent)}</p><p className="text-[10px] text-[#88796e]">{k.achieved} / {k.target}</p></div>)}
+                {(row.payload.kpis ?? []).map((k) => <div key={k.name} className="rounded-xl bg-[#fff8f1] p-2"><p className="truncate text-[11px] font-bold text-[#88796e]">{k.name}</p><p className="mt-1 text-lg font-black">{fmt(k.percent)}</p><p className="text-[11px] text-[#88796e]">{k.achieved} / {k.target}</p></div>)}
               </div>
               <details className="mt-3 rounded-xl border border-[#f2e4d8] bg-[#fffdfb] p-3">
                 <summary className="cursor-pointer text-xs font-black text-[#8a4b20]">Daily Achievement Log ({row.payload.entries?.length ?? 0})</summary>

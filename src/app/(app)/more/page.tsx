@@ -322,7 +322,7 @@ export default function MorePage() {
         <div className="absolute -left-10 -top-12 h-36 w-36 rounded-full bg-[#ffb36e]/20 blur-3xl" />
         <div className="relative flex flex-wrap items-center justify-between gap-3">
           <div>
-            <p className="text-[10px] font-black tracking-[0.18em] text-[var(--color-primary-700)]" dir="ltr">YOUR WORKSPACE</p>
+            <p className="text-[11px] font-black tracking-[0.18em] text-[var(--color-primary-700)]" dir="ltr">YOUR WORKSPACE</p>
             <h1 className="mt-1 text-xl font-black tracking-tight text-[var(--color-text-primary)]">كل أدواتك في مكان واحد</h1>
             <p className="mt-1 text-xs text-[var(--color-text-secondary)]">إدارة سجلاتك وبياناتك ومراجعة أدائك</p>
           </div>
@@ -333,15 +333,15 @@ export default function MorePage() {
           <div className="relative mt-4 grid grid-cols-3 gap-2 text-center">
             <div className="rounded-2xl border border-[var(--color-border)] bg-white/90 px-2 py-3">
               <p className="text-xl font-black tabular-nums text-[var(--color-primary-700)]">{Math.round(reportData.overall)}%</p>
-              <p className="text-[10px] font-bold text-[var(--color-text-secondary)]">التوتال</p>
+              <p className="text-[11px] font-bold text-[var(--color-text-secondary)]">التوتال</p>
             </div>
             <div className="rounded-2xl border border-[var(--color-border)] bg-white/90 px-2 py-3">
               <p className={`text-xl font-black tabular-nums ${reportData.overall >= 80 ? "text-[var(--color-success-text)]" : "text-[var(--color-danger-text)]"}`}>{Math.round(reportData.estimatedCommission)}</p>
-              <p className="text-[10px] font-bold text-[var(--color-text-secondary)]">الكوميشن (ج)</p>
+              <p className="text-[11px] font-bold text-[var(--color-text-secondary)]">الكوميشن (ج)</p>
             </div>
             <div className="rounded-2xl border border-[var(--color-border)] bg-white/90 px-2 py-3">
               <p className="text-xl font-black tabular-nums text-[var(--color-primary-700)]">{entries.length}</p>
-              <p className="text-[10px] font-bold text-[var(--color-text-secondary)]">سجلات الشهر</p>
+              <p className="text-[11px] font-bold text-[var(--color-text-secondary)]">سجلات الشهر</p>
             </div>
           </div>
         ) : null}
@@ -429,7 +429,7 @@ export default function MorePage() {
               <>
                 <div className="mt-4 grid grid-cols-2 gap-3">
                   <div className="rounded-2xl bg-[var(--color-primary-50)] p-3"><p className="text-[11px] font-bold text-[var(--color-text-secondary)]">التوتال</p><p className="text-2xl font-black text-[var(--color-primary-700)]">{reportData.overall.toFixed(1)}%</p></div>
-                  <div className="rounded-2xl bg-[var(--color-primary-50)] p-3"><p className="text-[11px] font-bold text-[var(--color-text-secondary)]">الكوميشن المتوقع</p><p className="text-2xl font-black text-[var(--color-primary-700)]">{Math.round(reportData.estimatedCommission)} ج</p><p className="text-[10px] text-[var(--color-text-secondary)]">من {Math.round(reportData.fullCommission)} ج</p></div>
+                  <div className="rounded-2xl bg-[var(--color-primary-50)] p-3"><p className="text-[11px] font-bold text-[var(--color-text-secondary)]">الكوميشن المتوقع</p><p className="text-2xl font-black text-[var(--color-primary-700)]">{Math.round(reportData.estimatedCommission)} ج</p><p className="text-[11px] text-[var(--color-text-secondary)]">من {Math.round(reportData.fullCommission)} ج</p></div>
                 </div>
                 <div className="mt-4 divide-y divide-dashed divide-[#F3D2B5]">
                   {reportData.kpis.map((kpi) => (
