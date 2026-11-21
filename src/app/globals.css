@@ -3984,15 +3984,15 @@ h1, h2 {
     --au-o: #ee6a22;
     --au-o2: #f98a45;
     --au-glass: rgba(255, 255, 255, .72);
-    --color-primary-700: #d9551a;
-    --color-primary-600: #ee6a22;
+    --color-primary-700: #bf4510;
+    --color-primary-600: #c9480c;
     --color-primary-500: #f98a45;
     --color-primary-100: #e9eefb;
     --color-primary-50: #f3f6fd;
     --color-border: #d9e0f3;
     --color-text-primary: #1a1d3a;
     --color-text-secondary: #5b6280;
-    --color-text-muted: #7a819c;
+    --color-text-muted: #646b86;
     background: #e9ecf5;
   }
   html[data-theme="aurora"] body {
