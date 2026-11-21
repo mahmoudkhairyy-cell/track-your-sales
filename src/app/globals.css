@@ -378,6 +378,67 @@ textarea { resize: vertical; }
 }
 
 
+/* Premium bottom bar: a floating, inset glass bar instead of a full-bleed strip. Mobile only. */
+.tys-mobile-nav {
+  left: 12px;
+  right: 12px;
+  bottom: calc(10px + env(safe-area-inset-bottom));
+  padding-top: 6px;
+  padding-bottom: 0;
+  border: 1px solid rgba(233, 104, 18, .12);
+  border-radius: 28px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, .92), rgba(255, 250, 245, .88));
+  box-shadow:
+    0 18px 40px -12px rgba(115, 58, 20, .20),
+    0 2px 6px rgba(115, 58, 20, .05),
+    inset 0 1px 0 rgba(255, 255, 255, .85);
+  -webkit-backdrop-filter: blur(24px) saturate(1.25);
+  backdrop-filter: blur(24px) saturate(1.25);
+  overflow: visible;
+}
+.tys-mobile-nav-link {
+  min-height: 62px;
+  border-radius: 22px;
+}
+.tys-mobile-nav-link-active::before {
+  top: -6px;
+  width: 22px;
+  height: 3px;
+}
+.tys-mobile-nav-link-active .tys-mobile-nav-icon:not(.tys-mobile-nav-primary) {
+  border-color: rgba(233, 104, 18, .16);
+  background: linear-gradient(145deg, #ffeedb, #fff7ef);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .9), 0 6px 14px rgba(189, 75, 10, .10);
+}
+.tys-mobile-nav-primary {
+  box-shadow:
+    0 10px 22px -6px rgba(217, 104, 18, .45),
+    inset 0 1px 0 rgba(255, 255, 255, .28),
+    0 0 0 4px rgba(255, 240, 226, .95);
+}
+:root[data-theme="aurora-dark"] .tys-mobile-nav,
+:root[data-theme="space"] .tys-mobile-nav {
+  border-color: rgba(255, 166, 98, .14);
+  background: linear-gradient(180deg, rgba(30, 24, 22, .90), rgba(18, 14, 13, .88));
+  box-shadow:
+    0 20px 44px -12px rgba(0, 0, 0, .55),
+    inset 0 1px 0 rgba(255, 255, 255, .06);
+}
+:root[data-theme="aurora-dark"] .tys-mobile-nav-link-active .tys-mobile-nav-icon:not(.tys-mobile-nav-primary),
+:root[data-theme="space"] .tys-mobile-nav-link-active .tys-mobile-nav-icon:not(.tys-mobile-nav-primary) {
+  border-color: rgba(255, 166, 98, .18);
+  background: linear-gradient(145deg, rgba(255, 140, 60, .20), rgba(255, 120, 40, .08));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .06);
+}
+@media (prefers-reduced-transparency: reduce) {
+  .tys-mobile-nav {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    background: #fffdfa;
+  }
+}
+
+
 /* Desktop sidebar navigation refinement. */
 .tys-desktop-nav-link {
   min-height: 48px;
