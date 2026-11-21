@@ -198,7 +198,7 @@ export default function MorePage() {
       if (!result.backup || !Array.isArray(result.backup.entries) || !Array.isArray(result.backup.months) || !result.backup.profile) {
         throw new Error("التصدير ناقص، الملف متنزلش");
       }
-      downloadJson(`targetx-backup-${cairoISODate()}.json`, result.backup);
+      downloadJson(`track-your-sales-backup-${cairoISODate()}.json`, result.backup);
       toast.push("info", result.message);
     } catch (err) {
       toast.push("error", err instanceof Error ? err.message : "فشل التصدير");
@@ -243,7 +243,7 @@ export default function MorePage() {
       if (!result.backup || !Array.isArray(result.backup.entries)) {
         throw new Error("النسخة الاحتياطية الحالية ناقصة، الاستبدال متوقف");
       }
-      downloadJson(`targetx-before-replace-${cairoISODate()}.json`, result.backup);
+      downloadJson(`track-your-sales-before-replace-${cairoISODate()}.json`, result.backup);
       setReplaceReady(true);
       toast.push("info", "اتنزّلت نسخة احتياطية من بياناتك الحالية. تقدر تكمل الاستبدال.");
     } catch (err) {
