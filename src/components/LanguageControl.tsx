@@ -136,7 +136,7 @@ export function LanguageControl() {
     let stored: "en" | "ar" = "en";
     try { stored = localStorage.getItem("tys.language") === "ar" ? "ar" : "en"; } catch { /* default English */ }
     if (stored !== lang) queueMicrotask(() => setLang(stored));
-  }, []);
+  }, [lang]);
 
   useEffect(() => {
     const active = isReference ? "ar" : lang;
