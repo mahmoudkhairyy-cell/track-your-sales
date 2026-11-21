@@ -149,7 +149,7 @@ export default function WikiPage() {
 
   const globalHits = useMemo(() => {
     if (!q) return null;
-    const sr = SR_ITEMS.filter((item) => [item.id, item.title, item.titleAr, item.description].join(" ").toLowerCase().includes(q)).slice(0, 12);
+    const sr = SR_ITEMS.filter((item) => [item.id, item.title, item.titleAr, item.description, item.steps, item.category].join(" ").toLowerCase().includes(q)).slice(0, 12);
     const hunts = HUNTS.filter((item) => `${item.name} ${item.number}`.toLowerCase().includes(q));
     const emails = EMAILS.filter((item) => `${item.name} ${item.email} ${item.description}`.toLowerCase().includes(q));
     const docs = DOCS.filter((item) => `${item.title} ${item.description}`.toLowerCase().includes(q));
