@@ -69,10 +69,10 @@ export function BottomNav({ month }: BottomNavProps) {
   return (
     <nav
       aria-label="التنقل الرئيسي"
-      className="tys-mobile-nav fixed inset-x-0 bottom-0 z-50 border-t border-orange-100 bg-white/95 pb-[env(safe-area-inset-bottom)] shadow-[0_-8px_28px_rgba(115,58,20,0.07)] backdrop-blur-2xl lg:hidden"
+      className="tys2-dock fixed z-50 lg:hidden"
       dir="rtl"
     >
-      <div className="grid grid-cols-5">
+      <div className="tys2-dock-grid">
         {ITEMS.map((item) => {
           const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
 
@@ -82,22 +82,20 @@ export function BottomNav({ month }: BottomNavProps) {
               href={`${item.href}?month=${month}`}
               prefetch={false}
               aria-current={active ? "page" : undefined}
-              className={`tys-mobile-nav-link relative flex min-h-[68px] flex-col items-center justify-center gap-1.5 px-1 pt-1 text-[10px] font-extrabold transition-colors ${
-                active ? "text-orange-600" : "text-neutral-500 hover:text-orange-600"
-              }`}
+              className={`tys2-dock-link ${active ? "tys2-dock-link-active" : ""}`}
             >
               <span
-                className={`tys-mobile-nav-icon flex h-9 w-12 items-center justify-center rounded-2xl transition-all ${
+                className={`tys2-dock-icon ${
                   item.emphasize
-                    ? "tys-mobile-nav-primary h-11 w-11 -translate-y-1 rounded-[18px] bg-gradient-to-br from-orange-600 to-orange-400 text-white shadow-[0_7px_18px_rgba(217,104,18,0.24)] ring-4 ring-orange-50"
+                    ? "tys2-dock-primary"
                     : active
-                      ? "bg-orange-50 text-orange-600"
-                      : "text-neutral-500"
+                      ? "tys2-dock-icon-active"
+                      : ""
                 }`}
               >
                 {item.icon}
               </span>
-              <span>{item.label}</span>
+              <span className="tys2-dock-label">{item.label}</span>
             </Link>
           );
         })}
