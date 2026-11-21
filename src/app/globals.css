@@ -667,3 +667,40 @@ main.tys-employee .tys-kpi-grid > article .text-3xl {
     margin-top: 9px;
   }
 }
+
+
+/* Compact, consistent mobile treatment for target setup and daily entry. */
+@media (max-width: 640px) {
+  main.tys-employee .tys-target-kpis {
+    gap: 12px;
+  }
+  main.tys-employee .tys-target-kpis > div {
+    padding: 13px;
+    border-radius: 16px;
+  }
+  main.tys-employee .tys-target-kpis > div > div:first-child > span {
+    width: 38px;
+    height: 38px;
+    border-radius: 13px;
+    font-size: 1.25rem;
+  }
+  main.tys-employee .tys-target-form > section:not(:first-child),
+  main.tys-employee .tys-log-entry {
+    border-radius: 18px;
+  }
+  main.tys-employee .tys-target-form > section:not(:first-child) {
+    padding: 15px;
+  }
+  main.tys-employee .tys-log-entry {
+    padding: 15px;
+    gap: 14px;
+  }
+  main.tys-employee .tys-log-entry > div:first-child .grid {
+    gap: 8px;
+  }
+  main.tys-employee .tys-log-entry > div:first-child button {
+    min-height: 52px;
+    padding-inline: 10px;
+    border-radius: 14px;
+  }
+}
