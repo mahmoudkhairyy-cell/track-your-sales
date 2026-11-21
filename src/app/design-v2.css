@@ -1,0 +1,455 @@
+/* ============================================================================
+   Track Your Sales — Month Track · design-v2 (المرحلة الأولى)
+   ----------------------------------------------------------------------------
+   طبقة تصميم جديدة مستقلة بتتحمّل AFTER globals.css و premium-layer.css.
+   - طبقة premium القديمة مقفولة بـ data-px-lock="off" على <html> (الـkill switch
+     الموثّق بتاعها)، فالملف ده هو المسؤول عن شكل الهيدر والسايدبار والناف.
+   - الثيمات الأربعة شغالة: الباليت الأساسي الجديد بيتعرّف تحت :root:not([data-theme])
+     فقط، وباقي الثيمات بتقرأ متغيراتها الحالية (--color-* / --d-*) عبر جسر التوكنز.
+   - كل القواعد هنا unlayered عشان تتغلب على Tailwind utilities عند التعارض،
+     ومحصورة في كلاسات tys2-* (ما عدا body/الخطوط ومساحة الأمان تحت الناف).
+   - ممنوع اللمس: المنطق، المزامنة، الأمان، القفل، الـroutes، الـbasePath.
+   ============================================================================ */
+
+/* --------------------------------------------------------------------------
+   1) الباليت الأساسي الجديد — للثيم الفاتح (الأساسي) فقط.
+      بيعيد تعريف نفس متغيرات globals.css عشان التطبيق كله يتدرّج لنفس الهوية.
+   -------------------------------------------------------------------------- */
+:root:not([data-theme]) {
+  --color-primary-50: #FEEADD;
+  --color-primary-500: #EA580C;
+  --color-primary-600: #C2410C;
+  --color-primary-700: #9A3412;
+  --color-text-primary: #221A12;
+  --color-text-secondary: #7A6A58;
+  --color-text-muted: #A08F7A;
+  --color-border: #E8DFD2;
+  --color-surface-cream: #F7F3EC;
+}
+
+/* --------------------------------------------------------------------------
+   2) توكنز النظام — جسر بيقرأ متغيرات الثيم النشط + هندسة + حركة + ظلال
+   -------------------------------------------------------------------------- */
+:root {
+  /* الألوان الدلالية (بتتبع الثيم) */
+  --tys2-primary: var(--color-primary-600, #C2410C);
+  --tys2-primary-strong: var(--color-primary-700, #9A3412);
+  --tys2-primary-bright: var(--color-primary-500, #EA580C);
+  --tys2-primary-soft: var(--color-primary-50, #FEEADD);
+  --tys2-ink: var(--color-text-primary, #221A12);
+  --tys2-ink-2: var(--color-text-secondary, #7A6A58);
+  --tys2-line: var(--color-border, #E8DFD2);
+  --tys2-paper: var(--color-surface-cream, #F7F3EC);
+  --tys2-surface: var(--color-surface, #FFFFFF);
+
+  /* الحبر الداكن — للناف العائم والسايدبار (مستقل عن الثيم) */
+  --tys2-deep: #241A12;
+  --tys2-deep-2: #1B130C;
+  --tys2-on-deep: #F5EDE3;
+  --tys2-on-deep-2: #B9A88F;
+
+  /* النحاسي — لحظات التميز */
+  --tys2-copper: #B45309;
+  --tys2-copper-2: #D97706;
+
+  /* الهندسة */
+  --tys2-radius-s: 12px;
+  --tys2-radius-m: 18px;
+  --tys2-radius-l: 24px;
+
+  /* الظلال */
+  --tys2-e1: 0 1px 2px rgba(34, 26, 18, 0.05), 0 8px 24px rgba(34, 26, 18, 0.05);
+  --tys2-e2: 0 12px 40px rgba(27, 19, 12, 0.28);
+
+  /* الحركة */
+  --tys2-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --tys2-fast: 140ms;
+  --tys2-mid: 280ms;
+  --tys2-slow: 600ms;
+
+  /* الخطوط */
+  --tys2-font-body: "IBM Plex Sans Arabic", "Segoe UI", Tahoma, system-ui, sans-serif;
+  --tys2-font-display: "Alexandria", "IBM Plex Sans Arabic", Tahoma, sans-serif;
+  --tys2-font-num: "Space Grotesk", "IBM Plex Sans Arabic", ui-monospace, monospace;
+
+  /* أسطح شفافة (بتتحول صلبة مع prefers-reduced-transparency) */
+  --tys2-header-bg: var(--tys2-paper);
+  --tys2-header-bg: color-mix(in oklab, var(--tys2-paper) 85%, transparent);
+  --tys2-dock-bg: var(--tys2-deep);
+  --tys2-dock-bg: color-mix(in oklab, var(--tys2-deep) 92%, transparent);
+}
+
+/* الثيمات الداكنة: الهيدر بياخد سطح الثيم نفسه عبر توكنز --d-* الخاصة بيه */
+:root[data-theme="aurora-dark"],
+:root[data-theme="space"] {
+  --tys2-paper: var(--d-card, #12172A);
+  --tys2-surface: var(--d-card, #12172A);
+  --tys2-ink: var(--color-text-primary, #EDF1F8);
+  --tys2-ink-2: var(--color-text-secondary, #9AA3B8);
+  --tys2-line: var(--d-line, #2A3247);
+}
+
+/* --------------------------------------------------------------------------
+   3) الأساسيات — خطوط وخلفية
+   -------------------------------------------------------------------------- */
+html {
+  font-family: var(--tys2-font-body);
+}
+body {
+  font-family: var(--tys2-font-body);
+}
+h1, h2, h3, h4 {
+  font-family: var(--tys2-font-display);
+}
+.tys2-body {
+  background: var(--tys2-paper);
+  color: var(--tys2-ink);
+}
+.tys2-num {
+  font-family: var(--tys2-font-num);
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+/* --------------------------------------------------------------------------
+   4) الخط العلوي — شعرية نحاسية بدل الشريط البرتقالي العريض
+   -------------------------------------------------------------------------- */
+.tys2-topline {
+  height: 2px;
+  background: linear-gradient(90deg, var(--tys2-copper), var(--tys2-primary), var(--tys2-copper-2));
+}
+
+/* --------------------------------------------------------------------------
+   5) الهيدر — ورق شفاف + blur + حد سفلي hairline
+   -------------------------------------------------------------------------- */
+.tys2-header {
+  background: var(--tys2-header-bg);
+  border-bottom-color: var(--tys2-line);
+  color: var(--tys2-ink);
+  box-shadow: 0 1px 0 rgba(34, 26, 18, 0.03);
+}
+.tys2-brand-mark {
+  background: var(--tys2-surface);
+  border: 1px solid var(--tys2-line);
+  border-radius: var(--tys2-radius-s);
+  box-shadow: var(--tys2-e1);
+}
+.tys2-brand-name {
+  font-family: var(--tys2-font-display);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: var(--tys2-ink);
+}
+.tys2-brand-sub {
+  font-size: 9px;
+  font-weight: 600;
+  color: var(--tys2-ink-2);
+}
+.tys2-page-title {
+  font-family: var(--tys2-font-display);
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--tys2-ink);
+}
+.tys2-page-sub {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--tys2-ink-2);
+}
+
+/* زرار الثيم + القائمة */
+.tys2-icon-btn {
+  background: var(--tys2-surface);
+  border: 1px solid var(--tys2-line);
+  border-radius: 999px;
+  box-shadow: var(--tys2-e1);
+  transition: background var(--tys2-fast) var(--tys2-ease), border-color var(--tys2-fast) var(--tys2-ease);
+}
+.tys2-icon-btn:hover {
+  background: var(--tys2-primary-soft);
+  border-color: var(--tys2-primary);
+}
+.tys2-theme-menu {
+  background: var(--tys2-surface);
+  border: 1px solid var(--tys2-line);
+  border-radius: var(--tys2-radius-m);
+  box-shadow: var(--tys2-e2);
+  color: var(--tys2-ink);
+}
+.tys2-theme-item {
+  border-radius: var(--tys2-radius-s);
+  color: var(--tys2-ink-2);
+  transition: background var(--tys2-fast) var(--tys2-ease), color var(--tys2-fast) var(--tys2-ease);
+}
+.tys2-theme-item:hover {
+  background: var(--tys2-paper);
+  color: var(--tys2-ink);
+}
+.tys2-theme-item-active {
+  background: var(--tys2-primary-soft);
+  color: var(--tys2-primary-strong);
+}
+
+/* --------------------------------------------------------------------------
+   6) مبدّل الشهر — capsule ورقية بأزرار دائرية
+   -------------------------------------------------------------------------- */
+.tys2-month {
+  background: var(--tys2-paper);
+  background: color-mix(in oklab, var(--tys2-ink) 6%, var(--tys2-paper));
+  border: 1px solid var(--tys2-line);
+  border-radius: 999px;
+}
+.tys2-month-btn {
+  background: var(--tys2-surface);
+  border: 1px solid var(--tys2-line);
+  border-radius: 999px;
+  color: var(--tys2-primary);
+  box-shadow: 0 1px 3px rgba(34, 26, 18, 0.08);
+  transition: transform var(--tys2-fast) var(--tys2-ease), border-color var(--tys2-fast) var(--tys2-ease);
+}
+.tys2-month-btn:hover {
+  border-color: var(--tys2-primary);
+}
+.tys2-month-label {
+  font-family: var(--tys2-font-display);
+  font-weight: 800;
+  color: var(--tys2-ink);
+  white-space: nowrap;
+}
+
+/* --------------------------------------------------------------------------
+   7) السايدبار (ديسكتوب) — حبر داكن بكروت شفافة وحدود نحاسية
+   -------------------------------------------------------------------------- */
+.tys2-sidebar {
+  background: linear-gradient(180deg, var(--tys2-deep) 0%, var(--tys2-deep-2) 100%);
+  border-left-color: rgba(245, 237, 227, 0.12);
+  color: var(--tys2-on-deep);
+}
+.tys2-side-card {
+  background: rgba(245, 237, 227, 0.06);
+  border: 1px solid rgba(245, 237, 227, 0.14);
+  border-radius: var(--tys2-radius-m);
+}
+.tys2-side-workspace {
+  background:
+    radial-gradient(ellipse 120px 80px at 85% 0%, rgba(217, 119, 6, 0.16), transparent 70%),
+    rgba(245, 237, 227, 0.06);
+}
+.tys2-live-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--tys2-copper-2);
+  box-shadow: 0 0 0 4px rgba(217, 119, 6, 0.15);
+}
+.tys2-side-brand {
+  font-family: var(--tys2-font-display);
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: var(--tys2-on-deep);
+}
+.tys2-side-brand-sub {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--tys2-on-deep-2);
+}
+.tys2-side-kicker {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: var(--tys2-on-deep-2);
+}
+.tys2-side-name {
+  font-family: var(--tys2-font-display);
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--tys2-on-deep);
+}
+.tys2-side-branch {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--tys2-on-deep-2);
+}
+.tys2-side-link {
+  border-radius: var(--tys2-radius-s);
+  color: var(--tys2-on-deep-2);
+  transition: background var(--tys2-fast) var(--tys2-ease), color var(--tys2-fast) var(--tys2-ease);
+}
+.tys2-side-link:hover {
+  background: rgba(245, 237, 227, 0.07);
+  color: var(--tys2-on-deep);
+}
+.tys2-side-link-active {
+  background: rgba(245, 237, 227, 0.1);
+  background: color-mix(in oklab, var(--tys2-primary) 22%, transparent);
+  color: var(--tys2-on-deep);
+}
+.tys2-side-link-active::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: 0;
+  inset-block: 10px;
+  width: 3px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, var(--tys2-copper-2), var(--tys2-primary));
+}
+.tys2-side-foot {
+  border-top: 1px solid rgba(245, 237, 227, 0.12);
+  color: var(--tys2-on-deep-2);
+}
+.tys2-side-foot span {
+  color: var(--tys2-copper-2);
+}
+
+/* --------------------------------------------------------------------------
+   8) الناف للموبايل — الجزيرة العائمة الداكنة
+   -------------------------------------------------------------------------- */
+.tys2-dock {
+  inset-inline: 12px;
+  bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+  margin-inline: auto;
+  max-width: 480px;
+  padding: 10px 8px 8px;
+  border-radius: var(--tys2-radius-l);
+  background: var(--tys2-dock-bg);
+  border: 1px solid var(--tys2-copper);
+  border-color: color-mix(in oklab, var(--tys2-copper-2) 30%, transparent);
+  box-shadow: var(--tys2-e2), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+.tys2-dock-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+.tys2-dock-link {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  min-height: 62px;
+  border-radius: 16px;
+  color: var(--tys2-on-deep-2);
+  -webkit-tap-highlight-color: transparent;
+}
+.tys2-dock-link:focus-visible {
+  outline: 2px solid var(--tys2-copper-2);
+  outline-offset: -2px;
+}
+.tys2-dock-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 32px;
+  border-radius: 999px;
+  transition: background var(--tys2-fast) var(--tys2-ease), color var(--tys2-fast) var(--tys2-ease), transform var(--tys2-fast) var(--tys2-ease);
+}
+.tys2-dock-icon-active {
+  background: var(--tys2-primary);
+  color: #FFFFFF;
+}
+.tys2-dock-primary {
+  width: 48px;
+  height: 48px;
+  margin-top: -16px;
+  background: linear-gradient(135deg, var(--tys2-primary-bright), var(--tys2-primary));
+  color: #FFFFFF;
+  box-shadow: 0 6px 18px rgba(194, 65, 12, 0.4), 0 0 0 4px rgba(36, 26, 18, 0.85);
+  box-shadow: 0 6px 18px color-mix(in oklab, var(--tys2-primary) 45%, transparent), 0 0 0 4px color-mix(in oklab, var(--tys2-deep) 85%, transparent);
+}
+.tys2-dock-label {
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+.tys2-dock-link-active {
+  color: var(--tys2-on-deep);
+}
+.tys2-dock-link-active .tys2-dock-label {
+  color: var(--tys2-on-deep);
+}
+
+/* مساحة أمان تحت الناف العائم للمحتوى (الموبايل فقط) */
+@media (max-width: 1023.98px) {
+  .tys-app-main {
+    padding-bottom: calc(120px + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+/* --------------------------------------------------------------------------
+   9) الحركة — micro تفاعلات + نبض النقطة (محترمة لتقليل الحركة)
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: no-preference) {
+  .tys2-header,
+  .tys2-dock {
+    -webkit-backdrop-filter: blur(18px) saturate(1.15);
+    backdrop-filter: blur(18px) saturate(1.15);
+  }
+  .tys2-month-btn:active {
+    transform: scale(0.94);
+  }
+  .tys2-icon-btn:active {
+    transform: scale(0.95);
+  }
+  .tys2-dock-link:active .tys2-dock-icon {
+    transform: scale(0.93);
+  }
+  .tys2-live-dot {
+    animation: tys2-pulse 2.4s var(--tys2-ease) infinite;
+  }
+  @keyframes tys2-pulse {
+    0%, 100% { box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.18); }
+    50% { box-shadow: 0 0 0 6px rgba(217, 119, 6, 0.06); }
+  }
+}
+
+/* --------------------------------------------------------------------------
+   10) تقليل الحركة — إيقاف كل الأنيميشن والترانزيشن في مكونات النظام
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .tys2-header, .tys2-header *,
+  .tys2-sidebar, .tys2-sidebar *,
+  .tys2-dock, .tys2-dock *,
+  .tys2-month, .tys2-month *,
+  .tys2-theme-menu, .tys2-theme-menu *,
+  .tys2-topline, .tys2-live-dot {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   11) تقليل الشفافية — أسطح صلبة بدون blur
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-transparency: reduce) {
+  :root {
+    --tys2-header-bg: var(--tys2-paper);
+    --tys2-dock-bg: var(--tys2-deep);
+  }
+  .tys2-header,
+  .tys2-dock {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   12) الطباعة — إخفاء هيكل التطبيق (تقرير الشهر بيطبع من #report-print)
+   -------------------------------------------------------------------------- */
+@media print {
+  .tys2-topline,
+  .tys2-header,
+  .tys2-sidebar,
+  .tys2-dock {
+    display: none !important;
+  }
+  .tys2-body {
+    background: #FFFFFF;
+  }
+  .tys-app-main {
+    padding: 0 !important;
+  }
+}
