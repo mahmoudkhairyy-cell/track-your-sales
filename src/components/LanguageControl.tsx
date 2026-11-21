@@ -133,7 +133,9 @@ export function LanguageControl() {
   const [lang, setLang] = useState<"en" | "ar">("en");
 
   useEffect(() => {
-    try { setLang(localStorage.getItem("tys.language") === "ar" ? "ar" : "en"); } catch { setLang("en"); }
+    let stored: "en" | "ar" = "en";
+    try { stored = localStorage.getItem("tys.language") === "ar" ? "ar" : "en"; } catch { /* default English */ }
+    if (stored !== lang) queueMicrotask(() => setLang(stored));
   }, []);
 
   useEffect(() => {
@@ -164,7 +166,7 @@ export function LanguageControl() {
   return (
     <button type="button" onClick={toggle} aria-label={lang === "en" ? "Switch to Arabic" : "Switch to English"}
       title={lang === "en" ? "Switch to Arabic" : "Switch to English"}
-      className="fixed right-3 top-3 z-[100] flex h-9 min-w-12 items-center justify-center rounded-full border border-white/50 bg-white/95 px-3 text-xs font-black text-[#bd4b0a] shadow-lg backdrop-blur transition hover:scale-105 active:scale-95">
+      className="fixed right-3 top-16 z-[100] flex h-9 min-w-12 items-center justify-center rounded-full border border-white/50 bg-white/95 px-3 text-xs font-black text-[#bd4b0a] shadow-lg backdrop-blur transition hover:scale-105 active:scale-95">
       {lang === "en" ? "عربي" : "EN"}
     </button>
   );
