@@ -341,7 +341,7 @@ export default function HomePage() {
                       </span>
                       <span className="truncate text-xs font-black text-[var(--color-text-primary)]" dir="ltr">{kpi.nameEn}</span>
                     </span>
-                    <span className={`shrink-0 rounded-full px-2 py-0.5 text-xs font-extrabold ${onTrackKpi ? "bg-emerald-50 text-emerald-700" : "bg-red-50 text-red-600"}`}>
+                    <span className={`shrink-0 text-xs ${onTrackKpi ? "font-bold text-[var(--color-text-muted)]" : "rounded-full bg-red-50 px-2 py-0.5 font-extrabold text-red-600"}`}>
                       {onTrackKpi ? "On Track" : `ناقص ${formatQty(Math.max(0, Math.ceil(kpi.expectedToDate - kpi.achieved)))}`}
                     </span>
                   </div>
@@ -361,8 +361,8 @@ export default function HomePage() {
                     </div>
                   ) : null}
                   {!kpi.overTarget && kpi.remaining > 0 && data.work.remaining > 0 ? (
-                    <p className="text-xs font-bold text-[var(--color-primary-700)]">
-                      محتاج {formatQty(Math.ceil(kpi.remaining / data.work.remaining))} يوميًا لباقي الشهر
+                    <p className="text-xs font-semibold text-[var(--color-text-secondary)]">
+                      محتاج <strong className="font-mono font-black text-[var(--color-text-primary)]">{formatQty(Math.ceil(kpi.remaining / data.work.remaining))}</strong> يوميًا لباقي الشهر
                     </p>
                   ) : null}
                   {kpi.overTarget ? <p className="text-xs font-bold text-[var(--color-primary-600)]">عدّيت التارجت 🎉</p> : null}
