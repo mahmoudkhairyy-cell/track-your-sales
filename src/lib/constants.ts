@@ -210,3 +210,15 @@ export const ARABIC_MONTHS = [
 
 export const YEAR_MONTH_RE = /^\d{4}-(0[1-9]|1[0-2])$/;
 export const ISO_DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
+
+/** اسم الوحدة بالإنجليزي للعرض فقط؛ القيمة المخزّنة بالعربي زي ما هي. */
+const UNIT_EN: Record<string, [string, string]> = {
+  "خط": ["line", "lines"],
+  "محفظة": ["wallet", "wallets"],
+  "نقطة": ["point", "points"],
+};
+export function unitEn(unitAr: string, qty = 2): string {
+  const pair = UNIT_EN[unitAr];
+  if (!pair) return unitAr;
+  return qty === 1 ? pair[0] : pair[1];
+}

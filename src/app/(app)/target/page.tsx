@@ -1,7 +1,7 @@
 "use client";
 
 import { FormEvent, useEffect, useState } from "react";
-import { KPI_CATALOG, kpiEmoji } from "@/lib/constants";
+import { KPI_CATALOG, kpiEmoji, unitEn } from "@/lib/constants";
 import { sumWeights } from "@/lib/calculations";
 import { Banner, Field, PageSkeleton, PrimaryButton, inputClass, useToast } from "@/components/ui";
 import { ApiError, api } from "@/lib/client";
@@ -277,15 +277,15 @@ export default function TargetPage() {
 
       <section className="rounded-[28px] border border-white bg-white p-4 shadow-[0_1px_2px_rgba(43,20,0,.04)]">
         <div className="mb-1 flex items-center justify-between">
-          <h2 className="text-lg font-black">الإيتمز والأوزان</h2>
+          <h2 className="text-lg font-black">Items &amp; weights</h2>
         </div>
         <p className="mb-2 rounded-xl bg-[var(--color-primary-50)] px-3 py-2 text-[11px] font-bold leading-5 text-[var(--color-primary-700)]">
           📌 الأوزان مختلفة للموظف والمدير. ده وزن {kpis.some((k) => k.kpiKey === "productivity" && k.weight > 0) ? "المدير" : "الموظف"}، وبيتحدد أوتوماتيك حسب اختيارك في أول مرة، ومش بيتعدل من التطبيق.
         </p>
         <div className="grid grid-cols-[minmax(0,1fr)_68px_60px] gap-1.5 border-b sm:grid-cols-[minmax(0,1fr)_74px_74px] sm:gap-2 border-dashed border-[var(--color-border)]/70 pb-2 text-[11px] font-bold text-[var(--color-text-secondary)]">
-          <span>الإيتم</span>
-          <span className="text-center">التارجت</span>
-          <span className="text-center">الوزن %</span>
+          <span>Item</span>
+          <span className="text-center">Target</span>
+          <span className="text-center">Weight %</span>
         </div>
         {kpis.map((kpi, index) => {
           // الكواليتي بتتدخل في قسم الكواليتي تحت بس، ووزنها بيفضل محسوب في المجموع.
@@ -300,9 +300,9 @@ export default function TargetPage() {
                 <div className="min-w-0">
                   <p className="truncate text-sm font-extrabold" dir="ltr">{catalog?.nameEn}</p>
                   {kpi.kpiKey === "new_orange_cash" ? (
-                    <p className="text-[10px] font-bold text-[var(--color-primary-700)]">تارجت بتدخله بإيدك</p>
+                    <p className="text-[10px] font-bold text-[var(--color-primary-700)]">Target you set yourself</p>
                   ) : (
-                    <p className="text-[10px] text-[var(--color-text-secondary)]">{kpi.unitAr}</p>
+                    <p className="text-[10px] text-[var(--color-text-secondary)]">{unitEn(kpi.unitAr)}</p>
                   )}
                 </div>
               </div>

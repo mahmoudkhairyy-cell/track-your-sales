@@ -1,7 +1,7 @@
 "use client";
 
 import { FormEvent, useEffect, useState } from "react";
-import { KPI_CATALOG, type KpiKey } from "@/lib/constants";
+import { KPI_CATALOG, type KpiKey, unitEn } from "@/lib/constants";
 import { cairoISODate, cairoYearMonth, monthLabelAr } from "@/lib/dates";
 import { haptic } from "@/lib/prefs";
 import { Banner, PrimaryButton, inputClass, useToast } from "@/components/ui";
@@ -304,10 +304,10 @@ export default function LogPage() {
                 placeholder="0"
                 aria-label={`Quantity ${item.nameEn}`}
               />
-              <span className="shrink-0 text-xs font-bold text-[var(--color-text-secondary)]">{d?.unitAr ?? ""}</span>
+              <span className="shrink-0 text-xs font-bold text-[var(--color-text-secondary)]">{unitEn(d?.unitAr ?? "", d?.remaining ?? 2)}</span>
             </div>
             <p className="mt-1.5 text-[10px] text-[var(--color-text-secondary)]" title={quantityHint(item.key)}>
-              {needToday > 0 ? `المطلوب النهارده: ${formatQty(needToday)} ${d?.unitAr ?? ""}` : "مفيش مطلوب إضافي النهارده"}
+              {needToday > 0 ? `المطلوب النهارده: ${formatQty(needToday)} ${unitEn(d?.unitAr ?? "", needToday)}` : "مفيش مطلوب إضافي النهارده"}
             </p>
           </article>
         );
