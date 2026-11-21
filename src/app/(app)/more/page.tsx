@@ -288,7 +288,7 @@ export default function MorePage() {
   const todayItems = todaySummary.filter((item) => item.quantity > 0 || item.count > 0);
 
   return (
-    <div className="space-y-5 pb-4 tys-more-page">
+    <div className="space-y-5 pb-4">
       <section>
         <div className="relative overflow-hidden rounded-hero border border-section bg-gradient-to-br from-[#fff8f0] via-white to-[#ffe9d5] p-5 shadow-section"><div className="absolute -left-8 -top-10 h-32 w-32 rounded-full bg-brand-500/10 blur-2xl" /><div className="relative"><div className="mb-2 inline-flex items-center gap-2 rounded-full border border-section-2 bg-white/80 px-3 py-1 text-xs font-extrabold text-brand-ink-soft"><span>⚙️</span><span>إدارة التطبيق</span></div><h1 className="text-2xl font-black tracking-tight text-brand-ink-strong">المزيد</h1></div></div>
         <p className="mt-1 text-sm text-ink-2">ملخص النهارده، سجل الشهر، النسخة الاحتياطية، والمساعد.</p>
@@ -318,7 +318,7 @@ export default function MorePage() {
         )}
       </section>
 
-      <section className="tys-history-card relative overflow-hidden rounded-hero border border-section bg-gradient-to-br from-white via-white to-brand-surface p-5 shadow-accent ring-1 ring-white">
+      <section className="relative overflow-hidden rounded-hero border border-section bg-gradient-to-br from-white via-white to-brand-surface p-5 shadow-accent ring-1 ring-white">
         <div className="flex items-center justify-between gap-3">
           <h2 className="flex items-center gap-2 text-lg font-black text-brand-ink-strong"><span className="flex h-9 w-9 items-center justify-center rounded-2xl bg-brand-200 text-lg">🗂️</span>سجل عمليات {monthLabelAr(month)}</h2>
           <span className="text-sm text-ink-2">{entries.length} سجل</span>
