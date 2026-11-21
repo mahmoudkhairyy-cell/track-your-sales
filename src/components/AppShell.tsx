@@ -53,22 +53,22 @@ function MonthSwitcher() {
   }
 
   return (
-    <div className="tys2-month flex items-center gap-1 p-1">
+    <div className="flex items-center gap-1 rounded-full border border-[#f2e4d8] bg-[#fff6ed] p-1 shadow-sm">
       <button
         type="button"
         onClick={() => go(shiftYearMonth(month, -1))}
-        className="tys2-month-btn flex h-8 w-8 rotate-180 items-center justify-center"
+        className="flex h-9 w-9 rotate-180 items-center justify-center rounded-full bg-white text-[#bd4b0a] shadow-[0_2px_8px_rgba(115,58,20,0.10)] ring-1 ring-[#f2e4d8] transition active:scale-95"
         aria-label="الشهر السابق"
       >
         <ChevronIcon width={18} height={18} strokeWidth={2.6} />
       </button>
-      <div className="min-w-[72px] px-1 text-center">
-        <p className="tys2-month-label text-xs">{monthLabelAr(month)}</p>
+      <div className="min-w-24 px-1 text-center">
+        <p className="text-xs font-extrabold text-[#2d2119]">{monthLabelAr(month)}</p>
       </div>
       <button
         type="button"
         onClick={() => go(shiftYearMonth(month, 1))}
-        className="tys2-month-btn flex h-8 w-8 items-center justify-center"
+        className="flex h-9 w-9 items-center justify-center rounded-full bg-white text-[#bd4b0a] shadow-[0_2px_8px_rgba(115,58,20,0.10)] ring-1 ring-[#f2e4d8] transition active:scale-95"
         aria-label="الشهر التالي"
       >
         <ChevronIcon width={18} height={18} strokeWidth={2.6} />
@@ -88,8 +88,8 @@ function NavLinks({ pathname, month }: { pathname: string; month: string }) {
             key={item.href}
             href={`${item.href}?month=${month}`} prefetch={false}
             aria-current={active ? "page" : undefined}
-            className={`tys2-side-link relative flex min-h-12 items-center gap-3 px-3 text-sm font-bold ${
-              active ? "tys2-side-link-active" : ""
+            className={`tys-desktop-nav-link relative flex min-h-12 items-center gap-3 rounded-2xl px-3 text-sm font-bold transition ${
+              active ? "tys-desktop-nav-link-active bg-gradient-to-l from-[#fff0e2] to-[#fff8f1] text-[#bd4b0a] shadow-[inset_0_0_0_1px_rgba(233,104,18,0.08)]" : "text-[#88796e] hover:bg-[#fff8f1] hover:text-[#bd4b0a]"
             }`}
           >
             <Icon />
@@ -613,47 +613,48 @@ function AppFrame({ children, blocked, month }: { children: ReactNode; blocked: 
       <StorageErrorListener />
       <MonthContext.Provider value={month}>
         <div className="min-h-screen bg-[#fffaf5] text-[#2d2119]">
-          <div className="tys2-topline" />
+          <div className="h-1.5 bg-gradient-to-l from-[#bd4b0a] via-[#e96812] to-[#ffb15f]" />
           <div className="mx-auto flex min-h-screen max-w-7xl">
-            <aside className="tys2-sidebar sticky top-0 hidden h-screen w-[276px] shrink-0 flex-col border-l p-5 lg:flex">
-              <div className="tys2-side-card flex items-center gap-3 p-3">
-                <img src="/track-your-sales/logo-mark.png" alt="" className="h-11 w-11 shrink-0 object-contain" />
+            <aside className="tys-sidebar sticky top-0 hidden h-screen w-[276px] shrink-0 flex-col border-l border-[#f1dfd0] bg-[#fffaf5] p-5 lg:flex">
+              <div className="flex items-center gap-3 rounded-[24px] border border-[#f4dfcd] bg-white p-3 shadow-[0_12px_28px_rgba(126,65,24,0.06)]">
+                <img src="/track-your-sales/logo-mark.png" alt="" className="h-12 w-12 shrink-0 object-contain" />
                 <div className="min-w-0">
-                  <p className="tys2-side-brand truncate" dir="ltr">{APP_NAME}</p>
-                  <p className="tys2-side-brand-sub mt-1" dir="ltr">SALES PERFORMANCE SPACE</p>
+                  <p className="truncate text-[15px] font-black tracking-tight text-[#2d2119]" dir="ltr">{APP_NAME}</p>
+                  <p className="mt-1 text-[10px] font-bold text-[#b76a3b]" dir="ltr">SALES PERFORMANCE SPACE</p>
                 </div>
               </div>
-              <div className="tys2-side-card tys2-side-workspace relative mt-4 overflow-hidden p-4">
+              <div className="relative mt-5 overflow-hidden rounded-[24px] border border-[#f3dfce] bg-gradient-to-br from-white via-[#fff8f1] to-[#fff0e2] p-4 shadow-[0_10px_26px_rgba(126,65,24,0.06)]">
+                <div className="absolute -left-8 -top-9 h-24 w-24 rounded-full bg-[#ffb36e]/25 blur-2xl" />
                 <div className="relative flex items-center gap-2">
-                  <span className="tys2-live-dot" />
-                  <p className="tys2-side-kicker">مساحة العمل</p>
+                  <span className="h-2 w-2 rounded-full bg-[#e96812] shadow-[0_0_0_4px_rgba(233,104,18,0.10)]" />
+                  <p className="text-[10px] font-extrabold tracking-wider text-[#b76a3b]">مساحة العمل</p>
                 </div>
-                <p className="tys2-side-name relative mt-3 truncate">{user.name || "أهلاً بيك"}</p>
-                <p className="tys2-side-branch relative mt-1 truncate">📍 {user.branch || "فرعك"}</p>
+                <p className="relative mt-3 truncate text-base font-black text-[#2d2119]">{user.name || "أهلاً بيك"}</p>
+                <p className="relative mt-1 truncate text-xs font-semibold text-[#9a7963]">📍 {user.branch || "فرعك"}</p>
               </div>
-              <nav aria-label="التنقل الرئيسي" className="tys2-side-nav mt-6 flex flex-col gap-1">
+              <nav aria-label="التنقل الرئيسي" className="tys-desktop-nav mt-6 flex flex-col gap-1.5">
                 <NavLinks pathname={pathname} month={month} />
               </nav>
-              <p className="tys2-side-foot mt-auto pt-5 text-[11px] leading-6">{APP_DISCLAIMER}<span className="mt-1 block font-bold">تم تطوير Track Your Sales بواسطة {BRAND_BY}</span></p>
+              <p className="mt-auto border-t border-[#f1dfd0] pt-5 text-[11px] leading-6 text-[#ad9888]">{APP_DISCLAIMER}<span className="mt-1 block font-bold text-[#bd6b39]">تم تطوير Track Your Sales بواسطة {BRAND_BY}</span></p>
             </aside>
 
             <div className="flex min-w-0 flex-1 flex-col">
-              <header className="tys2-header sticky top-0 z-30 border-b px-3 py-2.5 lg:px-8">
-                <div className="mx-auto flex max-w-6xl items-center justify-between gap-2">
-                  <div className="flex min-w-0 items-center gap-2 lg:hidden">
-                    <span className="tys2-brand-mark flex h-9 w-9 shrink-0 items-center justify-center">
-                      <img src="/track-your-sales/logo-mark.png" alt="" className="h-8 w-8 object-contain" />
+              <header className="tys-app-header sticky top-0 z-30 border-b border-[#d95708] bg-[#e96812] px-4 py-3 text-white shadow-[0_4px_18px_rgba(189,75,10,0.16)] backdrop-blur-2xl lg:px-8">
+                <div className="mx-auto flex max-w-6xl items-center justify-between gap-3">
+                  <div className="flex min-w-0 items-center gap-3 lg:hidden">
+                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white shadow-[0_4px_12px_rgba(217,104,18,0.12)] ring-1 ring-[#f2e4d8]">
+                      <img src="/track-your-sales/logo-mark.png" alt="" className="h-9 w-9 object-contain" />
                     </span>
                     <div className="min-w-0">
-                      <p className="tys2-brand-name truncate" dir="ltr">{APP_NAME}</p>
-                      <p className="tys2-brand-sub truncate">{user.name || "مساحة متابعة المبيعات"}</p>
+                      <p className="truncate text-[13px] font-black tracking-tight text-white" dir="ltr">{APP_NAME}</p>
+                      <p className="truncate text-[9px] font-semibold text-white/80">{user.name || "مساحة متابعة المبيعات"}</p>
                     </div>
                   </div>
                   <div className="hidden min-w-0 lg:block">
-                    <p className="tys2-page-title">{pathname === "/home" ? "لوحة الأداء" : NAV.find((item) => pathname.startsWith(item.href))?.label || "مساحة العمل"}</p>
-                    <p className="tys2-page-sub mt-1">تابع إنجازك وخطتك الشهرية من مكان واحد</p>
+                    <p className="text-sm font-black text-white">{pathname === "/home" ? "لوحة الأداء" : NAV.find((item) => pathname.startsWith(item.href))?.label || "مساحة العمل"}</p>
+                    <p className="mt-1 text-[11px] text-white/80">تابع إنجازك وخطتك الشهرية من مكان واحد</p>
                   </div>
-                  <div className="flex shrink-0 items-center gap-1.5">
+                  <div className="flex shrink-0 items-center gap-2">
                     {pathname === "/home" ? (
                       <div className="relative">
                         <button
@@ -661,12 +662,12 @@ function AppFrame({ children, blocked, month }: { children: ReactNode; blocked: 
                           onClick={() => setThemeMenuOpen((open) => !open)}
                           aria-label="تغيير المظهر"
                           aria-expanded={themeMenuOpen}
-                          className="tys2-icon-btn flex h-9 w-9 items-center justify-center gap-0.5"
+                          className="flex h-10 w-10 items-center justify-center gap-0.5 rounded-full border border-white/35 bg-white/15 text-base shadow-sm backdrop-blur transition hover:bg-white/25 active:scale-95"
                         >
-                          <span aria-hidden="true" className="flex h-6 w-6 overflow-hidden rounded-full ring-1 ring-[var(--tys2-line)]"><span className="flex w-1/2 items-center justify-center bg-[#342b50] text-[11px]">🌙</span><span className="flex w-1/2 items-center justify-center bg-[#fff0bd] text-[11px]">☀️</span></span>
+                          <span aria-hidden="true" className="flex h-6 w-6 overflow-hidden rounded-full ring-1 ring-white/50"><span className="flex w-1/2 items-center justify-center bg-[#342b50] text-[11px]">🌙</span><span className="flex w-1/2 items-center justify-center bg-[#fff0bd] text-[11px]">☀️</span></span>
                         </button>
                         {themeMenuOpen ? (
-                          <div className="tys2-theme-menu absolute left-0 top-full z-50 mt-2 w-40 p-2" dir="rtl">
+                          <div className="absolute left-0 top-full z-50 mt-2 w-44 rounded-2xl border border-[#f2e4d8] bg-white p-2 text-[#2d2119] shadow-xl" dir="rtl">
                             {([
                               ["light", "☀️", "الأساسي"],
                               ["aurora", "🌌", "أورورا فاتح"],
@@ -677,7 +678,7 @@ function AppFrame({ children, blocked, month }: { children: ReactNode; blocked: 
                                 key={key}
                                 type="button"
                                 onClick={() => chooseTheme(key)}
-                                className={`tys2-theme-item flex min-h-10 w-full items-center justify-between px-3 text-right text-xs font-extrabold ${theme === key ? "tys2-theme-item-active" : ""}`}
+                                className={`flex min-h-10 w-full items-center justify-between rounded-xl px-3 text-right text-xs font-extrabold transition ${theme === key ? "bg-[#fff0e2] text-[#bd4b0a]" : "text-[#514238] hover:bg-[#fff8f1]"}`}
                               >
                                 <span>{icon} {label}</span>
                                 {theme === key ? <span aria-hidden="true">✓</span> : null}
