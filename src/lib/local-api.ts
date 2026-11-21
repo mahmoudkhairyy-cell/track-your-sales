@@ -558,16 +558,29 @@ function restoreBackup(state: State, data: Record<string, unknown>) {
     });
   }
 
+  const existingArticleIds = mode === "merge"
+    ? new Set(state.articles.map((article) => article.id))
+    : new Set<string>();
   for (const article of backup.articles) {
-    const item = article as unknown as { title: string; content: string; createdAt?: string; updatedAt?: string };
+    const item = article as unknown as {
+      id?: string;
+      title: string;
+      content: string;
+      createdAt?: string;
+      updatedAt?: string;
+    };
+    // Preserve exported IDs so importing the same backup again won't duplicate notes.
+    if (item.id && existingArticleIds.has(item.id)) continue;
     const now = new Date().toISOString();
+    const id = item.id ?? newId();
     state.articles.push({
-      id: newId(),
+      id,
       title: item.title,
       content: item.content,
       createdAt: item.createdAt ?? now,
       updatedAt: item.updatedAt ?? now,
     });
+    existingArticleIds.add(id);
   }
 
   return {
