@@ -87,6 +87,18 @@ function translate(value: string, lang: string) {
 const originalText = new WeakMap<Text,string>();
 const originalAttrs = new WeakMap<Element,Record<string,string>>();
 
+function applyNode(node: Node, lang: string) {
+  if (node instanceof Text) {
+    if (!originalText.has(node)) originalText.set(node, node.nodeValue ?? "");
+    const next = translate(originalText.get(node) ?? "", lang);
+    if (node.nodeValue !== next) node.nodeValue = next;
+    return;
+  }
+  if (node instanceof Element) {
+    translateTree(node, lang);
+  }
+}
+
 function translateTree(root: Node, lang: string) {
   const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
   let node: Node | null;
@@ -109,8 +121,19 @@ function translateTree(root: Node, lang: string) {
       }
     }
   }
-  if (root instanceof Document) {
-    root.querySelectorAll("[placeholder],[aria-label],[title]").forEach(el=>translateTree(el,lang));
+  if (root instanceof Element || root instanceof Document) {
+    root.querySelectorAll("[placeholder],[aria-label],[title]").forEach(el => {
+      const attrs = ["placeholder","aria-label","title"];
+      let saved = originalAttrs.get(el);
+      if (!saved) { saved = {}; originalAttrs.set(el,saved); }
+      for (const attr of attrs) {
+        if (el.hasAttribute(attr)) {
+          if (!(attr in saved)) saved[attr] = el.getAttribute(attr) ?? "";
+          const next = translate(saved[attr],lang);
+          if (el.getAttribute(attr)!==next) el.setAttribute(attr,next);
+        }
+      }
+    });
   }
 }
 
