@@ -60,18 +60,19 @@ export default function AchievementShare({ name, branch, monthLabel, overall, kp
 
       drawText(ctx, "تفاصيل مؤشرات الأداء", 1000, 690, 32, INK, 900);
       const rows = kpis.filter(k => k.weight > 0);
-      const gap = 14, rowH = Math.min(104, Math.floor((570 - gap * Math.max(0, rows.length - 1)) / Math.max(1, rows.length)));
+      const gap = 10, rowH = Math.min(104, Math.floor((540 - gap * Math.max(0, rows.length - 1)) / Math.max(1, rows.length)));
+      const compactRows = rowH < 96;
       rows.forEach((k, i) => {
         const y = 720 + i * (rowH + gap);
         rounded(ctx, 80, y, 920, rowH, 22);
         ctx.fillStyle = "#fff"; ctx.fill();
-        drawText(ctx, k.nameEn, 960, y + 34, 25, INK, 800);
-        drawText(ctx, `${formatQty(k.achieved)} / ${formatQty(k.target)} ${k.unitAr}`, 960, y + 70, 21, "#80634f", 700);
-        ctx.textAlign = "left"; ctx.direction = "ltr"; ctx.font = "800 25px Cairo, Tahoma"; ctx.fillStyle = DEEP;
-        ctx.fillText(`${formatPercent(k.percent)}%`, 120, y + 43);
-        ctx.font = "600 18px Cairo, Tahoma"; ctx.fillStyle = "#80634f";
-        ctx.fillText(`متبقي ${formatQty(k.remaining)}`, 120, y + 73);
-        const barX = 120, barY = y + rowH - 16, barW = 840;
+        drawText(ctx, k.nameEn, 960, y + (compactRows ? 23 : 34), compactRows ? 21 : 25, INK, 800);
+        drawText(ctx, `${formatQty(k.achieved)} / ${formatQty(k.target)} ${k.unitAr}`, 960, y + (compactRows ? 44 : 70), compactRows ? 16 : 21, "#80634f", 700);
+        ctx.textAlign = "left"; ctx.direction = "ltr"; ctx.font = `800 ${compactRows ? 21 : 25}px Cairo, Tahoma`; ctx.fillStyle = DEEP;
+        ctx.fillText(`${formatPercent(k.percent)}%`, 120, y + (compactRows ? 26 : 43));
+        ctx.font = `600 ${compactRows ? 14 : 18}px Cairo, Tahoma`; ctx.fillStyle = "#80634f";
+        ctx.fillText(`متبقي ${formatQty(k.remaining)}`, 120, y + (compactRows ? 45 : 73));
+        const barX = 120, barY = y + rowH - (compactRows ? 8 : 16), barW = 840;
         rounded(ctx, barX, barY, barW, 7, 4); ctx.fillStyle = "#f4e5d8"; ctx.fill();
         rounded(ctx, barX, barY, barW * Math.min(1, Math.max(0, k.percent / 100)), 7, 4);
         ctx.fillStyle = k.percent >= 100 ? "#15966b" : k.percent >= 70 ? ORANGE : "#dc654f"; ctx.fill();
