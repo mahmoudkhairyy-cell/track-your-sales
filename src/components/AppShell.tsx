@@ -31,7 +31,9 @@ function MonthSwitcher() {
   const month = raw && isValidYearMonth(raw) ? raw : cairoYearMonth();
 
   function go(next: string) {
-    router.push(`${pathname}?month=${next}`);
+    const nextParams = new URLSearchParams(params.toString());
+    nextParams.set("month", next);
+    router.push(`${pathname}?${nextParams.toString()}`);
   }
 
   return (
@@ -68,7 +70,7 @@ function NavLinks({ pathname, month }: { pathname: string; month: string }) {
         return (
           <Link
             key={item.href}
-            href={`${item.href}?month=${month}`}
+            href={`${item.href}?${new URLSearchParams({ month }).toString()}`}
             aria-current={active ? "page" : undefined}
             className={`flex min-h-12 items-center gap-3 rounded-2xl px-3 text-sm font-bold transition ${
               active ? "bg-nav-active-bg text-brand-600 shadow-navlink" : "text-ink-muted-3 hover:bg-brand-surface hover:text-brand-600"
@@ -89,22 +91,6 @@ export function AppShell({ children }: { children: ReactNode }) {
   const params = useSearchParams();
   const raw = params.get("month");
   const month = raw && isValidYearMonth(raw) ? raw : cairoYearMonth();
-  const [isDark, setIsDark] = useState(false);
-
-  useEffect(() => {
-    const media = window.matchMedia("(prefers-color-scheme: dark)");
-    setIsDark(media.matches);
-
-    const listener = (e: MediaQueryListEvent) => setIsDark(e.matches);
-    media.addEventListener("change", listener);
-    return () => media.removeEventListener("change", listener);
-  }, []);
-
-  useEffect(() => {
-    document.documentElement.classList.toggle("dark", isDark);
-    document.documentElement.classList.toggle("light", !isDark);
-  }, [isDark]);
-
   useEffect(() => {
     const refreshProfile = () => {
       const profile = readProfile();
@@ -156,16 +142,7 @@ export function AppShell({ children }: { children: ReactNode }) {
                     </div>
                   </div>
                   <div className="relative flex shrink-0 items-center gap-2">
-                    <button
-                      type="button"
-                      onClick={() => setIsDark(!isDark)}
-                      className="flex items-center gap-2 rounded-lg border border-line px-3 py-2 text-sm transition-colors hover:bg-brand-50 dark:hover:bg-surface-2-dark"
-                      aria-label={isDark ? "التبديل للوضع الفاتح" : "التبديل للوضع الداكن"}
-                    >
-                      {isDark ? "☀️" : "🌙"}
-                      <span>{isDark ? "الوضع الفاتح" : "الوضع الداكن"}</span>
-                    </button>
-                    <MonthSwitcher />
+<MonthSwitcher />
                   </div>
                 </div>
               </header>
@@ -183,7 +160,7 @@ export function AppShell({ children }: { children: ReactNode }) {
                 return (
                   <Link
                     key={item.href}
-                    href={`${item.href}?month=${month}`}
+                    href={`${item.href}?${new URLSearchParams({ month }).toString()}`}
                     aria-current={active ? "page" : undefined}
                     className={`flex min-h-12 flex-col items-center justify-center gap-1 rounded-card px-1 py-1.5 text-[10px] font-extrabold transition-all duration-200 sm:min-h-14 sm:text-[11px] ${
                       highlighted
