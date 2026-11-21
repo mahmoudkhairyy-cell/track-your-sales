@@ -88,7 +88,7 @@ export default function AchievementShare({ name, branch, monthLabel, overall, kp
       } else {
         const url = URL.createObjectURL(blob);
         const a = document.createElement("a"); a.href = url; a.download = file.name; a.click();
-        URL.revokeObjectURL(url);
+        window.setTimeout(() => URL.revokeObjectURL(url), 1000);
       }
     } catch (error) {
       if (!(error instanceof DOMException && error.name === "AbortError")) {
