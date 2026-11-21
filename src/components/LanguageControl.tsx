@@ -125,7 +125,33 @@ function translateTree(root: Node, lang: string) {
     root.querySelectorAll("[placeholder],[aria-label],[title]").forEach(el => {
       const attrs = ["placeholder","aria-label","title"];
       let saved = originalAttrs.get(el);
-      if (!saved) { saved = {}; originalAttrs.set(el,saved); }
+      if (!saved) { saved = {  "تسجيل إنجاز":"Log Achievement","الديلي المطلوب":"Daily Requirements","كل المؤشرات وصلت للتارجت 🎉":"All KPIs have reached their targets 🎉",
+  "السجل":"History","تقرير الشهر":"Monthly Report","الحساب والبيانات":"Account & Data","بياناتك":"Your Details",
+  "نسخة احتياطية واستعادة":"Backup & Restore","إدارة البيانات":"Data Management","إجراءات حذف بيانات الشهر":"Monthly Data Deletion",
+  "المظهر":"Appearance","حول التطبيق":"About","رجوع للقائمة":"Back to Menu","التوتال":"Total",
+  "الكوميشن المتوقع":"Estimated Commission","بنحمّل التقرير...":"Loading report...","ابحث في السجل":"Search history",
+  "ابحث في المؤشر أو الملاحظات...":"Search KPIs or notes...","فلترة حسب المؤشر":"Filter by KPI","كل المؤشرات":"All KPIs",
+  "لسه مفيش عمليات":"No entries yet","ابدأ بتسجيل بيعة، وهتظهر هنا في الشهر ده.":"Log a sale and it will appear here for this month.",
+  "تسجيل خروج (نقل لفرع تاني)":"Log out (Switch Branch)","اختار مدير المنطقة من القائمة":"Select your Area Manager from the list",
+  "ماقدرناش نحفظ مدير المنطقة":"Could not save Area Manager","فشلت الاستعادة":"Restore failed",
+  "متأكد إنك عايز تسجل خروج؟ بياناتك وإنجازاتك هتفضل محفوظة.":"Are you sure you want to log out? Your data and achievements will remain saved.",
+  "تعذر تسجيل الخروج. حاول تاني.":"Could not log out. Try again.","حفظ مدير المنطقة":"Save Area Manager",
+  "الكمية":"Quantity","ملاحظة":"Note","تاريخ الإنجاز":"Achievement Date","احفظ التعديل":"Save Changes",
+  "تشيل السجل ده؟":"Delete this entry?","السجل هيتشال من الجهاز ده نهائيًا.":"This entry will be permanently deleted from this device.",
+  "لأ، خليه":"No, keep it","أيوه، شيله":"Yes, delete it","أيوه، امسح الشهر":"Yes, delete the month",
+  "الإعدادات مش هتتمسح. ده مش بيترجع بعد ما تأكده.":"Settings will not be deleted. This action cannot be undone.",
+  "ادمج مع البيانات الحالية":"Merge with current data","استبدل البيانات الحالية":"Replace current data",
+  "الاستبدال هيمسح السجلات والإعدادات الحالية بعد ما تنزّل نسخة احتياطية منها.":"Replacing will delete current entries and settings after you download a backup.",
+  "نزّل نسخة احتياطية الأول":"Download a backup first","الكمية":"Quantity",
+  "تارجت بتدخله بإيدك":"Target entered manually","متتحسبش غير لما تكمل 90%":"Only counts after reaching 90%",
+  "نسبة الكواليتي":"Quality Rate","علّم البند لو اتحقق بالكامل، والتغيير بيتحفظ فوراً.":"Check the item when fully achieved. Changes are saved immediately.",
+  "احفظ تارجت الشهر الأول من صفحة التارجت، وبعدين تقدر تعلّم الكواليتي.":"Save the monthly target from the Target page before checking Quality.",
+  "ملاحظة (لو حابب)":"Note (optional)","مثال: عميل جديد من الفرع":"Example: New customer from the branch",
+  "احفظ الإنجاز":"Save Achievement","بنحفظ...":"Saving...","الإيتمز والأوزان":"KPIs & Weights",
+  "تقويم الإجازات":"Days Off Calendar","اختار الأيام اللي مش هتشتغل فيها":"Select the days you will not work",
+  "اضغط أي يوم لإضافته أو إلغائه كإجازة":"Tap a day to add or remove a day off","الوزن":"Weight","الوزن %":"Weight %",
+  "المطلوب النهارده:":"Required today:","مفيش مطلوب إضافي النهارده":"No additional requirement today"
+}; originalAttrs.set(el,saved); }
       for (const attr of attrs) {
         if (el.hasAttribute(attr)) {
           if (!(attr in saved)) saved[attr] = el.getAttribute(attr) ?? "";
@@ -139,7 +165,7 @@ function translateTree(root: Node, lang: string) {
 
 export function LanguageControl() {
   const pathname = usePathname();
-  const isReference = pathname === "/wiki" || pathname.startsWith("/wiki/");
+  const isReference = pathname === "/wiki" || pathname.endsWith("/wiki") || pathname.startsWith("/wiki/") || pathname.endsWith("/wiki/");
   const [lang,setLang] = useState<"en"|"ar">("en");
 
   useEffect(() => {
