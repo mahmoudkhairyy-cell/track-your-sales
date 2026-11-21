@@ -1,0 +1,58 @@
+name: Verify Premium Scope
+
+on:
+  pull_request:
+  push:
+    branches-ignore:
+      - gh-pages
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: verify-premium-scope-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  static-gates:
+    name: Fixtures, parity, route drift
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Verify without a build
+        run: node scripts/verify-premium-scope.mjs --unit-only
+
+  built-html:
+    name: Built HTML audit
+    runs-on: ubuntu-latest
+    needs: static-gates
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Build
+        run: npm run build
+
+      - name: Verify emitted bootstrap in built HTML
+        run: node scripts/verify-premium-scope.mjs --out=out
+
+      - name: Upload built HTML on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: built-html
+          path: out/**/*.html
+          if-no-files-found: ignore
+          retention-days: 7
