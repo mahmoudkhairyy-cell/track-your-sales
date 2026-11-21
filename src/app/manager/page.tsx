@@ -680,6 +680,14 @@ export default function ManagerPage() {
                   </p>
                 ) : null}
                 
+                <button type="button" onClick={() => changeView("activity")} aria-label="View today's check-ins" className="flex w-full items-center justify-between gap-3 rounded-[20px] border border-[var(--color-border)] bg-white px-4 py-3 text-left shadow-[0_1px_2px_rgba(43,20,0,.04)] transition hover:border-[#e5b58e] active:scale-[0.99]">
+                  <span className="text-xs font-extrabold text-[var(--color-text-primary)]">Today</span>
+                  <span className="flex items-center gap-4 text-xs font-bold tabular-nums">
+                    <span className="text-emerald-700">{loggedToday.length} checked in</span>
+                    <span className="text-red-700">{missingToday.length} not yet</span>
+                    <span className="text-[var(--color-text-secondary)]">{onLeaveToday.length} on leave</span>
+                  </span>
+                </button>
                 <section className="grid grid-cols-3 gap-2.5 sm:grid-cols-3 sm:gap-3">
                   {[
                     {label:"Total branches",value:branchGroups.length,sub:"All area branches",tone:"orange",icon:"branches" as const,detail:"branches-all" as const},
