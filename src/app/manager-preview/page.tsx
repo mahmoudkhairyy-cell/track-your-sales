@@ -26,7 +26,7 @@ type ReportRow = {
 
 type AggKpi = { name: string; achieved: number; target: number; percent: number; weight: number; expectedPercent?: number };
 
-const NO_BRANCH = "بدون فرع";
+const NO_BRANCH = "No branch";
 
 /** On track = النسبة المحققة أكبر من أو تساوي المطلوب لحد النهارده (مقارنة مباشرة). */
 function TrackBadge({ percent, expected }: { percent?: number; expected?: number }) {
@@ -34,7 +34,7 @@ function TrackBadge({ percent, expected }: { percent?: number; expected?: number
   const onTrack = percent >= expected;
   return (
     <span className={`rounded-full px-2 py-0.5 text-[11px] font-black ${onTrack ? "bg-emerald-100 text-emerald-800" : "bg-red-100 text-red-700"}`}>
-      {onTrack ? "🟢 On track" : "🔴 متأخر"}
+      {onTrack ? "🟢 On track" : "🔴 Behind"}
     </span>
   );
 }
@@ -62,7 +62,7 @@ function saveBlob(blob: Blob, fileName: string) {
 
 function downloadBranchCsv(branchName: string, group: ReportRow[]) {
   const kpiNames = Array.from(new Set(group.flatMap((r) => (r.payload.kpis ?? []).map((k) => k.name))));
-  const header = ["الموظف", "التوتال %", "آخر تحديث", ...kpiNames.flatMap((n) => [`${n} محقق`, `${n} تارجت`, `${n} %`])];
+  const header = ["Employee", "Total %", "Last update", ...kpiNames.flatMap((n) => [`${n} achieved`, `${n} target`, `${n} %`])];
   const lines = group.map((row) => {
     const byName = new Map((row.payload.kpis ?? []).map((k) => [k.name, k]));
     return [
@@ -213,8 +213,8 @@ export default function ManagerPreviewPage() {
   async function changePassword(event: FormEvent) {
     event.preventDefault();
     setPwMsg("");
-    if (newPw.length < 8) return setPwMsg("الباسورد الجديد لازم يكون 8 حروف على الأقل.");
-    if (newPw !== newPw2) return setPwMsg("الباسورد الجديد مش متطابق.");
+    if (newPw.length < 8) return setPwMsg("New password must be at least 8 characters.");
+    if (newPw !== newPw2) return setPwMsg("New passwords do not match.");
     try {
       await managerApi("change_password", { password: oldPw, newPassword: newPw });
       sessionStorage.setItem("tys.mgrPass", newPw);
@@ -225,10 +225,10 @@ export default function ManagerPreviewPage() {
       setPwOpen(false);
       setPwMsg("");
       setError("");
-      alert("✅ اتغيّر الباسورد بنجاح.");
+      alert("✅ Password changed successfully.");
     } catch (err) {
       const raw = err instanceof Error ? err.message : String(err);
-      setPwMsg(raw.includes("wrong password") ? "الباسورد القديم مش صح. اكتبه تاني." : "حصلت مشكلة في الحفظ. اتأكد من النت وحاول تاني.");
+      setPwMsg(raw.includes("wrong password") ? "Current password is incorrect. Try again." : "Save failed. Check your connection and try again.");
     }
   }
 
@@ -236,7 +236,7 @@ export default function ManagerPreviewPage() {
     // بيتحسب بعد الـ render (مش جوه الـ effect مباشرة) عشان قاعدة lint بتمنع setState المتزامن.
     const id = setTimeout(() => {
       const hour = Number(new Intl.DateTimeFormat("en-GB", { timeZone: "Africa/Cairo", hour: "numeric", hour12: false }).format(new Date()));
-      setGreeting(hour < 12 ? "صباح الخير" : "مساء الخير");
+      setGreeting(hour < 12 ? "Good morning" : "Good evening");
     }, 0);
     return () => clearTimeout(id);
   }, []);
@@ -284,10 +284,10 @@ export default function ManagerPreviewPage() {
         } catch {
           // لا شيء
         }
-        setError("كلمة السر مش صح. جرّب تاني.");
+        setError("Incorrect password. Try again.");
       } else {
         // خطأ نت أو غيره: نحتفظ بالبيانات اللي موجودة ونعرض الخطأ فوقها.
-        setError(`ماقدرناش نحدّث البيانات. اتأكد من النت وحاول تاني. (${raw.slice(0, 160)})`);
+        setError(`Couldn't refresh the data. Check your connection and try again. (${raw.slice(0, 160)})`);
       }
     } finally {
       setPending(false);
@@ -314,7 +314,7 @@ export default function ManagerPreviewPage() {
   }, []);
 
   async function deleteEmployee(row: ReportRow) {
-    if (!window.confirm(`متأكد إنك عايز تمسح ${row.employee_name}؟ الملخص بتاعه هيتمسح من اللوحة.`)) return;
+    if (!window.confirm(`Are you sure you want to remove ${row.employee_name}? Their summary will be removed from the dashboard.`)) return;
     setPending(true);
     setError("");
     try {
@@ -323,7 +323,7 @@ export default function ManagerPreviewPage() {
       setRows((cur) => (cur ?? []).filter((r) => r.branch_id !== row.branch_id));
       setOpenId(null);
     } catch (err) {
-      setError(`ماقدرناش نمسح بيانات ${row.employee_name}. حاول تاني. (${err instanceof Error ? err.message.slice(0, 120) : ""})`);
+      setError(`Couldn't remove data for ${row.employee_name}. Try again. (${err instanceof Error ? err.message.slice(0, 120) : ""})`);
     } finally {
       setPending(false);
     }
@@ -340,10 +340,10 @@ export default function ManagerPreviewPage() {
           <div>
             <h3 className="font-black">{row.employee_name}</h3>
             <div className="mt-1 flex flex-wrap items-center gap-1">
-              {row.payload.role === "team_leader" ? <span className="rounded-full bg-[var(--color-primary-50)] px-2 py-0.5 text-[11px] font-black text-[var(--color-primary-700)]">🧑‍🏫 تيم ليدر</span> : null}
+              {row.payload.role === "team_leader" ? <span className="rounded-full bg-[var(--color-primary-50)] px-2 py-0.5 text-[11px] font-black text-[var(--color-primary-700)]">🧑‍🏫 Team leader</span> : null}
               <TrackBadge percent={row.payload.overall} expected={row.payload.expectedPercent} />
               {staleClass ? (
-                <span className={`rounded-full px-2 py-0.5 text-[11px] font-black ${staleClass}`}>آخر تحديث من {Math.floor(days)} يوم</span>
+                <span className={`rounded-full px-2 py-0.5 text-[11px] font-black ${staleClass}`}>Updated {Math.floor(days)} days ago</span>
               ) : null}
             </div>
           </div>
@@ -370,7 +370,7 @@ export default function ManagerPreviewPage() {
               onClick={() => setDetailsId(detailsId === row.branch_id ? null : row.branch_id)}
               className="mt-3 w-full rounded-2xl bg-[var(--color-primary-50)] py-2 text-xs font-extrabold text-[var(--color-primary-700)]"
             >
-              {detailsId === row.branch_id ? "إخفاء التفاصيل" : `عرض كل التفاصيل (${row.payload.entries?.length ?? 0} إنجاز)`}
+              {detailsId === row.branch_id ? "Hide details" : `Show all details (${row.payload.entries?.length ?? 0} achieved)`}
             </button>
             <button
               type="button"
@@ -378,22 +378,22 @@ export default function ManagerPreviewPage() {
               onClick={() => deleteEmployee(row)}
               className="mt-3 w-full rounded-2xl border border-red-200 bg-red-50 py-2 text-xs font-extrabold text-red-700 disabled:opacity-60"
             >
-              🗑 امسح الموظف من اللوحة
+              🗑 Remove employee from dashboard
             </button>
             {detailsId === row.branch_id ? (
               <div className="mt-3 space-y-3 text-xs">
                 <div>
-                  <p className="mb-1 font-black">التارجت والأوزان</p>
+                  <p className="mb-1 font-black">Targets & weights</p>
                   {(row.payload.settings?.kpis ?? []).map((k) => (
                     <div key={k.kpiKey} className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface-cream)] px-3 py-2">
                       <span className="min-w-0 font-extrabold text-[var(--color-text-primary)]">{kpiLabel(k.kpiKey)}</span>
-                      <span className="whitespace-nowrap text-[11px] font-bold tabular-nums text-[var(--color-text-secondary)] sm:text-xs">تارجت {k.target} · وزن {k.weight}%</span>
+                      <span className="whitespace-nowrap text-[11px] font-bold tabular-nums text-[var(--color-text-secondary)] sm:text-xs">Target {k.target} · Weight {k.weight}%</span>
                     </div>
                   ))}
                 </div>
                 <div>
-                  <p className="mb-2 flex items-center justify-between font-black"><span>كل الإنجازات</span><span className="rounded-full bg-[var(--color-primary-50)] px-2 py-0.5 text-[11px] font-black text-[var(--color-primary-700)]">{row.payload.entries?.length ?? 0}</span></p>
-                  {(row.payload.entries ?? []).length === 0 ? <p className="text-[var(--color-text-secondary)]">لا يوجد</p> : null}
+                  <p className="mb-2 flex items-center justify-between font-black"><span>All achievements</span><span className="rounded-full bg-[var(--color-primary-50)] px-2 py-0.5 text-[11px] font-black text-[var(--color-primary-700)]">{row.payload.entries?.length ?? 0}</span></p>
+                  {(row.payload.entries ?? []).length === 0 ? <p className="text-[var(--color-text-secondary)]">None</p> : null}
                   {(row.payload.entries ?? []).map((e, i) => (
                     <div key={`${e.date}-${i}`} className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] items-center gap-2 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface-cream)] px-3 py-2.5 text-[11px] sm:text-xs">
                       <span className="font-bold text-[var(--color-text-secondary)]" dir="ltr">{e.date}</span>
@@ -424,50 +424,50 @@ export default function ManagerPreviewPage() {
   const onLeaveToday = allRows.filter((r) => (r.payload.settings?.holidays ?? []).some((h) => h.date === today));
   const missingToday = allRows.filter((r) => !onLeaveToday.some((x) => x.branch_id === r.branch_id) && !loggedToday.some((x) => x.branch_id === r.branch_id));
   const navItems = [
-    { id: "overview", label: "الرئيسية", icon: "⌂" },
-    { id: "list", label: "الفروع", icon: "▦" },
-    { id: "top", label: "الموظفين", icon: "♙" },
-    { id: "activity", label: "التسجيلات", icon: "◷" },
-    { id: "reports", label: "التقارير", icon: "▤" },
+    { id: "overview", label: "Home", icon: "⌂" },
+    { id: "list", label: "Branches", icon: "▦" },
+    { id: "top", label: "Employees", icon: "♙" },
+    { id: "activity", label: "Check-ins", icon: "◷" },
+    { id: "reports", label: "Reports", icon: "▤" },
   ];
-  const activeLabel = navItems.find((item) => item.id === view)?.label ?? (branch ? "تفاصيل الفرع" : "لوحة المدير");
+  const activeLabel = navItems.find((item) => item.id === view)?.label ?? (branch ? "Branch details" : "Dashboard");
   const changeView = (next: string) => { setView(next); setMobileMenuOpen(false); };
   const statusNames = (items: typeof branchStatus) => items.length ? (
     <div className="mt-3 flex flex-wrap gap-2">
       {items.map((item) => <button key={item.name} type="button" onClick={() => changeView("b:" + item.name)} className="rounded-xl border border-[#f1dfd4] bg-white px-3 py-2 text-xs font-extrabold text-[var(--color-text-primary)]">{item.name}</button>)}
     </div>
-  ) : <p className="mt-3 text-xs text-[var(--color-text-secondary)]">مفيش فروع في القائمة دي حاليًا.</p>;
+  ) : <p className="mt-3 text-xs text-[var(--color-text-secondary)]">No branches in this list yet.</p>;
 
   return (
-    <main className="tys-page tx-manager min-h-screen bg-[radial-gradient(ellipse_at_top_left,rgba(255,176,111,.13),transparent_38%),linear-gradient(145deg,#fffaf6_0%,#f8f4ef_55%,#fff8f1_100%)] px-3 py-4 text-[var(--color-text-primary)] sm:px-5 sm:py-6" dir="rtl">
+    <main className="tys-page tx-manager min-h-screen bg-[radial-gradient(ellipse_at_top_left,rgba(255,176,111,.13),transparent_38%),linear-gradient(145deg,#fffaf6_0%,#f8f4ef_55%,#fff8f1_100%)] px-3 py-4 text-[var(--color-text-primary)] sm:px-5 sm:py-6" dir="ltr">
       {rows === null ? (
         <div className="mx-auto max-w-md">
           <section className="mt-10 rounded-[28px] border border-[var(--color-border)] bg-white p-6 shadow-sm">
             <div className="mb-6 text-center">
               <img src="/track-your-sales/logo-mark.png" alt="" className="mx-auto h-12 w-12 object-contain" />
               <p className="mt-3 text-[11px] font-black tracking-[.16em] text-[var(--color-primary-700)]" dir="ltr">MANAGEMENT</p>
-              <h1 className="mt-1 text-2xl font-black">دخول المدير</h1>
-              <p className="mt-2 text-xs leading-6 text-[var(--color-text-secondary)]">ادخل كلمة السر لمتابعة تقارير الفريق.</p>
+              <h1 className="mt-1 text-2xl font-black">Manager sign-in</h1>
+              <p className="mt-2 text-xs leading-6 text-[var(--color-text-secondary)]">Enter your password to view team reports.</p>
             </div>
             <form onSubmit={load} className="space-y-3">
-              <label className="block text-sm font-bold">كلمة السر
-                <input type="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="اكتب كلمة السر" className="mt-2 w-full rounded-xl border border-[var(--color-border)] bg-[var(--color-surface-cream)] px-4 py-3 text-base outline-none focus:border-[#d9651b]" />
+              <label className="block text-sm font-bold">Password
+                <input type="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Enter password" className="mt-2 w-full rounded-xl border border-[var(--color-border)] bg-[var(--color-surface-cream)] px-4 py-3 text-base outline-none focus:border-[#d9651b]" />
               </label>
               {error ? <p className="text-sm font-bold text-red-600">{error}</p> : null}
-              <button type="submit" disabled={pending || !password} className="w-full rounded-xl bg-[var(--color-primary-700)] py-3 font-extrabold text-white disabled:opacity-50">{pending ? "جاري الدخول..." : "دخول"}</button>
+              <button type="submit" disabled={pending || !password} className="w-full rounded-xl bg-[var(--color-primary-700)] py-3 font-extrabold text-white disabled:opacity-50">{pending ? "Signing in..." : "Sign in"}</button>
             </form>
           </section>
         </div>
       ) : (
         <div className="mx-auto flex max-w-[1440px] gap-5">
-          {mobileMenuOpen ? <button type="button" aria-label="إغلاق القائمة" onClick={() => setMobileMenuOpen(false)} className="fixed inset-0 z-40 bg-[var(--color-text-primary)]/30 backdrop-blur-[2px] lg:hidden" /> : null}
+          {mobileMenuOpen ? <button type="button" aria-label="Close menu" onClick={() => setMobileMenuOpen(false)} className="fixed inset-0 z-40 bg-[var(--color-text-primary)]/30 backdrop-blur-[2px] lg:hidden" /> : null}
           <aside className={"fixed inset-y-0 right-0 z-50 flex w-[min(82vw,300px)] flex-col border-l border-white/70 bg-white/90 p-4 shadow-2xl backdrop-blur-2xl transition-transform duration-200 lg:sticky lg:top-5 lg:z-auto lg:h-[calc(100vh-2.5rem)] lg:w-[248px] lg:shrink-0 lg:translate-x-0 lg:rounded-[28px] lg:border lg:shadow-[0_14px_42px_rgba(93,54,26,.08)] " + (mobileMenuOpen ? "translate-x-0" : "translate-x-full lg:translate-x-0")}>
             <div className="flex items-center gap-3 border-b border-[#f1e8e0] px-1 pb-5">
               <img src="/track-your-sales/logo-mark.png" alt="" className="h-10 w-10 object-contain" />
-              <div className="min-w-0"><p className="text-[11px] font-black tracking-[.14em] text-[var(--color-primary-700)]" dir="ltr">TRACK YOUR SALES</p><h2 className="mt-1 truncate text-sm font-black">لوحة المدير</h2></div>
-              <button type="button" onClick={() => setMobileMenuOpen(false)} aria-label="إغلاق القائمة" className="mr-auto rounded-lg p-2 text-[#6f5d4d] lg:hidden">✕</button>
+              <div className="min-w-0"><p className="text-[11px] font-black tracking-[.14em] text-[var(--color-primary-700)]" dir="ltr">TRACK YOUR SALES</p><h2 className="mt-1 truncate text-sm font-black">Dashboard</h2></div>
+              <button type="button" onClick={() => setMobileMenuOpen(false)} aria-label="Close menu" className="mr-auto rounded-lg p-2 text-[#6f5d4d] lg:hidden">✕</button>
             </div>
-            <p className="px-2 pb-2 pt-6 text-[11px] font-extrabold text-[var(--color-text-secondary)]">القائمة الرئيسية</p>
+            <p className="px-2 pb-2 pt-6 text-[11px] font-extrabold text-[var(--color-text-secondary)]">Main menu</p>
             <nav className="space-y-1">
               {navItems.map((item) => {
                 const active = view === item.id;
@@ -495,18 +495,18 @@ export default function ManagerPreviewPage() {
               })}
             </nav>
             <div className="mt-auto rounded-2xl border border-[var(--color-border)] bg-gradient-to-br from-[var(--color-surface-cream)] to-[var(--color-primary-50)]/70 p-3">
-              <p className="truncate text-xs font-extrabold">{managerName || "إدارة الفريق"}</p><p className="mt-1 text-[11px] text-[var(--color-text-secondary)]">متابعة الأداء اليومي</p>
-              <button type="button" onClick={() => { setPwOpen((v) => !v); setPwMsg(""); setMobileMenuOpen(false); }} className="mt-3 w-full rounded-xl border border-[#eadbce] bg-white px-3 py-2 text-xs font-bold text-[var(--color-primary-700)]">⚙ تغيير كلمة السر</button>
+              <p className="truncate text-xs font-extrabold">{managerName || "Team management"}</p><p className="mt-1 text-[11px] text-[var(--color-text-secondary)]">Daily performance tracking</p>
+              <button type="button" onClick={() => { setPwOpen((v) => !v); setPwMsg(""); setMobileMenuOpen(false); }} className="mt-3 w-full rounded-xl border border-[#eadbce] bg-white px-3 py-2 text-xs font-bold text-[var(--color-primary-700)]">⚙ Change password</button>
             </div>
           </aside>
 
           <div className="min-w-0 flex-1 space-y-5">
             <header className="flex items-center justify-between gap-3 rounded-[24px] border border-white/80 bg-white/80 px-4 py-3 shadow-[0_10px_30px_rgba(104,53,19,.055)] backdrop-blur-xl sm:px-5">
               <div className="flex min-w-0 items-center gap-3">
-                <button type="button" onClick={() => setMobileMenuOpen(true)} aria-label="فتح القائمة" className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--color-primary-50)] text-xl text-[var(--color-primary-700)] lg:hidden">☰</button>
-                <div className="min-w-0"><p className="text-[11px] font-black tracking-[.14em] text-[var(--color-primary-700)]" dir="ltr">MANAGEMENT</p><h1 className="mt-0.5 truncate text-xl font-black sm:text-2xl">{activeLabel}</h1><p className="mt-0.5 truncate text-[11px] text-[var(--color-text-secondary)]">متابعة أداء الفريق</p></div>
+                <button type="button" onClick={() => setMobileMenuOpen(true)} aria-label="Open menu" className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--color-primary-50)] text-xl text-[var(--color-primary-700)] lg:hidden">☰</button>
+                <div className="min-w-0"><p className="text-[11px] font-black tracking-[.14em] text-[var(--color-primary-700)]" dir="ltr">MANAGEMENT</p><h1 className="mt-0.5 truncate text-xl font-black sm:text-2xl">{activeLabel}</h1><p className="mt-0.5 truncate text-[11px] text-[var(--color-text-secondary)]">Team performance</p></div>
               </div>
-              <div className="flex shrink-0 items-center gap-2"><div className="flex items-center gap-2 rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface-cream)] py-1 pl-1 pr-1 sm:py-1.5 sm:pl-3 sm:pr-1.5"><span className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-[var(--color-primary-700)] to-[var(--color-primary-500)] text-xs font-black text-white">{(managerName.trim()[0] || "م").toUpperCase()}</span><span className="hidden max-w-[120px] truncate text-[11px] font-extrabold text-[var(--color-text-primary)] sm:inline">{managerName || "المدير"}</span></div><button type="button" disabled={pending} onClick={() => load()} className="shrink-0 rounded-xl border border-[#eee0d5] bg-white px-3 py-2.5 text-xs font-extrabold text-[var(--color-primary-700)] disabled:opacity-50">{pending ? "تحديث..." : "↻ تحديث"}</button></div>
+              <div className="flex shrink-0 items-center gap-2"><div className="flex items-center gap-2 rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface-cream)] py-1 pl-1 pr-1 sm:py-1.5 sm:pl-3 sm:pr-1.5"><span className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-[var(--color-primary-700)] to-[var(--color-primary-500)] text-xs font-black text-white">{(managerName.trim()[0] || "م").toUpperCase()}</span><span className="hidden max-w-[120px] truncate text-[11px] font-extrabold text-[var(--color-text-primary)] sm:inline">{managerName || "Manager"}</span></div><button type="button" disabled={pending} onClick={() => load()} className="shrink-0 rounded-xl border border-[#eee0d5] bg-white px-3 py-2.5 text-xs font-extrabold text-[var(--color-primary-700)] disabled:opacity-50">{pending ? "Refreshing..." : "↻ Refresh"}</button></div>
             </header>
             {error ? <p className="rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-xs font-bold text-red-700">{error}</p> : null}
 
@@ -514,29 +514,29 @@ export default function ManagerPreviewPage() {
               <div className="tx-overview mx-auto w-full max-w-[1040px] space-y-6">
                 <div className="flex flex-wrap items-end justify-between gap-3 px-1">
                   <div>
-                    <p className="text-[11px] font-semibold tracking-wide text-[#a66b43]">{greeting || "أهلاً بيك"}{managerName ? "، " + managerTitle(managerName) + " " + managerName : ""}</p>
-                    <h2 className="mt-1 text-2xl font-semibold tracking-tight text-[#30251e] sm:text-3xl">صورة واضحة. قرار أسرع.</h2>
-                    <p className="mt-1 text-sm text-[#88796e]">ملخص أداء فريقك في مكان واحد.</p>
+                    <p className="text-[11px] font-semibold tracking-wide text-[#a66b43]">{greeting || "Welcome"}{managerName ? ", " + managerTitle(managerName) + " " + managerName : ""}</p>
+                    <h2 className="mt-1 text-2xl font-semibold tracking-tight text-[#30251e] sm:text-3xl">A clear picture. Faster decisions.</h2>
+                    <p className="mt-1 text-sm text-[#88796e]">Your team's performance in one place.</p>
                   </div>
-                  <span className="text-[11px] text-[#9b8b7f]">{lastLoaded ? "آخر تحديث " + lastLoaded.toLocaleTimeString("ar-EG",{timeZone:"Africa/Cairo",hour:"2-digit",minute:"2-digit"}) : "بانتظار أول تحديث"}</span>
+                  <span className="text-[11px] text-[#9b8b7f]">{lastLoaded ? "Last update " + lastLoaded.toLocaleTimeString("en-US",{timeZone:"Africa/Cairo",hour:"2-digit",minute:"2-digit"}) : "Waiting for first refresh"}</span>
                 </div>
 
                 <section className="tx-hero-card relative overflow-hidden rounded-[28px] border border-[#f0e4da] bg-white p-5 sm:p-8">
                   <div className="relative z-10 flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
                     <div className="min-w-0">
-                      <p className="text-xs font-semibold text-[#8e7c6f]">مؤشر أداء المنطقة</p>
+                      <p className="text-xs font-semibold text-[#8e7c6f]">Area performance index</p>
                       <div className="mt-2 flex items-baseline gap-2">
                         <strong className="text-5xl font-semibold tracking-[-.06em] text-[#30251e] sm:text-6xl">{Math.round(groupAverage(allRows))}</strong>
                         <span className="text-xl font-medium text-[#a66b43]">%</span>
                       </div>
-                      <p className="mt-2 text-sm text-[#88796e]">الأداء الإجمالي وفق أوزان المؤشرات المعتمدة</p>
+                      <p className="mt-2 text-sm text-[#88796e]">Overall performance by approved KPI weights</p>
                     </div>
                     <div className="flex items-center gap-4 sm:gap-6">
                       <div className="tx-score-ring flex h-24 w-24 shrink-0 items-center justify-center rounded-full sm:h-28 sm:w-28" style={{"--score":Math.min(100,Math.max(0,groupAverage(allRows)))} as React.CSSProperties}>
-                        <div className="flex h-[78px] w-[78px] items-center justify-center rounded-full bg-white text-center sm:h-[94px] sm:w-[94px]"><span className="text-[11px] font-medium text-[#9a887a]">إنجاز<br/><b className="text-lg font-semibold text-[#30251e]">{Math.round(groupAverage(allRows))}%</b></span></div>
+                        <div className="flex h-[78px] w-[78px] items-center justify-center rounded-full bg-white text-center sm:h-[94px] sm:w-[94px]"><span className="text-[11px] font-medium text-[#9a887a]">achieved<br/><b className="text-lg font-semibold text-[#30251e]">{Math.round(groupAverage(allRows))}%</b></span></div>
                       </div>
                       <div className="hidden h-14 w-px bg-[#eee4dc] sm:block"/>
-                      <div className="min-w-[92px]"><p className="text-xs text-[#9a887a]">عدد الفروع</p><strong className="mt-1 block text-2xl font-semibold text-[#30251e]">{branchGroups.length}</strong><p className="mt-3 text-xs text-[#9a887a]">عدد الموظفين</p><strong className="mt-1 block text-2xl font-semibold text-[#30251e]">{allRows.length}</strong></div>
+                      <div className="min-w-[92px]"><p className="text-xs text-[#9a887a]">Branches</p><strong className="mt-1 block text-2xl font-semibold text-[#30251e]">{branchGroups.length}</strong><p className="mt-3 text-xs text-[#9a887a]">Employees</p><strong className="mt-1 block text-2xl font-semibold text-[#30251e]">{allRows.length}</strong></div>
                     </div>
                   </div>
                   <div className="tx-hero-line absolute inset-x-0 bottom-0 h-1"/>
@@ -545,86 +545,86 @@ export default function ManagerPreviewPage() {
                 <section className="flex flex-col gap-3 rounded-2xl border border-[#f0e7df] bg-white/80 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-5">
                   <div className="flex items-center gap-3">
                     <span className={behindBranches.length ? "flex h-9 w-9 items-center justify-center rounded-full bg-[#fff1e8] text-[#c56b32]" : "flex h-9 w-9 items-center justify-center rounded-full bg-[#edf6f0] text-[#43805c]"}>{behindBranches.length ? "!" : "✓"}</span>
-                    <div><p className="text-sm font-semibold text-[#382d25]">{behindBranches.length ? behindBranches.length + " فروع محتاجة متابعة" : "كل الفروع على المسار"}</p><p className="mt-0.5 text-xs text-[#96877b]">{behindBranches.length ? "راجع الفروع المتأخرة وشوف التفاصيل." : "مفيش فروع متأخرة عن الأداء المتوقع."}</p></div>
+                    <div><p className="text-sm font-semibold text-[#382d25]">{behindBranches.length ? behindBranches.length + " branches need follow-up" : "All branches On track"}</p><p className="mt-0.5 text-xs text-[#96877b]">{behindBranches.length ? "Review the behind branches for details." : "No branches are behind the expected pace."}</p></div>
                   </div>
-                  <button type="button" onClick={()=>changeView("list")} className="tx-text-action self-start text-xs font-semibold sm:self-auto">عرض الفروع <span aria-hidden="true">←</span></button>
+                  <button type="button" onClick={()=>changeView("list")} className="tx-text-action self-start text-xs font-semibold sm:self-auto">View Branches <span aria-hidden="true">←</span></button>
                 </section>
 
                 <div className="flex items-center justify-between px-1 pt-1">
-                  <div><h3 className="text-sm font-semibold text-[#49392e]">الوصول السريع</h3><p className="mt-1 text-xs text-[#9a887a]">التفاصيل موجودة في مكانها، وقت ما تحتاجها.</p></div>
+                  <div><h3 className="text-sm font-semibold text-[#49392e]">Quick access</h3><p className="mt-1 text-xs text-[#9a887a]">Details are one tap away when you need them.</p></div>
                 </div>
                 <section className="grid grid-cols-2 gap-3 sm:grid-cols-4">
                   {[
-                    {id:"list",title:"الفروع",desc:"أداء كل فرع"},
-                    {id:"top",title:"الموظفين",desc:"ترتيب الفريق"},
-                    {id:"activity",title:"التسجيلات",desc:"متابعة اليوم"},
-                    {id:"reports",title:"التقارير",desc:"تصدير ومراجعة"}
+                    {id:"list",title:"Branches",desc:"Performance of every branch"},
+                    {id:"top",title:"Employees",desc:"Team ranking"},
+                    {id:"activity",title:"Check-ins",desc:"Today's activity"},
+                    {id:"reports",title:"Reports",desc:"Export and review"}
                   ].map(item=><button key={item.id} type="button" onClick={()=>changeView(item.id)} className="tx-shortcut-card rounded-2xl border border-[#f0e7df] bg-white px-4 py-4 text-right transition"><span className="block text-sm font-semibold text-[#49392e]">{item.title}</span><span className="mt-1 block text-[11px] text-[#9a887a]">{item.desc}</span><span className="mt-4 block text-sm text-[#bd6b36]">←</span></button>)}
                 </section>
               </div>
             ) : view === "list" ? (
               <div className="space-y-4">
                 <section className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-                  <div className="rounded-2xl border border-[#eee5dc] bg-white p-4"><p className="text-xs text-[var(--color-text-secondary)]">الفروع</p><p className="mt-1 text-2xl font-black">{branchGroups.length}</p></div>
-                  <div className="rounded-2xl border border-[#eee5dc] bg-white p-4"><p className="text-xs text-[var(--color-text-secondary)]">الموظفين</p><p className="mt-1 text-2xl font-black">{allRows.length}</p></div>
-                  <div className="col-span-2 rounded-2xl border border-[#eee5dc] bg-white p-4 sm:col-span-1"><p className="text-xs text-[var(--color-text-secondary)]">فروع متأخرة</p><p className="mt-1 text-2xl font-black text-red-600">{behindBranches.length}</p></div>
+                  <div className="rounded-2xl border border-[#eee5dc] bg-white p-4"><p className="text-xs text-[var(--color-text-secondary)]">Branches</p><p className="mt-1 text-2xl font-black">{branchGroups.length}</p></div>
+                  <div className="rounded-2xl border border-[#eee5dc] bg-white p-4"><p className="text-xs text-[var(--color-text-secondary)]">Employees</p><p className="mt-1 text-2xl font-black">{allRows.length}</p></div>
+                  <div className="col-span-2 rounded-2xl border border-[#eee5dc] bg-white p-4 sm:col-span-1"><p className="text-xs text-[var(--color-text-secondary)]">Behind branches</p><p className="mt-1 text-2xl font-black text-red-600">{behindBranches.length}</p></div>
                 </section>
-                <section><h2 className="text-lg font-black">كل الفروع</h2><p className="text-[11px] text-[var(--color-text-secondary)]">{allRows.length} تقرير · {lastLoaded ? lastLoaded.toLocaleTimeString("en-US", { timeZone: "Africa/Cairo", hour: "2-digit", minute: "2-digit", hour12: false }) : "لم يتم التحديث بعد"}</p></section>
-                {branchStatus.length ? <section className="overflow-hidden rounded-[26px] border border-[var(--color-border)] bg-white/90 shadow-[0_10px_28px_rgba(104,53,19,.055)]"><div className="hidden grid-cols-[52px_minmax(0,1.5fr)_minmax(100px,1fr)_100px_90px] gap-3 border-b border-[var(--color-border)] bg-[var(--color-surface-cream)] px-4 py-3 text-[11px] font-black text-[var(--color-text-secondary)] sm:grid"><span>الترتيب</span><span>الفرع</span><span>الحالة</span><span>الإنجاز</span><span>الموظفين</span></div><div className="divide-y divide-[var(--color-border)]">{[...branchStatus].sort((a,b)=>b.percent-a.percent).map((b,index)=>{const delta=b.expected===undefined?null:b.percent-b.expected;const label=delta===null?"بيانات غير مكتملة":delta<0?"متأخر":delta>=15?"متقدم جدًا":delta>=5?"متقدم":"على المسار";const tone=delta===null?"bg-stone-100 text-stone-600":delta<0?"bg-red-50 text-red-700":delta>=5?"bg-emerald-50 text-emerald-700":"bg-amber-50 text-amber-800";const ring=delta!==null&&delta<0?"var(--color-danger-text)":"var(--color-primary-600)";return <button key={b.name} type="button" onClick={()=>changeView("b:"+b.name)} className="grid w-full grid-cols-[26px_minmax(0,1fr)_auto] items-center gap-3 px-3 py-3 text-right transition hover:bg-[var(--color-surface-cream)] sm:grid-cols-[52px_minmax(0,1.5fr)_minmax(100px,1fr)_100px_90px] sm:px-4"><span className="text-[11px] font-black text-[var(--color-text-secondary)]">#{index+1}</span><span className="min-w-0"><span className="block truncate text-xs font-black text-[var(--color-text-primary)]">{b.name}</span><span className="mt-1 block text-[11px] text-[var(--color-text-secondary)] sm:hidden">{b.group.length} موظف · {Math.round(b.percent)}% إنجاز</span></span><span className={"col-start-3 row-start-1 rounded-full px-2.5 py-1 text-[11px] font-black "+tone+" sm:col-start-auto sm:row-auto sm:justify-self-start"}>{label}</span><span className="col-span-2 flex items-center gap-2 sm:col-span-1"><span className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full" style={{background:"conic-gradient("+ring+" "+Math.min(100,Math.max(0,b.percent))+"%, var(--color-border) 0)"}}><span className="flex h-7 w-7 items-center justify-center rounded-full bg-white text-[10px] font-black tabular-nums">{Math.round(b.percent)}%</span></span><span className="h-1.5 min-w-0 flex-1 overflow-hidden rounded-full bg-[var(--color-border)] sm:hidden"><span className="block h-full rounded-full bg-gradient-to-l from-[var(--color-primary-700)] to-[var(--color-primary-500)]" style={{width:Math.min(100,Math.max(0,b.percent))+"%"}} /></span></span><span className="hidden text-xs font-bold text-[#6f5948] sm:block">{b.group.length}</span></button>})}</div></section> : <div className="rounded-2xl border border-dashed border-[#e8d5c5] bg-white p-8 text-center"><p className="font-extrabold">لا توجد تقارير حتى الآن</p><p className="mt-1 text-xs text-[var(--color-text-secondary)]">ستظهر بيانات الفريق بعد المزامنة.</p></div>}
+                <section><h2 className="text-lg font-black">All branches</h2><p className="text-[11px] text-[var(--color-text-secondary)]">{allRows.length} report · {lastLoaded ? lastLoaded.toLocaleTimeString("en-US", { timeZone: "Africa/Cairo", hour: "2-digit", minute: "2-digit", hour12: false }) : "Not updated yet"}</p></section>
+                {branchStatus.length ? <section className="overflow-hidden rounded-[26px] border border-[var(--color-border)] bg-white/90 shadow-[0_10px_28px_rgba(104,53,19,.055)]"><div className="hidden grid-cols-[52px_minmax(0,1.5fr)_minmax(100px,1fr)_100px_90px] gap-3 border-b border-[var(--color-border)] bg-[var(--color-surface-cream)] px-4 py-3 text-[11px] font-black text-[var(--color-text-secondary)] sm:grid"><span>Rank</span><span>Branch</span><span>Status</span><span>Achievement</span><span>Employees</span></div><div className="divide-y divide-[var(--color-border)]">{[...branchStatus].sort((a,b)=>b.percent-a.percent).map((b,index)=>{const delta=b.expected===undefined?null:b.percent-b.expected;const label=delta===null?"Incomplete data":delta<0?"Behind":delta>=15?"Far ahead":delta>=5?"Ahead":"On track";const tone=delta===null?"bg-stone-100 text-stone-600":delta<0?"bg-red-50 text-red-700":delta>=5?"bg-emerald-50 text-emerald-700":"bg-amber-50 text-amber-800";const ring=delta!==null&&delta<0?"var(--color-danger-text)":"var(--color-primary-600)";return <button key={b.name} type="button" onClick={()=>changeView("b:"+b.name)} className="grid w-full grid-cols-[26px_minmax(0,1fr)_auto] items-center gap-3 px-3 py-3 text-right transition hover:bg-[var(--color-surface-cream)] sm:grid-cols-[52px_minmax(0,1.5fr)_minmax(100px,1fr)_100px_90px] sm:px-4"><span className="text-[11px] font-black text-[var(--color-text-secondary)]">#{index+1}</span><span className="min-w-0"><span className="block truncate text-xs font-black text-[var(--color-text-primary)]">{b.name}</span><span className="mt-1 block text-[11px] text-[var(--color-text-secondary)] sm:hidden">{b.group.length} employees · {Math.round(b.percent)}% achieved</span></span><span className={"col-start-3 row-start-1 rounded-full px-2.5 py-1 text-[11px] font-black "+tone+" sm:col-start-auto sm:row-auto sm:justify-self-start"}>{label}</span><span className="col-span-2 flex items-center gap-2 sm:col-span-1"><span className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full" style={{background:"conic-gradient("+ring+" "+Math.min(100,Math.max(0,b.percent))+"%, var(--color-border) 0)"}}><span className="flex h-7 w-7 items-center justify-center rounded-full bg-white text-[10px] font-black tabular-nums">{Math.round(b.percent)}%</span></span><span className="h-1.5 min-w-0 flex-1 overflow-hidden rounded-full bg-[var(--color-border)] sm:hidden"><span className="block h-full rounded-full bg-gradient-to-l from-[var(--color-primary-700)] to-[var(--color-primary-500)]" style={{width:Math.min(100,Math.max(0,b.percent))+"%"}} /></span></span><span className="hidden text-xs font-bold text-[#6f5948] sm:block">{b.group.length}</span></button>})}</div></section> : <div className="rounded-2xl border border-dashed border-[#e8d5c5] bg-white p-8 text-center"><p className="font-extrabold">No reports yet</p><p className="mt-1 text-xs text-[var(--color-text-secondary)]">Team data will appear after sync.</p></div>}
               </div>
             ) : view === "top" ? (
               <section className="overflow-hidden rounded-[26px] border border-[var(--color-border)] bg-white/90 shadow-[0_10px_28px_rgba(104,53,19,.055)]">
-                <div className="flex items-center justify-between gap-3 border-b border-[var(--color-border)] px-4 py-4 sm:px-5"><div><p className="text-[11px] font-black tracking-[.15em] text-[var(--color-primary-700)]" dir="ltr">TEAM LEADERBOARD</p><h2 className="mt-1 text-lg font-black">ترتيب الموظفين</h2><p className="mt-0.5 text-[11px] text-[var(--color-text-secondary)]">من الأعلى إلى الأقل تحقيقًا</p></div><span className="rounded-xl bg-[var(--color-primary-50)] px-3 py-2 text-xs font-black text-[var(--color-primary-700)]">{topRows.length} موظف</span></div>
+                <div className="flex items-center justify-between gap-3 border-b border-[var(--color-border)] px-4 py-4 sm:px-5"><div><p className="text-[11px] font-black tracking-[.15em] text-[var(--color-primary-700)]" dir="ltr">TEAM LEADERBOARD</p><h2 className="mt-1 text-lg font-black">Employee ranking</h2><p className="mt-0.5 text-[11px] text-[var(--color-text-secondary)]">From highest to lowest achievement</p></div><span className="rounded-xl bg-[var(--color-primary-50)] px-3 py-2 text-xs font-black text-[var(--color-primary-700)]">{topRows.length} employees</span></div>
                 <div className="divide-y divide-[var(--color-border)]">{topRows.map((row) => <div key={row.branch + row.name + row.rank} className="flex items-center gap-3 px-4 py-3.5 sm:px-5"><span className={"flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-xs font-black "+(row.rank===1?"bg-[#fff0d7] text-[#a66a08]":row.rank===2?"bg-[#f2f3f5] text-[#657080]":row.rank===3?"bg-[#faeee5] text-[#9b5b31]":"bg-[var(--color-surface-cream)] text-[var(--color-primary-700)]")}>{row.rank}</span><span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#ffe2c9] to-[var(--color-primary-50)] text-sm font-black text-[var(--color-primary-700)]">{(row.name.trim()[0]||"م").toUpperCase()}</span><div className="min-w-0 flex-1"><p className="truncate text-sm font-extrabold text-[var(--color-text-primary)]">{row.name}</p><p className="truncate text-[11px] text-[var(--color-text-secondary)]" dir="ltr">{row.branch}</p><div className="mt-2 h-1.5 overflow-hidden rounded-full bg-[var(--color-border)]"><div className="h-full rounded-full bg-gradient-to-l from-[var(--color-primary-700)] to-[var(--color-primary-500)]" style={{width:Math.min(100,Math.max(0,row.percent))+"%"}} /></div></div><strong className="shrink-0 text-lg font-black tabular-nums text-[var(--color-primary-700)]">{Math.round(row.percent)}%</strong></div>)}</div>
               </section>
             ) : view === "activity" ? (
               <section className="space-y-4">
-                <div className="flex flex-wrap items-end justify-between gap-3"><div><p className="text-[11px] font-black tracking-[.15em] text-[var(--color-primary-700)]" dir="ltr">DAILY CHECK-IN</p><h2 className="mt-1 text-xl font-black">متابعة تسجيلات النهارده</h2><p className="mt-1 text-xs text-[var(--color-text-secondary)]" dir="ltr">{today}</p></div><span className="rounded-xl border border-[var(--color-border)] bg-white/80 px-3 py-2 text-[11px] font-bold text-[var(--color-text-secondary)]">حالة تسجيل الفريق</span></div>
+                <div className="flex flex-wrap items-end justify-between gap-3"><div><p className="text-[11px] font-black tracking-[.15em] text-[var(--color-primary-700)]" dir="ltr">DAILY CHECK-IN</p><h2 className="mt-1 text-xl font-black">Today's check-ins</h2><p className="mt-1 text-xs text-[var(--color-text-secondary)]" dir="ltr">{today}</p></div><span className="rounded-xl border border-[var(--color-border)] bg-white/80 px-3 py-2 text-[11px] font-bold text-[var(--color-text-secondary)]">Team check-in status</span></div>
                 <div className="grid gap-3 sm:grid-cols-3">
-                  {[{title:"سجّلوا",items:loggedToday,tone:"text-emerald-700",surface:"bg-emerald-50",dot:"bg-emerald-500"},{title:"لم يسجلوا",items:missingToday,tone:"text-red-700",surface:"bg-red-50",dot:"bg-red-500"},{title:"إجازة",items:onLeaveToday,tone:"text-[var(--color-text-secondary)]",surface:"bg-[#f7f1eb]",dot:"bg-[#b69b84]"}].map((group)=><article key={group.title} className="overflow-hidden rounded-[24px] border border-[var(--color-border)] bg-white/90 shadow-[0_8px_24px_rgba(126,65,24,.05)]"><div className="flex items-center justify-between border-b border-[#f3e9e1] px-4 py-3"><div className="flex items-center gap-2"><span className={"h-2.5 w-2.5 rounded-full "+group.dot}/><h3 className={"text-sm font-black "+group.tone}>{group.title}</h3></div><span className={"rounded-lg px-2.5 py-1 text-sm font-black tabular-nums "+group.surface}>{group.items.length}</span></div><div className="space-y-2 p-3">{group.items.length?group.items.map((r)=><div key={r.branch_id} className="flex items-center justify-between gap-2 rounded-xl bg-[var(--color-surface-cream)] px-3 py-2.5 text-xs"><b className="min-w-0 truncate">{r.employee_name}</b><span className="max-w-[45%] truncate text-[11px] text-[var(--color-text-secondary)]" dir="ltr">{r.branch_name||NO_BRANCH}</span></div>):<p className="py-5 text-center text-xs text-[var(--color-text-secondary)]">لا يوجد</p>}</div></article>)}
+                  {[{title:"Checked in",items:loggedToday,tone:"text-emerald-700",surface:"bg-emerald-50",dot:"bg-emerald-500"},{title:"Not checked in",items:missingToday,tone:"text-red-700",surface:"bg-red-50",dot:"bg-red-500"},{title:"On leave",items:onLeaveToday,tone:"text-[var(--color-text-secondary)]",surface:"bg-[#f7f1eb]",dot:"bg-[#b69b84]"}].map((group)=><article key={group.title} className="overflow-hidden rounded-[24px] border border-[var(--color-border)] bg-white/90 shadow-[0_8px_24px_rgba(126,65,24,.05)]"><div className="flex items-center justify-between border-b border-[#f3e9e1] px-4 py-3"><div className="flex items-center gap-2"><span className={"h-2.5 w-2.5 rounded-full "+group.dot}/><h3 className={"text-sm font-black "+group.tone}>{group.title}</h3></div><span className={"rounded-lg px-2.5 py-1 text-sm font-black tabular-nums "+group.surface}>{group.items.length}</span></div><div className="space-y-2 p-3">{group.items.length?group.items.map((r)=><div key={r.branch_id} className="flex items-center justify-between gap-2 rounded-xl bg-[var(--color-surface-cream)] px-3 py-2.5 text-xs"><b className="min-w-0 truncate">{r.employee_name}</b><span className="max-w-[45%] truncate text-[11px] text-[var(--color-text-secondary)]" dir="ltr">{r.branch_name||NO_BRANCH}</span></div>):<p className="py-5 text-center text-xs text-[var(--color-text-secondary)]">None</p>}</div></article>)}
                 </div>
               </section>
             ) : view === "reports" ? (
               <section className="overflow-hidden rounded-[26px] border border-[var(--color-border)] bg-white/90 shadow-[0_10px_28px_rgba(104,53,19,.055)]">
-                <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--color-border)] px-4 py-4 sm:px-5"><div><p className="text-[11px] font-black tracking-[.15em] text-[var(--color-primary-700)]" dir="ltr">BRANCH REPORTS</p><h2 className="mt-1 text-lg font-black">تقارير الفروع</h2><p className="mt-0.5 text-[11px] text-[var(--color-text-secondary)]">تحميل تقرير CSV تفصيلي لكل فرع</p></div><span className="rounded-xl bg-[var(--color-primary-50)] px-3 py-2 text-xs font-black text-[var(--color-primary-700)]">{branchGroups.length} فرع</span></div>
-                {branchGroups.length?<div className="divide-y divide-[var(--color-border)]">{branchGroups.map(([name,group])=><div key={name} className="flex items-center gap-3 px-4 py-3.5 sm:px-5"><span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--color-primary-50)] text-sm font-black text-[var(--color-primary-700)]">▦</span><div className="min-w-0 flex-1"><p className="truncate text-sm font-extrabold text-[var(--color-text-primary)]" dir="ltr">{name}</p><p className="mt-1 text-[11px] text-[var(--color-text-secondary)]">{group.length} موظف · تقرير تفصيلي</p></div><button type="button" onClick={()=>downloadBranchCsv(name,group)} className="shrink-0 rounded-xl border border-[#f0d4bd] bg-gradient-to-l from-[var(--color-primary-50)] to-[var(--color-surface-cream)] px-3 py-2.5 text-[11px] font-black text-[#a94b13] transition hover:border-[#e5b58e]">↓ CSV</button></div>)}</div>:<p className="py-8 text-center text-xs text-[var(--color-text-secondary)]">لا توجد بيانات لتصديرها.</p>}
+                <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--color-border)] px-4 py-4 sm:px-5"><div><p className="text-[11px] font-black tracking-[.15em] text-[var(--color-primary-700)]" dir="ltr">BRANCH REPORTS</p><h2 className="mt-1 text-lg font-black">Branch reports</h2><p className="mt-0.5 text-[11px] text-[var(--color-text-secondary)]">Download a detailed CSV report per branch</p></div><span className="rounded-xl bg-[var(--color-primary-50)] px-3 py-2 text-xs font-black text-[var(--color-primary-700)]">{branchGroups.length} branches</span></div>
+                {branchGroups.length?<div className="divide-y divide-[var(--color-border)]">{branchGroups.map(([name,group])=><div key={name} className="flex items-center gap-3 px-4 py-3.5 sm:px-5"><span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--color-primary-50)] text-sm font-black text-[var(--color-primary-700)]">▦</span><div className="min-w-0 flex-1"><p className="truncate text-sm font-extrabold text-[var(--color-text-primary)]" dir="ltr">{name}</p><p className="mt-1 text-[11px] text-[var(--color-text-secondary)]">{group.length} employees · detailed report</p></div><button type="button" onClick={()=>downloadBranchCsv(name,group)} className="shrink-0 rounded-xl border border-[#f0d4bd] bg-gradient-to-l from-[var(--color-primary-50)] to-[var(--color-surface-cream)] px-3 py-2.5 text-[11px] font-black text-[#a94b13] transition hover:border-[#e5b58e]">↓ CSV</button></div>)}</div>:<p className="py-8 text-center text-xs text-[var(--color-text-secondary)]">No data to export.</p>}
               </section>
             ) : branch !== null ? (
               <section className="space-y-3">
-                <div className="flex items-center justify-between gap-3"><div><button type="button" onClick={()=>changeView("list")} className="mb-1 text-xs font-bold text-[var(--color-primary-700)]">← كل الفروع</button><h2 className="text-xl font-black" dir="ltr">{branch}</h2><p className="text-xs text-[var(--color-text-secondary)]">{branchRows.length} موظف</p></div><button type="button" onClick={()=>downloadBranchCsv(branch,branchRows)} className="rounded-xl border border-[var(--color-border)] bg-white px-3 py-2 text-xs font-bold text-[var(--color-primary-700)]">↓ CSV</button></div>
-                <article className="rounded-2xl border border-[var(--color-border)] bg-white p-3"><button type="button" onClick={()=>setBranchOpenFor(branchOpen?null:branch)} className="flex w-full items-center justify-between gap-3 text-right"><span className="text-xs font-bold text-[var(--color-text-secondary)]">إجمالي أداء الفرع</span><strong className="text-2xl text-[var(--color-primary-700)]">{Math.round(branchAvg)}%　{branchOpen?"−":"+"}</strong></button>{branchOpen?<div className="mt-3 grid grid-cols-2 gap-2 border-t border-[var(--color-border)] pt-3 sm:grid-cols-3">{aggregateKpis(branchRows).map(k=><KpiTile key={k.name} kpi={k}/>)}</div>:null}<TrackBadge percent={branchAvg} expected={branchExpected}/></article>
-                <h3 className="text-sm font-black">الموظفين · مرتّبون حسب الأداء</h3><div className="space-y-2">{[...branchRows].sort((a,b)=>(b.payload.overall??0)-(a.payload.overall??0)).map((row,index)=><div key={row.branch_id} className="relative"><span className="absolute right-3 top-2 z-10 rounded-md bg-[var(--color-primary-50)] px-2 py-0.5 text-[11px] font-black text-[var(--color-primary-700)]">#{index+1}</span>{renderRow(row)}</div>)}</div>
+                <div className="flex items-center justify-between gap-3"><div><button type="button" onClick={()=>changeView("list")} className="mb-1 text-xs font-bold text-[var(--color-primary-700)]">← All branches</button><h2 className="text-xl font-black" dir="ltr">{branch}</h2><p className="text-xs text-[var(--color-text-secondary)]">{branchRows.length} employees</p></div><button type="button" onClick={()=>downloadBranchCsv(branch,branchRows)} className="rounded-xl border border-[var(--color-border)] bg-white px-3 py-2 text-xs font-bold text-[var(--color-primary-700)]">↓ CSV</button></div>
+                <article className="rounded-2xl border border-[var(--color-border)] bg-white p-3"><button type="button" onClick={()=>setBranchOpenFor(branchOpen?null:branch)} className="flex w-full items-center justify-between gap-3 text-right"><span className="text-xs font-bold text-[var(--color-text-secondary)]">Total branch performance</span><strong className="text-2xl text-[var(--color-primary-700)]">{Math.round(branchAvg)}%　{branchOpen?"−":"+"}</strong></button>{branchOpen?<div className="mt-3 grid grid-cols-2 gap-2 border-t border-[var(--color-border)] pt-3 sm:grid-cols-3">{aggregateKpis(branchRows).map(k=><KpiTile key={k.name} kpi={k}/>)}</div>:null}<TrackBadge percent={branchAvg} expected={branchExpected}/></article>
+                <h3 className="text-sm font-black">Employees · sorted by performance</h3><div className="space-y-2">{[...branchRows].sort((a,b)=>(b.payload.overall??0)-(a.payload.overall??0)).map((row,index)=><div key={row.branch_id} className="relative"><span className="absolute right-3 top-2 z-10 rounded-md bg-[var(--color-primary-50)] px-2 py-0.5 text-[11px] font-black text-[var(--color-primary-700)]">#{index+1}</span>{renderRow(row)}</div>)}</div>
               </section>
             ) : null}
 
-            <footer className="flex flex-wrap items-center justify-between gap-3 border-t border-[#eee5dc] pt-4"><p className="text-[11px] text-[var(--color-text-secondary)]">Track Your Sales · لوحة متابعة الأداء</p><button type="button" onClick={()=>{setPwOpen(v=>!v);setPwMsg("");}} className="text-xs font-bold text-[var(--color-primary-700)]">{pwOpen?"إخفاء تغيير كلمة السر":"🔑 تغيير كلمة السر"}</button></footer>
+            <footer className="flex flex-wrap items-center justify-between gap-3 border-t border-[#eee5dc] pt-4"><p className="text-[11px] text-[var(--color-text-secondary)]">Track Your Sales · Performance dashboard</p><button type="button" onClick={()=>{setPwOpen(v=>!v);setPwMsg("");}} className="text-xs font-bold text-[var(--color-primary-700)]">{pwOpen?"Hide password change":"🔑 Change password"}</button></footer>
             {branchPreview ? (() => {
               const previewRows = branchGroups.find(([name]) => name === branchPreview)?.[1] ?? [];
               const preview = branchStatus.find((item) => item.name === branchPreview);
               const previewKpis = aggregateKpis(previewRows);
               return (
                 <div className="fixed inset-0 z-[70] flex justify-end bg-[#2d211a]/35 backdrop-blur-[3px]" onClick={() => setBranchPreview(null)}>
-                  <aside role="dialog" aria-modal="true" aria-label={"تفاصيل فرع " + branchPreview} onClick={(event) => event.stopPropagation()} className="h-full w-full max-w-[520px] overflow-y-auto border-r border-white/50 bg-[var(--color-surface-cream)] p-4 shadow-2xl sm:p-6">
+                  <aside role="dialog" aria-modal="true" aria-label={"Branch details " + branchPreview} onClick={(event) => event.stopPropagation()} className="h-full w-full max-w-[520px] overflow-y-auto border-r border-white/50 bg-[var(--color-surface-cream)] p-4 shadow-2xl sm:p-6">
                     <div className="flex items-start justify-between gap-3">
-                      <div><p className="text-[11px] font-black tracking-[.15em] text-[var(--color-primary-700)]" dir="ltr">BRANCH QUICK VIEW</p><h2 className="mt-1 text-2xl font-black text-[#382719]" dir="auto">{branchPreview}</h2><p className="mt-1 text-xs text-[var(--color-text-secondary)]">ملخص أداء الفرع والموظفين</p></div>
-                      <button type="button" aria-label="إغلاق التفاصيل" onClick={() => setBranchPreview(null)} className="flex h-10 w-10 items-center justify-center rounded-xl border border-[var(--color-border)] bg-white text-lg font-bold text-[var(--color-text-secondary)]">×</button>
+                      <div><p className="text-[11px] font-black tracking-[.15em] text-[var(--color-primary-700)]" dir="ltr">BRANCH QUICK VIEW</p><h2 className="mt-1 text-2xl font-black text-[#382719]" dir="auto">{branchPreview}</h2><p className="mt-1 text-xs text-[var(--color-text-secondary)]">Branch and employee performance summary</p></div>
+                      <button type="button" aria-label="Close details" onClick={() => setBranchPreview(null)} className="flex h-10 w-10 items-center justify-center rounded-xl border border-[var(--color-border)] bg-white text-lg font-bold text-[var(--color-text-secondary)]">×</button>
                     </div>
                     <div className="mt-5 grid grid-cols-2 gap-3">
-                      <div className="rounded-2xl bg-white p-4 ring-1 ring-[var(--color-border)]"><p className="text-[11px] font-bold text-[var(--color-text-secondary)]">إنجاز الفرع</p><strong className="mt-1 block text-3xl font-black tabular-nums text-[var(--color-primary-700)]">{Math.round(preview?.percent ?? 0)}%</strong></div>
-                      <div className="rounded-2xl bg-white p-4 ring-1 ring-[var(--color-border)]"><p className="text-[11px] font-bold text-[var(--color-text-secondary)]">حالة الفرع</p><strong className={"mt-2 inline-flex rounded-full px-3 py-1.5 text-xs font-black "+(preview?.expected===undefined?"bg-stone-100 text-stone-600":preview.onTrack?"bg-emerald-50 text-emerald-700":"bg-red-50 text-red-700")}>{preview?.expected===undefined?"بيانات غير مكتملة":preview.onTrack?"على المسار":"متأخر"}</strong></div>
+                      <div className="rounded-2xl bg-white p-4 ring-1 ring-[var(--color-border)]"><p className="text-[11px] font-bold text-[var(--color-text-secondary)]">Branch achievement</p><strong className="mt-1 block text-3xl font-black tabular-nums text-[var(--color-primary-700)]">{Math.round(preview?.percent ?? 0)}%</strong></div>
+                      <div className="rounded-2xl bg-white p-4 ring-1 ring-[var(--color-border)]"><p className="text-[11px] font-bold text-[var(--color-text-secondary)]">Branch status</p><strong className={"mt-2 inline-flex rounded-full px-3 py-1.5 text-xs font-black "+(preview?.expected===undefined?"bg-stone-100 text-stone-600":preview.onTrack?"bg-emerald-50 text-emerald-700":"bg-red-50 text-red-700")}>{preview?.expected===undefined?"Incomplete data":preview.onTrack?"On track":"Behind"}</strong></div>
                     </div>
-                    <div className="mt-5"><div className="mb-3 flex items-center justify-between"><h3 className="text-sm font-black">أداء المؤشرات</h3><span className="text-[11px] text-[var(--color-text-secondary)]">{previewKpis.length} مؤشرات</span></div><div className="grid grid-cols-2 gap-2">{previewKpis.map((k)=> <KpiTile key={k.name} kpi={k}/>)}</div></div>
-                    <div className="mt-6"><div className="mb-3 flex items-center justify-between"><h3 className="text-sm font-black">موظفو الفرع</h3><span className="rounded-full bg-[var(--color-primary-50)] px-2.5 py-1 text-[11px] font-black text-[var(--color-primary-700)]">{previewRows.length}</span></div><div className="space-y-2">{[...previewRows].sort((a,b)=>(b.payload.overall??0)-(a.payload.overall??0)).map((row,index)=><div key={row.branch_id} className="rounded-2xl border border-[var(--color-border)] bg-white p-3"><div className="mb-2 flex items-center justify-between gap-3"><span className="text-[11px] font-black text-[var(--color-primary-700)]">#{index+1}</span><strong className="text-sm font-black text-[var(--color-text-primary)]">{Math.round(row.payload.overall??0)}%</strong></div>{renderRow(row)}</div>)}</div></div>
-                    <button type="button" onClick={() => { setBranchPreview(null); changeView("b:" + branchPreview); }} className="mt-6 w-full rounded-xl bg-gradient-to-l from-[var(--color-primary-700)] to-[#e97824] px-4 py-3 text-sm font-black text-white shadow-lg shadow-orange-900/10">فتح صفحة الفرع بالكامل ←</button>
+                    <div className="mt-5"><div className="mb-3 flex items-center justify-between"><h3 className="text-sm font-black">KPI performance</h3><span className="text-[11px] text-[var(--color-text-secondary)]">{previewKpis.length} KPIs</span></div><div className="grid grid-cols-2 gap-2">{previewKpis.map((k)=> <KpiTile key={k.name} kpi={k}/>)}</div></div>
+                    <div className="mt-6"><div className="mb-3 flex items-center justify-between"><h3 className="text-sm font-black">Branch employees</h3><span className="rounded-full bg-[var(--color-primary-50)] px-2.5 py-1 text-[11px] font-black text-[var(--color-primary-700)]">{previewRows.length}</span></div><div className="space-y-2">{[...previewRows].sort((a,b)=>(b.payload.overall??0)-(a.payload.overall??0)).map((row,index)=><div key={row.branch_id} className="rounded-2xl border border-[var(--color-border)] bg-white p-3"><div className="mb-2 flex items-center justify-between gap-3"><span className="text-[11px] font-black text-[var(--color-primary-700)]">#{index+1}</span><strong className="text-sm font-black text-[var(--color-text-primary)]">{Math.round(row.payload.overall??0)}%</strong></div>{renderRow(row)}</div>)}</div></div>
+                    <button type="button" onClick={() => { setBranchPreview(null); changeView("b:" + branchPreview); }} className="mt-6 w-full rounded-xl bg-gradient-to-l from-[var(--color-primary-700)] to-[#e97824] px-4 py-3 text-sm font-black text-white shadow-lg shadow-orange-900/10">Open full branch page ←</button>
                   </aside>
                 </div>
               );
             })() : null}
-            {pwOpen ? <form onSubmit={changePassword} className="rounded-2xl border border-[var(--color-border)] bg-white p-4"><h3 className="mb-3 text-sm font-black">تغيير كلمة السر</h3><div className="grid gap-3 sm:grid-cols-3">
-              <label className="text-xs font-bold">كلمة السر الحالية<input type="password" autoComplete="current-password" value={oldPw} onChange={e=>setOldPw(e.target.value)} className="mt-1.5 w-full rounded-xl border border-[var(--color-border)] px-3 py-2.5 text-sm"/></label>
-              <label className="text-xs font-bold">كلمة السر الجديدة<input type="password" autoComplete="new-password" value={newPw} onChange={e=>setNewPw(e.target.value)} className="mt-1.5 w-full rounded-xl border border-[var(--color-border)] px-3 py-2.5 text-sm"/></label>
-              <label className="text-xs font-bold">تأكيد كلمة السر<input type="password" autoComplete="new-password" value={newPw2} onChange={e=>setNewPw2(e.target.value)} className="mt-1.5 w-full rounded-xl border border-[var(--color-border)] px-3 py-2.5 text-sm"/></label>
-            </div>{pwMsg?<p className="mt-3 text-xs font-bold text-red-600">{pwMsg}</p>:null}<button type="submit" disabled={!oldPw||!newPw||!newPw2} className="mt-3 rounded-xl bg-[var(--color-primary-700)] px-5 py-3 text-sm font-bold text-white disabled:opacity-50">حفظ كلمة السر</button></form>:null}
+            {pwOpen ? <form onSubmit={changePassword} className="rounded-2xl border border-[var(--color-border)] bg-white p-4"><h3 className="mb-3 text-sm font-black">Change password</h3><div className="grid gap-3 sm:grid-cols-3">
+              <label className="text-xs font-bold">Current password<input type="password" autoComplete="current-password" value={oldPw} onChange={e=>setOldPw(e.target.value)} className="mt-1.5 w-full rounded-xl border border-[var(--color-border)] px-3 py-2.5 text-sm"/></label>
+              <label className="text-xs font-bold">New password<input type="password" autoComplete="new-password" value={newPw} onChange={e=>setNewPw(e.target.value)} className="mt-1.5 w-full rounded-xl border border-[var(--color-border)] px-3 py-2.5 text-sm"/></label>
+              <label className="text-xs font-bold">Confirm password<input type="password" autoComplete="new-password" value={newPw2} onChange={e=>setNewPw2(e.target.value)} className="mt-1.5 w-full rounded-xl border border-[var(--color-border)] px-3 py-2.5 text-sm"/></label>
+            </div>{pwMsg?<p className="mt-3 text-xs font-bold text-red-600">{pwMsg}</p>:null}<button type="submit" disabled={!oldPw||!newPw||!newPw2} className="mt-3 rounded-xl bg-[var(--color-primary-700)] px-5 py-3 text-sm font-bold text-white disabled:opacity-50">Save password</button></form>:null}
           </div>
         </div>
       )}
