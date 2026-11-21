@@ -55,6 +55,11 @@ async function syncManagerReport(): Promise<void> {
     // يفضل التقرير محليًا، والمحاولة التالية تحصل عند أي فتح/تفاعل لاحق.
   } finally {
     syncRunning = false;
+    // لو حصل تعديل جديد أثناء محاولة فاشلة، نعمل محاولة واحدة للتقرير الأحدث.
+    if (syncAgain) {
+      syncAgain = false;
+      void syncManagerReport();
+    }
   }
 }
 
