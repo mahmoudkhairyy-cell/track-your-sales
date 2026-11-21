@@ -58,7 +58,7 @@ const PHRASES: Record<string, string> = {
   "كمية":"Quantity","ملاحظات":"Notes","اختر":"Select","اختار":"Select","التالي":"Next","السابق":"Previous",
   "التاريخ":"Date","عدد":"Count","النسبة":"Percentage","الإجمالي":"Total","المجموع":"Total",
   "أهلاً يا":"Hello,","مساحة العمل":"Workspace","النتيجة":"Result","المساعدة":"Help"
-};
+  "جنيه":"EGP","متأخر":"Behind","ناقص":"Short by","زيادة":"Over by","يناير":"January","فبراير":"February","مارس":"March","أبريل":"April","مايو":"May","يونيو":"June","يوليو":"July","أغسطس":"August","سبتمبر":"September","أكتوبر":"October","نوفمبر":"November","ديسمبر":"December","محتاج":"Need","شهري":"Monthly","الكوميشن":"Commission",};
 
 const WORDS: Record<string,string> = {
   "الرئيسية":"Home","التارجت":"Target","تسجيل":"Log","المزيد":"More","المرجع":"Reference",
