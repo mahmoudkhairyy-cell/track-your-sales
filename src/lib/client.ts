@@ -55,6 +55,11 @@ async function syncManagerReport(): Promise<void> {
     // يفضل التقرير محليًا، والمحاولة التالية تحصل عند أي فتح/تفاعل لاحق.
   } finally {
     syncRunning = false;
+    // لو حصل تعديل جديد أثناء محاولة فاشلة، نعمل محاولة واحدة للتقرير الأحدث.
+    if (syncAgain) {
+      syncAgain = false;
+      void syncManagerReport();
+    }
   }
 }
 
@@ -74,5 +79,5 @@ export function downloadJson(filename: string, value: unknown) {
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
   link.href = url; link.download = filename;
-  document.body.appendChild(link); link.click(); link.remove(); URL.revokeObjectURL(url);
+  document.body.appendChild(link); link.click(); link.remove(); window.setTimeout(() => URL.revokeObjectURL(url), 1000);
 }

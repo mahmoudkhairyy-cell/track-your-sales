@@ -351,6 +351,7 @@ function putMonth(state: State, yearMonth: string, data: Record<string, unknown>
     return {kpiKey:key as KpiKey,target,weight,unitAr:typeof row.unitAr==="string"&&row.unitAr.trim()?row.unitAr.trim():cat.unitAr,sortOrder:index};
   });
   if(kpis.length!==KPI_CATALOG.length) fail(400,"لازم تحفظ كل الإيتمز");
+  if(new Set(kpis.map((item)=>item.kpiKey)).size!==KPI_CATALOG.length) fail(400,"مينفعش تكرر نفس المؤشر في إعدادات الشهر");
   const {start,end}=monthDateRange(yearMonth);
   const holidays:Holiday[]=data.holidays.map((item,index)=>{
     if(!item||typeof item!=="object") fail(400,`إجازة رقم ${index+1} شكلها غلط`);
@@ -557,16 +558,29 @@ function restoreBackup(state: State, data: Record<string, unknown>) {
     });
   }
 
+  const existingArticleIds = mode === "merge"
+    ? new Set(state.articles.map((article) => article.id))
+    : new Set<string>();
   for (const article of backup.articles) {
-    const item = article as unknown as { title: string; content: string; createdAt?: string; updatedAt?: string };
+    const item = article as unknown as {
+      id?: string;
+      title: string;
+      content: string;
+      createdAt?: string;
+      updatedAt?: string;
+    };
+    // Preserve exported IDs so importing the same backup again won't duplicate notes.
+    if (item.id && existingArticleIds.has(item.id)) continue;
     const now = new Date().toISOString();
+    const id = item.id ?? newId();
     state.articles.push({
-      id: newId(),
+      id,
       title: item.title,
       content: item.content,
       createdAt: item.createdAt ?? now,
       updatedAt: item.updatedAt ?? now,
     });
+    existingArticleIds.add(id);
   }
 
   return {
@@ -616,6 +630,7 @@ export function runLocalApi(url: string, method: string, body: unknown): LocalRe
       const rest = pathname.slice("/api/months/".length).split("/");
       const yearMonth = requireYearMonth(rest[0]);
       if (rest[1] === "clear") {
+        if (verb !== "POST") fail(405, "الطريقة دي مش مدعومة");
         result = clearMonth(state, yearMonth, data);
         changed = true;
       } else if (verb === "GET") {

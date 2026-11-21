@@ -190,11 +190,58 @@ export function Modal({
   children: ReactNode;
   onClose: () => void;
 }) {
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const onCloseRef = useRef(onClose);
+
+  useEffect(() => {
+    onCloseRef.current = onClose;
+  }, [onClose]);
+
+  useEffect(() => {
+    if (!open) return;
+    const previouslyFocused = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    const dialog = dialogRef.current;
+    const focusableSelector = 'button:not([disabled]), a[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+    const focusFirst = () => dialog?.querySelector<HTMLElement>(focusableSelector)?.focus();
+    focusFirst();
+
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        onCloseRef.current();
+        return;
+      }
+      if (event.key !== "Tab" || !dialog) return;
+      const focusable = Array.from(dialog.querySelectorAll<HTMLElement>(focusableSelector))
+        .filter((element) => element.offsetParent !== null);
+      if (focusable.length === 0) {
+        event.preventDefault();
+        dialog.focus();
+        return;
+      }
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && (document.activeElement === first || !dialog.contains(document.activeElement))) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && (document.activeElement === last || !dialog.contains(document.activeElement))) {
+        event.preventDefault();
+        first.focus();
+      }
+    }
+
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      previouslyFocused?.focus();
+    };
+  }, [open]);
+
   if (!open) return null;
   return (
     <div className="fixed inset-0 z-[80] flex items-end justify-center bg-backdrop/35 p-2 backdrop-blur-[3px] sm:items-center sm:p-3">
       <button type="button" className="absolute inset-0" aria-label="إغلاق النافذة" onClick={onClose} />
-      <div role="dialog" aria-modal="true" aria-labelledby="tx-modal-title" className="relative max-h-[88dvh] w-full max-w-lg overflow-y-auto rounded-t-[30px] border border-line bg-gradient-to-b from-white to-[#fffaf6] p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] shadow-modal sm:rounded-[28px]">
+      <div ref={dialogRef} role="dialog" aria-modal="true" aria-labelledby="tx-modal-title" tabIndex={-1} className="relative max-h-[88dvh] w-full max-w-lg overflow-y-auto rounded-t-[30px] border border-line bg-gradient-to-b from-white to-[#fffaf6] p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] shadow-modal sm:rounded-[28px]">
         <div className="mx-auto mb-4 h-1.5 w-12 rounded-full bg-line sm:hidden" />
         <div className="mb-4 flex items-start justify-between gap-3">
           <h2 id="tx-modal-title" className="text-lg font-extrabold text-ink-3">{title}</h2>

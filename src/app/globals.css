@@ -320,25 +320,25 @@ html, body { accent-color: var(--tx-orange-deep); }
 ::-webkit-scrollbar-thumb:hover { background: linear-gradient(180deg, #f07818, #9a3f06); }
 ::-webkit-scrollbar-corner { background: var(--color-brand-50); }
 
-main { color: var(--color-ink); }
-main h1, main h2, main h3 { letter-spacing: -0.025em; }
-main h1 { text-wrap: balance; }
-main p { text-wrap: pretty; }
+main.tys-employee { color: var(--color-ink); }
+main.tys-employee h1, main.tys-employee h2, main.tys-employee h3 { letter-spacing: -0.025em; }
+main.tys-employee h1 { text-wrap: balance; }
+main.tys-employee p { text-wrap: pretty; }
 
-main article, main section { scroll-margin-top: 88px; }
+main.tys-employee article, main.tys-employee section { scroll-margin-top: 88px; }
 
-main article {
+main.tys-employee article {
   box-shadow: var(--shadow-card);
   transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease;
 }
-main article:hover {
+main.tys-employee article:hover {
   border-color: var(--color-line-strong);
   box-shadow: var(--shadow-pop);
 }
 
-main input:not([type="checkbox"]):not([type="radio"]),
-main select,
-main textarea {
+main.tys-employee input:not([type="checkbox"]):not([type="radio"]),
+main.tys-employee select,
+main.tys-employee textarea {
   min-height: 48px;
   border: 1px solid var(--color-line-strong);
   border-radius: var(--radius-field);
@@ -348,42 +348,42 @@ main textarea {
   transition: border-color .18s ease, box-shadow .18s ease, background .18s ease;
 }
 
-main textarea { min-height: 104px; padding-top: 12px; }
+main.tys-employee textarea { min-height: 104px; padding-top: 12px; }
 
-main input::placeholder,
-main textarea::placeholder { color: var(--color-ink-2); opacity: 1; }
+main.tys-employee input::placeholder,
+main.tys-employee textarea::placeholder { color: var(--color-ink-2); opacity: 1; }
 
-main input:not([type="checkbox"]):not([type="radio"]):focus,
-main select:focus,
-main textarea:focus {
+main.tys-employee input:not([type="checkbox"]):not([type="radio"]):focus,
+main.tys-employee select:focus,
+main.tys-employee textarea:focus {
   border-color: var(--color-brand-600);
   background: var(--color-surface);
   box-shadow: 0 0 0 4px rgba(198, 83, 11, 0.16);
   outline: none;
 }
 
-main button { transition: transform .16s ease, box-shadow .16s ease, filter .16s ease; }
-main button:active { transform: translateY(1px) scale(.985); }
+main.tys-employee button { transition: transform .16s ease, box-shadow .16s ease, filter .16s ease; }
+main.tys-employee button:active { transform: translateY(1px) scale(.985); }
 
-main a:focus-visible,
-main button:focus-visible {
+main.tys-employee a:focus-visible,
+main.tys-employee button:focus-visible {
   outline: 3px solid rgba(198, 83, 11, 0.55);
   outline-offset: 3px;
 }
 
-main :where(button, [role="button"]):not(:disabled):focus-visible {
+main.tys-employee :where(button, [role="button"]):not(:disabled):focus-visible {
   box-shadow: 0 0 0 4px var(--tx-orange-glow);
 }
 
 @media (max-width: 640px) {
-  main { padding-top: 18px; }
-  main h1 { font-size: clamp(1.35rem, 6vw, 1.7rem); line-height: 1.45; }
-  main h2 { font-size: 1.15rem; }
-  main article { min-width: 0; }
-  main input:not([type="checkbox"]):not([type="radio"]), main select { font-size: 16px; }
+  main.tys-employee { padding-top: 18px; }
+  main.tys-employee h1 { font-size: clamp(1.35rem, 6vw, 1.7rem); line-height: 1.45; }
+  main.tys-employee h2 { font-size: 1.15rem; }
+  main.tys-employee article { min-width: 0; }
+  main.tys-employee input:not([type="checkbox"]):not([type="radio"]), main.tys-employee select { font-size: 16px; }
 }
 
-main table {
+main.tys-employee table {
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
@@ -392,33 +392,33 @@ main table {
   border-radius: var(--radius-card);
   background: var(--color-surface);
 }
-main thead th {
+main.tys-employee thead th {
   background: var(--color-brand-50);
   color: var(--color-brand-ink);
   font-weight: 800;
 }
-main tbody tr:nth-child(even) { background: var(--color-surface-2); }
-main tbody tr:nth-child(odd) { background: var(--color-surface); }
-main th, main td { border-bottom: 1px solid var(--color-line); }
-main tbody tr:last-child td { border-bottom: 0; }
-main tbody tr { transition: background .16s ease; }
-main tbody tr:hover { background: var(--color-brand-50); }
+main.tys-employee tbody tr:nth-child(even) { background: var(--color-surface-2); }
+main.tys-employee tbody tr:nth-child(odd) { background: var(--color-surface); }
+main.tys-employee th, main.tys-employee td { border-bottom: 1px solid var(--color-line); }
+main.tys-employee tbody tr:last-child td { border-bottom: 0; }
+main.tys-employee tbody tr { transition: background .16s ease; }
+main.tys-employee tbody tr:hover { background: var(--color-brand-50); }
 
 @media (max-width: 1023px) {
-  nav[aria-label="التنقل الرئيسي للموبايل"] {
+  nav.tys-mobile-nav {
     inset-inline: 12px;
-    bottom: max(10px, env(safe-area-inset-bottom));
+    bottom: calc(env(safe-area-inset-bottom) + 10px);
     overflow: hidden;
     border: 1px solid var(--color-line);
     border-radius: var(--radius-hero);
     background: rgba(255, 255, 255, 0.96);
     box-shadow: var(--shadow-pop);
   }
-  nav[aria-label="التنقل الرئيسي للموبايل"] > div { padding-inline: 4px; }
+  nav.tys-mobile-nav > div { padding-inline: 4px; }
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  main { animation: tx-enter .32s ease-out both; }
+  main.tys-employee { animation: tx-enter .32s ease-out both; }
   @keyframes tx-enter {
     from { opacity: 0; transform: translateY(7px); }
     to { opacity: 1; transform: translateY(0); }
@@ -450,35 +450,35 @@ main tbody tr:hover { background: var(--color-brand-50); }
     color: var(--color-ink-dark);
   }
 
-  :where(:root:not(.light)) main {
+  :where(:root:not(.light)) main.tys-employee {
     color: var(--color-ink-dark);
   }
 
-  :where(:root:not(.light)) :is(main article, main section) {
+  :where(:root:not(.light)) :is(main.tys-employee article, main.tys-employee section) {
     background: var(--color-surface-dark);
     border-color: var(--color-line-dark);
   }
 
-  :where(:root:not(.light)) :is(main input:not([type="checkbox"]):not([type="radio"]), main select, main textarea) {
+  :where(:root:not(.light)) :is(main.tys-employee input:not([type="checkbox"]):not([type="radio"]), main.tys-employee select, main.tys-employee textarea) {
     background: var(--color-surface-dark);
     border-color: var(--color-line-strong-dark);
     color: var(--color-ink-dark);
   }
 
-  :where(:root:not(.light)) main table {
+  :where(:root:not(.light)) main.tys-employee table {
     background: var(--color-surface-dark);
     border-color: var(--color-line-dark);
   }
 
-  :where(:root:not(.light)) main tbody tr:nth-child(even) {
+  :where(:root:not(.light)) main.tys-employee tbody tr:nth-child(even) {
     background: var(--color-surface-2-dark);
   }
 
-  :where(:root:not(.light)) main tbody tr:nth-child(odd) {
+  :where(:root:not(.light)) main.tys-employee tbody tr:nth-child(odd) {
     background: var(--color-surface-dark);
   }
 
-  :where(:root:not(.light)) main tbody tr:hover {
+  :where(:root:not(.light)) main.tys-employee tbody tr:hover {
     background: var(--color-surface-2-dark);
   }
 }
@@ -492,35 +492,35 @@ main tbody tr:hover { background: var(--color-brand-50); }
   color: var(--color-ink-dark);
 }
 
-.dark main {
+.dark main.tys-employee {
   color: var(--color-ink-dark);
 }
 
-.dark main article,
-.dark main section {
+.dark main.tys-employee article,
+.dark main.tys-employee section {
   background: var(--color-surface-dark);
   border-color: var(--color-line-dark);
 }
 
-.dark main input:not([type="checkbox"]):not([type="radio"]),
-.dark main select,
-.dark main textarea {
+.dark main.tys-employee input:not([type="checkbox"]):not([type="radio"]),
+.dark main.tys-employee select,
+.dark main.tys-employee textarea {
   background: var(--color-surface-dark);
   border-color: var(--color-line-strong-dark);
   color: var(--color-ink-dark);
 }
 
-.dark main table {
+.dark main.tys-employee table {
   background: var(--color-surface-dark);
   border-color: var(--color-line-dark);
 }
 
-.dark main tbody tr:nth-child(even),
-.dark main tbody tr:hover {
+.dark main.tys-employee tbody tr:nth-child(even),
+.dark main.tys-employee tbody tr:hover {
   background: var(--color-surface-2-dark);
 }
 
-.dark main tbody tr:nth-child(odd) {
+.dark main.tys-employee tbody tr:nth-child(odd) {
   background: var(--color-surface-dark);
 }
 
@@ -567,5 +567,165 @@ main tbody tr:hover { background: var(--color-brand-50); }
     :where(:root:not(.light)) .skeleton-shine {
       background: var(--color-skeleton-dark);
     }
+  }
+}
+
+
+/* Premium Neo-Tech — employee surfaces only. Reference / wiki is intentionally excluded. */
+main.tys-employee {
+  color: #241a13;
+  isolation: isolate;
+  background: linear-gradient(180deg, #faf7f2 0%, #fffaf5 52%, #faf7f2 100%);
+}
+main.tys-employee > div {
+  gap: 1.15rem;
+}
+main.tys-employee > div > section:first-child > div:first-child {
+  border-radius: 26px;
+  box-shadow: 0 12px 32px rgba(166, 76, 16, 0.075);
+}
+main.tys-employee article {
+  border-radius: 18px;
+  box-shadow: 0 5px 18px rgba(75, 42, 20, 0.045);
+}
+main.tys-employee article:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(105, 54, 20, 0.085);
+}
+
+@media (hover: none) {
+  main.tys-employee article:hover {
+    transform: none;
+  }
+}
+main.tys-employee :where(input:not([type="checkbox"]):not([type="radio"]), select, textarea) {
+  border-color: #ead8c8;
+  background-color: #fffefd;
+}
+main.tys-employee :where(input, select, textarea):focus {
+  border-color: #c6530b;
+  box-shadow: 0 0 0 4px rgba(198, 83, 11, 0.12);
+}
+main.tys-employee :where(button, a) {
+  touch-action: manipulation;
+}
+main.tys-employee :where(button, [role="button"]):not(:disabled):active {
+  transform: translateY(1px) scale(.99);
+}
+@media (max-width: 640px) {
+  main.tys-employee {
+    padding-inline: 12px;
+    padding-top: 14px;
+  }
+  main.tys-employee > div {
+    gap: 1rem;
+  }
+  main.tys-employee article {
+    border-radius: 16px;
+  }
+  main.tys-employee .grid.grid-cols-2.gap-3 {
+    gap: 10px;
+  }
+  main.tys-employee .grid.grid-cols-2.gap-3 > article {
+    padding: 11px;
+  }
+  main.tys-employee :where(h1) {
+    letter-spacing: -0.035em;
+  }
+}
+
+
+/* Compact KPI tiles on the employee dashboard; values and KPI ordering remain unchanged. */
+main.tys-employee .tys-kpi-grid > article {
+  min-width: 0;
+  padding: 12px;
+}
+main.tys-employee .tys-kpi-grid > article h3 {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  font-size: 0.78rem;
+  line-height: 1.25rem;
+}
+main.tys-employee .tys-kpi-grid > article p {
+  line-height: 1.35;
+}
+main.tys-employee .tys-kpi-grid > article .text-2xl {
+  font-size: 1.35rem;
+}
+main.tys-employee .tys-kpi-grid > article .text-3xl {
+  font-size: 1.6rem;
+}
+@media (max-width: 640px) {
+  main.tys-employee .tys-kpi-grid {
+    gap: 9px;
+  }
+  main.tys-employee .tys-kpi-grid > article {
+    padding: 10px;
+    border-radius: 15px;
+  }
+  main.tys-employee .tys-kpi-grid > article .mt-3 {
+    margin-top: 9px;
+  }
+}
+
+
+/* Compact, consistent mobile treatment for target setup and daily entry. */
+@media (max-width: 640px) {
+  main.tys-employee .tys-target-kpis {
+    gap: 12px;
+  }
+  main.tys-employee .tys-target-kpis > div {
+    padding: 13px;
+    border-radius: 16px;
+  }
+  main.tys-employee .tys-target-kpis > div > div:first-child > span {
+    width: 38px;
+    height: 38px;
+    border-radius: 13px;
+    font-size: 1.25rem;
+  }
+  main.tys-employee .tys-target-form > section:not(:first-child),
+  main.tys-employee .tys-log-entry {
+    border-radius: 18px;
+  }
+  main.tys-employee .tys-target-form > section:not(:first-child) {
+    padding: 15px;
+  }
+  main.tys-employee .tys-log-entry {
+    padding: 15px;
+    gap: 14px;
+  }
+  main.tys-employee .tys-log-entry > div:first-child .grid {
+    gap: 8px;
+  }
+  main.tys-employee .tys-log-entry > div:first-child button {
+    min-height: 52px;
+    padding-inline: 10px;
+    border-radius: 14px;
+  }
+}
+
+
+@media (max-width: 640px) {
+  main.tys-employee .tys-more-page > section:not(:first-child) {
+    border-radius: 18px;
+    padding: 15px;
+  }
+  main.tys-employee .tys-more-page .tys-history-card li {
+    padding: 11px;
+  }
+  main.tys-employee .tys-more-page .tys-history-card li > div:first-child {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  main.tys-employee .tys-more-page .tys-history-card li > div:first-child > div:last-child {
+    width: 100%;
+    justify-content: flex-start;
+    padding-top: 4px;
+    border-top: 1px solid var(--color-line);
+  }
+  main.tys-employee .tys-more-page .tys-history-card li > div:first-child > div:last-child button {
+    flex: 1;
+    min-height: 42px;
   }
 }

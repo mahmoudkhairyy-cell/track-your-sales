@@ -71,6 +71,15 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
+function isValidIsoDate(value: string): boolean {
+  if (!ISO_DATE_RE.test(value)) return false;
+  const [year, month, day] = value.split("-").map(Number);
+  const date = new Date(Date.UTC(year, month - 1, day));
+  return date.getUTCFullYear() === year
+    && date.getUTCMonth() === month - 1
+    && date.getUTCDate() === day;
+}
+
 function asString(value: unknown, field: string): string {
   if (typeof value !== "string" || value.trim() === "") {
     throw new Error(`حقل ${field} ناقص أو مش نص صالح`);
@@ -128,10 +137,14 @@ function parseKpi(value: unknown, index: number): BackupKpi {
   if (!KPI_KEYS.includes(kpiKey as KpiKey)) {
     throw new Error(`مؤشر غير معروف: ${kpiKey}`);
   }
+  const target = asNumber(value.target, `kpis[${index}].target`);
+  const weight = asNumber(value.weight, `kpis[${index}].weight`);
+  if (target < 0) throw new Error(`تارجت المؤشر ${kpiKey} مينفعش يكون بالسالب`);
+  if (weight < 0) throw new Error(`وزن المؤشر ${kpiKey} مينفعش يكون بالسالب`);
   return {
     kpiKey: kpiKey as KpiKey,
-    target: asNumber(value.target, `kpis[${index}].target`),
-    weight: asNumber(value.weight, `kpis[${index}].weight`),
+    target,
+    weight,
     unitAr: asString(value.unitAr, `kpis[${index}].unitAr`),
     sortOrder: asNumber(value.sortOrder, `kpis[${index}].sortOrder`),
   };
@@ -140,7 +153,7 @@ function parseKpi(value: unknown, index: number): BackupKpi {
 function parseHoliday(value: unknown, index: number): BackupHoliday {
   if (!isRecord(value)) throw new Error(`إجازة رقم ${index + 1} شكلها غلط`);
   const date = asString(value.date, `holidays[${index}].date`);
-  if (!ISO_DATE_RE.test(date)) {
+  if (!isValidIsoDate(date)) {
     throw new Error(`تاريخ إجازة غلط: ${date}`);
   }
   return { date, note: asOptionalString(value.note, `holidays[${index}].note`) };
@@ -160,14 +173,33 @@ function parseMonth(value: unknown, index: number): BackupMonth {
   }
   return {
     yearMonth,
-    fullCommission: asNumber(value.fullCommission, `months[${index}].fullCommission`),
+    fullCommission: (() => {
+      const amount = asNumber(value.fullCommission, `months[${index}].fullCommission`);
+      if (amount < 0) throw new Error(`الكوميشن الكامل لشهر ${yearMonth} مينفعش يكون بالسالب`);
+      return amount;
+    })(),
     allowCommissionOver100: asBoolean(
       value.allowCommissionOver100,
       `months[${index}].allowCommissionOver100`,
     ),
     workingDays: parseWorkingDays(value.workingDays),
-    kpis: value.kpis.map((item, kpiIndex) => parseKpi(item, kpiIndex)),
-    holidays: value.holidays.map((item, holidayIndex) => parseHoliday(item, holidayIndex)),
+    kpis: (() => {
+      const rows = value.kpis.map((item, kpiIndex) => parseKpi(item, kpiIndex));
+      if (new Set(rows.map((row) => row.kpiKey)).size !== rows.length) {
+        throw new Error(`فيه مؤشر مكرر في إعدادات شهر ${yearMonth}`);
+      }
+      return rows;
+    })(),
+    holidays: (() => {
+      const rows = value.holidays.map((item, holidayIndex) => parseHoliday(item, holidayIndex));
+      if (rows.some((row) => !row.date.startsWith(`${yearMonth}-`))) {
+        throw new Error(`فيه إجازة خارج شهر ${yearMonth}`);
+      }
+      if (new Set(rows.map((row) => row.date)).size !== rows.length) {
+        throw new Error(`فيه تاريخ إجازة مكرر في شهر ${yearMonth}`);
+      }
+      return rows;
+    })(),
   };
 }
 
@@ -178,7 +210,7 @@ function parseEntry(value: unknown, index: number): BackupEntry {
     throw new Error(`سجل بمؤشر غير معروف: ${kpiKey}`);
   }
   const entryDate = asString(value.entryDate, `entries[${index}].entryDate`);
-  if (!ISO_DATE_RE.test(entryDate)) {
+  if (!isValidIsoDate(entryDate)) {
     throw new Error(`تاريخ سجل غلط: ${entryDate}`);
   }
   const rawQuantity = asNumber(value.quantity, `entries[${index}].quantity`);
@@ -234,6 +266,10 @@ export function parseBackup(raw: unknown): BackupFile {
     throw new Error("فيه إعدادات شهر مكررة في الملف");
   }
   const entries = raw.entries.map((item, index) => parseEntry(item, index));
+  const entryIds = entries.flatMap((entry) => entry.id ? [entry.id] : []);
+  if (new Set(entryIds).size !== entryIds.length) {
+    throw new Error("فيه معرّف سجل مكرر في ملف النسخة الاحتياطية");
+  }
   const articles = raw.articles.map((item, index) => parseArticle(item, index));
   const isEmptyFlag = typeof raw.isEmpty === "boolean" ? raw.isEmpty : months.length === 0 && entries.length === 0 && articles.length === 0;
   return {

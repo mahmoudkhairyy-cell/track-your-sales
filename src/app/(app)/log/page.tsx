@@ -69,7 +69,7 @@ export default function LogPage() {
   }
 
   return (
-    <form className="space-y-5" onSubmit={onSubmit}>
+    <form className="space-y-5 tys-log-form" onSubmit={onSubmit}>
       <section>
         <div className="rounded-card border border-form bg-gradient-to-br from-[#fff2e6] via-white to-[#fff9f4] p-5 shadow-medium"><h1 className="text-2xl font-black tracking-tight text-ink-3">إنجاز اليوم ✍️</h1>
         <p className="mt-2 text-sm leading-6 text-neutral-600">سجّل اللي بعته النهارده — كل حفظة بتتسجل لوحدها وبتتجمع في الرئيسية.</p></div>
@@ -77,7 +77,7 @@ export default function LogPage() {
 
       {error ? <Banner tone="error">❌ {error}</Banner> : null}
 
-      <section className="space-y-4 rounded-card border border-form-2 bg-white p-5 shadow-soft">
+      <section className="space-y-4 rounded-card border border-form-2 bg-white p-5 shadow-soft tys-log-entry">
         <div>
           <p className="mb-2 block text-sm font-bold text-neutral-800">اختار الإيتم</p>
           <div className="grid grid-cols-2 gap-2">
