@@ -704,3 +704,28 @@ main.tys-employee .tys-kpi-grid > article .text-3xl {
     border-radius: 14px;
   }
 }
+
+
+@media (max-width: 640px) {
+  main.tys-employee .tys-more-page > section:not(:first-child) {
+    border-radius: 18px;
+    padding: 15px;
+  }
+  main.tys-employee .tys-more-page .tys-history-card li {
+    padding: 11px;
+  }
+  main.tys-employee .tys-more-page .tys-history-card li > div:first-child {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  main.tys-employee .tys-more-page .tys-history-card li > div:first-child > div:last-child {
+    width: 100%;
+    justify-content: flex-start;
+    padding-top: 4px;
+    border-top: 1px solid var(--color-line);
+  }
+  main.tys-employee .tys-more-page .tys-history-card li > div:first-child > div:last-child button {
+    flex: 1;
+    min-height: 42px;
+  }
+}
