@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import { APP_DISCLAIMER, APP_NAME, BRAND_BY } from "@/lib/constants";
 import "./globals.css";
 import { PwaRegister } from "@/components/PwaRegister";
+import { LanguageControl } from "@/components/LanguageControl";
 
 export const metadata: Metadata = {
   title: `${APP_NAME} ${BRAND_BY}`,
@@ -18,9 +19,9 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="ar" dir="rtl" suppressHydrationWarning>
+    <html lang="en" dir="ltr" suppressHydrationWarning>
       <head>
-        <script dangerouslySetInnerHTML={{ __html: "try{var t=localStorage.getItem('tys.theme');if(t==='aurora'||t==='aurora-dark'||t==='space'){document.documentElement.setAttribute('data-theme',t);var c={'aurora':'#e96812','aurora-dark':'#0b0f1e','space':'#000000'}[t];document.addEventListener('DOMContentLoaded',function(){document.querySelectorAll('meta[name=theme-color]').forEach(function(m){m.setAttribute('content',c)})})}}catch(e){}" }} />
+        <script dangerouslySetInnerHTML={{ __html: "try{var p=location.pathname;var l=p==='/wiki'||p.indexOf('/wiki/')===0?'ar':(localStorage.getItem('tys.language')==='ar'?'ar':'en');document.documentElement.lang=l;document.documentElement.dir=l==='ar'?'rtl':'ltr';var t=localStorage.getItem('tys.theme');if(t==='aurora'||t==='aurora-dark'||t==='space'){document.documentElement.setAttribute('data-theme',t);var c={'aurora':'#e96812','aurora-dark':'#0b0f1e','space':'#000000'}[t];document.addEventListener('DOMContentLoaded',function(){document.querySelectorAll('meta[name=theme-color]').forEach(function(m){m.setAttribute('content',c)})})}}catch(e){}" }} />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         <link href="https://fonts.googleapis.com/css2?family=Mada:wght@400;500;700;800&family=Noto+Naskh+Arabic:wght@500;700&family=Cairo:wght@500;700;900&display=swap" rel="stylesheet" />
@@ -34,6 +35,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       </head>
       <body className="min-h-screen bg-[#fffaf5] antialiased">
         {children}
+        <LanguageControl />
         <PwaRegister />
       </body>
     </html>
