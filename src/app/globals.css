@@ -4,7 +4,7 @@
 /* Track Your Sales — Design System v1 */
 
 @theme {
-  --color-bg: #faf7f2;
+  --color-bg: #faf7f4;
   --color-surface: #ffffff;
   --color-surface-2: #fffaf5;
   --color-line: #efe3d8;
@@ -575,6 +575,7 @@ main.tys-employee tbody tr:hover { background: var(--color-brand-50); }
 main.tys-employee {
   color: #241a13;
   isolation: isolate;
+  background: linear-gradient(180deg, #faf7f2 0%, #fffaf5 52%, #faf7f2 100%);
 }
 main.tys-employee > div {
   gap: 1.15rem;
@@ -615,6 +616,9 @@ main.tys-employee :where(button, [role="button"]):not(:disabled):active {
   }
   main.tys-employee article {
     border-radius: 16px;
+  }
+  main.tys-employee .grid.grid-cols-2.gap-3 {
+    gap: 10px;
   }
   main.tys-employee .grid.grid-cols-2.gap-3 > article {
     padding: 11px;
