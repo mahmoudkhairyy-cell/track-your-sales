@@ -4,8 +4,6 @@ import { APP_DISCLAIMER, APP_NAME, BRAND_BY } from "@/lib/constants";
 import "./globals.css";
 import "./premium-layer.css";
 import "./design-v2.css";
-import "./design-home.css";
-import "./design-ui.css";
 import { PwaRegister } from "@/components/PwaRegister";
 import PremiumScope from "@/components/PremiumScope";
 
