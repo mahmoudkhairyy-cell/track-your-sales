@@ -119,7 +119,7 @@ export default function TargetPage() {
   if (loading) return <Spinner label="ثواني… بنحمّل إعدادات التارجت" />;
 
   return (
-    <form className="space-y-5 tys-target-form" onSubmit={onSave}>
+    <form className="space-y-5" onSubmit={onSave}>
       <section>
         <div className="rounded-card border border-form bg-gradient-to-br from-[#fff2e6] via-white to-[#fff9f4] p-5 shadow-medium"><h1 className="text-2xl font-black tracking-tight text-ink-3">التارجت 🎯</h1>
         <p className="mt-2 text-sm leading-6 text-neutral-600">كل شهر محفوظ لوحده. لما تغيّر الشهر مش هيتكتب فوق شهر تاني.</p>
@@ -150,7 +150,7 @@ export default function TargetPage() {
         </label>
       </section>
 
-      <section className="space-y-3 tys-target-kpis">
+      <section className="space-y-3">
         <h2 className="text-lg font-black">الإيتمز والأوزان</h2>
         {kpis.map((kpi, index) => {
           const catalog = KPI_CATALOG.find((item) => item.key === kpi.kpiKey);
