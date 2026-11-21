@@ -630,6 +630,7 @@ export function runLocalApi(url: string, method: string, body: unknown): LocalRe
       const rest = pathname.slice("/api/months/".length).split("/");
       const yearMonth = requireYearMonth(rest[0]);
       if (rest[1] === "clear") {
+        if (verb !== "POST") fail(405, "الطريقة دي مش مدعومة");
         result = clearMonth(state, yearMonth, data);
         changed = true;
       } else if (verb === "GET") {
