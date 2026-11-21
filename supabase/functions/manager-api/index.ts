@@ -60,15 +60,6 @@ async function restUpsert(url: string, serviceKey: string, table: string, row: R
   });
   if (!res.ok) throw new Error(`database write failed: ${table}`);
 }
-async function verifyBranchPassword(url: string, serviceKey: string, branch: string, password: string): Promise<boolean> {
-  const response = await rpc(url, serviceKey, "verify_branch_manager_password", {
-    p_branch: branch,
-    p_password: password,
-  });
-  if (!response.ok) throw new Error("branch password verification failed");
-  return (await response.json()) === true;
-}
-
 function normalizeEmployeeIdentity(value: string): string {
   return value.trim().replace(/\s+/g, " ").toLocaleLowerCase("en-US");
 }
@@ -173,25 +164,6 @@ Deno.serve(async (req: Request) => {
     });
     if (!res.ok) return json({ error: "report sync failed" }, 500);
     return json({ ok: true }, 200);
-  }
-
-  if (["branch_manager_login", "branch_reports", "save_branch_productivity", "save_branch_quality"].includes(String(body.action))) {
-    const branch = typeof body.branch === "string" ? body.branch.trim() : "";
-    const password = typeof body.password === "string" ? body.password : "";
-    if (branch.length < 2 || branch.length > 100 || password.length < 8 || password.length > 200) {
-      return json({ error: "branch and password are required" }, 400);
-    }
-    try {
-      const valid = await verifyBranchPassword(url, serviceKey, branch, password);
-      if (!valid) {
-        recordFailure(key);
-        return json({ error: "wrong branch password" }, 401);
-      }
-      failures.delete(key);
-      if (body.action === "branch_manager_login") return json({ ok: true }, 200);
-    } catch {
-      return json({ error: "could not verify branch credentials" }, 500);
-    }
   }
 
   if (body.action === "branch_reports") {
