@@ -87,7 +87,6 @@ export default function BranchManagerPage() {
   const month = cairoYearMonth();
   const [managerName, setManagerName] = useState("");
   const [branch, setBranch] = useState("");
-  const [password, setPassword] = useState("");
   const [active, setActive] = useState(false);
   const [accessChecked, setAccessChecked] = useState(false);
   const [activeTab, setActiveTab] = useState<"overview" | "team">("overview");
@@ -103,7 +102,7 @@ export default function BranchManagerPage() {
   const load = useCallback(async (selectedBranch: string) => {
     setLoading(true); setError("");
     try {
-      const result = await managerApi<BranchData>("branch_reports", { branch: selectedBranch, yearMonth: month, password });
+      const result = await managerApi<BranchData>("branch_reports", { branch: selectedBranch, yearMonth: month });
       const next = result ?? { reports: [], productivity: null, qualityOverrides: [], audit: [] };
       setData(next);
       setProductivityInput(String(next.productivity?.productivity_percent ?? 0));
@@ -116,7 +115,7 @@ export default function BranchManagerPage() {
     } catch (e) {
       setError(e instanceof Error ? e.message : "Could not load branch data");
     } finally { setLoading(false); }
-  }, [month, password]);
+  }, [month]);
 
   useEffect(() => {
     let cancelled = false;
@@ -130,16 +129,8 @@ export default function BranchManagerPage() {
       if (profile.name.trim() && profile.branch.trim()) {
         setManagerName(profile.name);
         setBranch(profile.branch);
-        let savedPassword = "";
-        try { savedPassword = sessionStorage.getItem("tys.branchManagerPassword") ?? ""; } catch { /* Storage may be unavailable. */ }
-        if (savedPassword) {
-          setPassword(savedPassword);
-          void managerApi("branch_manager_login", { branch: profile.branch, password: savedPassword })
-            .then(() => { if (!cancelled) { setActive(true); void load(profile.branch); } })
-            .catch(() => { try { sessionStorage.removeItem("tys.branchManagerPassword"); } catch { /* ignore */ } })
-            .finally(() => { if (!cancelled) setAccessChecked(true); });
-          return;
-        }
+        setActive(true);
+        void load(profile.branch);
       }
       setAccessChecked(true);
     });
@@ -176,7 +167,7 @@ export default function BranchManagerPage() {
 
   function logout() {
     if (!window.confirm("Log out of the Branch Manager dashboard?")) return;
-    try { sessionStorage.removeItem("tys.mgrPass"); sessionStorage.removeItem("tys.branchManagerPassword"); } catch { /* Storage may be unavailable. */ }
+    try { sessionStorage.removeItem("tys.mgrPass"); } catch { /* Storage may be unavailable. */ }
     if (!logoutBranchManager()) {
       setError("Could not complete logout. Please try again.");
       return;
@@ -191,23 +182,16 @@ export default function BranchManagerPage() {
 
   async function enter(event: FormEvent) {
     event.preventDefault();
-    if (managerName.trim().length < 2 || !branch || password.length < 8) { setError("Enter your name, select your branch, and enter the branch password."); return; }
-    setLoading(true); setError("");
-    try {
-      await managerApi("branch_manager_login", { branch, password });
-      try { sessionStorage.setItem("tys.branchManagerPassword", password); } catch { /* Session-only login still works. */ }
-      setActive(true);
-      await load(branch);
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Could not verify branch password.");
-    } finally { setLoading(false); }
+    if (managerName.trim().length < 2 || !branch) { setError("Enter your name and select your branch."); return; }
+    setActive(true);
+    await load(branch);
   }
   async function saveProductivity() {
     const value = Number(productivityInput);
     if (!Number.isFinite(value) || value < 0 || value > 1000) { setError("Enter a valid percentage between 0 and 1000."); return; }
     setSaving("productivity"); setError(""); setNotice("");
     try {
-      await managerApi("save_branch_productivity", { branch, yearMonth: month, managerName: managerName.trim(), productivityPercent: value, password });
+      await managerApi("save_branch_productivity", { branch, yearMonth: month, managerName: managerName.trim(), productivityPercent: value });
       setNotice("Productivity saved and recorded in the audit log.");
       await load(branch);
     } catch (e) { setError(e instanceof Error ? e.message : "Could not save productivity."); }
@@ -220,7 +204,7 @@ export default function BranchManagerPage() {
     }
     setSaving(employee); setError(""); setNotice("");
     try {
-      await managerApi("save_branch_quality", { branch, employeeName: employee, yearMonth: month, managerName: managerName.trim(), quality, password });
+      await managerApi("save_branch_quality", { branch, employeeName: employee, yearMonth: month, managerName: managerName.trim(), quality });
       setNotice(`Quality data for ${employee} saved and recorded in the audit log.`);
       await load(branch);
     } catch (e) { setError(e instanceof Error ? e.message : "Could not save quality data."); }
@@ -245,9 +229,6 @@ export default function BranchManagerPage() {
               <option value="">Select a branch</option>
               {BRANCHES.map((item) => <option key={item} value={item}>{item}</option>)}
             </select>
-          </label>
-          <label className="block text-sm font-bold text-[#514238]">Branch password
-            <input type="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} className="mt-2 w-full rounded-2xl border border-[#f2e4d8] bg-[#fffdfb] px-4 py-3 outline-none focus:border-[#e96812]" placeholder="Enter your branch password" />
           </label>
           {error ? <p className="text-sm font-bold text-red-600">{error}</p> : null}
           <button disabled={loading} className="w-full rounded-2xl bg-gradient-to-l from-[#bd4b0a] to-[#ff9d38] py-3 font-black text-white disabled:opacity-60">{loading ? "Loading..." : "Open Dashboard"}</button>
