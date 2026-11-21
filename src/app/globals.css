@@ -5529,3 +5529,10 @@ html.dark .tys-page :is(input, select, textarea)::placeholder {
 html.light {
   color-scheme: light;
 }
+
+/* ===== Home polish: tabular figures + press feedback (no layout changes) ===== */
+.tys-page-home .font-mono { font-variant-numeric: tabular-nums lining-nums; }
+@media (prefers-reduced-motion: no-preference) {
+  .tys-page-home article.tys-home-kpi { transition: transform 140ms ease, box-shadow 140ms ease; }
+  .tys-page-home article.tys-home-kpi:active { transform: scale(0.985); }
+}
