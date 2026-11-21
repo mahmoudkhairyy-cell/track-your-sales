@@ -92,7 +92,20 @@ export function AppShell({ children }: { children: ReactNode }) {
   const raw = params.get("month");
   const month = raw && isValidYearMonth(raw) ? raw : cairoYearMonth();
   const search = params.toString();
-  const isReference = pathname === "/wiki" || pathname.startsWith("/wiki/");
+  const [isDark, setIsDark] = useState(false);
+
+  useEffect(() => {
+    const media = window.matchMedia("(prefers-color-scheme: dark)");
+    setIsDark(media.matches);
+    const listener = (e: MediaQueryListEvent) => setIsDark(e.matches);
+    media.addEventListener("change", listener);
+    return () => media.removeEventListener("change", listener);
+  }, []);
+
+  useEffect(() => {
+    document.documentElement.classList.toggle("dark", isDark);
+    document.documentElement.classList.toggle("light", !isDark);
+  }, [isDark]);
   useEffect(() => {
     const refreshProfile = () => {
       const profile = readProfile();
@@ -144,16 +157,20 @@ export function AppShell({ children }: { children: ReactNode }) {
                     </div>
                   </div>
                   <div className="relative flex shrink-0 items-center gap-2">
+                    <button type="button" onClick={() => setIsDark(!isDark)} className="flex items-center gap-2 rounded-lg border border-line px-3 py-2 text-sm transition-colors hover:bg-brand-50 dark:hover:bg-surface-2-dark" aria-label={isDark ? "التبديل للوضع الفاتح" : "التبديل للوضع الداكن"}>
+                      {isDark ? "☀️" : "🌙"}
+                      <span>{isDark ? "الوضع الفاتح" : "الوضع الداكن"}</span>
+                    </button>
                     <MonthSwitcher />
                   </div>
                 </div>
               </header>
-              <main id="main-content" tabIndex={-1} className={`mx-auto w-full max-w-[1440px] flex-1 px-4 py-5 pb-28 sm:px-5 lg:px-8 lg:py-7 lg:pb-10 ${isReference ? "tys-reference" : "tys-employee"}`}>{children}</main>
+              <main id="main-content" tabIndex={-1} className="mx-auto w-full max-w-[1440px] flex-1 px-4 py-5 pb-28 sm:px-5 lg:px-8 lg:py-7 lg:pb-10">{children}</main>
               <footer className="hidden px-8 pb-6 text-xs leading-6 text-neutral-400 lg:block">{APP_DISCLAIMER}</footer>
             </div>
           </div>
 
-          <nav aria-label="التنقل الرئيسي للموبايل" className="tys-mobile-nav fixed inset-x-3 bottom-[calc(env(safe-area-inset-bottom)+12px)] z-40 mx-auto max-w-xl rounded-hero border border-line-shell bg-white/95 p-2 shadow-bottom-nav backdrop-blur-2xl lg:hidden">
+          <nav aria-label="التنقل الرئيسي للموبايل" className="fixed inset-x-3 bottom-[calc(env(safe-area-inset-bottom)+12px)] z-40 mx-auto max-w-xl rounded-hero border border-line-shell bg-white/95 p-2 shadow-bottom-nav backdrop-blur-2xl lg:hidden">
             <div className="grid grid-cols-5 items-center gap-1">
               {NAV.map((item) => {
                 const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
