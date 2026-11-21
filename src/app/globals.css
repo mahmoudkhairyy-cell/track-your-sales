@@ -5468,15 +5468,3 @@ html.dark .tys-page :is(input, select, textarea)::placeholder {
 html.light {
   color-scheme: light;
 }
-
-
-/* Language direction: English is the default; Arabic remains RTL. */
-html[data-lang="en"] [dir="rtl"] {
-  direction: ltr !important;
-}
-html[data-lang="en"] .tys-mobile-nav,
-html[data-lang="en"] .tys-desktop-nav {
-  direction: ltr !important;
-}
-
-html[data-lang="en"] .text-right { text-align: left !important; }
