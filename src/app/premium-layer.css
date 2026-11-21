@@ -604,3 +604,16 @@
     break-inside: avoid;
   }
 }
+
+/* Respect users who ask for less transparency: drop blur, use solid surfaces. */
+@media (prefers-reduced-transparency: reduce) {
+  [data-px="on"] header,
+  [data-px="on"] aside,
+  [data-px="on"] nav[aria-label*="للموبايل"] {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+  [data-px="on"] nav[aria-label*="للموبايل"] {
+    background: var(--px-surface);
+  }
+}
