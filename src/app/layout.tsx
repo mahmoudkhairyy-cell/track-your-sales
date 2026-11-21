@@ -2,9 +2,7 @@ import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import { APP_DISCLAIMER, APP_NAME, BRAND_BY } from "@/lib/constants";
 import "./globals.css";
-import "./premium-layer.css";
 import { PwaRegister } from "@/components/PwaRegister";
-import PremiumScope from "@/components/PremiumScope";
 
 export const metadata: Metadata = {
   title: `${APP_NAME} ${BRAND_BY}`,
@@ -35,7 +33,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
       </head>
       <body className="min-h-screen bg-[#fffaf5] antialiased">
-        <PremiumScope />
         {children}
         <PwaRegister />
       </body>
