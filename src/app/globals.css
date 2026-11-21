@@ -405,16 +405,16 @@ main.tys-employee tbody tr { transition: background .16s ease; }
 main.tys-employee tbody tr:hover { background: var(--color-brand-50); }
 
 @media (max-width: 1023px) {
-  nav[aria-label="التنقل الرئيسي للموبايل"] {
+  nav.tys-mobile-nav {
     inset-inline: 12px;
-    bottom: max(10px, env(safe-area-inset-bottom));
+    bottom: calc(env(safe-area-inset-bottom) + 10px);
     overflow: hidden;
     border: 1px solid var(--color-line);
     border-radius: var(--radius-hero);
     background: rgba(255, 255, 255, 0.96);
     box-shadow: var(--shadow-pop);
   }
-  nav[aria-label="التنقل الرئيسي للموبايل"] > div { padding-inline: 4px; }
+  nav.tys-mobile-nav > div { padding-inline: 4px; }
 }
 
 @media (prefers-reduced-motion: no-preference) {
