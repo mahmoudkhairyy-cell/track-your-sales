@@ -351,6 +351,7 @@ function putMonth(state: State, yearMonth: string, data: Record<string, unknown>
     return {kpiKey:key as KpiKey,target,weight,unitAr:typeof row.unitAr==="string"&&row.unitAr.trim()?row.unitAr.trim():cat.unitAr,sortOrder:index};
   });
   if(kpis.length!==KPI_CATALOG.length) fail(400,"لازم تحفظ كل الإيتمز");
+  if(new Set(kpis.map((item)=>item.kpiKey)).size!==KPI_CATALOG.length) fail(400,"مينفعش تكرر نفس المؤشر في إعدادات الشهر");
   const {start,end}=monthDateRange(yearMonth);
   const holidays:Holiday[]=data.holidays.map((item,index)=>{
     if(!item||typeof item!=="object") fail(400,`إجازة رقم ${index+1} شكلها غلط`);
