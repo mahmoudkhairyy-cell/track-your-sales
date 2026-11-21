@@ -320,25 +320,25 @@ html, body { accent-color: var(--tx-orange-deep); }
 ::-webkit-scrollbar-thumb:hover { background: linear-gradient(180deg, #f07818, #9a3f06); }
 ::-webkit-scrollbar-corner { background: var(--color-brand-50); }
 
-main.tys-employee { color: var(--color-ink); }
-main.tys-employee h1, main.tys-employee h2, main.tys-employee h3 { letter-spacing: -0.025em; }
-main.tys-employee h1 { text-wrap: balance; }
-main.tys-employee p { text-wrap: pretty; }
+main { color: var(--color-ink); }
+main h1, main h2, main h3 { letter-spacing: -0.025em; }
+main h1 { text-wrap: balance; }
+main p { text-wrap: pretty; }
 
-main.tys-employee article, main.tys-employee section { scroll-margin-top: 88px; }
+main article, main section { scroll-margin-top: 88px; }
 
-main.tys-employee article {
+main article {
   box-shadow: var(--shadow-card);
   transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease;
 }
-main.tys-employee article:hover {
+main article:hover {
   border-color: var(--color-line-strong);
   box-shadow: var(--shadow-pop);
 }
 
-main.tys-employee input:not([type="checkbox"]):not([type="radio"]),
-main.tys-employee select,
-main.tys-employee textarea {
+main input:not([type="checkbox"]):not([type="radio"]),
+main select,
+main textarea {
   min-height: 48px;
   border: 1px solid var(--color-line-strong);
   border-radius: var(--radius-field);
@@ -348,42 +348,42 @@ main.tys-employee textarea {
   transition: border-color .18s ease, box-shadow .18s ease, background .18s ease;
 }
 
-main.tys-employee textarea { min-height: 104px; padding-top: 12px; }
+main textarea { min-height: 104px; padding-top: 12px; }
 
-main.tys-employee input::placeholder,
-main.tys-employee textarea::placeholder { color: var(--color-ink-2); opacity: 1; }
+main input::placeholder,
+main textarea::placeholder { color: var(--color-ink-2); opacity: 1; }
 
-main.tys-employee input:not([type="checkbox"]):not([type="radio"]):focus,
-main.tys-employee select:focus,
-main.tys-employee textarea:focus {
+main input:not([type="checkbox"]):not([type="radio"]):focus,
+main select:focus,
+main textarea:focus {
   border-color: var(--color-brand-600);
   background: var(--color-surface);
   box-shadow: 0 0 0 4px rgba(198, 83, 11, 0.16);
   outline: none;
 }
 
-main.tys-employee button { transition: transform .16s ease, box-shadow .16s ease, filter .16s ease; }
-main.tys-employee button:active { transform: translateY(1px) scale(.985); }
+main button { transition: transform .16s ease, box-shadow .16s ease, filter .16s ease; }
+main button:active { transform: translateY(1px) scale(.985); }
 
-main.tys-employee a:focus-visible,
-main.tys-employee button:focus-visible {
+main a:focus-visible,
+main button:focus-visible {
   outline: 3px solid rgba(198, 83, 11, 0.55);
   outline-offset: 3px;
 }
 
-main.tys-employee :where(button, [role="button"]):not(:disabled):focus-visible {
+main :where(button, [role="button"]):not(:disabled):focus-visible {
   box-shadow: 0 0 0 4px var(--tx-orange-glow);
 }
 
 @media (max-width: 640px) {
-  main.tys-employee { padding-top: 18px; }
-  main.tys-employee h1 { font-size: clamp(1.35rem, 6vw, 1.7rem); line-height: 1.45; }
-  main.tys-employee h2 { font-size: 1.15rem; }
-  main.tys-employee article { min-width: 0; }
-  main.tys-employee input:not([type="checkbox"]):not([type="radio"]), main.tys-employee select { font-size: 16px; }
+  main { padding-top: 18px; }
+  main h1 { font-size: clamp(1.35rem, 6vw, 1.7rem); line-height: 1.45; }
+  main h2 { font-size: 1.15rem; }
+  main article { min-width: 0; }
+  main input:not([type="checkbox"]):not([type="radio"]), main select { font-size: 16px; }
 }
 
-main.tys-employee table {
+main table {
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
@@ -392,33 +392,33 @@ main.tys-employee table {
   border-radius: var(--radius-card);
   background: var(--color-surface);
 }
-main.tys-employee thead th {
+main thead th {
   background: var(--color-brand-50);
   color: var(--color-brand-ink);
   font-weight: 800;
 }
-main.tys-employee tbody tr:nth-child(even) { background: var(--color-surface-2); }
-main.tys-employee tbody tr:nth-child(odd) { background: var(--color-surface); }
-main.tys-employee th, main.tys-employee td { border-bottom: 1px solid var(--color-line); }
-main.tys-employee tbody tr:last-child td { border-bottom: 0; }
-main.tys-employee tbody tr { transition: background .16s ease; }
-main.tys-employee tbody tr:hover { background: var(--color-brand-50); }
+main tbody tr:nth-child(even) { background: var(--color-surface-2); }
+main tbody tr:nth-child(odd) { background: var(--color-surface); }
+main th, main td { border-bottom: 1px solid var(--color-line); }
+main tbody tr:last-child td { border-bottom: 0; }
+main tbody tr { transition: background .16s ease; }
+main tbody tr:hover { background: var(--color-brand-50); }
 
 @media (max-width: 1023px) {
-  nav.tys-mobile-nav {
+  nav[aria-label="التنقل الرئيسي للموبايل"] {
     inset-inline: 12px;
-    bottom: calc(env(safe-area-inset-bottom) + 10px);
+    bottom: max(10px, env(safe-area-inset-bottom));
     overflow: hidden;
     border: 1px solid var(--color-line);
     border-radius: var(--radius-hero);
     background: rgba(255, 255, 255, 0.96);
     box-shadow: var(--shadow-pop);
   }
-  nav.tys-mobile-nav > div { padding-inline: 4px; }
+  nav[aria-label="التنقل الرئيسي للموبايل"] > div { padding-inline: 4px; }
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  main.tys-employee { animation: tx-enter .32s ease-out both; }
+  main { animation: tx-enter .32s ease-out both; }
   @keyframes tx-enter {
     from { opacity: 0; transform: translateY(7px); }
     to { opacity: 1; transform: translateY(0); }
@@ -450,35 +450,35 @@ main.tys-employee tbody tr:hover { background: var(--color-brand-50); }
     color: var(--color-ink-dark);
   }
 
-  :where(:root:not(.light)) main.tys-employee {
+  :where(:root:not(.light)) main {
     color: var(--color-ink-dark);
   }
 
-  :where(:root:not(.light)) :is(main.tys-employee article, main.tys-employee section) {
+  :where(:root:not(.light)) :is(main article, main section) {
     background: var(--color-surface-dark);
     border-color: var(--color-line-dark);
   }
 
-  :where(:root:not(.light)) :is(main.tys-employee input:not([type="checkbox"]):not([type="radio"]), main.tys-employee select, main.tys-employee textarea) {
+  :where(:root:not(.light)) :is(main input:not([type="checkbox"]):not([type="radio"]), main select, main textarea) {
     background: var(--color-surface-dark);
     border-color: var(--color-line-strong-dark);
     color: var(--color-ink-dark);
   }
 
-  :where(:root:not(.light)) main.tys-employee table {
+  :where(:root:not(.light)) main table {
     background: var(--color-surface-dark);
     border-color: var(--color-line-dark);
   }
 
-  :where(:root:not(.light)) main.tys-employee tbody tr:nth-child(even) {
+  :where(:root:not(.light)) main tbody tr:nth-child(even) {
     background: var(--color-surface-2-dark);
   }
 
-  :where(:root:not(.light)) main.tys-employee tbody tr:nth-child(odd) {
+  :where(:root:not(.light)) main tbody tr:nth-child(odd) {
     background: var(--color-surface-dark);
   }
 
-  :where(:root:not(.light)) main.tys-employee tbody tr:hover {
+  :where(:root:not(.light)) main tbody tr:hover {
     background: var(--color-surface-2-dark);
   }
 }
@@ -492,35 +492,35 @@ main.tys-employee tbody tr:hover { background: var(--color-brand-50); }
   color: var(--color-ink-dark);
 }
 
-.dark main.tys-employee {
+.dark main {
   color: var(--color-ink-dark);
 }
 
-.dark main.tys-employee article,
-.dark main.tys-employee section {
+.dark main article,
+.dark main section {
   background: var(--color-surface-dark);
   border-color: var(--color-line-dark);
 }
 
-.dark main.tys-employee input:not([type="checkbox"]):not([type="radio"]),
-.dark main.tys-employee select,
-.dark main.tys-employee textarea {
+.dark main input:not([type="checkbox"]):not([type="radio"]),
+.dark main select,
+.dark main textarea {
   background: var(--color-surface-dark);
   border-color: var(--color-line-strong-dark);
   color: var(--color-ink-dark);
 }
 
-.dark main.tys-employee table {
+.dark main table {
   background: var(--color-surface-dark);
   border-color: var(--color-line-dark);
 }
 
-.dark main.tys-employee tbody tr:nth-child(even),
-.dark main.tys-employee tbody tr:hover {
+.dark main tbody tr:nth-child(even),
+.dark main tbody tr:hover {
   background: var(--color-surface-2-dark);
 }
 
-.dark main.tys-employee tbody tr:nth-child(odd) {
+.dark main tbody tr:nth-child(odd) {
   background: var(--color-surface-dark);
 }
 
