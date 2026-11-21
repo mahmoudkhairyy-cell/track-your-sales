@@ -627,3 +627,37 @@ main.tys-employee :where(button, [role="button"]):not(:disabled):active {
     letter-spacing: -0.035em;
   }
 }
+
+
+/* Compact KPI tiles on the employee dashboard; values and KPI ordering remain unchanged. */
+main.tys-employee section .grid[class*="sm:grid-cols-3"] > article {
+  min-width: 0;
+  padding: 12px;
+}
+main.tys-employee section .grid[class*="sm:grid-cols-3"] > article h3 {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  font-size: 0.78rem;
+  line-height: 1.25rem;
+}
+main.tys-employee section .grid[class*="sm:grid-cols-3"] > article p {
+  line-height: 1.35;
+}
+main.tys-employee section .grid[class*="sm:grid-cols-3"] > article .text-2xl {
+  font-size: 1.35rem;
+}
+main.tys-employee section .grid[class*="sm:grid-cols-3"] > article .text-3xl {
+  font-size: 1.6rem;
+}
+@media (max-width: 640px) {
+  main.tys-employee section .grid[class*="sm:grid-cols-3"] {
+    gap: 9px;
+  }
+  main.tys-employee section .grid[class*="sm:grid-cols-3"] > article {
+    padding: 10px;
+    border-radius: 15px;
+  }
+  main.tys-employee section .grid[class*="sm:grid-cols-3"] > article .mt-3 {
+    margin-top: 9px;
+  }
+}
