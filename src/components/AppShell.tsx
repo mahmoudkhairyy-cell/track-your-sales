@@ -3,7 +3,7 @@
 import { Welcome } from "@/components/Welcome";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { createContext, useContext, useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
+import { createContext, useContext, useEffect, useState, type FormEvent, type ReactNode } from "react";
 import { readProfile } from "@/lib/local-api";
 import { pushReport, readSyncStatus } from "@/lib/sync";
 import { api } from "@/lib/client";
