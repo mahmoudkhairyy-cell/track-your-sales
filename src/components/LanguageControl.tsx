@@ -79,7 +79,7 @@ const T: Record<string, string> = {
 };
 
 const originalText = new WeakMap<Text, { original: string; translated: string }>();
-const originalAttrs = new WeakMap<Element, Record<string, string>>();
+const originalAttrs = new WeakMap<Element, Record<string, { original: string; translated: string }>>();
 
 function translate(value: string, lang: "en" | "ar") {
   if (lang === "ar") return value;
@@ -115,9 +115,14 @@ function translateNode(node: Node, lang: "en" | "ar") {
     for (const attr of ["placeholder", "aria-label", "title"]) {
       if (!element.hasAttribute(attr)) continue;
       const current = element.getAttribute(attr) ?? "";
-      if (!(attr in saved) || current !== translate(saved[attr], lang)) saved[attr] = current;
-      const next = translate(saved[attr], lang);
+      let record = saved[attr];
+      if (!record || current !== record.translated) {
+        record = { original: current, translated: "" };
+        saved[attr] = record;
+      }
+      const next = translate(record.original, lang);
       if (current !== next) element.setAttribute(attr, next);
+      record.translated = next;
     }
   }
 }
