@@ -3,7 +3,7 @@
 import { Welcome } from "@/components/Welcome";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { createContext, useContext, useEffect, useState, type FormEvent, type ReactNode } from "react";
+import { createContext, useContext, useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
 import { readProfile } from "@/lib/local-api";
 import { pushReport, readSyncStatus } from "@/lib/sync";
 import { api } from "@/lib/client";
@@ -128,6 +128,28 @@ function SearchableSelect({
   const [draft, setDraft] = useState({ value, query: value });
   const [open, setOpen] = useState(false);
   const query = draft.value === value ? draft.query : value;
+
+  // خلي زر الرجوع يقفل قائمة البحث أولاً بدل ما يخرج من صفحة التسجيل.
+  useEffect(() => {
+    if (!open) return;
+    window.history.pushState(
+      { ...(window.history.state && typeof window.history.state === "object" ? window.history.state : {}), __tysSearchDropdown: true },
+      "",
+      window.location.href,
+    );
+    let restoreHistory = true;
+    const handleBack = () => {
+      restoreHistory = false;
+      setOpen(false);
+    };
+    window.addEventListener("popstate", handleBack);
+    return () => {
+      window.removeEventListener("popstate", handleBack);
+      if (restoreHistory && window.history.state?.__tysSearchDropdown) {
+        window.history.back();
+      }
+    };
+  }, [open]);
 
   const normalizedQuery = normalizeSearchText(query);
   const matches = options.filter((item) => normalizeSearchText(item).includes(normalizedQuery)).slice(0, 8);
