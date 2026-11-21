@@ -191,9 +191,6 @@ export function Modal({
   onClose: () => void;
 }) {
   const dialogRef = useRef<HTMLDivElement>(null);
-  const onCloseRef = useRef(onClose);
-  onCloseRef.current = onClose;
-
   useEffect(() => {
     if (!open) return;
     const previouslyFocused = document.activeElement instanceof HTMLElement ? document.activeElement : null;
@@ -205,7 +202,7 @@ export function Modal({
     function onKeyDown(event: KeyboardEvent) {
       if (event.key === "Escape") {
         event.preventDefault();
-        onCloseRef.current();
+        onClose();
         return;
       }
       if (event.key !== "Tab" || !dialog) return;
@@ -232,7 +229,7 @@ export function Modal({
       document.removeEventListener("keydown", onKeyDown);
       previouslyFocused?.focus();
     };
-  }, [open]);
+  }, [open, onClose]);
 
   if (!open) return null;
   return (
