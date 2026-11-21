@@ -295,7 +295,7 @@ export default function HomePage() {
           </div>
           <span className="rounded-full border border-line-shell bg-white/80 px-3 py-1 text-[11px] font-extrabold text-brand-600">{data.kpis.length} مؤشرات</span>
         </div>
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 tys-kpi-grid">
           {data.kpis.map((kpi) => {
             const visual = Math.min(100, Math.max(0, kpi.percent));
             const featured = kpi.kpiKey === "new_lines";
