@@ -592,6 +592,12 @@ main.tys-employee article:hover {
   transform: translateY(-2px);
   box-shadow: 0 12px 28px rgba(105, 54, 20, 0.085);
 }
+
+@media (hover: none) {
+  main.tys-employee article:hover {
+    transform: none;
+  }
+}
 main.tys-employee :where(input:not([type="checkbox"]):not([type="radio"]), select, textarea) {
   border-color: #ead8c8;
   background-color: #fffefd;
@@ -630,34 +636,34 @@ main.tys-employee :where(button, [role="button"]):not(:disabled):active {
 
 
 /* Compact KPI tiles on the employee dashboard; values and KPI ordering remain unchanged. */
-main.tys-employee section .grid[class*="sm:grid-cols-3"] > article {
+main.tys-employee .tys-kpi-grid > article {
   min-width: 0;
   padding: 12px;
 }
-main.tys-employee section .grid[class*="sm:grid-cols-3"] > article h3 {
+main.tys-employee .tys-kpi-grid > article h3 {
   min-width: 0;
   overflow-wrap: anywhere;
   font-size: 0.78rem;
   line-height: 1.25rem;
 }
-main.tys-employee section .grid[class*="sm:grid-cols-3"] > article p {
+main.tys-employee .tys-kpi-grid > article p {
   line-height: 1.35;
 }
-main.tys-employee section .grid[class*="sm:grid-cols-3"] > article .text-2xl {
+main.tys-employee .tys-kpi-grid > article .text-2xl {
   font-size: 1.35rem;
 }
-main.tys-employee section .grid[class*="sm:grid-cols-3"] > article .text-3xl {
+main.tys-employee .tys-kpi-grid > article .text-3xl {
   font-size: 1.6rem;
 }
 @media (max-width: 640px) {
-  main.tys-employee section .grid[class*="sm:grid-cols-3"] {
+  main.tys-employee .tys-kpi-grid {
     gap: 9px;
   }
-  main.tys-employee section .grid[class*="sm:grid-cols-3"] > article {
+  main.tys-employee .tys-kpi-grid > article {
     padding: 10px;
     border-radius: 15px;
   }
-  main.tys-employee section .grid[class*="sm:grid-cols-3"] > article .mt-3 {
+  main.tys-employee .tys-kpi-grid > article .mt-3 {
     margin-top: 9px;
   }
 }
