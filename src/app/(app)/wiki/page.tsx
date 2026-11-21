@@ -140,7 +140,7 @@ function Back({ onClick, title }: { onClick: () => void; title: string }) {
         <div className="flex min-w-0 items-center gap-3">
           {card ? <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border border-[#f6e5d7] bg-[var(--color-primary-50)]">{card.icon}</span> : null}
           <div className="min-w-0">
-            {group ? <p className="text-[10px] font-bold text-[var(--color-text-secondary)]">{group}</p> : null}
+            {group ? <p className="text-[11px] font-bold text-[var(--color-text-secondary)]">{group}</p> : null}
             <h1 className="truncate text-lg font-black tracking-tight text-[var(--color-text-primary)]">{title}</h1>
           </div>
         </div>
@@ -168,7 +168,7 @@ function EntertainRow({ keys }: { keys: string[] }) {
 function PlanBand({ title, big }: { title: string; big?: string }) {
   return (
     <div className="-mx-4 -mt-4 mb-2 flex items-center justify-between gap-2 rounded-t-[24px] bg-gradient-to-br from-[var(--color-primary-500)] via-[var(--color-primary-600)] to-[var(--color-primary-500)] px-3 py-1.5 text-white">
-      <p className="min-w-0 truncate text-[10px] font-bold opacity-90">{title}</p>
+      <p className="min-w-0 truncate text-[11px] font-bold opacity-90">{title}</p>
       <p className="shrink-0 truncate text-sm font-black tabular-nums">{big ?? title}</p>
     </div>
   );
@@ -557,7 +557,7 @@ export default function WikiPage() {
                   <button key={filter.id} type="button" onClick={() => setSrTopic(filter.id)} aria-pressed={active}
                     className={`shrink-0 rounded-full border px-3.5 py-2 text-xs font-extrabold transition ${active ? "border-[#df6b1b] bg-[#e96f1d] text-white shadow-sm" : "border-[var(--color-border)] bg-white text-[#70513c] hover:border-[#e7b58f]"}`}>
                     <span className="ml-1">{filter.icon}</span>{filter.label}
-                    <span className={`mr-1.5 text-[10px] ${active ? "text-white/80" : "text-[var(--color-text-secondary)]"}`}>{count}</span>
+                    <span className={`mr-1.5 text-[11px] ${active ? "text-white/80" : "text-[var(--color-text-secondary)]"}`}>{count}</span>
                   </button>
                 );
               })}
@@ -568,7 +568,7 @@ export default function WikiPage() {
               <summary className="cursor-pointer select-none p-3 text-sm font-black text-[var(--color-primary-700)]">أهم أكواد وإجراءات الفرع</summary>
               <div className="grid gap-3 px-3 pb-3">
               <div className="rounded-xl border border-[#f0d8c5] bg-white p-3">
-                <p className="font-black text-[var(--color-primary-700)]">SR 31319 — رن الشكوى للفريق المختص <span className="text-[10px] text-[#c45a13]">• أولوية قصوى</span></p>
+                <p className="font-black text-[var(--color-primary-700)]">SR 31319 — رن الشكوى للفريق المختص <span className="text-[11px] text-[#c45a13]">• أولوية قصوى</span></p>
                 <p>اكتب تفاصيل الشكوى في Notes، وبعدها اعمل رن للفريق المختص. مناسب لشكاوى الشبكة، وخصم الرصيد بدون سبب، ومشكلات حساب الفاتورة.</p>
               </div>
               <div className="rounded-xl border border-[#f0d8c5] bg-white p-3">
@@ -606,7 +606,7 @@ export default function WikiPage() {
                 <p className="font-black text-[var(--color-primary-700)]">SR 60619</p>
                 <p>تحميل تطبيق Max it.</p>
               </div>
-              <p className="text-[10px] text-[#9a7c66]">الأكواد التي لم تتوفر لها سجلات في قاعدة الأكواد معروضة هنا كمرجع مؤكد من إجراءات الفرع، وليست سجلات رسمية مضافة إلى قاعدة SR.</p>
+              <p className="text-[11px] text-[#9a7c66]">الأكواد التي لم تتوفر لها سجلات في قاعدة الأكواد معروضة هنا كمرجع مؤكد من إجراءات الفرع، وليست سجلات رسمية مضافة إلى قاعدة SR.</p>
               </div>
             </details>
           ) : null}
@@ -648,7 +648,7 @@ export default function WikiPage() {
                   <p className="text-lg font-black">{pkg.name}</p>
                   <p className="rounded-xl bg-gradient-to-br from-[var(--color-primary-500)] to-[var(--color-primary-600)] px-3 py-1.5 text-center text-sm font-extrabold leading-5 text-white">
                     {pkg.price.toLocaleString("en-US")} جنيه
-                    <span className="block text-[10px] font-bold opacity-90">اشتراك شهري</span>
+                    <span className="block text-[11px] font-bold opacity-90">اشتراك شهري</span>
                   </p>
                 </div>
                 <div className="mt-4 grid grid-cols-3 gap-2 text-center">
@@ -691,16 +691,16 @@ export default function WikiPage() {
                           ) : name === "TOD" ? (
                             <span className="text-[15px] font-black leading-none text-[#f5b800]">TOD</span>
                           ) : name === "YouTube" ? (
-                            <span className="rounded-md bg-white px-1 text-[9px] font-black leading-none text-[#e00000]">▶ YouTube</span>
+                            <span className="rounded-md bg-white px-1 text-[11px] font-black leading-none text-[#e00000]">▶ YouTube</span>
                           ) : name === "EgyptAir" ? (
-                            <span className="text-[8px] font-black leading-none text-[#0b3d91]">EgyptAir</span>
+                            <span className="text-[11px] font-black leading-none text-[#0b3d91]">EgyptAir</span>
                           ) : name === "WTour" ? (
-                            <span className="text-[10px] font-black leading-none text-[#c8a165]">W Tour</span>
+                            <span className="text-[11px] font-black leading-none text-[#c8a165]">W Tour</span>
                           ) : (
                             <span className="text-[7px] font-bold leading-[1.1] tracking-tight text-white">GOURMET</span>
                           )}
                         </span>
-                        {note ? <span className="text-[9px] font-bold text-[var(--color-text-secondary)]">{note}</span> : null}
+                        {note ? <span className="text-[11px] font-bold text-[var(--color-text-secondary)]">{note}</span> : null}
                       </span>
                     );
                   })}
@@ -760,7 +760,7 @@ export default function WikiPage() {
                   </div>
                   <p className="rounded-xl bg-gradient-to-br from-[var(--color-primary-500)] to-[var(--color-primary-600)] px-3 py-1.5 text-center text-sm font-extrabold leading-5 text-white">
                     {money(plan.renewalPrice)} جنيه
-                    <span className="block text-[10px] font-bold opacity-90">تجديد</span>
+                    <span className="block text-[11px] font-bold opacity-90">تجديد</span>
                   </p>
                 </div>
                 <div className="mt-3 divide-y divide-[var(--color-border)] text-sm">
@@ -868,7 +868,7 @@ export default function WikiPage() {
             <section key={group.category} className="space-y-3">
               <div className="flex items-center justify-between gap-3 px-1">
                 <h3 className="text-base font-black tracking-tight text-[#71370f]">{group.category}</h3>
-                <span className="rounded-full border border-white bg-[#fff5ec] px-2.5 py-1 text-[10px] font-extrabold text-[#a45a27]">{group.plans.length} باقة</span>
+                <span className="rounded-full border border-white bg-[#fff5ec] px-2.5 py-1 text-[11px] font-extrabold text-[#a45a27]">{group.plans.length} باقة</span>
               </div>
               {group.plans.map((plan) => {
                 const after = Number.parseFloat(String(plan.fees ?? ""));

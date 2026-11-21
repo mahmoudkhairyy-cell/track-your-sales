@@ -620,14 +620,14 @@ function AppFrame({ children, blocked, month }: { children: ReactNode; blocked: 
                 <img src="/track-your-sales/logo-mark.png" alt="" className="h-12 w-12 shrink-0 object-contain" />
                 <div className="min-w-0">
                   <p className="truncate text-[15px] font-black tracking-tight text-[#2d2119]" dir="ltr">{APP_NAME}</p>
-                  <p className="mt-1 text-[10px] font-bold text-[#b76a3b]" dir="ltr">SALES PERFORMANCE SPACE</p>
+                  <p className="mt-1 text-[11px] font-bold text-[#b76a3b]" dir="ltr">SALES PERFORMANCE SPACE</p>
                 </div>
               </div>
               <div className="relative mt-5 overflow-hidden rounded-[24px] border border-[#f3dfce] bg-gradient-to-br from-white via-[#fff8f1] to-[#fff0e2] p-4 shadow-[0_10px_26px_rgba(126,65,24,0.06)]">
                 <div className="absolute -left-8 -top-9 h-24 w-24 rounded-full bg-[#ffb36e]/25 blur-2xl" />
                 <div className="relative flex items-center gap-2">
                   <span className="h-2 w-2 rounded-full bg-[#e96812] shadow-[0_0_0_4px_rgba(233,104,18,0.10)]" />
-                  <p className="text-[10px] font-extrabold tracking-wider text-[#b76a3b]">مساحة العمل</p>
+                  <p className="text-[11px] font-extrabold tracking-wider text-[#b76a3b]">مساحة العمل</p>
                 </div>
                 <p className="relative mt-3 truncate text-base font-black text-[#2d2119]">{user.name || "أهلاً بيك"}</p>
                 <p className="relative mt-1 truncate text-xs font-semibold text-[#9a7963]">📍 {user.branch || "فرعك"}</p>
@@ -647,7 +647,7 @@ function AppFrame({ children, blocked, month }: { children: ReactNode; blocked: 
                     </span>
                     <div className="min-w-0">
                       <p className="truncate text-[13px] font-black tracking-tight text-white" dir="ltr">{APP_NAME}</p>
-                      <p className="truncate text-[9px] font-semibold text-white/80">{user.name || "مساحة متابعة المبيعات"}</p>
+                      <p className="truncate text-[11px] font-semibold text-white/80">{user.name || "مساحة متابعة المبيعات"}</p>
                     </div>
                   </div>
                   <div className="hidden min-w-0 lg:block">

@@ -207,7 +207,7 @@ export default function LogPage() {
     <form className="tys-page tys-page-log tys-premium-log mx-auto max-w-5xl space-y-5 pb-8" onSubmit={onSubmit}>
       <section className="flex items-end justify-between gap-3 rounded-[26px] border border-white bg-white px-4 py-4 shadow-[0_1px_2px_rgba(43,20,0,.04)] sm:px-5">
         <div>
-          <p className="text-[10px] font-black tracking-[0.16em] text-[#c66b34]">DAILY SALES ENTRY</p>
+          <p className="text-[11px] font-black tracking-[0.16em] text-[#c66b34]">DAILY SALES ENTRY</p>
           <h1 className="mt-1 text-2xl font-black tracking-tight text-[var(--color-text-primary)]">تسجيل إنجاز</h1>
           <p className="mt-1 text-xs font-semibold text-[var(--color-text-secondary)]">سجّل مبيعاتك وإنجازاتك بسهولة — هتتحفظ تلقائيًا.</p>
         </div>
@@ -277,15 +277,15 @@ export default function LogPage() {
             </div>
             <div className="mt-2.5 grid grid-cols-3 gap-1.5 rounded-xl border border-white bg-white p-2 text-center">
               <div>
-                <p className="text-[10px] text-[var(--color-text-secondary)]">المستهدف</p>
+                <p className="text-[11px] text-[var(--color-text-secondary)]">المستهدف</p>
                 <p className="text-sm font-black tabular-nums">{d ? formatQty(d.target) : "—"}</p>
               </div>
               <div>
-                <p className="text-[10px] text-[var(--color-text-secondary)]">الوزن</p>
+                <p className="text-[11px] text-[var(--color-text-secondary)]">الوزن</p>
                 <p className="text-sm font-black tabular-nums">{d ? d.weight : 0}%</p>
               </div>
               <div>
-                <p className="text-[10px] text-[var(--color-text-secondary)]">الباقي</p>
+                <p className="text-[11px] text-[var(--color-text-secondary)]">الباقي</p>
                 <p className="text-sm font-black tabular-nums text-[var(--color-primary-700)]">{d ? formatQty(Math.max(0, d.remaining)) : "—"}</p>
               </div>
             </div>
@@ -306,7 +306,7 @@ export default function LogPage() {
               />
               <span className="shrink-0 text-xs font-bold text-[var(--color-text-secondary)]">{unitEn(d?.unitAr ?? "", d?.remaining ?? 2)}</span>
             </div>
-            <p className="mt-1.5 text-[10px] text-[var(--color-text-secondary)]" title={quantityHint(item.key)}>
+            <p className="mt-1.5 text-[11px] text-[var(--color-text-secondary)]" title={quantityHint(item.key)}>
               {needToday > 0 ? `المطلوب النهارده: ${formatQty(needToday)} ${unitEn(d?.unitAr ?? "", needToday)}` : "مفيش مطلوب إضافي النهارده"}
             </p>
           </article>

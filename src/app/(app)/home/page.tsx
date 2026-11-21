@@ -240,7 +240,7 @@ export default function HomePage() {
             <div className="tys-bar relative h-2.5 overflow-hidden rounded-full bg-orange-100">
               <div ref={overallBarRef} className="h-full rounded-full bg-gradient-to-l from-[var(--color-primary-500)] via-[var(--color-primary-600)] to-[var(--color-primary-700)] shadow-[0_1px_5px_rgba(189,75,10,0.22)]" style={{ width: "0%" }} />
             </div>
-            <div className="mt-1 flex justify-between text-[9px] font-bold text-[var(--color-text-secondary)]" dir="ltr">
+            <div className="mt-1 flex justify-between text-[11px] font-bold text-[var(--color-text-secondary)]" dir="ltr">
               <span>100% target</span><span>0%</span>
             </div>
           </div>
@@ -289,7 +289,7 @@ export default function HomePage() {
                 key={k.kpiKey}
                 className="flex min-h-[46px] min-w-0 items-center justify-between gap-2 rounded-lg border border-white bg-white px-2.5 py-1.5 text-orange-800 shadow-[0_1px_2px_rgba(43,20,0,.04)]"
               >
-                <span className="min-w-0 truncate text-[9px] font-bold tracking-wide text-orange-800" dir="ltr">{k.nameEn}</span>
+                <span className="min-w-0 truncate text-[11px] font-bold tracking-wide text-orange-800" dir="ltr">{k.nameEn}</span>
                 <strong className="shrink-0 rounded-md border border-white bg-orange-50 px-2 py-1 text-base font-black leading-none tabular-nums text-orange-800">
                   {formatQty(dailyRequired)}
                 </strong>

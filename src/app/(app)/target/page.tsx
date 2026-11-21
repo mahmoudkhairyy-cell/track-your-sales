@@ -160,11 +160,11 @@ export default function TargetPage() {
         <div className="relative">
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div className="min-w-0">
-              <p className="text-[10px] font-black tracking-[0.18em] text-[var(--color-primary-700)]">MONTHLY CONFIGURATION</p>
+              <p className="text-[11px] font-black tracking-[0.18em] text-[var(--color-primary-700)]">MONTHLY CONFIGURATION</p>
               <h1 className="mt-1 text-2xl font-black tracking-tight text-[var(--color-text-primary)] sm:text-3xl">التارجت 🎯</h1>
               <p className="mt-1.5 max-w-md text-xs leading-6 text-[var(--color-text-secondary)]">كل إعدادات الشهر في مكان واحد — راجع أهدافك قبل الحفظ.</p>
             </div>
-            <span role="status" aria-live="polite" className={`shrink-0 rounded-full px-3 py-1.5 text-[10px] font-extrabold ${saveState.tone}`}>
+            <span role="status" aria-live="polite" className={`shrink-0 rounded-full px-3 py-1.5 text-[11px] font-extrabold ${saveState.tone}`}>
               {saveState.label}
             </span>
           </div>
@@ -214,12 +214,12 @@ export default function TargetPage() {
         <div className="mb-4 flex items-center justify-between gap-3">
           <div>
             <h2 className="text-sm font-black text-[var(--color-text-primary)]">تقويم الإجازات</h2>
-            <p className="mt-1 text-[11px] text-[#9a8170]">اختار الأيام اللي مش هتشتغل فيها</p>
+            <p className="mt-1 text-[11px] text-[#7a6552]">اختار الأيام اللي مش هتشتغل فيها</p>
           </div>
           <span className="rounded-xl bg-[var(--color-primary-50)] px-3 py-2 text-xs font-black text-[var(--color-primary-700)]">{month}</span>
         </div>
         <p className="mb-2 text-xs font-bold text-[var(--color-text-secondary)]">اختيار تاريخ الإجازة</p>
-        <div className="grid grid-cols-7 gap-1 text-center text-[11px] font-bold text-[#9a8170]">
+        <div className="grid grid-cols-7 gap-1 text-center text-[11px] font-bold text-[#7a6552]">
           {["سبت", "أحد", "اتنين", "تلات", "أربع", "خميس", "جمعة"].map((d) => (
             <span key={d} className="py-1">{d}</span>
           ))}
@@ -300,9 +300,9 @@ export default function TargetPage() {
                 <div className="min-w-0">
                   <p className="truncate text-sm font-extrabold" dir="ltr">{catalog?.nameEn}</p>
                   {kpi.kpiKey === "new_orange_cash" ? (
-                    <p className="text-[10px] font-bold text-[var(--color-primary-700)]">Target you set yourself</p>
+                    <p className="text-[11px] font-bold text-[var(--color-primary-700)]">Target you set yourself</p>
                   ) : (
-                    <p className="text-[10px] text-[var(--color-text-secondary)]">{unitEn(kpi.unitAr)}</p>
+                    <p className="text-[11px] text-[var(--color-text-secondary)]">{unitEn(kpi.unitAr)}</p>
                   )}
                 </div>
               </div>
