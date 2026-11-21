@@ -9,7 +9,7 @@ import { ApiError, api, downloadJson } from "@/lib/client";
 import { cairoISODate, formatDateAr, formatTimeCairo, monthLabelAr } from "@/lib/dates";
 import { formatQty } from "@/lib/calculations";
 import { parseBackup, type BackupFile } from "@/lib/backup";
-import { APP_NAME, AREA_MANAGERS, OUTSIDE_BRANCHES, KPI_CATALOG, kpiEmoji, type KpiKey } from "@/lib/constants";
+import { APP_NAME, AREA_MANAGERS, OUTSIDE_BRANCHES, KPI_CATALOG, kpiEmoji, type KpiKey, unitEn } from "@/lib/constants";
 import { useMonth } from "@/components/AppShell";
 import { KpiIcon } from "@/components/KpiIcon";
 import { useHistoryView } from "@/lib/use-history-view";
@@ -490,7 +490,7 @@ export default function MorePage() {
                   </span>
                 </span>
                 <strong>
-                  {formatQty(item.quantity)} {item.unitAr}
+                  {formatQty(item.quantity)} {unitEn(item.unitAr, item.quantity)}
                 </strong>
               </li>
             ))}
@@ -526,7 +526,7 @@ export default function MorePage() {
                       <span dir="ltr">{entry.nameEn}</span>
                     </p>
                     <p className="text-xs text-[var(--color-text-secondary)]">
-                      {formatDateAr(entry.entryDate)} · {formatQty(entry.quantity)} {entry.unitAr}
+                      {formatDateAr(entry.entryDate)} · {formatQty(entry.quantity)} {unitEn(entry.unitAr, entry.quantity)}
                     </p>
                     {entry.note ? <p className="mt-1 text-sm text-[var(--color-text-secondary)]">{entry.note}</p> : null}
                     <p className="mt-1 text-[11px] text-[var(--color-text-secondary)]">اتسجل {formatTimeCairo(entry.createdAt)}</p>
