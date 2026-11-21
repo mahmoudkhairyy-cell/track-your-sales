@@ -1,0 +1,290 @@
+/* ============================================================================
+   Month Track — المرحلة التانية: عناصر الواجهة المشتركة (ui.tsx)
+   تُلحق بآخر design-v2.css.
+   ============================================================================ */
+
+/* --------------------------------------------------------------------------
+   الحقول — الأساس بره الصفحات (المودالات) + تخصيص أعلى جوه .tys-page
+   -------------------------------------------------------------------------- */
+.tys2-input,
+.tys-page :is(input, select, textarea).tys2-input:not([type="checkbox"]):not([type="radio"]) {
+  border-color: var(--tys2-line);
+  background-color: var(--tys2-surface);
+  color: var(--tys2-ink);
+  box-shadow: inset 0 1px 2px rgba(34, 26, 18, 0.04);
+  transition: border-color var(--tys2-fast) var(--tys2-ease), box-shadow var(--tys2-fast) var(--tys2-ease);
+}
+.tys2-input::placeholder,
+.tys-page :is(input, select, textarea).tys2-input::placeholder {
+  color: var(--color-text-muted, #A08F7A);
+  opacity: 1;
+}
+.tys2-input:focus,
+.tys-page :is(input, select, textarea).tys2-input:not([type="checkbox"]):not([type="radio"]):focus {
+  border-color: var(--tys2-primary);
+  box-shadow: inset 0 1px 2px rgba(34, 26, 18, 0.04), 0 0 0 4px rgba(194, 65, 12, 0.14);
+  box-shadow: inset 0 1px 2px rgba(34, 26, 18, 0.04), 0 0 0 4px color-mix(in oklab, var(--tys2-primary) 16%, transparent);
+  outline: none;
+}
+.tys2-input:disabled,
+.tys-page :is(input, select, textarea).tys2-input:disabled {
+  cursor: not-allowed;
+  opacity: 0.62;
+}
+.tys2-input[type="date"],
+.tys2-input[type="number"] {
+  font-variant-numeric: tabular-nums;
+}
+
+/* --------------------------------------------------------------------------
+   الأزرار
+   -------------------------------------------------------------------------- */
+.tys2-btn-primary,
+.tys-page button.tys2-btn-primary {
+  border: 1px solid transparent;
+  color: #FFFFFF;
+  background: linear-gradient(135deg, var(--tys2-primary-bright), var(--tys2-primary));
+  box-shadow: 0 6px 18px rgba(194, 65, 12, 0.28);
+  transition: transform var(--tys2-fast) var(--tys2-ease), box-shadow var(--tys2-fast) var(--tys2-ease), filter var(--tys2-fast) var(--tys2-ease);
+}
+.tys2-btn-primary:hover:not(:disabled),
+.tys-page button.tys2-btn-primary:hover:not(:disabled) {
+  filter: brightness(1.06);
+  box-shadow: 0 10px 26px rgba(194, 65, 12, 0.32);
+}
+.tys2-btn-primary:active:not(:disabled),
+.tys-page button.tys2-btn-primary:active:not(:disabled) {
+  transform: scale(0.985);
+  box-shadow: 0 4px 12px rgba(194, 65, 12, 0.26);
+}
+.tys2-btn-primary:disabled,
+.tys-page button.tys2-btn-primary:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+  filter: saturate(0.6);
+  box-shadow: none;
+}
+.tys2-btn-secondary,
+.tys-page button.tys2-btn-secondary {
+  border: 1px solid var(--tys2-line);
+  color: var(--tys2-ink);
+  background: var(--tys2-surface);
+  box-shadow: var(--tys2-e1);
+  transition: border-color var(--tys2-fast) var(--tys2-ease), background var(--tys2-fast) var(--tys2-ease), transform var(--tys2-fast) var(--tys2-ease);
+}
+.tys2-btn-secondary:hover:not(:disabled),
+.tys-page button.tys2-btn-secondary:hover:not(:disabled) {
+  border-color: var(--tys2-primary);
+  background: var(--tys2-primary-soft);
+}
+.tys2-btn-secondary:active:not(:disabled),
+.tys-page button.tys2-btn-secondary:active:not(:disabled) {
+  transform: scale(0.985);
+}
+.tys2-btn-secondary:disabled,
+.tys-page button.tys2-btn-secondary:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+.tys2-btn-primary:focus-visible,
+.tys2-btn-secondary:focus-visible {
+  outline: 3px solid color-mix(in oklab, var(--tys2-primary) 55%, transparent);
+  outline-offset: 3px;
+}
+
+/* --------------------------------------------------------------------------
+   الحقول: العنوان والتلميح
+   -------------------------------------------------------------------------- */
+.tys2-field-label,
+.tys-page .tys2-field-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--tys2-ink-2);
+}
+.tys2-field-hint,
+.tys-page .tys2-field-hint {
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.7;
+  color: var(--color-text-muted, #A08F7A);
+}
+
+/* --------------------------------------------------------------------------
+   البانرات
+   -------------------------------------------------------------------------- */
+.tys2-banner {
+  border: 1px solid var(--tys2-line);
+  border-radius: var(--tys2-radius-s);
+  padding: 12px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.85;
+}
+.tys2-banner-info {
+  border-color: color-mix(in oklab, var(--tys2-primary) 28%, var(--tys2-line));
+  background: var(--tys2-primary-soft);
+  color: var(--tys2-primary-strong);
+}
+.tys2-banner-error { border-color: #F3C0C0; background: #FEF2F2; color: #7F1D1D; }
+.tys2-banner-success { border-color: #A7D8C4; background: #ECFDF5; color: #064E3B; }
+.tys2-banner-warn { border-color: #F5D48A; background: #FFFBEB; color: #78350F; }
+
+/* --------------------------------------------------------------------------
+   الحالة الفارغة + التحميل
+   -------------------------------------------------------------------------- */
+.tys2-empty {
+  border: 1px dashed color-mix(in oklab, var(--tys2-primary) 32%, var(--tys2-line));
+  border-radius: var(--tys2-radius-l);
+  background: var(--tys2-surface);
+}
+.tys2-empty-title {
+  font-family: var(--tys2-font-display);
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--tys2-ink);
+}
+.tys2-empty-text {
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.9;
+  color: var(--tys2-ink-2);
+}
+.tys2-spinner {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--tys2-ink-2);
+}
+.tys2-spinner-ring {
+  border-color: var(--tys2-primary);
+  border-top-color: transparent;
+}
+.tys2-skel,
+.tys-page section.tys2-skel {
+  border-color: var(--tys2-line);
+  background: var(--tys2-surface);
+  box-shadow: var(--tys2-e1);
+}
+
+/* --------------------------------------------------------------------------
+   التوست
+   -------------------------------------------------------------------------- */
+.tys2-toast {
+  border: 1px solid transparent;
+  border-radius: var(--tys2-radius-m);
+  padding: 12px 16px;
+  font-size: 13px;
+  font-weight: 700;
+  box-shadow: var(--tys2-e2);
+}
+.tys2-toast-success {
+  background: linear-gradient(135deg, var(--tys2-deep), var(--tys2-deep-2));
+  border-color: color-mix(in oklab, var(--tys2-copper-2) 40%, transparent);
+  color: var(--tys2-on-deep);
+}
+.tys2-toast-error { background: #B91C1C; border-color: #991B1B; color: #FFFFFF; }
+.tys2-toast-info {
+  background: var(--tys2-surface);
+  border-color: var(--tys2-line);
+  color: var(--tys2-ink);
+}
+.tys2-toast-action {
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  padding: 4px 12px;
+  font-size: 11px;
+  font-weight: 800;
+  color: inherit;
+  transition: background var(--tys2-fast) var(--tys2-ease), transform var(--tys2-fast) var(--tys2-ease);
+}
+.tys2-toast-action:hover { background: rgba(255, 255, 255, 0.16); }
+.tys2-toast-info .tys2-toast-action:hover { background: var(--tys2-primary-soft); }
+
+/* --------------------------------------------------------------------------
+   المودال
+   -------------------------------------------------------------------------- */
+.tys2-modal-overlay {
+  background: rgba(27, 19, 12, 0.5);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+}
+.tys2-modal {
+  border: 1px solid var(--tys2-line);
+  border-radius: var(--tys2-radius-l);
+  background: var(--tys2-surface);
+  color: var(--tys2-ink);
+  box-shadow: var(--tys2-e2);
+  scrollbar-width: thin;
+  scrollbar-color: var(--tys2-primary) var(--tys2-paper);
+}
+.tys2-modal-title {
+  font-family: var(--tys2-font-display);
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--tys2-ink);
+}
+.tys2-modal-close {
+  border-radius: 999px;
+  color: var(--tys2-ink-2);
+  transition: background var(--tys2-fast) var(--tys2-ease), color var(--tys2-fast) var(--tys2-ease);
+}
+.tys2-modal-close:hover {
+  background: var(--tys2-primary-soft);
+  color: var(--tys2-primary-strong);
+}
+
+/* --------------------------------------------------------------------------
+   شريط التمرير بلغة التصميم
+   -------------------------------------------------------------------------- */
+html {
+  scrollbar-color: var(--tys2-primary) var(--tys2-paper);
+}
+::-webkit-scrollbar { width: 10px; height: 8px; }
+::-webkit-scrollbar-track { background: var(--tys2-paper); }
+::-webkit-scrollbar-thumb {
+  border: 2px solid var(--tys2-paper);
+  border-radius: 999px;
+  background: linear-gradient(180deg, var(--tys2-primary-bright), var(--tys2-primary));
+}
+::-webkit-scrollbar-thumb:hover { background: var(--tys2-primary-strong); }
+::-webkit-scrollbar-corner { background: transparent; }
+
+/* --------------------------------------------------------------------------
+   الحركة والوصولية والطباعة
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: no-preference) {
+  .tys2-toast { animation: tys2-toast-in var(--tys2-mid) var(--tys2-ease) backwards; }
+  .tys2-modal { animation: tys2-modal-in var(--tys2-mid) var(--tys2-ease) backwards; }
+  @keyframes tys2-toast-in {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes tys2-modal-in {
+    from { opacity: 0; transform: translateY(12px) scale(0.985); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tys2-input, .tys2-btn-primary, .tys2-btn-secondary,
+  .tys2-toast, .tys2-toast *, .tys2-modal, .tys2-modal *,
+  .tys2-empty, .tys2-skel, .tys2-spinner-ring {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .tys2-modal-overlay {
+    background: #1B130C;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+@media print {
+  .tys2-toast,
+  .tys2-modal-overlay { display: none !important; }
+  .tys2-banner, .tys2-empty, .tys2-skel {
+    box-shadow: none !important;
+    border-color: #D6CCC0 !important;
+    background: #FFFFFF !important;
+    color: #221A12 !important;
+  }
+}

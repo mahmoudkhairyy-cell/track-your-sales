@@ -54,8 +54,6 @@ type Dashboard = {
   projection?: { overall: number; commission: number; basisDays: number } | null;
 };
 
-
-
 function greeting() {
   const hour = Number(new Intl.DateTimeFormat("en-GB", { hour: "2-digit", hour12: false, timeZone: "Africa/Cairo" }).format(new Date()));
   if (hour >= 5 && hour < 12) return "صباح الخير يا";
@@ -114,6 +112,12 @@ export default function HomePage() {
     if (!valueNode || !barNode) return;
 
     const target = data ? Math.min(200, Math.max(0, data.overall)) : 0;
+    // احترام تقليل الحركة: القيمة النهائية تتعرض فورًا من غير أنيميشن.
+    if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) {
+      valueNode.textContent = formatPercent(target);
+      barNode.style.width = `${Math.min(100, target)}%`;
+      return;
+    }
     const duration = 1400;
     let frame = 0;
     const start = performance.now();
@@ -171,89 +175,101 @@ export default function HomePage() {
     `time|${data.yearMonth}`,
   );
 
-
-
   const sarcastic = sarcasticLine(data.overall);
 
   return (
     <div className="tys-page tys-page-home tys-premium-home mx-auto flex min-h-screen w-full max-w-6xl translate-y-0 flex-col gap-4 pb-28 opacity-100 transition-all duration-500 ease-out" style={{ animation: "tys-page-enter 500ms ease-out backwards" }}>
       {sync ? (
-        <p className={`text-xs font-bold ${sync.ok ? "text-emerald-700" : "text-red-600"}`} dir="rtl">
+        <p className={`tys2-sync ${sync.ok ? "tys2-sync-ok" : "tys2-sync-bad"}`} dir="rtl">
           {sync.ok
             ? `☁️ اتبعت للمدير ${new Date(sync.at).toLocaleTimeString("en-US", { timeZone: "Africa/Cairo", hour: "2-digit", minute: "2-digit", hour12: false })}`
             : `⚠️ مااتبعتش للمدير: ${sync.error ?? ""}. `}
           {sync.ok ? null : (
-            <button type="button" onClick={() => void pushReport()} className="min-h-8 rounded-lg px-2 font-black underline">
+            <button type="button" onClick={() => void pushReport()} className="tys2-sync-retry min-h-8 font-black">
               جرّب تبعت تاني
             </button>
           )}
         </p>
       ) : null}
 
-      <section className="tys-home-greeting flex items-end justify-between gap-3 rounded-[26px] border border-white bg-white px-4 py-4 shadow-[0_1px_2px_rgba(43,20,0,.04)] sm:px-5" dir="rtl">
+      <section className="tys-home-greeting tys2-greet flex items-end justify-between gap-3 px-4 py-4 sm:px-5" dir="rtl">
         <div className="min-w-0">
-          <p className="text-xs font-black tracking-[0.16em] text-[var(--color-primary-600)]">YOUR SALES OVERVIEW</p>
-          <h1 className="mt-1 text-xl font-black tracking-tight text-[var(--color-text-primary)] sm:text-2xl">
+          <p className="tys2-greet-kicker">YOUR SALES OVERVIEW</p>
+          <h1 className="tys2-greet-title mt-1">
             {greeting()} {data.profile.name.split(" ")[0]} 👋
           </h1>
-          <p className="mt-1 text-xs font-semibold text-[var(--color-text-secondary)]">📍 {data.profile.branch}</p>
+          <p className="tys2-greet-branch mt-1">📍 {data.profile.branch}</p>
         </div>
         <div className="flex shrink-0 items-center gap-2">
-          <div className="hidden h-12 w-12 items-center justify-center rounded-2xl bg-[var(--color-primary-50)] text-2xl sm:flex">📈</div>
+          <div className="tys2-greet-icon hidden h-12 w-12 items-center justify-center text-2xl sm:flex">📈</div>
         </div>
       </section>
 
-      {/* الهيرو الرئيسي — لوحة إنجاز دائرية */}
-      <section style={{ boxShadow: onTrack === null ? "0 5px 14px rgba(100,55,25,.13)" : onTrack ? "0 0 0 1px rgba(22,163,74,.06), 0 0 10px rgba(22,163,74,.08), 0 5px 14px rgba(100,55,25,.13)" : "0 0 0 1px rgba(220,38,38,.06), 0 0 10px rgba(220,38,38,.08), 0 5px 14px rgba(100,55,25,.13)" }} className="tys-home-hero relative isolate overflow-hidden rounded-[30px] border border-white bg-white p-5 shadow-[0_1px_2px_rgba(43,20,0,.04)] sm:p-7">
-        <div className="pointer-events-none absolute -left-12 -top-16 h-52 w-52 rounded-full bg-[var(--color-primary-500)]/20 blur-3xl" />
-        <div className="pointer-events-none absolute -bottom-24 right-1/3 h-52 w-52 rounded-full bg-[var(--color-primary-600)]/10 blur-3xl" />
+      {/* الهيرو الرئيسي — كرت الحبر + مسار الشهر */}
+      <section className="tys-home-hero tys2-hero relative isolate overflow-hidden p-5 sm:p-7">
+        <div className="tys2-hero-glow-a" />
+        <div className="tys2-hero-glow-b" />
         <SpaceScene pct={data.overall} />
         <div className="tys-hero-body relative">
-          <div className="flex items-center justify-between gap-3 border-b border-white pb-3">
+          <div className="tys2-hero-head flex items-center justify-between gap-3 pb-3">
             <div className="flex min-w-0 items-center gap-2.5">
-              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-[var(--color-primary-500)] to-[var(--color-primary-600)] text-lg text-white shadow-md">◎</span>
+              <span className="tys2-hero-mark flex h-9 w-9 shrink-0 items-center justify-center text-lg">◎</span>
               <div className="min-w-0">
-                <p className="text-xs font-black tracking-[0.14em] text-[var(--color-primary-700)]">MONTHLY PERFORMANCE</p>
-                <p className="mt-0.5 text-sm font-black text-[var(--color-text-primary)]">إجمالي التارجت الشهري</p>
+                <p className="tys2-hero-kicker">MONTHLY PERFORMANCE</p>
+                <p className="tys2-hero-title mt-0.5">إجمالي التارجت الشهري</p>
               </div>
             </div>
-            <span className={`shrink-0 rounded-full border px-3 py-1.5 text-xs font-extrabold ${onTrack === null ? "border-white bg-white text-[var(--color-text-secondary)]" : onTrack ? "border-emerald-200 bg-emerald-50 text-emerald-700" : "border-orange-200 bg-orange-50 text-[var(--color-primary-700)]"}`}>
-              <span className={`ml-1.5 inline-block h-1.5 w-1.5 rounded-full ${onTrack === null ? "bg-[var(--color-text-muted)]" : onTrack ? "bg-emerald-500" : "bg-[var(--color-primary-600)]"}`} />
+            <span className={`tys2-badge shrink-0 ${onTrack === null ? "" : onTrack ? "tys2-badge-good" : "tys2-badge-bad"}`}>
+              <span className="tys2-badge-dot" />
               {onTrack === null ? "Waiting for data" : onTrack ? "On track" : "Behind"}
             </span>
           </div>
           <div className="flex flex-wrap items-end justify-between gap-3 py-4 sm:py-5">
             <div className="min-w-0">
-              <p className="text-xs font-bold text-[var(--color-text-secondary)]">نسبة تحقيقك للتارجت</p>
+              <p className="tys2-hero-label">نسبة تحقيقك للتارجت</p>
               <div className="mt-1 flex items-baseline gap-1">
-                <span className="font-mono text-[56px] font-black leading-none tracking-[-0.06em] text-[var(--color-primary-700)] sm:text-[76px]" ref={overallValueRef}>{formatPercent(0)}</span>
-                <span className="text-xl font-black text-[var(--color-primary-600)]">%</span>
+                <span className="tys2-hero-num" ref={overallValueRef}>{formatPercent(0)}</span>
+                <span className="tys2-hero-pct">%</span>
               </div>
             </div>
-            <div className="inline-flex max-w-full shrink-0 flex-col items-end rounded-xl border border-white bg-white/85 px-3 py-2 shadow-sm">
-              <span className="text-xs font-bold text-[var(--color-text-secondary)]">الكوميشن المحقق</span>
-              <strong className={`truncate font-mono text-base font-black ${data.overall < 80 ? "text-red-600" : "text-emerald-700"}`}>{formatMoney(data.estimatedCommission)} جنيه</strong>
+            <div className="tys2-comm inline-flex max-w-full shrink-0 flex-col items-end">
+              <span className="tys2-comm-label">الكوميشن المحقق</span>
+              <strong className={`tys2-comm-value truncate ${data.overall < 80 ? "tys2-comm-low" : "tys2-comm-ok"}`}>{formatMoney(data.estimatedCommission)} جنيه</strong>
             </div>
           </div>
           <div>
             <Rope pct={data.overall} label="نسبة تحقيق التارجت" />
-            <div className="tys-bar relative h-2.5 overflow-hidden rounded-full bg-orange-100">
-              <div ref={overallBarRef} className="h-full rounded-full bg-gradient-to-l from-[var(--color-primary-500)] via-[var(--color-primary-600)] to-[var(--color-primary-700)] shadow-[0_1px_5px_rgba(189,75,10,0.22)]" style={{ width: "0%" }} />
+            <div className="tys2-track">
+              <div className="tys-bar tys2-bar relative h-2.5 overflow-hidden rounded-full">
+                <div ref={overallBarRef} className="tys2-bar-fill h-full rounded-full" style={{ width: "0%" }} />
+              </div>
+              {typeof data.expectedOverall === "number" ? (
+                <span
+                  className="tys2-track-mark"
+                  style={{ insetInlineStart: `${Math.min(100, Math.max(0, data.expectedOverall))}%` }}
+                  aria-hidden="true"
+                />
+              ) : null}
             </div>
-            <div className="mt-1 flex justify-between text-[9px] font-bold text-[var(--color-text-secondary)]" dir="ltr">
+            <div className="tys2-scale mt-1 flex justify-between" dir="ltr">
               <span>100% target</span><span>0%</span>
             </div>
+            {typeof data.expectedOverall === "number" ? (
+              <p className="tys2-track-note mt-1.5">
+                الخط المنقّط على المسار = المطلوب لحد النهارده <strong>{formatPercent(data.expectedOverall)}%</strong>
+              </p>
+            ) : null}
           </div>
-          <div className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs font-semibold text-[var(--color-text-secondary)]">
-            <span className="font-extrabold text-[var(--color-primary-700)]">{statusTextEgy}</span>{statusTextEgy && timeText ? <span className="text-[var(--color-border)]">•</span> : null}<span>{timeText}</span>
+          <div className="tys2-phrase mt-3 flex flex-wrap items-center gap-x-2 gap-y-1">
+            <b>{statusTextEgy}</b>{statusTextEgy && timeText ? <span aria-hidden="true">•</span> : null}<span>{timeText}</span>
           </div>
 
           {data.projection ? (
-            <p className="mt-3 rounded-xl border border-orange-200 bg-orange-50/50 px-3 py-2 text-xs font-bold text-[var(--color-text-secondary)]">
+            <p className="tys2-projection mt-3">
               لو كملت بنفس معدل آخر {data.projection.basisDays} أيام شغل، هتخلّص الشهر على تقريبًا{" "}
-              <strong className="font-mono text-[var(--color-primary-700)]">{formatPercent(data.projection.overall)}%</strong>
+              <strong>{formatPercent(data.projection.overall)}%</strong>
               {" "}وكوميشن حوالي{" "}
-              <strong className="font-mono text-[var(--color-primary-700)]">{formatMoney(data.projection.commission)}</strong> جنيه.
+              <strong>{formatMoney(data.projection.commission)}</strong> جنيه.
             </p>
           ) : null}
 
@@ -261,23 +277,24 @@ export default function HomePage() {
             <button
               type="button"
               onClick={() => void shareAchievement({ monthLabel: data.monthLabel, percent: Math.round(data.overall), commission: formatMoney(data.estimatedCommission) })}
-              className={`mt-3 min-h-10 rounded-xl bg-orange-600 px-4 text-xs font-extrabold text-white transition-colors hover:bg-orange-700 ${data.overall >= 100 ? "animate-pulse shadow-[0_0_0_4px_rgba(234,88,12,0.14),0_0_22px_rgba(234,88,12,0.3)]" : ""}`}
+              className={`tys2-share mt-3 ${data.overall >= 100 ? "tys2-share-done" : ""}`}
             >
               📤 شارك إنجازك
             </button>
           ) : null}
 
-          {sarcastic ? <p className="mt-3 text-xs font-bold text-[var(--color-primary-700)]">{sarcastic}</p> : null}
+          {sarcastic ? <p className="tys2-sarc mt-3">{sarcastic}</p> : null}
         </div>
       </section>
 
       {/* المطلوب */}
-      <section className="tys-home-daily rounded-[20px] border border-white bg-white p-4 shadow-[0_1px_2px_rgba(43,20,0,.04)]">
+      <section className="tys-home-daily tys2-daily p-4">
         <div className="mb-3 flex items-center justify-between gap-2">
-          <div>
-            <h2 className="mt-0.5 text-sm font-extrabold text-[var(--color-text-primary)]">DAILY</h2>
+          <div className="min-w-0">
+            <p className="tys2-sec-kicker">DAILY</p>
+            <h2 className="tys2-sec-title mt-0.5">المطلوب كل يوم</h2>
           </div>
-          <span className="shrink-0 rounded-full bg-[var(--color-primary-50)] px-2.5 py-1 text-xs font-extrabold text-[var(--color-primary-700)]">
+          <span className="tys2-pill shrink-0">
             فاضل {formatQty(data.work.remaining)} يوم عمل
           </span>
         </div>
@@ -287,26 +304,26 @@ export default function HomePage() {
             return (
               <div
                 key={k.kpiKey}
-                className="flex min-h-[46px] min-w-0 items-center justify-between gap-2 rounded-lg border border-white bg-white px-2.5 py-1.5 text-orange-800 shadow-[0_1px_2px_rgba(43,20,0,.04)]"
+                className="tys2-daily-cell flex min-h-[46px] min-w-0 items-center justify-between gap-2 px-2.5 py-1.5"
               >
-                <span className="min-w-0 truncate text-[9px] font-bold tracking-wide text-orange-800" dir="ltr">{k.nameEn}</span>
-                <strong className="shrink-0 rounded-md border border-white bg-orange-50 px-2 py-1 text-base font-black leading-none tabular-nums text-orange-800">
+                <span className="tys2-daily-name min-w-0 truncate" dir="ltr">{k.nameEn}</span>
+                <strong className="tys2-daily-value shrink-0 leading-none">
                   {formatQty(dailyRequired)}
                 </strong>
               </div>
             );
           })}
           {data.kpis.filter((k) => k.kpiKey !== "quality").every((k) => k.remaining <= 0) ? (
-            <p className="col-span-full rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-center text-xs font-extrabold text-emerald-700">كل المؤشرات مكتملة ✓</p>
+            <p className="tys2-daily-done col-span-full px-3 py-2 text-center text-xs font-extrabold">كل المؤشرات مكتملة ✓</p>
           ) : null}
         </div>
       </section>
 
       {/* المؤشرات */}
-      <section className="tys-home-kpis flex flex-col gap-3 rounded-[20px] border border-white bg-white p-5 shadow-[0_1px_2px_rgba(43,20,0,.04)]">
-        <div className="flex items-center justify-between">
-          <h2 className="text-base font-black tracking-tight text-[var(--color-text-primary)]">مؤشرات الأداء (KPIs)</h2>
-          <span className="text-xs font-bold text-[var(--color-text-secondary)]">{data.kpis.length} مؤشر</span>
+      <section className="tys-home-kpis tys2-kpis flex flex-col gap-3 p-5">
+        <div className="flex items-center justify-between gap-2">
+          <h2 className="tys2-sec-title">مؤشرات الأداء (KPIs)</h2>
+          <span className="tys2-sec-meta shrink-0">{data.kpis.length} مؤشر</span>
         </div>
         <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
           {data.kpis.map((kpi, kpiIndex) => {
@@ -314,46 +331,46 @@ export default function HomePage() {
             const ringLen = 2 * Math.PI * 18;
             const pct = Math.min(100, Math.max(0, kpi.percent));
             return (
-              <article key={kpi.kpiKey} style={{ animationDelay: `${kpiIndex * 100}ms`, boxShadow: kpi.percent >= 100 ? "0 0 0 1px rgba(234,88,12,.12), 0 0 16px rgba(234,88,12,.20), 0 5px 14px rgba(100,55,25,.13)" : onTrackKpi ? "0 0 0 1px rgba(22,163,74,.06), 0 0 8px rgba(22,163,74,.07), 0 5px 14px rgba(100,55,25,.13)" : "0 0 0 1px rgba(220,38,38,.06), 0 0 8px rgba(220,38,38,.07), 0 5px 14px rgba(100,55,25,.13)" }} className={`tys-rise tys-home-kpi flex min-w-0 items-center gap-2.5 rounded-[20px] border p-3 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg sm:gap-3 sm:p-3 border-white bg-orange-50/50`}>
+              <article key={kpi.kpiKey} style={{ animationDelay: `${kpiIndex * 100}ms` }} className={`tys-rise tys-home-kpi tys2-kpi flex min-w-0 items-center gap-2.5 p-3 sm:gap-3 ${kpi.percent >= 100 ? "tys2-kpi-done" : ""}`}>
                 <div className="tys-ring relative h-12 w-12 shrink-0 sm:h-14 sm:w-14">
                   <svg viewBox="0 0 44 44" className="h-full w-full -rotate-90">
-                    <circle cx="22" cy="22" r="18" fill="none" stroke="var(--color-border)" strokeWidth="5" />
+                    <circle cx="22" cy="22" r="18" fill="none" stroke="var(--tys2-line)" strokeWidth="4" />
                     <circle
                       cx="22"
                       cy="22"
                       r="18"
                       fill="none"
                       stroke={onTrackKpi ? "var(--color-success-ring)" : "var(--color-danger-text)"}
-                      strokeWidth="5"
+                      strokeWidth="4"
                       strokeLinecap="round"
                       strokeDasharray={ringLen}
                       strokeDashoffset={ringLen * (1 - pct / 100)}
                       className="transition-all duration-700"
                     />
                   </svg>
-                  <span className="absolute inset-0 flex items-center justify-center font-mono text-xs font-black text-[var(--color-text-primary)]">{Math.round(kpi.percent)}%</span>
+                  <span className="tys2-kpi-ring-num absolute inset-0 flex items-center justify-center">{Math.round(kpi.percent)}%</span>
                 </div>
                 <div className="flex min-w-0 flex-1 flex-col gap-1">
                   <div className="flex items-center justify-between gap-2">
                     <span dir="rtl" className="flex min-w-0 items-center gap-1.5">
-                      <span className="inline-flex shrink-0 items-center justify-center rounded-full bg-[var(--color-primary-50)] px-2.5 py-1.5 text-[var(--color-primary-600)]">
+                      <span className="tys2-kpi-icon inline-flex shrink-0 items-center justify-center p-1.5">
                         <KpiIcon kpiKey={kpi.kpiKey} className="h-5 w-5" />
                       </span>
-                      <span className="truncate text-xs font-black text-[var(--color-text-primary)]" dir="ltr">{kpi.nameEn}</span>
+                      <span className="tys2-kpi-name truncate" dir="ltr">{kpi.nameEn}</span>
                     </span>
-                    <span className={`shrink-0 rounded-full px-2 py-0.5 text-xs font-extrabold ${onTrackKpi ? "bg-emerald-50 text-emerald-700" : "bg-red-50 text-red-600"}`}>
+                    <span className={`tys2-tag shrink-0 ${onTrackKpi ? "tys2-tag-good" : "tys2-tag-bad"}`}>
                       {onTrackKpi ? "On Track" : `ناقص ${formatQty(Math.max(0, Math.ceil(kpi.expectedToDate - kpi.achieved)))}`}
                     </span>
                   </div>
-                  <div className="flex items-center justify-between text-xs font-semibold text-[var(--color-text-secondary)]">
+                  <div className="tys2-kpi-stats flex items-center justify-between">
                     <span>
-                      <strong className="font-mono text-[var(--color-text-primary)]">{formatQty(kpi.achieved)}</strong> / {formatQty(kpi.target)}
+                      <strong>{formatQty(kpi.achieved)}</strong> / {formatQty(kpi.target)}
                     </span>
-                    <span>المتبقي <strong className="font-mono text-[var(--color-text-primary)]">{formatQty(kpi.remaining)}</strong></span>
+                    <span>المتبقي <strong>{formatQty(kpi.remaining)}</strong></span>
                   </div>
                   <Rope pct={pct} label={kpi.nameEn} />
-                  <div className="tys-bar h-1.5 w-full overflow-hidden rounded-full bg-orange-100">
-                    <div className="h-full rounded-full bg-gradient-to-r from-[var(--color-primary-600)] to-[var(--color-primary-500)] transition-all duration-700" style={{ width: `${pct}%` }} />
+                  <div className="tys-bar tys2-kpi-bar h-1.5 w-full overflow-hidden rounded-full">
+                    <div className="tys2-kpi-fill h-full rounded-full" style={{ width: `${pct}%` }} />
                   </div>
                   {kpi.series && kpi.series.length >= 2 ? (
                     <div className="flex justify-end">
@@ -361,11 +378,11 @@ export default function HomePage() {
                     </div>
                   ) : null}
                   {!kpi.overTarget && kpi.remaining > 0 && data.work.remaining > 0 ? (
-                    <p className="text-xs font-bold text-[var(--color-primary-700)]">
+                    <p className="tys2-kpi-need">
                       محتاج {formatQty(Math.ceil(kpi.remaining / data.work.remaining))} يوميًا لباقي الشهر
                     </p>
                   ) : null}
-                  {kpi.overTarget ? <p className="text-xs font-bold text-[var(--color-primary-600)]">عدّيت التارجت 🎉</p> : null}
+                  {kpi.overTarget ? <p className="tys2-kpi-over">عدّيت التارجت 🎉</p> : null}
                 </div>
               </article>
             );
