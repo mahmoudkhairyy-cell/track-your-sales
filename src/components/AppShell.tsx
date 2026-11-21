@@ -129,6 +129,28 @@ function SearchableSelect({
   const [open, setOpen] = useState(false);
   const query = draft.value === value ? draft.query : value;
 
+  // خلي زر الرجوع يقفل قائمة البحث أولاً بدل ما يخرج من صفحة التسجيل.
+  useEffect(() => {
+    if (!open) return;
+    window.history.pushState(
+      { ...(window.history.state && typeof window.history.state === "object" ? window.history.state : {}), __tysSearchDropdown: true },
+      "",
+      window.location.href,
+    );
+    let restoreHistory = true;
+    const handleBack = () => {
+      restoreHistory = false;
+      setOpen(false);
+    };
+    window.addEventListener("popstate", handleBack);
+    return () => {
+      window.removeEventListener("popstate", handleBack);
+      if (restoreHistory && window.history.state?.__tysSearchDropdown) {
+        window.history.back();
+      }
+    };
+  }, [open]);
+
   const normalizedQuery = normalizeSearchText(query);
   const matches = options.filter((item) => normalizeSearchText(item).includes(normalizedQuery)).slice(0, 8);
 
@@ -303,7 +325,7 @@ function FirstRunProfile({ onDone }: { onDone: () => void }) {
         ) : (
           <>
         {role === "area_manager" ? (
-          <SearchableSelect label="اسم مدير المنطقة" value={name} options={AREA_MANAGERS} placeholder="اكتب اسمك، مثال: عبد الرحمن" onChange={setName} />
+          <SearchableSelect label="اسم مدير المنطقة" value={name} options={AREA_MANAGERS} placeholder="Enter your name, e.g. Abd Elrahman Mahmoud" onChange={setName} />
         ) : (
           <label className="mb-3 block text-sm font-bold text-[#514238]">
             الاسم
@@ -341,7 +363,7 @@ function FirstRunProfile({ onDone }: { onDone: () => void }) {
           label="اسم الفرع"
           value={branch}
           options={[...BRANCHES, OUTSIDE_BRANCHES]}
-          placeholder="ابحث باسم الفرع، مثال: حجر أو OB حجر النواتية"
+          placeholder="Search branch, e.g. OB. Hagar Elnawatya"
           onChange={(value) => {
             setBranch(value);
             setAreaManager("");
@@ -349,7 +371,7 @@ function FirstRunProfile({ onDone }: { onDone: () => void }) {
         />
         ) : null}
         {role !== "area_manager" && role !== "manager" && branch !== OUTSIDE_BRANCHES ? (
-        <SearchableSelect label="مدير المنطقة (الأريا مانجر)" value={areaManager} options={AREA_MANAGERS} placeholder="ابحث باسم مدير المنطقة، مثال: عبد الرحمن" onChange={setAreaManager} />
+        <SearchableSelect label="مدير المنطقة (الأريا مانجر)" value={areaManager} options={AREA_MANAGERS} placeholder="Search area manager, e.g. Abd Elrahman Mahmoud" onChange={setAreaManager} />
         ) : null}
           </>
         )}
