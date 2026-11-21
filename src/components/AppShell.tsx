@@ -61,7 +61,7 @@ function MonthSwitcher() {
   );
 }
 
-function NavLinks({ pathname, month }: { pathname: string; month: string }) {
+function NavLinks({ pathname, month, search }: { pathname: string; month: string; search: string }) {
   return (
     <>
       {NAV.map((item) => {
@@ -70,7 +70,7 @@ function NavLinks({ pathname, month }: { pathname: string; month: string }) {
         return (
           <Link
             key={item.href}
-            href={`${item.href}?${new URLSearchParams({ month }).toString()}`}
+            href={(() => { const next = new URLSearchParams(search); next.set("month", month); return `${item.href}?${next.toString()}`; })()}
             aria-current={active ? "page" : undefined}
             className={`flex min-h-12 items-center gap-3 rounded-2xl px-3 text-sm font-bold transition ${
               active ? "bg-nav-active-bg text-brand-600 shadow-navlink" : "text-ink-muted-3 hover:bg-brand-surface hover:text-brand-600"
@@ -91,6 +91,8 @@ export function AppShell({ children }: { children: ReactNode }) {
   const params = useSearchParams();
   const raw = params.get("month");
   const month = raw && isValidYearMonth(raw) ? raw : cairoYearMonth();
+  const search = params.toString();
+  const isReference = pathname === "/wiki" || pathname.startsWith("/wiki/");
   useEffect(() => {
     const refreshProfile = () => {
       const profile = readProfile();
@@ -123,7 +125,7 @@ export function AppShell({ children }: { children: ReactNode }) {
                 <p className="text-xs text-white/80">📍 {user.branch}</p>
               </div>
               <nav aria-label="التنقل الرئيسي" className="mt-6 flex flex-col gap-1">
-                <NavLinks pathname={pathname} month={month} />
+                <NavLinks pathname={pathname} month={month} search={search} />
               </nav>
               <p className="mt-auto pt-6 text-xs leading-6 text-neutral-400">{APP_DISCLAIMER}</p>
             </aside>
@@ -142,11 +144,11 @@ export function AppShell({ children }: { children: ReactNode }) {
                     </div>
                   </div>
                   <div className="relative flex shrink-0 items-center gap-2">
-<MonthSwitcher />
+                    <MonthSwitcher />
                   </div>
                 </div>
               </header>
-              <main id="main-content" tabIndex={-1} className="mx-auto w-full max-w-[1440px] flex-1 px-4 py-5 pb-28 sm:px-5 lg:px-8 lg:py-7 lg:pb-10">{children}</main>
+              <main id="main-content" tabIndex={-1} className={`mx-auto w-full max-w-[1440px] flex-1 px-4 py-5 pb-28 sm:px-5 lg:px-8 lg:py-7 lg:pb-10 ${isReference ? "tys-reference" : "tys-employee"}`}>{children}</main>
               <footer className="hidden px-8 pb-6 text-xs leading-6 text-neutral-400 lg:block">{APP_DISCLAIMER}</footer>
             </div>
           </div>
@@ -160,7 +162,7 @@ export function AppShell({ children }: { children: ReactNode }) {
                 return (
                   <Link
                     key={item.href}
-                    href={`${item.href}?${new URLSearchParams({ month }).toString()}`}
+                    href={(() => { const next = new URLSearchParams(search); next.set("month", month); return `${item.href}?${next.toString()}`; })()}
                     aria-current={active ? "page" : undefined}
                     className={`flex min-h-12 flex-col items-center justify-center gap-1 rounded-card px-1 py-1.5 text-[10px] font-extrabold transition-all duration-200 sm:min-h-14 sm:text-[11px] ${
                       highlighted
