@@ -153,7 +153,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             </div>
           </div>
 
-          <nav aria-label="التنقل الرئيسي للموبايل" className="fixed inset-x-3 bottom-[calc(env(safe-area-inset-bottom)+12px)] z-40 mx-auto max-w-xl rounded-hero border border-line-shell bg-white/95 p-2 shadow-bottom-nav backdrop-blur-2xl lg:hidden">
+          <nav aria-label="التنقل الرئيسي للموبايل" className="tys-mobile-nav fixed inset-x-3 bottom-[calc(env(safe-area-inset-bottom)+12px)] z-40 mx-auto max-w-xl rounded-hero border border-line-shell bg-white/95 p-2 shadow-bottom-nav backdrop-blur-2xl lg:hidden">
             <div className="grid grid-cols-5 items-center gap-1">
               {NAV.map((item) => {
                 const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
