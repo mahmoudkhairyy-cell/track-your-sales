@@ -387,7 +387,7 @@ export default function MorePage() {
                     onClick={() => setView(item.key as typeof view)}
                     className="tys-more-item group flex min-h-[76px] w-full items-center gap-3 rounded-[17px] border border-white bg-white px-3 py-2.5 text-right transition-all duration-200 hover:border-[#edc4a4] hover:shadow-[0_1px_2px_rgba(43,20,0,.04)] active:scale-[0.99]"
                   >
-                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[13px] bg-gradient-to-br from-[#fff0df] to-[#ffe0c1] text-xl shadow-sm">{item.icon}</span>
+                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[13px] bg-gradient-to-br from-[#fff0df] to-[#ffe0c1] shadow-sm"><span className="h-2.5 w-2.5 rounded-full bg-[var(--color-primary-600)]" aria-hidden="true" /></span>
                     <span className="min-w-0 flex-1">
                       <span className="block text-sm font-black leading-6 text-[var(--color-text-primary)]">{item.title}</span>
                       <span className="block text-[11px] leading-5 text-[var(--color-text-secondary)]">{item.desc}</span>

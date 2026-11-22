@@ -226,7 +226,7 @@ export default function HomePage() {
             <div className="min-w-0">
               <p className="text-xs font-bold text-[var(--color-text-secondary)]">نسبة تحقيقك للتارجت</p>
               <div className="mt-1 flex items-baseline gap-1">
-                <span className="font-mono text-[56px] font-black leading-none tracking-[-0.06em] text-[var(--color-primary-700)] sm:text-[76px]" ref={overallValueRef}>{formatPercent(0)}</span>
+                <span className="font-mono text-[64px] font-black leading-none tracking-[-0.06em] text-[var(--color-primary-700)] sm:text-[88px]" ref={overallValueRef}>{formatPercent(0)}</span>
                 <span className="text-xl font-black text-[var(--color-primary-600)]">%</span>
               </div>
             </div>
