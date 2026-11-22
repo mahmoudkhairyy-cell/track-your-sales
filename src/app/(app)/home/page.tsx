@@ -270,7 +270,7 @@ export default function HomePage() {
       </section>
 
       {/* المطلوب */}
-      <section className="tys-home-daily rounded-[20px] border border-white bg-white p-4 shadow-[0_1px_2px_rgba(43,20,0,.04)]">
+      <section className="tys-home-daily px-1 py-1">
         <div className="mb-3 flex items-center justify-between gap-2">
           <div>
             <h2 className="mt-0.5 text-sm font-extrabold text-[var(--color-text-primary)]">المطلوب النهارده</h2>
