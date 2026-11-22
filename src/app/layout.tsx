@@ -7,6 +7,19 @@ import { PwaRegister } from "@/components/PwaRegister";
 export const metadata: Metadata = {
   title: `${APP_NAME} ${BRAND_BY}`,
   description: `${APP_DISCLAIMER} — ${BRAND_BY}.`,
+  openGraph: {
+    title: `${APP_NAME} ${BRAND_BY}`,
+    description: "تتبع مبيعاتك — راقب .. حلل .. حقق المزيد",
+    url: "https://mahmoudkhairyy-cell.github.io/track-your-sales/",
+    siteName: APP_NAME,
+    locale: "ar_EG",
+    type: "website",
+    images: [{ url: "https://mahmoudkhairyy-cell.github.io/track-your-sales/og-image.png", width: 1200, height: 630, alt: "Track Your Sales" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    images: ["https://mahmoudkhairyy-cell.github.io/track-your-sales/og-image.png"],
+  },
 };
 
 export const viewport: Viewport = {
