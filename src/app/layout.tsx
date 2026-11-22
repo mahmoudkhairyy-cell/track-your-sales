@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     template: `%s | ${APP_NAME}`,
   },
   description: appDescription,
-  metadataBase: new URL("https://track-your-sales-rho.vercel.app"),
+  metadataBase: new URL("https://mahmoudkhairyy-cell.github.io/track-your-sales"),
   icons: {
     icon: [{ url: "/icon.svg", type: "image/svg+xml" }],
     shortcut: ["/icon.svg"],
