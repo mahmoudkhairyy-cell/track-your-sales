@@ -283,9 +283,9 @@ export default function TargetPage() {
           📌 الأوزان مختلفة للموظف والمدير. ده وزن {kpis.some((k) => k.kpiKey === "productivity" && k.weight > 0) ? "المدير" : "الموظف"}، وبيتحدد أوتوماتيك حسب اختيارك في أول مرة، ومش بيتعدل من التطبيق.
         </p>
         <div className="grid grid-cols-[minmax(0,1fr)_68px_60px] gap-1.5 border-b sm:grid-cols-[minmax(0,1fr)_74px_74px] sm:gap-2 border-dashed border-[var(--color-border)]/70 pb-2 text-[11px] font-bold text-[var(--color-text-secondary)]">
-          <span>Item</span>
-          <span className="text-center">Target</span>
-          <span className="text-center">Weight %</span>
+          <span>البند</span>
+          <span className="text-center">الهدف</span>
+          <span className="text-center">الوزن %</span>
         </div>
         {kpis.map((kpi, index) => {
           // الكواليتي بتتدخل في قسم الكواليتي تحت بس، ووزنها بيفضل محسوب في المجموع.
@@ -300,7 +300,7 @@ export default function TargetPage() {
                 <div className="min-w-0">
                   <p className="truncate text-sm font-extrabold" dir="ltr">{catalog?.nameEn}</p>
                   {kpi.kpiKey === "new_orange_cash" ? (
-                    <p className="text-[11px] font-bold text-[var(--color-primary-700)]">Target you set yourself</p>
+                    <p className="text-[11px] font-bold text-[var(--color-primary-700)]">هدف بتحدده إنت</p>
                   ) : (
                     <p className="text-[11px] text-[var(--color-text-secondary)]">{unitEn(kpi.unitAr)}</p>
                   )}

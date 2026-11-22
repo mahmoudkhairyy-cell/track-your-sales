@@ -219,7 +219,7 @@ export default function HomePage() {
             </div>
             <span className={`shrink-0 rounded-full border px-3 py-1.5 text-xs font-extrabold ${onTrack === null ? "border-white bg-white text-[var(--color-text-secondary)]" : onTrack ? "border-[var(--color-border)] bg-white text-[var(--color-text-secondary)]" : "border-orange-200 bg-orange-50 text-[var(--color-primary-700)]"}`}>
               <span className={`ml-1.5 inline-block h-1.5 w-1.5 rounded-full ${onTrack === null ? "bg-[var(--color-text-muted)]" : onTrack ? "bg-[var(--color-text-muted)]" : "bg-[var(--color-primary-600)]"}`} />
-              {onTrack === null ? "Waiting for data" : onTrack ? "On track" : "Behind"}
+              {onTrack === null ? "مستني بيانات" : onTrack ? "على الهدف" : "متأخر"}
             </span>
           </div>
           <div className="flex flex-wrap items-end justify-between gap-3 py-4 sm:py-5">
@@ -331,7 +331,7 @@ export default function HomePage() {
                       className="transition-all duration-700"
                     />
                   </svg>
-                  <span className={`absolute inset-0 flex items-center justify-center font-mono font-black text-[var(--color-text-primary)] ${kpi.percent >= 100 ? "text-[11px] tracking-tighter" : "text-xs"}`}>{Math.round(kpi.percent)}%</span>
+                  <span className={`absolute inset-0 flex items-center justify-center font-mono font-black text-[var(--color-text-primary)] ${kpi.percent >= 100 ? "text-[10px] tracking-tighter" : "text-xs"}`}>{Math.round(kpi.percent)}%</span>
                 </div>
                 <div className="flex min-w-0 flex-1 flex-col gap-1">
                   <div className="flex items-center justify-between gap-2">
@@ -342,7 +342,7 @@ export default function HomePage() {
                       <span className="truncate text-xs font-black text-[var(--color-text-primary)]" dir="ltr">{kpi.nameEn}</span>
                     </span>
                     <span className={`shrink-0 text-xs ${onTrackKpi ? "font-bold text-[var(--color-text-muted)]" : "rounded-full bg-red-50 px-2 py-0.5 font-extrabold text-red-600"}`}>
-                      {onTrackKpi ? "On Track" : `ناقص ${formatQty(Math.max(0, Math.ceil(kpi.expectedToDate - kpi.achieved)))}`}
+                      {onTrackKpi ? "على الهدف" : `ناقص ${formatQty(Math.max(0, Math.ceil(kpi.expectedToDate - kpi.achieved)))}`}
                     </span>
                   </div>
                   <div className="flex items-center justify-between text-xs font-semibold text-[var(--color-text-secondary)]">
