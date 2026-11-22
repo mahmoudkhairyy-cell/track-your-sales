@@ -261,7 +261,7 @@ export default function HomePage() {
             <button
               type="button"
               onClick={() => void shareAchievement({ monthLabel: data.monthLabel, percent: Math.round(data.overall), commission: formatMoney(data.estimatedCommission) })}
-              className={`mt-3 min-h-10 rounded-xl bg-orange-600 px-4 text-xs font-extrabold text-white transition-colors hover:bg-orange-700 ${data.overall >= 100 ? "animate-pulse shadow-[0_0_0_4px_rgba(234,88,12,0.14),0_0_22px_rgba(234,88,12,0.3)]" : ""}`}
+              className={`mt-3 min-h-10 rounded-xl bg-[#c2410c] px-4 text-xs font-extrabold text-white transition-colors hover:bg-[#9a3412] ${data.overall >= 100 ? "animate-pulse shadow-[0_0_0_4px_rgba(234,88,12,0.14),0_0_22px_rgba(234,88,12,0.3)]" : ""}`}
             >
               📤 شارك إنجازك
             </button>

@@ -25,7 +25,7 @@ export function ErrorState({ title, description, onRetry }: ErrorStateProps) {
       <button
         type="button"
         onClick={onRetry}
-        className="mt-6 inline-flex min-h-11 items-center justify-center rounded-xl bg-orange-600 px-6 py-3 text-sm font-extrabold text-white transition-colors hover:bg-orange-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
+        className="mt-6 inline-flex min-h-11 items-center justify-center rounded-xl bg-[#c2410c] px-6 py-3 text-sm font-extrabold text-white transition-colors hover:bg-[#9a3412] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
       >
         إعادة المحاولة
       </button>
