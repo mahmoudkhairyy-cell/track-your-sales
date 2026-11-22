@@ -190,7 +190,7 @@ export default function HomePage() {
         </p>
       ) : null}
 
-      <section className="tys-home-greeting flex items-end justify-between gap-3 rounded-[26px] border border-white bg-white px-4 py-4 shadow-[0_1px_2px_rgba(43,20,0,.04)] sm:px-5" dir="rtl">
+      <section className="tys-home-greeting flex items-end justify-between gap-3 px-1 pt-1" dir="rtl">
         <div className="min-w-0">
           <h1 className="mt-1 text-xl font-black tracking-tight text-[var(--color-text-primary)] sm:text-2xl">
             {greeting()} {data.profile.name.split(" ")[0]} 👋
