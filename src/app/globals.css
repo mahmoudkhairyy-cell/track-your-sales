@@ -5555,3 +5555,7 @@ html.light {
     pointer-events: none;
   }
 }
+
+/* Header title text: header background is light cream, so Tailwind's text-white must not win. */
+.tys-app-header p.text-white { color: var(--color-text-primary, #221a12); }
+.tys-app-header p.text-white\/80 { color: var(--color-text-secondary, #6b5a4b); }
