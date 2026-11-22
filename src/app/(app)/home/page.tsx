@@ -217,8 +217,8 @@ export default function HomePage() {
                 <p className="mt-0.5 text-sm font-black text-[var(--color-text-primary)]">إجمالي التارجت الشهري</p>
               </div>
             </div>
-            <span className={`shrink-0 rounded-full border px-3 py-1.5 text-xs font-extrabold ${onTrack === null ? "border-white bg-white text-[var(--color-text-secondary)]" : onTrack ? "border-emerald-200 bg-emerald-50 text-emerald-700" : "border-orange-200 bg-orange-50 text-[var(--color-primary-700)]"}`}>
-              <span className={`ml-1.5 inline-block h-1.5 w-1.5 rounded-full ${onTrack === null ? "bg-[var(--color-text-muted)]" : onTrack ? "bg-emerald-500" : "bg-[var(--color-primary-600)]"}`} />
+            <span className={`shrink-0 rounded-full border px-3 py-1.5 text-xs font-extrabold ${onTrack === null ? "border-white bg-white text-[var(--color-text-secondary)]" : onTrack ? "border-[var(--color-border)] bg-white text-[var(--color-text-secondary)]" : "border-orange-200 bg-orange-50 text-[var(--color-primary-700)]"}`}>
+              <span className={`ml-1.5 inline-block h-1.5 w-1.5 rounded-full ${onTrack === null ? "bg-[var(--color-text-muted)]" : onTrack ? "bg-[var(--color-text-muted)]" : "bg-[var(--color-primary-600)]"}`} />
               {onTrack === null ? "Waiting for data" : onTrack ? "On track" : "Behind"}
             </span>
           </div>
