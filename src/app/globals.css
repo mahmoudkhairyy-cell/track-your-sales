@@ -5536,3 +5536,22 @@ html.light {
   .tys-page-home article.tys-home-kpi { transition: transform 140ms ease, box-shadow 140ms ease; }
   .tys-page-home article.tys-home-kpi:active { transform: scale(0.985); }
 }
+
+/* ===== Home hero: one soft light sweep across the progress bar after the count-up ===== */
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes tys-bar-sweep {
+    from { transform: translateX(-130%); }
+    to { transform: translateX(260%); }
+  }
+  .tys-page-home .tys-home-hero .tys-bar > div { position: relative; overflow: hidden; }
+  .tys-page-home .tys-home-hero .tys-bar > div::after {
+    content: "";
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: 0;
+    width: 40%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+    animation: tys-bar-sweep 1.2s ease-out 1.5s 1 both;
+    pointer-events: none;
+  }
+}
