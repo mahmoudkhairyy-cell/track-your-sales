@@ -331,7 +331,7 @@ export default function HomePage() {
                       className="transition-all duration-700"
                     />
                   </svg>
-                  <span className="absolute inset-0 flex items-center justify-center font-mono text-xs font-black text-[var(--color-text-primary)]">{Math.round(kpi.percent)}%</span>
+                  <span className={`absolute inset-0 flex items-center justify-center font-mono font-black text-[var(--color-text-primary)] ${kpi.percent >= 100 ? "text-[11px] tracking-tighter" : "text-xs"}`}>{Math.round(kpi.percent)}%</span>
                 </div>
                 <div className="flex min-w-0 flex-1 flex-col gap-1">
                   <div className="flex items-center justify-between gap-2">
