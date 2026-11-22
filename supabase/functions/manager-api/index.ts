@@ -264,6 +264,8 @@ Deno.serve(async (req: Request) => {
     manager_name: { rpc: "get_manager_name", args: (b) => ({ p_password: b.password }) },
     delete: { rpc: "delete_report", args: (b) => ({ p_password: b.password, p_branch_id: b.branchId }) },
     change_password: { rpc: "change_password_any", args: (b) => ({ p_old: b.password, p_new: b.newPassword }) },
+    team_leader_branch: { rpc: "get_branch_team_for_team_leader", args: (b) => ({ p_branch: b.branch, p_password: b.password }) },
+    set_team_leader_password: { rpc: "set_team_leader_password", args: (b) => ({ p_area_password: b.password, p_branch: b.branch, p_new_password: b.newPassword, p_updated_by: b.updatedBy }) },
   };
   const action = typeof body.action === "string" ? actions[body.action] : undefined;
   if (!action) return json({ error: "unknown action" }, 400);
