@@ -196,10 +196,9 @@ export default function HomePage() {
           <h1 className="mt-1 text-xl font-black tracking-tight text-[var(--color-text-primary)] sm:text-2xl">
             {greeting()} {data.profile.name.split(" ")[0]} 👋
           </h1>
-          <p className="mt-1 text-xs font-semibold text-[var(--color-text-secondary)]">📍 {data.profile.branch}</p>
+          <p className="mt-1 text-xs font-semibold text-[var(--color-text-secondary)]">{data.profile.branch}</p>
         </div>
         <div className="flex shrink-0 items-center gap-2">
-          <div className="hidden h-12 w-12 items-center justify-center rounded-2xl bg-[var(--color-primary-50)] text-2xl sm:flex">📈</div>
         </div>
       </section>
 

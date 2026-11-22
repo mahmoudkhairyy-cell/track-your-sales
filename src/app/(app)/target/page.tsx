@@ -161,7 +161,7 @@ export default function TargetPage() {
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div className="min-w-0">
               <p className="text-[11px] font-black tracking-[0.18em] text-[var(--color-primary-700)]">MONTHLY CONFIGURATION</p>
-              <h1 className="mt-1 text-2xl font-black tracking-tight text-[var(--color-text-primary)] sm:text-3xl">التارجت 🎯</h1>
+              <h1 className="mt-1 text-2xl font-black tracking-tight text-[var(--color-text-primary)] sm:text-3xl">التارجت</h1>
               <p className="mt-1.5 max-w-md text-xs leading-6 text-[var(--color-text-secondary)]">كل إعدادات الشهر في مكان واحد — راجع أهدافك قبل الحفظ.</p>
             </div>
             <span role="status" aria-live="polite" className={`shrink-0 rounded-full px-3 py-1.5 text-[11px] font-extrabold ${saveState.tone}`}>
@@ -262,7 +262,7 @@ export default function TargetPage() {
       </p>
 
       <section className="rounded-[28px] border border-white bg-white p-4 shadow-[0_1px_2px_rgba(43,20,0,.04)] sm:p-5">
-        <Field label="💰 الكوميشن الكامل (جنيه)">
+        <Field label="الكوميشن الكامل (جنيه)">
           <input
             className={`${inputClass} text-xl font-black`}
             type="number"
