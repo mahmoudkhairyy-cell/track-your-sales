@@ -475,7 +475,7 @@ export default function MorePage() {
         <div className="space-y-4">
           <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[var(--color-primary-700)]">← رجوع للقائمة</button>
       <section className="rounded-[24px] border border-white bg-white p-5 shadow-sm">
-        <h2 className="text-lg font-black tracking-tight">📊 اللي عملته النهارده</h2>
+        <h2 className="text-lg font-black tracking-tight">اللي عملته النهارده</h2>
         {todayItems.length === 0 ? (
           <p className="mt-3 text-sm text-[var(--color-text-secondary)]">لسه مسجلتش حاجة النهارده. يلا نبدأ! 💪</p>
         ) : (
@@ -576,7 +576,7 @@ export default function MorePage() {
       </section>
 
       <section className="rounded-[24px] border border-white bg-white p-5 shadow-sm">
-        <h2 className="text-lg font-black tracking-tight">👤 بياناتك</h2>
+        <h2 className="text-lg font-black tracking-tight">بياناتك</h2>
         <div className="mt-4 space-y-3">
           <Field label="اسم الموظف">
             <input className={`${inputClass} bg-[#fdf6f0]`} value={name} readOnly />
