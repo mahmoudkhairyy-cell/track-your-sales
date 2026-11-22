@@ -308,7 +308,7 @@ export default function HomePage() {
           <h2 className="text-base font-black tracking-tight text-[var(--color-text-primary)]">مؤشرات الأداء (KPIs)</h2>
           <span className="text-xs font-bold text-[var(--color-text-secondary)]">{data.kpis.length} مؤشر</span>
         </div>
-        <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           {data.kpis.map((kpi, kpiIndex) => {
             const onTrackKpi = kpi.achieved >= kpi.expectedToDate;
             const ringLen = 2 * Math.PI * 18;
