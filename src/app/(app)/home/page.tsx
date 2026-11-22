@@ -192,7 +192,6 @@ export default function HomePage() {
 
       <section className="tys-home-greeting flex items-end justify-between gap-3 rounded-[26px] border border-white bg-white px-4 py-4 shadow-[0_1px_2px_rgba(43,20,0,.04)] sm:px-5" dir="rtl">
         <div className="min-w-0">
-          <p className="text-xs font-black tracking-[0.16em] text-[var(--color-primary-600)]">YOUR SALES OVERVIEW</p>
           <h1 className="mt-1 text-xl font-black tracking-tight text-[var(--color-text-primary)] sm:text-2xl">
             {greeting()} {data.profile.name.split(" ")[0]} 👋
           </h1>
@@ -274,7 +273,7 @@ export default function HomePage() {
       <section className="tys-home-daily rounded-[20px] border border-white bg-white p-4 shadow-[0_1px_2px_rgba(43,20,0,.04)]">
         <div className="mb-3 flex items-center justify-between gap-2">
           <div>
-            <h2 className="mt-0.5 text-sm font-extrabold text-[var(--color-text-primary)]">DAILY</h2>
+            <h2 className="mt-0.5 text-sm font-extrabold text-[var(--color-text-primary)]">المطلوب النهارده</h2>
           </div>
           <span className="shrink-0 rounded-full bg-[var(--color-primary-50)] px-2.5 py-1 text-xs font-extrabold text-[var(--color-primary-700)]">
             فاضل {formatQty(data.work.remaining)} يوم عمل
