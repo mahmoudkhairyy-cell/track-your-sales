@@ -10,7 +10,7 @@ type EmptyStateProps = {
 export function EmptyState({ title, description, actionLabel, onAction }: EmptyStateProps) {
   return (
     <section
-      className="mx-auto flex min-h-[48vh] w-full max-w-lg flex-col items-center justify-center rounded-3xl border border-orange-100 bg-white px-6 py-10 text-center shadow-sm dark:border-neutral-700 dark:bg-neutral-900"
+      className="orn-rich-card mx-auto flex min-h-[48vh] w-full max-w-lg flex-col items-center justify-center rounded-3xl border border-orange-100 bg-white px-6 py-10 text-center shadow-sm dark:border-neutral-700 dark:bg-neutral-900"
       dir="rtl"
       role="status"
     >
