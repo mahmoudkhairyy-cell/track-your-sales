@@ -211,6 +211,22 @@ export default function HomePage() {
           })}
         </div>
       </section>
+
+      {/* المساعد الذكي */}
+      <section
+        className="orn-card flex cursor-pointer items-center gap-3 p-4"
+        role="link"
+        tabIndex={0}
+        onClick={() => { haptic(); router.push("/assistant"); }}
+        onKeyDown={(e) => { if (e.key === "Enter") { haptic(); router.push("/assistant"); } }}
+      >
+        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[13px] bg-[var(--color-primary-50)] text-xl" aria-hidden="true">🤖</span>
+        <span className="min-w-0 flex-1">
+          <span className="block text-sm font-extrabold text-[var(--color-text-primary)]">المساعد الذكي</span>
+          <span className="mt-0.5 block text-xs leading-5 text-[var(--color-text-secondary)]">عندك سؤال عن باقة أو عرض أو إجراء؟ اسأل هنا وخد إجابة فورية.</span>
+        </span>
+        <span className="text-lg text-[var(--color-text-muted)]" aria-hidden="true">‹</span>
+      </section>
     </div>
   );
 }

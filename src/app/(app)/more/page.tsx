@@ -355,6 +355,7 @@ export default function MorePage() {
               items: [
                 { key: "today", icon: "📊", title: "اللي عملته النهارده", desc: "ملخص إنجازات اليوم" },
                 { key: "contracts", icon: "📑", title: "التعاقدات", desc: "سجّل وتابع حالات التعاقد" },
+                { key: "assistant", icon: "🤖", title: "المساعد الذكي", desc: "اسأل عن باقة أو عرض أو إجراء وخد إجابة فورية" },
                 { key: "history", icon: "🗂️", title: "السجل", desc: "عرض وتعديل وحذف الإنجازات" },
                 { key: "report", icon: "📄", title: "تقرير الشهر", desc: "اطبعه أو احفظه PDF" },
               ],
@@ -385,10 +386,10 @@ export default function MorePage() {
                   <button
                     key={item.key}
                     type="button"
-                    onClick={() => { if (item.key === "contracts") { router.push(`/contracts?month=${month}`); return; } setView(item.key as typeof view); }}
+                    onClick={() => { if (item.key === "contracts") { router.push(`/contracts?month=${month}`); return; } if (item.key === "assistant") { router.push("/assistant"); return; } setView(item.key as typeof view); }}
                     className="tys-more-item group flex min-h-[76px] w-full items-center gap-3 rounded-[17px] border border-white bg-white px-3 py-2.5 text-right transition-all duration-200 hover:border-[#edc4a4] hover:shadow-[0_1px_2px_rgba(43,20,0,.04)] active:scale-[0.99]"
                   >
-                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[13px] bg-gradient-to-br from-[#fff0df] to-[#ffe0c1] shadow-sm"><span className="orn-menu-symbol" aria-hidden="true">{{today:"◷",contracts:"▣",history:"▤",report:"▥",profile:"♙",backup:"⇩",data:"⚙",theme:"◐",about:"ⓘ"}[item.key] ?? "•"}</span></span>
+                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[13px] bg-gradient-to-br from-[#fff0df] to-[#ffe0c1] shadow-sm"><span className="orn-menu-symbol" aria-hidden="true">{{today:"◷",contracts:"▣",assistant:"✦",history:"▤",report:"▥",profile:"♙",backup:"⇩",data:"⚙",theme:"◐",about:"ⓘ"}[item.key] ?? "•"}</span></span>
                     <span className="min-w-0 flex-1">
                       <span className="block text-sm font-black leading-6 text-[var(--color-text-primary)]">{item.title}</span>
                       <span className="block text-[11px] leading-5 text-[var(--color-text-secondary)]">{item.desc}</span>
