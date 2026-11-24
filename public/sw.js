@@ -1,4 +1,4 @@
-const CACHE = "tys-v101-kpi-rtl";
+const CACHE = "tys-v102-leave-colors";
 const APP_HOME = "/track-your-sales/home/";
 
 self.addEventListener("install", (event) => {
