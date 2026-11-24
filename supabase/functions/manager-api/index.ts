@@ -283,8 +283,82 @@ Deno.serve(async (req: Request) => {
     }
   }
 
+  if (body.action === "submit_contracts") {
+    // دفع التعاقدات من جهاز موظف: بلا كلمة مرور، لكن بنفس تحقق submit_report
+    // (مدير المنطقة لازم يكون اسمًا حقيقيًا من جدول المديرين).
+    const branchId = body.branchId;
+    const employee = body.employee;
+    const branch = body.branch;
+    const areaManager = body.areaManager;
+    const contracts = body.contracts;
+    const deletedIds = body.deletedIds;
+    if (typeof branchId !== "string" || branchId.length < 8 || branchId.length > 80 ||
+        typeof employee !== "string" || employee.trim().length < 2 ||
+        typeof branch !== "string" || branch.trim().length < 2 ||
+        typeof areaManager !== "string" || areaManager.trim().length < 2 ||
+        !Array.isArray(contracts) || contracts.length > 500 ||
+        (deletedIds !== undefined && (!Array.isArray(deletedIds) || deletedIds.length > 500))) {
+      return json({ error: "invalid contracts payload" }, 400);
+    }
+    const managerQuery = new URLSearchParams({ select: "name", name: `eq.${areaManager.trim()}`, limit: "1" });
+    const managerRes = await fetch(`${url}/rest/v1/manager_areas?${managerQuery.toString()}`, {
+      headers: { apikey: serviceKey, Authorization: "Bearer " + serviceKey },
+    });
+    if (!managerRes.ok) return json({ error: "تعذر التحقق من مدير المنطقة" }, 500);
+    const managerRows = await managerRes.json();
+    if (!Array.isArray(managerRows) || !managerRows.some((row) => row?.name === areaManager.trim())) {
+      return json({ error: "مدير المنطقة المختار غير موجود" }, 400);
+    }
+    for (const item of contracts as Record<string, unknown>[]) {
+      const res = await rpc(url, serviceKey, "upsert_contract", {
+        p_id: item.id,
+        p_branch_id: branchId,
+        p_employee: employee,
+        p_branch: branch,
+        p_area_manager: areaManager.trim(),
+        p_client: item.client,
+        p_status: item.status,
+        p_contract_date: item.contractDate,
+        p_sent_date: item.sentDate ?? null,
+        p_note: item.note ?? null,
+      });
+      if (!res.ok) return json({ error: "contract sync failed" }, 500);
+    }
+    for (const id of (deletedIds ?? []) as unknown[]) {
+      if (typeof id !== "string") continue;
+      const res = await rpc(url, serviceKey, "delete_contract", { p_id: id, p_branch_id: branchId });
+      if (!res.ok) return json({ error: "contract delete failed" }, 500);
+    }
+    return json({ ok: true }, 200);
+  }
+
+  if (body.action === "branch_contracts") {
+    // مدير الفرع يشوف تعاقدات فرعه بكلمة مرور الفرع (نفس تحقق branch_reports).
+    const branch = typeof body.branch === "string" ? body.branch.trim() : "";
+    if (branch.length < 2 || branch.length > 100) {
+      return json({ error: "فرع غير صالح" }, 400);
+    }
+    const check = await verifyBranchManager(url, serviceKey, branch, body.password);
+    if (check === "wrong") { recordFailure(key); return json({ error: "wrong password" }, 401); }
+    if (check === "error") return json({ error: "تعذر التحقق من كلمة المرور" }, 500);
+    failures.delete(key);
+    try {
+      const rows = await restRows(url, serviceKey, "contracts", new URLSearchParams({
+        select: "id,employee_name,branch_name,client_name,status,contract_date,sent_date,note,updated_at",
+        branch_name: `eq.${branch}`,
+        order: "contract_date.desc",
+        limit: "1000",
+      }));
+      return json({ contracts: rows }, 200);
+    } catch {
+      return json({ error: "تعذر تحميل التعاقدات" }, 500);
+    }
+  }
+
   const actions: Record<string, { rpc: string; args: (b: Record<string, unknown>) => Record<string, unknown> }> = {
     reports: { rpc: "get_reports_for_password", args: (b) => ({ p_password: b.password }) },
+    contracts: { rpc: "get_contracts_for_area_password", args: (b) => ({ p_password: b.password }) },
+    delete_contract_area: { rpc: "delete_contract_for_area", args: (b) => ({ p_password: b.password, p_id: b.contractId }) },
     manager_name: { rpc: "get_manager_name", args: (b) => ({ p_password: b.password }) },
     delete: { rpc: "delete_report", args: (b) => ({ p_password: b.password, p_branch_id: b.branchId }) },
     change_password: { rpc: "change_password_any", args: (b) => ({ p_old: b.password, p_new: b.newPassword }) },
