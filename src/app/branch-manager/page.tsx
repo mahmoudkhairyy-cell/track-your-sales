@@ -24,12 +24,24 @@ type Report = {
 };
 type Quality = { kyc: number; visits: number; training: number; pos: number; csat: number };
 type Audit = { id: number; employee_name: string | null; field_name: string; old_value: unknown; new_value: unknown; updated_by: string; updated_at: string };
+type ContractRow = { id: string; employee_name: string; client_name: string; status: "sent" | "missing" | "rejected"; contract_date: string; sent_date: string | null; note: string | null; updated_at: string };
 type BranchData = {
   reports: Report[];
   productivity: { productivity_percent: number; updated_by: string; updated_at: string } | null;
   qualityOverrides: { employee_name: string; quality: Quality; updated_by: string; updated_at: string }[];
   audit: Audit[];
 };
+const CONTRACT_STATUS_LABEL: Record<ContractRow["status"], string> = { sent: "Sent", missing: "Missing", rejected: "Rejected" };
+const CONTRACT_STATUS_STYLE: Record<ContractRow["status"], string> = {
+  sent: "border-emerald-200 bg-emerald-50 text-emerald-700",
+  missing: "border-amber-200 bg-amber-50 text-amber-700",
+  rejected: "border-red-200 bg-red-50 text-red-700",
+};
+function contractDaysOld(date: string): number {
+  const then = new Date(`${date}T12:00:00`).getTime();
+  if (Number.isNaN(then)) return 0;
+  return Math.floor((Date.now() - then) / 86400000);
+}
 
 const QUALITY_FIELDS: { key: keyof Quality; label: string; weight: number }[] = [
   { key: "kyc", label: "KYC & Compliance", weight: 5 },
@@ -90,7 +102,9 @@ export default function BranchManagerPage() {
   const [password, setPassword] = useState("");
   const [active, setActive] = useState(false);
   const [accessChecked, setAccessChecked] = useState(false);
-  const [activeTab, setActiveTab] = useState<"overview" | "team">("overview");
+  const [activeTab, setActiveTab] = useState<"overview" | "team" | "contracts">("overview");
+  const [contracts, setContracts] = useState<ContractRow[] | null>(null);
+  const [contractsLoading, setContractsLoading] = useState(false);
   const [teamFilter, setTeamFilter] = useState<"all" | "agent" | "team_leader">("all");
   const [data, setData] = useState<BranchData | null>(null);
   const [productivityInput, setProductivityInput] = useState("0");
@@ -115,6 +129,12 @@ export default function BranchManagerPage() {
       }
       setQualityInputs(values);
       try { sessionStorage.setItem("tys.bmPass", passwordToUse); } catch { /* Storage may be unavailable. */ }
+      // التعاقدات بتحمل بنفس كلمة مرور الفرع.
+      setContractsLoading(true);
+      managerApi<{ contracts: ContractRow[] }>("branch_contracts", { branch: selectedBranch, password: passwordToUse })
+        .then((result) => setContracts(result?.contracts ?? []))
+        .catch(() => setContracts(null))
+        .finally(() => setContractsLoading(false));
     } catch (e) {
       const raw = e instanceof Error ? e.message : "Could not load branch data";
       if (raw.includes("wrong password")) {
@@ -273,9 +293,10 @@ export default function BranchManagerPage() {
         </header>
         {error ? <p className="rounded-xl border border-red-200 bg-red-50 p-3 text-sm font-bold text-red-700">{error}</p> : null}
         {notice ? <p className="rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm font-bold text-emerald-800">{notice}</p> : null}
-        <nav className="grid grid-cols-2 gap-2 rounded-2xl border border-[#f1dfd0] bg-white p-2 shadow-sm" aria-label="Manager sections">
+        <nav className="grid grid-cols-3 gap-2 rounded-2xl border border-[#f1dfd0] bg-white p-2 shadow-sm" aria-label="Manager sections">
           <button onClick={() => setActiveTab("overview")} className={`rounded-xl px-3 py-3 text-sm font-black transition ${activeTab === "overview" ? "bg-[#bd4b0a] text-white shadow-sm" : "text-[#88796e] hover:bg-[#fff4e9]"}`}>Overview</button>
           <button onClick={() => setActiveTab("team")} className={`rounded-xl px-3 py-3 text-sm font-black transition ${activeTab === "team" ? "bg-[#bd4b0a] text-white shadow-sm" : "text-[#88796e] hover:bg-[#fff4e9]"}`}>Team Tracking ({reports.length})</button>
+          <button onClick={() => setActiveTab("contracts")} className={`rounded-xl px-3 py-3 text-sm font-black transition ${activeTab === "contracts" ? "bg-[#bd4b0a] text-white shadow-sm" : "text-[#88796e] hover:bg-[#fff4e9]"}`}>Contracts ({contracts?.length ?? 0})</button>
         </nav>
         {activeTab === "overview" ? (
           <>
@@ -326,6 +347,36 @@ export default function BranchManagerPage() {
           {data?.productivity ? <p className="mt-2 text-xs text-[#88796e]">Last updated by {data.productivity.updated_by} · {timeLabel(data.productivity.updated_at)}</p> : null}
         </section>
           </>
+        ) : null}
+        {activeTab === "contracts" ? (
+        <section className="space-y-3">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <div><h2 className="text-lg font-black">Contracts Tracking</h2><p className="text-xs text-[#88796e]">Every contract logged by the team: sent to the company, missing, or rejected. Late = not sent for 3+ days.</p></div>
+            {contracts ? (
+              <div className="flex gap-2 text-[11px] font-black">
+                <span className="rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-emerald-700">Sent {contracts.filter((c) => c.status === "sent").length}</span>
+                <span className="rounded-full border border-amber-200 bg-amber-50 px-2.5 py-1 text-amber-700">Missing {contracts.filter((c) => c.status === "missing").length}</span>
+                <span className="rounded-full border border-red-200 bg-red-50 px-2.5 py-1 text-red-700">Rejected {contracts.filter((c) => c.status === "rejected").length}</span>
+              </div>
+            ) : null}
+          </div>
+          {contractsLoading ? <p className="rounded-2xl bg-white p-6 text-center">Loading contracts...</p> : null}
+          {!contractsLoading && contracts === null ? <p className="rounded-2xl border border-dashed border-[#e7cdb8] bg-white p-6 text-center text-sm text-[#88796e]">Could not load contracts. Hit Refresh to try again.</p> : null}
+          {!contractsLoading && contracts !== null && contracts.length === 0 ? <p className="rounded-2xl border border-dashed border-[#e7cdb8] bg-white p-6 text-center text-sm text-[#88796e]">No contracts logged by this branch yet.</p> : null}
+          {(contracts ?? []).map((row) => {
+            const late = row.status !== "sent" && contractDaysOld(row.contract_date) >= 3;
+            return <article key={row.id} className="orn-rich-card rounded-3xl border border-[#f1dfd0] bg-white p-4 shadow-sm">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <div className="min-w-0">
+                  <h3 className="truncate font-black">{row.client_name}</h3>
+                  <p className="mt-1 text-xs text-[#88796e]">{row.employee_name} · Contract date {row.contract_date}{row.sent_date ? ` · Sent ${row.sent_date}` : ""}{late ? ` · Late ${contractDaysOld(row.contract_date)} days` : ""}</p>
+                  {row.note ? <p className="mt-1 text-xs text-[#88796e]">{row.note}</p> : null}
+                </div>
+                <span className={`shrink-0 rounded-full border px-3 py-1 text-xs font-extrabold ${CONTRACT_STATUS_STYLE[row.status]}`}>{CONTRACT_STATUS_LABEL[row.status]}{late ? " · LATE" : ""}</span>
+              </div>
+            </article>;
+          })}
+        </section>
         ) : null}
         {activeTab === "team" ? (
         <section className="space-y-3">
