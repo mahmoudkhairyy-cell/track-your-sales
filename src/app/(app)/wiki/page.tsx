@@ -295,7 +295,7 @@ export default function WikiPage() {
                 type="button"
                 aria-pressed={srCategory === cat}
                 onClick={() => setSrCategory(cat)}
-                className={`${CHIP_BTN} shrink-0 ${srCategory === cat ? "bg-brand-600 text-white" : "bg-white text-ink-2 shadow-sm"}`}
+                className={`${CHIP_BTN} shrink-0 ${srCategory === cat ? "bg-brand-600 !text-white" : "bg-white text-ink-2 shadow-sm"}`}
               >
                 {cat}
               </button>
