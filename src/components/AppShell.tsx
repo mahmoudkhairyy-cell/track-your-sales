@@ -612,7 +612,7 @@ function AppFrame({ children, blocked, month }: { children: ReactNode; blocked: 
       <Welcome />
       <StorageErrorListener />
       <MonthContext.Provider value={month}>
-        <div className="min-h-screen bg-[#fffaf5] text-[#2d2119]">
+        <div id="tys-bold-identity" className="min-h-screen bg-[#fffaf5] text-[#2d2119]">
           <div className="h-1.5 bg-gradient-to-l from-[#bd4b0a] via-[#e96812] to-[#ffb15f]" />
           <div className="mx-auto flex min-h-screen max-w-7xl">
             <aside className="tys-sidebar sticky top-0 hidden h-screen w-[276px] shrink-0 flex-col border-l border-[#f1dfd0] bg-[#fffaf5] p-5 lg:flex">
@@ -669,10 +669,8 @@ function AppFrame({ children, blocked, month }: { children: ReactNode; blocked: 
                         {themeMenuOpen ? (
                           <div className="absolute left-0 top-full z-50 mt-2 w-44 rounded-2xl border border-[#f2e4d8] bg-white p-2 text-[#2d2119] shadow-xl" dir="rtl">
                             {([
-                              ["light", "☀️", "الأساسي"],
-                              ["aurora", "🌌", "أورورا فاتح"],
-                              ["aurora-dark", "🌙", "أورورا داكن"],
-                              ["space", "🧑‍🚀", "فضاء"],
+                              ["light", "☀️", "فاتح"],
+                              ["dark", "🌙", "غامق"],
                             ] as [Theme, string, string][]).map(([key, icon, label]) => (
                               <button
                                 key={key}
