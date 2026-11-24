@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useCallback, useEffect, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Banner, EmptyState, Field, Modal, PrimaryButton, SecondaryButton, Spinner, inputClass, useToast } from "@/components/ui";
 import { ApiError, api, downloadJson } from "@/lib/client";
@@ -292,6 +293,19 @@ export default function MorePage() {
       <section>
         <div className="relative overflow-hidden rounded-hero border border-section bg-gradient-to-br from-[#fff8f0] via-white to-[#ffe9d5] p-5 shadow-section"><div className="absolute -left-8 -top-10 h-32 w-32 rounded-full bg-brand-500/10 blur-2xl" /><div className="relative"><div className="mb-2 inline-flex items-center gap-2 rounded-full border border-section-2 bg-white/80 px-3 py-1 text-xs font-extrabold text-brand-ink-soft"><span>⚙️</span><span>إدارة التطبيق</span></div><h1 className="text-2xl font-black tracking-tight text-brand-ink-strong">المزيد</h1></div></div>
         <p className="mt-1 text-sm text-ink-2">ملخص النهارده، سجل الشهر، النسخة الاحتياطية، والمساعد.</p>
+      </section>
+
+      <section>
+        <Link
+          href="/assistant"
+          className="relative flex items-center gap-3 overflow-hidden rounded-hero border border-section bg-gradient-to-br from-white via-white to-brand-surface p-5 shadow-accent ring-1 ring-white transition hover:bg-brand-surface"
+        >
+          <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-brand-200 text-2xl">🤖</span>
+          <span>
+            <span className="block text-lg font-black text-brand-ink-strong">المساعد الذكي</span>
+            <span className="mt-1 block text-sm leading-6 text-ink-2">اسأل عن الباقات والأسعار والعروض، وخد إجابة فورية من قاعدة معلومات أورنچ.</span>
+          </span>
+        </Link>
       </section>
 
       <section className="relative overflow-hidden rounded-hero border border-section bg-gradient-to-br from-white via-white to-brand-surface p-5 shadow-accent ring-1 ring-white">

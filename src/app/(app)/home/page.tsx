@@ -287,6 +287,19 @@ export default function HomePage() {
         <p className="text-sm text-ink-2">عدد العمليات المحفوظة الشهر ده: {data.entriesCount}</p>
       )}
 
+      <section>
+        <Link
+          href="/assistant"
+          className="relative flex items-center gap-3 overflow-hidden rounded-hero border border-section bg-gradient-to-br from-white via-white to-brand-surface p-5 shadow-accent ring-1 ring-white transition hover:bg-brand-surface"
+        >
+          <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-brand-200 text-2xl">🤖</span>
+          <span>
+            <span className="block text-lg font-black text-brand-ink-strong">المساعد الذكي</span>
+            <span className="mt-1 block text-sm leading-6 text-ink-2">عندك سؤال عن باقة أو عرض أو إجراء؟ اسأل هنا وخد إجابة فورية.</span>
+          </span>
+        </Link>
+      </section>
+
       <section className="space-y-3">
         <div className="flex items-end justify-between gap-3">
           <div>
