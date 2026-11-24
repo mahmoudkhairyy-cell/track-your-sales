@@ -3,6 +3,7 @@
 import { FormEvent, useEffect, useRef, useState } from "react";
 import { Banner, EmptyState, PrimaryButton, inputClass } from "@/components/ui";
 import { AssistantError, askAssistant } from "@/lib/assistant";
+import { WIZARD_FLOWS, WizardFlowId, WizardState, advanceWizard, startWizard } from "@/lib/wizard";
 
 type ChatMessage = {
   id: string;
@@ -28,11 +29,43 @@ export default function AssistantPage() {
   const [question, setQuestion] = useState("");
   const [pending, setPending] = useState(false);
   const [error, setError] = useState("");
+  const [wizard, setWizard] = useState<WizardState | null>(null);
   const bottomRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
   }, [messages, pending]);
+
+  function appendAssistantMessages(texts: string[]) {
+    setMessages((current) => [...current, ...texts.map((text) => ({ id: nextMessageId(), role: "assistant" as const, text }))]);
+  }
+
+  function beginWizard(flowId: WizardFlowId) {
+    const { state, messages: intro } = startWizard(flowId);
+    setWizard(state);
+    setError("");
+    appendAssistantMessages(intro);
+  }
+
+  function cancelWizard() {
+    setWizard(null);
+    appendAssistantMessages(["اتلغت الحاسبة. اسألني أي سؤال تاني، أو شغّل حاسبة من تحت."]);
+  }
+
+  function answerWizard(text: string) {
+    if (!wizard) return;
+    if (/^(إلغاء|الغاء|كنسل|cancel)$/i.test(text.trim())) {
+      cancelWizard();
+      return;
+    }
+    const result = advanceWizard(wizard, text);
+    if (result.done) {
+      setWizard(null);
+    } else {
+      setWizard(result.state);
+    }
+    appendAssistantMessages(result.messages);
+  }
 
   async function send(text: string) {
     const trimmed = text.trim();
@@ -40,6 +73,10 @@ export default function AssistantPage() {
     setError("");
     setQuestion("");
     setMessages((current) => [...current, { id: nextMessageId(), role: "user", text: trimmed }]);
+    if (wizard) {
+      answerWizard(trimmed);
+      return;
+    }
     setPending(true);
     try {
       const answer = await askAssistant(trimmed);
@@ -78,6 +115,34 @@ export default function AssistantPage() {
       </Banner>
 
       <section className="relative overflow-hidden rounded-hero border border-section bg-gradient-to-br from-white via-white to-brand-surface p-5 shadow-accent ring-1 ring-white">
+        <div className="mb-4 flex flex-wrap gap-2">
+          {wizard ? (
+            <button
+              type="button"
+              onClick={cancelWizard}
+              className="rounded-full border border-red-200 bg-red-50 px-3 py-2 text-xs font-extrabold text-red-700 shadow-section-xs transition hover:bg-red-100"
+            >
+              ❌ إلغاء الحاسبة ({WIZARD_FLOWS[wizard.flowId].title.split("—")[0].trim()})
+            </button>
+          ) : (
+            <>
+              <button
+                type="button"
+                onClick={() => beginWizard("dsl")}
+                className="rounded-full border border-section-3 bg-white px-3 py-2 text-xs font-extrabold text-brand-ink-soft shadow-section-xs transition hover:bg-brand-surface"
+              >
+                🧮 حاسبة إلغاء ADSL
+              </button>
+              <button
+                type="button"
+                onClick={() => beginWizard("invoice")}
+                className="rounded-full border border-section-3 bg-white px-3 py-2 text-xs font-extrabold text-brand-ink-soft shadow-section-xs transition hover:bg-brand-surface"
+              >
+                🧮 حاسبة إلغاء الفاتورة (SR 10758)
+              </button>
+            </>
+          )}
+        </div>
         {messages.length === 0 ? (
           <div className="space-y-4">
             <EmptyState
@@ -132,7 +197,7 @@ export default function AssistantPage() {
         <form onSubmit={onSubmit} className="mt-4 space-y-3">
           <textarea
             className={`${inputClass} min-h-20 resize-none py-3`}
-            placeholder="اكتب سؤالك هنا…"
+            placeholder={wizard ? "اكتب إجابتك هنا…" : "اكتب سؤالك هنا…"}
             value={question}
             onChange={(e) => setQuestion(e.target.value)}
             maxLength={800}
@@ -140,7 +205,7 @@ export default function AssistantPage() {
             aria-label="سؤالك للمساعد"
           />
           <PrimaryButton type="submit" disabled={pending || !question.trim()}>
-            {pending ? "⏳ لحظة واحدة…" : "📤 ابعت السؤال"}
+            {pending ? "⏳ لحظة واحدة…" : wizard ? "📤 ابعت الإجابة" : "📤 ابعت السؤال"}
           </PrimaryButton>
         </form>
       </section>
