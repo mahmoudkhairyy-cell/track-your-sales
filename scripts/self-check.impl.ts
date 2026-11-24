@@ -364,7 +364,7 @@ check("استعادة: نسخة بإصدار غير مدعوم أو أقدم ت�
   assert.throws(() => parseBackup(rawBackup({ schemaVersion: 99 })), /إصدار الملف غير مدعوم/);
 });
 
-console.log("\nاكتملت اختبارات الحسابات والنسخ الاحتياطي والكميات بنجاح.");
+
 
 
 check("استعادة بالدمج لا تغيّر اسم الموظف أو فرعه", () => {
@@ -380,3 +380,27 @@ check("استعادة بالاستبدال تستعيد الاسم والفرع 
   applyBackupToState(state, backup, "replace", restoreOptions());
   assert.deepEqual(state.profile, { name: "Imported Name", branch: "Imported Branch" });
 });
+
+
+check("النسخة الاحتياطية تطابق حدود local-api للتواريخ والملاحظات والمقالات", () => {
+  const month = {
+    yearMonth: "2026-11",
+    fullCommission: 6000,
+    workingDays: WEEK_DAYS,
+    kpis: [],
+    holidays: [],
+  };
+  assert.throws(() => parseBackup(rawBackup({ months: [{ ...month, holidays: [{ date: "2026-10-31", note: null }] }] })));
+  assert.throws(() => parseBackup(rawBackup({ months: [{ ...month, holidays: [{ date: "2026-11-10", note: null }, { date: "2026-11-10", note: null }] }] })));
+  assert.throws(() => parseBackup(rawBackup({ months: [{ ...month, holidays: [{ date: "2026-11-31", note: null }] }] })));
+  assert.throws(() => parseBackup(rawBackup({ months: [{ ...month, kpis: [{ kpiKey: "new_lines", target: 1, weight: -1, unitAr: "خط", sortOrder: 0 }] }] })));
+  assert.throws(() => parseBackup(rawBackup({ months: [{ ...month, kpis: [{ kpiKey: "new_lines", target: 1, weight: 1, unitAr: "خط", sortOrder: -1 }] }] })));
+  assert.throws(() => parseBackup(rawBackup({ entries: [{ kpiKey: "new_lines", quantity: 1, entryDate: "2041-01-01", note: null }] })));
+  assert.throws(() => parseBackup(rawBackup({ entries: [{ kpiKey: "new_lines", quantity: -1, entryDate: "2026-11-08", note: null }] })));
+  assert.throws(() => parseBackup(rawBackup({ entries: [{ kpiKey: "new_lines", quantity: 1, entryDate: "2026-11-08", note: "x".repeat(501) }] })));
+  assert.throws(() => parseBackup(rawBackup({ articles: [{ title: "S", content: "xx" }] })));
+  assert.throws(() => parseBackup(rawBackup({ articles: [{ title: "SR", content: "x" }] })));
+  assert.throws(() => parseBackup(rawBackup({ articles: [{ title: "SR", content: "x".repeat(8001) }] })));
+});
+
+console.log("\nاكتملت اختبارات الحسابات والنسخ الاحتياطي والكميات بنجاح.");
