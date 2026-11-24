@@ -214,7 +214,7 @@ export default function BranchManagerPage() {
   if (!accessChecked) return <main className="flex min-h-screen items-center justify-center bg-[#fffaf5] text-sm font-bold text-[#bd4b0a]">Loading your manager workspace...</main>;
 
   if (!active) return (
-    <main className="min-h-screen bg-[radial-gradient(ellipse_at_top,_#fff0e2_0%,_#fffaf5_60%,_#fff_100%)] px-4 py-10" dir="ltr">
+    <main className="tys-page tys-page-manager min-h-screen bg-[radial-gradient(ellipse_at_top,_#fff0e2_0%,_#fffaf5_60%,_#fff_100%)] px-4 py-10" dir="ltr">
       <section className="mx-auto max-w-md rounded-[28px] border border-[#f1dfd0] bg-white p-6 shadow-[0_18px_55px_rgba(126,65,24,.10)]">
         <img src="/track-your-sales/logo-full.png" alt="Track Your Sales" className="mx-auto mb-5 h-20 w-auto object-contain" />
         <p className="text-center text-xs font-black text-[#bd4b0a]">BRANCH MANAGEMENT</p>
@@ -239,7 +239,7 @@ export default function BranchManagerPage() {
   );
 
   return (
-    <main className="min-h-screen bg-[#fffaf5] px-3 py-5 text-[#2d2119] sm:px-6" dir="ltr">
+    <main className="tys-page tys-page-manager min-h-screen bg-[#fffaf5] px-3 py-5 text-[#2d2119] sm:px-6" dir="ltr">
       <div className="mx-auto max-w-6xl space-y-5">
         <header className="flex items-end justify-between gap-3 rounded-[26px] border border-white bg-white px-4 py-4 shadow-[0_1px_2px_rgba(43,20,0,.04)] sm:px-5">
           <div className="min-w-0">
