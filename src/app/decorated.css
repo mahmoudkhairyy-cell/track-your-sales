@@ -172,3 +172,6 @@ html body #tys-bold-identity .tys-page-more .tys-theme-option[aria-checked='true
 /* Theme changes are immediate so old light backgrounds cannot flash in dark mode. */
 html body #tys-bold-identity :is(.tys-page,.tys-mobile-nav,.tys-mobile-nav-primary,.tys-mobile-nav-icon) *{transition-property:transform,opacity!important}
 html[data-theme='dark'] body #tys-bold-identity .tys-page-more>button{background:var(--orn-surface)!important;background-image:none!important;color:#f68b84!important;border-color:var(--orn-line)!important;transition:none!important}
+/* KPI reading direction: percentage on the right, progress grows leftward. */
+html body #tys-bold-identity .orn-kpi-body{flex-direction:row-reverse}
+html body #tys-bold-identity .orn-track{direction:rtl}
