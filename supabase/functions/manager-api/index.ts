@@ -60,6 +60,20 @@ async function restUpsert(url: string, serviceKey: string, table: string, row: R
   });
   if (!res.ok) throw new Error(`database write failed: ${table}`);
 }
+// Branch manager actions are protected by a per-branch password, verified
+// against branch_manager_access with crypt() — same pattern as manager_areas.
+async function verifyBranchManager(url: string, serviceKey: string, branch: string, password: unknown): Promise<"ok" | "wrong" | "error"> {
+  if (typeof password !== "string" || password.length === 0 || password.length > 200) return "wrong";
+  try {
+    const res = await rpc(url, serviceKey, "verify_branch_manager", { p_branch: branch, p_password: password });
+    if (res.ok) return "ok";
+    const text = await res.text();
+    return text.includes("wrong password") ? "wrong" : "error";
+  } catch {
+    return "error";
+  }
+}
+
 function normalizeEmployeeIdentity(value: string): string {
   return value.trim().replace(/\s+/g, " ").toLocaleLowerCase("en-US");
 }
@@ -172,6 +186,10 @@ Deno.serve(async (req: Request) => {
     if (branch.length < 2 || branch.length > 100 || !/^[0-9]{4}-(0[1-9]|1[0-2])$/.test(month)) {
       return json({ error: "فرع أو شهر غير صالح" }, 400);
     }
+    const check = await verifyBranchManager(url, serviceKey, branch, body.password);
+    if (check === "wrong") { recordFailure(key); return json({ error: "wrong password" }, 401); }
+    if (check === "error") return json({ error: "تعذر التحقق من كلمة المرور" }, 500);
+    failures.delete(key);
     try {
       const reportQuery = new URLSearchParams({
         select: "branch_id,employee_name,branch_name,payload,updated_at",
@@ -223,6 +241,9 @@ Deno.serve(async (req: Request) => {
         !/^[0-9]{4}-(0[1-9]|1[0-2])$/.test(month) || !validPercent(value)) {
       return json({ error: "بيانات الإنتاجية غير صالحة" }, 400);
     }
+    const check = await verifyBranchManager(url, serviceKey, branch, body.password);
+    if (check === "wrong") { recordFailure(key); return json({ error: "wrong password" }, 401); }
+    if (check === "error") return json({ error: "تعذر التحقق من كلمة المرور" }, 500);
     try {
       await restUpsert(url, serviceKey, "branch_manager_monthly", {
         branch_name: branch, year_month: month, productivity_percent: value,
@@ -247,6 +268,9 @@ Deno.serve(async (req: Request) => {
         !keys.every((key) => validPercent((quality as Record<string, unknown>)[key], 100))) {
       return json({ error: "بيانات الجودة غير صالحة؛ كل بند لازم يكون من 0 إلى 100" }, 400);
     }
+    const check = await verifyBranchManager(url, serviceKey, branch, body.password);
+    if (check === "wrong") { recordFailure(key); return json({ error: "wrong password" }, 401); }
+    if (check === "error") return json({ error: "تعذر التحقق من كلمة المرور" }, 500);
     try {
       await restUpsert(url, serviceKey, "branch_manager_employee_overrides", {
         branch_name: branch, employee_name: employee, year_month: month,
@@ -265,6 +289,7 @@ Deno.serve(async (req: Request) => {
     delete: { rpc: "delete_report", args: (b) => ({ p_password: b.password, p_branch_id: b.branchId }) },
     change_password: { rpc: "change_password_any", args: (b) => ({ p_old: b.password, p_new: b.newPassword }) },
     team_leader_branch: { rpc: "get_branch_team_for_team_leader", args: (b) => ({ p_branch: b.branch, p_password: b.password }) },
+    change_branch_password: { rpc: "change_branch_manager_password", args: (b) => ({ p_branch: b.branch, p_old: b.password, p_new: b.newPassword }) },
     set_team_leader_password: { rpc: "set_team_leader_password", args: (b) => ({ p_area_password: b.password, p_branch: b.branch, p_new_password: b.newPassword, p_updated_by: b.updatedBy }) },
   };
   const action = typeof body.action === "string" ? actions[body.action] : undefined;
