@@ -2,14 +2,15 @@
   "name": "track-your-sales",
   "private": true,
   "scripts": {
-    "dev": "node scripts/prepare-assistant-api.mjs && next dev",
-    "build": "node scripts/prepare-assistant-api.mjs && next build",
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
     "lint": "eslint .",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "selfcheck": "node scripts/self-check.mjs"
   },
   "dependencies": {
-    "@fontsource-variable/cairo": "^5.3.0",
-    "next": "^16.4.3",
+    "next": "16.4.3",
     "react": "19.2.6",
     "react-dom": "19.2.6"
   },
@@ -19,9 +20,10 @@
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
     "eslint": "9.39.4",
-    "eslint-config-next": "16.2.6",
+    "eslint-config-next": "16.4.3",
     "postcss": "8.5.8",
     "tailwindcss": "4.1.17",
+    "tsx": "^4.23.15",
     "typescript": "5.9.3"
   }
 }

@@ -1,15 +1,17 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import Link from "next/link";
-import { AnimatedCounter, Banner, BulletChart, EmptyState, Skeleton } from "@/components/ui";
+import { useToast } from "@/components/ui";
+import { ErrorState } from "@/components/ui/ErrorState";
+import { EmptyState } from "@/components/ui/EmptyState";
+import { haptic } from "@/lib/prefs";
+import { HomeSkeleton } from "@/components/Skeleton";
 import { ApiError, api } from "@/lib/client";
-import { formatPercent, formatQty } from "@/lib/calculations";
+import { formatMoney, formatPercent, formatQty } from "@/lib/calculations";
 import { useMonth } from "@/components/AppShell";
-import { kpiEmoji } from "@/lib/constants";
-import { MOOD_STYLES, kpiMood, overallMood } from "@/lib/motivation";
-import { pickStatusPhrase } from "@/lib/motivation-phrases";
-import AchievementShare from "@/components/AchievementShare";
+import { KpiIcon } from "@/components/KpiIcon";
+import { pushReport, readSyncStatus, type SyncStatus } from "@/lib/sync";
 
 type KpiRow = {
   kpiKey: string;
@@ -23,83 +25,59 @@ type KpiRow = {
   expectedToDate: number;
   remaining: number;
   overTarget: boolean;
+  series?: number[];
+  previousToDate?: number | null;
 };
 
 type Dashboard = {
   profile: { name: string; branch: string };
   yearMonth: string;
   monthLabel: string;
+  todaySummary: { kpiKey: string; quantity: number; count: number }[];
   settingsSaved: boolean;
   kpis: KpiRow[];
   overall: number;
+  expectedOverall?: number | null;
   estimatedCommission: number;
+  rules: { belowKpis: string[]; clawBacks: string[]; belowOverall: boolean; walletDone: boolean };
   fullCommission: number;
   weightSum: number;
   weightWarning: boolean;
   empty: boolean;
   entriesCount: number;
-  work: { total: number; elapsed: number; remaining: number };
-  overallExpectedPercent: number;
+  work: { total: number; elapsed: number; elapsedBeforeToday?: number; remaining: number };
   pace: { remaining: number; remainingDays: number; perDay: number | null; message: string };
+  projection?: { overall: number; commission: number; basisDays: number } | null;
 };
 
-function ScoreRing({ value }: { value: number }) {
-  const visual = Math.min(100, Math.max(0, value));
-  const radius = 48;
-  const circ = 2 * Math.PI * radius;
-  const offset = circ - (visual / 100) * circ;
-  return (
-    <svg viewBox="0 0 130 130" role="img" aria-label={`نسبة الإنجاز ${formatPercent(value)} بالمئة`} className="h-32 w-32 shrink-0">
-      <circle cx="65" cy="65" r={radius} fill="none" stroke="rgba(255,255,255,0.28)" strokeWidth="12" />
-      <circle
-        cx="65"
-        cy="65"
-        r={radius}
-        fill="none"
-        stroke="#fff"
-        strokeWidth="12"
-        strokeDasharray={circ}
-        strokeDashoffset={offset}
-        strokeLinecap="round"
-        transform="rotate(-90 65 65)"
-      />
-      <text x="65" y="62" textAnchor="middle" fill="#fff" fontSize="22" fontWeight="800">
-        {Math.round(Math.max(0, value))}%
-      </text>
-      <text x="65" y="80" textAnchor="middle" fill="rgba(255,255,255,0.8)" fontSize="10">
-        الإنجاز
-      </text>
-    </svg>
-  );
-}
 
-const STATUS_BADGE: Record<ReturnType<typeof overallMood>["tone"], string> = {
-  celebrate: "قفلت التارجت",
-  ahead: "متقدم",
-  ontrack: "على الخطة",
-  behind: "متأخر شوية",
-  danger: "متأخر جامد",
-  empty: "شهر جديد",
-};
 
 function greeting() {
-  const hour = Number(
-    new Intl.DateTimeFormat("en-US", { hour: "numeric", hour12: false, timeZone: "Africa/Cairo" }).format(new Date()),
-  );
+  const hour = Number(new Intl.DateTimeFormat("en-GB", { hour: "2-digit", hour12: false, timeZone: "Africa/Cairo" }).format(new Date()));
   if (hour >= 5 && hour < 12) return "صباح الخير يا";
   if (hour >= 12 && hour < 18) return "نهارك سعيد يا";
   return "مساء الخير يا";
 }
 
 export default function HomePage() {
+  const router = useRouter();
+
+
+  const [sync, setSync] = useState<SyncStatus | null>(null);
+  useEffect(() => {
+    const refresh = () => setSync(readSyncStatus());
+    refresh();
+    window.addEventListener("tys-sync-status", refresh);
+    return () => window.removeEventListener("tys-sync-status", refresh);
+  }, []);
   const month = useMonth();
+  const toast = useToast();
   // بنخزّن الشهر مع البيانات عشان نعرف إن اللي معروض يخص الشهر الحالي من غير setState متزامن جوه الـ effect.
   const [state, setState] = useState<{ month: string; data: Dashboard | null; error: string }>({
     month: "",
     data: null,
     error: "",
   });
-  const [sessionPhrase, setSessionPhrase] = useState<{ month: string; text: string | null }>({ month: "", text: null });
 
   useEffect(() => {
     let cancelled = false;
@@ -112,7 +90,7 @@ export default function HomePage() {
           setState({
             month,
             data: null,
-            error: err instanceof ApiError || err instanceof Error ? err.message : "مقدرناش نحمّل اللوحة",
+            error: err instanceof ApiError || err instanceof Error ? err.message : "ماقدرناش نحمّل البيانات. اتأكد من النت وحاول تاني.",
           });
         }
       });
@@ -121,247 +99,115 @@ export default function HomePage() {
     };
   }, [month]);
 
-  useEffect(() => {
-    if (state.month !== month || !state.data) return;
-    setSessionPhrase((current) => {
-      if (current.month === month) return current;
-      const expected = state.data!.overallExpectedPercent;
-      const currentMood = overallMood({
-        overall: state.data!.overall,
-        expectedPercent: expected,
-        empty: state.data!.empty,
-        remainingDays: state.data!.work.remaining,
-      });
-      return { month, text: pickStatusPhrase(currentMood.tone, state.data!.overall) };
-    });
-  }, [state, month]);
-
   const loading = state.month !== month;
   const { data, error } = state;
 
-  if (loading) {
-    return (
-      <div className="space-y-4 p-4">
-        <Skeleton className="h-40 w-full" />
-        <Skeleton className="h-20 w-full" />
-        <Skeleton className="h-60 w-full" />
-        <span className="sr-only">ثواني… بنحمّل لوحة الأداء</span>
-      </div>
-    );
-  }
-  if (error) return <Banner tone="error">{error}</Banner>;
-  if (!data) return <Banner tone="error">مفيش بيانات نعرضها</Banner>;
+  // Count-up خفيف: تحديث DOM مباشرة لتجنب إعادة رسم الصفحة في كل frame.
 
-  const newLines = data.kpis.find((kpi) => kpi.kpiKey === "new_lines");
-  const gap = Math.max(0, 100 - data.overall);
-  const expectedPercent = data.overallExpectedPercent;
-  const mood = overallMood({
-    overall: data.overall,
-    expectedPercent,
-    empty: data.empty,
-    remainingDays: data.work.remaining,
-  });
-  const moodStyle = MOOD_STYLES[mood.tone];
+  // احتفال هادي مرة واحدة في الشهر لما الإجمالي يوصل 100%.
+  useEffect(() => {
+    if (!data || loading || data.overall < 100) return;
+    const key = `tys.celebrated.${data.yearMonth}`;
+    try {
+      if (window.localStorage.getItem(key)) return;
+      window.localStorage.setItem(key, "1");
+    } catch {
+      return;
+    }
+    haptic([30, 50, 30]);
+    toast.push("success", "وصلت التارجت الشهري. عاش يا بطل 👏");
+  }, [data, loading, toast]);
 
-  const behindKpis = data.kpis.filter((kpi) => kpi.weight > 0 && kpi.percent < 100 && kpi.remaining > 0);
+  if (loading) return <HomeSkeleton />;
+  if (error) return <ErrorState title="حصلت مشكلة في تحميل البيانات" description={error} onRetry={() => window.location.reload()} />;
+  if (!data) return <EmptyState title="لسه مفيش بيانات" description="ابدأ بتسجيل أول بيعة ليك، وهتظهر مؤشرات أدائك هنا." actionLabel="تسجيل أول إنجاز" onAction={() => router.push(`/log?month=${month}`)} />;
 
+  // اون تراك: الإجمالي وصل لنسبة الأيام اللي عدّت من الشهر (أيام الشغل). لو مفيش أيام، مبنحكمش.
+  // النهارده مش محسوب في الأيام اللي عدّت.
+  // نفس منطق شاشة المدير بالظبط: الإجمالي الفعلي مقابل نسبة الوقت المنقضي من الشهر (أيام الشغل اللي خلصت قبل النهارده).
+  const doneDays = data.work.elapsedBeforeToday ?? data.work.elapsed;
+  // نفس حساب صفحة المدير بالظبط: متوسط نسب المؤشرات بأوزانها (من غير الكواليتي) مقابل نسبة الأيام اللي عدّت.
+  // كده لو كل مؤشراتك On Track ما يطلعش "Behind" بسبب بند الكواليتي أو قواعد الكوميشن.
+  const tracked = data.kpis.filter((k) => k.kpiKey !== "quality" && !k.nameEn.trim().toLowerCase().startsWith("kyc") && k.weight > 0);
+  const trackedWeight = tracked.reduce((sum, k) => sum + k.weight, 0);
+  const trackPercent = trackedWeight > 0 ? tracked.reduce((sum, k) => sum + k.percent * k.weight, 0) / trackedWeight : data.overall;
+  const onTrack: boolean | null = data.work.total > 0 ? trackPercent >= (doneDays / data.work.total) * 100 : null;
   return (
-    <div className="space-y-5">
-      <section className="text-center">
-        <span className={`inline-flex items-center gap-1 rounded-full border px-3 py-1 text-xs font-extrabold ${moodStyle.box} ${moodStyle.title}`}>
-          {mood.emoji} {STATUS_BADGE[mood.tone]}
-        </span>
-        <h1 className="mt-2 text-[1.65rem] font-black leading-10 text-neutral-900">
-          {greeting()} {data.profile.name.split(" ")[0]} 👋
-        </h1>
-        <p className="mt-1 text-sm text-ink-2">
-          📍 {data.profile.branch} · {data.monthLabel}
+    <div className="tys-page orn-home mx-auto flex min-h-screen w-full max-w-6xl translate-y-0 flex-col gap-4 pb-28 opacity-100 transition-all duration-500 ease-out" style={{ animation: "tys-page-enter 500ms ease-out backwards" }}>
+      {sync ? (
+        <p className={`text-xs font-bold ${sync.ok ? "text-emerald-700" : "text-red-600"}`} dir="rtl">
+          {sync.ok
+            ? `☁️ اتبعت للمدير ${new Date(sync.at).toLocaleTimeString("en-US", { timeZone: "Africa/Cairo", hour: "2-digit", minute: "2-digit", hour12: false })}`
+            : `⚠️ مااتبعتش للمدير: ${sync.error ?? ""}. `}
+          {sync.ok ? null : (
+            <button type="button" onClick={() => void pushReport()} className="min-h-8 rounded-lg px-2 font-black underline">
+              جرّب تبعت تاني
+            </button>
+          )}
         </p>
-      </section>
-
-      <section className="relative isolate overflow-hidden rounded-hero border border-hero bg-gradient-to-br from-[#fffaf5] via-[#fff2e4] to-[#ffe4ca] p-4 shadow-pop sm:p-6">
-        <div aria-hidden="true" className="pointer-events-none absolute -left-12 -top-16 h-52 w-52 rounded-full bg-brand-glow/20 blur-3xl" />
-        <div aria-hidden="true" className="pointer-events-none absolute -bottom-20 right-1/4 h-48 w-48 rounded-full bg-white/80 blur-3xl" />
-        <div className="relative flex items-center gap-4 sm:gap-6">
-          <div className="flex h-28 w-28 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#ff9a45] via-[#f07818] to-[#c6530b] p-1 shadow-glow sm:h-36 sm:w-36">
-            <div className="flex h-full w-full items-center justify-center rounded-full border border-white/40 bg-white/10">
-              <ScoreRing value={data.overall} />
-            </div>
-          </div>
-          <div className="min-w-0 flex-1">
-            <p className="text-sm font-extrabold text-ink-warm">إجمالي التارجت الشهري</p>
-            <p className="mt-1 text-3xl font-black tracking-tight text-brand-ink sm:text-4xl"><AnimatedCounter value={Math.round(data.overall)} className="text-3xl font-black tracking-tight sm:text-4xl" />%</p>
-            <p className="mt-1 text-sm font-bold text-ink-warm">{gap > 0 ? `فاضل ${formatPercent(gap)}%` : "مفيش فاضل، قفلت الشهر"}</p>
-          </div>
-        </div>
-        <div className="relative mt-4 px-1">
-          <BulletChart percent={data.overall} expected={expectedPercent} className="mt-4" />
-          <p className="mt-2 text-sm text-ink-2 dark:text-ink-2-dark">
-            المتوقع النهارده: {Math.round(expectedPercent)}%
-          </p>
-        </div>
-        <div className="relative mt-4 grid grid-cols-2 gap-2">
-          <div className="rounded-2xl border border-white/80 bg-white/75 p-3 shadow-sm backdrop-blur-sm">
-            <p className="text-[11px] font-bold text-ink-2">الكوميشن المتوقع</p>
-            <p className="mt-1 text-lg font-black text-brand-ink"><AnimatedCounter value={Math.round(data.estimatedCommission)} /> <span className="text-[10px] font-bold text-ink-2">جنيه</span></p>
-          </div>
-          <div className="rounded-2xl border border-white/80 bg-white/75 p-3 shadow-sm backdrop-blur-sm">
-            <p className="text-[11px] font-bold text-ink-2">الكوميشن الكامل</p>
-            <p className="mt-1 text-lg font-black text-ink"><AnimatedCounter value={Math.round(data.fullCommission)} /> <span className="text-[10px] font-bold text-ink-2">جنيه</span></p>
-          </div>
-        </div>
-      </section>
-      <AchievementShare name={data.profile.name} branch={data.profile.branch} monthLabel={data.monthLabel} overall={data.overall} kpis={data.kpis} />
-      <section className={`rounded-card border p-4 shadow-card ${moodStyle.box}`}>
-        <p className={`text-base font-black ${moodStyle.title}`}>
-          {mood.emoji} {mood.headline}
-        </p>
-        <p className={`mt-1 text-sm leading-7 ${moodStyle.text}`}>{sessionPhrase.month === month && sessionPhrase.text ? sessionPhrase.text : mood.detail}</p>
-        <div className="mt-3 grid grid-cols-3 gap-2 text-center">
-          <div className="rounded-2xl border border-white/70 bg-white/75 p-2 shadow-sm">
-            <p className="text-lg font-black text-neutral-900">{data.work.total}</p>
-            <p className="text-[11px] text-ink-2">أيام الشغل</p>
-          </div>
-          <div className="rounded-2xl bg-white/70 p-2">
-            <p className="text-lg font-black text-neutral-900">{data.work.elapsed}</p>
-            <p className="text-[11px] text-ink-2">عدّت</p>
-          </div>
-          <div className="rounded-2xl bg-white/70 p-2">
-            <p className="text-lg font-black text-neutral-900">{data.work.remaining}</p>
-            <p className="text-[11px] text-ink-2">فاضلة</p>
-          </div>
-        </div>
-        <p className="mt-2 text-xs text-ink-2">المتوقع لحد النهارده: {formatPercent(expectedPercent)}%</p>
-      </section>
-
-      <div className="grid grid-cols-2 gap-3">
-        <article className="group relative overflow-hidden rounded-card border border-hero bg-gradient-to-br from-white via-white to-[#fff6ed] p-3 shadow-card transition-all duration-200 hover:-translate-y-0.5 hover:shadow-pop before:absolute before:inset-y-3 before:right-0 before:w-1 before:rounded-l-full before:bg-gradient-to-b before:from-[#ff963f] before:to-[#c6530b]">
-          <p className="text-sm font-bold text-ink-2">📱 الخطوط اللي عملتها</p>
-          <p className="mt-2 text-3xl font-black tracking-tight text-brand-600">{formatQty(newLines?.achieved ?? 0)}</p>
-          <p className="text-xs text-ink-2">من {formatQty(newLines?.target ?? 0)}</p>
-        </article>
-        <article className="group relative overflow-hidden rounded-card border border-hero bg-gradient-to-br from-white via-white to-[#fff6ed] p-3 shadow-card transition-all duration-200 hover:-translate-y-0.5 hover:shadow-pop before:absolute before:inset-y-3 before:right-0 before:w-1 before:rounded-l-full before:bg-gradient-to-b before:from-[#ff963f] before:to-[#c6530b]">
-          <p className="text-sm font-bold text-ink-2">🎯 الفاضل في الخطوط</p>
-          <p className="mt-2 text-3xl font-black tracking-tight text-brand-600">{formatQty(newLines?.remaining ?? 0)}</p>
-          <p className="text-xs text-ink-2">خط</p>
-        </article>
-      </div>
-
-      {data.weightWarning ? (
-        <Banner tone="warn">⚠️ مجموع الأوزان {formatPercent(data.weightSum)}% مش 100%. راجع صفحة التارجت.</Banner>
       ) : null}
 
-      <section className="rounded-card bg-brand-50 p-4 text-sm leading-7 text-brand-ink">
-        <p className="font-extrabold">⚡ المطلوب منك النهارده عشان تفضل ON TRACK:</p>
-        {behindKpis.length === 0 ? (
-          <p className="mt-1 font-bold">كل المؤشرات تمام. مفيش حاجة ضاغطة النهارده 👌</p>
-        ) : data.work.remaining <= 0 ? (
-          <p className="mt-1 font-bold">أيام الشغل خلصت. اللي فاضل: {behindKpis.map((k) => `${kpiEmoji(k.kpiKey)} ${k.nameEn} ${formatQty(k.remaining)}`).join(" · ")}</p>
-        ) : (
-          <ul className="mt-2 space-y-1">
-            {behindKpis.map((kpi) => (
-              <li key={kpi.kpiKey} className="flex items-center justify-between gap-2">
-                <span className="font-bold">
-                  {kpiEmoji(kpi.kpiKey)} {kpi.nameEn}
-                </span>
-                <span className="font-black">
-                  {formatQty(Math.ceil(kpi.remaining / data.work.remaining))} {kpi.unitAr} — فاضل {formatQty(kpi.remaining)}
-                </span>
-              </li>
-            ))}
-          </ul>
-        )}
+      <section className="orn-greeting orn-card" dir="rtl">
+        <div><h1>{greeting()} <bdi>{data.profile.name.trim().split(/\s+/)[0]}</bdi></h1><p><span className="orn-pin" /> <bdi>{data.profile.branch}</bdi></p></div>
+        <span className="orn-avatar" aria-hidden="true">{data.profile.name.trim().charAt(0).toUpperCase() || "M"}</span>
       </section>
-
-      {data.empty ? (
-        <EmptyState
-          title="ابدأ الشهر بقوة 🚀"
-          text="لسه مفيش سجلات الشهر ده. الأرقام اللي تحت من إعدادات التارجت بس، والمحقق صفر عشان مفيش عمليات محفوظة."
-          action={
-            <Link href={`/log?month=${month}`} className="inline-flex min-h-12 items-center rounded-full bg-brand-600 px-5 font-extrabold text-white">
-              ➕ سجّل أول إنجاز
-            </Link>
-          }
-        />
-      ) : (
-        <p className="text-sm text-ink-2">عدد العمليات المحفوظة الشهر ده: {data.entriesCount}</p>
-      )}
-
-      <section>
-        <Link
-          href="/assistant"
-          className="relative flex items-center gap-3 overflow-hidden rounded-hero border border-section bg-gradient-to-br from-white via-white to-brand-surface p-5 shadow-accent ring-1 ring-white transition hover:bg-brand-surface"
-        >
-          <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-brand-200 text-2xl">🤖</span>
-          <span>
-            <span className="block text-lg font-black text-brand-ink-strong">المساعد الذكي</span>
-            <span className="mt-1 block text-sm leading-6 text-ink-2">عندك سؤال عن باقة أو عرض أو إجراء؟ اسأل هنا وخد إجابة فورية.</span>
-          </span>
-        </Link>
-      </section>
-
-      <section className="space-y-3">
-        <div className="flex items-end justify-between gap-3">
-          <div>
-            <h2 className="text-xl font-black text-ink">مؤشرات الأداء</h2>
-            <p className="mt-1 text-xs text-ink-2">نظرة سريعة على كل مؤشر من مؤشراتك</p>
-          </div>
-          <span className="rounded-full border border-line-shell bg-white/80 px-3 py-1 text-[11px] font-extrabold text-brand-600">{data.kpis.length} مؤشرات</span>
+      <section className="orn-monthly orn-card" aria-label="الأداء الشهري">
+        <div className="orn-month-ring" role="img" aria-label={`إجمالي تحقيق التارجت ${formatPercent(data.overall)}%`}>
+          <svg viewBox="0 0 200 200" aria-hidden="true">
+            <path className="orn-diamond-track" d="M100 4L196 100L100 196L4 100Z" />
+            <path className="orn-diamond-fill" d="M100 4L196 100L100 196L4 100Z" pathLength="100" strokeDasharray={`${Math.min(100, Math.max(0, data.overall))} 100`} />
+            <path className="orn-diamond-inner" d="M100 20L180 100L100 180L20 100Z" />
+            <path className="orn-diamond-corners" d="M74 4H50L4 50V74 M126 196H150L196 150V126" />
+          </svg>
+          <div className="orn-month-center"><span>إجمالي تحقيق التارجت</span><strong dir="ltr">{formatPercent(data.overall)}<small>%</small></strong></div>
         </div>
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 tys-kpi-grid">
-          {data.kpis.map((kpi) => {
-            const visual = Math.min(100, Math.max(0, kpi.percent));
-            const featured = kpi.kpiKey === "new_lines";
-            const kpiExpected = kpi.target > 0 ? (kpi.expectedToDate / kpi.target) * 100 : 0;
-            const m = kpiMood({ percent: kpi.percent, expectedPercent: kpiExpected, weight: kpi.weight });
-            const moodColor =
-              m.tone === "good" ? "text-ok" : m.tone === "warn" ? "text-warn" : m.tone === "bad" ? "text-risk" : "text-ink-2";
-            const progressGradient =
-              m.tone === "good"
-                ? "linear-gradient(90deg, #34d399 0%, #059669 100%)"
-                : m.tone === "warn"
-                  ? "linear-gradient(90deg, #fbbf24 0%, #d97706 100%)"
-                  : m.tone === "bad"
-                    ? "linear-gradient(90deg, #fb7185 0%, #dc2626 100%)"
-                    : "linear-gradient(90deg, #ffad68 0%, #f07818 52%, #c6530b 100%)";
-            const progressTrack =
-              m.tone === "good" ? "bg-ok-soft" : m.tone === "warn" ? "bg-warn-soft" : m.tone === "bad" ? "bg-risk-soft" : "bg-surface-progress";
+        <div className="orn-month-side"><span className={`orn-status ${onTrack === false ? "is-behind" : ""}`}>{onTrack === null ? "مستني بيانات" : onTrack ? "On track" : "Behind"}</span><div className="orn-commission"><p>الكوميشن المحقق</p><strong dir="ltr">{formatMoney(data.estimatedCommission)}</strong><small>جنيه</small></div></div>
+      </section>
+
+      {/* المطلوب */}
+      <section className="orn-daily orn-card">
+        <div className="mb-3 flex items-center justify-between gap-2">
+          <div>
+            <h2 className="mt-0.5 text-sm font-extrabold text-[var(--color-text-primary)]">المطلوب النهارده</h2>
+          </div>
+          <span className="shrink-0 rounded-full bg-[var(--color-primary-50)] px-2.5 py-1 text-xs font-extrabold text-[var(--color-primary-700)]">
+            فاضل {formatQty(data.work.remaining)} يوم عمل
+          </span>
+        </div>
+        <div className="orn-daily-grid">
+          {data.kpis.filter((k) => k.kpiKey !== "quality" && k.remaining > 0).map((k) => {
+            const dailyRequired = data.work.remaining > 0 ? Math.ceil(k.remaining / data.work.remaining) : k.remaining;
             return (
-              <article
-                key={kpi.kpiKey}
-                className={`relative overflow-hidden rounded-card border p-3.5 shadow-card transition-all duration-200 hover:-translate-y-0.5 hover:shadow-pop sm:p-4 ${featured ? "col-span-2 border-hero bg-gradient-to-br from-white via-[#fffaf5] to-[#fff0df] sm:col-span-2" : "border-line-shell bg-white/95"}`}
+              <div
+                key={k.kpiKey}
+                className="orn-daily-tile"
               >
-                {featured ? <span aria-hidden="true" className="pointer-events-none absolute -left-8 -top-10 h-28 w-28 rounded-full bg-brand-300/10 blur-2xl" /> : null}
-                <div className="relative flex items-center justify-between gap-2">
-                  <div className="flex items-center gap-2">
-                    <span className={`flex h-9 w-9 items-center justify-center rounded-xl ${featured ? "bg-gradient-to-br from-[#ff9a45] to-[#c6530b] text-xl text-white shadow-md shadow-orange-900/10" : "bg-brand-50 text-xl"}`}>{kpiEmoji(kpi.kpiKey)}</span>
-                    <h3 className="text-sm font-extrabold text-ink" dir="ltr">{kpi.nameEn}</h3>
-                  </div>
-                  <p className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-black ${featured ? "bg-white/85 text-brand-600" : "bg-brand-surface text-brand-600"}`}>{formatPercent(kpi.percent)}%</p>
-                </div>
-                <div className="relative mt-3 flex items-baseline gap-1.5">
-                  <p className={`font-black tracking-tight text-ink ${featured ? "text-3xl sm:text-4xl" : "text-2xl"}`}>{formatQty(kpi.achieved)}</p>
-                  <span className="text-xs text-ink-2">من {formatQty(kpi.target)} {kpi.unitAr}</span>
-                </div>
-                <div
-                  role="progressbar"
-                  aria-label={`نسبة إنجاز ${kpi.nameEn}`}
-                  aria-valuemin={0}
-                  aria-valuemax={100}
-                  aria-valuenow={visual}
-                  className={`relative mt-3 overflow-hidden rounded-full ${progressTrack} ${featured ? "h-2.5" : "h-2"} ring-1 ring-inset ring-black/[0.025]`}
-                >
-                  <div
-                    className="h-full rounded-full transition-[width] duration-700 ease-out"
-                    style={{ width: `${visual}%`, background: progressGradient, boxShadow: "0 1px 5px rgba(90, 45, 15, .16)" }}
-                  />
-                </div>
-                <div className="relative mt-2 flex flex-wrap items-center justify-between gap-1">
-                  <p className={`text-[11px] font-bold ${moodColor}`}>{m.emoji} {m.text}</p>
-                  <p className="text-[11px] text-ink-2">فاضل {formatQty(kpi.remaining)}</p>
-                </div>
-              </article>
+                <span className="min-w-0 truncate text-[11px] font-bold tracking-wide text-orange-800" dir="ltr">{k.kpiKey === "new_orange_cash" ? "Wallets" : k.nameEn}</span>
+                <strong className="shrink-0 rounded-md border border-white bg-orange-50 px-2 py-1 text-base font-black leading-none tabular-nums text-orange-800">
+                  {formatQty(dailyRequired)}
+                </strong>
+              </div>
             );
+          })}
+          {data.kpis.filter((k) => k.kpiKey !== "quality").every((k) => k.remaining <= 0) ? (
+            <p className="col-span-full rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-center text-xs font-extrabold text-emerald-700">كل المؤشرات مكتملة ✓</p>
+          ) : null}
+        </div>
+      </section>
+
+      <section className="orn-kpis">
+        <h2 className="orn-section-title">مؤشرات الأداء</h2>
+        <div className="orn-kpi-grid">
+          {data.kpis.map((kpi) => {
+            const onTrackKpi = kpi.achieved >= kpi.expectedToDate;
+            const pct = Math.min(100, Math.max(0, kpi.percent));
+            return <article key={kpi.kpiKey} className={`orn-kpi orn-card ${kpi.percent >= 100 ? "is-win" : ""}`}>
+              <span className="orn-watermark"><KpiIcon kpiKey={kpi.kpiKey}/></span>
+              <div className="orn-kpi-head"><div className="orn-kpi-identity"><span className="orn-kpi-icon"><KpiIcon kpiKey={kpi.kpiKey}/></span><span dir="ltr">{kpi.nameEn}</span></div><span className={`orn-status ${onTrackKpi ? "" : "is-behind"}`}>{onTrackKpi ? "On track" : `ناقص ${formatQty(Math.max(0, Math.ceil(kpi.expectedToDate-kpi.achieved)))}`}</span></div>
+              <div className="orn-kpi-body"><div className="orn-kpi-numbers" dir="ltr"><strong>{formatQty(kpi.achieved)}</strong><span>/ {formatQty(kpi.target)}</span></div><div className="orn-kpi-ring"><svg viewBox="0 0 55 55" aria-hidden="true"><circle cx="27.5" cy="27.5" r="24"/><circle className="orn-ring-fill" cx="27.5" cy="27.5" r="24" pathLength="100" strokeDasharray={`${pct} 100`}/></svg><b>{Math.round(kpi.percent)}%</b></div></div>
+              <div className="orn-track" role="progressbar" aria-label={kpi.nameEn} aria-valuenow={Math.round(kpi.percent)} aria-valuemin={0} aria-valuemax={Math.max(100,Math.round(kpi.percent))}><i style={{width:`${pct}%`}}/></div>
+              <p className="orn-kpi-foot">{kpi.percent >= 100 ? <><span>✦</span> {kpi.percent > 100 ? "عدّيت التارجت، عاش!" : "حققت التارجت، عاش!"}</> : kpi.remaining > 0 && data.work.remaining > 0 ? <>محتاج <b>{formatQty(Math.ceil(kpi.remaining/data.work.remaining))}</b> يوميًا</> : <>المتبقي {formatQty(kpi.remaining)} {kpi.unitAr}</>}</p>
+            </article>;
           })}
         </div>
       </section>

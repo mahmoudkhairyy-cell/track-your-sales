@@ -3,17 +3,20 @@
  * الصفحات بتكلم "/api/..." زي ما كانت، وهنا بنرد عليها محلياً بنفس الشكل.
  */
 import {
-  DEFAULT_COMMISSION,
+  AREA_MANAGERS,
   DEFAULT_WORKING_DAYS,
   ISO_DATE_RE,
   KPI_CATALOG,
   KPI_KEYS,
   SCHEMA_VERSION,
   YEAR_MONTH_RE,
+  kpiWeight,
   type KpiKey,
+  type Role,
 } from "@/lib/constants";
 import {
   achievementPercent,
+  applyCompanyRules,
   buildWorkdayStats,
   catalogByKey,
   estimatedCommission,
@@ -22,9 +25,10 @@ import {
   newLinesDailyNeed,
   sumWeights,
 } from "@/lib/calculations";
-import { cairoISODate, cairoYearMonth, monthDateRange, monthLabelAr } from "@/lib/dates";
+import { cairoISODate, cairoYearMonth, listMonthDates, monthDateRange, monthLabelAr, shiftYearMonth } from "@/lib/dates";
 import { validateQuantity } from "@/lib/quantity";
-import { backupSummary, parseBackup, planEntryRestore, type BackupFile } from "@/lib/backup";
+import { backupSummary, parseBackup, type BackupFile } from "@/lib/backup";
+import { applyBackupToState, checkRestoreRequest } from "@/lib/restore";
 import type { WorkingDays } from "@/lib/types";
 
 const STORAGE_KEY = "trackYourSales.local.v1";
@@ -56,17 +60,47 @@ type KpiRow = {
 
 type Holiday = { date: string; note: string | null };
 
+/** الكواليتي = الـChecklist بس. الدرجات الرقمية القديمة بتتجاهل. */
+type QualityScores = { checks: Record<QualityNumKey, boolean> };
+
+type QualityNumKey = "kyc" | "visits" | "training" | "pos" | "csat";
+const QUALITY_WEIGHTS: Record<QualityNumKey, number> = { kyc: 5, visits: 5, training: 2, pos: 1, csat: 2 };
+const ZERO_QUALITY: QualityScores = { checks: { kyc: false, visits: false, training: false, pos: false, csat: false } };
+
+// نسبة تحقيق الكواليتي (0-100) = مجموع (نسبة كل بند × وزنه) ÷ مجموع الأوزان (15)
+function qualityPercent(q: QualityScores): number {
+  // كل بند متعلّم عليه ✓ بيتحسب بوزنه كامل، والبند اللي مش متعلّم بيتحسب صفر.
+  const total = (Object.keys(QUALITY_WEIGHTS) as QualityNumKey[]).reduce(
+    (sum, key) => sum + (q.checks?.[key] ? QUALITY_WEIGHTS[key] : 0),
+    0,
+  );
+  return (total / 15) * 100;
+}
+
+/** بيقبل الـchecks بس، والدرجات الرقمية القديمة (لو موجودة في بيانات محفوظة أو نسخة قديمة) بتتجاهل من غير خطأ. */
+function qualityFromChecks(checks: unknown): QualityScores {
+  const source = checks && typeof checks === "object" ? (checks as Record<string, unknown>) : {};
+  return {
+    checks: Object.fromEntries(
+      (Object.keys(QUALITY_WEIGHTS) as QualityNumKey[]).map((key) => [key, source[key] === true]),
+    ) as Record<QualityNumKey, boolean>,
+  };
+}
+
+function requireQuality(value: unknown): QualityScores {
+  const row = (value && typeof value === "object" ? value : {}) as Record<string, unknown>;
+  return qualityFromChecks(row.checks);
+}
+
 type MonthRow = {
   fullCommission: number;
-  allowCommissionOver100: boolean;
   workingDays: WorkingDays;
   kpis: KpiRow[];
   holidays: Holiday[];
+  quality?: QualityScores;
 };
 
-
-
-type Profile = { name: string; branch: string; role: string };
+type Profile = { name: string; branch: string; role: string; areaManager?: string };
 
 type State = {
   profile: Profile;
@@ -79,10 +113,10 @@ type Bundle = {
   saved: boolean;
   yearMonth: string;
   fullCommission: number;
-  allowCommissionOver100: boolean;
   workingDays: WorkingDays;
   kpis: KpiRow[];
   holidays: Holiday[];
+  quality: QualityScores;
   monthSettingsId: null;
 };
 
@@ -100,7 +134,7 @@ function fail(status: number, message: string): never {
 
 function emptyState(): State {
   return {
-    profile: { name: "موظف المبيعات", branch: "الفرع", role: "owner" },
+    profile: { name: "", branch: "", role: "", areaManager: "" },
     entries: [],
     months: {},
     articles: [],
@@ -113,19 +147,14 @@ function loadState(): State {
     raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return emptyState();
     const parsed = JSON.parse(raw) as Partial<State>;
-    const empty = emptyState();
-    return {
-      ...empty, ...parsed,
-      profile: { ...empty.profile, ...(parsed.profile ?? {}) },
-      entries: Array.isArray(parsed.entries) ? parsed.entries : [],
-      months: parsed.months && typeof parsed.months === "object" ? parsed.months : {},
-      articles: Array.isArray(parsed.articles) ? parsed.articles : [],
-    };
+    return { ...emptyState(), ...parsed };
   } catch {
     // البيانات المحفوظة بايظة: منمسحهاش، ننسخها جنب الأصلية قبل ما أي حفظ جديد يكتب فوقها.
+    // نسخة واحدة بس: loadState بيتنادى مع كل طلب، ولو كل مرة نكتب نسخة جديدة المساحة هتخلص.
     if (raw) {
       try {
-        localStorage.setItem(`${STORAGE_KEY}.corrupt.${Date.now()}`, raw);
+        const copyKey = `${STORAGE_KEY}.corrupt`;
+        if (localStorage.getItem(copyKey) === null) localStorage.setItem(copyKey, raw);
       } catch {
         // لو المساحة خلصت، مفيش أكتر من كده نعمله.
       }
@@ -138,6 +167,11 @@ function loadState(): State {
 function saveState(state: State): boolean {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    // Notify the app shell after every successful local mutation so the latest
+    // complete report is queued for cloud sync.
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new Event("tys-data-changed"));
+    }
     return true;
   } catch {
     // لو المتصفح منعنا من الحفظ، نبلغ المستخدم عشان ما يفتكرش إن الإنجاز اتحفظ.
@@ -157,12 +191,26 @@ function newId(): string {
 
 /* ---------- قراءة الملف الشخصي (بيستخدمه الشريط الجانبي) ---------- */
 
-export function readProfile(): { name: string; branch: string; role: string } {
-  const p = loadState().profile;
-  return { name: p.name || "موظف المبيعات", branch: p.branch || "الفرع", role: p.role || "owner" };
+export function readProfile(): { name: string; branch: string; role: Role | ""; areaManager: string } {
+  const state = loadState();
+  const role = state.profile.role;
+  return { name: state.profile.name, branch: state.profile.branch, areaManager: state.profile.areaManager ?? "", role: role === "manager" || role === "agent" || role === "team_leader" || role === "area_manager" ? role : "" };
 }
 
+/** تسجيل خروج الموظف أو التيم ليدر مع الاحتفاظ بكل الإنجازات والتارجت والنسخ الاحتياطية. */
+export function logoutProfile(): boolean {
+  const state = loadState();
+  state.profile = { name: "", branch: "", role: "", areaManager: "" };
+  return saveState(state);
+}
 
+/** تسجيل خروج مدير الفرع فقط مع الاحتفاظ بكل بيانات المبيعات والتقارير والإعدادات. */
+export function logoutBranchManager(): boolean {
+  const state = loadState();
+  if (state.profile.role !== "manager") return true;
+  state.profile = { name: "", branch: "", role: "", areaManager: "" };
+  return saveState(state);
+}
 
 /* ---------- تحقق من المدخلات ---------- */
 
@@ -232,36 +280,107 @@ function requireWorkingDays(value: unknown): WorkingDays {
 
 /* ---------- بناء الشهر والسجلات ---------- */
 
-function defaultBundle(yearMonth: string): Bundle {
+function roleOf(state: State): Role {
+  if (state.profile.role === "manager") return "manager";
+  if (state.profile.role === "area_manager") return "area_manager";
+  if (state.profile.role === "team_leader") return "team_leader";
+  return "agent";
+}
+
+function defaultBundle(yearMonth: string, role: Role): Bundle {
   return {
-    saved: false, yearMonth, fullCommission: DEFAULT_COMMISSION, allowCommissionOver100: false,
+    saved: false,
+    yearMonth,
+    fullCommission: 0,
     workingDays: { ...DEFAULT_WORKING_DAYS },
-    kpis: KPI_CATALOG.map((kpi, index) => ({ kpiKey: kpi.key, target: kpi.defaultTarget, weight: kpi.defaultWeight, unitAr: kpi.unitAr, sortOrder: index })),
-    holidays: [], monthSettingsId: null,
+    kpis: KPI_CATALOG.map((kpi, index) => ({
+      kpiKey: kpi.key,
+      target: 0,
+      weight: kpiWeight(kpi.key, role),
+      unitAr: kpi.unitAr,
+      sortOrder: index,
+    })),
+    holidays: [],
+    quality: { checks: { ...ZERO_QUALITY.checks } },
+    monthSettingsId: null,
   };
 }
+
+/** شهر جديد: بنعتمد تارجت وأوزان وكومشن آخر شهر اتحفظ قبله، والموظف يقدر يغيّر بعدين. الإجازات والكواليتي بتبدأ فاضية. */
+function prefillBundle(state: State, yearMonth: string, role: Role): Bundle {
+  const base = defaultBundle(yearMonth, role);
+  // أدوار الإدارة للمتابعة فقط؛ لا ترث تارجت أو أوزانًا شخصية من شهر سابق.
+  if (role === "manager" || role === "area_manager") return base;
+  const previous = Object.keys(state.months)
+    .filter((key) => key < yearMonth)
+    .sort()
+    .pop();
+  const prev = previous ? state.months[previous] : undefined;
+  if (!prev) return base;
+  const prevMap = new Map((prev.kpis ?? []).map((item) => [item.kpiKey, item]));
+  // الإجازات بتتنقل حسب أيام الأسبوع: لو اختار التلات، كل التلاتات في الشهر الجديد إجازة.
+  const [year, month] = yearMonth.split("-").map(Number);
+  const daysInMonth = new Date(Date.UTC(year, month, 0)).getUTCDate();
+  const weekdays = new Set((prev.holidays ?? []).map((item) => {
+    const [y, m, d] = item.date.split("-").map(Number);
+    return new Date(Date.UTC(y, m - 1, d)).getUTCDay();
+  }));
+  const holidays: Holiday[] = [];
+  for (let day = 1; day <= daysInMonth; day += 1) {
+    const weekday = new Date(Date.UTC(year, month - 1, day)).getUTCDay();
+    if (weekdays.has(weekday)) {
+      holidays.push({ date: `${yearMonth}-${String(day).padStart(2, "0")}`, note: null });
+    }
+  }
+  return {
+    ...base,
+    holidays,
+    fullCommission: prev.fullCommission,
+    kpis: base.kpis.map((kpi) => {
+      const old = prevMap.get(kpi.kpiKey);
+      return old && kpi.kpiKey !== "new_orange_cash" ? { ...kpi, target: old.target } : kpi;
+    }),
+  };
+}
+
 function loadBundle(state: State, yearMonth: string): Bundle {
   const row = state.months[yearMonth];
-  if (!row) return defaultBundle(yearMonth);
+  const role = roleOf(state);
+  if (!row) return prefillBundle(state, yearMonth, role);
+
   const savedMap = new Map((row.kpis ?? []).map((item) => [item.kpiKey, item]));
   const kpis = KPI_CATALOG.map((kpi, index) => {
     const saved = savedMap.get(kpi.key);
-    return { kpiKey: kpi.key, target: saved?.target ?? kpi.defaultTarget, weight: saved?.weight ?? kpi.defaultWeight,
-      unitAr: saved?.unitAr ?? kpi.unitAr, sortOrder: saved?.sortOrder ?? index };
-  }).sort((a,b)=>a.sortOrder-b.sortOrder);
-  return { saved: true, yearMonth, fullCommission: row.fullCommission ?? DEFAULT_COMMISSION,
-    allowCommissionOver100: row.allowCommissionOver100 ?? false, workingDays: { ...(row.workingDays ?? DEFAULT_WORKING_DAYS) },
-    kpis, holidays: [...(row.holidays ?? [])].sort((a,b)=>a.date.localeCompare(b.date)), monthSettingsId: null };
+    // تارجت المحافظ الجديدة بيدخله الموظف بإيده.
+    const target = saved?.target ?? 0;
+    return {
+      kpiKey: kpi.key,
+      target,
+      // الأوزان ثابتة من الكود بس، مش بتتغير من التطبيق.
+      weight: kpiWeight(kpi.key, role),
+      unitAr: saved?.unitAr ?? kpi.unitAr,
+      sortOrder: saved?.sortOrder ?? index,
+    };
+  }).sort((a, b) => a.sortOrder - b.sortOrder);
+
+  return {
+    saved: true,
+    yearMonth,
+    fullCommission: row.fullCommission,
+    workingDays: { ...(row.workingDays ?? DEFAULT_WORKING_DAYS) },
+    kpis,
+    holidays: [...(row.holidays ?? [])].sort((a, b) => a.date.localeCompare(b.date)),
+    quality: row.quality ? qualityFromChecks(row.quality.checks) : { checks: { ...ZERO_QUALITY.checks } },
+    monthSettingsId: null,
+  };
 }
-
-
 
 function enrichEntry(entry: Entry) {
   const catalog = catalogByKey(entry.kpiKey);
   return {
     ...entry,
     nameEn: catalog?.nameEn ?? entry.kpiKey,
-    nameAr: catalog?.nameAr ?? entry.kpiKey,
+    nameAr: catalog?.nameEn ?? entry.kpiKey,
     unitAr: catalog?.unitAr ?? "",
   };
 }
@@ -336,36 +455,69 @@ function getMonth(state: State, yearMonth: string) {
 
 function putMonth(state: State, yearMonth: string, data: Record<string, unknown>) {
   const fullCommission = Number(data.fullCommission);
-  if (!Number.isFinite(fullCommission) || fullCommission < 0) fail(400, "الكوميشن الكامل لازم يكون رقم صفر أو أكبر");
-  const allowCommissionOver100 = Boolean(data.allowCommissionOver100);
+  if (!Number.isFinite(fullCommission) || fullCommission < 0) {
+    fail(400, "الكوميشن الكامل لازم يكون رقم صفر أو أكبر");
+  }
   const workingDays = requireWorkingDays(data.workingDays);
-  if (!Array.isArray(data.kpis) || !Array.isArray(data.holidays)) fail(400, "إعدادات الشهر ناقصة");
-  const kpis: KpiRow[] = data.kpis.map((item, index) => {
-    if (!item || typeof item !== "object") fail(400, `مؤشر رقم ${index+1} شكله غلط`);
-    const row = item as Record<string,unknown>, key=row.kpiKey;
-    if (typeof key !== "string" || !KPI_CATALOG.some(k=>k.key===key)) fail(400,"فيه إيتم مش معروف");
-    const target=Number(row.target), weight=Number(row.weight);
-    if (!Number.isFinite(target)||target<0) fail(400,`تارجت ${key} غير صالح`);
-    if (!Number.isFinite(weight)||weight<0) fail(400,`وزن ${key} غير صالح`);
-    const cat=KPI_CATALOG.find(k=>k.key===key)!;
-    return {kpiKey:key as KpiKey,target,weight,unitAr:typeof row.unitAr==="string"&&row.unitAr.trim()?row.unitAr.trim():cat.unitAr,sortOrder:index};
+  if (!Array.isArray(data.kpis)) fail(400, "الإيتمز ناقصة");
+  if (!Array.isArray(data.holidays)) fail(400, "قائمة الإجازات ناقصة");
+
+  const kpis: KpiRow[] = (data.kpis as unknown[]).map((item, index) => {
+    if (!item || typeof item !== "object") fail(400, `مؤشر رقم ${index + 1} شكله غلط`);
+    const row = item as Record<string, unknown>;
+    const kpiKey = row.kpiKey;
+    if (typeof kpiKey !== "string" || !KPI_CATALOG.some((kpi) => kpi.key === kpiKey)) {
+      fail(400, "فيه إيتم مش معروف");
+    }
+    // الـ Quality تارجته ثابت 100% (بيتحسب من البنود المتعلمة)، فمايتطلبش من الموظف.
+    const target = kpiKey === "quality" ? 100 : Number(row.target);
+    if (!Number.isFinite(target) || target < 0) fail(400, `تارجت ${kpiKey} غير صالح`);
+    const catalog = KPI_CATALOG.find((kpi) => kpi.key === kpiKey)!;
+    const weight = kpiWeight(kpiKey as KpiKey, roleOf(state));
+    if (weight > 0 && target <= 0) fail(400, `لازم تدخل تارجت ${catalog.nameEn}`);
+    return {
+      kpiKey: kpiKey as KpiKey,
+      target,
+      // الوزن ثابت من الكود حسب الدور، أي قيمة جاية من الواجهة بتتجاهل.
+      weight,
+      unitAr: typeof row.unitAr === "string" && row.unitAr.trim() ? row.unitAr.trim() : catalog.unitAr,
+      sortOrder: index,
+    };
   });
-  if(kpis.length!==KPI_CATALOG.length) fail(400,"لازم تحفظ كل الإيتمز");
-  if(new Set(kpis.map((item)=>item.kpiKey)).size!==KPI_CATALOG.length) fail(400,"مينفعش تكرر نفس المؤشر في إعدادات الشهر");
-  const {start,end}=monthDateRange(yearMonth);
-  const holidays:Holiday[]=data.holidays.map((item,index)=>{
-    if(!item||typeof item!=="object") fail(400,`إجازة رقم ${index+1} شكلها غلط`);
-    const row=item as Record<string,unknown>, date=requireIsoDate(row.date,"تاريخ الإجازة");
-    if(date<start||date>end) fail(400,`الإجازة ${date} مش في الشهر المختار`);
-    return {date,note:optionalNote(row.note)};
+  if (kpis.length !== KPI_CATALOG.length) fail(400, "لازم تحفظ كل الإيتمز");
+
+  const { start, end } = monthDateRange(yearMonth);
+  const holidays: Holiday[] = (data.holidays as unknown[]).map((item, index) => {
+    if (!item || typeof item !== "object") fail(400, `إجازة رقم ${index + 1} شكلها غلط`);
+    const row = item as Record<string, unknown>;
+    const date = requireIsoDate(row.date, "تاريخ الإجازة");
+    if (date < start || date > end) fail(400, `الإجازة ${date} مش في الشهر المختار`);
+    return { date, note: optionalNote(row.note) };
   });
-  if(new Set(holidays.map(h=>h.date)).size!==holidays.length) fail(400,"فيه تاريخ إجازة متكرر");
-  state.months[yearMonth]={fullCommission,allowCommissionOver100,workingDays,kpis,holidays};
-  const bundle=loadBundle(state,yearMonth);
-  return {message:"✅ إعدادات الشهر اتحفظت",settings:bundle,weightSum:sumWeights(bundle.kpis),id:yearMonth};
+  if (new Set(holidays.map((item) => item.date)).size !== holidays.length) {
+    fail(400, "فيه تاريخ إجازة متكرر");
+  }
+
+  // لو الطلب ما بعتش كواليتي، بنحتفظ بالقديم. ولو بعت، بنقبل الـchecks بس.
+  const quality =
+    data.quality === undefined
+      ? state.months[yearMonth]?.quality ?? qualityFromChecks(undefined)
+      : requireQuality(data.quality);
+  // قفل الترتيب: الكواليتي ماتتعلمش قبل ما التارجت الشهري يتحفظ أول مرة.
+  // حفظ التارجت نفسه (من غير أي بند متعلّم) مسموح، وده اللي بيعمل الحفظ الأول.
+  const hasChecks = Object.values(quality.checks).some(Boolean);
+  if (!state.months[yearMonth] && hasChecks) {
+    fail(409, "احفظ تارجت الشهر الأول قبل ما تعلّم بنود الكواليتي");
+  }
+  state.months[yearMonth] = { fullCommission, workingDays, kpis, holidays, quality };
+  const bundle = loadBundle(state, yearMonth);
+  return {
+    message: "✅ إعدادات الشهر اتحفظت",
+    settings: bundle,
+    weightSum: sumWeights(bundle.kpis),
+    id: yearMonth,
+  };
 }
-
-
 
 function clearMonth(state: State, yearMonth: string, data: Record<string, unknown>) {
   const confirmMonth = typeof data.confirmMonth === "string" ? data.confirmMonth : "";
@@ -413,44 +565,198 @@ function deleteArticle(state: State, id: string) {
 }
 
 function updateProfile(state: State, data: Record<string, unknown>) {
-  const name=trimText(data.name,"اسم الموظف",2,80), branch=trimText(data.branch,"الفرع",2,80);
-  state.profile={...state.profile,name,branch};
-  return {user:{id:"local",name,branch,role:state.profile.role},message:"✅ بياناتك اتحدثت"};
+  const has = (key: string) => Object.prototype.hasOwnProperty.call(data, key);
+  const managerOnly = has("areaManager") && !has("name") && !has("branch") && !has("role");
+
+  // الاسم والفرع والوظيفة بيتقفلوا بعد التسجيل، لكن نسمح بتعيين مدير المنطقة مرة واحدة للملفات القديمة.
+  if (state.profile.name && state.profile.role) {
+    if (!managerOnly) throw new Error("بياناتك اتسجلت قبل كده ومينفعش تتغير");
+    const areaManager = typeof data.areaManager === "string" ? data.areaManager.trim() : "";
+    if (!AREA_MANAGERS.includes(areaManager as (typeof AREA_MANAGERS)[number])) {
+      fail(400, "اختار مدير المنطقة من القائمة");
+    }
+    if (state.profile.areaManager && state.profile.areaManager !== areaManager) {
+      fail(409, "مدير المنطقة متحدد بالفعل. تغيير المدير يحتاج مراجعة عشان التقارير القديمة ما تنتقلش تلقائيًا.");
+    }
+    state.profile.areaManager = areaManager;
+    return {
+      user: { id: "local", ...state.profile, areaManager },
+      message: "✅ تم حفظ مدير المنطقة. المزامنة هتبدأ مع التحديث القادم.",
+    };
+  }
+
+  const name = trimText(data.name, "اسم الموظف", 2, 80);
+  const branch = typeof data.branch === "string" ? data.branch.trim().slice(0, 80) : "";
+  const role = data.role === "manager" || data.role === "agent" || data.role === "team_leader" || data.role === "area_manager" ? data.role : state.profile.role;
+  const areaManager = typeof data.areaManager === "string" ? data.areaManager.trim() : "";
+  const requiresAreaManager = role === "agent" || role === "team_leader";
+  if (requiresAreaManager && branch !== "خارج الفروع" && !AREA_MANAGERS.includes(areaManager as (typeof AREA_MANAGERS)[number])) {
+    fail(400, "اختار مدير المنطقة قبل حفظ بياناتك");
+  }
+  state.profile = { ...state.profile, name, branch, role, areaManager };
+  return { user: { id: "local", name, branch, role, areaManager }, message: "✅ بياناتك اتحدثت" };
 }
 
+/** مجموع تراكمي يومي لكل مؤشر، للرسم الصغير في كروت الصفحة الرئيسية. */
+function cumulativeSeries(entries: Entry[], yearMonth: string, today: string): Record<string, number[]> {
+  const dates = listMonthDates(yearMonth).filter((date) => date <= today);
+  const perKeyDay = new Map<string, Map<string, number>>();
+  for (const entry of entries) {
+    const days = perKeyDay.get(entry.kpiKey) ?? new Map<string, number>();
+    days.set(entry.entryDate, (days.get(entry.entryDate) ?? 0) + entry.quantity);
+    perKeyDay.set(entry.kpiKey, days);
+  }
+  const result: Record<string, number[]> = {};
+  for (const [key, days] of perKeyDay) {
+    let sum = 0;
+    result[key] = dates.map((date) => {
+      sum += days.get(date) ?? 0;
+      return sum;
+    });
+  }
+  return result;
+}
 
+/** إجمالي كل مؤشر في الشهر اللي فات لحد نفس رقم اليوم (مقارنة عادلة). */
+function previousMonthToDate(state: State, yearMonth: string, today: string): Record<string, number> {
+  const previous = shiftYearMonth(yearMonth, -1);
+  const isCurrent = yearMonth === cairoYearMonth();
+  const dayLimit = isCurrent ? Number(today.slice(8, 10)) : 31;
+  const totals: Record<string, number> = {};
+  for (const entry of entriesInMonth(state, previous)) {
+    if (Number(entry.entryDate.slice(8, 10)) > dayLimit) continue;
+    totals[entry.kpiKey] = (totals[entry.kpiKey] ?? 0) + entry.quantity;
+  }
+  return totals;
+}
 
 function getDashboard(state: State, params: URLSearchParams) {
-  const raw=params.get("month"), yearMonth=raw?requireYearMonth(raw):cairoYearMonth(), today=cairoISODate();
-  const bundle=loadBundle(state,yearMonth), rows=entriesInMonth(state,yearMonth);
-  const achieved={} as Record<KpiKey,number>;
-  for(const kpi of KPI_CATALOG) achieved[kpi.key]=0;
-  const q:number[]=[];
-  for(const row of rows){const key=row.kpiKey as KpiKey;if(key==="quality")q.push(row.quantity);else achieved[key]=(achieved[key]??0)+row.quantity;}
-  achieved.quality=q.length?q.reduce((a,b)=>a+b,0)/q.length:0;
-  const holidays=bundle.holidays.map(h=>h.date), work=buildWorkdayStats(yearMonth,bundle.workingDays,holidays,today);
-  const todayHasEntries=rows.some(r=>r.entryDate===today);
-  const [y,m,d]=today.split("-").map(Number), yesterday=new Date(Date.UTC(y,m-1,d-1)).toISOString().slice(0,10);
-  const paceWork=todayHasEntries?work:buildWorkdayStats(yearMonth,bundle.workingDays,holidays,yesterday);
-  const overall=bundle.kpis.reduce((sum,k)=>sum+(k.weight===0||k.target<=0?0:((achieved[k.kpiKey]??0)/k.target)*k.weight),0);
-  const estimated=estimatedCommission(bundle.fullCommission,overall,bundle.allowCommissionOver100), weightSum=sumWeights(bundle.kpis);
-  const newLines=bundle.kpis.find(k=>k.kpiKey==="new_lines"), pace=newLinesDailyNeed(newLines?.target??175,achieved.new_lines??0,work.remaining);
-  const todayRows=rows.filter(r=>r.entryDate===today);
-  const todaySummary=KPI_CATALOG.map(k=>{const matches=todayRows.filter(r=>r.kpiKey===k.key);return {kpiKey:k.key,nameEn:k.nameEn,nameAr:k.nameAr,unitAr:k.unitAr,quantity:matches.reduce((a,b)=>a+b.quantity,0),count:matches.length};});
-  const kpis=bundle.kpis.map(k=>{const cat=KPI_CATALOG.find(c=>c.key===k.kpiKey)!;const value=achieved[k.kpiKey]??0;return {...k,nameEn:cat.nameEn,nameAr:cat.nameAr,achieved:value,percent:achievementPercent(value,k.target),contribution:k.weight===0||k.target<=0?0:(value/k.target)*k.weight,expectedToDate:expectedToDate(k.target,paceWork.elapsed,paceWork.total),remaining:Math.max(0,k.target-value),overTarget:value>k.target};});
-  return {profile:{...state.profile},yearMonth,monthLabel:monthLabelAr(yearMonth),today,settingsSaved:bundle.saved,fullCommission:bundle.fullCommission,allowCommissionOver100:bundle.allowCommissionOver100,workingDays:bundle.workingDays,holidays:bundle.holidays,work,overallExpectedPercent:work.total>0?(paceWork.elapsed/work.total)*100:0,kpis,overall,overallLabel:formatPercent(overall),estimatedCommission:estimated,weightSum,weightWarning:Math.abs(weightSum-100)>0.01,pace,todaySummary,entriesCount:rows.length,empty:rows.length===0,hasAnySavedData:bundle.saved||rows.length>0};
+  const raw = params.get("month");
+  const yearMonth = raw ? requireYearMonth(raw) : cairoYearMonth();
+  const today = cairoISODate();
+  const bundle = loadBundle(state, yearMonth);
+  const monthEntries = entriesInMonth(state, yearMonth);
+
+  const achieved: Record<string, number> = {};
+  for (const kpi of KPI_CATALOG) achieved[kpi.key] = 0;
+  for (const entry of monthEntries) {
+    achieved[entry.kpiKey] = (achieved[entry.kpiKey] ?? 0) + entry.quantity;
+  }
+  achieved.quality = qualityPercent(bundle.quality);
+  const achievedTyped = achieved as Record<KpiKey, number>;
+
+  const holidayDates = bundle.holidays.map((item) => item.date);
+  const work = buildWorkdayStats(yearMonth, bundle.workingDays, holidayDates, today);
+  const companyRuleOptions = { newLinesNeedWallets: roleOf(state) !== "manager" };
+  const rules = applyCompanyRules(
+    bundle.kpis.map((kpi) => ({ ...kpi, achieved: achievedTyped[kpi.kpiKey] ?? 0 })),
+    companyRuleOptions,
+  );
+  // نفس قواعد الكوميشن بس بالإنجاز "المفروض لحد النهارده": عشان نقارن الإجمالي بالإجمالي (تفاح بتفاح).
+  const doneBefore = Math.max(0, work.elapsedBeforeToday ?? work.elapsed);
+  const expectedRules = work.total > 0
+    ? applyCompanyRules(bundle.kpis.map((kpi) => ({ ...kpi, achieved: expectedToDate(kpi.target, doneBefore, work.total) })), companyRuleOptions)
+    : null;
+  const expectedOverall = expectedRules ? expectedRules.total : null;
+  const overall = rules.total; // سقف 200% على الإجمالي بس، والمؤشرات الفردية بدون سقف
+  // المحافظ الجديدة وزنها صفر، لكنها شرط استحقاق مستقل بجانب حد الـ80% للإجمالي.
+  // الكوميشن بيظهر دايمًا (حتى تحت 80%)، والمعادلة نفسها ما اتغيرتش. شرط المحافظ مش مرتبط بالكوميشن، ومرتبط بالنيو لاين بس.
+  const commission = estimatedCommission(bundle.fullCommission, overall);
+  const weightSum = sumWeights(bundle.kpis);
+  const newLines = bundle.kpis.find((kpi) => kpi.kpiKey === "new_lines");
+  const pace = newLinesDailyNeed(newLines?.target ?? 175, achieved.new_lines ?? 0, work.remaining);
+
+  const seriesByKpi = cumulativeSeries(monthEntries, yearMonth, today);
+  const prevToDate = previousMonthToDate(state, yearMonth, today);
+
+  // توقّع نهاية الشهر: بنفترض نفس معدل الأيام اللي عدّت. بنعرضه بس لو فيه 3 أيام شغل على الأقل وفاضل أيام.
+  let projection: { overall: number; commission: number; basisDays: number } | null = null;
+  if (yearMonth === cairoYearMonth() && work.elapsed >= 3 && work.remaining > 0 && work.total > 0) {
+    const factor = work.total / work.elapsed;
+    const projected = bundle.kpis.map((kpi) => ({
+      ...kpi,
+      achieved: kpi.kpiKey === "quality" ? (achievedTyped[kpi.kpiKey] ?? 0) : (achievedTyped[kpi.kpiKey] ?? 0) * factor,
+    }));
+    const projectedRules = applyCompanyRules(projected, companyRuleOptions);
+    projection = {
+      overall: projectedRules.total,
+      commission: estimatedCommission(bundle.fullCommission, projectedRules.total),
+      basisDays: work.elapsed,
+    };
+  }
+
+  const todayEntries = monthEntries.filter((entry) => entry.entryDate === today);
+  const todaySummary = KPI_CATALOG.map((kpi) => {
+    const rows = todayEntries.filter((entry) => entry.kpiKey === kpi.key);
+    return {
+      kpiKey: kpi.key,
+      nameEn: kpi.nameEn,
+      nameAr: kpi.nameEn,
+      unitAr: kpi.unitAr,
+      quantity: rows.reduce((sum, entry) => sum + entry.quantity, 0),
+      count: rows.length,
+    };
+  });
+
+  const kpis = bundle.kpis
+    .filter((kpi) => !(kpi.kpiKey === "productivity" && kpi.weight === 0))
+    .map((kpi) => {
+    const catalog = KPI_CATALOG.find((item) => item.key === kpi.kpiKey)!;
+    const value = achieved[kpi.kpiKey] ?? 0;
+    return {
+      ...kpi,
+      nameEn: catalog.nameEn,
+      nameAr: catalog.nameEn,
+      achieved: value,
+      percent: achievementPercent(value, kpi.target),
+      contribution: rules.counted.find((row) => row.kpiKey === kpi.kpiKey)?.contribution ?? 0,
+      gated: rules.belowKpis.includes(kpi.kpiKey),
+      clawBack: rules.clawBacks.includes(kpi.kpiKey),
+      expectedToDate: expectedToDate(kpi.target, work.elapsedBeforeToday, work.total),
+      remaining: Math.max(0, kpi.target - value),
+      overTarget: value > kpi.target,
+      series: seriesByKpi[kpi.kpiKey] ?? [],
+      previousToDate: kpi.kpiKey === "quality" ? null : (prevToDate[kpi.kpiKey] ?? 0),
+    };
+  });
+
+  return {
+    rawOverall: rules.rawTotal,
+    profile: { name: state.profile.name, branch: state.profile.branch, role: state.profile.role, areaManager: state.profile.areaManager ?? "" },
+    yearMonth,
+    monthLabel: monthLabelAr(yearMonth),
+    today,
+    settingsSaved: bundle.saved,
+    fullCommission: bundle.fullCommission,
+    workingDays: bundle.workingDays,
+    holidays: bundle.holidays,
+    quality: bundle.quality,
+    work,
+    kpis,
+    overall,
+    expectedOverall,
+    overallLabel: formatPercent(overall),
+    estimatedCommission: commission,
+    rules: { belowKpis: rules.belowKpis, clawBacks: rules.clawBacks, belowOverall: rules.belowOverall, walletDone: rules.walletDone },
+    weightSum,
+    weightWarning: Math.abs(weightSum - 100) > 0.01,
+    pace,
+    projection,
+    todaySummary,
+    entriesCount: monthEntries.length,
+    empty: monthEntries.length === 0,
+    hasAnySavedData: bundle.saved || monthEntries.length > 0,
+  };
 }
-
-
 
 function exportBackup(state: State) {
   const months = Object.entries(state.months).map(([yearMonth, row]) => ({
     yearMonth,
     fullCommission: row.fullCommission,
-    allowCommissionOver100: row.allowCommissionOver100,
     workingDays: { ...(row.workingDays ?? DEFAULT_WORKING_DAYS) },
     kpis: loadBundle(state, yearMonth).kpis,
-    holidays: row.holidays.map((item) => ({ date: item.date, note: item.note })),
+    holidays: (row.holidays ?? []).map((item) => ({ date: item.date, note: item.note })),
+    quality: row.quality ? { checks: { ...row.quality.checks } } : undefined,
   }));
   const isEmpty = months.length === 0 && state.entries.length === 0 && state.articles.length === 0;
   const backup = {
@@ -498,96 +804,31 @@ function restoreBackup(state: State, data: Record<string, unknown>) {
     return { summary, message: "الملف مطابق للمخطط. مفيش أي تعديل اتعمل لسه." };
   }
 
-  const mode = data.mode === "replace" ? "replace" : data.mode === "merge" ? "merge" : null;
-  if (!mode) fail(400, "اختار نوع الاستعادة: دمج أو استبدال");
-  if (mode === "replace" && data.confirmReplace !== true) {
-    fail(400, "الاستبدال محتاج تأكيد صريح بعد تحميل نسخة احتياطية");
-  }
+  const request = checkRestoreRequest(data);
+  if (!request.ok) fail(400, request.message);
+  const { mode } = request;
 
-  // قبل الاستبدال بنحفظ نسخة من البيانات القديمة جنب الأصلية، عشان لو حصل خطأ ترجع منها.
-  if (mode === "replace") {
-    try {
-      localStorage.setItem(`${STORAGE_KEY}.beforeRestore`, JSON.stringify(state));
-    } catch {
-      // لو المساحة خلصت، نكمّل بالنسخة اللي اتنزلت للجهاز قبل الاستبدال (من الواجهة).
-    }
-  }
-
-  state.profile = { ...state.profile, name: backup.profile.name, branch: backup.profile.branch };
-  if (mode === "replace") {
-    state.entries = [];
-    state.articles = [];
-    state.months = {};
-  }
-
-  for (const month of backup.months) {
-    state.months[month.yearMonth] = {
-      fullCommission: month.fullCommission,
-      allowCommissionOver100: month.allowCommissionOver100,
-      workingDays: month.workingDays,
-      kpis: month.kpis.map((kpi, index) => ({ ...kpi, sortOrder: kpi.sortOrder ?? index })),
-      holidays: month.holidays.map((item) => ({ date: item.date, note: item.note })),
-    };
-  }
-
-  const existing = mode === "merge"
-    ? state.entries.map((item) => ({
-        id: item.id,
-        kpiKey: item.kpiKey,
-        quantity: item.quantity,
-        entryDate: item.entryDate,
-        note: item.note,
-      }))
-    : [];
-  const plan = planEntryRestore(backup.entries, existing as never, mode);
-  for (const entry of plan.toInsert) {
-    const item = entry as unknown as {
-      kpiKey: string;
-      quantity: number;
-      entryDate: string;
-      note: string | null;
-      createdAt?: string;
-    };
-    state.entries.push({
-      id: newId(),
-      kpiKey: item.kpiKey,
-      quantity: item.quantity,
-      entryDate: item.entryDate,
-      note: item.note ?? null,
-      createdAt: item.createdAt ?? new Date().toISOString(),
-    });
-  }
-
-  const existingArticleIds = mode === "merge"
-    ? new Set(state.articles.map((article) => article.id))
-    : new Set<string>();
-  for (const article of backup.articles) {
-    const item = article as unknown as {
-      id?: string;
-      title: string;
-      content: string;
-      createdAt?: string;
-      updatedAt?: string;
-    };
-    // Preserve exported IDs so importing the same backup again won't duplicate notes.
-    if (item.id && existingArticleIds.has(item.id)) continue;
-    const now = new Date().toISOString();
-    const id = item.id ?? newId();
-    state.articles.push({
-      id,
-      title: item.title,
-      content: item.content,
-      createdAt: item.createdAt ?? now,
-      updatedAt: item.updatedAt ?? now,
-    });
-    existingArticleIds.add(id);
-  }
+  const result = applyBackupToState(state, backup, mode, {
+    newId,
+    now: () => new Date().toISOString(),
+    qualityFromChecks,
+    beforeReplace: (snapshot) => {
+      // قبل الاستبدال بنحفظ نسخة من البيانات القديمة جنب الأصلية، عشان لو حصل خطأ ترجع منها.
+      try {
+        localStorage.setItem(`${STORAGE_KEY}.beforeRestore`, snapshot);
+      } catch {
+        // لو المساحة خلصت، نكمّل بالنسخة اللي اتنزلت للجهاز قبل الاستبدال (من الواجهة).
+      }
+    },
+  });
 
   return {
     summary,
-    entriesInserted: plan.entriesInserted,
-    entriesSkipped: plan.entriesSkipped,
-    message: `✅ تمت الاستعادة. سجلات مضافة: ${plan.entriesInserted}، متخطاة: ${plan.entriesSkipped}`,
+    entriesInserted: result.entriesInserted,
+    entriesSkipped: result.entriesSkipped,
+    monthsSkipped: result.monthsSkipped,
+    articlesSkipped: result.articlesSkipped,
+    message: `✅ تمت الاستعادة. سجلات مضافة: ${result.entriesInserted}، متخطاة: ${result.entriesSkipped}، شهور موجودة متخطاة: ${result.monthsSkipped}، مقالات مكررة متخطاة: ${result.articlesSkipped}`,
   };
 }
 
@@ -630,7 +871,6 @@ export function runLocalApi(url: string, method: string, body: unknown): LocalRe
       const rest = pathname.slice("/api/months/".length).split("/");
       const yearMonth = requireYearMonth(rest[0]);
       if (rest[1] === "clear") {
-        if (verb !== "POST") fail(405, "الطريقة دي مش مدعومة");
         result = clearMonth(state, yearMonth, data);
         changed = true;
       } else if (verb === "GET") {
@@ -673,7 +913,6 @@ export function runLocalApi(url: string, method: string, body: unknown): LocalRe
     if (changed && !saveState(state)) {
       return { ok: false, status: 507, message: "المتصفح مانعش الحفظ، فالعملية ما اتحفظتش. فضّي مساحة وجرّب تاني." };
     }
-    if (changed && pathname === "/api/profile" && typeof window !== "undefined") window.dispatchEvent(new Event("tys-profile-updated"));
     return { ok: true, data: { ok: true, ...result } };
   } catch (error) {
     if (error instanceof LocalError) {
@@ -681,71 +920,4 @@ export function runLocalApi(url: string, method: string, body: unknown): LocalRe
     }
     return { ok: false, status: 500, message: "حصل خطأ غير متوقع" };
   }
-}
-
-
-/** Snapshot متوافق مع صيغة تقارير المدير القديمة، من غير ما يغيّر بيانات الموظف المحلية. */
-export function buildManagerSnapshot() {
-  const state = loadState();
-  const profile = state.profile;
-  if (!profile.name.trim() || profile.name === "موظف المبيعات" || !profile.branch.trim() || profile.branch === "الفرع") return null;
-
-  const yearMonth = cairoYearMonth();
-  const dashboard = getDashboard(state, new URLSearchParams(`month=${yearMonth}`));
-  const rows = entriesInMonth(state, yearMonth);
-  const legacyNames: Record<string, string> = {
-    new_lines: "GAs",
-    new_orange_cash: "New Orange Cash Wallets",
-    existing_wallets: "Excite",
-    points: "Points",
-    postpaid_lines: "Postpaid",
-    dsl: "Home ADSL",
-    quality: "KYC & Compliance",
-  };
-
-  const payload = {
-    role: "agent",
-    kpis: dashboard.kpis.map((item) => ({
-      name: legacyNames[item.kpiKey] ?? item.nameEn,
-      target: item.target,
-      weight: item.weight,
-      percent: item.percent,
-      achieved: item.achieved,
-      expectedPercent: item.target > 0 ? (item.expectedToDate / item.target) * 100 : 0,
-    })),
-    entries: rows.map((item) => ({
-      at: item.id,
-      kpi: legacyNames[item.kpiKey] ?? item.kpiKey,
-      date: item.entryDate,
-      note: item.note ?? "",
-      unit: catalogByKey(item.kpiKey)?.unitAr ?? "",
-      quantity: item.quantity,
-    })),
-    overall: dashboard.overall,
-    settings: {
-      kpis: dashboard.kpis.map((item) => ({
-        kpiKey: item.kpiKey,
-        target: item.target,
-        unitAr: item.unitAr,
-        weight: item.weight,
-        sortOrder: item.sortOrder,
-      })),
-      holidays: dashboard.holidays,
-      workingDays: dashboard.workingDays,
-      fullCommission: dashboard.fullCommission,
-    },
-    syncedAt: new Date().toISOString(),
-    monthLabel: dashboard.monthLabel,
-    areaManager: "Abd Elrahman Mahmoud",
-    todaySummary: dashboard.todaySummary.map((item) => ({
-      kpi: item.kpiKey,
-      count: item.count,
-      quantity: item.quantity,
-    })),
-    fullCommission: dashboard.fullCommission,
-    expectedPercent: dashboard.overallExpectedPercent,
-    estimatedCommission: dashboard.estimatedCommission,
-  };
-
-  return { employee: profile.name, branch: profile.branch, payload };
 }

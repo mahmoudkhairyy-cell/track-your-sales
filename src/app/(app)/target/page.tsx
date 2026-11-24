@@ -1,13 +1,17 @@
 "use client";
 
 import { FormEvent, useEffect, useState } from "react";
-import { KPI_CATALOG, WEEK_DAYS } from "@/lib/constants";
+import Link from "next/link";
+import { KPI_CATALOG, kpiEmoji, unitEn } from "@/lib/constants";
 import { sumWeights } from "@/lib/calculations";
-import { Banner, Field, PrimaryButton, SecondaryButton, Spinner, inputClass, useToast } from "@/components/ui";
+import { Banner, Field, PageSkeleton, PrimaryButton, inputClass, useToast } from "@/components/ui";
 import { ApiError, api } from "@/lib/client";
+import { readProfile } from "@/lib/local-api";
 import type { WorkingDays } from "@/lib/types";
 import type { KpiKey } from "@/lib/constants";
 import { useMonth } from "@/components/AppShell";
+import { KpiIcon } from "@/components/KpiIcon";
+import { workingDatesInMonth } from "@/lib/dates";
 
 type KpiForm = {
   kpiKey: KpiKey;
@@ -18,6 +22,15 @@ type KpiForm = {
 };
 
 type Holiday = { date: string; note: string | null };
+type QualityKey = "kyc" | "visits" | "training" | "pos" | "csat";
+/** الكواليتي = الـChecklist بس، بأوزانه المعتمدة. */
+type Quality = { checks?: Partial<Record<QualityKey, boolean>> };
+const ZERO_QUALITY_FORM: Quality = { checks: {} };
+
+
+function settingsSnapshot(v: { fullCommission: number; workingDays: unknown; kpis: unknown; holidays: unknown; quality: unknown }) {
+  return JSON.stringify({ fullCommission: v.fullCommission, workingDays: v.workingDays, kpis: v.kpis, holidays: v.holidays, quality: v.quality });
+}
 
 export default function TargetPage() {
   const toast = useToast();
@@ -27,7 +40,6 @@ export default function TargetPage() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [fullCommission, setFullCommission] = useState(6000);
-  const [allowOver, setAllowOver] = useState(false);
   const [workingDays, setWorkingDays] = useState<WorkingDays>({
     sat: true,
     sun: true,
@@ -39,36 +51,58 @@ export default function TargetPage() {
   });
   const [kpis, setKpis] = useState<KpiForm[]>([]);
   const [holidays, setHolidays] = useState<Holiday[]>([]);
-  const [holidayDate, setHolidayDate] = useState(`${month}-01`);
-  const [holidayNote, setHolidayNote] = useState("");
+  // أول مرة للشهر: لازم الموظف يأكد إجازاته (أو يأكد إنه مفيش) قبل الحفظ.
+  const [holidaysConfirmed, setHolidaysConfirmed] = useState(false);
+  const [quality, setQuality] = useState<Quality>(ZERO_QUALITY_FORM);
+  const [yy, mm] = month.split("-").map(Number);
+  const monthDays = Array.from({ length: new Date(Date.UTC(yy, mm, 0)).getUTCDate() }, (_, i) => `${month}-${String(i + 1).padStart(2, "0")}`);
+  const firstWeekdayOffset = (new Date(Date.UTC(yy, mm - 1, 1)).getUTCDay() + 1) % 7;
   const [saved, setSaved] = useState(false);
-
+  const [baseline, setBaseline] = useState<string | null>(null);
+  // تيم ليدر فرع OB: عنده صفحة متابعة فريق جنب صفحة التارجت.
+  const [isObTeamLeader, setIsObTeamLeader] = useState(false);
+  useEffect(() => {
+    const id = setTimeout(() => {
+      const profile = readProfile();
+      setIsObTeamLeader(profile.role === "team_leader" && profile.branch.startsWith("OB."));
+    }, 0);
+    return () => clearTimeout(id);
+  }, []);
   useEffect(() => {
     let cancelled = false;
-    async function loadSettings() {
-      await Promise.resolve();
-      if (cancelled) return;
-      setLoading(true);
-      setError("");
-      try {
-        const result = await api<{ settings: { saved: boolean; fullCommission: number; allowCommissionOver100: boolean; workingDays: WorkingDays; kpis: KpiForm[]; holidays: Holiday[] } }>(
-          `/api/months/${month}`,
-        );
+    queueMicrotask(() => {
+      if (!cancelled) {
+        setLoading(true);
+        setError("");
+      }
+    });
+    api<{ settings: { saved: boolean; fullCommission: number; workingDays: WorkingDays; kpis: KpiForm[]; holidays: Holiday[]; quality: Quality } }>(
+      `/api/months/${month}`,
+    )
+      .then((result) => {
         if (cancelled) return;
         setSaved(result.settings.saved);
         setFullCommission(result.settings.fullCommission);
-        setAllowOver(result.settings.allowCommissionOver100);
         setWorkingDays(result.settings.workingDays);
         setKpis(result.settings.kpis);
         setHolidays(result.settings.holidays);
-        setHolidayDate(`${month}-01`);
-      } catch (err) {
-        if (!cancelled) setError(err instanceof ApiError || err instanceof Error ? err.message : "مقدرناش نحمّل الإعدادات");
-      } finally {
+        setQuality(result.settings.quality ?? ZERO_QUALITY_FORM);
+        setBaseline(
+          settingsSnapshot({
+            fullCommission: result.settings.fullCommission,
+            workingDays: result.settings.workingDays,
+            kpis: result.settings.kpis,
+            holidays: result.settings.holidays,
+            quality: result.settings.quality ?? ZERO_QUALITY_FORM,
+          }),
+        );
+      })
+      .catch((err) => {
+        if (!cancelled) setError(err instanceof ApiError || err instanceof Error ? err.message : "ماقدرناش نحمّل الإعدادات. اتأكد من النت وحاول تاني.");
+      })
+      .finally(() => {
         if (!cancelled) setLoading(false);
-      }
-    }
-    void loadSettings();
+      });
     return () => {
       cancelled = true;
     };
@@ -76,25 +110,52 @@ export default function TargetPage() {
 
   const weightSum = sumWeights(kpis);
 
+  const snapshot = settingsSnapshot({ fullCommission, workingDays, kpis, holidays, quality });
+  const dirty = baseline !== null && snapshot !== baseline;
+  const saveState = saving
+    ? { label: "⏳ جارٍ الحفظ", tone: "bg-amber-50 text-amber-800 ring-1 ring-amber-200" }
+    : error && !dirty
+      ? { label: "⚠️ تعذر الحفظ", tone: "bg-red-50 text-red-700 ring-1 ring-red-200" }
+      : dirty
+        ? { label: "● تغييرات غير محفوظة", tone: "bg-[var(--color-primary-50)] text-[var(--color-primary-700)] ring-1 ring-[#f3d6c0]" }
+        : saved
+          ? { label: "✓ محفوظ", tone: "bg-emerald-50 text-emerald-700 ring-1 ring-emerald-100" }
+          : { label: "● محتاجة حفظ", tone: "bg-[var(--color-primary-50)] text-[var(--color-primary-700)] ring-1 ring-[#f3d6c0]" };
+
   async function onSave(event: FormEvent) {
     event.preventDefault();
     setError("");
+    if (!saved && !holidaysConfirmed) {
+      const message = "لازم تأكد إجازاتك الأول (أو إنه مفيش إجازات) قبل ما تحفظ";
+      setError(message);
+      toast.push("error", message);
+      return;
+    }
+    if (Math.abs(sumWeights(kpis) - 100) > 0.01) {
+      const message = `مجموع الأوزان لازم يبقى 100%. دلوقتي ${sumWeights(kpis)}%`;
+      setError(message);
+      toast.push("error", message);
+      return;
+    }
+    const submitted = settingsSnapshot({ fullCommission, workingDays, kpis, holidays, quality });
     setSaving(true);
     try {
       await api<{ message: string; settings: { saved: boolean } }>(`/api/months/${month}`, {
         method: "PUT",
         body: JSON.stringify({
           fullCommission,
-          allowCommissionOver100: allowOver,
           workingDays,
           kpis,
           holidays,
+          quality,
         }),
       });
       setSaved(true);
+      setBaseline(submitted);
+      window.dispatchEvent(new Event("tys-settings-saved"));
       toast.push("success", "✅ تمام! إعدادات الشهر اتحفظت");
     } catch (err) {
-      const message = err instanceof ApiError || err instanceof Error ? err.message : "مقدرناش نحفظ الإعدادات";
+      const message = err instanceof ApiError || err instanceof Error ? err.message : "ماقدرناش نحفظ الإعدادات. اتأكد من النت وحاول تاني.";
       setError(message);
       toast.push("error", message);
     } finally {
@@ -102,153 +163,197 @@ export default function TargetPage() {
     }
   }
 
-  function addHoliday() {
-    if (!holidayDate.startsWith(month)) {
-      setError("تاريخ الإجازة لازم يكون جوه الشهر المختار");
-      return;
-    }
-    if (holidays.some((item) => item.date === holidayDate)) {
-      setError("التاريخ ده متسجل إجازة قبل كده");
-      return;
-    }
-    setHolidays((current) => [...current, { date: holidayDate, note: holidayNote.trim() || null }].sort((a, b) => a.date.localeCompare(b.date)));
-    setHolidayNote("");
-    setError("");
-  }
-
-  if (loading) return <Spinner label="ثواني… بنحمّل إعدادات التارجت" />;
+  if (loading) return <PageSkeleton label="ثواني… بنحمّل إعدادات التارجت" rows={3} />;
 
   return (
-    <form className="space-y-5 tys-target-form" onSubmit={onSave}>
-      <section>
-        <div className="rounded-card border border-form bg-gradient-to-br from-[#fff2e6] via-white to-[#fff9f4] p-5 shadow-medium"><h1 className="text-2xl font-black tracking-tight text-ink-3">التارجت 🎯</h1>
-        <p className="mt-2 text-sm leading-6 text-neutral-600">كل شهر محفوظ لوحده. لما تغيّر الشهر مش هيتكتب فوق شهر تاني.</p>
-        <p className="mt-2 text-xs font-semibold text-ink-2">{saved ? "✅ الإعدادات دي محفوظة في قاعدة البيانات." : "⚠️ لسه مش محفوظة. الأرقام اللي شايفها افتراضية لحد ما تدوس حفظ."}</p></div>
+    <form className="tys-page tys-page-target mx-auto max-w-6xl space-y-5 pb-4" onSubmit={onSave}>
+      <section className="orn-rich-card relative isolate overflow-hidden rounded-[28px] border border-white bg-white p-5 shadow-[0_1px_2px_rgba(43,20,0,.04)] sm:p-6">
+        <div className="relative">
+          <div className="flex flex-wrap items-start justify-between gap-3">
+            <div className="min-w-0">
+              <p className="text-[11px] font-black tracking-[0.18em] text-[var(--color-primary-700)]">MONTHLY CONFIGURATION</p>
+              <h1 className="mt-1 text-2xl font-black tracking-tight text-[var(--color-text-primary)] sm:text-3xl">التارجت</h1>
+              <p className="mt-1.5 max-w-md text-xs leading-6 text-[var(--color-text-secondary)]">كل إعدادات الشهر في مكان واحد — راجع أهدافك قبل الحفظ.</p>
+            </div>
+            <span role="status" aria-live="polite" className={`shrink-0 rounded-full px-3 py-1.5 text-[11px] font-extrabold ${saveState.tone}`}>
+              {saveState.label}
+            </span>
+          </div>
+        </div>
+      </section>
+
+      {isObTeamLeader ? (
+        <Link href="/team" className="flex items-center justify-between gap-3 rounded-[24px] border border-white bg-white p-4 shadow-[0_1px_2px_rgba(43,20,0,.04)] transition hover:border-[#e5b58e]">
+          <span className="flex items-center gap-3">
+            <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[var(--color-primary-50)] text-lg">👥</span>
+            <span>
+              <span className="block text-sm font-black text-[var(--color-text-primary)]">متابعة الفريق</span>
+              <span className="mt-0.5 block text-[11px] font-semibold text-[var(--color-text-secondary)]">تابع إنجاز فريق فرعك (فروع OB)</span>
+            </span>
+          </span>
+          <span className="text-lg text-[var(--color-primary-700)]" aria-hidden="true">‹</span>
+        </Link>
+      ) : null}
+
+      {!saved ? (
+        <section className="orn-rich-card rounded-[24px] border-2 border-[var(--color-primary-700)] bg-[var(--color-primary-50)] p-4 text-[var(--color-primary-700)]">
+          <p className="text-sm font-black">📅 الخطوة الأولى: اختار إجازاتك لهذا الشهر</p>
+          <p className="mt-1 text-xs leading-6">اضغط على الأيام اللي هتاخد فيها إجازة في التقويم تحت. لو مش هتاخد إجازة، فعّل التأكيد بس.</p>
+          <label className="mt-3 flex items-center gap-2 text-sm font-extrabold">
+            <input type="checkbox" checked={holidaysConfirmed} onChange={(e) => setHolidaysConfirmed(e.target.checked)} className="h-5 w-5 accent-[var(--color-primary-700)]" />
+            {holidays.length > 0 ? `أكدت إن عندي ${holidays.length} إجازة` : "مفيش عندي إجازات الشهر ده"}
+          </label>
+        </section>
+      ) : null}
+
+      <section className="orn-rich-card overflow-hidden rounded-[28px] border border-white bg-white p-4 shadow-[0_1px_2px_rgba(43,20,0,.04)]">
+        <div className="grid grid-cols-3 gap-2 text-center">
+          <div className="orn-rich-card rounded-2xl border border-white bg-white px-2 py-3 shadow-[0_1px_2px_rgba(43,20,0,.04)]"><p className="text-2xl font-black tabular-nums text-[var(--color-text-primary)]">{monthDays.length}</p><p className="text-[11px] text-[var(--color-text-secondary)]">أيام الشهر</p></div>
+          <div className="orn-rich-card rounded-2xl border border-white bg-white px-2 py-3 shadow-[0_1px_2px_rgba(43,20,0,.04)]"><p className="text-2xl font-black tabular-nums text-[var(--color-text-primary)]">{holidays.length}</p><p className="text-[11px] text-[var(--color-text-secondary)]">إجازات</p></div>
+          <div className="orn-rich-card rounded-2xl border border-white bg-white px-2 py-3 shadow-[0_1px_2px_rgba(43,20,0,.04)]"><p className="text-2xl font-black tabular-nums text-[var(--color-text-primary)]">{workingDatesInMonth(month, workingDays, holidays.map((item) => item.date)).length}</p><p className="text-[11px] text-[var(--color-text-secondary)]">أيام شغل</p></div>
+        </div>
+      </section>
+
+      {kpis.some((k) => k.weight > 0) ? (
+        <section className="orn-rich-card rounded-[28px] border border-white bg-white p-4 shadow-[0_1px_2px_rgba(43,20,0,.04)]">
+          <p className="text-sm font-black text-[var(--color-text-primary)]">توزيع الأوزان</p>
+          <div className="mt-3 flex h-3 w-full overflow-hidden rounded-full bg-[var(--color-surface-cream)]">
+            {kpis.filter((k) => k.weight > 0).map((k, i) => (
+              <span key={k.kpiKey} style={{ width: `${k.weight}%`, background: ["var(--color-primary-600)", "var(--color-primary-500)", "var(--color-primary-700)", "#e7a06a", "#f2c49f"][i % 5] }} />
+            ))}
+          </div>
+          <ul className="mt-3 grid grid-cols-2 gap-2 text-xs font-bold text-[var(--color-text-secondary)]">
+            {kpis.filter((k) => k.weight > 0).map((k, i) => (
+              <li key={k.kpiKey} className="flex items-center gap-2">
+                <span className="h-2.5 w-2.5 rounded-full" style={{ background: ["var(--color-primary-600)", "var(--color-primary-500)", "var(--color-primary-700)", "#e7a06a", "#f2c49f"][i % 5] }} />
+                <span className="truncate">{kpiEmoji(k.kpiKey)} {KPI_CATALOG.find((c) => c.key === k.kpiKey)?.nameEn ?? k.kpiKey}</span>
+                <span className="mr-auto tabular-nums text-[var(--color-text-primary)]">{k.weight}%</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
+
+      <section className="orn-rich-card rounded-[28px] border border-white bg-white p-4 shadow-[0_1px_2px_rgba(43,20,0,.04)] sm:p-5">
+        <div className="mb-4 flex items-center justify-between gap-3">
+          <div>
+            <h2 className="text-sm font-black text-[var(--color-text-primary)]">تقويم الإجازات</h2>
+            <p className="mt-1 text-[11px] text-[#7a6552]">اختار الأيام اللي مش هتشتغل فيها</p>
+          </div>
+          <span className="rounded-xl bg-[var(--color-primary-50)] px-3 py-2 text-xs font-black text-[var(--color-primary-700)]">{month}</span>
+        </div>
+        <p className="mb-2 text-xs font-bold text-[var(--color-text-secondary)]">اختيار تاريخ الإجازة</p>
+        <div className="grid grid-cols-7 gap-1 text-center text-[11px] font-bold text-[#7a6552]">
+          {["سبت", "أحد", "اتنين", "تلات", "أربع", "خميس", "جمعة"].map((d) => (
+            <span key={d} className="py-1">{d}</span>
+          ))}
+        </div>
+        <div className="mt-1 grid grid-cols-7 gap-1">
+          {Array.from({ length: firstWeekdayOffset }).map((_, i) => (
+            <span key={`pad-${i}`} />
+          ))}
+          {monthDays.map((date) => {
+            const isHoliday = holidays.some((item) => item.date === date);
+            return (
+              <button
+                key={date}
+                type="button"
+                aria-pressed={isHoliday}
+                aria-label={`${date}${isHoliday ? " — إجازة" : ""}`}
+                onClick={() =>
+                  setHolidays((current) =>
+                    current.some((item) => item.date === date)
+                      ? current.filter((row) => row.date !== date)
+                      : [...current, { date, note: null }].sort((a, b) => a.date.localeCompare(b.date)),
+                  )
+                }
+                className={`flex aspect-square items-center justify-center rounded-xl text-sm font-extrabold transition duration-200 hover:scale-[1.04] active:scale-95 ${
+                  isHoliday ? "bg-gradient-to-br from-[var(--color-primary-600)] to-[var(--color-primary-500)] text-white shadow-sm" : "border border-[#f3e6dc] bg-[#fff8f1] text-[var(--color-text-primary)]"
+                }`}
+              >
+                {Number(date.slice(8, 10))}
+              </button>
+            );
+          })}
+        </div>
+        <p className="mt-3 text-center text-xs text-[var(--color-text-secondary)]">اضغط أي يوم لإضافته أو إلغائه كإجازة</p>
       </section>
 
       {error ? <Banner tone="error">❌ {error}</Banner> : null}
-      {Math.abs(weightSum - 100) > 0.01 ? (
-        <Banner tone="warn">⚠️ مجموع الأوزان {weightSum}% مش 100%. تقدر تحفظ عادي، بس النتيجة هتتحسب على الأوزان دي.</Banner>
-      ) : (
-        <Banner tone="success">👌 مجموع الأوزان 100% تمام.</Banner>
-      )}
 
-      <section className="rounded-card border border-form-2 bg-white p-5 shadow-soft">
-        <Field label="💰 الكوميشن الكامل (جنيه)">
+      <p className={`px-1 text-xs font-bold ${Math.abs(weightSum - 100) > 0.01 ? "text-amber-700" : "text-emerald-700"}`}>
+        {Math.abs(weightSum - 100) > 0.01 ? `⚠️ الأوزان ${weightSum}%: ${weightSum < 100 ? `ناقص ${Math.round((100 - weightSum) * 100) / 100}%` : `زيادة ${Math.round((weightSum - 100) * 100) / 100}%`} (لازم 100% عشان تتحفظ)` : "✓ الأوزان 100%"}
+      </p>
+
+      <section className="orn-rich-card rounded-[28px] border border-white bg-white p-4 shadow-[0_1px_2px_rgba(43,20,0,.04)] sm:p-5">
+        <Field label="الكوميشن الكامل (جنيه)">
           <input
             className={`${inputClass} text-xl font-black`}
             type="number"
             min={0}
             step="1"
-            value={fullCommission}
-            onChange={(e) => setFullCommission(Number(e.target.value))}
+            value={fullCommission || ""}
+            placeholder="0"
+            onChange={(e) => setFullCommission(Math.max(0, Number(e.target.value) || 0))}
           />
         </Field>
-        <label className="mt-4 flex min-h-12 items-center gap-3 text-sm font-bold">
-          <input type="checkbox" checked={allowOver} onChange={(e) => setAllowOver(e.target.checked)} className="h-5 w-5 accent-[#ff7900]" />
-          اسمح إن الكوميشن التقديري يعدّي 100%
-        </label>
       </section>
 
-      <section className="space-y-3 tys-target-kpis">
-        <h2 className="text-lg font-black">الإيتمز والأوزان</h2>
+      <section className="orn-rich-card rounded-[28px] border border-white bg-white p-4 shadow-[0_1px_2px_rgba(43,20,0,.04)]">
+        <div className="mb-1 flex items-center justify-between">
+          <h2 className="text-lg font-black">Items &amp; weights</h2>
+        </div>
+        <p className="mb-2 rounded-xl bg-[var(--color-primary-50)] px-3 py-2 text-[11px] font-bold leading-5 text-[var(--color-primary-700)]">
+          📌 الأوزان مختلفة للموظف والمدير. ده وزن {kpis.some((k) => k.kpiKey === "productivity" && k.weight > 0) ? "المدير" : "الموظف"}، وبيتحدد أوتوماتيك حسب اختيارك في أول مرة، ومش بيتعدل من التطبيق.
+        </p>
+        <div className="grid grid-cols-[minmax(0,1fr)_68px_60px] gap-1.5 border-b sm:grid-cols-[minmax(0,1fr)_74px_74px] sm:gap-2 border-dashed border-[var(--color-border)]/70 pb-2 text-[11px] font-bold text-[var(--color-text-secondary)]">
+          <span>البند</span>
+          <span className="text-center">الهدف</span>
+          <span className="text-center">الوزن %</span>
+        </div>
         {kpis.map((kpi, index) => {
+          // الكواليتي بتتدخل في قسم الكواليتي تحت بس، ووزنها بيفضل محسوب في المجموع.
+          if (kpi.kpiKey === "quality") return null;
+          // الإنتاجية للمدير بس (وزنها صفر للموظف).
+          if (kpi.kpiKey === "productivity" && kpi.weight === 0) return null;
           const catalog = KPI_CATALOG.find((item) => item.key === kpi.kpiKey);
           return (
-            <div key={kpi.kpiKey} className="rounded-card border border-form-2 bg-white p-4 shadow-soft">
-              <div className="flex items-center gap-3">
-                <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-brand-50 text-2xl">{catalog?.emoji ?? "🎯"}</span>
-                <div>
-                  <p className="font-extrabold" dir="ltr">
-                    {catalog?.nameEn}
-                  </p>
-                  <p className="text-xs text-ink-2">الوحدة: {kpi.unitAr}</p>
+            <div key={kpi.kpiKey} className="grid grid-cols-[minmax(0,1fr)_68px_60px] items-center gap-1.5 border-b sm:grid-cols-[minmax(0,1fr)_74px_74px] sm:gap-2 border-dashed border-[var(--color-border)]/70 py-2.5 last:border-0">
+              <div className="flex min-w-0 items-center gap-2">
+                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[var(--color-primary-50)] text-[var(--color-primary-700)]"><KpiIcon kpiKey={kpi.kpiKey} className="h-4 w-4" /></span>
+                <div className="min-w-0">
+                  <p className="truncate text-sm font-extrabold" dir="ltr">{catalog?.nameEn}</p>
+                  {kpi.kpiKey === "new_orange_cash" ? (
+                    <p className="text-[11px] font-bold text-[var(--color-primary-700)]">هدف بتحدده إنت</p>
+                  ) : (
+                    <p className="text-[11px] text-[var(--color-text-secondary)]">{unitEn(kpi.unitAr)}</p>
+                  )}
                 </div>
               </div>
-              <div className="mt-3 grid grid-cols-2 gap-3">
-                <Field label="التارجت">
-                  <input
-                    className={`${inputClass} text-lg font-black`}
-                    type="number"
-                    min={0}
-                    step="0.01"
-                    value={kpi.target}
-                    onChange={(e) => {
-                      const target = Number(e.target.value);
-                      setKpis((current) => current.map((row, rowIndex) => (rowIndex === index ? { ...row, target } : row)));
-                    }}
-                  />
-                </Field>
-                <Field label="الوزن %">
-                  <input
-                    className={`${inputClass} text-lg font-black`}
-                    type="number"
-                    min={0}
-                    step="0.01"
-                    value={kpi.weight}
-                    onChange={(e) => {
-                      const weight = Number(e.target.value);
-                      setKpis((current) => current.map((row, rowIndex) => (rowIndex === index ? { ...row, weight } : row)));
-                    }}
-                  />
-                </Field>
-              </div>
+              <input
+                aria-label={`تارجت ${catalog?.nameEn}`}
+                className={`${inputClass} px-2 py-2 text-center text-sm font-black`}
+                type="number"
+                min={0}
+                step="0.01"
+                value={kpi.target || ""}
+                placeholder="0"
+                onChange={(e) => {
+                  const target = Math.max(0, Number(e.target.value) || 0);
+                  setKpis((current) => current.map((row, rowIndex) => (rowIndex === index ? { ...row, target } : row)));
+                }}
+              />
+              <p aria-label={`وزن ${catalog?.nameEn}`} className="py-2 text-center text-sm font-black text-[var(--color-text-secondary)]">{kpi.weight}%</p>
             </div>
           );
         })}
       </section>
 
-      <section className="rounded-card border border-form-2 bg-white p-5 shadow-soft">
-        <h2 className="text-lg font-black">📅 أيام الشغل</h2>
-        <p className="mt-1 text-xs text-ink-2">الحسابات بتعتمد على أيام الشغل الفعلية، مش الأيام التقويمية.</p>
-        <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
-          {WEEK_DAYS.map((day) => (
-            <button
-              key={day.key}
-              type="button"
-              onClick={() => setWorkingDays((current) => ({ ...current, [day.key]: !current[day.key] }))}
-              className={`min-h-12 rounded-2xl border text-sm font-extrabold ${
-                workingDays[day.key] ? "border-accent-strong bg-brand-50 text-brand-ink" : "border-neutral-200 bg-neutral-50 text-ink-2"
-              }`}
-            >
-              {workingDays[day.key] ? "✅ " : ""}
-              {day.label}
-            </button>
-          ))}
-        </div>
-      </section>
-
-      <section className="rounded-card border border-form-2 bg-white p-5 shadow-soft">
-        <h2 className="text-lg font-black">🏖️ إجازات الشهر</h2>
-        <div className="mt-3 grid gap-3 sm:grid-cols-[1fr_1fr_auto]">
-          <input className={inputClass} type="date" value={holidayDate} onChange={(e) => setHolidayDate(e.target.value)} />
-          <input className={inputClass} placeholder="ملاحظة (اختياري)" value={holidayNote} onChange={(e) => setHolidayNote(e.target.value)} />
-          <SecondaryButton type="button" onClick={addHoliday} className="w-full">
-            ➕ ضيف
-          </SecondaryButton>
-        </div>
-        {holidays.length === 0 ? (
-          <p className="mt-4 text-sm text-ink-2">مفيش إجازات متسجلة للشهر ده.</p>
-        ) : (
-          <ul className="mt-4 space-y-2">
-            {holidays.map((item) => (
-              <li key={item.date} className="flex items-center justify-between rounded-2xl bg-brand-50 px-3 py-2 text-sm">
-                <span className="font-bold">
-                  {item.date}
-                  {item.note ? ` · ${item.note}` : ""}
-                </span>
-                <button type="button" className="font-extrabold text-risk" onClick={() => setHolidays((current) => current.filter((row) => row.date !== item.date))}>
-                  شيل
-                </button>
-              </li>
-            ))}
-          </ul>
-        )}
-      </section>
-
-      <PrimaryButton type="submit" disabled={saving}>
+      <div className="sticky bottom-[calc(76px+env(safe-area-inset-bottom))] z-20 rounded-[24px] border border-white bg-[var(--color-surface-cream)]/95 p-2 shadow-[0_12px_30px_rgba(100,55,25,0.12)] backdrop-blur-xl lg:bottom-4">
+      <PrimaryButton type="submit" disabled={saving || (saved && !dirty) || (!saved && !holidaysConfirmed)}>
         {saving ? "⏳ بنحفظ على السيرفر..." : "💾 احفظ إعدادات الشهر"}
       </PrimaryButton>
+      </div>
     </form>
   );
 }

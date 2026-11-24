@@ -11,6 +11,59 @@ export const SESSION_DAYS = 30;
 export const SCHEMA_VERSION = 1;
 export const DEFAULT_COMMISSION = 6000;
 
+/** الفروع المتاحة: الموظف بيختار فرعه أول مرة. */
+export const BRANCHES = [
+  "OB. Hagar Elnawatya",
+  "OB. Janacklise",
+  "OB. Mawaser st1",
+  "OB. Talaten St",
+  "OB. Borg El Borolos",
+  "OB. Hamoul",
+  "OB. Motobas",
+  "OB. Al Teraa St",
+  "OB. Cablat St",
+  "OB. Eshreen St",
+  "OB. Eshreen St2",
+  "OB. Nasria",
+  "OB. Edco",
+  "OB. Markaz Bader",
+  "OB. Abo Youssef",
+  "OB. Dekihla 2",
+  "OB. Ras El Hekma",
+  "OB. El Arab Old City",
+  "EXP Desouk",
+  "EXP Desouk 2",
+  "EXP EL Mhmodia",
+  "Exp Kafr El Sheikh",
+  "EXP Sidi Salem",
+  "EXP Amryia ElQesm",
+  "EXP Amryia Gomhrya St",
+  "EXP Roz Garden",
+  "EXP Zawyet Abdel Kader",
+  "EXP Hosh Eissy",
+  "EXP Kafer EL Dawar 2",
+  "EXP Kom Hamada",
+  "EXP Montazah",
+  "EXP Abo El Matamer",
+  "EXP Alamin Old city",
+  "EXP Dekhila",
+  "EXP El Dabaa",
+  "EXP Madenet Elhamam",
+  "EXP Matrouh",
+  "EXP Camp Shezar",
+  "EXP Cleopatra",
+  "EXP Mamoura 25st",
+  "Fr Montazah2",
+  "Fr Smouha Alexandria2",
+  "Fr Asafra",
+] as const;
+
+/** مديرو المناطق (الأريا مانجر): الموظف بيختار مديره، ومديره بس يشوف تقاريره. */
+export const AREA_MANAGERS = ["Abd Elrahman Mahmoud", "Adham Mohey Eldin", "Khaled Mahdy", "Nesma Nassar", "Rana Mohamed", "Ayman Khatab", "Alaa Adel", "Hanan Mohamed", "Ibrahim Magdy", "Mahmoud Sobhy", "Mohamed Ayad", "Mohamed Mamdouh", "Mohamed Samy", "Ramzy Girgis", "Shady Mohamed"] as const;
+
+/** اختيار لمن مش تابع لفرع: بيتسجل عنده، ومايظهرش في لوحة المدير. */
+export const OUTSIDE_BRANCHES = "خارج الفروع";
+
 export const WEEK_DAYS = [
   { key: "sat", label: "السبت", jsDay: 6 },
   { key: "sun", label: "الأحد", jsDay: 0 },
@@ -30,14 +83,13 @@ export const DEFAULT_WORKING_DAYS: WorkingDays = {
   tue: true,
   wed: true,
   thu: true,
-  fri: false,
+  fri: true,
 };
 
 export const KPI_CATALOG = [
   {
     key: "new_lines",
-    nameEn: "New Lines",
-    nameAr: "New Lines",
+    nameEn: "GAs",
     emoji: "📱",
     unitAr: "خط",
     defaultTarget: 175,
@@ -46,7 +98,6 @@ export const KPI_CATALOG = [
   {
     key: "new_orange_cash",
     nameEn: "New Orange Cash Wallets",
-    nameAr: "New Orange Cash Wallets",
     emoji: "👛",
     unitAr: "محفظة",
     defaultTarget: 158,
@@ -55,7 +106,6 @@ export const KPI_CATALOG = [
   {
     key: "existing_wallets",
     nameEn: "Excite",
-    nameAr: "Excite",
     emoji: "💳",
     unitAr: "محفظة",
     defaultTarget: 74,
@@ -64,7 +114,6 @@ export const KPI_CATALOG = [
   {
     key: "points",
     nameEn: "Points",
-    nameAr: "Points",
     emoji: "⭐",
     unitAr: "نقطة",
     defaultTarget: 1737,
@@ -72,8 +121,7 @@ export const KPI_CATALOG = [
   },
   {
     key: "postpaid_lines",
-    nameEn: "Postpaid Lines",
-    nameAr: "Postpaid Lines",
+    nameEn: "Postpaid",
     emoji: "📞",
     unitAr: "خط",
     defaultTarget: 10,
@@ -81,17 +129,24 @@ export const KPI_CATALOG = [
   },
   {
     key: "dsl",
-    nameEn: "DSL",
-    nameAr: "DSL",
+    nameEn: "Home ADSL",
     emoji: "🌐",
     unitAr: "خط",
     defaultTarget: 1,
     defaultWeight: 10,
   },
   {
+    // المدير بس: إنتاجية الفرع (تارجت الـ GAs والـ OC). للموظف وزنها صفر ومش بتظهر.
+    key: "productivity",
+    nameEn: "Productivity (GA & OC)",
+    emoji: "📈",
+    unitAr: "%",
+    defaultTarget: 100,
+    defaultWeight: 0,
+  },
+  {
     key: "quality",
-    nameEn: "Quality",
-    nameAr: "Quality",
+    nameEn: "KYC & Compliance",
     emoji: "✅",
     unitAr: "%",
     defaultTarget: 100,
@@ -108,6 +163,33 @@ export function kpiEmoji(key: string): string {
 }
 
 export type KpiKey = (typeof KPI_CATALOG)[number]["key"];
+
+export type Role = "agent" | "team_leader" | "manager" | "area_manager";
+
+/** أوزان مدير الفرع: تُطبّق على نتائج فريقه، وليست تارجت أو مبيعات شخصية. */
+export const MANAGER_KPI_WEIGHTS: Record<KpiKey, number> = {
+  new_lines: 30,
+  new_orange_cash: 0,
+  existing_wallets: 10,
+  points: 10,
+  postpaid_lines: 10,
+  dsl: 10,
+  productivity: 15,
+  quality: 15,
+};
+
+export const MANAGER_FIXED_SALARY = 10_000;
+export const MANAGER_FULL_COMMISSION = 10_000;
+
+/** الموظف والتيم ليدر لهما نفس التارجت والأوزان. المدير له أوزان مستقلة تُستخدم في حساب الفريق فقط. */
+export function managerKpiWeight(key: KpiKey): number {
+  return MANAGER_KPI_WEIGHTS[key] ?? 0;
+}
+
+export function kpiWeight(key: KpiKey, role: Role): number {
+  if (role === "manager" || role === "area_manager") return 0;
+  return KPI_CATALOG.find((item) => item.key === key)?.defaultWeight ?? 0;
+}
 
 export const KPI_KEYS = KPI_CATALOG.map((item) => item.key);
 
@@ -128,3 +210,15 @@ export const ARABIC_MONTHS = [
 
 export const YEAR_MONTH_RE = /^\d{4}-(0[1-9]|1[0-2])$/;
 export const ISO_DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
+
+/** اسم الوحدة بالإنجليزي للعرض فقط؛ القيمة المخزّنة بالعربي زي ما هي. */
+const UNIT_EN: Record<string, [string, string]> = {
+  "خط": ["line", "lines"],
+  "محفظة": ["wallet", "wallets"],
+  "نقطة": ["point", "points"],
+};
+export function unitEn(unitAr: string, qty = 2): string {
+  const pair = UNIT_EN[unitAr];
+  if (!pair) return unitAr;
+  return qty === 1 ? pair[0] : pair[1];
+}

@@ -1,200 +1,876 @@
 "use client";
 
-import { FormEvent, useCallback, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
+import { useHistoryView } from "@/lib/use-history-view";
+import { managerApi } from "@/lib/cloud";
+import { BRANCHES, KPI_CATALOG } from "@/lib/constants";
+import { cairoISODate } from "@/lib/dates";
 
-type Report = {
+type MgrContractRow = { id: string; employee_name: string; branch_name: string; client_name: string; status: "sent" | "missing" | "rejected"; contract_date: string; sent_date: string | null; note: string | null; updated_at: string };
+const CONTRACT_STATUS_LABEL: Record<MgrContractRow["status"], string> = { sent: "Sent", missing: "Missing", rejected: "Rejected" };
+const CONTRACT_STATUS_STYLE: Record<MgrContractRow["status"], string> = {
+  sent: "bg-emerald-50 text-emerald-700",
+  missing: "bg-amber-50 text-amber-800",
+  rejected: "bg-red-50 text-red-700",
+};
+function contractDaysOld(date: string): number {
+  const then = new Date(`${date}T12:00:00`).getTime();
+  if (Number.isNaN(then)) return 0;
+  return Math.floor((Date.now() - then) / 86400000);
+}
+
+type ReportRow = {
   branch_id: string;
   employee_name: string;
   branch_name: string;
-  payload: {
-    overall?: number;
-    monthLabel?: string;
-    syncedAt?: string;
-    kpis?: Array<{ name: string; achieved: number; target: number; percent: number; weight: number }>;
-    entries?: Array<{ date: string; kpi: string; quantity: number; unit: string; note?: string }>;
-  };
   updated_at: string;
+  payload: {
+    role?: string;
+    monthLabel?: string;
+    overall?: number;
+    expectedPercent?: number;
+    estimatedCommission?: number;
+    fullCommission?: number;
+    kpis?: { name: string; achieved: number; target: number; percent: number; weight: number; expectedPercent?: number }[];
+    settings?: { fullCommission: number; kpis: { kpiKey: string; target: number; weight: number; unitAr: string }[]; holidays: { date: string }[] };
+    entries?: { date: string; kpi: string; quantity: number; unit: string; note: string }[];
+    managerQuality?: { quality: { kyc: number; visits: number; training: number; pos: number; csat: number }; updatedBy?: string; updatedAt?: string };
+    branchManagerProductivity?: { percent: number; updatedBy?: string; updatedAt?: string };
+  };
 };
 
-const API = "https://fjhjqrgolqqtaokrlezd.supabase.co/functions/v1/manager-api";
-const PUBLIC_KEY = "sb_publishable_6cLV7KQHG3RNeAenIUcKFg_qpWHumZq";
+type AggKpi = { name: string; achieved: number; target: number; percent: number; weight: number; expectedPercent?: number };
 
-async function managerRequest(action: string, password: string, extra: Record<string, unknown> = {}) {
-  const response = await fetch(API, {
-    method: "POST",
-    headers: { "Content-Type": "application/json", apikey: PUBLIC_KEY },
-    body: JSON.stringify({ action, password, ...extra }),
-  });
-  const result = await response.json().catch(() => ({}));
-  if (!response.ok) {
-    if (response.status === 401) throw new Error("كلمة المرور غير صحيحة");
-    throw new Error(typeof result.error === "string" ? result.error : "تعذر الاتصال بالخادم");
-  }
-  return result;
+const NO_BRANCH = "No branch";
+
+/** On track = النسبة المحققة أكبر من أو تساوي المطلوب لحد النهارده (مقارنة مباشرة). */
+function TrackBadge({ percent, expected }: { percent?: number; expected?: number }) {
+  if (typeof percent !== "number" || typeof expected !== "number") return null;
+  const onTrack = percent >= expected;
+  return (
+    <span className={`rounded-full px-2 py-0.5 text-[11px] font-black ${onTrack ? "bg-emerald-100 text-emerald-800" : "bg-red-100 text-red-700"}`}>
+      {onTrack ? "🟢 On track" : "🔴 Behind"}
+    </span>
+  );
 }
 
-function percent(value: unknown) {
-  const number = Number(value);
-  return Number.isFinite(number) ? `${number.toFixed(1)}%` : "—";
+function daysSince(iso: string): number {
+  return (Date.now() - new Date(iso).getTime()) / (24 * 60 * 60 * 1000);
+}
+
+/** اسم المؤشر بالإنجليزي من الكتالوج، ولو مش موجود بيرجع المفتاح نفسه. */
+function kpiLabel(key: string): string {
+  return KPI_CATALOG.find((item) => item.key === key)?.nameEn ?? key;
+}
+
+/** تحميل ملف: الرابط بيتضاف للصفحة ويتلغى بعد شوية عشان الموبايل يلحق يحمّل. */
+function saveBlob(blob: Blob, fileName: string) {
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = fileName;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  window.setTimeout(() => URL.revokeObjectURL(url), 4000);
+}
+
+function downloadBranchCsv(branchName: string, group: ReportRow[]) {
+  const kpiNames = Array.from(new Set(group.flatMap((r) => (r.payload.kpis ?? []).map((k) => k.name))));
+  const header = ["Employee", "Total %", "Last update", ...kpiNames.flatMap((n) => [`${n} achieved`, `${n} target`, `${n} %`])];
+  const lines = group.map((row) => {
+    const byName = new Map((row.payload.kpis ?? []).map((k) => [k.name, k]));
+    return [
+      row.employee_name,
+      Math.round(row.payload.overall ?? 0),
+      new Date(row.updated_at).toLocaleString("en-US", { timeZone: "Africa/Cairo", hour12: false }),
+      ...kpiNames.flatMap((n) => {
+        const k = byName.get(n);
+        return [k?.achieved ?? "", k?.target ?? "", k ? Math.round(k.percent) : ""];
+      }),
+    ];
+  });
+  const csv = [header, ...lines]
+    .map((cols) => cols.map((c) => `"${String(c).replace(/"/g, '""')}"`).join(","))
+    .join("\r\n");
+  saveBlob(new Blob(["﻿" + csv], { type: "text/csv;charset=utf-8" }), `${branchName}.csv`);
+}
+
+/** بيجمع كل موظفين الفرع لكل مؤشر: المحقق الكلي ÷ التارجت الكلي. الـ Quality بيتحسب متوسط نسبه لأنه مش بيتجمع. */
+/** أسماء قديمة في التقارير اللي اتبعتت قبل تغيير الأسماء: بتتجمع مع الاسم الجديد عشان متتكررش. */
+const LEGACY_KPI_NAMES: Record<string, string> = {
+  "New Lines": "GAs",
+  "Postpaid Lines": "Postpaid",
+  DSL: "Home ADSL",
+  Exist: "Excite",
+  "Existing OC Wallets": "Excite",
+  Quality: "KYC & Compliance",
+};
+
+function aggregateKpis(group: ReportRow[]): AggKpi[] {
+  const map = new Map<string, { achieved: number; target: number; weight: number; percents: number[]; expected: number[] }>();
+  for (const row of group) {
+    for (const raw of row.payload.kpis ?? []) {
+      const k = { ...raw, name: LEGACY_KPI_NAMES[raw.name] ?? raw.name };
+      const cur = map.get(k.name) ?? { achieved: 0, target: 0, weight: k.weight, percents: [], expected: [] };
+      cur.achieved += k.achieved;
+      cur.target += k.target;
+      cur.percents.push(k.percent);
+      if (typeof k.expectedPercent === "number") cur.expected.push(k.expectedPercent);
+      map.set(k.name, cur);
+    }
+  }
+  const avg = (xs: number[]) => (xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : 0);
+  return [...map.entries()].map(([name, v]) => {
+    // الكواليتي بتتحسب كمتوسط نسب الموظفين (كل موظف بحصة متساوية)، مش مجموع مرجّح.
+    const isQuality = name.toLowerCase() === "quality" || name.toLowerCase().startsWith("kyc");
+    return {
+      name,
+      achieved: isQuality ? Math.round(avg(v.percents) * 10) / 10 : v.achieved,
+      target: isQuality ? 100 : v.target,
+      percent: isQuality ? avg(v.percents) : v.target > 0 ? (v.achieved / v.target) * 100 : 0,
+      weight: v.weight,
+      expectedPercent: v.expected.length ? avg(v.expected) : undefined,
+    };
+  });
+}
+
+/** نسبة متابعة On Track بدون بند الجودة: متوسط مرجّح بأوزان كل المؤشرات ذات الوزن، مع استبعاد Quality فقط. */
+function trackPercent(kpis: { name: string; percent: number; weight: number }[]): number | undefined {
+  const included = kpis.filter((k) => {
+    const name = k.name.trim().toLowerCase();
+    return k.weight > 0 && name !== "quality" && !name.startsWith("kyc");
+  });
+  const totalWeight = included.reduce((sum, k) => sum + k.weight, 0);
+  return totalWeight > 0
+    ? included.reduce((sum, k) => sum + k.percent * k.weight, 0) / totalWeight
+    : undefined;
+}
+
+function KpiTile({ kpi }: { kpi: AggKpi }) {
+  const ok = kpi.expectedPercent === undefined || kpi.percent >= kpi.expectedPercent;
+  const neutral = kpi.weight === 0;
+  const tone = neutral
+    ? { text: "text-[var(--color-text-secondary)]", bar: "from-[var(--color-border)] to-[#e8b88f]", ring: "ring-[var(--color-border)]" }
+    : ok
+      ? { text: "text-emerald-700", bar: "from-emerald-400 to-emerald-600", ring: "ring-emerald-200" }
+      : { text: "text-red-600", bar: "from-red-400 to-red-600", ring: "ring-red-200" };
+  return (
+    <div
+      style={neutral ? undefined : { boxShadow: ok
+        ? "0 0 0 1px rgba(22,163,74,.12), 0 0 18px rgba(22,163,74,.16), 0 6px 18px rgba(22,163,74,.08)"
+        : "0 0 0 1px rgba(220,38,38,.12), 0 0 18px rgba(220,38,38,.16), 0 6px 18px rgba(220,38,38,.08)" }}
+      className={`relative overflow-hidden rounded-2xl bg-gradient-to-br from-white to-[var(--color-primary-50)]/60 p-3 shadow-sm ring-1 transition duration-300 hover:-translate-y-0.5 hover:shadow-lg ${tone.ring} ${neutral ? "" : ok ? "bg-emerald-50/70" : "bg-red-50/70"}`}
+    >
+      <p className="truncate text-[11px] font-extrabold text-[var(--color-text-secondary)]" dir="ltr">{kpi.name}</p>
+      <p className={`mt-1 text-2xl font-black tabular-nums tracking-tight ${tone.text}`}>
+        {Math.round(kpi.percent)}<span className="text-sm">%</span>
+      </p>
+      <div className="orn-rich-card mt-2 h-1.5 overflow-hidden rounded-full bg-white/80">
+        <div className={`h-full rounded-full bg-gradient-to-r transition-[width] duration-700 ease-out ${tone.bar}`} style={{ width: `${Math.min(100, Math.max(0, kpi.percent))}%` }} />
+      </div>
+      <p className="mt-1.5 text-[11px] tabular-nums text-[var(--color-text-secondary)]" dir="ltr">{Math.round(kpi.achieved)} / {kpi.target}</p>
+    </div>
+  );
+}
+
+type TopRow = { rank: number; name: string; branch: string; branchId: string; percent: number };
+
+/** إجمالي الفرع = متوسط نسب الإنجاز النهائية للأفراد؛ كل موظف وتيم ليدر له نفس الحصة. */
+function groupAverage(group: ReportRow[]): number {
+  const contributors = group.filter((row) =>
+    row.payload.role !== "manager" && row.payload.role !== "area_manager" &&
+    typeof row.payload.overall === "number" && Number.isFinite(row.payload.overall)
+  );
+  if (!contributors.length) return 0;
+  return contributors.reduce((sum, row) => sum + (row.payload.overall ?? 0), 0) / contributors.length;
+}
+
+function groupExpected(group: ReportRow[]): number | undefined {
+  const withData = group.filter((r) => typeof r.payload.expectedPercent === "number");
+  return withData.length ? withData.reduce((sum, r) => sum + (r.payload.expectedPercent ?? 0), 0) / withData.length : undefined;
+}
+
+function groupByBranch(rows: ReportRow[]): [string, ReportRow[]][] {
+  const map = new Map<string, ReportRow[]>();
+  for (const row of rows) {
+    const key = row.branch_name || NO_BRANCH;
+    map.set(key, [...(map.get(key) ?? []), row]);
+  }
+  return [...map.entries()];
+}
+
+const FEMALE_MANAGER_NAMES = ["نسمة", "nasma", "nesma", "رنا", "rana"];
+
+function managerTitle(name: string): string {
+  const n = name.trim().toLowerCase();
+  return n && FEMALE_MANAGER_NAMES.some((f) => n.includes(f.toLowerCase())) ? "MS." : "MR.";
+}
+
+type ManagerIconName = "home" | "branches" | "users" | "activity" | "reports" | "trend" | "alert" | "settings";
+
+function ManagerIcon({ name, size = 18 }: { name: ManagerIconName; size?: number }) {
+  const common = { fill: "none", stroke: "currentColor", strokeWidth: 1.7, strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
+  const paths: Record<ManagerIconName, React.ReactNode> = {
+    home: <><path d="m3 10 9-7 9 7" /><path d="M5 9v11h14V9M9 20v-6h6v6" /></>,
+    branches: <><rect x="3.5" y="4" width="7" height="7" rx="1.5" /><rect x="13.5" y="13" width="7" height="7" rx="1.5" /><path d="M10.5 7.5h3a2 2 0 0 1 2 2V13" /></>,
+    users: <><circle cx="9" cy="8" r="3" /><path d="M3.5 20v-1.5a5.5 5.5 0 0 1 11 0V20zM16 5.5a3 3 0 0 1 0 5.8M17 14a4.5 4.5 0 0 1 3.5 4.4V20" /></>,
+    activity: <><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3.2 2" /></>,
+    reports: <><path d="M6 3.5h8l4 4V20H6z" /><path d="M14 3.5V8h4M9 12h6M9 16h6" /></>,
+    trend: <><path d="m4 16 5-5 3 3 7-8" /><path d="M14 6h5v5" /></>,
+    alert: <><path d="M12 3.5 21 20H3z" /><path d="M12 9v4M12 16.5h.01" /></>,
+    settings: <><circle cx="12" cy="12" r="3" /><path d="m19.4 15 .1.1 1.2 1-1.4 2.4-1.5-.6a8 8 0 0 1-1.5.9l-.3 1.6h-2.8l-.3-1.6a8 8 0 0 1-1.5-.9l-1.5.6L6.5 16l1.2-1a7 7 0 0 1 0-1.8l-1.2-1 1.4-2.4 1.5.6a8 8 0 0 1 1.5-.9l.3-1.6H14l.3 1.6a8 8 0 0 1 1.5.9l1.5-.6 1.4 2.4-1.2 1a7 7 0 0 1-.1 1.8Z" /></>,
+  };
+  return <svg width={size} height={size} viewBox="0 0 24 24" aria-hidden="true" {...common}>{paths[name]}</svg>;
 }
 
 export default function ManagerPage() {
   const [password, setPassword] = useState("");
-  const [managerName, setManagerName] = useState("");
-  const [reports, setReports] = useState<Report[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [loggedIn, setLoggedIn] = useState(false);
-  const [expanded, setExpanded] = useState<string | null>(null);
-  const [newPassword, setNewPassword] = useState("");
-  const [changingPassword, setChangingPassword] = useState(false);
+  const [detailsId, setDetailsId] = useState<string | null>(null);
+  const [branchOpenFor, setBranchOpenFor] = useState<string | null>(null);
+  const [branchPreview, setBranchPreview] = useState<string | null>(null);
+  const [dashboardDetail, setDashboardDetail] = useState<"branches-all" | "branches-ahead" | "branches-behind" | "employees-all" | "employees-track" | "employees-behind" | null>(null);
+  // "list" = الفروع، "b:<فرع>" = صفحة فرع، "b:<فرع>|e:<id>" = موظف مفتوح. كل خطوة بتتسجل في تاريخ المتصفح.
+  // زرار الرجوع في الموبايل بيرجّع لشاشة المدير اللي قبلها (الفرع/الموظف/الرئيسية) من غير ما يطلّع من الصفحة.
+  const [view, setView] = useHistoryView<string>("overview");
+  const branch = view.startsWith("b:") ? view.slice(2).split("|e:")[0] : null;
+  const branchOpen = branch !== null && branchOpenFor === branch;
+  // فتح وقفل بنود الموظف حالة داخل الصفحة فقط، ولا يضيف أي خطوة إلى سجل زر الرجوع.
+  const [openId, setOpenId] = useState<string | null>(null);
+  const employeeOverlayRef = useRef(false);
+  const branchKpiOverlayRef = useRef(false);
 
-  const loadReports = useCallback(async (secret: string) => {
-    setLoading(true);
-    setError("");
-    try {
-      const [name, data] = await Promise.all([
-        managerRequest("manager_name", secret),
-        managerRequest("reports", secret),
-      ]);
-      setManagerName(typeof name === "string" ? name : "مدير المنطقة");
-      setReports(Array.isArray(data) ? data as Report[] : []);
-      setPassword(secret);
-      setLoggedIn(true);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "تعذر تحميل التقارير");
-      setLoggedIn(false);
-      } finally {
-      setLoading(false);
+  // زر الرجوع يقفل تفاصيل الموظف أو مؤشرات الفرع المفتوحة قبل مغادرة الصفحة.
+  useEffect(() => {
+    const onDetailsBack = () => {
+      if (dashboardDetail) {
+        setDashboardDetail(null);
+        return;
+      }
+      if (employeeOverlayRef.current) {
+        employeeOverlayRef.current = false;
+        setOpenId(null);
+        return;
+      }
+      if (branchKpiOverlayRef.current) {
+        branchKpiOverlayRef.current = false;
+        setBranchOpenFor(null);
+      }
+    };
+    window.addEventListener("popstate", onDetailsBack);
+    return () => window.removeEventListener("popstate", onDetailsBack);
+  }, [dashboardDetail]);
+
+  function toggleBranchKpis(isOpen: boolean) {
+    if (isOpen) {
+      if (branchKpiOverlayRef.current) {
+        branchKpiOverlayRef.current = false;
+        window.history.back();
+      } else {
+        setBranchOpenFor(null);
+      }
+      return;
     }
-  }, []);
-
-  async function login(event: FormEvent) {
-    event.preventDefault();
-    await loadReports(password);
+    if (!branchKpiOverlayRef.current) {
+      const current = (window.history.state ?? {}) as Record<string, unknown>;
+      window.history.pushState({ ...current, tysOverlay: "branch-kpis" }, "");
+      branchKpiOverlayRef.current = true;
+    }
+    setBranchOpenFor(branch);
   }
 
-  async function refresh() {
-    await loadReports(password);
+  function toggleEmployeeDetails(id: string, isOpen: boolean) {
+    if (isOpen) {
+      if (employeeOverlayRef.current) {
+        employeeOverlayRef.current = false;
+        window.history.back();
+      } else {
+        setOpenId(null);
+      }
+      return;
+    }
+    if (!employeeOverlayRef.current) {
+      const current = (window.history.state ?? {}) as Record<string, unknown>;
+      window.history.pushState({ ...current, tysOverlay: "employee" }, "");
+      employeeOverlayRef.current = true;
+    }
+    setOpenId(id);
   }
+  const [rows, setRows] = useState<ReportRow[] | null>(null);
+  const [contractRows, setContractRows] = useState<MgrContractRow[] | null>(null);
+  const [contractsLoading, setContractsLoading] = useState(false);
+  const [contractMsg, setContractMsg] = useState("");
+  const [error, setError] = useState("");
+  const [pending, setPending] = useState(false);
+  const [authChecking, setAuthChecking] = useState(true);
+  const [lastLoaded, setLastLoaded] = useState<Date | null>(null);
+  const [yesterday, setYesterday] = useState("");
+  const [pwOpen, setPwOpen] = useState(false);
+  const [oldPw, setOldPw] = useState("");
+  const [newPw, setNewPw] = useState("");
+  const [newPw2, setNewPw2] = useState("");
+  const [pwMsg, setPwMsg] = useState("");
+  const [managerName, setManagerName] = useState("");
+  const [greeting, setGreeting] = useState("");
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  // باسورد التيم ليدر لفروع OB (بوتيك): المدير بيحدد باسورد لكل فرع OB.
+  const OB_BRANCHES = BRANCHES.filter((b) => b.startsWith("OB."));
+  const [tlOpen, setTlOpen] = useState(false);
+  const [tlBranch, setTlBranch] = useState("");
+  const [tlPw, setTlPw] = useState("");
+  const [tlMsg, setTlMsg] = useState("");
+  const [tlBusy, setTlBusy] = useState(false);
 
-  async function deleteReport(report: Report) {
-    if (!window.confirm(`متأكد إنك عايز تحذف تقرير ${report.employee_name}؟`)) return;
-    setLoading(true);
+  function logout() {
+    if (!window.confirm("Log out of the area manager dashboard?")) return;
     try {
-      await managerRequest("delete", password, { branchId: report.branch_id });
-      await refresh();
+      sessionStorage.removeItem("tys.mgrPass");
+      localStorage.removeItem("tys.mgrPass");
+    } catch {
+      // لو التخزين غير متاح، نمسح حالة الدخول من الواجهة الحالية على الأقل.
+    }
+    setPassword("");
+    setRows(null);
+    setManagerName("");
+    setError("");
+    setLastLoaded(null);
+    setPwOpen(false);
+    setOldPw("");
+    setNewPw("");
+    setNewPw2("");
+    setPwMsg("");
+    setDetailsId(null);
+    setOpenId(null);
+    setDashboardDetail(null);
+    setBranchPreview(null);
+    setBranchOpenFor(null);
+    setView("overview");
+    setAuthChecking(false);
+  }
+
+  async function deleteContract(id: string) {
+    if (!window.confirm("Delete this contract?")) return;
+    const pw = sessionStorage.getItem("tys.mgrPass") ?? password;
+    setContractMsg("");
+    try {
+      await managerApi("delete_contract_area", { password: pw, contractId: id });
+      setContractRows((current) => (current ?? []).filter((row) => row.id !== id));
     } catch (err) {
-      setError(err instanceof Error ? err.message : "تعذر حذف التقرير");
-    } finally { setLoading(false); }
+      const raw = err instanceof Error ? err.message : "";
+      setContractMsg(raw.includes("wrong password") ? "Incorrect password. Sign in again." : "Could not delete the contract. Try again.");
+    }
+  }
+
+  async function saveTeamLeaderPassword(event: FormEvent) {
+    event.preventDefault();
+    setTlMsg("");
+    if (!tlBranch) return setTlMsg("Select an OB branch first.");
+    if (tlPw.length < 8) return setTlMsg("Team leader password must be at least 8 characters.");
+    setTlBusy(true);
+    try {
+      const pw = password || sessionStorage.getItem("tys.mgrPass") || "";
+      await managerApi("set_team_leader_password", { password: pw, branch: tlBranch, newPassword: tlPw, updatedBy: managerName || "Area manager" });
+      setTlPw("");
+      setTlBranch("");
+      setTlMsg("saved");
+      alert(`✅ Team leader password saved for ${tlBranch}.`);
+    } catch (err) {
+      const raw = err instanceof Error ? err.message : String(err);
+      setTlMsg(raw.includes("wrong password") ? "Your manager password is incorrect. Sign in again." : "Save failed. Check your connection and try again.");
+    } finally {
+      setTlBusy(false);
+    }
   }
 
   async function changePassword(event: FormEvent) {
     event.preventDefault();
-    if (newPassword.length < 8) { setError("كلمة المرور الجديدة لازم تكون 8 أحرف على الأقل"); return; }
-    setChangingPassword(true);
+    setPwMsg("");
+    if (newPw.length < 8) return setPwMsg("New password must be at least 8 characters.");
+    if (newPw !== newPw2) return setPwMsg("New passwords do not match.");
     try {
-      await managerRequest("change_password", password, { newPassword });
-      setPassword(newPassword);
-      setNewPassword("");
+      await managerApi("change_password", { password: oldPw, newPassword: newPw });
+      try { sessionStorage.setItem("tys.mgrPass", newPw); } catch { /* الجلسة الحالية تفضل شغالة حتى لو التخزين مقفول. */ }
+      try { localStorage.removeItem("tys.mgrPass"); } catch { /* إزالة النسخة القديمة اختيارية. */ }
+      setPassword(newPw);
+      setOldPw("");
+      setNewPw("");
+      setNewPw2("");
+      setPwOpen(false);
+      setPwMsg("");
       setError("");
-      await loadReports(newPassword);
+      alert("✅ Password changed successfully.");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "تعذر تغيير كلمة المرور");
-    } finally { setChangingPassword(false); }
+      const raw = err instanceof Error ? err.message : String(err);
+      setPwMsg(raw.includes("wrong password") ? "Current password is incorrect. Try again." : "Save failed. Check your connection and try again.");
+    }
   }
 
-  function logout() {
-    sessionStorage.removeItem("tys.manager.session");
-    setPassword("");
-    setManagerName("");
-    setReports([]);
-    setLoggedIn(false);
+  useEffect(() => {
+    // بيتحسب بعد الـ render (مش جوه الـ effect مباشرة) عشان قاعدة lint بتمنع setState المتزامن.
+    const id = setTimeout(() => {
+      const hour = Number(new Intl.DateTimeFormat("en-GB", { timeZone: "Africa/Cairo", hour: "numeric", hour12: false }).format(new Date()));
+      setGreeting(hour < 12 ? "Good morning" : "Good evening");
+    }, 0);
+    return () => clearTimeout(id);
+  }, []);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      setYesterday(cairoISODate(new Date(Date.now() - 24 * 60 * 60 * 1000)));
+    }, 0);
+    return () => window.clearTimeout(timer);
+  }, []);
+
+  const allRows = rows ?? [];
+  const branchRows = branch ? allRows.filter((r) => (r.branch_name || NO_BRANCH) === branch) : [];
+  const branchAvg = groupAverage(branchRows);
+  const branchExpected = groupExpected(branchRows);
+
+  const topRows: TopRow[] = allRows
+    .map((r) => ({ name: r.employee_name, branch: r.branch_name || NO_BRANCH, branchId: r.branch_id, percent: r.payload.overall ?? 0 }))
+    .sort((a, b) => b.percent - a.percent)
+    .map((r, i) => ({ ...r, rank: i + 1 }));
+
+  async function load(event?: FormEvent, savedPassword?: string) {
+    event?.preventDefault();
+    const pw = savedPassword ?? password;
+    setPending(true);
+    setError("");
+    try {
+      const data = await managerApi<ReportRow[]>("reports", { password: pw });
+      // احتفظ بكلمة المرور في الجلسة الحالية فقط، ولا تتركها في تخزين دائم.
+      try { sessionStorage.setItem("tys.mgrPass", pw); } catch { /* التخزين غير متاح في المتصفح. */ }
+      try { localStorage.removeItem("tys.mgrPass"); } catch { /* إزالة النسخة القديمة اختيارية. */ }
+      setRows(data ?? []);
+      // التعاقدات بتتحمّل بنفس كلمة مرور مدير المنطقة.
+      setContractsLoading(true);
+      managerApi<MgrContractRow[]>("contracts", { password: pw })
+        .then((list) => setContractRows(list ?? []))
+        .catch(() => setContractRows(null))
+        .finally(() => setContractsLoading(false));
+      setLastLoaded(new Date());
+      managerApi<string>("manager_name", { password: pw }).then((name) => setManagerName(name ?? "")).catch(() => setManagerName(""));
+    } catch (err) {
+      const raw = err instanceof Error ? err.message : "";
+      if (raw.includes("wrong password")) {
+        // الباسورد غلط: نرجع لشاشة الدخول.
+        setRows(null);
+        try {
+          localStorage.removeItem("tys.mgrPass");
+          sessionStorage.removeItem("tys.mgrPass");
+        } catch {
+          // لا شيء
+        }
+        setError("Incorrect password. Try again.");
+      } else {
+        // خطأ نت أو غيره: نحتفظ بالبيانات اللي موجودة ونعرض الخطأ فوقها.
+        setError(`Couldn't refresh the data. Check your connection and try again. (${raw.slice(0, 160)})`);
+      }
+    } finally {
+      setPending(false);
+    }
   }
+
+  useEffect(() => {
+    let cancelled = false;
+    let saved: string | null = null;
+    try {
+      saved = sessionStorage.getItem("tys.mgrPass");
+      // ترحيل النسخ القديمة من التخزين الدائم إلى الجلسة الحالية ثم حذفها.
+      if (!saved) {
+        saved = localStorage.getItem("tys.mgrPass");
+        if (saved) {
+          try { sessionStorage.setItem("tys.mgrPass", saved); } catch { /* يظل الدخول متاحًا في الذاكرة الحالية. */ }
+          localStorage.removeItem("tys.mgrPass");
+        }
+      }
+    } catch {
+      saved = null;
+    }
+    if (saved) {
+      queueMicrotask(() => {
+        if (cancelled) return;
+        setPassword(saved);
+        void load(undefined, saved).finally(() => {
+          if (!cancelled) setAuthChecking(false);
+        });
+      });
+    } else {
+      const timer = window.setTimeout(() => {
+        if (!cancelled) setAuthChecking(false);
+      }, 0);
+      return () => {
+        cancelled = true;
+        window.clearTimeout(timer);
+      };
+    }
+    return () => { cancelled = true; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  async function deleteEmployee(row: ReportRow) {
+    if (!window.confirm(`Are you sure you want to remove ${row.employee_name}? Their summary will be removed from the dashboard.`)) return;
+    setPending(true);
+    setError("");
+    try {
+      const pw = password || sessionStorage.getItem("tys.mgrPass") || "";
+      await managerApi("delete", { password: pw, branchId: row.branch_id });
+      setRows((cur) => (cur ?? []).filter((r) => r.branch_id !== row.branch_id));
+      setOpenId(null);
+    } catch (err) {
+      setError(`Couldn't remove data for ${row.employee_name}. Try again. (${err instanceof Error ? err.message.slice(0, 120) : ""})`);
+    } finally {
+      setPending(false);
+    }
+  }
+
+  function renderRow(row: ReportRow) {
+    const open = openId === row.branch_id;
+    const days = daysSince(row.updated_at);
+    const staleClass = days >= 3 ? "bg-red-100 text-red-700" : days >= 1 ? "bg-amber-100 text-amber-800" : "";
+    const percent = Math.round(row.payload.overall ?? 0);
+    return (
+      <article key={row.branch_id} className="orn-rich-card tys-manager-employee-card rounded-[26px] bg-white/95 p-4 shadow-[0_10px_28px_rgba(126,65,24,0.06)] ring-1 ring-[var(--color-border)]/70">
+        <button type="button" onClick={() => toggleEmployeeDetails(row.branch_id, open)} className="flex w-full items-center justify-between gap-3 text-right">
+          <div>
+            <h3 className="font-black">{row.employee_name}</h3>
+            <div className="mt-1 flex flex-wrap items-center gap-1">
+              {row.payload.role === "team_leader" ? <span className="rounded-full bg-[var(--color-primary-50)] px-2 py-0.5 text-[11px] font-black text-[var(--color-primary-700)]">🧑‍🏫 Team leader</span> : null}
+              <TrackBadge percent={employeeTrackPercent(row)} expected={row.payload.expectedPercent} />
+              {staleClass ? (
+                <span className={`rounded-full px-2 py-0.5 text-[11px] font-black ${staleClass}`}>Updated {Math.floor(days)} days ago</span>
+              ) : null}
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <p className="text-2xl font-black text-[var(--color-primary-700)] tabular-nums">{percent}%</p>
+            <span className="text-[var(--color-text-secondary)]">{open ? "▲" : "▼"}</span>
+          </div>
+        </button>
+
+        {open ? (
+          <>
+            <p className="mt-1 text-[11px] text-[var(--color-text-secondary)]" dir="ltr">
+              {new Date(row.updated_at).toLocaleString("en-US", { timeZone: "Africa/Cairo", hour12: false })}
+            </p>
+            <div className="mt-4 grid grid-cols-2 gap-2 sm:gap-3">
+              {(row.payload.kpis ?? []).map((kpi, index) => (
+                <div key={kpi.name} className="tys-rise" style={{ animationDelay: `${index * 70}ms` }}>
+                  <KpiTile kpi={kpi} />
+                </div>
+              ))}
+            </div>
+            <button
+              type="button"
+              onClick={() => setDetailsId(detailsId === row.branch_id ? null : row.branch_id)}
+              className="mt-3 w-full rounded-2xl bg-[var(--color-primary-50)] py-2 text-xs font-extrabold text-[var(--color-primary-700)]"
+            >
+              {detailsId === row.branch_id ? "Hide details" : `Show all details (${row.payload.entries?.length ?? 0} achieved)`}
+            </button>
+            <button
+              type="button"
+              disabled={pending}
+              onClick={() => deleteEmployee(row)}
+              className="mt-3 w-full rounded-2xl border border-red-200 bg-red-50 py-2 text-xs font-extrabold text-red-700 disabled:opacity-60"
+            >
+              🗑 Remove employee from dashboard
+            </button>
+            {detailsId === row.branch_id ? (
+              <div className="mt-3 space-y-3 text-xs">
+                <div>
+                  <p className="mb-1 font-black">Targets & weights</p>
+                  {(row.payload.settings?.kpis ?? []).map((k) => (
+                    <div key={k.kpiKey} className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface-cream)] px-3 py-2">
+                      <span className="min-w-0 font-extrabold text-[var(--color-text-primary)]">{kpiLabel(k.kpiKey)}</span>
+                      <span className="whitespace-nowrap text-[11px] font-bold tabular-nums text-[var(--color-text-secondary)] sm:text-xs">Target {k.target} · Weight {k.weight}%</span>
+                    </div>
+                  ))}
+                </div>
+                <div>
+                  <p className="mb-2 flex items-center justify-between font-black"><span>All achievements</span><span className="rounded-full bg-[var(--color-primary-50)] px-2 py-0.5 text-[11px] font-black text-[var(--color-primary-700)]">{row.payload.entries?.length ?? 0}</span></p>
+                  {(row.payload.entries ?? []).length === 0 ? <p className="text-[var(--color-text-secondary)]">None</p> : null}
+                  {(row.payload.entries ?? []).map((e, i) => (
+                    <div key={`${e.date}-${i}`} className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] items-center gap-2 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface-cream)] px-3 py-2.5 text-[11px] sm:text-xs">
+                      <span className="font-bold text-[var(--color-text-secondary)]" dir="ltr">{e.date}</span>
+                      <span className="min-w-0 truncate font-extrabold text-[var(--color-text-primary)]">{kpiLabel(e.kpi)}</span>
+                      <span className="whitespace-nowrap rounded-lg bg-[var(--color-primary-50)] px-2 py-1 font-black tabular-nums text-[var(--color-primary-700)]">{e.quantity} {e.unit}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : null}
+          </>
+        ) : null}
+      </article>
+    );
+  }
+
+  const branchGroups = groupByBranch(allRows);
+  const branchStatus = branchGroups.map(([name, group]) => {
+    const percent = groupAverage(group);
+    const expected = groupExpected(group);
+    const track = trackPercent(aggregateKpis(group));
+    return { name, group, percent, expected, track, onTrack: expected !== undefined && track !== undefined && track >= expected };
+  });
+  const onTrackBranches = branchStatus.filter((b) => b.onTrack);
+  const behindBranches = branchStatus.filter((b) => b.expected !== undefined && !b.onTrack);
+  const unclassifiedBranches = branchStatus.filter((b) => b.expected === undefined);
+  const employeeTrackPercent = (r: ReportRow) => trackPercent(r.payload.kpis ?? []);
+  const onTrackEmployees = allRows.filter((r) => typeof r.payload.expectedPercent === "number" && (employeeTrackPercent(r) ?? -1) >= (r.payload.expectedPercent ?? 0));
+  const behindEmployees = allRows.filter((r) => typeof r.payload.expectedPercent === "number" && employeeTrackPercent(r) !== undefined && (employeeTrackPercent(r) ?? 0) < (r.payload.expectedPercent ?? 0));
+  const today = cairoISODate();
+  const loggedToday = allRows.filter((r) => (r.payload.entries ?? []).some((e) => e.date === today));
+  const onLeaveToday = allRows.filter((r) => (r.payload.settings?.holidays ?? []).some((h) => h.date === today));
+  const missingToday = allRows.filter((r) => !onLeaveToday.some((x) => x.branch_id === r.branch_id) && !loggedToday.some((x) => x.branch_id === r.branch_id));
+  const navItems = [
+    { id: "overview", label: "Home", icon: "home" as const },
+    { id: "list", label: "Branches", icon: "branches" as const },
+    { id: "top", label: "Employees", icon: "users" as const },
+    { id: "activity", label: "Check-ins", icon: "activity" as const },
+    { id: "reports", label: "Reports", icon: "reports" as const },
+    { id: "contracts", label: "Contracts", icon: "alert" as const },
+  ];
+  const activeLabel = navItems.find((item) => item.id === view)?.label ?? (branch ? "Branch details" : "Dashboard");
+  const changeView = (next: string) => {
+    // فتح صفحة أداء فرع لازم يكون لها رجوع واضح لقائمة الفروع، حتى لو اتفتحت من الرئيسية.
+    if (next.startsWith("b:") && view !== "list" && !view.startsWith("b:")) {
+      const current = (window.history.state ?? {}) as Record<string, unknown>;
+      window.history.pushState({ ...current, tysView: "list" }, "");
+    }
+    setView(next);
+    setMobileMenuOpen(false);
+  };
+  const statusNames = (items: typeof branchStatus) => items.length ? (
+    <div className="mt-3 flex flex-wrap gap-2">
+      {items.map((item) => <button key={item.name} type="button" onClick={() => changeView("b:" + item.name)} className="rounded-xl border border-[#f1dfd4] bg-white px-3 py-2 text-xs font-extrabold text-[var(--color-text-primary)]">{item.name}</button>)}
+    </div>
+  ) : <p className="mt-3 text-xs text-[var(--color-text-secondary)]">No branches in this list yet.</p>;
 
   return (
-    <main dir="rtl" className="min-h-screen bg-[#fff8f1] px-4 py-6 text-neutral-900 sm:px-6">
-      <div className="mx-auto max-w-5xl">
-        <header className="mb-6 flex items-center justify-between gap-3 rounded-3xl bg-gradient-to-l from-[#c6530b] via-[#f07818] to-[#ff9a45] p-5 text-white shadow-lg">
-          <div>
-            <p className="text-xs font-bold text-white/80">TRACK YOUR SALES</p>
-            <h1 className="mt-1 text-2xl font-black">لوحة مدير المنطقة</h1>
-            <p className="mt-1 text-sm text-white/85">متابعة تقارير الموظفين</p>
-          </div>
-          {loggedIn && <button onClick={logout} className="rounded-xl border border-white/40 px-3 py-2 text-sm font-bold">خروج</button>}
-        </header>
-
-        {!loggedIn ? (
-          <form onSubmit={login} className="mx-auto max-w-md rounded-3xl border border-orange-100 bg-white p-6 shadow-sm">
-            <h2 className="text-xl font-black">دخول المدير</h2>
-            <p className="mt-2 text-sm leading-6 text-neutral-500">اكتب كلمة مرور مدير المنطقة لعرض تقارير الموظفين.</p>
-            <label className="mt-5 block text-sm font-bold" htmlFor="manager-password">كلمة المرور</label>
-            <input id="manager-password" type="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} className="mt-2 min-h-12 w-full rounded-xl border border-neutral-200 px-3 outline-none focus:border-orange-500" required />
-            <button disabled={loading} className="mt-4 min-h-12 w-full rounded-xl bg-[#e86d12] font-black text-white disabled:opacity-60">{loading ? "جاري التحقق…" : "دخول"}</button>
-          </form>
-        ) : (
-          <>
-            <section className="mb-5 grid grid-cols-2 gap-3 sm:grid-cols-3">
-              <div className="rounded-2xl border border-orange-100 bg-white p-4"><p className="text-xs text-neutral-500">المدير</p><p className="mt-1 font-black">{managerName}</p></div>
-              <div className="rounded-2xl border border-orange-100 bg-white p-4"><p className="text-xs text-neutral-500">عدد التقارير</p><p className="mt-1 text-2xl font-black">{reports.length}</p></div>
-              <button onClick={refresh} disabled={loading} className="rounded-2xl border border-orange-200 bg-white p-4 text-sm font-black text-orange-700 disabled:opacity-60">{loading ? "جاري التحديث…" : "↻ تحديث التقارير"}</button>
-            </section>
-
-            {reports.length === 0 ? (
-              <div className="rounded-2xl border border-dashed border-orange-200 bg-white p-8 text-center text-neutral-500">لسه مفيش تقارير مسجلة للمدير ده.</div>
-            ) : (
-              <section className="space-y-3">
-                {reports.map((report) => (
-                  <article key={report.branch_id} className="overflow-hidden rounded-2xl border border-orange-100 bg-white shadow-sm">
-                    <button onClick={() => setExpanded(expanded === report.branch_id ? null : report.branch_id)} className="flex w-full items-center justify-between gap-3 p-4 text-right">
-                      <div className="min-w-0">
-                        <p className="truncate font-black">{report.employee_name}</p>
-                        <p className="mt-1 truncate text-xs text-neutral-500">{report.branch_name} · {report.payload?.monthLabel ?? ""}</p>
-                      </div>
-                      <div className="shrink-0 text-left">
-                        <p className="text-xl font-black text-orange-700">{percent(report.payload?.overall)}</p>
-                        <p className="text-[10px] text-neutral-400">آخر تحديث {new Date(report.updated_at).toLocaleString("ar-EG")}</p>
-                      </div>
-                    </button>
-                    {expanded === report.branch_id && (
-                      <div className="border-t border-orange-100 p-4">
-                        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-                          {(report.payload?.kpis ?? []).map((kpi) => (
-                            <div key={kpi.name} className="rounded-xl bg-orange-50/70 p-3">
-                              <p className="text-xs font-bold text-neutral-600">{kpi.name}</p>
-                              <p className="mt-1 font-black">{kpi.achieved} <span className="text-xs font-normal text-neutral-500">/ {kpi.target}</span></p>
-                              <p className="mt-1 text-xs font-bold text-orange-700">{percent(kpi.percent)}</p>
-                            </div>
-                          ))}
-                        </div>
-                        <h3 className="mt-5 font-black">آخر العمليات</h3>
-                        <div className="mt-2 max-h-64 space-y-2 overflow-auto">
-                          {(report.payload?.entries ?? []).slice(0, 20).map((entry, index) => (
-                            <div key={`${entry.date}-${entry.kpi}-${index}`} className="flex items-center justify-between gap-2 rounded-xl bg-neutral-50 px-3 py-2 text-sm">
-                              <span>{entry.kpi} · {entry.date}</span><strong>{entry.quantity} {entry.unit}</strong>
-                            </div>
-                          ))}
-                        </div>
-                        <button onClick={() => void deleteReport(report)} className="mt-4 rounded-xl border border-red-200 px-3 py-2 text-xs font-bold text-red-600">حذف التقرير</button>
-                      </div>
-                    )}
-                  </article>
-                ))}
-              </section>
-            )}
-
-            <form onSubmit={changePassword} className="mt-7 rounded-2xl border border-orange-100 bg-white p-4">
-              <h2 className="font-black">تغيير كلمة المرور</h2>
-              <div className="mt-3 flex flex-col gap-2 sm:flex-row">
-                <input type="password" minLength={8} autoComplete="new-password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} placeholder="كلمة المرور الجديدة (8 أحرف على الأقل)" className="min-h-11 flex-1 rounded-xl border border-neutral-200 px-3" />
-                <button disabled={changingPassword || !newPassword} className="min-h-11 rounded-xl bg-neutral-900 px-4 text-sm font-bold text-white disabled:opacity-50">{changingPassword ? "جاري التغيير…" : "تغيير كلمة المرور"}</button>
-              </div>
+    <main className="tys-page tx-manager min-h-screen bg-[radial-gradient(ellipse_at_top_left,rgba(255,176,111,.13),transparent_38%),linear-gradient(145deg,#fffaf6_0%,#f8f4ef_55%,#fff8f1_100%)] px-3 py-4 text-[var(--color-text-primary)] sm:px-5 sm:py-6" dir="ltr">
+      {authChecking ? (
+        <div className="mx-auto flex min-h-[70vh] max-w-md items-center justify-center">
+          <section className="orn-rich-card rounded-2xl border border-[var(--color-border)] bg-white px-7 py-6 text-center shadow-sm">
+            <img src="/track-your-sales/logo-mark.png" alt="" className="mx-auto h-10 w-10 object-contain" />
+            <p className="mt-3 text-sm font-bold text-[var(--color-text-secondary)]">Restoring manager session...</p>
+          </section>
+        </div>
+      ) : rows === null ? (
+        <div className="mx-auto max-w-md">
+          <section className="orn-rich-card mt-10 rounded-[28px] border border-[var(--color-border)] bg-white p-6 shadow-sm">
+            <div className="mb-6 text-center">
+              <img src="/track-your-sales/logo-mark.png" alt="" className="mx-auto h-12 w-12 object-contain" />
+              <p className="mt-3 text-[11px] font-black tracking-[.16em] text-[var(--color-primary-700)]" dir="ltr">MANAGEMENT</p>
+              <h1 className="mt-1 text-2xl font-black">Manager sign-in</h1>
+              <p className="mt-2 text-xs leading-6 text-[var(--color-text-secondary)]">Enter your password to view team reports.</p>
+            </div>
+            <form onSubmit={load} className="space-y-3">
+              <label className="block text-sm font-bold">Password
+                <input type="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Enter password" className="mt-2 w-full rounded-xl border border-[var(--color-border)] bg-[var(--color-surface-cream)] px-4 py-3 text-base outline-none focus:border-[#d9651b]" />
+              </label>
+              {error ? <p className="text-sm font-bold text-red-600">{error}</p> : null}
+              <button type="submit" disabled={pending || !password} className="w-full rounded-xl bg-[var(--color-primary-700)] py-3 font-extrabold text-white disabled:opacity-50">{pending ? "Signing in..." : "Sign in"}</button>
             </form>
-          </>
-        )}
-        {error && <p role="alert" className="mt-4 rounded-xl bg-red-50 p-3 text-sm font-bold text-red-700">{error}</p>}
-        <footer className="mt-8 text-center text-xs text-neutral-400">أداة مستقلة لمتابعة المبيعات — ليست منتجًا رسميًا أو معتمدًا من Orange.</footer>
-      </div>
+          </section>
+        </div>
+      ) : (
+        <div className="mx-auto flex max-w-[1440px] gap-5">
+          {mobileMenuOpen ? <button type="button" aria-label="Close menu" onClick={() => setMobileMenuOpen(false)} className="fixed inset-0 z-40 bg-[var(--color-text-primary)]/30 backdrop-blur-[2px] lg:hidden" /> : null}
+          <aside className={"fixed inset-y-0 right-0 z-50 flex w-[min(82vw,300px)] flex-col border-l border-white/70 bg-white/90 p-4 shadow-2xl backdrop-blur-2xl transition-transform duration-200 lg:sticky lg:top-5 lg:z-auto lg:h-[calc(100vh-2.5rem)] lg:w-[248px] lg:shrink-0 lg:translate-x-0 lg:rounded-[28px] lg:border lg:shadow-[0_14px_42px_rgba(93,54,26,.08)] " + (mobileMenuOpen ? "translate-x-0" : "translate-x-full lg:translate-x-0")}>
+            <div className="flex items-center gap-3 border-b border-[#f1e8e0] px-1 pb-5">
+              <img src="/track-your-sales/logo-mark.png" alt="" className="h-10 w-10 object-contain" />
+              <div className="min-w-0"><p className="text-[11px] font-black tracking-[.14em] text-[var(--color-primary-700)]" dir="ltr">TRACK YOUR SALES</p><h2 className="mt-1 truncate text-sm font-black">Dashboard</h2></div>
+              <button type="button" onClick={() => setMobileMenuOpen(false)} aria-label="Close menu" className="mr-auto rounded-lg p-2 text-[#6f5d4d] lg:hidden">✕</button>
+            </div>
+            <p className="px-2 pb-2 pt-6 text-[11px] font-extrabold text-[var(--color-text-secondary)]">Main menu</p>
+            <nav className="space-y-1">
+              {navItems.map((item) => {
+                const active = view === item.id;
+                const className = "flex w-full items-center gap-3 rounded-2xl px-3 py-3 text-right text-sm font-extrabold transition " + (active ? "bg-[#fff0e5] text-[var(--color-primary-700)] shadow-sm" : "text-[#766252] hover:bg-[#faf6f2]");
+                const content = <>
+                  <span className={"flex h-8 w-8 items-center justify-center rounded-xl " + (active ? "bg-white text-[var(--color-primary-700)]" : "bg-[#f8f5f1] text-[var(--color-text-secondary)]")}><ManagerIcon name={item.icon} size={17} /></span>{item.label}{active ? <span className="mr-auto h-1.5 w-1.5 rounded-full bg-[var(--color-primary-600)]" /> : null}
+                </>;
+                // الرجوع للرئيسية يتم داخل نفس الجلسة حتى لا نفقد حالة دخول المدير.
+                if (item.id === "overview") {
+                  return <button
+                    key={item.id}
+                    type="button"
+                    onClick={() => {
+                      setView("overview");
+                      setBranchPreview(null);
+                      setBranchOpenFor(null);
+                      setDetailsId(null);
+                      setPwOpen(false);
+                      setMobileMenuOpen(false);
+                    }}
+                    className={className}
+                  >{content}</button>;
+                }
+                return <button key={item.id} type="button" onClick={() => changeView(item.id)} className={className}>{content}</button>;
+              })}
+            </nav>
+            <div className="mt-auto rounded-2xl border border-[var(--color-border)] bg-gradient-to-br from-[var(--color-surface-cream)] to-[var(--color-primary-50)]/70 p-3">
+              <p className="truncate text-xs font-extrabold">{managerName || "Team management"}</p><p className="mt-1 text-[11px] text-[var(--color-text-secondary)]">Daily performance tracking</p>
+              <button type="button" onClick={() => { setPwOpen((v) => !v); setPwMsg(""); setMobileMenuOpen(false); }} className="mt-3 w-full rounded-xl border border-[#eadbce] bg-white px-3 py-2 text-xs font-bold text-[var(--color-primary-700)]">⚙ Change password</button>
+              <button type="button" onClick={() => { setMobileMenuOpen(false); logout(); }} className="mt-2 flex min-h-11 w-full items-center justify-center gap-2 rounded-xl border border-red-200 bg-white px-3 py-2 text-xs font-extrabold text-red-600 transition hover:bg-red-50">↪ Log out</button>
+            </div>
+          </aside>
+
+          <div className="min-w-0 flex-1 space-y-5">
+            <header className="flex items-center justify-between gap-3 rounded-[24px] border border-white/80 bg-white/80 px-4 py-3 shadow-[0_10px_30px_rgba(104,53,19,.055)] backdrop-blur-xl sm:px-5">
+              <div className="flex min-w-0 flex-col gap-2">
+                <div className="flex min-w-0 items-center gap-2.5">
+                  <button type="button" onClick={() => setMobileMenuOpen(true)} aria-label="Open menu" className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--color-primary-50)] text-xl text-[var(--color-primary-700)] lg:hidden">☰</button>
+                  <img src="/track-your-sales/logo-mark.png" alt="Track Your Sales" className="h-9 w-9 shrink-0 object-contain" />
+                  <div className="min-w-0 flex-1">
+                    <p className="text-[11px] font-black tracking-[.06em] text-[var(--color-primary-700)]" dir="ltr">TRACK YOUR SALES</p>
+                    <p className="mt-0.5 whitespace-normal text-[11px] leading-4 font-semibold text-[var(--color-text-secondary)]" dir="ltr">Developed by Mahmoud Khairy</p>
+                  </div>
+                </div>
+                <div className="min-w-0 pr-1">
+                  <h1 className="truncate text-xl font-black sm:text-2xl">{dashboardDetail ? ({ "branches-all":"All branches", "branches-ahead":"Ahead branches", "branches-behind":"Behind branches", "employees-all":"All employees", "employees-track":"On track", "employees-behind":"Below target" } as const)[dashboardDetail] : activeLabel}</h1>
+                  <p className="mt-0.5 truncate text-[11px] text-[var(--color-text-secondary)]">Team performance</p>
+                </div>
+              </div>
+              <div className="flex shrink-0 items-center gap-2"><div className="flex items-center gap-2 rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface-cream)] py-1 pl-1 pr-1 sm:py-1.5 sm:pl-3 sm:pr-1.5"><span className="hidden max-w-[120px] truncate text-[11px] font-extrabold text-[var(--color-text-primary)] sm:inline">{managerName || "Manager"}</span></div><button type="button" disabled={pending} onClick={() => load()} className="shrink-0 rounded-xl border border-[#eee0d5] bg-white px-3 py-2.5 text-xs font-extrabold text-[var(--color-primary-700)] disabled:opacity-50">{pending ? "Refreshing..." : "↻ Refresh"}</button></div>
+            </header>
+            {error ? <p className="rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-xs font-bold text-red-700">{error}</p> : null}
+
+            {view === "overview" ? (
+              <div className="space-y-5">
+                {greeting && managerName ? (
+                  <p className="inline-flex items-center gap-2 rounded-full border border-[var(--color-border)] bg-[var(--color-surface-cream)] px-3 py-1.5 text-xs font-extrabold text-[var(--color-primary-700)]">
+                    <span aria-hidden="true">👋</span>{greeting}, {managerTitle(managerName)} {managerName}
+                  </p>
+                ) : null}
+                
+                <button type="button" onClick={() => changeView("activity")} aria-label="View today's check-ins" className="flex w-full items-center justify-between gap-3 rounded-[20px] border border-[var(--color-border)] bg-white px-4 py-3 text-left shadow-[0_1px_2px_rgba(43,20,0,.04)] transition hover:border-[#e5b58e] active:scale-[0.99]">
+                  <span className="text-xs font-extrabold text-[var(--color-text-primary)]">Today</span>
+                  <span className="flex items-center gap-4 text-xs font-bold tabular-nums">
+                    <span className="text-emerald-700">{loggedToday.length} checked in</span>
+                    <span className="text-red-700">{missingToday.length} not yet</span>
+                    <span className="text-[var(--color-text-secondary)]">{onLeaveToday.length} on leave</span>
+                  </span>
+                </button>
+                <section className="grid grid-cols-3 gap-2.5 sm:grid-cols-3 sm:gap-3">
+                  {[
+                    {label:"Total branches",value:branchGroups.length,sub:"All area branches",tone:"orange",icon:"branches" as const,detail:"branches-all" as const},
+                    {label:"Ahead branches",value:branchStatus.filter(b=>b.expected!==undefined && (b.track ?? -Infinity)-b.expected>=5).length,sub:"Above expected",tone:"green",icon:"trend" as const,detail:"branches-ahead" as const},
+                    {label:"Behind branches",value:behindBranches.length,sub:"Need follow-up",tone:"red",icon:"alert" as const,detail:"branches-behind" as const},
+                    {label:"Total employees",value:allRows.length,sub:"In current reports",tone:"violet",icon:"users" as const,detail:"employees-all" as const},
+                    {label:"On track",value:onTrackEmployees.length,sub:"On track or ahead",tone:"green",icon:"trend" as const,detail:"employees-track" as const},
+                    {label:"Below target",value:behindEmployees.length,sub:"Need follow-up",tone:"red",icon:"alert" as const,detail:"employees-behind" as const}
+                  ].map((item)=>(
+                    <button key={item.label} type="button" onClick={()=>{const current=(window.history.state??{}) as Record<string,unknown>;window.history.replaceState({...current,tysView:view},"");window.history.pushState({...current,tysView:view,tysOverlay:"dashboard-detail"},"");setDashboardDetail(item.detail);}} aria-label={"View " + item.label} className="min-w-0 rounded-[20px] border border-[var(--color-border)] bg-white/85 p-3 text-right shadow-[0_8px_24px_rgba(126,65,24,.055)] backdrop-blur-xl transition hover:-translate-y-0.5 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary-600)] sm:rounded-[24px] sm:p-4">
+                      <div className="flex items-center justify-between gap-1">
+                        <span className={"flex h-8 w-8 items-center justify-center rounded-xl text-sm font-black "+(item.tone==="red"?"bg-red-50 text-red-600":item.tone==="green"?"bg-emerald-50 text-emerald-700":item.tone==="violet"?"bg-violet-50 text-violet-700":"bg-[var(--color-primary-50)] text-[var(--color-primary-700)]")}><ManagerIcon name={item.icon} size={17} /></span>
+                        <span className="hidden text-[10px] font-bold text-[var(--color-text-secondary)] sm:inline">{item.sub}</span>
+                      </div>
+                      <p className="mt-3 truncate text-[11px] font-extrabold text-[var(--color-text-secondary)] sm:text-xs">{item.label}</p>
+                      <strong className={"mt-0.5 block text-2xl font-black tabular-nums sm:text-3xl "+(item.tone==="red"?"text-red-600":item.tone==="green"?"text-emerald-700":"text-[var(--color-text-primary)]")}>{item.value}</strong>
+                    </button>
+                  ))}
+                </section>
+
+                
+              </div>
+            ) : view === "list" ? (
+              <div className="space-y-4">
+                <section><h2 className="text-lg font-black">All branches</h2><p className="text-[11px] text-[var(--color-text-secondary)]">{allRows.length} report · {lastLoaded ? lastLoaded.toLocaleTimeString("en-US", { timeZone: "Africa/Cairo", hour: "2-digit", minute: "2-digit", hour12: false }) : "Not updated yet"}</p></section>
+                {branchStatus.length ? <section className="orn-rich-card overflow-hidden rounded-[26px] border border-[var(--color-border)] bg-white/90 shadow-[0_10px_28px_rgba(104,53,19,.055)]"><div className="hidden grid-cols-[52px_minmax(0,1.5fr)_minmax(100px,1fr)_100px_90px] gap-3 border-b border-[var(--color-border)] bg-[var(--color-surface-cream)] px-4 py-3 text-[11px] font-black text-[var(--color-text-secondary)] sm:grid"><span>Rank</span><span>Branch</span><span>Status</span><span>Achievement</span><span>Employees</span></div><div className="divide-y divide-[var(--color-border)]">{[...branchStatus].sort((a,b)=>b.percent-a.percent).map((b,index)=>{const delta=b.expected===undefined || b.track===undefined?null:b.track-b.expected;const label=delta===null?"No data":delta<0?"Behind":delta>=5?"Ahead":"On track";const tone=delta===null?"bg-stone-100 text-stone-600":delta<0?"bg-red-50 text-red-700":delta>=5?"bg-emerald-50 text-emerald-700":"bg-amber-50 text-amber-800";const ring=delta!==null&&delta<0?"var(--color-danger-text)":"var(--color-primary-600)";return <button key={b.name} type="button" onClick={()=>changeView("b:"+b.name)} className="grid w-full grid-cols-[26px_minmax(0,1fr)_auto] items-center gap-3 px-3 py-3 text-right transition hover:bg-[var(--color-surface-cream)] sm:grid-cols-[52px_minmax(0,1.5fr)_minmax(100px,1fr)_100px_90px] sm:px-4"><span className="text-[11px] font-black text-[var(--color-text-secondary)]">#{index+1}</span><span className="min-w-0"><span className="block truncate text-xs font-black text-[var(--color-text-primary)]">{b.name}</span><span className="mt-1 block text-[11px] text-[var(--color-text-secondary)] sm:hidden">{b.group.length} employees · {Math.round(b.percent)}% achieved</span></span><span className={"col-start-3 row-start-1 rounded-full px-2.5 py-1 text-[11px] font-black "+tone+" sm:col-start-auto sm:row-auto sm:justify-self-start"}>{label}</span><span className="col-span-2 flex items-center gap-2 sm:col-span-1"><span className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full" style={{background:"conic-gradient("+ring+" "+Math.min(100,Math.max(0,b.percent))+"%, var(--color-border) 0)"}}><span className="flex h-7 w-7 items-center justify-center rounded-full bg-white text-[10px] font-black tabular-nums">{Math.round(b.percent)}%</span></span><span className="h-1.5 min-w-0 flex-1 overflow-hidden rounded-full bg-[var(--color-border)] sm:hidden"><span className="block h-full rounded-full bg-gradient-to-l from-[var(--color-primary-700)] to-[var(--color-primary-500)]" style={{width:Math.min(100,Math.max(0,b.percent))+"%"}} /></span></span><span className="hidden text-xs font-bold text-[#6f5948] sm:block">{b.group.length}</span></button>})}</div></section> : <div className="orn-rich-card rounded-2xl border border-dashed border-[#e8d5c5] bg-white p-8 text-center"><p className="font-extrabold">No reports yet</p><p className="mt-1 text-xs text-[var(--color-text-secondary)]">Team data will appear after sync.</p></div>}
+              </div>
+            ) : view === "top" ? (
+              <section className="orn-rich-card overflow-hidden rounded-[26px] border border-[var(--color-border)] bg-white/90 shadow-[0_10px_28px_rgba(104,53,19,.055)]">
+                <div className="flex items-center justify-between gap-3 border-b border-[var(--color-border)] px-4 py-4 sm:px-5"><div><p className="text-[11px] font-black tracking-[.15em] text-[var(--color-primary-700)]" dir="ltr">TEAM LEADERBOARD</p><h2 className="mt-1 text-lg font-black">Employee ranking</h2><p className="mt-0.5 text-[11px] text-[var(--color-text-secondary)]">From highest to lowest achievement</p></div><span className="rounded-xl bg-[var(--color-primary-50)] px-3 py-2 text-xs font-black text-[var(--color-primary-700)]">{topRows.length} employees</span></div>
+                <div className="divide-y divide-[var(--color-border)]">{topRows.map((row) => {
+                  const employee = allRows.find((item) => item.branch_id === row.branchId);
+                  const expanded = openId === row.branchId;
+                  return <div key={row.branchId}>
+                    <button type="button" aria-expanded={expanded} onClick={() => toggleEmployeeDetails(row.branchId, expanded)} className="flex w-full items-center gap-3 px-4 py-3.5 text-right transition hover:bg-[var(--color-surface-cream)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--color-primary-600)] sm:px-5"><span className={"flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-xs font-black "+(row.rank===1?"bg-[#fff0d7] text-[#a66a08]":row.rank===2?"bg-[#f2f3f5] text-[#657080]":row.rank===3?"bg-[#faeee5] text-[#9b5b31]":"bg-[var(--color-surface-cream)] text-[var(--color-primary-700)]")}>{row.rank}</span><span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#ffe2c9] to-[var(--color-primary-50)] text-sm font-black text-[var(--color-primary-700)]">{(row.name.trim()[0]||"م").toUpperCase()}</span><div className="min-w-0 flex-1"><p className="truncate text-sm font-extrabold text-[var(--color-text-primary)]">{row.name}</p><p className="truncate text-[11px] text-[var(--color-text-secondary)]" dir="ltr">{row.branch}</p><div className="mt-2 h-1.5 overflow-hidden rounded-full bg-[var(--color-border)]"><div className="h-full rounded-full bg-gradient-to-l from-[var(--color-primary-700)] to-[var(--color-primary-500)]" style={{width:Math.min(100,Math.max(0,row.percent))+"%"}} /></div></div><strong className="shrink-0 text-lg font-black tabular-nums text-[var(--color-primary-700)]">{Math.round(row.percent)}%</strong><span className="text-[var(--color-text-secondary)]" aria-hidden="true">{expanded ? "⌄" : "‹"}</span></button>
+                    {expanded && employee ? <div className="border-t border-[var(--color-border)] bg-[var(--color-surface-cream)]/60 px-4 py-4 sm:px-5">
+                      <div className="mb-3 flex items-center justify-between gap-2"><h3 className="text-xs font-black">Target items</h3><TrackBadge percent={employeeTrackPercent(employee)} expected={employee.payload.expectedPercent} /></div>
+                      <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">{(employee.payload.kpis ?? []).map((kpi) => <KpiTile key={kpi.name} kpi={kpi} />)}</div>
+                      {employee.payload.managerQuality ? <div className="mt-3 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface-cream)] p-3"><p className="mb-2 font-black">Quality approved by branch manager</p><div className="grid grid-cols-2 gap-2 text-[11px] sm:grid-cols-5">{([{k:"kyc",n:"KYC"},{k:"visits",n:"Quality Visits"},{k:"training",n:"Training"},{k:"pos",n:"POS"},{k:"csat",n:"CSAT"}] as const).map((item)=><div key={item.k}><span className="block text-[var(--color-text-secondary)]">{item.n}</span><b>{employee.payload.managerQuality?.quality[item.k]}%</b></div>)}</div><p className="mt-2 text-[11px] text-[var(--color-text-secondary)]">Last approval: {employee.payload.managerQuality.updatedBy ?? "Branch manager"}</p></div> : null}
+                      {employee.payload.branchManagerProductivity ? <p className="mt-2 rounded-xl bg-[var(--color-primary-50)] p-2 text-xs font-bold">Approved branch productivity: {employee.payload.branchManagerProductivity.percent}% · by {employee.payload.branchManagerProductivity.updatedBy ?? "Branch manager"}</p> : null}
+                      <p className="mt-3 text-[11px] text-[var(--color-text-secondary)]" dir="ltr">Last update: {new Date(employee.updated_at).toLocaleString("en-US", { timeZone: "Africa/Cairo", hour12: false })}</p>
+                    </div> : null}
+                  </div>;
+                })}</div>
+              </section>
+            ) : view === "activity" ? (
+              <section className="space-y-4">
+                <div className="flex flex-wrap items-end justify-between gap-3"><div><p className="text-[11px] font-black tracking-[.15em] text-[var(--color-primary-700)]" dir="ltr">DAILY CHECK-IN</p><h2 className="mt-1 text-xl font-black">Today&apos;s check-ins</h2><p className="mt-1 text-xs text-[var(--color-text-secondary)]" dir="ltr">{today}</p></div><span className="rounded-xl border border-[var(--color-border)] bg-white/80 px-3 py-2 text-[11px] font-bold text-[var(--color-text-secondary)]">Team check-in status</span></div>
+                <div className="grid gap-3 sm:grid-cols-3">
+                  {[{title:"Checked in",items:loggedToday,tone:"text-emerald-700",surface:"bg-emerald-50",dot:"bg-emerald-500"},{title:"Not checked in",items:missingToday,tone:"text-red-700",surface:"bg-red-50",dot:"bg-red-500"},{title:"On leave",items:onLeaveToday,tone:"text-[var(--color-text-secondary)]",surface:"bg-[#f7f1eb]",dot:"bg-[#b69b84]"}].map((group)=><article key={group.title} className="orn-rich-card overflow-hidden rounded-[24px] border border-[var(--color-border)] bg-white/90 shadow-[0_8px_24px_rgba(126,65,24,.05)]"><div className="flex items-center justify-between border-b border-[#f3e9e1] px-4 py-3"><div className="flex items-center gap-2"><span className={"h-2.5 w-2.5 rounded-full "+group.dot}/><h3 className={"text-sm font-black "+group.tone}>{group.title}</h3></div><span className={"rounded-lg px-2.5 py-1 text-sm font-black tabular-nums "+group.surface}>{group.items.length}</span></div><div className="space-y-2 p-3">{group.items.length?group.items.map((r)=><div key={r.branch_id} className="flex items-center justify-between gap-2 rounded-xl bg-[var(--color-surface-cream)] px-3 py-2.5 text-xs"><b className="min-w-0 truncate">{r.employee_name}</b><span className="max-w-[45%] truncate text-[11px] text-[var(--color-text-secondary)]" dir="ltr">{r.branch_name||NO_BRANCH}</span></div>):<p className="py-5 text-center text-xs text-[var(--color-text-secondary)]">None</p>}</div></article>)}
+                </div>
+              </section>
+            ) : view === "contracts" ? (
+              <section className="orn-rich-card overflow-hidden rounded-[26px] border border-[var(--color-border)] bg-white/90 shadow-[0_10px_28px_rgba(104,53,19,.055)]">
+                <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--color-border)] px-4 py-4 sm:px-5"><div><p className="text-[11px] font-black tracking-[.15em] text-[var(--color-primary-700)]" dir="ltr">CONTRACTS TRACKING</p><h2 className="mt-1 text-lg font-black">Contracts</h2><p className="mt-0.5 text-[11px] text-[var(--color-text-secondary)]">Every contract logged by the team across all branches. Late = not sent for 3+ days.</p></div>{contractRows ? <div className="flex gap-2 text-[11px] font-black"><span className="rounded-full bg-emerald-50 px-2.5 py-1 text-emerald-700">Sent {contractRows.filter((c)=>c.status==="sent").length}</span><span className="rounded-full bg-amber-50 px-2.5 py-1 text-amber-800">Missing {contractRows.filter((c)=>c.status==="missing").length}</span><span className="rounded-full bg-red-50 px-2.5 py-1 text-red-700">Rejected {contractRows.filter((c)=>c.status==="rejected").length}</span><span className="rounded-full bg-red-100 px-2.5 py-1 text-red-800">Late {contractRows.filter((c)=>c.status!=="sent" && contractDaysOld(c.contract_date)>=3).length}</span></div> : null}</div>
+                {contractMsg ? <p className="border-b border-[var(--color-border)] bg-red-50 px-4 py-2 text-xs font-bold text-red-700">{contractMsg}</p> : null}
+                {contractsLoading ? <p className="py-8 text-center text-xs text-[var(--color-text-secondary)]">Loading contracts...</p> : contractRows === null ? <p className="py-8 text-center text-xs text-[var(--color-text-secondary)]">Could not load contracts. Hit Refresh to try again.</p> : contractRows.length === 0 ? <p className="py-8 text-center text-xs text-[var(--color-text-secondary)]">No contracts logged yet.</p> : (
+                  <div className="divide-y divide-[var(--color-border)]">{[...contractRows].sort((a,b)=>{const al=a.status!=="sent"&&contractDaysOld(a.contract_date)>=3?0:1;const bl=b.status!=="sent"&&contractDaysOld(b.contract_date)>=3?0:1;return al-bl||b.contract_date.localeCompare(a.contract_date);}).map((row)=>{const late=row.status!=="sent"&&contractDaysOld(row.contract_date)>=3;return <div key={row.id} className="flex flex-wrap items-center gap-3 px-4 py-3 sm:px-5"><span className={"h-2.5 w-2.5 shrink-0 rounded-full "+(row.status==="sent"?"bg-emerald-500":late?"bg-red-500":"bg-amber-500")} /><div className="min-w-0 flex-1"><p className="truncate text-sm font-extrabold text-[var(--color-text-primary)]" dir="auto">{row.client_name}</p><p className="mt-1 text-[11px] text-[var(--color-text-secondary)]" dir="auto">{row.employee_name} · {row.branch_name} · {row.contract_date}{row.sent_date?" · sent "+row.sent_date:""}{late?" · LATE "+contractDaysOld(row.contract_date)+"d":""}{row.note?" · "+row.note:""}</p></div><span className={"shrink-0 rounded-full px-2.5 py-1 text-[11px] font-black "+CONTRACT_STATUS_STYLE[row.status]}>{CONTRACT_STATUS_LABEL[row.status]}{late?" · LATE":""}</span><button type="button" onClick={()=>deleteContract(row.id)} aria-label="Delete contract" className="shrink-0 rounded-lg border border-red-200 bg-white px-2 py-1 text-[11px] font-bold text-red-600">✕</button></div>;})}</div>
+                )}
+              </section>
+            ) : view === "reports" ? (
+              <section className="orn-rich-card overflow-hidden rounded-[26px] border border-[var(--color-border)] bg-white/90 shadow-[0_10px_28px_rgba(104,53,19,.055)]">
+                <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--color-border)] px-4 py-4 sm:px-5"><div><p className="text-[11px] font-black tracking-[.15em] text-[var(--color-primary-700)]" dir="ltr">BRANCH REPORTS</p><h2 className="mt-1 text-lg font-black">Branch reports</h2><p className="mt-0.5 text-[11px] text-[var(--color-text-secondary)]">Download a detailed CSV report per branch</p></div><span className="rounded-xl bg-[var(--color-primary-50)] px-3 py-2 text-xs font-black text-[var(--color-primary-700)]">{branchGroups.length} branches</span></div>
+                {branchGroups.length?<div className="divide-y divide-[var(--color-border)]">{branchGroups.map(([name,group])=><div key={name} className="flex items-center gap-3 px-4 py-3.5 sm:px-5"><span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--color-primary-50)] text-sm font-black text-[var(--color-primary-700)]">▦</span><div className="min-w-0 flex-1"><p className="truncate text-sm font-extrabold text-[var(--color-text-primary)]" dir="ltr">{name}</p><p className="mt-1 text-[11px] text-[var(--color-text-secondary)]">{group.length} employees · detailed report</p></div><button type="button" onClick={()=>downloadBranchCsv(name,group)} className="shrink-0 rounded-xl border border-[#f0d4bd] bg-gradient-to-l from-[var(--color-primary-50)] to-[var(--color-surface-cream)] px-3 py-2.5 text-[11px] font-black text-[#a94b13] transition hover:border-[#e5b58e]">↓ CSV</button></div>)}</div>:<p className="py-8 text-center text-xs text-[var(--color-text-secondary)]">No data to export.</p>}
+              </section>
+            ) : branch !== null ? (
+              <section className="space-y-3">
+                <div className="flex items-center justify-between gap-3"><div><button type="button" onClick={()=>changeView("list")} className="mb-1 text-xs font-bold text-[var(--color-primary-700)]">← All branches</button><h2 className="text-xl font-black" dir="ltr">{branch}</h2><p className="text-xs text-[var(--color-text-secondary)]">{branchRows.length} employees</p></div><button type="button" onClick={()=>downloadBranchCsv(branch,branchRows)} className="rounded-xl border border-[var(--color-border)] bg-white px-3 py-2 text-xs font-bold text-[var(--color-primary-700)]">↓ CSV</button></div>
+                <article className="orn-rich-card rounded-2xl border border-[var(--color-border)] bg-white p-3"><button type="button" onClick={()=>toggleBranchKpis(branchOpen)} className="flex w-full items-center justify-between gap-3 text-right"><span className="text-xs font-bold text-[var(--color-text-secondary)]">Total branch performance</span><strong className="text-2xl text-[var(--color-primary-700)]">{Math.round(branchAvg)}%　{branchOpen?"−":"+"}</strong></button>{branchOpen?<div className="mt-3 grid grid-cols-2 gap-2 border-t border-[var(--color-border)] pt-3 sm:grid-cols-3">{aggregateKpis(branchRows).map(k=><KpiTile key={k.name} kpi={k}/>)}{branchRows[0]?.payload.branchManagerProductivity ? <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface-cream)] p-3"><p className="text-[11px] font-extrabold text-[var(--color-text-secondary)]">Productivity</p><p className="mt-1 text-2xl font-black">{branchRows[0].payload.branchManagerProductivity.percent}%</p><p className="mt-1 text-[11px] text-[var(--color-text-secondary)]">Last updated by {branchRows[0].payload.branchManagerProductivity.updatedBy ?? "Branch manager"}</p></div> : null}</div>:null}<TrackBadge percent={trackPercent(aggregateKpis(branchRows))} expected={branchExpected}/></article>
+                <h3 className="text-sm font-black">Employees · sorted by performance</h3><div className="space-y-2">{[...branchRows].sort((a,b)=>(b.payload.overall??0)-(a.payload.overall??0)).map((row,index)=><div key={row.branch_id} className="relative [&>article]:pt-8"><span className="absolute right-3 top-2 z-10 rounded-md bg-[var(--color-primary-50)] px-2 py-0.5 text-[11px] font-black text-[var(--color-primary-700)]">#{index+1}</span>{renderRow(row)}</div>)}</div>
+              </section>
+            ) : null}
+
+            {dashboardDetail ? (() => {
+              const branchItems = dashboardDetail === "branches-all" ? branchStatus : dashboardDetail === "branches-ahead" ? branchStatus.filter(b=>b.expected!==undefined && (b.track ?? -Infinity)-b.expected>=5) : branchStatus.filter(b=>b.expected!==undefined && !b.onTrack);
+              const employeeItems = dashboardDetail === "employees-all" ? topRows : dashboardDetail === "employees-track" ? topRows.filter(r=>onTrackEmployees.some(e=>e.branch_id===r.branchId)) : topRows.filter(r=>behindEmployees.some(e=>e.branch_id===r.branchId));
+          const orderedEmployeeItems = dashboardDetail === "employees-all" ? [...employeeItems].sort((a,b)=>a.branch.localeCompare(b.branch,"ar") || b.percent-a.percent) : employeeItems;
+              const isBranches = dashboardDetail.startsWith("branches");
+              const title = ({ "branches-all":"All branches", "branches-ahead":"Ahead branches", "branches-behind":"Behind branches", "employees-all":"All employees", "employees-track":"employees On Track", "employees-behind":"employees Behind" } as const)[dashboardDetail];
+              return <section className="space-y-4">
+                <div className="flex items-center justify-between gap-3"><div><p className="text-[11px] font-black tracking-[.15em] text-[var(--color-primary-700)]" dir="ltr">DASHBOARD DETAILS</p><h2 className="mt-1 text-xl font-black">{title}</h2><p className="mt-1 text-xs text-[var(--color-text-secondary)]">{isBranches?branchItems.length+" branches":employeeItems.length+" employees"}</p></div><button type="button" onClick={()=>{setDashboardDetail(null);window.history.back();}} className="rounded-xl border border-[var(--color-border)] bg-white px-3 py-2 text-xs font-bold text-[var(--color-primary-700)]">← Home</button></div>
+                {isBranches ? <section className="orn-rich-card overflow-hidden rounded-[26px] border border-[var(--color-border)] bg-white/90 shadow-[0_10px_28px_rgba(104,53,19,.055)]"><div className="divide-y divide-[var(--color-border)]">{branchItems.length ? [...branchItems].sort((a,b)=>b.percent-a.percent).map((b,i)=><div key={b.name} className="flex items-center justify-between gap-3 px-4 py-3 text-right"><div className="min-w-0"><p className="truncate text-sm font-black">{b.name}</p><p className="mt-1 text-[11px] text-[var(--color-text-secondary)]">{b.group.length} employees · {b.expected===undefined?"No data":b.onTrack?"On track":"Behind"}</p></div><strong className="shrink-0 text-lg font-black tabular-nums text-[var(--color-primary-700)]">{Math.round(b.percent)}%</strong></div>) : <p className="py-8 text-center text-xs text-[var(--color-text-secondary)]">No branches in this list yet.</p>}</div></section> : <section className="orn-rich-card overflow-hidden rounded-[26px] border border-[var(--color-border)] bg-white/90 shadow-[0_10px_28px_rgba(104,53,19,.055)]"><div className="divide-y divide-[var(--color-border)]">{orderedEmployeeItems.length ? orderedEmployeeItems.map(row=><div key={row.branchId} className="flex items-center justify-between gap-3 px-4 py-3 text-right"><div className="min-w-0"><p className="truncate text-sm font-black">{row.name}</p><p className="mt-1 text-[11px] text-[var(--color-text-secondary)]">{row.branch}</p></div><strong className="shrink-0 text-lg font-black tabular-nums text-[var(--color-primary-700)]">{Math.round(row.percent)}%</strong></div>) : <p className="py-8 text-center text-xs text-[var(--color-text-secondary)]">No employees in this list yet.</p>}</div></section>}
+              </section>;
+            })() : null}
+            <footer className="flex justify-end gap-4 border-t border-[#eee5dc] pt-4"><button type="button" onClick={()=>{setPwOpen(v=>!v);setPwMsg("");}} className="text-xs font-bold text-[var(--color-primary-700)]">{pwOpen?"Hide password change":"🔑 Change password"}</button><button type="button" onClick={()=>{setTlOpen(v=>!v);setTlMsg("");}} className="text-xs font-bold text-[var(--color-primary-700)]">{tlOpen?"Hide team leader passwords":"👥 OB team leader passwords"}</button></footer>
+            {tlOpen ? <form onSubmit={saveTeamLeaderPassword} className="rounded-2xl border border-[var(--color-border)] bg-white p-4"><h3 className="text-sm font-black">Team leader password (OB branches)</h3><p className="mt-1 text-xs text-[var(--color-text-secondary)]">Set or change the team follow-up password for an OB boutique branch. The team leader uses it on the Team page; it is separate from your password.</p><div className="mt-3 grid gap-3 sm:grid-cols-2">
+              <label className="text-xs font-bold">OB Branch<select value={tlBranch} onChange={e=>setTlBranch(e.target.value)} className="mt-1.5 w-full rounded-xl border border-[var(--color-border)] bg-white px-3 py-2.5 text-sm"><option value="">Select a branch</option>{OB_BRANCHES.map((b)=><option key={b} value={b}>{b}</option>)}</select></label>
+              <label className="text-xs font-bold">New team leader password<input type="password" autoComplete="new-password" value={tlPw} onChange={e=>setTlPw(e.target.value)} className="mt-1.5 w-full rounded-xl border border-[var(--color-border)] px-3 py-2.5 text-sm"/></label>
+            </div>{tlMsg && tlMsg!=="saved"?<p className="mt-3 text-xs font-bold text-red-600">{tlMsg}</p>:null}{tlMsg==="saved"?<p className="mt-3 text-xs font-bold text-emerald-700">Saved.</p>:null}<button type="submit" disabled={tlBusy||!tlBranch||!tlPw} className="mt-3 rounded-xl bg-[var(--color-primary-700)] px-5 py-3 text-sm font-bold text-white disabled:opacity-50">{tlBusy?"Saving...":"Save team leader password"}</button></form>:null}
+            {branchPreview ? (() => {
+              const previewRows = branchGroups.find(([name]) => name === branchPreview)?.[1] ?? [];
+              const preview = branchStatus.find((item) => item.name === branchPreview);
+              const previewKpis = aggregateKpis(previewRows);
+              return (
+                <div className="fixed inset-0 z-[70] flex justify-end bg-[#2d211a]/35 backdrop-blur-[3px]" onClick={() => setBranchPreview(null)}>
+                  <aside role="dialog" aria-modal="true" aria-label={"Branch details " + branchPreview} onClick={(event) => event.stopPropagation()} className="h-full w-full max-w-[520px] overflow-y-auto border-r border-white/50 bg-[var(--color-surface-cream)] p-4 shadow-2xl sm:p-6">
+                    <div className="flex items-start justify-between gap-3">
+                      <div><p className="text-[11px] font-black tracking-[.15em] text-[var(--color-primary-700)]" dir="ltr">BRANCH QUICK VIEW</p><h2 className="mt-1 text-2xl font-black text-[#382719]" dir="auto">{branchPreview}</h2><p className="mt-1 text-xs text-[var(--color-text-secondary)]">Branch and employee performance summary</p></div>
+                      <button type="button" aria-label="Close details" onClick={() => setBranchPreview(null)} className="flex h-10 w-10 items-center justify-center rounded-xl border border-[var(--color-border)] bg-white text-lg font-bold text-[var(--color-text-secondary)]">×</button>
+                    </div>
+                    <div className="mt-5 grid grid-cols-2 gap-3">
+                      <div className="orn-rich-card rounded-2xl bg-white p-4 ring-1 ring-[var(--color-border)]"><p className="text-[11px] font-bold text-[var(--color-text-secondary)]">Branch achievement</p><strong className="mt-1 block text-3xl font-black tabular-nums text-[var(--color-primary-700)]">{Math.round(preview?.percent ?? 0)}%</strong></div>
+                      <div className="orn-rich-card rounded-2xl bg-white p-4 ring-1 ring-[var(--color-border)]"><p className="text-[11px] font-bold text-[var(--color-text-secondary)]">Branch status</p><strong className={"mt-2 inline-flex rounded-full px-3 py-1.5 text-xs font-black "+(preview?.expected===undefined?"bg-stone-100 text-stone-600":preview.onTrack?"bg-emerald-50 text-emerald-700":"bg-red-50 text-red-700")}>{preview?.expected===undefined?"No data":preview.onTrack?"On track":"Behind"}</strong></div>
+                    </div>
+                    <div className="mt-5"><div className="mb-3 flex items-center justify-between"><h3 className="text-sm font-black">KPI performance</h3><span className="text-[11px] text-[var(--color-text-secondary)]">{previewKpis.length} KPIs</span></div><div className="grid grid-cols-2 gap-2">{previewKpis.map((k)=> <KpiTile key={k.name} kpi={k}/>)}</div></div>
+                    <div className="mt-6"><div className="mb-3 flex items-center justify-between"><h3 className="text-sm font-black">Branch employees</h3><span className="rounded-full bg-[var(--color-primary-50)] px-2.5 py-1 text-[11px] font-black text-[var(--color-primary-700)]">{previewRows.length}</span></div><div className="space-y-2">{[...previewRows].sort((a,b)=>(b.payload.overall??0)-(a.payload.overall??0)).map((row,index)=><div key={row.branch_id} className="orn-rich-card rounded-2xl border border-[var(--color-border)] bg-white p-3"><div className="mb-2 flex items-center justify-between gap-3"><span className="text-[11px] font-black text-[var(--color-primary-700)]">#{index+1}</span><strong className="text-sm font-black text-[var(--color-text-primary)]">{Math.round(row.payload.overall??0)}%</strong></div>{renderRow(row)}</div>)}</div></div>
+                    <button type="button" onClick={() => { setBranchPreview(null); changeView("b:" + branchPreview); }} className="mt-6 w-full rounded-xl bg-gradient-to-l from-[var(--color-primary-700)] to-[#e97824] px-4 py-3 text-sm font-black text-white shadow-lg shadow-orange-900/10">Open full branch page ←</button>
+                  </aside>
+                </div>
+              );
+            })() : null}
+            {pwOpen ? <form onSubmit={changePassword} className="rounded-2xl border border-[var(--color-border)] bg-white p-4"><h3 className="mb-3 text-sm font-black">Change password</h3><div className="grid gap-3 sm:grid-cols-3">
+              <label className="text-xs font-bold">Current password<input type="password" autoComplete="current-password" value={oldPw} onChange={e=>setOldPw(e.target.value)} className="mt-1.5 w-full rounded-xl border border-[var(--color-border)] px-3 py-2.5 text-sm"/></label>
+              <label className="text-xs font-bold">New password<input type="password" autoComplete="new-password" value={newPw} onChange={e=>setNewPw(e.target.value)} className="mt-1.5 w-full rounded-xl border border-[var(--color-border)] px-3 py-2.5 text-sm"/></label>
+              <label className="text-xs font-bold">Confirm password<input type="password" autoComplete="new-password" value={newPw2} onChange={e=>setNewPw2(e.target.value)} className="mt-1.5 w-full rounded-xl border border-[var(--color-border)] px-3 py-2.5 text-sm"/></label>
+            </div>{pwMsg?<p className="mt-3 text-xs font-bold text-red-600">{pwMsg}</p>:null}<button type="submit" disabled={!oldPw||!newPw||!newPw2} className="mt-3 rounded-xl bg-[var(--color-primary-700)] px-5 py-3 text-sm font-bold text-white disabled:opacity-50">Save password</button></form>:null}
+          </div>
+        </div>
+      )}
     </main>
   );
 }

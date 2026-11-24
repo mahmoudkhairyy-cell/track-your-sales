@@ -16,13 +16,21 @@ export type BackupHoliday = {
   note: string | null;
 };
 
+/** الكواليتي = الـchecks بس. الحقول الرقمية القديمة لو موجودة في ملف قديم بتتجاهل. */
+export type BackupQuality = {
+  checks?: Record<string, boolean>;
+};
+
 export type BackupMonth = {
   yearMonth: string;
   fullCommission: number;
-  allowCommissionOver100: boolean;
+  /** قديم: كان خيار كوميشن فوق 100%، اتشال. الملفات القديمة بتفضل شغالة والحقل بيتجاهل. */
+  allowCommissionOver100?: boolean;
   workingDays: WorkingDays;
   kpis: BackupKpi[];
   holidays: BackupHoliday[];
+  /** اختياري: الملفات القديمة من غيره بتفضل شغالة */
+  quality?: BackupQuality;
 };
 
 export type BackupEntry = {
@@ -71,15 +79,6 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
-function isValidIsoDate(value: string): boolean {
-  if (!ISO_DATE_RE.test(value)) return false;
-  const [year, month, day] = value.split("-").map(Number);
-  const date = new Date(Date.UTC(year, month - 1, day));
-  return date.getUTCFullYear() === year
-    && date.getUTCMonth() === month - 1
-    && date.getUTCDate() === day;
-}
-
 function asString(value: unknown, field: string): string {
   if (typeof value !== "string" || value.trim() === "") {
     throw new Error(`حقل ${field} ناقص أو مش نص صالح`);
@@ -102,19 +101,27 @@ function asNumber(value: unknown, field: string): number {
   return value;
 }
 
-function asBoolean(value: unknown, field: string): boolean {
-  if (typeof value !== "boolean") {
-    throw new Error(`حقل ${field} لازم يكون true أو false`);
+/** بيفحص الملف كله (كل المستويات) عشان ما يدخلش أي حقل حساس. */
+function assertNoSecrets(value: unknown, path: string) {
+  if (Array.isArray(value)) {
+    value.forEach((item, index) => assertNoSecrets(item, `${path}[${index}]`));
+    return;
   }
-  return value;
-}
-
-function assertNoSecrets(record: Record<string, unknown>, path: string) {
-  for (const key of Object.keys(record)) {
+  if (!isRecord(value)) return;
+  for (const key of Object.keys(value)) {
     if (FORBIDDEN.includes(key)) {
       throw new Error(`الملف فيه حقل ممنوع (${path}.${key})`);
     }
+    assertNoSecrets(value[key], `${path}.${key}`);
   }
+}
+
+/** تاريخ بصيغة YYYY-MM-DD وفي الحقيقة (مش 2026-13-40). */
+function isRealIsoDate(value: string): boolean {
+  if (!ISO_DATE_RE.test(value)) return false;
+  const [y, m, d] = value.split("-").map(Number);
+  const date = new Date(Date.UTC(y, m - 1, d));
+  return date.getUTCFullYear() === y && date.getUTCMonth() === m - 1 && date.getUTCDate() === d;
 }
 
 function parseWorkingDays(value: unknown): WorkingDays {
@@ -131,20 +138,23 @@ function parseWorkingDays(value: unknown): WorkingDays {
   return result;
 }
 
+/** أرقام الهدف والوزن والعمولة مش ممكن تبقى سالبة: بنوقف الاستعادة قبل أي كتابة. */
+function asNonNegative(value: unknown, field: string): number {
+  const n = asNumber(value, field);
+  if (n < 0) throw new Error(`القيمة لازم تكون صفر أو أكبر: ${field}`);
+  return n;
+}
+
 function parseKpi(value: unknown, index: number): BackupKpi {
   if (!isRecord(value)) throw new Error(`مؤشر رقم ${index + 1} شكله غلط`);
   const kpiKey = asString(value.kpiKey, `kpis[${index}].kpiKey`);
   if (!KPI_KEYS.includes(kpiKey as KpiKey)) {
     throw new Error(`مؤشر غير معروف: ${kpiKey}`);
   }
-  const target = asNumber(value.target, `kpis[${index}].target`);
-  const weight = asNumber(value.weight, `kpis[${index}].weight`);
-  if (target < 0) throw new Error(`تارجت المؤشر ${kpiKey} مينفعش يكون بالسالب`);
-  if (weight < 0) throw new Error(`وزن المؤشر ${kpiKey} مينفعش يكون بالسالب`);
   return {
     kpiKey: kpiKey as KpiKey,
-    target,
-    weight,
+    target: asNonNegative(value.target, `kpis[${index}].target`),
+    weight: asNonNegative(value.weight, `kpis[${index}].weight`),
     unitAr: asString(value.unitAr, `kpis[${index}].unitAr`),
     sortOrder: asNumber(value.sortOrder, `kpis[${index}].sortOrder`),
   };
@@ -153,10 +163,23 @@ function parseKpi(value: unknown, index: number): BackupKpi {
 function parseHoliday(value: unknown, index: number): BackupHoliday {
   if (!isRecord(value)) throw new Error(`إجازة رقم ${index + 1} شكلها غلط`);
   const date = asString(value.date, `holidays[${index}].date`);
-  if (!isValidIsoDate(date)) {
+  if (!isRealIsoDate(date)) {
     throw new Error(`تاريخ إجازة غلط: ${date}`);
   }
   return { date, note: asOptionalString(value.note, `holidays[${index}].note`) };
+}
+
+/** بيقرا الـchecks بس. أي درجات رقمية قديمة (kyc/visits...) بتتجاهل من غير ما توقف الاستعادة. */
+function parseQuality(value: unknown, index: number): BackupQuality | undefined {
+  if (value === undefined || value === null) return undefined;
+  if (!isRecord(value)) throw new Error(`تشيك Quality لشهر رقم ${index + 1} شكله غلط`);
+  const checks: Record<string, boolean> = {};
+  if (isRecord(value.checks)) {
+    for (const [k, v] of Object.entries(value.checks)) {
+      if (typeof v === "boolean") checks[k] = v;
+    }
+  }
+  return { checks };
 }
 
 function parseMonth(value: unknown, index: number): BackupMonth {
@@ -173,33 +196,11 @@ function parseMonth(value: unknown, index: number): BackupMonth {
   }
   return {
     yearMonth,
-    fullCommission: (() => {
-      const amount = asNumber(value.fullCommission, `months[${index}].fullCommission`);
-      if (amount < 0) throw new Error(`الكوميشن الكامل لشهر ${yearMonth} مينفعش يكون بالسالب`);
-      return amount;
-    })(),
-    allowCommissionOver100: asBoolean(
-      value.allowCommissionOver100,
-      `months[${index}].allowCommissionOver100`,
-    ),
+    fullCommission: asNonNegative(value.fullCommission, `months[${index}].fullCommission`),
     workingDays: parseWorkingDays(value.workingDays),
-    kpis: (() => {
-      const rows = value.kpis.map((item, kpiIndex) => parseKpi(item, kpiIndex));
-      if (new Set(rows.map((row) => row.kpiKey)).size !== rows.length) {
-        throw new Error(`فيه مؤشر مكرر في إعدادات شهر ${yearMonth}`);
-      }
-      return rows;
-    })(),
-    holidays: (() => {
-      const rows = value.holidays.map((item, holidayIndex) => parseHoliday(item, holidayIndex));
-      if (rows.some((row) => !row.date.startsWith(`${yearMonth}-`))) {
-        throw new Error(`فيه إجازة خارج شهر ${yearMonth}`);
-      }
-      if (new Set(rows.map((row) => row.date)).size !== rows.length) {
-        throw new Error(`فيه تاريخ إجازة مكرر في شهر ${yearMonth}`);
-      }
-      return rows;
-    })(),
+    kpis: value.kpis.map((item, kpiIndex) => parseKpi(item, kpiIndex)),
+    holidays: value.holidays.map((item, holidayIndex) => parseHoliday(item, holidayIndex)),
+    quality: parseQuality(value.quality, index),
   };
 }
 
@@ -210,7 +211,7 @@ function parseEntry(value: unknown, index: number): BackupEntry {
     throw new Error(`سجل بمؤشر غير معروف: ${kpiKey}`);
   }
   const entryDate = asString(value.entryDate, `entries[${index}].entryDate`);
-  if (!isValidIsoDate(entryDate)) {
+  if (!isRealIsoDate(entryDate)) {
     throw new Error(`تاريخ سجل غلط: ${entryDate}`);
   }
   const rawQuantity = asNumber(value.quantity, `entries[${index}].quantity`);
@@ -249,7 +250,7 @@ export function parseBackup(raw: unknown): BackupFile {
   if (!isRecord(raw)) {
     throw new Error("ملف الاستعادة مش كائن JSON صحيح");
   }
-  assertNoSecrets(raw, "root");
+  assertNoSecrets(raw, "backup");
   const schemaVersion = asNumber(raw.schemaVersion, "schemaVersion");
   if (schemaVersion !== SCHEMA_VERSION) {
     throw new Error(`إصدار الملف غير مدعوم (${schemaVersion})`);
@@ -266,10 +267,6 @@ export function parseBackup(raw: unknown): BackupFile {
     throw new Error("فيه إعدادات شهر مكررة في الملف");
   }
   const entries = raw.entries.map((item, index) => parseEntry(item, index));
-  const entryIds = entries.flatMap((entry) => entry.id ? [entry.id] : []);
-  if (new Set(entryIds).size !== entryIds.length) {
-    throw new Error("فيه معرّف سجل مكرر في ملف النسخة الاحتياطية");
-  }
   const articles = raw.articles.map((item, index) => parseArticle(item, index));
   const isEmptyFlag = typeof raw.isEmpty === "boolean" ? raw.isEmpty : months.length === 0 && entries.length === 0 && articles.length === 0;
   return {

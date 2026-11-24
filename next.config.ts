@@ -1,12 +1,8 @@
 import type { NextConfig } from "next";
 
-// GitHub Pages بيفضل static export، لكن على Vercel (VERCEL=1) بنبني نسخة سيرفر
-// عشان Route Handler بتاع المساعد يشتغل. الحقن نفسه بيحصل في
-// scripts/prepare-assistant-api.mjs قبل البناء.
-const isVercel = process.env.VERCEL === "1";
-
+// نسخة ثابتة تتنشر على GitHub Pages. البيانات بتتحفظ على موبايل كل مستخدم.
 const nextConfig: NextConfig = {
-  ...(isVercel ? {} : { output: "export" as const }),
+  output: "export",
   basePath: "/track-your-sales",
   trailingSlash: true,
   images: { unoptimized: true },

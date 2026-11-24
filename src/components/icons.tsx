@@ -68,34 +68,6 @@ export function ChevronIcon(props: IconProps) {
   );
 }
 
-export function LogoMark(props: IconProps) {
-  return (
-    <svg
-      viewBox="0 0 48 48"
-      width="40"
-      height="40"
-      role="img"
-      aria-label="Track Your Sales"
-      {...props}
-    >
-      <defs>
-        <linearGradient id="ty-fusion-bg" x1="5" y1="4" x2="43" y2="46" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#F58A3C" />
-          <stop offset="0.52" stopColor="#D96516" />
-          <stop offset="1" stopColor="#A94309" />
-        </linearGradient>
-        <linearGradient id="ty-fusion-y" x1="13" y1="14" x2="35" y2="34" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#FFF4E8" />
-          <stop offset="1" stopColor="#FFD0A6" />
-        </linearGradient>
-      </defs>
-      <rect x="1" y="1" width="46" height="46" rx="15" fill="url(#ty-fusion-bg)" />
-      <path d="M11 12H37M24 12V36" stroke="#fff" strokeWidth="4.2" strokeLinecap="round" />
-      <path d="M15 19L24 28L33 19" stroke="url(#ty-fusion-y)" strokeWidth="4.2" strokeLinecap="round" strokeLinejoin="round" />
-      <circle cx="24" cy="36" r="2.1" fill="#FFD0A6" />
-    </svg>
-  );
-}
 
 export function PhoneIcon(props: IconProps) {
   return (
