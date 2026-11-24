@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useToast } from "@/components/ui";
 import { ErrorState } from "@/components/ui/ErrorState";
 import { EmptyState } from "@/components/ui/EmptyState";
@@ -14,7 +14,8 @@ import { KpiIcon } from "@/components/KpiIcon";
 import { DeltaChip } from "@/components/Sparkline";
 import { overallBandLines, pickPhrase, sarcasticLine, timeLines } from "@/lib/phrases";
 import { shareAchievement } from "@/lib/sharecard";
-import { Rope, SpaceScene } from "@/components/Rope";
+import { Rope } from "@/components/Rope";
+import { AchievementDial } from "@/components/AchievementDial";
 import { pushReport, readSyncStatus, type SyncStatus } from "@/lib/sync";
 
 type KpiRow = {
@@ -66,8 +67,8 @@ function greeting() {
 export default function HomePage() {
   const router = useRouter();
   const [copied, setCopied] = useState(false);
-  const overallValueRef = useRef<HTMLSpanElement | null>(null);
-  const overallBarRef = useRef<HTMLDivElement | null>(null);
+
+
   const [sync, setSync] = useState<SyncStatus | null>(null);
   useEffect(() => {
     const refresh = () => setSync(readSyncStatus());
@@ -108,32 +109,6 @@ export default function HomePage() {
   const { data, error } = state;
 
   // Count-up خفيف: تحديث DOM مباشرة لتجنب إعادة رسم الصفحة في كل frame.
-  useEffect(() => {
-    const valueNode = overallValueRef.current;
-    const barNode = overallBarRef.current;
-    if (!valueNode || !barNode) return;
-
-    const target = data ? Math.min(200, Math.max(0, data.overall)) : 0;
-    const duration = 1400;
-    let frame = 0;
-    const start = performance.now();
-    valueNode.textContent = formatPercent(0);
-    barNode.style.width = "0%";
-
-    const animate = (now: number) => {
-      const progress = Math.min(1, (now - start) / duration);
-      const eased = progress < 0.5
-        ? 4 * progress * progress * progress
-        : 1 - Math.pow(-2 * progress + 2, 3) / 2;
-      const current = target * eased;
-      valueNode.textContent = formatPercent(current);
-      barNode.style.width = `${Math.min(100, current)}%`;
-      if (progress < 1) frame = requestAnimationFrame(animate);
-    };
-
-    frame = requestAnimationFrame(animate);
-    return () => cancelAnimationFrame(frame);
-  }, [data?.yearMonth, data?.overall, loading]);
 
   // احتفال هادي مرة واحدة في الشهر لما الإجمالي يوصل 100%.
   useEffect(() => {
@@ -201,91 +176,31 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* الهيرو الرئيسي — لوحة إنجاز دائرية */}
-      <section style={{ boxShadow: onTrack === null ? "0 5px 14px rgba(100,55,25,.13)" : onTrack ? "0 0 0 1px rgba(22,163,74,.06), 0 0 10px rgba(22,163,74,.08), 0 5px 14px rgba(100,55,25,.13)" : "0 0 0 1px rgba(220,38,38,.06), 0 0 10px rgba(220,38,38,.08), 0 5px 14px rgba(100,55,25,.13)" }} className="tys-home-hero relative isolate overflow-hidden rounded-[30px] border border-white bg-white p-5 shadow-[0_1px_2px_rgba(43,20,0,.04)] sm:p-7">
-        <div className="pointer-events-none absolute -left-12 -top-16 h-52 w-52 rounded-full bg-[var(--color-primary-500)]/20 blur-3xl" />
-        <div className="pointer-events-none absolute -bottom-24 right-1/3 h-52 w-52 rounded-full bg-[var(--color-primary-600)]/10 blur-3xl" />
-        <SpaceScene pct={data.overall} />
-        <div className="tys-hero-body relative">
-          <div className="flex items-center justify-between gap-3 border-b border-white pb-3">
-            <div className="flex min-w-0 items-center gap-2.5">
-              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-[var(--color-primary-500)] to-[var(--color-primary-600)] text-lg text-white shadow-md">◎</span>
-              <div className="min-w-0">
-                <p className="text-xs font-black tracking-[0.14em] text-[var(--color-primary-700)]">MONTHLY PERFORMANCE</p>
-                <p className="mt-0.5 text-sm font-black text-[var(--color-text-primary)]">إجمالي التارجت الشهري</p>
-              </div>
-            </div>
-            <span className={`shrink-0 rounded-full border px-3 py-1.5 text-xs font-extrabold ${onTrack === null ? "border-white bg-white text-[var(--color-text-secondary)]" : onTrack ? "border-[var(--color-border)] bg-white text-[var(--color-text-secondary)]" : "border-orange-200 bg-orange-50 text-[var(--color-primary-700)]"}`}>
-              <span className={`ml-1.5 inline-block h-1.5 w-1.5 rounded-full ${onTrack === null ? "bg-[var(--color-text-muted)]" : onTrack ? "bg-[var(--color-text-muted)]" : "bg-[var(--color-primary-600)]"}`} />
-              {onTrack === null ? "مستني بيانات" : onTrack ? "على الهدف" : "متأخر"}
-            </span>
-          </div>
-          <div className="flex flex-wrap items-end justify-between gap-3 py-4 sm:py-5">
-            <div className="min-w-0">
-              <p className="text-xs font-bold text-[var(--color-text-secondary)]">نسبة تحقيقك للتارجت</p>
-              <div className="mt-1 flex items-baseline gap-1">
-                <span className="font-mono text-[64px] font-black leading-none tracking-[-0.06em] text-[var(--color-primary-700)] sm:text-[88px]" ref={overallValueRef}>{formatPercent(0)}</span>
-                <span className="text-xl font-black text-[var(--color-primary-600)]">%</span>
-              </div>
-            </div>
-            <div className="inline-flex max-w-full shrink-0 flex-col items-end rounded-xl border border-white bg-white/85 px-3 py-2 shadow-sm">
-              <span className="text-xs font-bold text-[var(--color-text-secondary)]">الكوميشن المحقق</span>
-              <strong className={`truncate font-mono text-base font-black ${data.overall < 80 ? "text-red-600" : "text-emerald-700"}`}>{formatMoney(data.estimatedCommission)} جنيه</strong>
-            </div>
-          </div>
-          <div>
-            <Rope pct={data.overall} label="نسبة تحقيق التارجت" />
-            <div className="tys-bar relative h-2.5 overflow-hidden rounded-full bg-orange-100">
-              <div ref={overallBarRef} className="h-full rounded-full bg-gradient-to-l from-[var(--color-primary-500)] via-[var(--color-primary-600)] to-[var(--color-primary-700)] shadow-[0_1px_5px_rgba(189,75,10,0.22)]" style={{ width: "0%" }} />
-            </div>
-            <div className="mt-1 flex justify-between text-[11px] font-bold text-[var(--color-text-secondary)]" dir="ltr">
-              <span>100% target</span><span>0%</span>
-            </div>
-          </div>
-          <div className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs font-semibold text-[var(--color-text-secondary)]">
-            <span className="font-extrabold text-[var(--color-primary-700)]">{statusTextEgy}</span>{statusTextEgy && timeText ? <span className="text-[var(--color-border)]">•</span> : null}<span>{timeText}</span>
-          </div>
-
-          {data.projection ? (
-            <p className="mt-3 rounded-xl border border-orange-200 bg-orange-50/50 px-3 py-2 text-xs font-bold text-[var(--color-text-secondary)]">
-              لو كملت بنفس معدل آخر {data.projection.basisDays} أيام شغل، هتخلّص الشهر على تقريبًا{" "}
-              <strong className="font-mono text-[var(--color-primary-700)]">{formatPercent(data.projection.overall)}%</strong>
-              {" "}وكوميشن حوالي{" "}
-              <strong className="font-mono text-[var(--color-primary-700)]">{formatMoney(data.projection.commission)}</strong> جنيه.
-            </p>
-          ) : null}
-
-          {data.entriesCount > 0 ? (
-            <button
-              type="button"
-              onClick={() => void shareAchievement({ monthLabel: data.monthLabel, percent: Math.round(data.overall), commission: formatMoney(data.estimatedCommission) })}
-              className={`mt-3 min-h-10 rounded-xl bg-[#c2410c] px-4 text-xs font-extrabold text-white transition-colors hover:bg-[#9a3412] ${data.overall >= 100 ? "animate-pulse shadow-[0_0_0_4px_rgba(234,88,12,0.14),0_0_22px_rgba(234,88,12,0.3)]" : ""}`}
-            >
-              📤 شارك إنجازك
-            </button>
-          ) : null}
-
-          {sarcastic ? <p className="mt-3 text-xs font-bold text-[var(--color-primary-700)]">{sarcastic}</p> : null}
-        </div>
+      <section className="bold-headline"><p>YOUR AMBITION. IN MOTION.</p><h2>إنجازك.<br/><span>على المكشوف.</span></h2></section>
+      <section className="bold-performance">
+        <div className="bold-performance-top"><span>التارجت الشهري</span><span className="bold-status">{onTrack === null ? "مستني بيانات" : onTrack ? "على الهدف" : "متأخر"}</span></div>
+        <AchievementDial value={data.overall}/>
+        <div className="bold-metrics"><div><p>الكوميشن المحقق</p><strong>{formatMoney(data.estimatedCommission)}</strong><small> جنيه</small></div><div><p>المتبقي للتارجت</p><strong>{formatPercent(Math.max(0,100-data.overall))}<small>%</small></strong></div></div>
+        <div className="bold-performance-details"><p>{statusTextEgy} {timeText}</p>{data.projection ? <p>بنفس المعدل، المتوقع في آخر الشهر {formatPercent(data.projection.overall)}% وكوميشن {formatMoney(data.projection.commission)} جنيه.</p> : null}{data.entriesCount > 0 ? <button type="button" onClick={()=>void shareAchievement({monthLabel:data.monthLabel,percent:Math.round(data.overall),commission:formatMoney(data.estimatedCommission)})}>شارك إنجازك ↗</button>:null}{sarcastic?<p>{sarcastic}</p>:null}</div>
       </section>
 
       {/* المطلوب */}
       <section className="tys-home-daily px-1 py-1">
         <div className="mb-3 flex items-center justify-between gap-2">
           <div>
-            <h2 className="mt-0.5 text-sm font-extrabold text-[var(--color-text-primary)]">المطلوب النهارده</h2>
+            <h2 className="mt-0.5 text-sm font-extrabold text-[var(--color-text-primary)]"><span className="bold-section-number">01</span>خطوتك النهارده</h2>
           </div>
           <span className="shrink-0 rounded-full bg-[var(--color-primary-50)] px-2.5 py-1 text-xs font-extrabold text-[var(--color-primary-700)]">
             فاضل {formatQty(data.work.remaining)} يوم عمل
           </span>
         </div>
-        <div className="grid grid-cols-2 gap-1.5 sm:grid-cols-3">
+        <div className="bold-daily-grid grid grid-cols-3 gap-2">
           {data.kpis.filter((k) => k.kpiKey !== "quality" && k.remaining > 0).map((k) => {
             const dailyRequired = data.work.remaining > 0 ? Math.ceil(k.remaining / data.work.remaining) : k.remaining;
             return (
               <div
                 key={k.kpiKey}
-                className="flex min-h-[46px] min-w-0 items-center justify-between gap-2 rounded-lg border border-white bg-white px-2.5 py-1.5 text-orange-800 shadow-[0_1px_2px_rgba(43,20,0,.04)]"
+                className="bold-daily-tile flex min-h-[46px] min-w-0 items-center justify-between gap-2 rounded-lg border border-white bg-white px-2.5 py-1.5 text-orange-800 shadow-[0_1px_2px_rgba(43,20,0,.04)]"
               >
                 <span className="min-w-0 truncate text-[11px] font-bold tracking-wide text-orange-800" dir="ltr">{k.nameEn}</span>
                 <strong className="shrink-0 rounded-md border border-white bg-orange-50 px-2 py-1 text-base font-black leading-none tabular-nums text-orange-800">
@@ -303,7 +218,7 @@ export default function HomePage() {
       {/* المؤشرات */}
       <section className="tys-home-kpis flex flex-col gap-3 rounded-[20px] border border-white bg-white p-5 shadow-[0_1px_2px_rgba(43,20,0,.04)]">
         <div className="flex items-center justify-between">
-          <h2 className="text-base font-black tracking-tight text-[var(--color-text-primary)]">مؤشرات الأداء (KPIs)</h2>
+          <h2 className="text-base font-black tracking-tight text-[var(--color-text-primary)]"><span className="bold-section-number">02</span>نبض الأداء</h2>
           <span className="text-xs font-bold text-[var(--color-text-secondary)]">{data.kpis.length} مؤشر</span>
         </div>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
