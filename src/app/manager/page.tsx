@@ -3,7 +3,7 @@
 import { FormEvent, useEffect, useRef, useState } from "react";
 import { useHistoryView } from "@/lib/use-history-view";
 import { managerApi } from "@/lib/cloud";
-import { KPI_CATALOG } from "@/lib/constants";
+import { BRANCHES, KPI_CATALOG } from "@/lib/constants";
 import { cairoISODate } from "@/lib/dates";
 
 type ReportRow = {
@@ -297,6 +297,13 @@ export default function ManagerPage() {
   const [managerName, setManagerName] = useState("");
   const [greeting, setGreeting] = useState("");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  // باسورد التيم ليدر لفروع OB (بوتيك): المدير بيحدد باسورد لكل فرع OB.
+  const OB_BRANCHES = BRANCHES.filter((b) => b.startsWith("OB."));
+  const [tlOpen, setTlOpen] = useState(false);
+  const [tlBranch, setTlBranch] = useState("");
+  const [tlPw, setTlPw] = useState("");
+  const [tlMsg, setTlMsg] = useState("");
+  const [tlBusy, setTlBusy] = useState(false);
 
   function logout() {
     if (!window.confirm("Log out of the area manager dashboard?")) return;
@@ -323,6 +330,27 @@ export default function ManagerPage() {
     setBranchOpenFor(null);
     setView("overview");
     setAuthChecking(false);
+  }
+
+  async function saveTeamLeaderPassword(event: FormEvent) {
+    event.preventDefault();
+    setTlMsg("");
+    if (!tlBranch) return setTlMsg("Select an OB branch first.");
+    if (tlPw.length < 8) return setTlMsg("Team leader password must be at least 8 characters.");
+    setTlBusy(true);
+    try {
+      const pw = password || sessionStorage.getItem("tys.mgrPass") || "";
+      await managerApi("set_team_leader_password", { password: pw, branch: tlBranch, newPassword: tlPw, updatedBy: managerName || "Area manager" });
+      setTlPw("");
+      setTlBranch("");
+      setTlMsg("saved");
+      alert(`✅ Team leader password saved for ${tlBranch}.`);
+    } catch (err) {
+      const raw = err instanceof Error ? err.message : String(err);
+      setTlMsg(raw.includes("wrong password") ? "Your manager password is incorrect. Sign in again." : "Save failed. Check your connection and try again.");
+    } finally {
+      setTlBusy(false);
+    }
   }
 
   async function changePassword(event: FormEvent) {
@@ -764,7 +792,11 @@ export default function ManagerPage() {
                 {isBranches ? <section className="orn-rich-card overflow-hidden rounded-[26px] border border-[var(--color-border)] bg-white/90 shadow-[0_10px_28px_rgba(104,53,19,.055)]"><div className="divide-y divide-[var(--color-border)]">{branchItems.length ? [...branchItems].sort((a,b)=>b.percent-a.percent).map((b,i)=><div key={b.name} className="flex items-center justify-between gap-3 px-4 py-3 text-right"><div className="min-w-0"><p className="truncate text-sm font-black">{b.name}</p><p className="mt-1 text-[11px] text-[var(--color-text-secondary)]">{b.group.length} employees · {b.expected===undefined?"No data":b.onTrack?"On track":"Behind"}</p></div><strong className="shrink-0 text-lg font-black tabular-nums text-[var(--color-primary-700)]">{Math.round(b.percent)}%</strong></div>) : <p className="py-8 text-center text-xs text-[var(--color-text-secondary)]">No branches in this list yet.</p>}</div></section> : <section className="orn-rich-card overflow-hidden rounded-[26px] border border-[var(--color-border)] bg-white/90 shadow-[0_10px_28px_rgba(104,53,19,.055)]"><div className="divide-y divide-[var(--color-border)]">{orderedEmployeeItems.length ? orderedEmployeeItems.map(row=><div key={row.branchId} className="flex items-center justify-between gap-3 px-4 py-3 text-right"><div className="min-w-0"><p className="truncate text-sm font-black">{row.name}</p><p className="mt-1 text-[11px] text-[var(--color-text-secondary)]">{row.branch}</p></div><strong className="shrink-0 text-lg font-black tabular-nums text-[var(--color-primary-700)]">{Math.round(row.percent)}%</strong></div>) : <p className="py-8 text-center text-xs text-[var(--color-text-secondary)]">No employees in this list yet.</p>}</div></section>}
               </section>;
             })() : null}
-            <footer className="flex justify-end border-t border-[#eee5dc] pt-4"><button type="button" onClick={()=>{setPwOpen(v=>!v);setPwMsg("");}} className="text-xs font-bold text-[var(--color-primary-700)]">{pwOpen?"Hide password change":"🔑 Change password"}</button></footer>
+            <footer className="flex justify-end gap-4 border-t border-[#eee5dc] pt-4"><button type="button" onClick={()=>{setPwOpen(v=>!v);setPwMsg("");}} className="text-xs font-bold text-[var(--color-primary-700)]">{pwOpen?"Hide password change":"🔑 Change password"}</button><button type="button" onClick={()=>{setTlOpen(v=>!v);setTlMsg("");}} className="text-xs font-bold text-[var(--color-primary-700)]">{tlOpen?"Hide team leader passwords":"👥 OB team leader passwords"}</button></footer>
+            {tlOpen ? <form onSubmit={saveTeamLeaderPassword} className="rounded-2xl border border-[var(--color-border)] bg-white p-4"><h3 className="text-sm font-black">Team leader password (OB branches)</h3><p className="mt-1 text-xs text-[var(--color-text-secondary)]">Set or change the team follow-up password for an OB boutique branch. The team leader uses it on the Team page; it is separate from your password.</p><div className="mt-3 grid gap-3 sm:grid-cols-2">
+              <label className="text-xs font-bold">OB Branch<select value={tlBranch} onChange={e=>setTlBranch(e.target.value)} className="mt-1.5 w-full rounded-xl border border-[var(--color-border)] bg-white px-3 py-2.5 text-sm"><option value="">Select a branch</option>{OB_BRANCHES.map((b)=><option key={b} value={b}>{b}</option>)}</select></label>
+              <label className="text-xs font-bold">New team leader password<input type="password" autoComplete="new-password" value={tlPw} onChange={e=>setTlPw(e.target.value)} className="mt-1.5 w-full rounded-xl border border-[var(--color-border)] px-3 py-2.5 text-sm"/></label>
+            </div>{tlMsg && tlMsg!=="saved"?<p className="mt-3 text-xs font-bold text-red-600">{tlMsg}</p>:null}{tlMsg==="saved"?<p className="mt-3 text-xs font-bold text-emerald-700">Saved.</p>:null}<button type="submit" disabled={tlBusy||!tlBranch||!tlPw} className="mt-3 rounded-xl bg-[var(--color-primary-700)] px-5 py-3 text-sm font-bold text-white disabled:opacity-50">{tlBusy?"Saving...":"Save team leader password"}</button></form>:null}
             {branchPreview ? (() => {
               const previewRows = branchGroups.find(([name]) => name === branchPreview)?.[1] ?? [];
               const preview = branchStatus.find((item) => item.name === branchPreview);

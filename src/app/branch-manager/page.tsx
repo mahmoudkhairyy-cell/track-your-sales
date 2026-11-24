@@ -87,6 +87,7 @@ export default function BranchManagerPage() {
   const month = cairoYearMonth();
   const [managerName, setManagerName] = useState("");
   const [branch, setBranch] = useState("");
+  const [password, setPassword] = useState("");
   const [active, setActive] = useState(false);
   const [accessChecked, setAccessChecked] = useState(false);
   const [activeTab, setActiveTab] = useState<"overview" | "team">("overview");
@@ -99,10 +100,11 @@ export default function BranchManagerPage() {
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
 
-  const load = useCallback(async (selectedBranch: string) => {
+  const load = useCallback(async (selectedBranch: string, pw?: string) => {
+    const passwordToUse = pw ?? password;
     setLoading(true); setError("");
     try {
-      const result = await managerApi<BranchData>("branch_reports", { branch: selectedBranch, yearMonth: month });
+      const result = await managerApi<BranchData>("branch_reports", { branch: selectedBranch, yearMonth: month, password: passwordToUse });
       const next = result ?? { reports: [], productivity: null, qualityOverrides: [], audit: [] };
       setData(next);
       setProductivityInput(String(next.productivity?.productivity_percent ?? 0));
@@ -112,10 +114,18 @@ export default function BranchManagerPage() {
         values[row.employee_name] = override ?? { ...EMPTY_QUALITY };
       }
       setQualityInputs(values);
+      try { sessionStorage.setItem("tys.bmPass", passwordToUse); } catch { /* Storage may be unavailable. */ }
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Could not load branch data");
+      const raw = e instanceof Error ? e.message : "Could not load branch data";
+      if (raw.includes("wrong password")) {
+        try { sessionStorage.removeItem("tys.bmPass"); } catch { /* ignore */ }
+        setActive(false);
+        setError("Incorrect password. Try again.");
+      } else {
+        setError(raw);
+      }
     } finally { setLoading(false); }
-  }, [month]);
+  }, [month, password]);
 
   useEffect(() => {
     let cancelled = false;
@@ -129,8 +139,13 @@ export default function BranchManagerPage() {
       if (profile.name.trim() && profile.branch.trim()) {
         setManagerName(profile.name);
         setBranch(profile.branch);
-        setActive(true);
-        void load(profile.branch);
+        let saved = "";
+        try { saved = sessionStorage.getItem("tys.bmPass") ?? ""; } catch { /* Storage may be unavailable. */ }
+        if (saved) {
+          setPassword(saved);
+          setActive(true);
+          void load(profile.branch, saved);
+        }
       }
       setAccessChecked(true);
     });
@@ -167,7 +182,7 @@ export default function BranchManagerPage() {
 
   function logout() {
     if (!window.confirm("Log out of the Branch Manager dashboard?")) return;
-    try { sessionStorage.removeItem("tys.mgrPass"); } catch { /* Storage may be unavailable. */ }
+    try { sessionStorage.removeItem("tys.bmPass"); } catch { /* Storage may be unavailable. */ }
     if (!logoutBranchManager()) {
       setError("Could not complete logout. Please try again.");
       return;
@@ -175,6 +190,7 @@ export default function BranchManagerPage() {
     setActive(false);
     setManagerName("");
     setBranch("");
+    setPassword("");
     setData(null);
     setError("");
     setNotice("");
@@ -183,6 +199,7 @@ export default function BranchManagerPage() {
   async function enter(event: FormEvent) {
     event.preventDefault();
     if (managerName.trim().length < 2 || !branch) { setError("Enter your name and select your branch."); return; }
+    if (!password) { setError("Enter your branch password."); return; }
     setActive(true);
     await load(branch);
   }
@@ -191,7 +208,7 @@ export default function BranchManagerPage() {
     if (!Number.isFinite(value) || value < 0 || value > 1000) { setError("Enter a valid percentage between 0 and 1000."); return; }
     setSaving("productivity"); setError(""); setNotice("");
     try {
-      await managerApi("save_branch_productivity", { branch, yearMonth: month, managerName: managerName.trim(), productivityPercent: value });
+      await managerApi("save_branch_productivity", { branch, yearMonth: month, managerName: managerName.trim(), productivityPercent: value, password });
       setNotice("Productivity saved and recorded in the audit log.");
       await load(branch);
     } catch (e) { setError(e instanceof Error ? e.message : "Could not save productivity."); }
@@ -204,7 +221,7 @@ export default function BranchManagerPage() {
     }
     setSaving(employee); setError(""); setNotice("");
     try {
-      await managerApi("save_branch_quality", { branch, employeeName: employee, yearMonth: month, managerName: managerName.trim(), quality });
+      await managerApi("save_branch_quality", { branch, employeeName: employee, yearMonth: month, managerName: managerName.trim(), quality, password });
       setNotice(`Quality data for ${employee} saved and recorded in the audit log.`);
       await load(branch);
     } catch (e) { setError(e instanceof Error ? e.message : "Could not save quality data."); }
@@ -219,7 +236,7 @@ export default function BranchManagerPage() {
         <img src="/track-your-sales/logo-full.png" alt="Track Your Sales" className="mx-auto mb-5 h-20 w-auto object-contain" />
         <p className="text-center text-xs font-black text-[#bd4b0a]">BRANCH MANAGEMENT</p>
         <h1 className="mt-2 text-center text-2xl font-black text-[#2d2119]">Branch Manager</h1>
-        <p className="mt-2 text-center text-sm leading-6 text-[#88796e]">Enter your name and select your branch to review team performance and update productivity and quality.</p>
+        <p className="mt-2 text-center text-sm leading-6 text-[#88796e]">Enter your name, select your branch and type the branch password to review team performance and update productivity and quality.</p>
         <form onSubmit={enter} className="mt-6 space-y-4">
           <label className="block text-sm font-bold text-[#514238]">Manager Name
             <input value={managerName} onChange={(e) => setManagerName(e.target.value)} maxLength={80} className="mt-2 w-full rounded-2xl border border-[#f2e4d8] bg-[#fffdfb] px-4 py-3 outline-none focus:border-[#e96812]" placeholder="Enter your name" />
@@ -229,6 +246,9 @@ export default function BranchManagerPage() {
               <option value="">Select a branch</option>
               {BRANCHES.map((item) => <option key={item} value={item}>{item}</option>)}
             </select>
+          </label>
+          <label className="block text-sm font-bold text-[#514238]">Branch Password
+            <input type="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} maxLength={200} className="mt-2 w-full rounded-2xl border border-[#f2e4d8] bg-[#fffdfb] px-4 py-3 outline-none focus:border-[#e96812]" placeholder="Enter the branch password" />
           </label>
           {error ? <p className="text-sm font-bold text-red-600">{error}</p> : null}
           <button disabled={loading} className="w-full rounded-2xl bg-gradient-to-l from-[#bd4b0a] to-[#ff9d38] py-3 font-black text-white disabled:opacity-60">{loading ? "Loading..." : "Open Dashboard"}</button>
