@@ -215,7 +215,7 @@ export default function BranchManagerPage() {
 
   if (!active) return (
     <main className="tys-page tys-page-manager min-h-screen bg-[radial-gradient(ellipse_at_top,_#fff0e2_0%,_#fffaf5_60%,_#fff_100%)] px-4 py-10" dir="ltr">
-      <section className="mx-auto max-w-md rounded-[28px] border border-[#f1dfd0] bg-white p-6 shadow-[0_18px_55px_rgba(126,65,24,.10)]">
+      <section className="orn-rich-card mx-auto max-w-md rounded-[28px] border border-[#f1dfd0] bg-white p-6 shadow-[0_18px_55px_rgba(126,65,24,.10)]">
         <img src="/track-your-sales/logo-full.png" alt="Track Your Sales" className="mx-auto mb-5 h-20 w-auto object-contain" />
         <p className="text-center text-xs font-black text-[#bd4b0a]">BRANCH MANAGEMENT</p>
         <h1 className="mt-2 text-center text-2xl font-black text-[#2d2119]">Branch Manager</h1>
@@ -259,7 +259,7 @@ export default function BranchManagerPage() {
         </nav>
         {activeTab === "overview" ? (
           <>
-        <section className="relative isolate overflow-hidden rounded-[30px] border border-white bg-white p-5 shadow-[0_8px_28px_rgba(126,65,24,.10)] sm:p-7">
+        <section className="orn-rich-card relative isolate overflow-hidden rounded-[30px] border border-white bg-white p-5 shadow-[0_8px_28px_rgba(126,65,24,.10)] sm:p-7">
           <div className="pointer-events-none absolute -left-12 -top-16 h-52 w-52 rounded-full bg-[#ff9d38]/20 blur-3xl" />
           <div className="pointer-events-none absolute -bottom-24 right-1/3 h-52 w-52 rounded-full bg-[#bd4b0a]/10 blur-3xl" />
           <div className="relative">
@@ -291,14 +291,14 @@ export default function BranchManagerPage() {
 
           </div>
         </section>
-        <section className="rounded-3xl border border-[#f1dfd0] bg-white p-4 sm:p-5">
+        <section className="orn-rich-card rounded-3xl border border-[#f1dfd0] bg-white p-4 sm:p-5">
           <h2 className="text-lg font-black">Manager KPI Contributions</h2>
           <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {metrics.rows.map((item) => <div key={item.key} className="rounded-2xl bg-[#fff8f1] p-3"><div className="flex justify-between gap-2 text-sm font-bold"><span>{item.label}</span><span>{fmt(item.percent)}</span></div><div className="mt-2 h-2 overflow-hidden rounded-full bg-[#f2e4d8]"><div className="h-full rounded-full bg-[#e96812]" style={{ width: `${Math.min(100,item.percent)}%` }} /></div>{item.key !== "quality" ? <p className="mt-2 text-xs font-bold text-[#6e5543]">Achieved {formatCount(item.achieved)} / {formatCount(item.target)}</p> : null}<p className="mt-2 text-xs text-[#88796e]">Weight {item.weight}% · Contribution {item.contribution.toFixed(2)}%</p></div>)}
-            <div className="rounded-2xl border border-[#f2c9a7] bg-[#fff1e4] p-3"><div className="flex justify-between text-sm font-bold"><span>Productivity</span><span>{fmt(metrics.productivity)}</span></div><div className="mt-2 h-2 overflow-hidden rounded-full bg-white"><div className="h-full rounded-full bg-[#bd4b0a]" style={{ width: `${Math.min(100,metrics.productivity)}%` }} /></div><p className="mt-2 text-xs text-[#88796e]">Weight {MANAGER_KPI_WEIGHTS.productivity}% · Contribution {metrics.productivityContribution.toFixed(2)}%</p></div>
+            <div className="rounded-2xl border border-[#f2c9a7] bg-[#fff1e4] p-3"><div className="flex justify-between text-sm font-bold"><span>Productivity</span><span>{fmt(metrics.productivity)}</span></div><div className="orn-rich-card mt-2 h-2 overflow-hidden rounded-full bg-white"><div className="h-full rounded-full bg-[#bd4b0a]" style={{ width: `${Math.min(100,metrics.productivity)}%` }} /></div><p className="mt-2 text-xs text-[#88796e]">Weight {MANAGER_KPI_WEIGHTS.productivity}% · Contribution {metrics.productivityContribution.toFixed(2)}%</p></div>
           </div>
         </section>
-        <section className="rounded-3xl border border-[#f1dfd0] bg-white p-4 sm:p-5">
+        <section className="orn-rich-card rounded-3xl border border-[#f1dfd0] bg-white p-4 sm:p-5">
           <div className="flex flex-wrap items-center justify-between gap-2"><div><h2 className="text-lg font-black">Branch Productivity</h2><p className="text-xs text-[#88796e]">One productivity percentage for the entire branch, not per employee.</p></div><span className="rounded-full bg-[#fff0e2] px-3 py-1 text-xs font-black text-[#bd4b0a]">15% Weight</span></div>
           <div className="mt-4 flex flex-wrap items-end gap-3"><label className="min-w-44 flex-1 text-sm font-bold">Productivity %
             <input type="number" min="0" max="1000" step="0.01" value={productivityInput} onChange={(e) => setProductivityInput(e.target.value)} className="mt-2 w-full rounded-xl border border-[#f2e4d8] px-3 py-3" />
@@ -317,14 +317,14 @@ export default function BranchManagerPage() {
           {!loading && visibleReports.length===0 ? <p className="rounded-2xl border border-dashed border-[#e7cdb8] bg-white p-6 text-center text-sm text-[#88796e]">No synchronized reports for this branch this month yet.</p> : null}
           {visibleReports.map((row) => {
             const q = qualityInputs[row.employee_name] ?? employeeQuality(row, qualityMap.get(row.employee_name));
-            return <article key={row.branch_id} className="rounded-3xl border border-[#f1dfd0] bg-white p-4 shadow-sm">
+            return <article key={row.branch_id} className="orn-rich-card rounded-3xl border border-[#f1dfd0] bg-white p-4 shadow-sm">
               <div className="flex flex-wrap items-center justify-between gap-2"><div><h3 className="font-black">{row.employee_name}</h3><p className="mt-1 text-xs text-[#88796e]">{row.payload.role==="team_leader"?"Team Leader":"Employee"} · Last sync {timeLabel(row.updated_at)}</p></div><span className="rounded-full bg-[#fff0e2] px-3 py-1 text-sm font-black text-[#bd4b0a]">{fmt(row.payload.overall ?? 0)}</span></div>
               <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-6">
                 {(row.payload.kpis ?? []).map((k) => <div key={k.name} className="rounded-xl bg-[#fff8f1] p-2"><p className="truncate text-[11px] font-bold text-[#88796e]">{k.name}</p><p className="mt-1 text-lg font-black">{fmt(k.percent)}</p><p className="text-[11px] text-[#88796e]">{k.achieved} / {k.target}</p></div>)}
               </div>
-              <details className="mt-3 rounded-xl border border-[#f2e4d8] bg-[#fffdfb] p-3">
+              <details className="orn-rich-card mt-3 rounded-xl border border-[#f2e4d8] bg-[#fffdfb] p-3">
                 <summary className="cursor-pointer text-xs font-black text-[#8a4b20]">Daily Achievement Log ({row.payload.entries?.length ?? 0})</summary>
-                <div className="mt-3 space-y-2">{(row.payload.entries ?? []).map((entry, index) => <div key={entry.at ?? `${entry.date}-${index}`} className="flex flex-wrap justify-between gap-2 rounded-lg bg-white px-3 py-2 text-xs"><span>{entry.date} · {entry.kpi}</span><b>{entry.quantity} {displayUnit(entry.unit)}</b></div>)}</div>
+                <div className="mt-3 space-y-2">{(row.payload.entries ?? []).map((entry, index) => <div key={entry.at ?? `${entry.date}-${index}`} className="orn-rich-card flex flex-wrap justify-between gap-2 rounded-lg bg-white px-3 py-2 text-xs"><span>{entry.date} · {entry.kpi}</span><b>{entry.quantity} {displayUnit(entry.unit)}</b></div>)}</div>
               </details>
               <div className="mt-4 rounded-2xl border border-[#f2e4d8] p-3">
                 <div className="flex flex-wrap items-center justify-between gap-2"><div><h4 className="font-black">Quality Approval</h4><p className="text-xs text-[#88796e]">Employees keep their own entries; manager-approved percentages are recorded here.</p></div><span className="text-sm font-black text-[#bd4b0a]">Result {fmt(qualityPercent(q))}</span></div>
@@ -340,7 +340,7 @@ export default function BranchManagerPage() {
         </section>
         ) : null}
         {activeTab === "overview" ? (
-        <section className="rounded-3xl border border-[#f1dfd0] bg-white p-4 sm:p-5">
+        <section className="orn-rich-card rounded-3xl border border-[#f1dfd0] bg-white p-4 sm:p-5">
           <h2 className="text-lg font-black">Audit Log</h2><p className="mt-1 text-xs text-[#88796e]">Latest 100 productivity and quality changes.</p>
           <div className="mt-3 space-y-2">
             {(data?.audit ?? []).length===0 ? <p className="text-sm text-[#9a7963]">No changes recorded this month.</p> : data!.audit.map((item) => <div key={item.id} className="flex flex-wrap justify-between gap-2 rounded-xl bg-[#fff8f1] p-3 text-xs"><div><p className="font-black">{item.employee_name ?? "Branch"} · {item.field_name}</p><p className="mt-1 text-[#88796e]">{String(item.old_value ?? "—")} ← {String(item.new_value)} · by {item.updated_by}</p></div><time className="text-[#9a7963]">{timeLabel(item.updated_at)}</time></div>)}
