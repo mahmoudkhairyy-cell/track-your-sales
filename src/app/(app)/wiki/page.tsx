@@ -555,7 +555,7 @@ export default function WikiPage() {
                 const active = srTopic === filter.id;
                 return (
                   <button key={filter.id} type="button" onClick={() => setSrTopic(filter.id)} aria-pressed={active}
-                    className={`shrink-0 rounded-full border px-3.5 py-2 text-xs font-extrabold transition ${active ? "border-[#df6b1b] bg-[#e96f1d] text-white shadow-sm" : "border-[var(--color-border)] bg-white text-[#70513c] hover:border-[#e7b58f]"}`}>
+                    className={`shrink-0 rounded-full border px-3.5 py-2 text-xs font-extrabold transition ${active ? "border-[#df6b1b] bg-[#e96f1d] !text-white shadow-sm" : "border-[var(--color-border)] bg-white text-[#70513c] hover:border-[#e7b58f]"}`}>
                     <span className="ml-1">{filter.icon}</span>{filter.label}
                     <span className={`mr-1.5 text-[11px] ${active ? "text-white/80" : "text-[var(--color-text-secondary)]"}`}>{count}</span>
                   </button>
