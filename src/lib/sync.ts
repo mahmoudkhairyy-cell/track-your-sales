@@ -1,5 +1,6 @@
 import { api } from "@/lib/client";
 import { managerApi } from "@/lib/cloud";
+import { pushContracts } from "@/lib/contracts";
 import { cairoYearMonth } from "@/lib/dates";
 import { readProfile } from "@/lib/local-api";
 import { AREA_MANAGERS, OUTSIDE_BRANCHES } from "@/lib/constants";
@@ -150,6 +151,8 @@ async function pushReportOnce(): Promise<boolean> {
       },
     });
     saveStatus({ ok: true, at: new Date().toISOString() });
+    // التعاقدات بترفع مع نفس نبضة المزامنة؛ فشلها ما يوقفش تقرير الأداء.
+    void pushContracts();
     return true;
   } catch (err) {
     saveStatus({ ok: false, at: new Date().toISOString(), error: err instanceof Error ? err.message.slice(0, 160) : "خطأ" });
