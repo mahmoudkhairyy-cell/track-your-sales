@@ -5,10 +5,8 @@ import { haptic } from "@/lib/prefs";
 import { readTheme, saveTheme, type Theme } from "@/lib/theme";
 
 const OPTIONS: { key: Theme; icon: string; title: string; text: string; swatch: string[] }[] = [
-  { key: "light", icon: "☀️", title: "الأساسي", text: "الشكل الدافي الأصلي", swatch: ["#fff4eb", "#ffffff", "#e96812"] },
-  { key: "aurora", icon: "🌌", title: "أورورا فاتح", text: "خلفية متدرجة ناعمة وبطاقات بيضا", swatch: ["#e9ecf5", "#f0d4e0", "#ee6a22"] },
-  { key: "aurora-dark", icon: "🌃", title: "أورورا داكن", text: "نفس الشكل بألوان ليلية هادية", swatch: ["#0b0f1e", "#3b4fb8", "#ff7a30"] },
-  { key: "space", icon: "🧑‍🚀", title: "فضاء", text: "أسود خالص وتيل، والتقدم حبل برائد فضاء", swatch: ["#000000", "#2b3436", "#19c9c9"] },
+ {key:"light",icon:"☀️",title:"فاتح",text:"هوية إنجازك بألوان فاتحة",swatch:["#faf9f6","#ffffff","#ff7900"]},
+ {key:"dark",icon:"🌙",title:"غامق",text:"هوية إنجازك بألوان داكنة",swatch:["#09090b","#141417","#ff7900"]},
 ];
 
 export function ThemeSwitch() {
