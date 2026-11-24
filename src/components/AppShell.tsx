@@ -53,7 +53,7 @@ function MonthSwitcher() {
   }
 
   return (
-    <div className="flex items-center gap-1 rounded-full border border-[#f2e4d8] bg-[#fff6ed] p-1 shadow-sm">
+    <div className="orn-month-switch flex items-center gap-1 rounded-full border border-[#f2e4d8] bg-[#fff6ed] p-1 shadow-sm">
       <button
         type="button"
         onClick={() => go(shiftYearMonth(month, -1))}
@@ -613,7 +613,7 @@ function AppFrame({ children, blocked, month }: { children: ReactNode; blocked: 
       <StorageErrorListener />
       <MonthContext.Provider value={month}>
         <div id="tys-bold-identity" className="min-h-screen bg-[#fffaf5] text-[#2d2119]">
-          <div className="h-1.5 bg-gradient-to-l from-[#bd4b0a] via-[#e96812] to-[#ffb15f]" />
+
           <div className="mx-auto flex min-h-screen max-w-7xl">
             <aside className="tys-sidebar sticky top-0 hidden h-screen w-[276px] shrink-0 flex-col border-l border-[#f1dfd0] bg-[#fffaf5] p-5 lg:flex">
               <div className="flex items-center gap-3 rounded-[24px] border border-[#f4dfcd] bg-white p-3 shadow-[0_12px_28px_rgba(126,65,24,0.06)]">
@@ -641,7 +641,7 @@ function AppFrame({ children, blocked, month }: { children: ReactNode; blocked: 
             <div className="flex min-w-0 flex-1 flex-col">
               <header className="tys-app-header sticky top-0 z-30 border-b border-[#d95708] bg-[#e96812] px-4 py-3 text-white shadow-[0_4px_18px_rgba(189,75,10,0.16)] backdrop-blur-2xl lg:px-8">
                 <div className="mx-auto flex max-w-6xl items-center justify-between gap-3">
-                  <div className="flex min-w-0 items-center gap-3 lg:hidden">
+                  <div className="orn-mobile-brand flex min-w-0 items-center gap-3 lg:hidden">
                     <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white shadow-[0_4px_12px_rgba(217,104,18,0.12)] ring-1 ring-[#f2e4d8]">
                       <img src="/track-your-sales/logo-mark.png" alt="" className="h-9 w-9 object-contain" />
                     </span>
@@ -662,7 +662,7 @@ function AppFrame({ children, blocked, month }: { children: ReactNode; blocked: 
                           onClick={() => setThemeMenuOpen((open) => !open)}
                           aria-label="تغيير المظهر"
                           aria-expanded={themeMenuOpen}
-                          className="flex h-10 w-10 items-center justify-center gap-0.5 rounded-full border border-white/35 bg-white/15 text-base shadow-sm backdrop-blur transition hover:bg-white/25 active:scale-95"
+                          className="orn-theme-toggle flex h-10 w-10 items-center justify-center gap-0.5 rounded-full border border-white/35 bg-white/15 text-base shadow-sm backdrop-blur transition hover:bg-white/25 active:scale-95"
                         >
                           <span aria-hidden="true" className="flex h-6 w-6 overflow-hidden rounded-full ring-1 ring-white/50"><span className="flex w-1/2 items-center justify-center bg-[#342b50] text-[11px]">🌙</span><span className="flex w-1/2 items-center justify-center bg-[#fff0bd] text-[11px]">☀️</span></span>
                         </button>
