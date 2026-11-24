@@ -175,3 +175,7 @@ html[data-theme='dark'] body #tys-bold-identity .tys-page-more>button{background
 /* KPI reading direction: percentage on the right, progress grows leftward. */
 html body #tys-bold-identity .orn-kpi-body{flex-direction:row-reverse}
 html body #tys-bold-identity .orn-track{direction:rtl}
+/* Leave selection has one clear state in either theme, never a pale neutral tile. */
+html body #tys-bold-identity .tys-page-target button[aria-label][aria-pressed]{position:relative;border:2px solid var(--orn-line)!important;background:var(--orn-surface)!important;background-image:none!important;color:var(--orn-ink)!important;overflow:visible;transition-property:transform!important}
+html body #tys-bold-identity .tys-page-target button[aria-label][aria-pressed='true']{background:#ff7900!important;background-image:none!important;color:#fff!important;border-color:#bd5400!important;box-shadow:0 0 0 3px #ff790035,0 3px 8px #ff790025!important}
+html body #tys-bold-identity .tys-page-target button[aria-label][aria-pressed='true']:after{content:'✓';position:absolute;top:-5px;right:-5px;display:grid;place-items:center;width:17px;height:17px;background:#fff;color:#aa4900;border:1px solid #ff7900;border-radius:50%;font:bold 11px Arial;pointer-events:none}
