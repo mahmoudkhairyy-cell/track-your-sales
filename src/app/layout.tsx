@@ -1,7 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import { APP_DISCLAIMER, APP_NAME, BRAND_BY } from "@/lib/constants";
-import "./globals.css";
+import "./2-globals.css";
+import "./decorated.css";
 import { PwaRegister } from "@/components/PwaRegister";
 
 export const metadata: Metadata = {
