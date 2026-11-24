@@ -1,10 +1,12 @@
 "use client";
 
 import { FormEvent, useEffect, useState } from "react";
+import Link from "next/link";
 import { KPI_CATALOG, kpiEmoji, unitEn } from "@/lib/constants";
 import { sumWeights } from "@/lib/calculations";
 import { Banner, Field, PageSkeleton, PrimaryButton, inputClass, useToast } from "@/components/ui";
 import { ApiError, api } from "@/lib/client";
+import { readProfile } from "@/lib/local-api";
 import type { WorkingDays } from "@/lib/types";
 import type { KpiKey } from "@/lib/constants";
 import { useMonth } from "@/components/AppShell";
@@ -57,6 +59,15 @@ export default function TargetPage() {
   const firstWeekdayOffset = (new Date(Date.UTC(yy, mm - 1, 1)).getUTCDay() + 1) % 7;
   const [saved, setSaved] = useState(false);
   const [baseline, setBaseline] = useState<string | null>(null);
+  // تيم ليدر فرع OB: عنده صفحة متابعة فريق جنب صفحة التارجت.
+  const [isObTeamLeader, setIsObTeamLeader] = useState(false);
+  useEffect(() => {
+    const id = setTimeout(() => {
+      const profile = readProfile();
+      setIsObTeamLeader(profile.role === "team_leader" && profile.branch.startsWith("OB."));
+    }, 0);
+    return () => clearTimeout(id);
+  }, []);
   useEffect(() => {
     let cancelled = false;
     queueMicrotask(() => {
@@ -170,6 +181,19 @@ export default function TargetPage() {
           </div>
         </div>
       </section>
+
+      {isObTeamLeader ? (
+        <Link href="/team" className="flex items-center justify-between gap-3 rounded-[24px] border border-white bg-white p-4 shadow-[0_1px_2px_rgba(43,20,0,.04)] transition hover:border-[#e5b58e]">
+          <span className="flex items-center gap-3">
+            <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[var(--color-primary-50)] text-lg">👥</span>
+            <span>
+              <span className="block text-sm font-black text-[var(--color-text-primary)]">متابعة الفريق</span>
+              <span className="mt-0.5 block text-[11px] font-semibold text-[var(--color-text-secondary)]">تابع إنجاز فريق فرعك (فروع OB)</span>
+            </span>
+          </span>
+          <span className="text-lg text-[var(--color-primary-700)]" aria-hidden="true">‹</span>
+        </Link>
+      ) : null}
 
       {!saved ? (
         <section className="rounded-[24px] border-2 border-[var(--color-primary-700)] bg-[var(--color-primary-50)] p-4 text-[var(--color-primary-700)]">
