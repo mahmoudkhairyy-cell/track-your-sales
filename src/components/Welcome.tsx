@@ -29,7 +29,7 @@ export function Welcome() {
   const last = step === STEPS.length - 1;
   return (
     <div className="fixed inset-0 z-[90] flex items-end justify-center bg-black/40 p-4 sm:items-center" role="dialog" aria-modal="true" aria-label="مرحبًا">
-      <div className="w-full max-w-sm rounded-[28px] bg-white p-6 text-center shadow-xl">
+      <div className="orn-rich-card w-full max-w-sm rounded-[28px] bg-white p-6 text-center shadow-xl">
         <div className="text-5xl" aria-hidden>{s.icon}</div>
         <h2 className="mt-3 text-xl font-black">{s.title}</h2>
         <p className="mt-2 text-sm text-[var(--color-text-secondary)]">{s.text}</p>
