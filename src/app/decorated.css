@@ -160,8 +160,8 @@ html[data-theme='dark'] body .tys-page-target button[type='submit']:disabled{bac
 html body :is(.tys-login-card,.tys-target-gate){position:relative;isolation:isolate;overflow:hidden;background:radial-gradient(ellipse at 0% 100%,var(--orn-wash),transparent 76%),var(--orn-surface)!important;border-color:var(--orn-line)!important;color:var(--orn-ink)!important}
 html body :is(.tys-login-card,.tys-target-gate):after{content:'';position:absolute;left:-60px;bottom:-80px;width:220px;height:220px;border:1px solid #ff790024;border-radius:50%;box-shadow:0 0 0 15px #ff79000b,0 0 0 31px #ff790007;pointer-events:none;z-index:-1}
 
-/* Compact cards at 70% scale. Keep the app chrome and tap controls unchanged. */
-html body #tys-bold-identity .tys-page{zoom:.7}
+/* Compact cards at 80% scale. Keep the app chrome and tap controls unchanged. */
+html body #tys-bold-identity .tys-page{zoom:.8}
 html body #tys-bold-identity .tys-page :is(input,select,textarea,button[type='submit']){min-height:57px!important}
 html body #tys-bold-identity .tys-page-more .orn-inner-view{background:transparent!important;border:0!important;box-shadow:none!important;border-radius:0!important;overflow:visible!important;padding:0!important}
 html body #tys-bold-identity .tys-page-more .orn-inner-view:before,html body #tys-bold-identity .tys-page-more .orn-inner-view:after{content:none!important}
