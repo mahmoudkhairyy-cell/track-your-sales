@@ -14,7 +14,7 @@ export default function RootPage() {
       dir="rtl"
       className="tys-landing flex min-h-[100svh] items-center justify-center bg-[radial-gradient(ellipse_at_top_right,_#fff7ed_0%,_#fff_42%,_#fff1e6_100%)] px-5 py-10"
     >
-      <section className="w-full max-w-sm rounded-[30px] border border-orange-100 bg-white/90 p-7 text-center shadow-[0_24px_70px_rgba(157,65,10,0.12)] backdrop-blur">
+      <section className="orn-rich-card w-full max-w-sm rounded-[30px] border border-orange-100 bg-white/90 p-7 text-center shadow-[0_24px_70px_rgba(157,65,10,0.12)] backdrop-blur">
         <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-[26px] border border-[#f6e2d1] bg-gradient-to-br from-white to-[#fff0e2] p-2 shadow-[0_12px_28px_rgba(189,75,10,0.10)]">
           <img src="/track-your-sales/logo-mark.png" alt="شعار Track Your Sales" className="h-full w-full object-contain" />
         </div>
