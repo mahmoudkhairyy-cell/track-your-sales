@@ -107,7 +107,7 @@ export function AppLock() {
           نسيت الرقم؟
         </button>
       ) : (
-        <div className="max-w-xs rounded-2xl border border-[#f2e4d8] bg-white p-4 text-xs font-semibold leading-6 text-[#6e4a32]">
+        <div className="orn-rich-card max-w-xs rounded-2xl border border-[#f2e4d8] bg-white p-4 text-xs font-semibold leading-6 text-[#6e4a32]">
           <p>ده قفل خصوصية بسيط. لو مسحته، بياناتك هتفضل زي ما هي، بس القفل هيتشال.</p>
           <button
             type="button"
