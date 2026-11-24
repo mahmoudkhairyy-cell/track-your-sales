@@ -318,9 +318,9 @@ export default function MorePage() {
 
   return (
     <div className="tys-page tys-page-more mx-auto max-w-5xl space-y-5">
-      <section className="relative overflow-hidden rounded-[26px] border border-white bg-white p-5 shadow-[0_1px_2px_rgba(43,20,0,.04)]">
+      <section className="orn-rich-card relative overflow-hidden rounded-[26px] border border-white bg-white p-5 shadow-[0_1px_2px_rgba(43,20,0,.04)]">
         <div className="absolute -left-10 -top-12 h-36 w-36 rounded-full bg-[#ffb36e]/20 blur-3xl" />
-        <div className="relative flex flex-wrap items-center justify-between gap-3">
+        <div className="orn-more-heading relative flex items-center justify-between gap-3">
           <div>
             <p className="text-[11px] font-black tracking-[0.18em] text-[var(--color-primary-700)]" dir="ltr">YOUR WORKSPACE</p>
             <h1 className="mt-1 text-xl font-black tracking-tight text-[var(--color-text-primary)]">كل أدواتك في مكان واحد</h1>
@@ -331,15 +331,15 @@ export default function MorePage() {
         <p className="relative mt-3 text-[11px] leading-6 text-[var(--color-text-secondary)]">أداة مستقلة وغير رسمية لمتابعة الأداء، وليست تطبيقًا رسميًا تابعًا لشركة Orange.</p>
         {reportData ? (
           <div className="relative mt-4 grid grid-cols-3 gap-2 text-center">
-            <div className="rounded-2xl border border-[var(--color-border)] bg-white/90 px-2 py-3">
+            <div className="orn-rich-card rounded-2xl border border-[var(--color-border)] bg-white/90 px-2 py-3">
               <p className="text-xl font-black tabular-nums text-[var(--color-primary-700)]">{Math.round(reportData.overall)}%</p>
               <p className="text-[11px] font-bold text-[var(--color-text-secondary)]">التوتال</p>
             </div>
-            <div className="rounded-2xl border border-[var(--color-border)] bg-white/90 px-2 py-3">
+            <div className="orn-rich-card rounded-2xl border border-[var(--color-border)] bg-white/90 px-2 py-3">
               <p className={`text-xl font-black tabular-nums ${reportData.overall >= 80 ? "text-[var(--color-success-text)]" : "text-[var(--color-danger-text)]"}`}>{Math.round(reportData.estimatedCommission)}</p>
               <p className="text-[11px] font-bold text-[var(--color-text-secondary)]">الكوميشن (ج)</p>
             </div>
-            <div className="rounded-2xl border border-[var(--color-border)] bg-white/90 px-2 py-3">
+            <div className="orn-rich-card rounded-2xl border border-[var(--color-border)] bg-white/90 px-2 py-3">
               <p className="text-xl font-black tabular-nums text-[var(--color-primary-700)]">{entries.length}</p>
               <p className="text-[11px] font-bold text-[var(--color-text-secondary)]">سجلات الشهر</p>
             </div>
@@ -374,7 +374,7 @@ export default function MorePage() {
               ],
             },
           ].map((group) => (
-            <section key={group.title} className="tys-more-group rounded-[22px] border border-white bg-white/80 p-3.5 shadow-[0_1px_2px_rgba(43,20,0,.04)]">
+            <section key={group.title} className="orn-rich-card tys-more-group rounded-[22px] border border-white bg-white/80 p-3.5 shadow-[0_1px_2px_rgba(43,20,0,.04)]">
               <div className="mb-3 flex items-center gap-2">
                 <span className="h-5 w-1 rounded-full bg-[var(--color-primary-600)]" />
                 <h2 className="text-sm font-black text-[var(--color-text-primary)]">{group.title}</h2>
@@ -387,7 +387,7 @@ export default function MorePage() {
                     onClick={() => setView(item.key as typeof view)}
                     className="tys-more-item group flex min-h-[76px] w-full items-center gap-3 rounded-[17px] border border-white bg-white px-3 py-2.5 text-right transition-all duration-200 hover:border-[#edc4a4] hover:shadow-[0_1px_2px_rgba(43,20,0,.04)] active:scale-[0.99]"
                   >
-                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[13px] bg-gradient-to-br from-[#fff0df] to-[#ffe0c1] shadow-sm"><span className="h-2.5 w-2.5 rounded-full bg-[var(--color-primary-600)]" aria-hidden="true" /></span>
+                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[13px] bg-gradient-to-br from-[#fff0df] to-[#ffe0c1] shadow-sm"><span className="orn-menu-symbol" aria-hidden="true">{{today:"◷",history:"▤",report:"▥",profile:"♙",backup:"⇩",data:"⚙",theme:"◐",about:"ⓘ"}[item.key] ?? "•"}</span></span>
                     <span className="min-w-0 flex-1">
                       <span className="block text-sm font-black leading-6 text-[var(--color-text-primary)]">{item.title}</span>
                       <span className="block text-[11px] leading-5 text-[var(--color-text-secondary)]">{item.desc}</span>
@@ -404,7 +404,7 @@ export default function MorePage() {
       {view === "data" ? (
         <section className="space-y-4">
           <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[var(--color-primary-700)]">رجوع للقائمة</button>
-          <div className="rounded-[24px] border border-red-200 bg-white p-5 shadow-sm">
+          <div className="orn-rich-card rounded-[24px] border border-red-200 bg-white p-5 shadow-sm">
             <h2 className="text-lg font-black text-[var(--color-text-primary)]">🛡️ إدارة البيانات</h2>
             <p className="mt-2 text-sm leading-7 text-[var(--color-text-secondary)]">الإجراء ده منفصل عن الاستخدام اليومي. تقدر تمسح سجلات شهر محدد مع الاحتفاظ بإعدادات التارجت والملف الشخصي.</p>
             <div className="mt-4 rounded-2xl bg-red-50 p-4 text-sm leading-7 text-red-900">
@@ -421,7 +421,7 @@ export default function MorePage() {
       {view === "report" ? (
         <section className="space-y-4">
           <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[var(--color-primary-700)]">← رجوع للقائمة</button>
-          <div id="report-print" className="rounded-[24px] border border-white bg-white p-5 shadow-sm">
+          <div id="report-print" className="orn-rich-card rounded-[24px] border border-white bg-white p-5 shadow-sm">
             <p className="text-xs font-bold text-[var(--color-text-secondary)]">تقرير الشهر · {monthLabelAr(month)}</p>
             <h2 className="mt-1 text-xl font-black">{profile.name || "—"}</h2>
             <p className="text-sm text-[var(--color-text-secondary)]">📍 {profile.branch || "—"}</p>
@@ -453,7 +453,7 @@ export default function MorePage() {
       {view === "theme" ? (
         <section className="space-y-4">
           <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[var(--color-primary-700)]">← رجوع للقائمة</button>
-          <div className="rounded-[24px] border border-white bg-white p-5 shadow-sm">
+          <div className="orn-rich-card rounded-[24px] border border-white bg-white p-5 shadow-sm">
             <h2 className="text-lg font-black">🌌 المظهر</h2>
             <p className="mt-1 text-sm text-[var(--color-text-secondary)]">اختار المظهر. بيتحفظ على جهازك وبيفضل بعد قفل التطبيق.</p>
             <div className="mt-4"><ThemeSwitch /></div>
@@ -464,7 +464,7 @@ export default function MorePage() {
       {view === "about" ? (
         <div className="space-y-4">
           <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[var(--color-primary-700)]">← رجوع للقائمة</button>
-          <section className="rounded-[24px] border border-white bg-white p-5 shadow-sm">
+          <section className="orn-rich-card rounded-[24px] border border-white bg-white p-5 shadow-sm">
             <p className="font-black">{APP_NAME}</p>
             <p className="mt-2 text-sm leading-7 text-[var(--color-text-secondary)]">أداة مستقلة وغير رسمية لمتابعة الأداء، وليست تطبيقًا رسميًا تابعًا لشركة Orange.</p>
           </section>
@@ -474,7 +474,7 @@ export default function MorePage() {
       {view === "today" ? (
         <div className="space-y-4">
           <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[var(--color-primary-700)]">← رجوع للقائمة</button>
-      <section className="rounded-[24px] border border-white bg-white p-5 shadow-sm">
+      <section className="orn-rich-card rounded-[24px] border border-white bg-white p-5 shadow-sm">
         <h2 className="text-lg font-black tracking-tight">اللي عملته النهارده</h2>
         {todayItems.length === 0 ? (
           <p className="mt-3 text-sm text-[var(--color-text-secondary)]">لسه مسجلتش حاجة النهارده. يلا نبدأ! 💪</p>
@@ -502,7 +502,7 @@ export default function MorePage() {
       {view === "history" ? (
         <div className="space-y-4">
           <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[var(--color-primary-700)]">← رجوع للقائمة</button>
-      <section className="rounded-[24px] border border-white bg-white p-5 shadow-sm">
+      <section className="orn-rich-card rounded-[24px] border border-white bg-white p-5 shadow-sm">
         <div className="flex items-center justify-between gap-3">
           <h2 className="text-lg font-black tracking-tight">🗂️ سجل عمليات {monthLabelAr(month)}</h2>
           <span className="text-sm text-[var(--color-text-secondary)]">{filteredEntries.length} من {entries.length} سجل</span>
@@ -550,7 +550,7 @@ export default function MorePage() {
       {view === "profile" ? (
         <div className="space-y-4">
           <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[var(--color-primary-700)]">← رجوع للقائمة</button>
-      <section className="rounded-[24px] border border-red-200 bg-white p-5">
+      <section className="orn-rich-card rounded-[24px] border border-red-200 bg-white p-5">
         <h2 className="text-lg font-black tracking-tight">🚪 تسجيل خروج (نقل لفرع تاني)</h2>
         <p className="mt-1 text-xs leading-5 text-[var(--color-text-secondary)]">
           ده بيمسح بيانات الإنجازات والتارجت المحفوظة على الجهاز، وبيفصل الفرع الحالي، وبيرجع لشاشة التسجيل. إعدادات تانية ممكن تفضل محفوظة. لو عايز تحتفظ ببياناتك، اطلع نسخة احتياطية الأول.
@@ -575,7 +575,7 @@ export default function MorePage() {
         </button>
       </section>
 
-      <section className="rounded-[24px] border border-white bg-white p-5 shadow-sm">
+      <section className="orn-rich-card rounded-[24px] border border-white bg-white p-5 shadow-sm">
         <h2 className="text-lg font-black tracking-tight">بياناتك</h2>
         <div className="mt-4 space-y-3">
           <Field label="اسم الموظف">
@@ -609,7 +609,7 @@ export default function MorePage() {
       {view === "backup" ? (
         <div className="space-y-4">
           <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[var(--color-primary-700)]">← رجوع للقائمة</button>
-      <section className="rounded-[24px] border border-white bg-white p-5 shadow-sm">
+      <section className="orn-rich-card rounded-[24px] border border-white bg-white p-5 shadow-sm">
         <h2 className="text-lg font-black tracking-tight">💾 نسخة احتياطية واستعادة</h2>
         <p className="mt-2 text-sm leading-7 text-[var(--color-text-secondary)]">التصدير بينزّل ملف JSON فيه بياناتك وإعدادات الشهور والسجلات والملاحظات. من غير أي مفاتيح أو أسرار.</p>
         <div className="mt-4 grid gap-3 sm:grid-cols-2">
