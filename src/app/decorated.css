@@ -179,3 +179,14 @@ html body #tys-bold-identity .orn-track{direction:rtl}
 html body #tys-bold-identity .tys-page-target button[aria-label][aria-pressed]{position:relative;border:2px solid var(--orn-line)!important;background:var(--orn-surface)!important;background-image:none!important;color:var(--orn-ink)!important;overflow:visible;transition-property:transform!important}
 html body #tys-bold-identity .tys-page-target button[aria-label][aria-pressed='true']{background:#ff7900!important;background-image:none!important;color:#fff!important;border-color:#bd5400!important;box-shadow:0 0 0 3px #ff790035,0 3px 8px #ff790025!important}
 html body #tys-bold-identity .tys-page-target button[aria-label][aria-pressed='true']:after{content:'✓';position:absolute;top:-5px;right:-5px;display:grid;place-items:center;width:17px;height:17px;background:#fff;color:#aa4900;border:1px solid #ff7900;border-radius:50%;font:bold 11px Arial;pointer-events:none}
+
+/* Diamond monthly achievement, approved mockup. */
+html body #tys-bold-identity .orn-month-ring:before{display:none!important}
+html body #tys-bold-identity .orn-month-ring>svg{transform:none;overflow:visible;filter:none}
+.orn-diamond-track{fill:#ff790008;stroke:#ff79002c;stroke-width:6}
+.orn-diamond-fill{fill:none;stroke:#ff7900;stroke-width:6;stroke-linejoin:round}
+.orn-diamond-inner{fill:none;stroke:#ff790050;stroke-width:1}
+.orn-diamond-corners{fill:none;stroke:#ff790040;stroke-width:2}
+html body #tys-bold-identity .orn-month-center strong{font-size:54px}
+html body #tys-bold-identity .orn-month-center>span{font-size:9px}
+@media(max-width:359px){html body #tys-bold-identity .orn-month-center strong{font-size:46px}html body #tys-bold-identity .orn-month-center>span{font-size:8px}}
