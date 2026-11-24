@@ -1,0 +1,64 @@
+{
+  "name": "Track Your Sales",
+  "short_name": "Track Sales",
+  "description": "تطبيق متابعة المبيعات والتارجت",
+  "start_url": "/track-your-sales/home/",
+  "scope": "/track-your-sales/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#fffaf5",
+  "theme_color": "#e96812",
+  "lang": "ar",
+  "dir": "rtl",
+  "icons": [
+    {
+      "src": "/track-your-sales/app-icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/track-your-sales/app-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/track-your-sales/app-icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "id": "/track-your-sales/",
+  "categories": [
+    "business",
+    "productivity"
+  ],
+  "shortcuts": [
+    {
+      "name": "تسجيل إنجاز",
+      "short_name": "تسجيل",
+      "url": "/track-your-sales/log/",
+      "icons": [
+        {
+          "src": "/track-your-sales/app-icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "التارجت",
+      "short_name": "التارجت",
+      "url": "/track-your-sales/target/",
+      "icons": [
+        {
+          "src": "/track-your-sales/app-icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    }
+  ]
+}

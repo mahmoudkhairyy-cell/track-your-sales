@@ -1,4 +1,4 @@
-import { KPI_CATALOG, type KpiKey } from "@/lib/constants";
+import { KPI_CATALOG, type KpiKey, managerKpiWeight } from "@/lib/constants";
 import {
   elapsedWorkingDates,
   remainingWorkingDates,
@@ -30,21 +30,19 @@ export function kpiContribution(achieved: number, target: number, weight: number
   return (achieved / target) * weight;
 }
 
-export function computeOverall(kpis: KpiSettingInput[], achieved: AchievedMap): number {
-  return kpis.reduce((sum, kpi) => {
-    const value = achieved[kpi.kpiKey] ?? 0;
-    return sum + kpiContribution(value, kpi.target, kpi.weight);
-  }, 0);
+/** حصة مدير الفرع من مؤشر فريقه: أقل من 90% = صفر، ومن 90% تُحتسب النسبة الفعلية بلا سقف للمؤشر. */
+export function managerKpiContribution(key: KpiKey, achieved: number, target: number): number {
+  const weight = managerKpiWeight(key);
+  if (weight <= 0 || target <= 0) return 0;
+  const percent = achievementPercent(achieved, target);
+  return percent < KPI_MIN_PERCENT ? 0 : kpiContribution(achieved, target, weight);
 }
 
-export function estimatedCommission(
-  fullCommission: number,
-  overallPercent: number,
-  allowOver100: boolean,
-): number {
+export function estimatedCommission(fullCommission: number, overallPercent: number): number {
+  // الكوميشن بيزيد مع الإنجاز لحد 200% بس، من غير ما يحتاج اختيار.
   const ratio = overallPercent / 100;
-  const used = allowOver100 ? ratio : Math.min(Math.max(ratio, 0), 1);
-  return fullCommission * used;
+  const used = Math.min(Math.max(ratio, 0), 2);
+  return Math.round(fullCommission * used);
 }
 
 export function expectedToDate(target: number, elapsed: number, total: number): number {
@@ -58,6 +56,13 @@ export type NewLinesPace = {
   perDay: number | null;
   message: string;
 };
+
+export function linesWord(n: number): string {
+  if (n === 1) return "خط";
+  if (n === 2) return "خطين";
+  if (n >= 3 && n <= 10) return "خطوط";
+  return "خط";
+}
 
 export function newLinesDailyNeed(
   target: number,
@@ -86,21 +91,21 @@ export function newLinesDailyNeed(
     remaining,
     remainingDays,
     perDay,
-    message: `📱 محتاج تقريبًا ${formatQty(perDay)} خط New Lines في اليوم عشان تلحق التارجت.`,
+    message: `📱 محتاج تقريبًا ${formatQty(Math.ceil(perDay))} ${linesWord(Math.ceil(perDay))} في اليوم عشان تلحق التارجت.`,
   };
 }
 
 export function formatQty(value: number): string {
   if (Number.isInteger(value)) return String(value);
-  return value.toLocaleString("ar-EG", { maximumFractionDigits: 2 });
+  return value.toLocaleString("en-US", { maximumFractionDigits: 0 });
 }
 
 export function formatPercent(value: number): string {
-  return value.toLocaleString("ar-EG", { maximumFractionDigits: 1, minimumFractionDigits: 0 });
+  return value.toLocaleString("en-US", { maximumFractionDigits: 1, minimumFractionDigits: 0 });
 }
 
 export function formatMoney(value: number): string {
-  return value.toLocaleString("ar-EG", { maximumFractionDigits: 2 });
+  return value.toLocaleString("en-US", { maximumFractionDigits: 0 });
 }
 
 export function catalogByKey(key: string) {
@@ -119,9 +124,49 @@ export function buildWorkdayStats(
   return {
     total: totalDates.length,
     elapsed: elapsedDates.length,
+    // الأيام اللي عدّت قبل النهارده بس (النهارده مش محسوب في المقارنة اليومية للتراك).
+    elapsedBeforeToday: elapsedDates.filter((iso) => iso < todayISO).length,
     remaining: remainingDates.length,
     totalDates,
     elapsedDates,
     remainingDates,
   };
+}
+
+// قواعد حساب الكوميشن من نظام الشركة (موظف الفرع):
+// - كل مؤشر له وزن وتارجت لازم يوصل 90% عشان يتحسب في التوتال، والزيادة فوق 100% بتتحسب عادي.
+// - New Orange Cash وزنه صفر، لكنه شرط مستقل: لازم يتقفل 100% من التارجت اللي الموظف دخله.
+// - المؤشرات الفردية بلا سقف، بينما الإجمالي الشهري فقط سقفه 200%.
+// - لو التوتال النهائي أقل من 80% مفيش حافز.
+// - لا يوجد خصم إضافي للـ Postpaid أو DSL.
+export const KPI_MIN_PERCENT = 90;
+export const OVERALL_MIN_PERCENT = 80;
+/** سقف الإجمالي الشهري بس (200%). المؤشرات الفردية ماليهاش سقف. */
+export const OVERALL_MAX_PERCENT = 200;
+
+export type RulesKpi = KpiSettingInput & { achieved: number };
+
+export function applyCompanyRules(kpis: RulesKpi[], options: { newLinesNeedWallets?: boolean } = {}) {
+  const newLinesNeedWallets = options.newLinesNeedWallets ?? true;
+  const newWallets = kpis.find((kpi) => kpi.kpiKey === "new_orange_cash");
+  // المدير لا يخضع لشرط المحافظ؛ الموظف يخضع له إذا كان بند المحافظ موجودًا ومفعّلًا.
+  const walletRequired = Boolean(newWallets && newLinesNeedWallets);
+  const walletDone = !walletRequired || Boolean(newWallets && newWallets.target > 0 && newWallets.achieved >= newWallets.target);
+  const newLinesOpen = walletDone;
+
+  const counted: { kpiKey: KpiKey; contribution: number; percent: number; gated: boolean }[] = kpis.map((kpi) => {
+    const percent = achievementPercent(kpi.achieved, kpi.target);
+    const eligible = kpi.weight > 0 && kpi.target > 0 && (kpi.kpiKey !== "new_lines" || newLinesOpen);
+    const gated = eligible && percent < KPI_MIN_PERCENT;
+    const contribution = eligible && !gated ? kpiContribution(kpi.achieved, kpi.target, kpi.weight) : 0;
+    return { kpiKey: kpi.kpiKey, contribution, percent, gated };
+  });
+
+
+  const rawTotal = counted.reduce((sum, row) => sum + row.contribution, 0);
+  const total = Math.min(OVERALL_MAX_PERCENT, Math.max(0, rawTotal));
+  const belowKpis = counted.filter((row) => row.gated).map((row) => row.kpiKey);
+  const belowOverall = total < OVERALL_MIN_PERCENT;
+  const commissionEligible = !belowOverall && walletDone;
+  return { counted, total, rawTotal, belowKpis, clawBacks: [] as string[], belowOverall, walletDone, commissionEligible };
 }

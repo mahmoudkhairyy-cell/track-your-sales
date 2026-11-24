@@ -11,7 +11,7 @@
       "icon": "shopping-cart",
       "label": "خصومات كازيون",
       "detail": "خصومات لحد 100 جنيه على كل منتجات كازيون ماركت.",
-      "color": "#FF7900"
+      "color": "#D95B00"
     },
     {
       "icon": "music",
@@ -29,7 +29,7 @@
       "icon": "wallet",
       "label": "اورنچ كاش",
       "detail": "50% وحدات زيادة هدية لما تجدد من اورنچ كاش.",
-      "color": "#FF7900"
+      "color": "#D95B00"
     }
   ],
   "simPrice": 84,
@@ -47,7 +47,7 @@
       "whatsapp": "50 MB",
       "hasPerks": false,
       "perks": [],
-      "color": "#FF7900"
+      "color": "#D95B00"
     },
     {
       "name": "FREEmax 80",
@@ -65,7 +65,7 @@
         "خصم 50ج كازيون",
         "3 شهور Spotify"
       ],
-      "color": "#FF7900"
+      "color": "#D95B00"
     },
     {
       "name": "FREEmax 115",
@@ -108,7 +108,7 @@
       "name": "FREEmax 230",
       "nameAr": "فري ماكس 230",
       "price": 230,
-      "units": "12,000",
+      "units": "12,800",
       "customerPrice": 394.6,
       "activationWithTax": 310.57,
       "activationNoTax": 217.4,
@@ -127,7 +127,7 @@
       "name": "FREEmax 345",
       "nameAr": "فري ماكس 345",
       "price": 345,
-      "units": "20,000",
+      "units": "21,000",
       "customerPrice": 558.9,
       "activationWithTax": 474.86,
       "activationNoTax": 332.4,
@@ -146,7 +146,7 @@
   "weekly": {
     "name": "FREEmax Weekly",
     "nameAr": "فري ماكس الأسبوع",
-    "units": "1,800",
+    "units": "1,700",
     "renewalPrice": 50,
     "tagline": "أكبر باقة أسبوعية",
     "channels": [

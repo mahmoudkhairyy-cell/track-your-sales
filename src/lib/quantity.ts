@@ -14,7 +14,7 @@ export const MAX_QUANTITY = 1_000_000;
 export type QuantityResult = { ok: true; value: number } | { ok: false; message: string };
 
 export function allowsFraction(kpiKey: KpiKey): boolean {
-  return kpiKey === "quality";
+  return kpiKey === "quality" || kpiKey === "productivity";
 }
 
 export function quantityStep(kpiKey: KpiKey): string {
@@ -26,10 +26,11 @@ export function quantityMin(kpiKey: KpiKey): number {
 }
 
 export function quantityMax(kpiKey: KpiKey): number {
-  return allowsFraction(kpiKey) ? 100 : MAX_QUANTITY;
+  return kpiKey === "quality" ? 100 : MAX_QUANTITY;
 }
 
 export function quantityHint(kpiKey: KpiKey): string {
+  if (kpiKey === "productivity") return "الإنتاجية بالنسبة %، وممكن تعدي 100% لو الفرع حقق أكتر.";
   return allowsFraction(kpiKey)
     ? "Quality من 0 لـ 100، وينفع كسور زي 97.5."
     : "عدد صحيح أكبر من صفر. ينفع تسجّل نفس المؤشر أكتر من مرة في اليوم.";
@@ -44,8 +45,9 @@ export function validateQuantity(kpiKey: KpiKey, raw: unknown): QuantityResult {
   }
 
   if (allowsFraction(kpiKey)) {
-    if (quantity < 0 || quantity > 100) {
-      return { ok: false, message: "Quality لازم تكون بين 0 و 100" };
+    // الإنتاجية ممكن تعدي 100%، والكواليتي بس سقفها 100.
+    if (quantity < 0 || quantity > quantityMax(kpiKey)) {
+      return { ok: false, message: kpiKey === "quality" ? "Quality لازم تكون بين 0 و 100" : "الإنتاجية لازم تكون رقم موجب" };
     }
     return { ok: true, value: Math.round(quantity * 100) / 100 };
   }

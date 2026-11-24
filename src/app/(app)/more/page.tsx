@@ -1,16 +1,20 @@
 "use client";
 
+import { ThemeSwitch } from "@/components/ThemeSwitch";
 import { FormEvent, useCallback, useEffect, useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Banner, EmptyState, Field, Modal, PrimaryButton, SecondaryButton, Spinner, inputClass, useToast } from "@/components/ui";
+import { LockSettings } from "@/components/LockSettings";
+import { Banner, EmptyState, Field, Modal, PageSkeleton, PrimaryButton, SecondaryButton, inputClass, useToast } from "@/components/ui";
 import { ApiError, api, downloadJson } from "@/lib/client";
 import { cairoISODate, formatDateAr, formatTimeCairo, monthLabelAr } from "@/lib/dates";
 import { formatQty } from "@/lib/calculations";
 import { parseBackup, type BackupFile } from "@/lib/backup";
-import { KPI_CATALOG, kpiEmoji, type KpiKey } from "@/lib/constants";
+import { APP_NAME, AREA_MANAGERS, OUTSIDE_BRANCHES, KPI_CATALOG, kpiEmoji, type KpiKey, unitEn } from "@/lib/constants";
 import { useMonth } from "@/components/AppShell";
+import { KpiIcon } from "@/components/KpiIcon";
+import { useHistoryView } from "@/lib/use-history-view";
 import { quantityHint, quantityMax, quantityMin, quantityStep, validateQuantity } from "@/lib/quantity";
+import { logoutProfile } from "@/lib/local-api";
 
 type EntryRow = {
   id: string;
@@ -34,6 +38,9 @@ type TodayItem = {
 };
 
 export default function MorePage() {
+  const [view, setView] = useHistoryView<"menu" | "today" | "history" | "data" | "profile" | "backup" | "about" | "report" | "theme">("menu");
+  const [reportData, setReportData] = useState<{ overall: number; estimatedCommission: number; fullCommission: number; kpis: { kpiKey: string; nameEn: string; achieved: number; target: number; percent: number; contribution: number }[] } | null>(null);
+
   const toast = useToast();
   const router = useRouter();
   const month = useMonth();
@@ -41,10 +48,13 @@ export default function MorePage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [entries, setEntries] = useState<EntryRow[]>([]);
+  const [historyQuery, setHistoryQuery] = useState("");
+  const [historyKpi, setHistoryKpi] = useState<KpiKey | "all">("all");
   const [todaySummary, setTodaySummary] = useState<TodayItem[]>([]);
   const [profile, setProfile] = useState({ name: "", branch: "", role: "user" });
   const [name, setName] = useState("");
   const [branch, setBranch] = useState("");
+  const [areaManager, setAreaManager] = useState("");
   const [pending, setPending] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [editing, setEditing] = useState<EntryRow | null>(null);
@@ -61,60 +71,38 @@ export default function MorePage() {
   const [restoreOpen, setRestoreOpen] = useState(false);
   const [replaceReady, setReplaceReady] = useState(false);
 
-  const load = useCallback(async (isActive: () => boolean = () => true) => {
-    if (!isActive()) return;
+  const load = useCallback(async () => {
     setLoading(true);
     setError("");
     try {
       const [entryData, dash] = await Promise.all([
         api<{ entries: EntryRow[] }>(`/api/entries?month=${month}`),
         api<{
-          profile: { name: string; branch: string; role: string };
+          profile: { name: string; branch: string; role: string; areaManager?: string };
           todaySummary: TodayItem[];
+          overall: number;
+          estimatedCommission: number;
+          fullCommission: number;
+          kpis: { kpiKey: string; nameEn: string; achieved: number; target: number; percent: number; contribution: number }[];
         }>(`/api/dashboard?month=${month}`),
       ]);
-      if (!isActive()) return;
       setEntries(entryData.entries);
       setTodaySummary(dash.todaySummary);
+      setReportData({ overall: dash.overall, estimatedCommission: dash.estimatedCommission, fullCommission: dash.fullCommission, kpis: dash.kpis });
       setProfile({ name: dash.profile.name, branch: dash.profile.branch, role: dash.profile.role });
       setName(dash.profile.name);
       setBranch(dash.profile.branch);
+      setAreaManager(dash.profile.areaManager ?? "");
     } catch (err) {
-      if (isActive()) setError(err instanceof ApiError || err instanceof Error ? err.message : "تعذر تحميل صفحة المزيد");
+      setError(err instanceof ApiError || err instanceof Error ? err.message : "ماقدرناش نحمّل الصفحة. اتأكد من النت وحاول تاني.");
     } finally {
-      if (isActive()) setLoading(false);
+      setLoading(false);
     }
   }, [month]);
 
   useEffect(() => {
-    let cancelled = false;
-    async function run() {
-      await Promise.resolve();
-      if (!cancelled) await load(() => !cancelled);
-    }
-    void run();
-    return () => {
-      cancelled = true;
-    };
+    queueMicrotask(() => { void load(); });
   }, [load]);
-
-  async function saveProfile(event: FormEvent) {
-    event.preventDefault();
-    setPending(true);
-    try {
-      const result = await api<{ message: string; user: { name: string; branch: string } }>("/api/profile", {
-        method: "PATCH",
-        body: JSON.stringify({ name, branch }),
-      });
-      toast.push("success", result.message);
-      setProfile((current) => ({ ...current, name: result.user.name, branch: result.user.branch }));
-      router.refresh();
-    } catch (err) {
-      toast.push("error", err instanceof Error ? err.message : "فشل تحديث الملف");
-    } finally {
-      setPending(false);
-    }
-  }
 
   function openEdit(entry: EntryRow) {
     setEditing(entry);
@@ -147,8 +135,9 @@ export default function MorePage() {
       toast.push("success", result.message);
       setEditing(null);
       await load();
+      window.dispatchEvent(new Event("tys-data-changed"));
     } catch (err) {
-      const message = err instanceof ApiError || err instanceof Error ? err.message : "مقدرناش نعدّل السجل";
+      const message = err instanceof ApiError || err instanceof Error ? err.message : "ماقدرناش نعدّل السجل. حاول تاني.";
       setEditError(message);
       toast.push("error", message);
     } finally {
@@ -164,6 +153,7 @@ export default function MorePage() {
       toast.push("success", result.message);
       setDeleteId(null);
       await load();
+      window.dispatchEvent(new Event("tys-data-changed"));
     } catch (err) {
       toast.push("error", err instanceof Error ? err.message : "فشل حذف السجل");
     } finally {
@@ -183,6 +173,7 @@ export default function MorePage() {
       setClearOpen(false);
       setClearConfirm("");
       await load();
+      window.dispatchEvent(new Event("tys-data-changed"));
     } catch (err) {
       toast.push("error", err instanceof Error ? err.message : "فشل مسح الشهر");
     } finally {
@@ -244,11 +235,32 @@ export default function MorePage() {
       if (!result.backup || !Array.isArray(result.backup.entries)) {
         throw new Error("النسخة الاحتياطية الحالية ناقصة، الاستبدال متوقف");
       }
-      downloadJson(`track-your-sales-before-replace-${cairoISODate()}.json`, result.backup);
+      downloadJson(`track-your-sales-backup-before-replace-${cairoISODate()}.json`, result.backup);
       setReplaceReady(true);
       toast.push("info", "اتنزّلت نسخة احتياطية من بياناتك الحالية. تقدر تكمل الاستبدال.");
     } catch (err) {
       toast.push("error", err instanceof Error ? err.message : "فشل تجهيز نسخة قبل الاستبدال");
+    } finally {
+      setPending(false);
+    }
+  }
+
+  async function saveAreaManager() {
+    if (!AREA_MANAGERS.includes(areaManager as (typeof AREA_MANAGERS)[number])) {
+      toast.push("error", "اختار مدير المنطقة من القائمة");
+      return;
+    }
+    setPending(true);
+    try {
+      const result = await api<{ message: string }>("/api/profile", {
+        method: "PATCH",
+        body: JSON.stringify({ areaManager }),
+      });
+      toast.push("success", result.message);
+      await load();
+      window.dispatchEvent(new Event("tys-data-changed"));
+    } catch (err) {
+      toast.push("error", err instanceof Error ? err.message : "ماقدرناش نحفظ مدير المنطقة");
     } finally {
       setPending(false);
     }
@@ -275,6 +287,7 @@ export default function MorePage() {
       setRestoreOpen(false);
       setRestoreBackup(null);
       await load();
+      window.dispatchEvent(new Event("tys-data-changed"));
       router.refresh();
     } catch (err) {
       toast.push("error", err instanceof Error ? err.message : "فشلت الاستعادة");
@@ -283,85 +296,248 @@ export default function MorePage() {
     }
   }
 
-  if (loading) return <Spinner label="ثواني… بنحمّل الصفحة" />;
+  if (loading) return <PageSkeleton label="ثواني… بنحمّل الصفحة" rows={4} />;
   if (error) return <Banner tone="error">{error}</Banner>;
 
   const todayItems = todaySummary.filter((item) => item.quantity > 0 || item.count > 0);
+  function handleLogout() {
+    if (!window.confirm("متأكد إنك عايز تسجل خروج؟ بياناتك وإنجازاتك هتفضل محفوظة.")) return;
+    if (!logoutProfile()) {
+      toast.push("error", "تعذر تسجيل الخروج. حاول تاني.");
+      return;
+    }
+    window.location.assign("/track-your-sales/");
+  }
+
+  const filteredEntries = entries.filter((entry) => {
+    if (historyKpi !== "all" && entry.kpiKey !== historyKpi) return false;
+    const needle = historyQuery.trim().toLocaleLowerCase("ar");
+    if (!needle) return true;
+    return [entry.nameEn, entry.note ?? "", entry.entryDate].join(" ").toLocaleLowerCase("en").includes(needle);
+  });
 
   return (
-    <div className="space-y-5 pb-4 tys-more-page">
-      <section>
-        <div className="relative overflow-hidden rounded-hero border border-section bg-gradient-to-br from-[#fff8f0] via-white to-[#ffe9d5] p-5 shadow-section"><div className="absolute -left-8 -top-10 h-32 w-32 rounded-full bg-brand-500/10 blur-2xl" /><div className="relative"><div className="mb-2 inline-flex items-center gap-2 rounded-full border border-section-2 bg-white/80 px-3 py-1 text-xs font-extrabold text-brand-ink-soft"><span>⚙️</span><span>إدارة التطبيق</span></div><h1 className="text-2xl font-black tracking-tight text-brand-ink-strong">المزيد</h1></div></div>
-        <p className="mt-1 text-sm text-ink-2">ملخص النهارده، سجل الشهر، النسخة الاحتياطية، والمساعد.</p>
+    <div className="tys-page tys-page-more mx-auto max-w-5xl space-y-5">
+      <section className="orn-rich-card relative overflow-hidden rounded-[26px] border border-white bg-white p-5 shadow-[0_1px_2px_rgba(43,20,0,.04)]">
+        <div className="absolute -left-10 -top-12 h-36 w-36 rounded-full bg-[#ffb36e]/20 blur-3xl" />
+        <div className="orn-more-heading relative flex items-center justify-between gap-3">
+          <div>
+            <p className="text-[11px] font-black tracking-[0.18em] text-[var(--color-primary-700)]" dir="ltr">YOUR WORKSPACE</p>
+            <h1 className="mt-1 text-xl font-black tracking-tight text-[var(--color-text-primary)]">كل أدواتك في مكان واحد</h1>
+            <p className="mt-1 text-xs text-[var(--color-text-secondary)]">إدارة سجلاتك وبياناتك ومراجعة أدائك</p>
+          </div>
+          <img src="/track-your-sales/logo-mark.png" alt="Track Your Sales" className="h-14 w-14 object-contain" />
+        </div>
+        <p className="relative mt-3 text-[11px] leading-6 text-[var(--color-text-secondary)]">أداة مستقلة وغير رسمية لمتابعة الأداء، وليست تطبيقًا رسميًا تابعًا لشركة Orange.</p>
+        {reportData ? (
+          <div className="relative mt-4 grid grid-cols-3 gap-2 text-center">
+            <div className="orn-rich-card rounded-2xl border border-[var(--color-border)] bg-white/90 px-2 py-3">
+              <p className="text-xl font-black tabular-nums text-[var(--color-primary-700)]">{Math.round(reportData.overall)}%</p>
+              <p className="text-[11px] font-bold text-[var(--color-text-secondary)]">التوتال</p>
+            </div>
+            <div className="orn-rich-card rounded-2xl border border-[var(--color-border)] bg-white/90 px-2 py-3">
+              <p className={`text-xl font-black tabular-nums ${reportData.overall >= 80 ? "text-[var(--color-success-text)]" : "text-[var(--color-danger-text)]"}`}>{Math.round(reportData.estimatedCommission)}</p>
+              <p className="text-[11px] font-bold text-[var(--color-text-secondary)]">الكوميشن (ج)</p>
+            </div>
+            <div className="orn-rich-card rounded-2xl border border-[var(--color-border)] bg-white/90 px-2 py-3">
+              <p className="text-xl font-black tabular-nums text-[var(--color-primary-700)]">{entries.length}</p>
+              <p className="text-[11px] font-bold text-[var(--color-text-secondary)]">سجلات الشهر</p>
+            </div>
+          </div>
+        ) : null}
       </section>
 
-      <section>
-        <Link
-          href="/assistant"
-          className="relative flex items-center gap-3 overflow-hidden rounded-hero border border-section bg-gradient-to-br from-white via-white to-brand-surface p-5 shadow-accent ring-1 ring-white transition hover:bg-brand-surface"
-        >
-          <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-brand-200 text-2xl">🤖</span>
-          <span>
-            <span className="block text-lg font-black text-brand-ink-strong">المساعد الذكي</span>
-            <span className="mt-1 block text-sm leading-6 text-ink-2">اسأل عن الباقات والأسعار والعروض، وخد إجابة فورية من قاعدة معلومات أورنچ.</span>
-          </span>
-        </Link>
-      </section>
+      {view === "menu" ? (
+        <div className="tys-more-menu space-y-4">
+          {[
+            {
+              title: "متابعة الأداء",
+              items: [
+                { key: "today", icon: "📊", title: "اللي عملته النهارده", desc: "ملخص إنجازات اليوم" },
+                { key: "contracts", icon: "📑", title: "التعاقدات", desc: "سجّل وتابع حالات التعاقد" },
+                { key: "assistant", icon: "🤖", title: "المساعد الذكي", desc: "اسأل عن باقة أو عرض أو إجراء وخد إجابة فورية" },
+                { key: "history", icon: "🗂️", title: "السجل", desc: "عرض وتعديل وحذف الإنجازات" },
+                { key: "report", icon: "📄", title: "تقرير الشهر", desc: "اطبعه أو احفظه PDF" },
+              ],
+            },
+            {
+              title: "الحساب والبيانات",
+              items: [
+                { key: "profile", icon: "👤", title: "بياناتك", desc: "الاسم والفرع" },
+                { key: "backup", icon: "💾", title: "نسخة احتياطية واستعادة", desc: "احفظ بياناتك أو استرجعها" },
+                { key: "data", icon: "🛡️", title: "إدارة البيانات", desc: "إجراءات حذف بيانات الشهر" },
+              ],
+            },
+            {
+              title: "التطبيق",
+              items: [
+                { key: "theme", icon: "🌌", title: "المظهر", desc: "فاتح أو غامق" },
+                { key: "about", icon: "ℹ️", title: "حول التطبيق", desc: "معلومات عن الأداة" },
+              ],
+            },
+          ].map((group) => (
+            <section key={group.title} className="orn-rich-card tys-more-group rounded-[22px] border border-white bg-white/80 p-3.5 shadow-[0_1px_2px_rgba(43,20,0,.04)]">
+              <div className="mb-3 flex items-center gap-2">
+                <span className="h-5 w-1 rounded-full bg-[var(--color-primary-600)]" />
+                <h2 className="text-sm font-black text-[var(--color-text-primary)]">{group.title}</h2>
+              </div>
+              <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                {group.items.map((item) => (
+                  <button
+                    key={item.key}
+                    type="button"
+                    onClick={() => { if (item.key === "contracts") { router.push(`/contracts?month=${month}`); return; } if (item.key === "assistant") { router.push("/assistant"); return; } setView(item.key as typeof view); }}
+                    className="tys-more-item group flex min-h-[76px] w-full items-center gap-3 rounded-[17px] border border-white bg-white px-3 py-2.5 text-right transition-all duration-200 hover:border-[#edc4a4] hover:shadow-[0_1px_2px_rgba(43,20,0,.04)] active:scale-[0.99]"
+                  >
+                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[13px] bg-gradient-to-br from-[#fff0df] to-[#ffe0c1] shadow-sm"><span className="orn-menu-symbol" aria-hidden="true">{{today:"◷",contracts:"▣",assistant:"✦",history:"▤",report:"▥",profile:"♙",backup:"⇩",data:"⚙",theme:"◐",about:"ⓘ"}[item.key] ?? "•"}</span></span>
+                    <span className="min-w-0 flex-1">
+                      <span className="block text-sm font-black leading-6 text-[var(--color-text-primary)]">{item.title}</span>
+                      <span className="block text-[11px] leading-5 text-[var(--color-text-secondary)]">{item.desc}</span>
+                    </span>
+                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#fff0e3] text-lg text-[var(--color-primary-700)] transition-transform group-hover:-translate-x-0.5">‹</span>
+                  </button>
+                ))}
+              </div>
+            </section>
+          ))}
+        </div>
+      ) : null}
 
-      <section className="relative overflow-hidden rounded-hero border border-section bg-gradient-to-br from-white via-white to-brand-surface p-5 shadow-accent ring-1 ring-white">
-        <h2 className="flex items-center gap-2 text-lg font-black text-brand-ink-strong"><span className="flex h-9 w-9 items-center justify-center rounded-2xl bg-brand-200 text-lg">📊</span>اللي عملته النهارده</h2>
+      {view === "data" ? (
+        <section className="orn-inner-view space-y-4">
+          <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[var(--color-primary-700)]">رجوع للقائمة</button>
+          <div className="orn-rich-card rounded-[24px] border border-red-200 bg-white p-5 shadow-sm">
+            <h2 className="text-lg font-black text-[var(--color-text-primary)]">🛡️ إدارة البيانات</h2>
+            <p className="mt-2 text-sm leading-7 text-[var(--color-text-secondary)]">الإجراء ده منفصل عن الاستخدام اليومي. تقدر تمسح سجلات شهر محدد مع الاحتفاظ بإعدادات التارجت والملف الشخصي.</p>
+            <div className="mt-4 rounded-2xl bg-red-50 p-4 text-sm leading-7 text-red-900">
+              الشهر المحدد: <strong>{monthLabelAr(month)}</strong><br />
+              عدد السجلات المتأثرة: <strong>{entries.length}</strong>
+            </div>
+            <button type="button" className="mt-4 min-h-12 w-full rounded-full border border-red-200 bg-red-50 font-extrabold text-red-700" onClick={() => setClearOpen(true)}>
+              🚨 مراجعة حذف سجلات الشهر
+            </button>
+          </div>
+        </section>
+      ) : null}
+
+      {view === "report" ? (
+        <section className="orn-inner-view space-y-4">
+          <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[var(--color-primary-700)]">← رجوع للقائمة</button>
+          <div id="report-print" className="orn-rich-card rounded-[24px] border border-white bg-white p-5 shadow-sm">
+            <p className="text-xs font-bold text-[var(--color-text-secondary)]">تقرير الشهر · {monthLabelAr(month)}</p>
+            <h2 className="mt-1 text-xl font-black">{profile.name || "—"}</h2>
+            <p className="text-sm text-[var(--color-text-secondary)]">📍 {profile.branch || "—"}</p>
+            {reportData ? (
+              <>
+                <div className="mt-4 grid grid-cols-2 gap-3">
+                  <div className="rounded-2xl bg-[var(--color-primary-50)] p-3"><p className="text-[11px] font-bold text-[var(--color-text-secondary)]">التوتال</p><p className="text-2xl font-black text-[var(--color-primary-700)]">{reportData.overall.toFixed(1)}%</p></div>
+                  <div className="rounded-2xl bg-[var(--color-primary-50)] p-3"><p className="text-[11px] font-bold text-[var(--color-text-secondary)]">الكوميشن المتوقع</p><p className="text-2xl font-black text-[var(--color-primary-700)]">{Math.round(reportData.estimatedCommission)} ج</p><p className="text-[11px] text-[var(--color-text-secondary)]">من {Math.round(reportData.fullCommission)} ج</p></div>
+                </div>
+                <div className="mt-4 divide-y divide-dashed divide-[#F3D2B5]">
+                  {reportData.kpis.map((kpi) => (
+                    <div key={kpi.kpiKey} className="flex items-center justify-between py-2.5 text-sm">
+                      <span className="font-extrabold" dir="ltr">{kpi.nameEn}</span>
+                      <span className="text-[var(--color-text-secondary)]">{formatQty(kpi.achieved)} / {formatQty(kpi.target)} · <b className="text-[var(--color-primary-700)]">{kpi.percent.toFixed(0)}%</b></span>
+                    </div>
+                  ))}
+                </div>
+              </>
+            ) : (
+              <p className="mt-4 text-sm text-[var(--color-text-secondary)]">بنحمّل التقرير...</p>
+            )}
+          </div>
+          <button type="button" onClick={() => window.print()} className="w-full rounded-2xl bg-gradient-to-br from-[var(--color-primary-600)] to-[var(--color-primary-500)] py-3 font-extrabold text-white shadow-sm">
+            🖨️ اطبع / احفظ PDF
+          </button>
+        </section>
+      ) : null}
+
+      {view === "theme" ? (
+        <section className="orn-inner-view space-y-4">
+          <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[var(--color-primary-700)]">← رجوع للقائمة</button>
+          <div className="orn-rich-card rounded-[24px] border border-white bg-white p-5 shadow-sm">
+            <h2 className="text-lg font-black">المظهر</h2>
+            <p className="mt-1 text-sm text-[var(--color-text-secondary)]">اختار المظهر. بيتحفظ على جهازك وبيفضل بعد قفل التطبيق.</p>
+            <div className="mt-4"><ThemeSwitch /></div>
+          </div>
+        </section>
+      ) : null}
+
+      {view === "about" ? (
+        <div className="space-y-4">
+          <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[var(--color-primary-700)]">← رجوع للقائمة</button>
+          <section className="orn-rich-card rounded-[24px] border border-white bg-white p-5 shadow-sm">
+            <p className="font-black">{APP_NAME}</p>
+            <p className="mt-2 text-sm leading-7 text-[var(--color-text-secondary)]">أداة مستقلة وغير رسمية لمتابعة الأداء، وليست تطبيقًا رسميًا تابعًا لشركة Orange.</p>
+          </section>
+        </div>
+      ) : null}
+
+      {view === "today" ? (
+        <div className="space-y-4">
+          <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[var(--color-primary-700)]">← رجوع للقائمة</button>
+      <section className="orn-rich-card rounded-[24px] border border-white bg-white p-5 shadow-sm">
+        <h2 className="text-lg font-black tracking-tight">اللي عملته النهارده</h2>
         {todayItems.length === 0 ? (
-          <p className="mt-3 text-sm text-ink-2">لسه مسجلتش حاجة النهارده. يلا نبدأ! 💪</p>
+          <p className="mt-3 text-sm text-[var(--color-text-secondary)]">لسه مسجلتش حاجة النهارده. يلا نبدأ! 💪</p>
         ) : (
           <ul className="mt-3 space-y-2">
             {todayItems.map((item) => (
-              <li key={item.kpiKey} className="flex items-center justify-between rounded-2xl border border-section-3 bg-gradient-to-l from-[#fff4e9] to-white px-3 py-3 text-sm shadow-section-sm">
+              <li key={item.kpiKey} className="flex items-center justify-between rounded-2xl bg-[var(--color-primary-50)] px-3 py-2 text-sm">
                 <span className="flex items-center gap-2">
-                  <span className="text-xl">{kpiEmoji(item.kpiKey)}</span>
+                  <span className="flex h-7 w-7 items-center justify-center text-[var(--color-primary-700)]"><KpiIcon kpiKey={item.kpiKey} className="h-5 w-5" /></span>
                   <span>
                     <span dir="ltr" className="font-extrabold">{item.nameEn}</span>
-                    <span className="block text-xs text-ink-2">{item.count} عملية</span>
+                    <span className="block text-xs text-[var(--color-text-secondary)]">{item.count} عملية</span>
                   </span>
                 </span>
                 <strong>
-                  {formatQty(item.quantity)} {item.unitAr}
+                  {formatQty(item.quantity)} {unitEn(item.unitAr, item.quantity)}
                 </strong>
               </li>
             ))}
           </ul>
         )}
       </section>
-
-      <section className="tys-history-card relative overflow-hidden rounded-hero border border-section bg-gradient-to-br from-white via-white to-brand-surface p-5 shadow-accent ring-1 ring-white">
+        </div>
+      ) : null}
+      {view === "history" ? (
+        <div className="space-y-4">
+          <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[var(--color-primary-700)]">← رجوع للقائمة</button>
+      <section className="orn-rich-card rounded-[24px] border border-white bg-white p-5 shadow-sm">
         <div className="flex items-center justify-between gap-3">
-          <h2 className="flex items-center gap-2 text-lg font-black text-brand-ink-strong"><span className="flex h-9 w-9 items-center justify-center rounded-2xl bg-brand-200 text-lg">🗂️</span>سجل عمليات {monthLabelAr(month)}</h2>
-          <span className="text-sm text-ink-2">{entries.length} سجل</span>
+          <h2 className="text-lg font-black tracking-tight">🗂️ سجل عمليات {monthLabelAr(month)}</h2>
+          <span className="text-sm text-[var(--color-text-secondary)]">{filteredEntries.length} من {entries.length} سجل</span>
+        </div>
+        <div className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-[minmax(0,1fr)_220px]">
+          <label className="block"><span className="sr-only">ابحث في السجل</span><input className={inputClass} type="search" value={historyQuery} onChange={(e) => setHistoryQuery(e.target.value)} placeholder="ابحث في المؤشر أو الملاحظات..." /></label>
+          <label className="block"><span className="sr-only">فلترة حسب المؤشر</span><select className={inputClass} value={historyKpi} onChange={(e) => setHistoryKpi(e.target.value as KpiKey | "all")}><option value="all">كل المؤشرات</option>{KPI_CATALOG.map((item) => <option key={item.key} value={item.key}>{item.nameEn}</option>)}</select></label>
         </div>
         {entries.length === 0 ? (
           <div className="mt-4">
-            <EmptyState title="السجل فاضي" text="مفيش عمليات محفوظة في الشهر ده." />
+            <EmptyState title="لسه مفيش عمليات" text="ابدأ بتسجيل بيعة، وهتظهر هنا في الشهر ده." />
           </div>
         ) : (
           <ul className="mt-4 space-y-2">
-            {entries.map((entry) => (
-              <li key={entry.id} className="rounded-2xl border border-section-4 bg-white/80 p-3 shadow-section-xs transition-colors hover:border-section-5">
+            {filteredEntries.map((entry) => (
+              <li key={entry.id} className="rounded-2xl border border-[var(--color-border)] p-3">
                 <div className="flex items-start justify-between gap-3">
                   <div>
                     <p className="font-extrabold">
-                      <span className="ml-1">{kpiEmoji(entry.kpiKey)}</span>
+                      <span className="ml-1 inline-flex align-middle text-[var(--color-primary-700)]"><KpiIcon kpiKey={entry.kpiKey} className="h-4 w-4" /></span>
                       <span dir="ltr">{entry.nameEn}</span>
                     </p>
-                    <p className="text-xs text-ink-2">
-                      {formatDateAr(entry.entryDate)} · {formatQty(entry.quantity)} {entry.unitAr}
+                    <p className="text-xs text-[var(--color-text-secondary)]">
+                      {formatDateAr(entry.entryDate)} · {formatQty(entry.quantity)} {unitEn(entry.unitAr, entry.quantity)}
                     </p>
-                    {entry.note ? <p className="mt-1 text-sm text-neutral-700">{entry.note}</p> : null}
-                    <p className="mt-1 text-[11px] text-ink-2">اتسجل {formatTimeCairo(entry.createdAt)}</p>
+                    {entry.note ? <p className="mt-1 text-sm text-[var(--color-text-secondary)]">{entry.note}</p> : null}
+                    <p className="mt-1 text-[11px] text-[var(--color-text-secondary)]">اتسجل {formatTimeCairo(entry.createdAt)}</p>
                   </div>
                   <div className="flex shrink-0 items-center gap-3">
-                    <button type="button" className="min-h-10 font-extrabold text-brand-600" onClick={() => openEdit(entry)}>
+                    <button type="button" className="min-h-10 font-extrabold text-[var(--color-primary-700)]" onClick={() => openEdit(entry)}>
                       ✏️ عدّل
                     </button>
-                    <button type="button" className="min-h-10 font-extrabold text-risk" onClick={() => setDeleteId(entry.id)}>
+                    <button type="button" className="min-h-10 font-extrabold text-red-600" onClick={() => setDeleteId(entry.id)}>
                       🗑️ شيل
                     </button>
                   </div>
@@ -370,39 +546,79 @@ export default function MorePage() {
             ))}
           </ul>
         )}
+      </section>
+        </div>
+      ) : null}
+      {view === "profile" ? (
+        <div className="space-y-4">
+          <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[var(--color-primary-700)]">← رجوع للقائمة</button>
+      <section className="orn-rich-card rounded-[24px] border border-red-200 bg-white p-5">
+        <h2 className="text-lg font-black tracking-tight">🚪 تسجيل خروج (نقل لفرع تاني)</h2>
+        <p className="mt-1 text-xs leading-5 text-[var(--color-text-secondary)]">
+          ده بيمسح بيانات الإنجازات والتارجت المحفوظة على الجهاز، وبيفصل الفرع الحالي، وبيرجع لشاشة التسجيل. إعدادات تانية ممكن تفضل محفوظة. لو عايز تحتفظ ببياناتك، اطلع نسخة احتياطية الأول.
+        </p>
         <button
           type="button"
-          className="mt-4 min-h-12 w-full rounded-full border border-red-200 bg-red-50 font-extrabold text-red-700"
-          onClick={() => setClearOpen(true)}
+          onClick={() => {
+            if (!window.confirm("متأكد؟ هيتمسح سجل الإنجازات والتارجت المحفوظ على الجهاز، وهيتم فصل الفرع الحالي. اطلعت نسخة احتياطية؟")) return;
+            try {
+              localStorage.removeItem("trackYourSales.local.v1");
+              localStorage.removeItem("trackYourSales.local.v1.beforeRestore");
+              localStorage.removeItem("tys.branchId");
+              localStorage.removeItem("tys.lastSync");
+            } catch {
+              // لو التخزين مش متاح، نكمّل ونعمل ريلود.
+            }
+            window.location.href = "/track-your-sales/home/";
+          }}
+          className="mt-3 w-full rounded-2xl border border-red-300 bg-red-50 py-2.5 text-sm font-extrabold text-red-700"
         >
-          🚨 امسح كل سجلات الشهر (مش بيترجع)
+          تسجيل خروج
         </button>
       </section>
 
-      <section className="relative overflow-hidden rounded-hero border border-section bg-gradient-to-br from-white via-white to-brand-surface p-5 shadow-accent ring-1 ring-white">
-        <h2 className="flex items-center gap-2 text-lg font-black text-brand-ink-strong"><span className="flex h-9 w-9 items-center justify-center rounded-2xl bg-brand-200 text-lg">👤</span>بياناتك</h2>
-        <form className="mt-4 space-y-3" onSubmit={saveProfile}>
+      <section className="orn-rich-card rounded-[24px] border border-white bg-white p-5 shadow-sm">
+        <h2 className="text-lg font-black tracking-tight">بياناتك</h2>
+        <div className="mt-4 space-y-3">
           <Field label="اسم الموظف">
-            <input className={inputClass} value={name} onChange={(e) => setName(e.target.value)} required />
+            <input className={`${inputClass} bg-[#fdf6f0]`} value={name} readOnly />
           </Field>
           <Field label="الفرع">
-            <input className={inputClass} value={branch} onChange={(e) => setBranch(e.target.value)} required />
+            <input className={`${inputClass} bg-[#fdf6f0]`} value={branch} readOnly />
           </Field>
-          <PrimaryButton type="submit" disabled={pending}>
-            {pending ? "⏳ بنحفظ..." : "💾 احفظ الاسم والفرع"}
-          </PrimaryButton>
-        </form>
-        <p className="mt-3 text-xs leading-6 text-ink-2">تقدر تغيّر اسمك والفرع في أي وقت من هنا.</p>
+          {profile.branch !== OUTSIDE_BRANCHES ? <Field label="مدير المنطقة">
+            {areaManager ? (
+              <input className={`${inputClass} bg-[#fdf6f0]`} value={areaManager} readOnly />
+            ) : (
+              <select className={inputClass} value={areaManager} onChange={(event) => setAreaManager(event.target.value)} disabled={pending}>
+                <option value="">اختار مدير المنطقة</option>
+                {AREA_MANAGERS.map((manager) => <option key={manager} value={manager}>{manager}</option>)}
+              </select>
+            )}
+          </Field> : null}
+          {profile.branch !== OUTSIDE_BRANCHES && !areaManager ? (
+            <PrimaryButton type="button" disabled={pending} onClick={() => void saveAreaManager()}>
+              {pending ? "بيحفظ..." : "حفظ مدير المنطقة"}
+            </PrimaryButton>
+          ) : profile.branch !== OUTSIDE_BRANCHES ? (
+            <p className="text-xs leading-6 text-[var(--color-text-secondary)]">مدير المنطقة اتحدد. التقارير بتوصل للمدير ده فقط، ومش بنغيّره تلقائيًا عشان ما ننقلش تقاريرك القديمة.</p>
+          ) : null}
+        </div>
+        <p className="mt-3 text-xs leading-6 text-[var(--color-text-secondary)]">{profile.branch === OUTSIDE_BRANCHES ? "الاسم والفرع ثابتين بعد التسجيل. فرع خارج الفروع لا يرسل تقارير إلى لوحة المدير." : "الاسم والفرع ثابتين بعد التسجيل. تعيين مدير المنطقة مطلوب عشان تقاريرك تتزامن وتظهر عند مديرك فقط."}</p>
       </section>
-
-      <section className="relative overflow-hidden rounded-hero border border-section bg-gradient-to-br from-white via-white to-brand-surface p-5 shadow-accent ring-1 ring-white">
-        <h2 className="flex items-center gap-2 text-lg font-black text-brand-ink-strong"><span className="flex h-9 w-9 items-center justify-center rounded-2xl bg-brand-200 text-lg">💾</span>نسخة احتياطية واستعادة</h2>
-        <p className="mt-2 text-sm leading-7 text-ink-2">التصدير بينزّل ملف JSON فيه بياناتك وإعدادات الشهور والسجلات والملاحظات. من غير أي مفاتيح أو أسرار.</p>
+        </div>
+      ) : null}
+      {view === "backup" ? (
+        <div className="space-y-4">
+          <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[var(--color-primary-700)]">← رجوع للقائمة</button>
+      <section className="orn-rich-card rounded-[24px] border border-white bg-white p-5 shadow-sm">
+        <h2 className="text-lg font-black tracking-tight">💾 نسخة احتياطية واستعادة</h2>
+        <p className="mt-2 text-sm leading-7 text-[var(--color-text-secondary)]">التصدير بينزّل ملف JSON فيه بياناتك وإعدادات الشهور والسجلات والملاحظات. من غير أي مفاتيح أو أسرار.</p>
         <div className="mt-4 grid gap-3 sm:grid-cols-2">
           <PrimaryButton type="button" disabled={pending} onClick={() => void exportBackup()}>
             ⬇️ نزّل نسخة JSON
           </PrimaryButton>
-          <label className="inline-flex min-h-12 cursor-pointer items-center justify-center rounded-full border border-hero bg-white px-4 font-extrabold text-brand-ink-soft shadow-sm transition hover:bg-brand-surface">
+          <label className="inline-flex min-h-12 cursor-pointer items-center justify-center rounded-full border border-neutral-200 bg-white px-4 font-bold">
             ⬆️ اختار ملف للاستعادة
             <input
               type="file"
@@ -417,6 +633,13 @@ export default function MorePage() {
           </label>
         </div>
       </section>
+      <LockSettings />
+        </div>
+      ) : null}
+
+
+
+
 
       <Modal open={Boolean(editing)} title="✏️ تعديل السجل" onClose={() => setEditing(null)}>
         <form className="space-y-4" onSubmit={saveEdit}>
@@ -432,10 +655,10 @@ export default function MorePage() {
                     type="button"
                     onClick={() => setEditKpi(kpi.key)}
                     className={`flex min-h-12 items-center gap-2 rounded-2xl border px-3 text-right text-xs font-extrabold transition ${
-                      active ? "border-accent-strong bg-brand-50 text-brand-ink" : "border-neutral-200 bg-white text-neutral-700"
+                      active ? "border-[var(--color-primary-700)] bg-[var(--color-primary-50)] text-[var(--color-primary-700)]" : "border-neutral-200 bg-white text-[var(--color-text-secondary)]"
                     }`}
                   >
-                    <span className="text-lg">{kpi.emoji}</span>
+                    <span className="text-[var(--color-primary-700)]"><KpiIcon kpiKey={kpi.key} className="h-5 w-5" /></span>
                     <span dir="ltr" className="leading-4">
                       {kpi.nameEn}
                     </span>
@@ -475,7 +698,7 @@ export default function MorePage() {
       </Modal>
 
       <Modal open={Boolean(deleteId)} title="🗑️ تشيل السجل ده؟" onClose={() => setDeleteId(null)}>
-        <p className="text-sm leading-7 text-neutral-600">السجل هيتشال من قاعدة البيانات بعد ما السيرفر يأكد بس.</p>
+        <p className="text-sm leading-7 text-[var(--color-text-secondary)]">السجل هيتشال من الجهاز ده نهائيًا.</p>
         <div className="mt-4 flex gap-2">
           <SecondaryButton type="button" onClick={() => setDeleteId(null)}>
             لأ، خليه
@@ -487,8 +710,8 @@ export default function MorePage() {
       </Modal>
 
       <Modal open={clearOpen} title="🚨 تمسح الشهر كله؟" onClose={() => setClearOpen(false)}>
-        <p className="text-sm leading-7 text-neutral-700">
-          هتمسح كل سجلات <strong>{monthLabelAr(month)}</strong> وعددها <strong>{entries.length}</strong>. الإعدادات مش هتتمسح. ده مش بيترجع بعد ما السيرفر ينفذ.
+        <p className="text-sm leading-7 text-[var(--color-text-secondary)]">
+          هتمسح كل سجلات <strong>{monthLabelAr(month)}</strong> وعددها <strong>{entries.length}</strong>. الإعدادات مش هتتمسح. ده مش بيترجع بعد ما تأكده.
         </p>
         <Field label={`اكتب ${month} للتأكيد`}>
           <input className={inputClass} value={clearConfirm} onChange={(e) => setClearConfirm(e.target.value)} />
@@ -504,7 +727,7 @@ export default function MorePage() {
       </Modal>
 
       <Modal open={restoreOpen} title="⬆️ استعادة نسخة" onClose={() => setRestoreOpen(false)}>
-        <p className="text-sm leading-7 text-neutral-700">{restoreSummary}</p>
+        <p className="text-sm leading-7 text-[var(--color-text-secondary)]">{restoreSummary}</p>
         <div className="mt-4 grid gap-2">
           <label className="flex min-h-12 items-center gap-2 rounded-2xl bg-neutral-50 px-3 text-sm font-bold">
             <input type="radio" name="restore-mode" checked={restoreMode === "merge"} onChange={() => setRestoreMode("merge")} />
@@ -533,6 +756,11 @@ export default function MorePage() {
         </PrimaryButton>
       </Modal>
 
+      <div className="pb-8 pt-2">
+        <button type="button" onClick={handleLogout} className="flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl border border-red-200 bg-white px-4 py-3 text-sm font-extrabold text-red-600 shadow-sm transition hover:bg-red-50">
+          <span aria-hidden="true">↪</span> تسجيل الخروج
+        </button>
+      </div>
     </div>
   );
 }

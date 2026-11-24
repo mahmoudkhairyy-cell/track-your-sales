@@ -1,23 +1,50 @@
 "use client";
 
+import { createPortal } from "react-dom";
 import {
   createContext,
   useCallback,
   useContext,
   useEffect,
+  useId,
   useMemo,
   useRef,
   useState,
   type ButtonHTMLAttributes,
-  type HTMLAttributes,
   type ReactNode,
 } from "react";
 
 export function Spinner({ label = "بيحمّل..." }: { label?: string }) {
   return (
-    <div role="status" aria-live="polite" className="flex items-center justify-center gap-3 py-10 text-ink-muted-3">
-      <span className="h-5 w-5 animate-spin rounded-full border-2 border-spinner border-t-transparent" />
+    <div className="flex items-center justify-center gap-3 py-10 text-[#927b69]">
+      <span className="h-5 w-5 animate-spin rounded-full border-2 border-[#bd4b0a] border-t-transparent" />
       <span>{label}</span>
+    </div>
+  );
+}
+
+export function PageSkeleton({ label = "بيحمّل...", rows = 3 }: { label?: string; rows?: number }) {
+  return (
+    <div className="tys-page flex flex-col gap-4" role="status" aria-busy="true" aria-live="polite">
+      <span className="sr-only">{label}</span>
+      <section className="orn-rich-card rounded-[24px] border bg-white p-5">
+        <div className="skeleton-bone h-3 w-24 rounded-full" />
+        <div className="skeleton-bone mt-3 h-7 w-48 rounded-xl" />
+        <div className="skeleton-bone mt-4 h-2 w-full rounded-full" />
+      </section>
+      {Array.from({ length: rows }).map((_, index) => (
+        <section key={index} className="orn-rich-card rounded-[24px] border bg-white p-4">
+          <div className="flex items-center gap-3">
+            <div className="skeleton-bone h-11 w-11 shrink-0 rounded-2xl" />
+            <div className="flex-1">
+              <div className="skeleton-bone h-3.5 w-2/5 rounded-full" />
+              <div className="skeleton-bone mt-2 h-3 w-1/4 rounded-full" />
+            </div>
+            <div className="skeleton-bone h-12 w-12 shrink-0 rounded-full" />
+          </div>
+          <div className="skeleton-bone mt-4 h-2 w-full rounded-full" />
+        </section>
+      ))}
     </div>
   );
 }
@@ -32,12 +59,11 @@ export function EmptyState({
   action?: ReactNode;
 }) {
   return (
-    <section className="tx-empty-state rounded-hero border border-line bg-gradient-to-b from-white to-brand-50 px-5 py-10 text-center shadow-empty">
-      <div aria-hidden="true" className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-card border border-light bg-brand-200 text-3xl text-brand-deep shadow-empty-inner">⌕</div>
-      <p className="text-lg font-extrabold text-ink-3">{title}</p>
-      <p className="mx-auto mt-2 max-w-md text-sm leading-7 text-ink-muted-3">{text}</p>
-      {action ? <div className="mx-auto mt-5 w-full max-w-xs">{action}</div> : null}
-    </section>
+    <div className="orn-rich-card rounded-[28px] border border-dashed border-[#edc6a8] bg-white px-5 py-10 text-center shadow-[0_1px_2px_rgba(43,20,0,.04)]">
+      <p className="text-lg font-extrabold text-[#2d2119]">{title}</p>
+      <p className="mx-auto mt-2 max-w-md text-sm leading-7 text-[#927b69]">{text}</p>
+      {action ? <div className="mt-5">{action}</div> : null}
+    </div>
   );
 }
 
@@ -48,18 +74,13 @@ export function Banner({
   tone?: "info" | "error" | "success" | "warn";
   children: ReactNode;
 }) {
-  const config = {
-    info: { icon: "ⓘ", style: "border-line border-r-line-accent text-info-deep", iconStyle: "bg-brand-200 text-brand-deep" },
-    error: { icon: "!", style: "border-line-risk border-r-line-risk-strong text-risk-deep", iconStyle: "bg-risk-soft text-risk-light" },
-    success: { icon: "✓", style: "border-line-ok border-r-line-ok-strong text-ok-deep", iconStyle: "bg-ok-soft text-ok-light" },
-    warn: { icon: "⚠", style: "border-line-warn border-r-line-warn-strong text-warn-deep", iconStyle: "bg-warn-soft text-warn-light" },
-  }[tone];
-  return (
-    <div role={tone === "error" ? "alert" : "status"} aria-live={tone === "error" ? "assertive" : "polite"} className={`flex items-start gap-3 rounded-card border border-r-4 bg-white px-4 py-3 text-sm leading-7 shadow-banner ${config.style}`}>
-      <span aria-hidden="true" className={`mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-xl text-sm font-black ${config.iconStyle}`}>{config.icon}</span>
-      <div className="min-w-0 flex-1">{children}</div>
-    </div>
-  );
+  const tones = {
+    info: "bg-[#fff0e2] text-[#bd4b0a] border-[#f2e4d8]",
+    error: "bg-red-50 text-red-900 border-red-200",
+    success: "bg-emerald-50 text-emerald-950 border-emerald-200",
+    warn: "bg-amber-50 text-amber-950 border-amber-200",
+  };
+  return <div role={tone === "error" ? "alert" : "status"} aria-live={tone === "error" ? "assertive" : "polite"} className={`rounded-2xl border px-4 py-3 text-sm leading-7 ${tones[tone]}`}>{children}</div>;
 }
 
 export function PrimaryButton({
@@ -70,7 +91,7 @@ export function PrimaryButton({
   return (
     <button
       {...props}
-      className={`tx-btn-primary inline-flex min-h-12 w-full items-center justify-center rounded-full border border-focus/35 bg-gradient-to-l from-brand-600 via-brand-500 to-brand-300 px-4 text-base font-extrabold text-white shadow-button-primary transition duration-200 hover:-translate-y-0.5 hover:brightness-105 hover:shadow-button-primary-hover focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand-500/25 enabled:active:translate-y-0 enabled:active:scale-[0.985] disabled:cursor-not-allowed disabled:opacity-55 disabled:saturate-50 ${className}`}
+      className={`inline-flex min-h-12 w-full items-center justify-center rounded-full bg-gradient-to-br from-[#bd4b0a] to-[#e96812] px-4 text-base font-extrabold text-white shadow-[0_12px_28px_rgba(190,90,0,0.35)] transition duration-200 hover:-translate-y-0.5 hover:shadow-[0_15px_32px_rgba(190,90,0,0.28)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#e96812] enabled:active:translate-y-0 enabled:active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60 ${className}`}
     >
       {children}
     </button>
@@ -85,27 +106,13 @@ export function SecondaryButton({
   return (
     <button
       {...props}
-      className={`inline-flex min-h-12 items-center justify-center rounded-full border border-line bg-white px-4 text-base font-bold text-ink-muted-deep shadow-sm transition hover:border-line-strong hover:bg-surface-hover focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-spinner/15 disabled:opacity-60 ${className}`}
+      className={`inline-flex min-h-12 items-center justify-center rounded-full border border-[#f0dfd2] bg-white px-4 text-base font-bold text-[#514238] shadow-[0_4px_12px_rgba(115,58,20,0.04)] transition duration-200 hover:-translate-y-0.5 hover:border-[#e8b48e] hover:bg-[#fffaf5] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#e96812] disabled:opacity-60 ${className}`}
     >
       {children}
     </button>
   );
 }
 
-export function DangerButton({
-  children,
-  className = "",
-  ...props
-}: ButtonHTMLAttributes<HTMLButtonElement>) {
-  return (
-    <button
-      {...props}
-      className={`inline-flex min-h-12 items-center justify-center rounded-full bg-gradient-to-l from-red-700 to-red-500 px-4 text-base font-extrabold text-white shadow-sm transition hover:brightness-105 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-red-500/20 disabled:opacity-60 ${className}`}
-    >
-      {children}
-    </button>
-  );
-}
 
 export function Field({
   label,
@@ -118,56 +125,69 @@ export function Field({
 }) {
   return (
     <label className="block">
-      <span className="mb-2 block text-sm font-bold text-ink">{label}</span>
+      <span className="mb-2 block text-sm font-bold text-[#5f4939]">{label}</span>
       {children}
-      {hint ? <span className="mt-1 block text-xs leading-6 text-ink-2">{hint}</span> : null}
+      {hint ? <span className="mt-1 block text-xs leading-6 text-neutral-500">{hint}</span> : null}
     </label>
   );
 }
 
 export const inputClass =
-  "min-h-12 w-full rounded-2xl border border-line bg-white px-3 text-base text-ink-deep outline-none transition placeholder:text-muted-placeholder focus:border-focus focus:bg-white focus:ring-4 focus:ring-[#e96812]/10";
+  "min-h-12 w-full rounded-2xl border border-[#f2e4d8] bg-white px-4 text-base text-[#241f1b] shadow-[0_2px_8px_rgba(115,58,20,0.025)] outline-none ring-[#bd4b0a] transition duration-150 placeholder:text-[#b5a69b] focus:border-[#e96812] focus:ring-2 focus:ring-[#e96812]/15";
 
-type Toast = { id: number; type: "success" | "error" | "info"; text: string };
+type ToastAction = { label: string; onClick: () => void };
+type Toast = { id: number; type: "success" | "error" | "info"; text: string; action?: ToastAction };
 
 const ToastContext = createContext<{
-  push: (type: Toast["type"], text: string) => void;
+  push: (type: Toast["type"], text: string, action?: ToastAction) => void;
 } | null>(null);
 
 export function ToastProvider({ children }: { children: ReactNode }) {
   const [toasts, setToasts] = useState<Toast[]>([]);
-  const push = useCallback((type: Toast["type"], text: string) => {
+  const push = useCallback((type: Toast["type"], text: string, action?: ToastAction) => {
     const id = Date.now() + Math.random();
-    setToasts((current) => [...current, { id, type, text }]);
+    setToasts((current) => [...current, { id, type, text, action }]);
     window.setTimeout(() => {
       setToasts((current) => current.filter((toast) => toast.id !== id));
-    }, 4200);
+    }, action ? 7000 : 4200);
+  }, []);
+  const dismiss = useCallback((id: number) => {
+    setToasts((current) => current.filter((toast) => toast.id !== id));
   }, []);
   const value = useMemo(() => ({ push }), [push]);
 
   return (
     <ToastContext.Provider value={value}>
       {children}
-      <div aria-live="polite" aria-relevant="additions" className="pointer-events-none fixed left-1/2 top-4 z-[70] flex w-[min(92vw,420px)] -translate-x-1/2 flex-col gap-2">
-        {toasts.map((toast) => {
-          const tone = toast.type === "success"
-            ? "border-line-ok border-r-line-ok-strong text-ok-deep"
-            : toast.type === "error"
-              ? "border-line-risk border-r-line-risk-strong text-risk-deep"
-              : "border-line border-r-line-accent text-info-deep";
-          const icon = toast.type === "success" ? "✓" : toast.type === "error" ? "!" : "ⓘ";
-          const iconTone = toast.type === "success"
-            ? "bg-ok-soft text-ok-light"
-            : toast.type === "error"
-              ? "bg-risk-soft text-risk-light"
-              : "bg-brand-200 text-brand-deep";
-          return (
-            <div key={toast.id} role={toast.type === "error" ? "alert" : "status"} className={`flex items-center gap-3 rounded-card border border-r-4 bg-white px-4 py-3 text-sm font-bold shadow-toast ${tone}`}>
-              <span aria-hidden="true" className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-xl ${iconTone}`}>{icon}</span>
-              <span className="min-w-0 flex-1">{toast.text}</span>
+      <div role="status" aria-live="polite" aria-atomic="false" className="pointer-events-none fixed top-4 left-1/2 z-[70] flex w-[min(92vw,420px)] -translate-x-1/2 flex-col gap-2">
+        {toasts.map((toast) => (
+          <div
+            key={toast.id}
+            className={`rounded-2xl px-4 py-3 text-sm font-bold shadow-lg ${
+              toast.type === "success"
+                ? "bg-[#bd4b0a] text-white"
+                : toast.type === "error"
+                  ? "bg-red-600 text-white"
+                  : "bg-[#fff0e2] text-[#8b3d0a] ring-1 ring-[#f1d7c2]"
+            }`}
+          >
+            <div className="flex items-center justify-between gap-3">
+              <span>{toast.text}</span>
+              {toast.action ? (
+                <button
+                  type="button"
+                  onClick={() => {
+                    toast.action?.onClick();
+                    dismiss(toast.id);
+                  }}
+                  className="pointer-events-auto shrink-0 rounded-full border border-white/70 px-3 py-1 text-xs font-extrabold text-white transition hover:bg-white/15"
+                >
+                  {toast.action.label}
+                </button>
+              ) : null}
             </div>
-          );
-        })}
+          </div>
+        ))}
       </div>
     </ToastContext.Provider>
   );
@@ -190,182 +210,112 @@ export function Modal({
   children: ReactNode;
   onClose: () => void;
 }) {
-  const dialogRef = useRef<HTMLDivElement>(null);
+  const titleId = useId();
   const onCloseRef = useRef(onClose);
-
   useEffect(() => {
     onCloseRef.current = onClose;
   }, [onClose]);
-
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const overlayRef = useRef<HTMLDivElement>(null);
+  const previousFocusRef = useRef<HTMLElement | null>(null);
+  // إدارة التركيز داخل النافذة: نقل التركيز عند الفتح، وحصر Tab، وإعادته بعد الإغلاق.
   useEffect(() => {
     if (!open) return;
-    const previouslyFocused = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    previousFocusRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     const dialog = dialogRef.current;
-    const focusableSelector = 'button:not([disabled]), a[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
-    const focusFirst = () => dialog?.querySelector<HTMLElement>(focusableSelector)?.focus();
-    focusFirst();
-
-    function onKeyDown(event: KeyboardEvent) {
+    const getFocusable = () => dialog?.querySelectorAll<HTMLElement>(
+      'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+    ) ?? [];
+    const first = getFocusable()[0];
+    (first ?? dialog)?.focus();
+    const onKey = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         event.preventDefault();
         onCloseRef.current();
         return;
       }
-      if (event.key !== "Tab" || !dialog) return;
-      const focusable = Array.from(dialog.querySelectorAll<HTMLElement>(focusableSelector))
-        .filter((element) => element.offsetParent !== null);
-      if (focusable.length === 0) {
+      if (event.key !== "Tab") return;
+      const items = getFocusable();
+      if (!items.length) {
         event.preventDefault();
-        dialog.focus();
+        dialog?.focus();
         return;
       }
-      const first = focusable[0];
-      const last = focusable[focusable.length - 1];
-      if (event.shiftKey && (document.activeElement === first || !dialog.contains(document.activeElement))) {
+      const firstItem = items[0];
+      const lastItem = items[items.length - 1];
+      if (event.shiftKey && (document.activeElement === firstItem || document.activeElement === dialog)) {
         event.preventDefault();
-        last.focus();
-      } else if (!event.shiftKey && (document.activeElement === last || !dialog.contains(document.activeElement))) {
+        lastItem.focus();
+      } else if (!event.shiftKey && document.activeElement === lastItem) {
         event.preventDefault();
-        first.focus();
+        firstItem.focus();
       }
-    }
-
-    document.addEventListener("keydown", onKeyDown);
+    };
+    window.addEventListener("keydown", onKey);
     return () => {
-      document.removeEventListener("keydown", onKeyDown);
-      previouslyFocused?.focus();
+      window.removeEventListener("keydown", onKey);
+      const previousFocus = previousFocusRef.current;
+      previousFocusRef.current = null;
+      window.setTimeout(() => previousFocus?.focus(), 0);
     };
   }, [open]);
-
+  // عزل بقية الصفحة عن قارئات الشاشة ولوحة المفاتيح أثناء فتح النافذة.
+  useEffect(() => {
+    if (!open || !overlayRef.current) return;
+    const siblings = Array.from(document.body.children).filter(
+      (element): element is HTMLElement => element instanceof HTMLElement && element !== overlayRef.current,
+    );
+    const previous = siblings.map((element) => ({
+      element,
+      inert: element.inert,
+      ariaHidden: element.getAttribute("aria-hidden"),
+    }));
+    siblings.forEach((element) => {
+      element.inert = true;
+      element.setAttribute("aria-hidden", "true");
+    });
+    return () => {
+      previous.forEach(({ element, inert, ariaHidden }) => {
+        element.inert = inert;
+        if (ariaHidden === null) element.removeAttribute("aria-hidden");
+        else element.setAttribute("aria-hidden", ariaHidden);
+      });
+    };
+  }, [open]);
+  // زرار الرجوع في الموبايل بيقفل النافذة الأول، بدل ما يسيبها مفتوحة ويرجّعك لصفحة قبلها.
+  useEffect(() => {
+    if (!open) return;
+    const current = (window.history.state ?? {}) as Record<string, unknown>;
+    window.history.pushState({ ...current, tysModal: true }, "");
+    let closedByBack = false;
+    const onPop = () => {
+      closedByBack = true;
+      onCloseRef.current();
+    };
+    window.addEventListener("popstate", onPop);
+    return () => {
+      window.removeEventListener("popstate", onPop);
+      // لو اتقفلت من الزرار (مش من الرجوع)، نشيل الخطوة اللي ضفناها.
+      if (!closedByBack && (window.history.state as { tysModal?: boolean } | null)?.tysModal) {
+        window.history.back();
+      }
+    };
+  }, [open]);
   if (!open) return null;
-  return (
-    <div className="fixed inset-0 z-[80] flex items-end justify-center bg-backdrop/35 p-2 backdrop-blur-[3px] sm:items-center sm:p-3">
-      <button type="button" className="absolute inset-0" aria-label="إغلاق النافذة" onClick={onClose} />
-      <div ref={dialogRef} role="dialog" aria-modal="true" aria-labelledby="tx-modal-title" tabIndex={-1} className="relative max-h-[88dvh] w-full max-w-lg overflow-y-auto rounded-t-[30px] border border-line bg-gradient-to-b from-white to-[#fffaf6] p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] shadow-modal sm:rounded-[28px]">
-        <div className="mx-auto mb-4 h-1.5 w-12 rounded-full bg-line sm:hidden" />
+  // بنرسم النافذة على الـ body مباشرة، عشان أي transform في الصفحة ما يحبسهاش جوه المحتوى.
+  return createPortal(
+    <div ref={overlayRef} className="fixed inset-0 z-[9999] flex items-center justify-center bg-[#4b3024]/45 p-3 backdrop-blur-[3px]">
+      <button className="absolute inset-0" aria-label="إغلاق" tabIndex={-1} onClick={onClose} />
+      <div ref={dialogRef} tabIndex={-1} role="dialog" aria-modal="true" aria-labelledby={titleId} className="orn-rich-card relative z-[1] max-h-[min(90dvh,760px)] w-full max-w-lg overflow-y-auto overscroll-contain rounded-[28px] border border-[#f1dfd0] bg-white p-5 text-[#38291f] shadow-[0_24px_70px_rgba(77,44,25,0.20)]">
         <div className="mb-4 flex items-start justify-between gap-3">
-          <h2 id="tx-modal-title" className="text-lg font-extrabold text-ink-3">{title}</h2>
-          <button type="button" onClick={onClose} aria-label="إغلاق النافذة" className="min-h-10 min-w-10 rounded-full text-xl text-ink-2 transition hover:bg-brand-200 hover:text-brand-deep focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-spinner/20">
+          <h2 id={titleId} className="text-lg font-extrabold text-neutral-900">{title}</h2>
+          <button type="button" onClick={onClose} aria-label="إغلاق" className="min-h-10 min-w-10 rounded-full text-xl text-neutral-500">
             ×
           </button>
         </div>
         {children}
       </div>
-    </div>
-  );
-}
-
-
-export function Skeleton({
-  className = "",
-  "aria-label": ariaLabel = "جاري التحميل...",
-  ...props
-}: React.HTMLAttributes<HTMLDivElement> & { "aria-label"?: string }) {
-  return (
-    <div
-      role="status"
-      aria-label={ariaLabel}
-      className={`skeleton-shine rounded-xl bg-skeleton dark:bg-skeleton-dark ${className}`}
-      {...props}
-    />
-  );
-}
-
-export function AnimatedCounter({
-  value,
-  duration = 400,
-  className = "",
-}: {
-  value: number;
-  duration?: number;
-  className?: string;
-}) {
-  const [display, setDisplay] = useState(0);
-  const prevValue = useRef(0);
-  const rafId = useRef<number | null>(null);
-
-  useEffect(() => {
-    // لو المستخدم مفعّل تقليل الحركة، اعرض القيمة مباشرة بدون أنيميشن
-    const motionMedia = window.matchMedia("(prefers-reduced-motion: reduce)");
-    if (motionMedia.matches) {
-      setDisplay(value);
-      prevValue.current = value;
-      return;
-    }
-
-    const start = prevValue.current;
-    const end = value;
-    const startTime = performance.now();
-
-    const animate = (currentTime: number) => {
-      const elapsed = currentTime - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 3);
-      const current = start + (end - start) * eased;
-      setDisplay(Math.round(current));
-
-      if (progress < 1) {
-        rafId.current = requestAnimationFrame(animate);
-      } else {
-        prevValue.current = end;
-        rafId.current = null;
-      }
-    };
-
-    // إلغاء أي حركة سابقة قبل بدء حركة جديدة
-    if (rafId.current !== null) {
-      cancelAnimationFrame(rafId.current);
-      rafId.current = null;
-    }
-
-    rafId.current = requestAnimationFrame(animate);
-
-    // cleanup: إلغاء الحركة عند إزالة المكوّن أو تغيير القيمة
-    return () => {
-      if (rafId.current !== null) {
-        cancelAnimationFrame(rafId.current);
-        rafId.current = null;
-      }
-    };
-  }, [value, duration]);
-
-  return <span className={className}>{display.toLocaleString("ar-EG")}</span>;
-}
-
-export function BulletChart({
-  percent,
-  expected,
-  className = "",
-}: {
-  percent: number;
-  expected: number;
-  className?: string;
-}) {
-  const capped = Math.min(100, Math.max(0, percent));
-  const expectedCapped = Math.min(100, Math.max(0, expected));
-
-  return (
-    <div className={`relative ${className}`}>
-      <div
-        role="progressbar"
-        aria-label="نسبة إنجاز التارجت الشهري"
-        aria-valuenow={Math.round(capped)}
-        aria-valuemin={0}
-        aria-valuemax={100}
-        aria-valuetext={`${Math.round(percent)} بالمئة، والمتوقع النهارده ${Math.round(expected)} بالمئة`}
-        className="h-3 w-full overflow-hidden rounded-full bg-surface-2 dark:bg-surface-2-dark"
-      >
-        <div
-          className="h-full rounded-full bg-gradient-to-l from-brand-500 to-brand-600 transition-all duration-700 ease-out dark:from-brand-500-dark dark:to-brand-600-dark"
-          style={{ width: `${capped}%` }}
-        />
-      </div>
-      <div
-        className="absolute top-1/2 h-5 w-0.5 -translate-y-1/2 rounded-full bg-ink dark:bg-ink-dark"
-        style={{ left: `${expectedCapped}%` }}
-        title={`المتوقع النهارده: ${Math.round(expected)}%`}
-        aria-hidden="true"
-      />
-    </div>
+    </div>,
+    document.body,
   );
 }
