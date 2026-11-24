@@ -11,11 +11,6 @@ import { ApiError, api } from "@/lib/client";
 import { formatMoney, formatPercent, formatQty } from "@/lib/calculations";
 import { useMonth } from "@/components/AppShell";
 import { KpiIcon } from "@/components/KpiIcon";
-import { DeltaChip } from "@/components/Sparkline";
-import { overallBandLines, pickPhrase, sarcasticLine, timeLines } from "@/lib/phrases";
-import { shareAchievement } from "@/lib/sharecard";
-import { Rope } from "@/components/Rope";
-import { AchievementDial } from "@/components/AchievementDial";
 import { pushReport, readSyncStatus, type SyncStatus } from "@/lib/sync";
 
 type KpiRow = {
@@ -66,7 +61,6 @@ function greeting() {
 
 export default function HomePage() {
   const router = useRouter();
-  const [copied, setCopied] = useState(false);
 
 
   const [sync, setSync] = useState<SyncStatus | null>(null);
@@ -138,20 +132,8 @@ export default function HomePage() {
   const trackedWeight = tracked.reduce((sum, k) => sum + k.weight, 0);
   const trackPercent = trackedWeight > 0 ? tracked.reduce((sum, k) => sum + k.percent * k.weight, 0) / trackedWeight : data.overall;
   const onTrack: boolean | null = data.work.total > 0 ? trackPercent >= (doneDays / data.work.total) * 100 : null;
-  const employeeName = data.profile.name.trim().split(/\s+/)[0] || "يا نجم";
-  const statusPhrase = pickPhrase(overallBandLines(data.overall), `overall|${data.yearMonth}`);
-  const statusTextEgy = statusPhrase.replaceAll("{name}", employeeName);
-  const timeText = pickPhrase(
-    timeLines(data.work.remaining, data.work.total, data.work.elapsedBeforeToday ?? data.work.elapsed),
-    `time|${data.yearMonth}`,
-  );
-
-
-
-  const sarcastic = sarcasticLine(data.overall);
-
   return (
-    <div className="tys-page tys-page-home tys-premium-home mx-auto flex min-h-screen w-full max-w-6xl translate-y-0 flex-col gap-4 pb-28 opacity-100 transition-all duration-500 ease-out" style={{ animation: "tys-page-enter 500ms ease-out backwards" }}>
+    <div className="tys-page orn-home mx-auto flex min-h-screen w-full max-w-6xl translate-y-0 flex-col gap-4 pb-28 opacity-100 transition-all duration-500 ease-out" style={{ animation: "tys-page-enter 500ms ease-out backwards" }}>
       {sync ? (
         <p className={`text-xs font-bold ${sync.ok ? "text-emerald-700" : "text-red-600"}`} dir="rtl">
           {sync.ok
@@ -165,44 +147,37 @@ export default function HomePage() {
         </p>
       ) : null}
 
-      <section className="tys-home-greeting flex items-end justify-between gap-3 px-1 pt-1" dir="rtl">
-        <div className="min-w-0">
-          <h1 className="mt-1 text-xl font-black tracking-tight text-[var(--color-text-primary)] sm:text-2xl">
-            {greeting()} {data.profile.name.split(" ")[0]} 👋
-          </h1>
-          <p className="mt-1 text-xs font-semibold text-[var(--color-text-secondary)]">{data.profile.branch}</p>
-        </div>
-        <div className="flex shrink-0 items-center gap-2">
-        </div>
+      <section className="orn-greeting orn-card" dir="rtl">
+        <div><h1>{greeting()} <bdi>{data.profile.name.trim().split(/\s+/)[0]}</bdi></h1><p><span className="orn-pin" /> <bdi>{data.profile.branch}</bdi></p></div>
+        <span className="orn-avatar" aria-hidden="true">{data.profile.name.trim().charAt(0).toUpperCase() || "M"}</span>
       </section>
-
-      <section className="bold-headline"><p>YOUR AMBITION. IN MOTION.</p><h2>إنجازك.<br/><span>على المكشوف.</span></h2></section>
-      <section className="bold-performance">
-        <div className="bold-performance-top"><span>التارجت الشهري</span><span className="bold-status">{onTrack === null ? "مستني بيانات" : onTrack ? "على الهدف" : "متأخر"}</span></div>
-        <AchievementDial value={data.overall}/>
-        <div className="bold-metrics"><div><p>الكوميشن المحقق</p><strong>{formatMoney(data.estimatedCommission)}</strong><small> جنيه</small></div><div><p>المتبقي للتارجت</p><strong>{formatPercent(Math.max(0,100-data.overall))}<small>%</small></strong></div></div>
-        <div className="bold-performance-details"><p>{statusTextEgy} {timeText}</p>{data.projection ? <p>بنفس المعدل، المتوقع في آخر الشهر {formatPercent(data.projection.overall)}% وكوميشن {formatMoney(data.projection.commission)} جنيه.</p> : null}{data.entriesCount > 0 ? <button type="button" onClick={()=>void shareAchievement({monthLabel:data.monthLabel,percent:Math.round(data.overall),commission:formatMoney(data.estimatedCommission)})}>شارك إنجازك ↗</button>:null}{sarcastic?<p>{sarcastic}</p>:null}</div>
+      <section className="orn-monthly orn-card" aria-label="الأداء الشهري">
+        <div className="orn-month-ring" role="img" aria-label={`إجمالي تحقيق التارجت ${formatPercent(data.overall)}%`}>
+          <svg viewBox="0 0 181 181" aria-hidden="true"><circle className="orn-ring-track" cx="90.5" cy="90.5" r="85"/><circle className="orn-ring-fill" cx="90.5" cy="90.5" r="85" pathLength="100" strokeDasharray={`${Math.min(100,Math.max(0,data.overall))} 100`}/></svg>
+          <div className="orn-month-center"><span>إجمالي تحقيق التارجت</span><strong dir="ltr">{formatPercent(data.overall)}<small>%</small></strong></div>
+        </div>
+        <div className="orn-month-side"><span className={`orn-status ${onTrack === false ? "is-behind" : ""}`}>{onTrack === null ? "مستني بيانات" : onTrack ? "On track" : "Behind"}</span><div className="orn-commission"><p>الكوميشن المحقق</p><strong dir="ltr">{formatMoney(data.estimatedCommission)}</strong><small>جنيه</small></div></div>
       </section>
 
       {/* المطلوب */}
-      <section className="tys-home-daily px-1 py-1">
+      <section className="orn-daily orn-card">
         <div className="mb-3 flex items-center justify-between gap-2">
           <div>
-            <h2 className="mt-0.5 text-sm font-extrabold text-[var(--color-text-primary)]"><span className="bold-section-number">01</span>خطوتك النهارده</h2>
+            <h2 className="mt-0.5 text-sm font-extrabold text-[var(--color-text-primary)]">المطلوب النهارده</h2>
           </div>
           <span className="shrink-0 rounded-full bg-[var(--color-primary-50)] px-2.5 py-1 text-xs font-extrabold text-[var(--color-primary-700)]">
             فاضل {formatQty(data.work.remaining)} يوم عمل
           </span>
         </div>
-        <div className="bold-daily-grid grid grid-cols-3 gap-2">
+        <div className="orn-daily-grid">
           {data.kpis.filter((k) => k.kpiKey !== "quality" && k.remaining > 0).map((k) => {
             const dailyRequired = data.work.remaining > 0 ? Math.ceil(k.remaining / data.work.remaining) : k.remaining;
             return (
               <div
                 key={k.kpiKey}
-                className="bold-daily-tile flex min-h-[46px] min-w-0 items-center justify-between gap-2 rounded-lg border border-white bg-white px-2.5 py-1.5 text-orange-800 shadow-[0_1px_2px_rgba(43,20,0,.04)]"
+                className="orn-daily-tile"
               >
-                <span className="min-w-0 truncate text-[11px] font-bold tracking-wide text-orange-800" dir="ltr">{k.nameEn}</span>
+                <span className="min-w-0 truncate text-[11px] font-bold tracking-wide text-orange-800" dir="ltr">{k.kpiKey === "new_orange_cash" ? "Wallets" : k.nameEn}</span>
                 <strong className="shrink-0 rounded-md border border-white bg-orange-50 px-2 py-1 text-base font-black leading-none tabular-nums text-orange-800">
                   {formatQty(dailyRequired)}
                 </strong>
@@ -215,77 +190,22 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* المؤشرات */}
-      <section className="tys-home-kpis flex flex-col gap-3 rounded-[20px] border border-white bg-white p-5 shadow-[0_1px_2px_rgba(43,20,0,.04)]">
-        <div className="flex items-center justify-between">
-          <h2 className="text-base font-black tracking-tight text-[var(--color-text-primary)]"><span className="bold-section-number">02</span>نبض الأداء</h2>
-          <span className="text-xs font-bold text-[var(--color-text-secondary)]">{data.kpis.length} مؤشر</span>
-        </div>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          {data.kpis.map((kpi, kpiIndex) => {
+      <section className="orn-kpis">
+        <h2 className="orn-section-title">مؤشرات الأداء</h2>
+        <div className="orn-kpi-grid">
+          {data.kpis.map((kpi) => {
             const onTrackKpi = kpi.achieved >= kpi.expectedToDate;
-            const ringLen = 2 * Math.PI * 18;
             const pct = Math.min(100, Math.max(0, kpi.percent));
-            return (
-              <article key={kpi.kpiKey} style={{ animationDelay: `${kpiIndex * 100}ms`, boxShadow: kpi.percent >= 100 ? "0 0 0 1px rgba(234,88,12,.12), 0 0 16px rgba(234,88,12,.20), 0 5px 14px rgba(100,55,25,.13)" : onTrackKpi ? "0 0 0 1px rgba(22,163,74,.06), 0 0 8px rgba(22,163,74,.07), 0 5px 14px rgba(100,55,25,.13)" : "0 0 0 1px rgba(220,38,38,.06), 0 0 8px rgba(220,38,38,.07), 0 5px 14px rgba(100,55,25,.13)" }} className={`tys-rise tys-home-kpi flex min-w-0 items-center gap-2.5 rounded-[20px] border p-3 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg sm:gap-3 sm:p-3 border-white bg-orange-50/50`}>
-                <div className="tys-ring relative h-12 w-12 shrink-0 sm:h-14 sm:w-14">
-                  <svg viewBox="0 0 44 44" className="h-full w-full -rotate-90">
-                    <circle cx="22" cy="22" r="18" fill="none" stroke="var(--color-border)" strokeWidth="5" />
-                    <circle
-                      cx="22"
-                      cy="22"
-                      r="18"
-                      fill="none"
-                      stroke={onTrackKpi ? "var(--color-success-ring)" : "var(--color-danger-text)"}
-                      strokeWidth="5"
-                      strokeLinecap="round"
-                      strokeDasharray={ringLen}
-                      strokeDashoffset={ringLen * (1 - pct / 100)}
-                      className="transition-all duration-700"
-                    />
-                  </svg>
-                  <span className={`absolute inset-0 flex items-center justify-center font-mono font-black text-[var(--color-text-primary)] ${kpi.percent >= 100 ? "text-[10px] tracking-tighter" : "text-xs"}`}>{Math.round(kpi.percent)}%</span>
-                </div>
-                <div className="flex min-w-0 flex-1 flex-col gap-1">
-                  <div className="flex items-center justify-between gap-2">
-                    <span dir="rtl" className="flex min-w-0 items-center gap-1.5">
-                      <span className="inline-flex shrink-0 items-center justify-center rounded-full bg-[var(--color-primary-50)] px-2.5 py-1.5 text-[var(--color-primary-600)]">
-                        <KpiIcon kpiKey={kpi.kpiKey} className="h-5 w-5" />
-                      </span>
-                      <span className="truncate text-xs font-black text-[var(--color-text-primary)]" dir="ltr">{kpi.nameEn}</span>
-                    </span>
-                    <span className={`shrink-0 text-xs ${onTrackKpi ? "font-bold text-[var(--color-text-muted)]" : "rounded-full bg-red-50 px-2 py-0.5 font-extrabold text-red-600"}`}>
-                      {onTrackKpi ? "على الهدف" : `ناقص ${formatQty(Math.max(0, Math.ceil(kpi.expectedToDate - kpi.achieved)))}`}
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between text-xs font-semibold text-[var(--color-text-secondary)]">
-                    <span>
-                      <strong className="font-mono text-[var(--color-text-primary)]">{formatQty(kpi.achieved)}</strong> / {formatQty(kpi.target)}
-                    </span>
-                    <span>المتبقي <strong className="font-mono text-[var(--color-text-primary)]">{formatQty(kpi.remaining)}</strong></span>
-                  </div>
-                  <Rope pct={pct} label={kpi.nameEn} />
-                  <div className="tys-bar h-1.5 w-full overflow-hidden rounded-full bg-orange-100">
-                    <div className="h-full rounded-full bg-gradient-to-r from-[var(--color-primary-600)] to-[var(--color-primary-500)] transition-all duration-700" style={{ width: `${pct}%` }} />
-                  </div>
-                  {kpi.series && kpi.series.length >= 2 ? (
-                    <div className="flex justify-end">
-                      <DeltaChip current={kpi.achieved} previous={kpi.previousToDate ?? null} />
-                    </div>
-                  ) : null}
-                  {!kpi.overTarget && kpi.remaining > 0 && data.work.remaining > 0 ? (
-                    <p className="text-xs font-semibold text-[var(--color-text-secondary)]">
-                      محتاج <strong className="font-mono font-black text-[var(--color-text-primary)]">{formatQty(Math.ceil(kpi.remaining / data.work.remaining))}</strong> يوميًا لباقي الشهر
-                    </p>
-                  ) : null}
-                  {kpi.overTarget ? <p className="text-xs font-bold text-[var(--color-primary-600)]">عدّيت التارجت 🎉</p> : null}
-                </div>
-              </article>
-            );
+            return <article key={kpi.kpiKey} className={`orn-kpi orn-card ${kpi.percent >= 100 ? "is-win" : ""}`}>
+              <span className="orn-watermark"><KpiIcon kpiKey={kpi.kpiKey}/></span>
+              <div className="orn-kpi-head"><div className="orn-kpi-identity"><span className="orn-kpi-icon"><KpiIcon kpiKey={kpi.kpiKey}/></span><span dir="ltr">{kpi.nameEn}</span></div><span className={`orn-status ${onTrackKpi ? "" : "is-behind"}`}>{onTrackKpi ? "On track" : `ناقص ${formatQty(Math.max(0, Math.ceil(kpi.expectedToDate-kpi.achieved)))}`}</span></div>
+              <div className="orn-kpi-body"><div className="orn-kpi-numbers" dir="ltr"><strong>{formatQty(kpi.achieved)}</strong><span>/ {formatQty(kpi.target)}</span></div><div className="orn-kpi-ring"><svg viewBox="0 0 55 55" aria-hidden="true"><circle cx="27.5" cy="27.5" r="24"/><circle className="orn-ring-fill" cx="27.5" cy="27.5" r="24" pathLength="100" strokeDasharray={`${pct} 100`}/></svg><b>{Math.round(kpi.percent)}%</b></div></div>
+              <div className="orn-track" role="progressbar" aria-label={kpi.nameEn} aria-valuenow={Math.round(kpi.percent)} aria-valuemin={0} aria-valuemax={Math.max(100,Math.round(kpi.percent))}><i style={{width:`${pct}%`}}/></div>
+              <p className="orn-kpi-foot">{kpi.percent >= 100 ? <><span>✦</span> {kpi.percent > 100 ? "عدّيت التارجت، عاش!" : "حققت التارجت، عاش!"}</> : kpi.remaining > 0 && data.work.remaining > 0 ? <>محتاج <b>{formatQty(Math.ceil(kpi.remaining/data.work.remaining))}</b> يوميًا</> : <>المتبقي {formatQty(kpi.remaining)} {kpi.unitAr}</>}</p>
+            </article>;
           })}
         </div>
       </section>
-
     </div>
   );
 }
