@@ -27,13 +27,13 @@ export function PageSkeleton({ label = "بيحمّل...", rows = 3 }: { label?: 
   return (
     <div className="tys-page flex flex-col gap-4" role="status" aria-busy="true" aria-live="polite">
       <span className="sr-only">{label}</span>
-      <section className="rounded-[24px] border bg-white p-5">
+      <section className="orn-rich-card rounded-[24px] border bg-white p-5">
         <div className="skeleton-bone h-3 w-24 rounded-full" />
         <div className="skeleton-bone mt-3 h-7 w-48 rounded-xl" />
         <div className="skeleton-bone mt-4 h-2 w-full rounded-full" />
       </section>
       {Array.from({ length: rows }).map((_, index) => (
-        <section key={index} className="rounded-[24px] border bg-white p-4">
+        <section key={index} className="orn-rich-card rounded-[24px] border bg-white p-4">
           <div className="flex items-center gap-3">
             <div className="skeleton-bone h-11 w-11 shrink-0 rounded-2xl" />
             <div className="flex-1">
@@ -59,7 +59,7 @@ export function EmptyState({
   action?: ReactNode;
 }) {
   return (
-    <div className="rounded-[28px] border border-dashed border-[#edc6a8] bg-white px-5 py-10 text-center shadow-[0_1px_2px_rgba(43,20,0,.04)]">
+    <div className="orn-rich-card rounded-[28px] border border-dashed border-[#edc6a8] bg-white px-5 py-10 text-center shadow-[0_1px_2px_rgba(43,20,0,.04)]">
       <p className="text-lg font-extrabold text-[#2d2119]">{title}</p>
       <p className="mx-auto mt-2 max-w-md text-sm leading-7 text-[#927b69]">{text}</p>
       {action ? <div className="mt-5">{action}</div> : null}
@@ -306,7 +306,7 @@ export function Modal({
   return createPortal(
     <div ref={overlayRef} className="fixed inset-0 z-[9999] flex items-center justify-center bg-[#4b3024]/45 p-3 backdrop-blur-[3px]">
       <button className="absolute inset-0" aria-label="إغلاق" tabIndex={-1} onClick={onClose} />
-      <div ref={dialogRef} tabIndex={-1} role="dialog" aria-modal="true" aria-labelledby={titleId} className="relative z-[1] max-h-[min(90dvh,760px)] w-full max-w-lg overflow-y-auto overscroll-contain rounded-[28px] border border-[#f1dfd0] bg-white p-5 text-[#38291f] shadow-[0_24px_70px_rgba(77,44,25,0.20)]">
+      <div ref={dialogRef} tabIndex={-1} role="dialog" aria-modal="true" aria-labelledby={titleId} className="orn-rich-card relative z-[1] max-h-[min(90dvh,760px)] w-full max-w-lg overflow-y-auto overscroll-contain rounded-[28px] border border-[#f1dfd0] bg-white p-5 text-[#38291f] shadow-[0_24px_70px_rgba(77,44,25,0.20)]">
         <div className="mb-4 flex items-start justify-between gap-3">
           <h2 id={titleId} className="text-lg font-extrabold text-neutral-900">{title}</h2>
           <button type="button" onClick={onClose} aria-label="إغلاق" className="min-h-10 min-w-10 rounded-full text-xl text-neutral-500">
