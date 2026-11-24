@@ -1,5 +1,8 @@
 import type { MetadataRoute } from "next";
 
+// Next 16.4.6+ بيطلب ده صراحة مع output: "export".
+export const dynamic = "force-static";
+
 export default function manifest(): MetadataRoute.Manifest {
   return {
     id: "/",

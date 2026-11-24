@@ -2,10 +2,11 @@
   "name": "track-your-sales",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
+    "dev": "node scripts/prepare-assistant-api.mjs && next dev",
+    "build": "node scripts/prepare-assistant-api.mjs && next build",
     "lint": "eslint .",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "knowledge-base": "node scripts/build-knowledge-base.mjs"
   },
   "dependencies": {
     "@fontsource-variable/cairo": "^5.3.0",

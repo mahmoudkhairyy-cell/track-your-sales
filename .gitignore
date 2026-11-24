@@ -12,3 +12,6 @@ backups/
 *.tsbuildinfo
 next-env.d.ts
 drizzle/meta/_journal.json.bak
+
+# Assistant API route gets copied here on Vercel builds only (scripts/prepare-assistant-api.mjs)
+src/app/api/
