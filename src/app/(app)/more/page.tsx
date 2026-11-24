@@ -402,7 +402,7 @@ export default function MorePage() {
       ) : null}
 
       {view === "data" ? (
-        <section className="space-y-4">
+        <section className="orn-inner-view space-y-4">
           <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[var(--color-primary-700)]">رجوع للقائمة</button>
           <div className="orn-rich-card rounded-[24px] border border-red-200 bg-white p-5 shadow-sm">
             <h2 className="text-lg font-black text-[var(--color-text-primary)]">🛡️ إدارة البيانات</h2>
@@ -419,7 +419,7 @@ export default function MorePage() {
       ) : null}
 
       {view === "report" ? (
-        <section className="space-y-4">
+        <section className="orn-inner-view space-y-4">
           <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[var(--color-primary-700)]">← رجوع للقائمة</button>
           <div id="report-print" className="orn-rich-card rounded-[24px] border border-white bg-white p-5 shadow-sm">
             <p className="text-xs font-bold text-[var(--color-text-secondary)]">تقرير الشهر · {monthLabelAr(month)}</p>
@@ -451,10 +451,10 @@ export default function MorePage() {
       ) : null}
 
       {view === "theme" ? (
-        <section className="space-y-4">
+        <section className="orn-inner-view space-y-4">
           <button type="button" onClick={() => setView("menu")} className="text-sm font-extrabold text-[var(--color-primary-700)]">← رجوع للقائمة</button>
           <div className="orn-rich-card rounded-[24px] border border-white bg-white p-5 shadow-sm">
-            <h2 className="text-lg font-black">🌌 المظهر</h2>
+            <h2 className="text-lg font-black">المظهر</h2>
             <p className="mt-1 text-sm text-[var(--color-text-secondary)]">اختار المظهر. بيتحفظ على جهازك وبيفضل بعد قفل التطبيق.</p>
             <div className="mt-4"><ThemeSwitch /></div>
           </div>
