@@ -46,7 +46,7 @@ export function LockSettings() {
   }
 
   return (
-    <section className="rounded-[24px] border border-white bg-white p-5 shadow-sm">
+    <section className="orn-rich-card rounded-[24px] border border-white bg-white p-5 shadow-sm">
       <h2 className="text-lg font-black tracking-tight">🔒 قفل التطبيق</h2>
       <p className="mt-2 text-sm leading-7 text-[var(--color-text-secondary)]">
         رقم سري من 4 أرقام بيتطلب لما تفتح التطبيق، وبعد ما تغيب عنه أكتر من دقيقتين. ده قفل خصوصية بسيط ومش تشفير للبيانات.
