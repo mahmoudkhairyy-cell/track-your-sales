@@ -1,0 +1,620 @@
+"use client";
+
+import { FormEvent, useEffect, useMemo, useState, type ReactNode } from "react";
+import {
+  EmptyState,
+  Field,
+  Modal,
+  PrimaryButton,
+  SecondaryButton,
+  inputClass,
+  useToast,
+} from "@/components/ui";
+import { ApiError, api } from "@/lib/client";
+import {
+  DOCS,
+  DSL,
+  EMAILS,
+  FREEMAX,
+  HUNTS,
+  PLAN_GROUPS,
+  PREMIER_GUIDE,
+  SR_CATEGORIES,
+  SR_ITEMS,
+  type SrItem,
+} from "@/data";
+import { BookIcon, CallIcon, CardIcon, CheckIcon, PhoneIcon, StarIcon, WalletIcon, WifiIcon } from "@/components/icons";
+
+type Article = { id: string; title: string; content: string; updatedAt: string };
+type SectionId = "hub" | "sr" | "premier" | "freemax" | "go" | "hunts" | "home" | "dsl" | "docs" | "emails" | "notes";
+
+// ===== ستايل موحد =====
+const CARD = "rounded-card bg-white p-4 shadow-sm";
+const CARD_ROW = `flex items-center justify-between gap-3 ${CARD}`;
+const CHIP_BTN = "rounded-full px-3 py-2 text-xs font-extrabold transition motion-safe:active:scale-95";
+const HUB_CARD = "group flex min-h-[136px] flex-col rounded-card border border-wiki bg-white/95 p-4 text-right shadow-soft transition duration-200 hover:border-wiki-strong hover:shadow-wiki motion-safe:hover:-translate-y-1 motion-safe:active:scale-[.985]";
+const ICON_WRAP = "flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-[#fff0e4] to-[#ffe1c9] text-brand-deep shadow-inner";
+
+const HUB: { id: SectionId; title: string; desc: string; count: string; icon: ReactNode }[] = [
+  { id: "freemax", title: "FREEmax", desc: "باقات فري ماكس والأسعار", count: `${FREEMAX.plans.length} باقة`, icon: <StarIcon className="text-brand-600" /> },
+  { id: "sr", title: "موسوعة الـ SR", desc: "أكواد Service Request", count: `${SR_ITEMS.length} كود`, icon: <BookIcon className="text-brand-600" /> },
+  { id: "go", title: "Go", desc: "باقات Go Monthly و Extra", count: "باقات شهرية", icon: <PhoneIcon className="text-brand-600" /> },
+  { id: "premier", title: "Premier", desc: "Premier و Super Max", count: "باقات بوست بايد", icon: <StarIcon className="text-brand-600" /> },
+  { id: "hunts", title: "أرقام Hunts", desc: "جهات للتواصل السريع", count: `${HUNTS.length} جهة`, icon: <CallIcon className="text-brand-600" /> },
+  { id: "home", title: "Home Wireless", desc: "باقات الإنترنت اللاسلكي", count: "7 باقات", icon: <WifiIcon className="text-brand-600" /> },
+  { id: "dsl", title: "Home Internet", desc: "باقات DSL والراوتر", count: `${DSL.plans.length} باقة`, icon: <WifiIcon className="text-brand-600" /> },
+  { id: "docs", title: "أهم المستندات", desc: "نماذج ومستندات", count: `${DOCS.length} ملف`, icon: <CardIcon className="text-brand-600" /> },
+  { id: "emails", title: "E-Mails", desc: "إيميلات للتواصل", count: `${EMAILS.length} إيميل`, icon: <WalletIcon className="text-brand-600" /> },
+  { id: "notes", title: "ملاحظاتي", desc: "مرجع شخصي بتضيفه بنفسك", count: "ملاحظاتك", icon: <CheckIcon className="text-brand-600" /> },
+];
+
+function copyText(value: string, toast: { push: (t: "success" | "error" | "info", m: string) => void }, ok: string) {
+  navigator.clipboard
+    .writeText(value)
+    .then(() => toast.push("success", ok))
+    .catch(() => toast.push("error", "النسخ معرفش يتم، جرّب تاني"));
+}
+
+function money(value: number) {
+  return value.toLocaleString("en-EG", { maximumFractionDigits: 2 });
+}
+
+function SearchBox({ value, onChange, placeholder }: { value: string; onChange: (v: string) => void; placeholder: string }) {
+  return (
+    <div className="relative">
+      <input
+        type="search"
+        aria-label={placeholder}
+        className={`${inputClass} rounded-full bg-white pr-4 pl-12`}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder={placeholder}
+      />
+      <span aria-hidden="true" className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-ink-2">⌕</span>
+    </div>
+  );
+}
+
+function Back({ onClick, title }: { onClick: () => void; title: string }) {
+  return (
+    <button type="button" onClick={onClick} className="flex min-h-11 items-center gap-2 text-sm font-extrabold text-brand-600">
+      <span aria-hidden="true">‹</span> رجوع
+      <span className="text-neutral-900">{title}</span>
+    </button>
+  );
+}
+
+function SectionTitle({ children }: { children: ReactNode }) {
+  return <h2 className="pt-2 text-lg font-black text-neutral-900">{children}</h2>;
+}
+
+function SkeletonList() {
+  return (
+    <div className="space-y-2" aria-hidden="true">
+      {[0, 1, 2].map((i) => (
+        <div key={i} className={`h-24 animate-pulse bg-neutral-100 ${CARD}`} />
+      ))}
+    </div>
+  );
+}
+
+export default function WikiPage() {
+  const toast = useToast();
+  const [section, setSection] = useState<SectionId>("hub");
+  const [query, setQuery] = useState("");
+  const [srCategory, setSrCategory] = useState("الكل");
+  const [openSr, setOpenSr] = useState<SrItem | null>(null);
+  const [articles, setArticles] = useState<Article[]>([]);
+  const [loadingNotes, setLoadingNotes] = useState(false);
+  const [noteOpen, setNoteOpen] = useState(false);
+  const [editing, setEditing] = useState<Article | null>(null);
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [pending, setPending] = useState(false);
+  const [confirmId, setConfirmId] = useState<string | null>(null);
+
+  async function loadNotes(isActive: () => boolean = () => true) {
+    if (!isActive()) return;
+    setLoadingNotes(true);
+    try {
+      const result = await api<{ articles: Article[] }>("/api/wiki");
+      if (isActive()) setArticles(result.articles);
+    } catch {
+      if (isActive()) setArticles([]);
+    } finally {
+      if (isActive()) setLoadingNotes(false);
+    }
+  }
+
+  useEffect(() => {
+    if (section !== "notes") return;
+    let active = true;
+    void loadNotes(() => active);
+    return () => {
+      active = false;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [section]);
+
+  const q = query.trim().toLowerCase();
+
+  const filteredSr = useMemo(() => {
+    return SR_ITEMS.filter((item) => {
+      const catOk = srCategory === "الكل" || item.category === srCategory;
+      if (!catOk) return false;
+      if (!q) return true;
+      return [item.id, item.title, item.titleAr, item.description, item.steps, item.category].join(" ").toLowerCase().includes(q);
+    });
+  }, [q, srCategory]);
+
+  const globalHits = useMemo(() => {
+    if (!q) return null;
+    const sr = SR_ITEMS.filter((item) => [item.id, item.title, item.titleAr, item.description, item.steps, item.category].join(" ").toLowerCase().includes(q)).slice(0, 12);
+    const hunts = HUNTS.filter((item) => `${item.name} ${item.number}`.toLowerCase().includes(q));
+    const emails = EMAILS.filter((item) => `${item.name} ${item.email} ${item.description}`.toLowerCase().includes(q));
+    const docs = DOCS.filter((item) => `${item.title} ${item.description}`.toLowerCase().includes(q));
+    const plans = PLAN_GROUPS.flatMap((g) => g.plans.filter((p) => String(p.name).toLowerCase().includes(q)).map((p) => ({ ...p, group: g.category })));
+    const fm = FREEMAX.plans.filter((p) => `${p.name} ${p.nameAr}`.toLowerCase().includes(q));
+    const dsl = DSL.plans.filter((p) => p.name.toLowerCase().includes(q));
+    return { sr, hunts, emails, docs, plans, fm, dsl };
+  }, [q]);
+
+  async function saveNote(event: FormEvent) {
+    event.preventDefault();
+    setPending(true);
+    try {
+      if (editing) {
+        await api(`/api/wiki/${editing.id}`, { method: "PATCH", body: JSON.stringify({ title, content }) });
+        toast.push("success", "✅ الملاحظة اتعدلت");
+      } else {
+        await api("/api/wiki", { method: "POST", body: JSON.stringify({ title, content }) });
+        toast.push("success", "✅ الملاحظة اتضافت");
+      }
+      setNoteOpen(false);
+      await loadNotes();
+    } catch (err) {
+      toast.push("error", err instanceof ApiError || err instanceof Error ? err.message : "فشل الحفظ");
+    } finally {
+      setPending(false);
+    }
+  }
+
+  async function deleteNote() {
+    if (!confirmId) return;
+    setPending(true);
+    try {
+      await api(`/api/wiki/${confirmId}`, { method: "DELETE" });
+      toast.push("success", "🗑️ الملاحظة اتشالت");
+      setConfirmId(null);
+      await loadNotes();
+    } catch (err) {
+      toast.push("error", err instanceof Error ? err.message : "فشل الحذف");
+    } finally {
+      setPending(false);
+    }
+  }
+
+  const premierPlans = PLAN_GROUPS.filter((g) => g.category === "Orange Premier" || g.category === "Super Max");
+  const goPlans = PLAN_GROUPS.filter((g) => g.category.startsWith("Go"));
+  const homePlans = PLAN_GROUPS.find((g) => g.category === "Home Wireless");
+
+  return (
+    <div className="space-y-5">
+      {section === "hub" ? (
+        <>
+          <section className="relative isolate overflow-hidden rounded-hero border border-wiki-deep bg-gradient-to-br from-[#fff3e8] via-white to-[#fff8f2] px-5 py-6 text-center shadow-wiki-deep before:absolute before:-left-10 before:-top-14 before:-z-10 before:h-40 before:w-40 before:rounded-full before:bg-brand-600/10">
+            <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-card bg-gradient-to-br from-brand-400 to-brand-deep text-2xl text-white shadow-wiki-strong">🍊</span>
+            <h1 className="mt-3 text-2xl font-black text-neutral-900">موسوعة أورانج</h1>
+            <p className="mt-2 text-sm leading-6 text-ink-2">كل اللي تحتاجه في الشغل… في مكان واحد</p>
+            <p className="mt-1 text-xs text-ink-2">أكواد SR · الباقات · الأرقام · الإيميلات</p>
+          </section>
+          <SearchBox value={query} onChange={setQuery} placeholder="ابحث بالكود أو الاسم أو الرقم..." />
+
+          {globalHits ? (
+            <div className="space-y-3">
+              <SectionTitle>نتائج البحث</SectionTitle>
+              {globalHits.sr.map((item) => (
+                <button key={item.id + item.title} type="button" onClick={() => setOpenSr(item)} className={`w-full text-right ${CARD}`}>
+                  <p className="text-xs font-extrabold text-brand-600">{item.id}</p>
+                  <p className="font-extrabold">{item.titleAr || item.title}</p>
+                </button>
+              ))}
+              {globalHits.hunts.map((item) => (
+                <a key={item.number + item.name} href={`tel:${item.number}`} className={`block ${CARD}`}>
+                  <p className="font-extrabold">{item.name}</p>
+                  <p className="text-brand-600">{item.number}</p>
+                </a>
+              ))}
+              {globalHits.emails.map((item) => (
+                <button key={item.email} type="button" onClick={() => copyText(item.email, toast, "📋 الإيميل اتنسخ")} className="w-full rounded-card bg-white p-4 text-right shadow-sm">
+                  <p className="font-extrabold">{item.name}</p>
+                  <p className="text-sm text-brand-600">{item.email}</p>
+                </button>
+              ))}
+              {globalHits.fm.map((item) => (
+                <article key={item.name} className={CARD}>
+                  <p className="font-extrabold">{item.nameAr}</p>
+                  <p className="text-sm text-ink-2">{item.units} وحدة · تجديد {money(item.renewalPrice)} ج</p>
+                </article>
+              ))}
+              {globalHits.plans.map((item) => (
+                <article key={item.group + item.name} className={CARD}>
+                  <p className="text-xs text-brand-600">{item.group}</p>
+                  <p className="font-extrabold">{item.name}</p>
+                  <p className="text-sm text-ink-2">{item.fees || item.data}</p>
+                </article>
+              ))}
+              {globalHits.dsl.map((item) => (
+                <article key={item.name} className="rounded-card bg-white p-4 shadow-sm">
+                  <p className="font-extrabold">{item.name}</p>
+                  <p className="text-sm text-ink-2">{item.speed} Mbps · {item.quota} GB · {money(item.price)} ج</p>
+                </article>
+              ))}
+              {globalHits.docs.map((item) => (
+                <a key={item.title} href={item.url} target="_blank" rel="noreferrer" className="block rounded-card bg-white p-4 shadow-sm">
+                  <p className="font-extrabold">{item.title}</p>
+                  <p className="text-sm text-ink-2">{item.description}</p>
+                </a>
+              ))}
+              {!globalHits.sr.length && !globalHits.hunts.length && !globalHits.emails.length && !globalHits.fm.length && !globalHits.plans.length && !globalHits.dsl.length && !globalHits.docs.length ? (
+                <EmptyState title="مفيش نتيجة 🤷" text="جرّب كلمة تانية: كود SR، اسم باقة، رقم، أو إيميل." />
+              ) : null}
+            </div>
+          ) : (
+            <>
+              <div className="grid grid-cols-2 gap-3">
+                {HUB.map((card) => (
+                  <button
+                    key={card.id}
+                    type="button"
+                    aria-label={`${card.title}: ${card.desc} (${card.count})`}
+                    onClick={() => { setSection(card.id); setQuery(""); }}
+                    className={HUB_CARD}
+                  >
+                    <span className={ICON_WRAP}>{card.icon}</span>
+                    <p className="mt-3 font-black">{card.title}</p>
+                    <p className="mt-1 text-xs leading-5 text-ink-2">{card.desc}</p>
+                    <p className="mt-auto pt-2 text-[11px] font-bold text-brand-600">{card.count}</p>
+                  </button>
+                ))}
+              </div>
+              <p className="text-center text-[11px] leading-6 text-ink-2">مرجع شغل داخلي للموظف. مش منتج رسمي أو معتمد من Orange.</p>
+            </>
+          )}
+        </>
+      ) : null}
+
+      {section === "sr" ? (
+        <div>
+          <Back onClick={() => setSection("hub")} title="موسوعة الـ SR" />
+          <SearchBox value={query} onChange={setQuery} placeholder="ابحث بكود SR أو اسم الإجراء..." />
+          <div className="mt-3 flex gap-2 overflow-x-auto pb-2">
+            {["الكل", ...SR_CATEGORIES].map((cat) => (
+              <button
+                key={cat}
+                type="button"
+                aria-pressed={srCategory === cat}
+                onClick={() => setSrCategory(cat)}
+                className={`${CHIP_BTN} shrink-0 ${srCategory === cat ? "bg-brand-600 !text-white" : "bg-white text-ink-2 shadow-sm"}`}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+          <p className="mt-2 text-xs text-ink-2">{filteredSr.length} نتيجة</p>
+          <div className="mt-3 space-y-2">
+            {filteredSr.map((item) => (
+              <button key={`${item.id}-${item.title}`} type="button" onClick={() => setOpenSr(item)} className="w-full rounded-card bg-white p-4 text-right shadow-sm">
+                <p className="text-xs font-extrabold text-brand-600">{item.id}</p>
+                <p className="font-extrabold">{item.titleAr || item.title}</p>
+                <p className="mt-1 line-clamp-2 text-xs leading-6 text-ink-2">{item.description}</p>
+              </button>
+            ))}
+          </div>
+        </div>
+      ) : null}
+
+      {section === "premier" ? (
+        <div className="space-y-3">
+          <Back onClick={() => setSection("hub")} title="Premier" />
+          {PREMIER_GUIDE.steps.map((step) => (
+            <article key={step.title} className="rounded-card bg-white p-4 shadow-sm">
+              <p className="font-extrabold text-brand-600">{step.title}</p>
+              <p className="mt-2 text-sm leading-7 text-neutral-600">{step.text}</p>
+            </article>
+          ))}
+          <article className="rounded-card bg-brand-50 p-4">
+            <p className="font-extrabold">مستندات القدرة على الدفع (Second ID)</p>
+            <ul className="mt-2 grid gap-1 text-sm leading-7 text-neutral-700">
+              {PREMIER_GUIDE.secondIds.map((item) => (
+                <li key={item}>• {item}</li>
+              ))}
+            </ul>
+          </article>
+          {premierPlans.map((group) => (
+            <div key={group.category} className="space-y-2">
+              <h2 className="pt-2 text-lg font-black">{group.category}</h2>
+              {group.plans.map((plan) => (
+                <article key={plan.name} className="rounded-card bg-white p-4 shadow-sm">
+                  <div className="flex items-start justify-between gap-3">
+                    <p className="font-black">{plan.name}</p>
+                    <p className="font-extrabold text-brand-600">{String(plan.fees ?? "")}</p>
+                  </div>
+                  <div className="mt-3 grid grid-cols-2 gap-2 text-xs leading-6 text-neutral-600">
+                    {plan.minutes ? <p>دقائق: {String(plan.minutes)}</p> : null}
+                    {plan.data ? <p>إنترنت: {String(plan.data)}</p> : null}
+                    {plan.units ? <p>وحدات: {String(plan.units)}</p> : null}
+                    {plan.familyLines ? <p>خطوط عائلية: {String(plan.familyLines)}</p> : null}
+                    {plan.intlMinutes ? <p>دولي: {String(plan.intlMinutes)}</p> : null}
+                    {plan.installment ? <p>تقسيط: {String(plan.installment)}</p> : null}
+                    {plan.adslDiscount ? <p>خصم DSL: {String(plan.adslDiscount)}</p> : null}
+                    {plan.hwDiscount ? <p>خصم HW: {String(plan.hwDiscount)}</p> : null}
+                  </div>
+                  {Array.isArray(plan.subscriptions) ? <p className="mt-2 text-xs text-ink-2">{plan.subscriptions.join(" · ")}</p> : null}
+                </article>
+              ))}
+            </div>
+          ))}
+        </div>
+      ) : null}
+
+      {section === "freemax" ? (
+        <div className="space-y-3">
+          <Back onClick={() => setSection("hub")} title="FREEmax" />
+          <p className="text-sm leading-7 text-ink-2">{FREEMAX.tagline}</p>
+          <div className="grid gap-2">
+            {FREEMAX.highlights.map((item) => (
+              <p key={item} className="rounded-2xl bg-brand-50 px-3 py-2 text-sm font-bold text-brand-ink">
+                {item}
+              </p>
+            ))}
+          </div>
+          {FREEMAX.plans.map((plan) => (
+            <article key={plan.name} className="rounded-card bg-white p-4 shadow-sm">
+              <div className="flex items-start justify-between">
+                <div>
+                  <p className="font-black">{plan.nameAr}</p>
+                  <p className="text-xs text-ink-2">{plan.units} وحدة</p>
+                </div>
+                <p className="text-lg font-black text-brand-600">{money(plan.renewalPrice)} ج</p>
+              </div>
+              <div className="mt-3 grid grid-cols-2 gap-2 text-xs leading-6 text-neutral-600">
+                <p>سعر العميل: {money(plan.customerPrice)}</p>
+                <p>تفعيل بضريبة: {money(plan.activationWithTax)}</p>
+                <p>تفعيل من غير ضريبة: {money(plan.activationNoTax)}</p>
+                <p>Facebook / WhatsApp: {plan.facebook}</p>
+              </div>
+              {plan.perks.length ? <p className="mt-2 text-xs font-bold text-brand-600">{plan.perks.join(" · ")}</p> : null}
+            </article>
+          ))}
+          <article className="rounded-card bg-white p-4 shadow-sm">
+            <p className="font-black">{FREEMAX.weekly.nameAr}</p>
+            <p className="text-sm text-ink-2">{FREEMAX.weekly.units} وحدة · تجديد {FREEMAX.weekly.renewalPrice} ج</p>
+            <p className="mt-2 text-xs leading-6 text-ink-2">{FREEMAX.weekly.channels.join(" · ")}</p>
+          </article>
+          <article className="rounded-card bg-brand-50 p-4 text-sm leading-7">
+            الرصيد بعد الشحن = قيمة الشحن × 0.70 (خصم 30% ضريبة ومصاريف). سعر الشريحة {FREEMAX.simPrice} ج.
+          </article>
+        </div>
+      ) : null}
+
+      {section === "go" ? (
+        <div className="space-y-3">
+          <Back onClick={() => setSection("hub")} title="Go" />
+          {goPlans.map((group) => (
+            <div key={group.category}>
+              <h2 className="mb-2 text-lg font-black">{group.category}</h2>
+              {group.plans.map((plan) => (
+                <article key={plan.name} className={CARD_ROW}>
+                  <div>
+                    <p className="font-black">{plan.name}</p>
+                    <p className="text-xs text-ink-2">{String(plan.data ?? "")}</p>
+                  </div>
+                  <p className="font-extrabold text-brand-600">{String(plan.fees ?? "")}</p>
+                </article>
+              ))}
+            </div>
+          ))}
+        </div>
+      ) : null}
+
+      {section === "home" ? (
+        <div className="space-y-3">
+          <Back onClick={() => setSection("hub")} title="Home Wireless" />
+          {homePlans?.plans.map((plan) => (
+            <article key={plan.name} className={CARD_ROW}>
+              <div>
+                <p className="font-black">{plan.name}</p>
+                <p className="text-xs text-ink-2">{String(plan.data ?? "")}</p>
+              </div>
+              <p className="font-extrabold text-brand-600">{String(plan.fees ?? "")}</p>
+            </article>
+          ))}
+        </div>
+      ) : null}
+
+      {section === "dsl" ? (
+        <div className="space-y-3">
+          <Back onClick={() => setSection("hub")} title="Home Internet DSL" />
+          {DSL.plans.map((plan) => (
+            <article key={plan.name} className="rounded-card bg-white p-4 shadow-sm">
+              <div className="flex items-start justify-between">
+                <p className="font-black">{plan.name}</p>
+                <p className="font-extrabold text-brand-600">{money(plan.price)} ج</p>
+              </div>
+              <p className="mt-1 text-sm text-ink-2">
+                {plan.speed} Mbps · {plan.quota} GB · كان: {plan.oldPlan}
+              </p>
+            </article>
+          ))}
+          <h2 className="pt-2 text-lg font-black">إضافات الكوتا</h2>
+          {DSL.addons.map((item) => (
+            <article key={item.quota} className="flex items-center justify-between rounded-card bg-white p-4 shadow-sm">
+              <p className="font-bold">{item.quota}</p>
+              <p className="font-extrabold text-brand-600">{money(item.price)} ج</p>
+            </article>
+          ))}
+          <h2 className="pt-2 text-lg font-black">الراوتر</h2>
+          {DSL.routers.map((item) => (
+            <article key={item.name} className="rounded-card bg-white p-4 shadow-sm">
+              <p className="text-xs font-extrabold text-brand-600">{item.tag}</p>
+              <p className="font-black">{item.name}</p>
+              <p className="mt-1 text-sm text-ink-2">{item.desc}</p>
+              <p className="mt-2 text-sm">كاش {money(item.cash)} ج · عرض {money(item.promoCash)} ج · تقسيط {item.installment} ج × {item.months} شهر</p>
+            </article>
+          ))}
+        </div>
+      ) : null}
+
+      {section === "hunts" ? (
+        <div className="space-y-3">
+          <Back onClick={() => setSection("hub")} title="أرقام Hunts" />
+          <SearchBox value={query} onChange={setQuery} placeholder="ابحث باسم الفريق أو الرقم..." />
+          {["Orange", "ADSL"].map((type) => {
+            const rows = HUNTS.filter((item) => item.type === type && (!q || `${item.name} ${item.number}`.toLowerCase().includes(q)));
+            if (!rows.length) return null;
+            return (
+              <div key={type}>
+                <h2 className="mb-2 text-lg font-black">{type === "ADSL" ? "ADSL / Fixed" : "موبايل"}</h2>
+                {rows.map((item) => (
+                  <article key={item.name + item.number} className="mb-2 flex items-center justify-between rounded-card bg-white p-4 shadow-sm">
+                    <div>
+                      <p className="font-black">{item.name}</p>
+                      <p className="text-sm text-brand-600">{item.number}</p>
+                    </div>
+                    <div className="flex gap-2">
+                      <a href={`tel:${item.number}`} className={`${CHIP_BTN} bg-brand-50 text-brand-600`}>
+                        اتصال
+                      </a>
+                      <button type="button" className={`${CHIP_BTN} bg-neutral-100`} onClick={() => copyText(item.number, toast, "📋 الرقم اتنسخ")}>
+                        نسخ
+                      </button>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            );
+          })}
+        </div>
+      ) : null}
+
+      {section === "emails" ? (
+        <div className="space-y-2">
+          <Back onClick={() => setSection("hub")} title="E-Mails" />
+          <SearchBox value={query} onChange={setQuery} placeholder="ابحث باسم الفريق أو الإيميل..." />
+          {EMAILS.filter((item) => !q || `${item.name} ${item.email} ${item.description}`.toLowerCase().includes(q)).map((item) => (
+            <article key={item.email} className="rounded-card bg-white p-4 shadow-sm">
+              <p className="font-black">{item.name}</p>
+              <p className="text-xs text-ink-2">{item.description}</p>
+              <p className="mt-1 break-all text-sm text-brand-600">{item.email}</p>
+              <div className="mt-3 flex gap-2">
+                <a href={`mailto:${item.email}`} className="rounded-full bg-brand-50 px-3 py-2 text-xs font-extrabold text-brand-600">
+                  إيميل
+                </a>
+                <button type="button" className="rounded-full bg-neutral-100 px-3 py-2 text-xs font-extrabold" onClick={() => copyText(item.email, toast, "📋 الإيميل اتنسخ")}>
+                  نسخ
+                </button>
+              </div>
+            </article>
+          ))}
+        </div>
+      ) : null}
+
+      {section === "docs" ? (
+        <div className="space-y-2">
+          <Back onClick={() => setSection("hub")} title="أهم المستندات" />
+          {DOCS.map((item) => (
+            <a key={item.title} href={item.url} target="_blank" rel="noreferrer" className="block rounded-card bg-white p-4 shadow-sm">
+              <p className="font-black">{item.title}</p>
+              <p className="mt-1 text-sm leading-7 text-ink-2">{item.description}</p>
+              <p className="mt-2 text-xs font-extrabold text-brand-600">فتح الملف</p>
+            </a>
+          ))}
+        </div>
+      ) : null}
+
+      {section === "notes" ? (
+        <div className="space-y-3">
+          <Back onClick={() => setSection("hub")} title="ملاحظاتي" />
+          <p className="text-sm leading-7 text-ink-2">مرجع شخصي بتضيفه بنفسك. مش هيخترع سياسات رسمية عن الشركة.</p>
+          <PrimaryButton
+            type="button"
+            onClick={() => {
+              setEditing(null);
+              setTitle("");
+              setContent("");
+              setNoteOpen(true);
+            }}
+          >
+            إضافة ملاحظة
+          </PrimaryButton>
+          {loadingNotes ? <SkeletonList /> : null}
+          {!loadingNotes && articles.length === 0 ? <EmptyState title="مفيش ملاحظات" text="ضيف مرجع أو ملاحظة شغل من عندك." /> : null}
+          {articles.map((article) => (
+            <article key={article.id} className="rounded-card bg-white p-4 shadow-sm">
+              <h2 className="font-black">{article.title}</h2>
+              <p className="mt-2 whitespace-pre-wrap text-sm leading-7 text-neutral-600">{article.content}</p>
+              <div className="mt-3 flex gap-2">
+                <SecondaryButton
+                  type="button"
+                  onClick={() => {
+                    setEditing(article);
+                    setTitle(article.title);
+                    setContent(article.content);
+                    setNoteOpen(true);
+                  }}
+                >
+                  تعديل
+                </SecondaryButton>
+                <button type="button" className="min-h-12 rounded-full px-4 font-bold text-risk" onClick={() => setConfirmId(article.id)}>
+                  حذف
+                </button>
+              </div>
+            </article>
+          ))}
+        </div>
+      ) : null}
+
+      <Modal open={Boolean(openSr)} title={openSr?.titleAr || openSr?.title || "تفاصيل SR"} onClose={() => setOpenSr(null)}>
+        {openSr ? (
+          <div className="space-y-3 text-sm leading-7">
+            <p className="font-extrabold text-brand-600">{openSr.id}</p>
+            <p className="text-ink-2">{openSr.category}</p>
+            <p>{openSr.description}</p>
+            <p className="whitespace-pre-wrap text-neutral-700">{openSr.steps}</p>
+            <SecondaryButton type="button" className="w-full" onClick={() => copyText(`${openSr.id} — ${openSr.titleAr}\n${openSr.steps}`, toast, "📋 تفاصيل الـ SR اتنسخت")}>
+              نسخ التفاصيل
+            </SecondaryButton>
+          </div>
+        ) : null}
+      </Modal>
+
+      <Modal open={noteOpen} title={editing ? "تعديل ملاحظة" : "ملاحظة جديدة"} onClose={() => setNoteOpen(false)}>
+        <form className="space-y-4" onSubmit={saveNote}>
+          <Field label="العنوان">
+            <input className={inputClass} value={title} onChange={(e) => setTitle(e.target.value)} required />
+          </Field>
+          <Field label="المحتوى">
+            <textarea className={`${inputClass} min-h-40 py-3`} value={content} onChange={(e) => setContent(e.target.value)} required />
+          </Field>
+          <PrimaryButton type="submit" disabled={pending}>
+            {pending ? "بيحفظ..." : "حفظ"}
+          </PrimaryButton>
+        </form>
+      </Modal>
+
+      <Modal open={Boolean(confirmId)} title="حذف الملاحظة؟" onClose={() => setConfirmId(null)}>
+        <p className="text-sm leading-7 text-neutral-600">الحذف نهائي بعد نجاح السيرفر فقط.</p>
+        <div className="mt-4 flex gap-2">
+          <SecondaryButton type="button" onClick={() => setConfirmId(null)}>
+            إلغاء
+          </SecondaryButton>
+          <button type="button" disabled={pending} onClick={() => void deleteNote()} className="min-h-12 rounded-full bg-red-600 px-4 font-bold text-white">
+            تأكيد الحذف
+          </button>
+        </div>
+      </Modal>
+    </div>
+  );
+}
+
