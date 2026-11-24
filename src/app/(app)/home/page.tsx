@@ -153,7 +153,12 @@ export default function HomePage() {
       </section>
       <section className="orn-monthly orn-card" aria-label="الأداء الشهري">
         <div className="orn-month-ring" role="img" aria-label={`إجمالي تحقيق التارجت ${formatPercent(data.overall)}%`}>
-          <svg viewBox="0 0 181 181" aria-hidden="true"><circle className="orn-ring-track" cx="90.5" cy="90.5" r="85"/><circle className="orn-ring-fill" cx="90.5" cy="90.5" r="85" pathLength="100" strokeDasharray={`${Math.min(100,Math.max(0,data.overall))} 100`}/></svg>
+          <svg viewBox="0 0 200 200" aria-hidden="true">
+            <path className="orn-diamond-track" d="M100 4L196 100L100 196L4 100Z" />
+            <path className="orn-diamond-fill" d="M100 4L196 100L100 196L4 100Z" pathLength="100" strokeDasharray={`${Math.min(100, Math.max(0, data.overall))} 100`} />
+            <path className="orn-diamond-inner" d="M100 20L180 100L100 180L20 100Z" />
+            <path className="orn-diamond-corners" d="M74 4H50L4 50V74 M126 196H150L196 150V126" />
+          </svg>
           <div className="orn-month-center"><span>إجمالي تحقيق التارجت</span><strong dir="ltr">{formatPercent(data.overall)}<small>%</small></strong></div>
         </div>
         <div className="orn-month-side"><span className={`orn-status ${onTrack === false ? "is-behind" : ""}`}>{onTrack === null ? "مستني بيانات" : onTrack ? "On track" : "Behind"}</span><div className="orn-commission"><p>الكوميشن المحقق</p><strong dir="ltr">{formatMoney(data.estimatedCommission)}</strong><small>جنيه</small></div></div>
