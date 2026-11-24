@@ -9,7 +9,7 @@ type ErrorStateProps = {
 export function ErrorState({ title, description, onRetry }: ErrorStateProps) {
   return (
     <section
-      className="mx-auto flex min-h-[48vh] w-full max-w-lg flex-col items-center justify-center rounded-3xl border border-red-100 bg-white px-6 py-10 text-center shadow-sm dark:border-red-950 dark:bg-neutral-900"
+      className="orn-rich-card mx-auto flex min-h-[48vh] w-full max-w-lg flex-col items-center justify-center rounded-3xl border border-red-100 bg-white px-6 py-10 text-center shadow-sm dark:border-red-950 dark:bg-neutral-900"
       dir="rtl"
       role="alert"
     >
