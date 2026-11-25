@@ -4,6 +4,7 @@ import { FormEvent, useEffect, useRef, useState } from "react";
 import { Banner, EmptyState, PrimaryButton, inputClass } from "@/components/ui";
 import { AssistantError, askAssistant } from "@/lib/assistant";
 import { WIZARD_FLOWS, WizardFlowId, WizardState, advanceWizard, detectWizardIntent, startWizard } from "@/lib/wizard";
+import { AssistantAnswerText } from "@/components/assistant-answer";
 
 type ChatMessage = {
   id: string;
@@ -177,10 +178,10 @@ export default function AssistantPage() {
                   className={
                     message.role === "user"
                       ? "max-w-[85%] whitespace-pre-wrap rounded-3xl rounded-tl-md bg-gradient-to-br from-[#ff9a45] to-[#f07818] px-4 py-3 text-sm font-bold text-white shadow-section-sm"
-                      : "max-w-[85%] whitespace-pre-wrap rounded-3xl rounded-tr-md border border-section-3 bg-white px-4 py-3 text-sm leading-7 text-neutral-800 shadow-section-xs"
+                      : "max-w-[85%] rounded-3xl rounded-tr-md border border-section-3 bg-white px-4 py-3 text-sm leading-7 text-neutral-800 shadow-section-xs"
                   }
                 >
-                  {message.text}
+                  {message.role === "user" ? message.text : <AssistantAnswerText text={message.text} />}
                 </div>
               </li>
             ))}
