@@ -3,7 +3,7 @@
 import { FormEvent, useEffect, useRef, useState } from "react";
 import { Banner, EmptyState, PrimaryButton, inputClass } from "@/components/ui";
 import { AssistantError, askAssistant } from "@/lib/assistant";
-import { WIZARD_FLOWS, WizardFlowId, WizardState, advanceWizard, startWizard } from "@/lib/wizard";
+import { WIZARD_FLOWS, WizardFlowId, WizardState, advanceWizard, detectWizardIntent, startWizard } from "@/lib/wizard";
 
 type ChatMessage = {
   id: string;
@@ -75,6 +75,13 @@ export default function AssistantPage() {
     setMessages((current) => [...current, { id: nextMessageId(), role: "user", text: trimmed }]);
     if (wizard) {
       answerWizard(trimmed);
+      return;
+    }
+    // كتابة اسم الحالة في الشات (زي «إلغاء فاتورة» أو «تحويل من بوست بيد لبري بيد»)
+    // بتشغّل الحاسبة المناسبة على طول بدل ما تروح سؤال عادي للمساعد.
+    const intent = detectWizardIntent(trimmed);
+    if (intent) {
+      beginWizard(intent);
       return;
     }
     setPending(true);

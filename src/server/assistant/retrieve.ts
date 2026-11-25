@@ -79,6 +79,42 @@ const SYNONYMS: Record<string, string[]> = {
   "موظف": ["agent", "employee"],
   "عميل": ["customer"],
   "نظام": ["system", "tariff", "plan"],
+  // ألفاظ مستخدمة في الملفات الرسمية وليها صيغ عربية شائعة:
+  "فولت": ["fault"],
+  "بوستبيد": ["postpaid"],
+  "بوس بيد": ["postpaid"],
+  "بوست بايد": ["postpaid"],
+  "بريبيد": ["prepaid"],
+  "بري بايد": ["prepaid"],
+  "ميجريشن": ["migration"],
+  "ترمينيشن": ["termination"],
+  "سداد": ["payment", "settlement", "pay"],
+  "تسديد": ["payment", "settlement", "pay"],
+  "تعويض": ["compensation", "compensate"],
+};
+
+// فرانكو (عربي بحروف لاتينية) -> مرادفات عربي/إنجليزي. مطابقة كلمة كاملة بس.
+const FRANCO: Record<string, string[]> = {
+  elgha: ["الغاء", "cancel", "termination"],
+  ilgha: ["الغاء", "cancel", "termination"],
+  elghaa: ["الغاء", "cancel", "termination"],
+  fatora: ["فاتوره", "bill", "invoice"],
+  fatorah: ["فاتوره", "bill", "invoice"],
+  fatura: ["فاتوره", "bill", "invoice"],
+  fawater: ["فواتير", "bill", "invoice"],
+  ta7wel: ["تحويل", "migration", "transfer"],
+  tahwel: ["تحويل", "migration", "transfer"],
+  bostbed: ["بوستبيد", "postpaid"],
+  postbed: ["بوستبيد", "postpaid"],
+  brebed: ["بريبيد", "prepaid"],
+  bribid: ["بريبيد", "prepaid"],
+  blok: ["بلوك", "block", "suspend"],
+  mahfaza: ["محفظه", "wallet", "cash"],
+  mahfza: ["محفظه", "wallet", "cash"],
+  fasakh: ["فسخ", "cancel", "termination"],
+  rasid: ["رصيد", "balance", "credit"],
+  khedma: ["خدمه", "service"],
+  baka: ["باقه", "bundle", "tariff", "plan"],
 };
 
 const STOPWORDS = new Set([
@@ -120,6 +156,8 @@ function queryTerms(question: string): { terms: string[]; bigrams: string[] } {
         for (const e of english) terms.add(e);
       }
     }
+    const franco = FRANCO[token];
+    if (franco) for (const t of franco) terms.add(t);
   }
   const bigrams: string[] = [];
   for (let i = 0; i + 1 < tokens.length; i++) bigrams.push(tokens[i] + " " + tokens[i + 1]);
