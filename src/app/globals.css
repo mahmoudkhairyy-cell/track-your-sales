@@ -5650,3 +5650,7 @@ html[data-theme='dark'] body #tys-bold-identity .tys-page button[type='submit']{
 html[data-theme='dark'] body #tys-bold-identity .tys-page button[type='submit'] *{color:#25190d!important}
 
 html[data-theme] body main.tys-page{background:var(--bold-bg)!important}
+
+/* لوحة مدير المنطقة: وزن خط واحد للعربي والإنجليزي (Cairo محمّل 500/700/900، فالـ 900 كان تقيل على الأسماء العربي). */
+.tx-manager .font-black,
+.tx-manager .font-extrabold { font-weight: 700; }
