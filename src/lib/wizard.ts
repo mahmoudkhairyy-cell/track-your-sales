@@ -298,6 +298,9 @@ export function detectWizardIntent(question: string): WizardFlowId | null {
   if ((cancelish && invoiceish) || (postpaidish && prepaidish)) return "invoice";
 
   const dslish = has("adsl", "dsl", "راوتر", "ارضي", "نت البيت");
-  if (cancelish && dslish) return "dsl";
+  // سؤال «كود/SR/ازاي» عن إلغاء الـDSL = إجابة الأكواد الأول من المساعد، والحاسبة بتتعرض تحت كزر.
+  const asksCode = has("كود", "code", "kod", "sr ", "sr") && !saysCalculate && !has("رسوم", "غرامه", "هيدفع", "مبلغ");
+  const asksHow = has("ازاي", "ازى", "كيف", "how", "ezay", "اعمل", "عايز اعرف", "اعرف");
+  if (cancelish && dslish) return asksCode || (asksHow && !saysCalculate) ? null : "dsl";
   return null;
 }
