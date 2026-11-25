@@ -94,6 +94,20 @@ const SYNONYMS: Record<string, string[]> = {
   "تحديث": ["update", "refresh", "modify"],
   "اكسايت": ["excite"],
   "إكسايت": ["excite"],
+  "انتظار": ["waiting", "wait", "hold"],
+  "خدمه": ["service", "vas"],
+  "كول": ["call"],
+  "تون": ["tone"],
+  "اعتراض": ["dispute"],
+  "مسافر": ["roaming", "travel", "abroad"],
+  "سفر": ["roaming", "travel"],
+  "دوره": ["cycle"],
+  "مشترك": ["subscription", "status"],
+  "اشتراك": ["subscription", "subscribe"],
+  "استخدام": ["usage"],
+  "مفوتر": ["billed", "unbilled"],
+  "افعل": ["activate", "add"],
+  "الغي": ["delete", "cancel", "deactivate"],
 };
 
 // فرانكو (عربي بحروف لاتينية) -> مرادفات عربي/إنجليزي. مطابقة كلمة كاملة بس.
@@ -132,6 +146,16 @@ const FRANCO: Record<string, string[]> = {
   kyc: ["ekyc", "بيانات", "تحديث", "data", "gathering", "cleansed"],
   ekyc: ["kyc", "بيانات", "تحديث", "data", "gathering", "cleansed"],
   excite: ["اكسايت"],
+  entezar: ["انتظار", "waiting", "hold"],
+  intezar: ["انتظار", "waiting", "hold"],
+  entzar: ["انتظار", "waiting", "hold"],
+  mokalmat: ["مكالمات", "call"],
+  mkalmat: ["مكالمات", "call"],
+  waiting: ["انتظار"],
+  af3al: ["افعل", "activate", "add"],
+  alghi: ["الغي", "delete", "cancel", "deactivate"],
+  msfr: ["مسافر", "roaming"],
+  mosafer: ["مسافر", "roaming"],
 };
 
 const STOPWORDS = new Set([
