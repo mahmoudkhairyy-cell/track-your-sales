@@ -1,0 +1,47 @@
+/* Manager page, visual polish (CSS only): bottom nav on mobile, bigger type and buttons, steady status colors, clearer top cards. */
+.tx-manager { --st-ok:#0f8a5f; --st-ok-bg:#dff5ea; --st-warn:#b45f06; --st-warn-bg:#ffe9cc; --st-bad:#c8281f; --st-bad-bg:#fde0de; }
+.tx-manager [class*='bg-emerald-'] { background-color: var(--st-ok-bg) !important; color: var(--st-ok) !important; }
+.tx-manager [class*='bg-amber-'] { background-color: var(--st-warn-bg) !important; color: var(--st-warn) !important; }
+.tx-manager [class*='bg-red-'] { background-color: var(--st-bad-bg) !important; color: var(--st-bad) !important; }
+.tx-manager [class*='text-emerald-'] { color: var(--st-ok) !important; }
+.tx-manager [class*='text-amber-'] { color: var(--st-warn) !important; }
+.tx-manager [class*='text-red-'] { color: var(--st-bad) !important; }
+.tx-manager .rounded-full[class*='text-\[11px\]'] { font-size: 12px; padding: 4px 10px; }
+.tx-manager button, .tx-manager [role='button'] { min-height: 44px; }
+.tx-manager header { box-shadow: 0 10px 30px rgba(104,53,19,.08); }
+.tx-manager .text-2xl.font-black, .tx-manager .text-3xl.font-black { letter-spacing: -.01em; }
+.tx-manager .tabular-nums { font-variant-numeric: tabular-nums; }
+.tx-manager table th { font-size: 12px; letter-spacing: .03em; text-transform: uppercase; background: #fff4ea; }
+.tx-manager table td { padding-top: 12px; padding-bottom: 12px; }
+.tx-manager table tbody tr:nth-child(even) td { background: rgba(255,244,234,.45); }
+.tx-manager article { box-shadow: 0 12px 30px rgba(126,65,24,.09); }
+
+@media (min-width: 1024px) {
+  .tx-manager aside nav button { font-size: 15px; padding-top: 14px; padding-bottom: 14px; }
+}
+
+@media (max-width: 1023px) {
+  .tx-manager { font-size: 16px; padding-bottom: 96px; }
+  .tx-manager h2 { font-size: 1.6rem; }
+  .tx-manager .text-sm { font-size: 15.5px; }
+  .tx-manager button { font-size: 15px; }
+  /* Closed menu = bottom navigation bar; open menu keeps the original drawer. */
+  .tx-manager aside.translate-x-full {
+    inset: auto 0 0 0 !important; width: 100% !important; height: auto !important; translate: none !important;
+    flex-direction: row !important; padding: 6px 8px calc(6px + env(safe-area-inset-bottom)) !important;
+    border-left: 0 !important; border-top: 1px solid #f1e3d5 !important; border-radius: 22px 22px 0 0;
+    background: rgba(255,255,255,.96) !important; box-shadow: 0 -8px 28px rgba(93,54,26,.14) !important; z-index: 45 !important;
+  }
+  .tx-manager aside.translate-x-full > div { display: none !important; }
+  .tx-manager aside.translate-x-full > p { display: none !important; }
+  .tx-manager aside.translate-x-full nav { display: flex !important; width: 100%; gap: 2px; }
+  .tx-manager aside.translate-x-full nav > * {
+    flex: 1 1 0; min-width: 0; flex-direction: column !important; gap: 2px !important; padding: 6px 2px !important;
+    font-size: 11px !important; line-height: 1.15; text-align: center !important; justify-content: center; min-height: 56px;
+  }
+  .tx-manager aside.translate-x-full nav > * > span:first-child { width: 34px !important; height: 30px !important; border-radius: 12px !important; }
+  .tx-manager aside.translate-x-full nav *::before, .tx-manager aside.translate-x-full nav *::after { display: none !important; content: none !important; }
+  .tx-manager aside.translate-x-full nav > * > span:last-child:not(:first-child) { display: none !important; }
+  .tx-manager aside.translate-x-full nav > * { justify-content: flex-start !important; }
+  .tx-manager aside.translate-x-full nav > *[class*='fff0e5'] { background: #fff0e5; }
+}
