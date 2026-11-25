@@ -6,6 +6,9 @@ import { AssistantError, askAssistant } from "@/lib/assistant";
 import { WIZARD_FLOWS, WizardFlowId, WizardState, advanceWizard, detectWizardIntent, startWizard } from "@/lib/wizard";
 import { AssistantAnswerText } from "@/components/assistant-answer";
 import { splitNarrowingOptions } from "@/lib/narrowing";
+import { buildWhatIfAnswer, detectWhatIfIntent, type WhatIfDashboard } from "@/lib/whatif";
+import { api } from "@/lib/client";
+import { useMonth } from "@/components/AppShell";
 
 type ChatMessage = {
   id: string;
@@ -32,6 +35,7 @@ export default function AssistantPage() {
   const [pending, setPending] = useState(false);
   const [error, setError] = useState("");
   const [wizard, setWizard] = useState<WizardState | null>(null);
+  const month = useMonth();
   const bottomRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -84,6 +88,21 @@ export default function AssistantPage() {
     const intent = detectWizardIntent(trimmed);
     if (intent) {
       beginWizard(intent);
+      return;
+    }
+    // أسئلة «لو عملت N كمان هبقى كام؟»: إجابة حتمية من قواعد الداشبورد نفسها، من غير الموديل.
+    const whatIf = detectWhatIfIntent(trimmed);
+    if (whatIf) {
+      setPending(true);
+      try {
+        const data = await api<WhatIfDashboard>(`/api/dashboard?month=${month}`);
+        const answer = buildWhatIfAnswer(data, whatIf);
+        setMessages((current) => [...current, { id: nextMessageId(), role: "assistant", text: answer }]);
+      } catch {
+        setError("ماقدرناش نقرا بيانات التارجت دلوقتي، جرّب تاني.");
+      } finally {
+        setPending(false);
+      }
       return;
     }
     setPending(true);
