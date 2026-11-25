@@ -150,10 +150,7 @@ export default function HomePage() {
 
       <section className="orn-greeting orn-card" dir="rtl">
         <div><h1>{greeting()} <bdi>{data.profile.name.trim().split(/\s+/)[0]}</bdi></h1><p><span className="orn-pin" /> <bdi>{data.profile.branch}</bdi></p></div>
-        <span className="flex shrink-0 items-center gap-2.5">
-          <RobotMascot size={58} />
-          <span className="orn-avatar" aria-hidden="true">{data.profile.name.trim().charAt(0).toUpperCase() || "M"}</span>
-        </span>
+        <span className="orn-avatar" aria-hidden="true">{data.profile.name.trim().charAt(0).toUpperCase() || "M"}</span>
       </section>
       <section className="orn-monthly orn-card" aria-label="الأداء الشهري">
         <div className="orn-month-ring" role="img" aria-label={`إجمالي تحقيق التارجت ${formatPercent(data.overall)}%`}>
@@ -165,6 +162,7 @@ export default function HomePage() {
           </svg>
           <div className="orn-month-center"><span>إجمالي تحقيق التارجت</span><strong dir="ltr">{formatPercent(data.overall)}<small>%</small></strong></div>
         </div>
+        <RobotMascot size={54} className="orn-mascot-home" />
         <div className="orn-month-side"><span className={`orn-status ${onTrack === false ? "is-behind" : ""}`}>{onTrack === null ? "مستني بيانات" : onTrack ? "On track" : "Behind"}</span><div className="orn-commission"><p>الكوميشن المحقق</p><strong dir="ltr">{formatMoney(data.estimatedCommission)}</strong><small>جنيه</small></div></div>
       </section>
 
