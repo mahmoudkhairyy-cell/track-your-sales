@@ -143,8 +143,17 @@ function normalize(text: string): string {
     .trim();
 }
 
+// تصيغ مكتوبة بحروف عربية متقطعة لمصطلحات إنجليزية، بنرجعها للأصل قبل التفكيك.
+const PHRASE_FIXES: [string, string][] = [
+  ["دي اس ال", "dsl"],
+  ["اي دي اس ال", "adsl"],
+  ["اس ار", "sr"],
+];
+
 function queryTerms(question: string): { terms: string[]; bigrams: string[] } {
-  const tokens = normalize(question)
+  let normQ = normalize(question);
+  for (const [from, to] of PHRASE_FIXES) normQ = normQ.split(from).join(" " + to + " ");
+  const tokens = normQ
     .split(" ")
     .filter((t) => t.length >= 2 && !STOPWORDS.has(t));
   const terms = new Set<string>();
