@@ -1,10 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
 import { retrieveRelevantKB } from "./retrieve";
+import { cacheGet, cacheSet, directAnswer, freemaxPriceAnswer, questionKey, rateLimited } from "./direct";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 const GEMINI_MODEL = process.env.GEMINI_MODEL ?? "gemini-3.5-flash-lite";
+// موديلات مجانية احتياطية على نفس مزود Gemini (حصة كل موديل منفصلة). بتتجرب بالترتيب لو الأساسي خلّص حصته.
+const FALLBACK_MODELS = (process.env.GEMINI_FALLBACK_MODELS ?? "gemini-2.5-flash-lite,gemini-2.5-flash")
+  .split(",")
+  .map((m) => m.trim())
+  .filter((m) => m && m !== GEMINI_MODEL);
+const QUOTA_MESSAGE = "المساعد عليه ضغط دلوقتي وحصة الاستخدام المجانية خلصت مؤقتًا. جرّب تاني بعد دقيقة، أو ارجع لقسم الأكواد في التطبيق. الأسئلة المتكررة والأكواد المباشرة لسه شغالة.";
 const MAX_QUESTION_CHARS = 800;
 const MAX_ANSWER_TOKENS = 2048;
 const REQUEST_TIMEOUT_MS = 20000;
@@ -45,6 +52,9 @@ const SYSTEM_PROMPT_TEMPLATE = `انت «المساعد» بتاع موظف مب
 - ممنوع تكتب أي كود USSD أو كود مختصر يبدأ بـ * أو # إلا لو موجود حرفي في القاعدة. لو الموظف سأل عن كود USSD أو *...# مش موجود في القاعدة (رصيد، تحويل رصيد، تفعيل نت...) قول «مش لاقي ده في الملفات» بس، ومتديش قائمة أكواد SR بدله.
 - جداول الأسعار والمزايا: طابق اسم الباقة والعمود المطلوب بدقة (إجمالي سعر الخط غير قيمة الشحن لتجديد الباقة غير سعر التفعيل). الجداول مكتوبة سطر لكل باقة بصيغة «العمود=القيمة»، انسخ القيمة من العمود الصح بالظبط. لو الموظف سأل «سعر الباقة» من غير تحديد، اكتب إجمالي سعر الخط وقيمة الشحن للتجديد، وكل واحد باسمه.
 - بلوك محفظة أورنچ كاش من إدارة المخاطر (Risk / مخاطر / رسك): مفيش SR. الإجابة: «بلّغ العميل إن الإيقاف من البنك المركزي ويتصل على 16777». ممنوع تديه SR 11306 أو أي كود تاني لحالة Risk.
+- قسيمة كازيون مع فري ماكس: عمودين مختلفين، «من تطبيق Max It» غير «عند استخدام كود #02#». لو الموظف ذكر #02# خد قيمة العمود التاني بالظبط (فري ماكس 80 = 25 جنيه)، ولو ذكر Max It خد العمود الأول.
+- أسعار باقات الـDSL/الإنترنت الأرضي (السرعات والاشتراك الشهري) مش في القاعدة: قول «مش لاقي أسعار باقات الـDSL في الملفات» وبس، ولو الموظف سأل عن الراوتر اذكر سعره من القاعدة. ممنوع تعرض سعر راوتر كإنه سعر الباقة.
+- ممنوع تشرح وظيفة أي كود USSD (*...# أو #...#) بمعلومة مش مكتوبة حرفيًا في القاعدة. لو سأل «بيعمل ايه» وملقتش شرحه، قول «مش لاقي شرح للكود ده في الملفات».
 - جداول الكاش باك (تحويشة): لو الموظف قال رقم تحويشة، رجّع الصف اللي «بحد أقصى» فيه نفس الرقم بالظبط (مثال: 500 تحويشة = 15 جنيه كاش باك، ممنوع تاخد صف تاني بس لإن الرقم 500 ظهر في عمود الكاش باك).
 - لو سؤال الموظف فيه رقم تليفون أو رقم قومي، اكتب في آخر الإجابة سطر: «متكتبش بيانات العملاء الشخصية هنا» وجاوب من غير ما تعيد الرقم.
 - سؤال عن أكتر من باقة أو مقارنة: جاوب بالأرقام من القاعدة لكل باقة جنب بعض بدل ما تسأل.
@@ -104,6 +114,7 @@ export async function POST(request: NextRequest) {
   const headers = corsHeaders(request.headers.get("origin"));
   const fail = (message: string, status: number) => NextResponse.json({ error: message }, { status, headers });
 
+  const userId = (request.headers.get("x-forwarded-for") ?? "unknown").split(",")[0].trim();
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) {
     return fail("المساعد لسه متظبطش على السيرفر (مفتاح Gemini مش متضاف).", 503);
@@ -125,9 +136,18 @@ export async function POST(request: NextRequest) {
     return fail(`السؤال طويل أوي، خليه أقل من ${MAX_QUESTION_CHARS} حرف.`, 400);
   }
 
+  const cacheKey = questionKey(question);
+  const cached = cacheGet(cacheKey);
+  if (cached) return NextResponse.json({ answer: cached }, { headers });
+
   let systemPrompt: string;
   try {
     const knowledgeBase = await getKnowledgeBase();
+    const direct = directAnswer(knowledgeBase, question) ?? freemaxPriceAnswer(knowledgeBase, question);
+    if (direct) return NextResponse.json({ answer: direct }, { headers });
+    if (rateLimited(userId)) {
+      return fail("بعتّ أسئلة كتير في وقت قصير. استنى دقيقة وجرّب تاني.", 429);
+    }
     const retrieved = retrieveRelevantKB(knowledgeBase, question);
     systemPrompt = SYSTEM_PROMPT_TEMPLATE.replace("__KNOWLEDGE_BASE__", retrieved.text);
     console.log(`assistant retrieval: ${retrieved.totalChars} chars, ${retrieved.matchedRows} rows, sections: ${retrieved.matchedSections.join(" | ")}`);
@@ -136,22 +156,28 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "x-goog-api-key": apiKey },
-        body: JSON.stringify({
-          systemInstruction: { parts: [{ text: systemPrompt }] },
-          contents: [{ role: "user", parts: [{ text: question }] }],
-          generationConfig: { temperature: 0.2, maxOutputTokens: MAX_ANSWER_TOKENS },
-        }),
-        signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
-      },
-    );
+    let response: Response | null = null;
+    for (const model of [GEMINI_MODEL, ...FALLBACK_MODELS]) {
+      response = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "x-goog-api-key": apiKey },
+          body: JSON.stringify({
+            systemInstruction: { parts: [{ text: systemPrompt }] },
+            contents: [{ role: "user", parts: [{ text: question }] }],
+            generationConfig: { temperature: 0.2, maxOutputTokens: MAX_ANSWER_TOKENS },
+          }),
+          signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
+        },
+      );
+      // حصة خلصت أو موديل مش موجود/وقع: جرّب الموديل المجاني اللي بعده.
+      if (response.ok || ![404, 429, 500, 503].includes(response.status)) break;
+    }
+    if (!response) return fail("خدمة Gemini فيها مشكلة دلوقتي، جرّب بعد شوية.", 502);
 
     if (response.status === 429) {
-      return fail("وصلنا لحد الاستخدام المجاني النهارده، جرّب تاني بكرة.", 429);
+      return fail(QUOTA_MESSAGE, 429);
     }
     if (response.status === 401 || response.status === 403) {
       return fail("مفتاح Gemini مش سليم أو اتلغى، راجع إعدادات Vercel.", 502);
@@ -169,6 +195,7 @@ export async function POST(request: NextRequest) {
       .trim();
 
     if (!answer) return fail("المساعد مرجعش بإجابة، جرّب بصيغة تانية.", 502);
+    cacheSet(cacheKey, answer);
     return NextResponse.json({ answer }, { headers });
   } catch {
     return fail("الاتصال بخدمة Gemini اتقطع، جرّب تاني.", 504);
