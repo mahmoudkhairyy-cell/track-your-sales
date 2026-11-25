@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import { APP_DISCLAIMER, APP_NAME, BRAND_BY } from "@/lib/constants";
 import "./2-globals.css";
 import "./decorated.css";
+import "./manager-polish.css";
 import { PwaRegister } from "@/components/PwaRegister";
 
 export const metadata: Metadata = {
