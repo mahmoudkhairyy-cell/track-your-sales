@@ -79,6 +79,54 @@ const SYNONYMS: Record<string, string[]> = {
   "موظف": ["agent", "employee"],
   "عميل": ["customer"],
   "نظام": ["system", "tariff", "plan"],
+  // ألفاظ مستخدمة في الملفات الرسمية وليها صيغ عربية شائعة:
+  "فولت": ["fault"],
+  "بوستبيد": ["postpaid"],
+  "بوس بيد": ["postpaid"],
+  "بوست بايد": ["postpaid"],
+  "بريبيد": ["prepaid"],
+  "بري بايد": ["prepaid"],
+  "ميجريشن": ["migration"],
+  "ترمينيشن": ["termination"],
+  "سداد": ["payment", "settlement", "pay"],
+  "تسديد": ["payment", "settlement", "pay"],
+  "تعويض": ["compensation", "compensate"],
+  "تحديث": ["update", "refresh", "modify"],
+  "اكسايت": ["excite"],
+  "إكسايت": ["excite"],
+};
+
+// فرانكو (عربي بحروف لاتينية) -> مرادفات عربي/إنجليزي. مطابقة كلمة كاملة بس.
+const FRANCO: Record<string, string[]> = {
+  elgha: ["الغاء", "cancel", "termination"],
+  ilgha: ["الغاء", "cancel", "termination"],
+  elghaa: ["الغاء", "cancel", "termination"],
+  fatora: ["فاتوره", "bill", "invoice"],
+  fatorah: ["فاتوره", "bill", "invoice"],
+  fatura: ["فاتوره", "bill", "invoice"],
+  fawater: ["فواتير", "bill", "invoice"],
+  ta7wel: ["تحويل", "migration", "transfer"],
+  tahwel: ["تحويل", "migration", "transfer"],
+  bostbed: ["بوستبيد", "postpaid"],
+  postbed: ["بوستبيد", "postpaid"],
+  brebed: ["بريبيد", "prepaid"],
+  bribid: ["بريبيد", "prepaid"],
+  blok: ["بلوك", "block", "suspend"],
+  mahfaza: ["محفظه", "wallet", "cash"],
+  mahfza: ["محفظه", "wallet", "cash"],
+  ma7faza: ["محفظه", "wallet", "cash"],
+  ma7fza: ["محفظه", "wallet", "cash"],
+  blocked: ["بلوك", "block", "suspend"],
+  block: ["بلوك"],
+  sebab: ["سبب", "reason"],
+  sabab: ["سبب", "reason"],
+  fasakh: ["فسخ", "cancel", "termination"],
+  rasid: ["رصيد", "balance", "credit"],
+  khedma: ["خدمه", "service"],
+  baka: ["باقه", "bundle", "tariff", "plan"],
+  kyc: ["ekyc", "بيانات", "تحديث", "data", "gathering", "cleansed"],
+  ekyc: ["kyc", "بيانات", "تحديث", "data", "gathering", "cleansed"],
+  excite: ["اكسايت"],
 };
 
 const STOPWORDS = new Set([
@@ -107,19 +155,35 @@ function normalize(text: string): string {
     .trim();
 }
 
+// تصيغ مكتوبة بحروف عربية متقطعة لمصطلحات إنجليزية، بنرجعها للأصل قبل التفكيك.
+const PHRASE_FIXES: [string, string][] = [
+  ["دي اس ال", "dsl"],
+  ["اي دي اس ال", "adsl"],
+  ["اس ار", "sr"],
+];
+
 function queryTerms(question: string): { terms: string[]; bigrams: string[] } {
-  const tokens = normalize(question)
+  let normQ = normalize(question);
+  for (const [from, to] of PHRASE_FIXES) normQ = normQ.split(from).join(" " + to + " ");
+  const tokens = normQ
     .split(" ")
     .filter((t) => t.length >= 2 && !STOPWORDS.has(t));
   const terms = new Set<string>();
   for (const token of tokens) {
     if (token.length >= 3) terms.add(token);
     for (const [arabic, english] of Object.entries(SYNONYMS)) {
-      if (token.includes(arabic) || arabic.includes(token)) {
+      // المطابقة بالاتجاهين: كلمة عربية في السؤال تجيب المرادفات الإنجليزية،
+      // وكلمة إنجليزية في السؤال تجيب المفتاح العربي (القاعدة معظمها عربي).
+      const hitsEnglish = english.some(
+        (e) => token === e || (e.length >= 4 && token.includes(e)) || (token.length >= 4 && e.includes(token)),
+      );
+      if (token.includes(arabic) || arabic.includes(token) || hitsEnglish) {
         terms.add(arabic);
         for (const e of english) terms.add(e);
       }
     }
+    const franco = FRANCO[token];
+    if (franco) for (const t of franco) terms.add(t);
   }
   const bigrams: string[] = [];
   for (let i = 0; i + 1 < tokens.length; i++) bigrams.push(tokens[i] + " " + tokens[i + 1]);

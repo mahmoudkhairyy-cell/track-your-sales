@@ -3,7 +3,9 @@
 import { FormEvent, useEffect, useRef, useState } from "react";
 import { Banner, EmptyState, PrimaryButton, inputClass } from "@/components/ui";
 import { AssistantError, askAssistant } from "@/lib/assistant";
-import { WIZARD_FLOWS, WizardFlowId, WizardState, advanceWizard, startWizard } from "@/lib/wizard";
+import { WIZARD_FLOWS, WizardFlowId, WizardState, advanceWizard, detectWizardIntent, startWizard } from "@/lib/wizard";
+import { AssistantAnswerText } from "@/components/assistant-answer";
+import { splitNarrowingOptions } from "@/lib/narrowing";
 
 type ChatMessage = {
   id: string;
@@ -75,6 +77,13 @@ export default function AssistantPage() {
     setMessages((current) => [...current, { id: nextMessageId(), role: "user", text: trimmed }]);
     if (wizard) {
       answerWizard(trimmed);
+      return;
+    }
+    // كتابة اسم الحالة في الشات (زي «إلغاء فاتورة» أو «تحويل من بوست بيد لبري بيد»)
+    // بتشغّل الحاسبة المناسبة على طول بدل ما تروح سؤال عادي للمساعد.
+    const intent = detectWizardIntent(trimmed);
+    if (intent) {
+      beginWizard(intent);
       return;
     }
     setPending(true);
@@ -164,19 +173,46 @@ export default function AssistantPage() {
           </div>
         ) : (
           <ol className="space-y-3">
-            {messages.map((message) => (
-              <li key={message.id} className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}>
-                <div
-                  className={
-                    message.role === "user"
-                      ? "max-w-[85%] whitespace-pre-wrap rounded-3xl rounded-tl-md bg-gradient-to-br from-[#ff9a45] to-[#f07818] px-4 py-3 text-sm font-bold text-white shadow-section-sm"
-                      : "max-w-[85%] whitespace-pre-wrap rounded-3xl rounded-tr-md border border-section-3 bg-white px-4 py-3 text-sm leading-7 text-neutral-800 shadow-section-xs"
-                  }
-                >
-                  {message.text}
-                </div>
-              </li>
-            ))}
+            {messages.map((message, index) => {
+              const isLastAssistant =
+                message.role === "assistant" && index === messages.length - 1 && !pending;
+              // سؤال التضييق: لو آخر رد فيه سؤال بعلامة استفهام وبعده اختيارات بشرطات،
+              // الاختيارات بتتحول لأزرار قابلة للضغط بتبعت الاختيار على طول.
+              const narrowing = isLastAssistant ? splitNarrowingOptions(message.text) : null;
+              return (
+                <li key={message.id} className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}>
+                  <div className="max-w-[85%] space-y-2">
+                    <div
+                      className={
+                        message.role === "user"
+                          ? "whitespace-pre-wrap rounded-3xl rounded-tl-md bg-gradient-to-br from-[#ff9a45] to-[#f07818] px-4 py-3 text-sm font-bold text-white shadow-section-sm"
+                          : "rounded-3xl rounded-tr-md border border-section-3 bg-white px-4 py-3 text-sm leading-7 text-neutral-800 shadow-section-xs"
+                      }
+                    >
+                      {message.role === "user" ? (
+                        message.text
+                      ) : (
+                        <AssistantAnswerText text={narrowing ? narrowing.body : message.text} />
+                      )}
+                    </div>
+                    {narrowing && narrowing.options.length > 0 ? (
+                      <div className="flex flex-wrap gap-2">
+                        {narrowing.options.map((option) => (
+                          <button
+                            key={option}
+                            type="button"
+                            onClick={() => void send(option)}
+                            className="rounded-full border border-section-3 bg-white px-3 py-2 text-xs font-extrabold text-brand-ink-soft shadow-section-xs transition hover:bg-brand-surface"
+                          >
+                            {option}
+                          </button>
+                        ))}
+                      </div>
+                    ) : null}
+                  </div>
+                </li>
+              );
+            })}
             {pending ? (
               <li className="flex justify-start">
                 <div className="rounded-3xl rounded-tr-md border border-section-3 bg-white px-4 py-3 text-sm font-bold text-ink-2 shadow-section-xs">

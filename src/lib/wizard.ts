@@ -111,7 +111,7 @@ export const WIZARD_FLOWS: Record<WizardFlowId, { title: string; intro: string; 
       },
       {
         key: "unbilledOcc",
-        question: "5/5: قيمة الـ Unbilled OCC قبل الضريبة؟\nمن Customer Info في SMC Tool.",
+        question: "5/5: قيمة الـUnbilled OCC (الرسوم غير المفوترة) قبل الضريبة؟\nخانة Unbilled OCC في صفحة Customer Info في الـSMC Tool.",
         parse: (input) => parseNumberInput(input),
         errorMessage: numberError,
       },
@@ -137,6 +137,11 @@ export const WIZARD_FLOWS: Record<WizardFlowId, { title: string; intro: string; 
         `إجمالي مبلغ الإلغاء: ${money(total)}`,
         "",
         "المعادلة والثوابت (227 و57 و14%) من ملف حاسبة الإلغاء الرسمي. راجع القيم من SMC وSiebel قبل ما تقول رقم نهائي للعميل.",
+        "",
+        "الخطوات البعدها (من دليل DSL After Sales على Siebel):",
+        "1. لو العميل مش موجود يمضي عقد إنهاء الخدمة: ابعت SR 16058 وهيردوا بالمبلغ في خلال 30 دقيقة.",
+        "2. بعد سداد المبلغ كامل: ارفع البطاقة مع عقد الإلغاء على Automated SR 5009.",
+        "3. اضغط Deactivated على Siebel وبلّغ العميل بإنهاء التعاقد في خلال 24 ساعة.",
       ].join("\n");
     },
   },
@@ -147,44 +152,44 @@ export const WIZARD_FLOWS: Record<WizardFlowId, { title: string; intro: string; 
     steps: [
       {
         key: "billed",
-        question: "1/7: إجمالي الفواتير الصادرة غير المسددة (Billed)؟",
+        question: "1/7: إجمالي الفواتير الصادرة ولسه متسددتش (Billed)؟\nالفواتير المفتوحة في صفحة Customer Info في الـSMC Tool.",
         parse: (input) => parseNumberInput(input),
         errorMessage: numberError,
       },
       {
         key: "monthlySub",
-        question: "2/7: قيمة الاشتراك الشهري؟",
+        question: "2/7: قيمة الاشتراك الشهري للباقة؟\nسعر الباقة الشهري قبل الضريبة، من صفحة الـService Account على Siebel.",
         parse: (input) => parseNumberInput(input),
         errorMessage: numberError,
       },
       {
         key: "tariffDays",
-        question: "3/7: عدد أيام دورة الاشتراك (Tariff Days)؟ غالبًا 30.",
+        question: "3/7: عدد أيام دورة الفاتورة (Tariff Days)؟ غالبًا 30 يوم.",
         parse: (input) => parseNumberInput(input, { integer: true, min: 1 }),
         errorMessage: "اكتب عدد صحيح أكبر من صفر.",
       },
       {
         key: "daysPassed",
         question:
-          "4/7: عدد الأيام من تاريخ إصدار الفاتورة حتى تاريخ التحويل/الإلغاء + يوم زيادة لإجراءات التحويل في خلال 24 ساعة؟\n(نفس خانة Days passed في الملف بالظبط)",
+          "4/7: عدد الأيام من يوم إصدار آخر فاتورة لحد يوم التحويل/الإلغاء + يوم واحد زيادة لإجراءات التحويل؟\n(نفس خانة Days passed في الملف الرسمي بالظبط)",
         parse: (input) => parseNumberInput(input, { integer: true }),
         errorMessage: "اكتب عدد صحيح (صفر أو أكتر).",
       },
       {
         key: "unbilledUsage",
-        question: "5/7: الـUnbilled Usage (الاستخدام غير المفوتر)؟",
+        question: "5/7: الـUnbilled Usage (الاستخدام غير المفوتر)؟\nقيمة استخدام العميل من يوم إصدار آخر فاتورة لحد دلوقتي ولسه مااتفوترتش — خانة Unbilled في صفحة Customer Info في الـSMC Tool.",
         parse: (input) => parseNumberInput(input),
         errorMessage: numberError,
       },
       {
         key: "unbilledOcc",
-        question: "6/7: الـUnbilled OCC (الرسوم الدورية غير المفوترة)؟",
+        question: "6/7: الـUnbilled OCC (الرسوم الدورية غير المفوترة)؟\nخانة Unbilled OCC في صفحة Customer Info في الـSMC Tool.",
         parse: (input) => parseNumberInput(input),
         errorMessage: numberError,
       },
       {
         key: "sdf",
-        question: "7/7: رسوم التنمية (SDF)؟ (في مثال الملف الرسمي: 10)",
+        question: "7/7: رسوم التنمية (SDF)؟\nفي مثال الملف الرسمي: 10 جنيه.",
         parse: (input) => parseNumberInput(input),
         errorMessage: numberError,
       },
@@ -213,7 +218,10 @@ export const WIZARD_FLOWS: Record<WizardFlowId, { title: string; intro: string; 
         "",
         `إجمالي المبلغ المستحق على العميل: ${money(total)}`,
         "",
-        "الخطوات البعدها (SR 10758): (1) العميل يسدد المبلغ. (2) استكمل الـSR. (3) املأ عقدًا فاضيًا واكتب نوع الـMigration (مثال: من X إلى FREEmax 115).",
+        "الخطوات البعدها (SR 10758):",
+        "1. العميل يسدد المبلغ.",
+        "2. استكمل الـSR.",
+        "3. املأ عقدًا فاضيًا واكتب نوع الـMigration (مثال: من X إلى FREEmax 115).",
         "متنساش: راجع الـTariff Lock على Siebel، وسوّي أقساط Wincash، واسترد نقاط الولاء قبل الإنهاء.",
       ].join("\n");
     },
@@ -242,4 +250,54 @@ export function advanceWizard(state: WizardState, input: string): { state: Wizar
     return { state: { ...state, stepIndex: nextIndex, answers }, messages: [flow.finish(answers)], done: true };
   }
   return { state: { ...state, stepIndex: nextIndex, answers }, messages: [flow.steps[nextIndex].question], done: false };
+}
+
+// كشف طلبات الحاسبة المكتوبة في الشات (عربي / فرانكو / إنجليزي): المستخدم ممكن يكتب
+// «إلغاء فاتورة» أو «تحويل من بوست بيد لبري بيد» بدل ما يدوس على زرار الحاسبة.
+// الألفاظ دي من الملفات الرسمية: ملف Postpaid Calculator عنوانه Line Termination or
+// Migration Calculator (إلغاء الفاتورة = تحويل بوست بيد لبري بيد = SR 10758)، وملف
+// حاسبة ADSL هو حاسبة غرامة إلغاء خدمة ADSL.
+function normalizeForIntent(text: string): string {
+  return text
+    .toLowerCase()
+    .replace(/[ً-ْٰـ]/g, "")
+    .replace(/[أإآ]/g, "ا")
+    .replace(/ى/g, "ي")
+    .replace(/ة/g, "ه")
+    .replace(/چ/g, "ج")
+    .replace(/[٠-٩]/g, (d) => String("٠١٢٣٤٥٦٧٨٩".indexOf(d)))
+    .replace(/[^ء-غف-ي0-9a-z]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+const FRANCO_INTENT: Record<string, string> = {
+  elgha: "الغاء", ilgha: "الغاء", elghaa: "الغاء",
+  fatora: "فاتوره", fatorah: "فاتوره", fatura: "فاتوره",
+  ta7wel: "تحويل", tahwel: "تحويل", ta7wil: "تحويل",
+  bostbed: "بوستبيد", postbed: "بوستبيد", bostbid: "بوستبيد",
+  brebed: "بريبيد", bribid: "بريبيد", brebid: "بريبيد",
+  fasakh: "فسخ", fasek: "فسخ",
+  ard: "ارضي",
+};
+
+export function detectWizardIntent(question: string): WizardFlowId | null {
+  const norm = normalizeForIntent(question);
+  if (!norm) return null;
+  const words = norm.split(" ");
+  const text = words.map((w) => FRANCO_INTENT[w] ?? w).join(" ");
+  const has = (...needles: string[]) => needles.some((n) => text.includes(n));
+  // الأسئلة الطويلة المركبة تفضل رايحة للمساعد العادي، إلا لو فيها طلب حساب صريح.
+  const saysCalculate = has("حاسبه", "احسب", "يحسب", "هيدفع كام", "calculator");
+  if (words.length > 12 && !saysCalculate) return null;
+
+  const cancelish = has("الغاء", "الغي", "انهاء", "كنسل", "cancel", "terminat", "فسخ");
+  const invoiceish = has("فاتوره", "invoice", "bill");
+  const postpaidish = has("بوستبيد", "بوست بيد", "بوس بيد", "بوست بايد", "postpaid");
+  const prepaidish = has("بريبيد", "بري بيد", "بري بايد", "prepaid");
+  if ((cancelish && invoiceish) || (postpaidish && prepaidish)) return "invoice";
+
+  const dslish = has("adsl", "dsl", "راوتر", "ارضي", "نت البيت");
+  if (cancelish && dslish) return "dsl";
+  return null;
 }
