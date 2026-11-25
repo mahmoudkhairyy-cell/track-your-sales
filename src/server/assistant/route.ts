@@ -46,9 +46,14 @@ __KNOWLEDGE_BASE__`;
 // قاعدة المعرفة مش متخزنة في الريبو (الريبو public). بتتقرأ وقت التشغيل من رابط خاص
 // (ASSISTANT_KB_URL) مع توكن اختياري (ASSISTANT_KB_TOKEN)، وبتتخزن في الذاكرة بعد أول قراءة.
 let knowledgeBasePromise: Promise<string> | null = null;
+let knowledgeBaseLoadedAt = 0;
+// تحديثات قاعدة المعرفة تظهر خلال 5 دقايق من غير إعادة نشر.
+const KB_TTL_MS = 5 * 60 * 1000;
 
 function getKnowledgeBase(): Promise<string> {
+  if (knowledgeBasePromise && Date.now() - knowledgeBaseLoadedAt > KB_TTL_MS) knowledgeBasePromise = null;
   if (!knowledgeBasePromise) {
+    knowledgeBaseLoadedAt = Date.now();
     knowledgeBasePromise = (async () => {
       const url = process.env.ASSISTANT_KB_URL;
       if (!url) throw new Error("kb_not_configured");
