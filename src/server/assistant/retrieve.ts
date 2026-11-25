@@ -226,7 +226,7 @@ const SECTION_KEYWORDS: Record<string, string[]> = {
   "## 1.": ["فري ماكس", "فريماكس", "freemax", "free max", "كازيون", "kazyon", "سبوتيفاي", "spotify", "ترحيل"],
   "## 2.": ["بريمير", "premier", "بريميير", "الترا", "ultra", "بلاتينيوم", "platinum", "سيلكت", "select", "لايت", "lite", "اميال", "ايجيبت اير", "مصر للطيران", "wtour", "sixt", "يوتيوب", "youtube", "تجوال"],
   "## 3.": ["تحويشه", "tahweesha", "ta7weesha", "tahwesha", "ta7wesha", "كاش باك", "cashback"],
-  "## 4.": ["اورنج كاش", "اورنچ كاش", "orange cash", "محفظه", "wallet", "بلاك فرايداي", "black friday", "instashop", "انستاشوب"],
+  "## 4.": ["اورنج كاش", "اورنچ كاش", "orange cash", "محفظه", "wallet", "بلاك فرايداي", "black friday", "instashop", "انستاشوب", "risk", "رسك", "مخاطر", "ntra", "nbe", "compliance", "aml", "فوري", "fawry", "credit trx", "بلوك", "فك الايقاف"],
   "## 5.": ["راوتر", "router", "dsl", "adsl", "وايرلس", "wireless", "home 4g", "انترنت ارضي", "نت ارضي", "انترنت منزلي", "wincash", "go education", "educational"],
   "## 6.": ["تقسيط", "taqseet", "ائتمان", "installment", "سهوله", "souhoola", "بنك مصر", "eagle", "ايجل"],
   "## 7.": ["شهداء", "همم", "احتياجات خاصه"],
