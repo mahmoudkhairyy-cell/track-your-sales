@@ -11,7 +11,7 @@ export interface RetrievedKB {
 }
 
 const MAX_ROWS = 60;
-const MAX_SMALL_SECTIONS = 3;
+const MAX_SMALL_SECTIONS = 4;
 const TOTAL_BUDGET_CHARS = 30000;
 const ROW_MODE_MIN_CHARS = 6000;
 
@@ -172,6 +172,7 @@ const STOPWORDS = new Set([
 function normalize(text: string): string {
   return text
     .toLowerCase()
+    .replace(/[٠-٩]/g, (d) => String(d.charCodeAt(0) - 0x0660))
     .replace(/[ً-ْٰـ]/g, "")
     .replace(/[أإآ]/g, "ا")
     .replace(/ى/g, "ي")
@@ -217,6 +218,55 @@ function queryTerms(question: string): { terms: string[]; bigrams: string[] } {
   const bigrams: string[] = [];
   for (let i = 0; i + 1 < tokens.length; i++) bigrams.push(tokens[i] + " " + tokens[i + 1]);
   return { terms: [...terms], bigrams };
+}
+
+// كلمات مفتاحية لكل قسم صغير: لو السؤال فيها، القسم يتجاب حتى لو التطابق المعجمي ضعيف
+// (أسماء الباقات بتتكتب بصيغ كتير: فريماكس / freemax / premier / الترا...).
+const SECTION_KEYWORDS: Record<string, string[]> = {
+  "## 1.": ["فري ماكس", "فريماكس", "freemax", "free max", "كازيون", "kazyon", "سبوتيفاي", "spotify", "ترحيل"],
+  "## 2.": ["بريمير", "premier", "بريميير", "الترا", "ultra", "بلاتينيوم", "platinum", "سيلكت", "select", "لايت", "lite", "اميال", "ايجيبت اير", "مصر للطيران", "wtour", "sixt", "يوتيوب", "youtube", "تجوال"],
+  "## 3.": ["تحويشه", "tahweesha", "ta7weesha", "tahwesha", "ta7wesha", "كاش باك", "cashback"],
+  "## 4.": ["اورنج كاش", "اورنچ كاش", "orange cash", "محفظه", "wallet", "بلاك فرايداي", "black friday", "instashop", "انستاشوب"],
+  "## 5.": ["راوتر", "router", "dsl", "adsl", "وايرلس", "wireless", "home 4g", "انترنت ارضي", "نت ارضي", "انترنت منزلي", "wincash", "go education", "educational"],
+  "## 6.": ["تقسيط", "taqseet", "ائتمان", "installment", "سهوله", "souhoola", "بنك مصر", "eagle", "ايجل"],
+  "## 7.": ["شهداء", "همم", "احتياجات خاصه"],
+  "## 8.": ["kpi", "تارجت", "target", "نقاط", "نقطه", "points", " ga", "gas", "تحقيق", "الصرف", "كوميشن", "حافز", "csat", "mnp", "alo", "king", "الو ", "esim", "اي سيم", "claw"],
+  "## 9.": ["ekyc", "اونلاين", "اجانب", "اجنبي", "جواز", "ارقامي", "cp ", "تفويض", "دايلات", "ntra", "white sim", "تفعيل خط"],
+};
+
+function keywordBoost(heading: string, normQuestion: string): number {
+  const key = Object.keys(SECTION_KEYWORDS).find((k) => heading.startsWith(k));
+  if (!key) return 0;
+  const q = " " + normQuestion + " ";
+  let hits = 0;
+  for (const kw of SECTION_KEYWORDS[key]) {
+    const n = normalize(kw);
+    if (!n) continue;
+    if (q.includes(kw.startsWith(" ") ? " " + n : n)) hits++;
+  }
+  return hits * 5;
+}
+
+function tableToRecords(text: string): string {
+  const lines = text.split("\n");
+  const out: string[] = [];
+  let header: string[] | null = null;
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    if (/^\|[\s:|-]+\|$/.test(line)) continue;
+    if (line.startsWith("|")) {
+      const cells = line.split("|").slice(1, -1).map((c) => c.trim());
+      if (!header) {
+        header = cells;
+        continue;
+      }
+      out.push("- " + cells.map((c, idx) => (idx === 0 ? c : `${header![idx] ?? ""}=${c}`)).join(" ؛ "));
+    } else {
+      header = null;
+      out.push(line);
+    }
+  }
+  return out.join("\n");
 }
 
 function scoreText(normText: string, terms: string[], bigrams: string[]): number {
@@ -296,6 +346,7 @@ function parseSections(kb: string): { header: string; sections: Section[] } {
 export function retrieveRelevantKB(kb: string, question: string): RetrievedKB {
   const { header, sections } = parseSections(kb);
   const { terms, bigrams } = queryTerms(question);
+  const normQ = normalize(question);
 
   const out: string[] = [header.trimEnd()];
   let total = header.length;
@@ -313,14 +364,15 @@ export function retrieveRelevantKB(kb: string, question: string): RetrievedKB {
   // الأقسام الصغيرة: خد الأعلى نقاطًا (حد أدنى 2 عشان منجيبش ضوضاء)
   const smallScored = sections
     .filter((s) => s.rows === null && !s.heading.startsWith("## 0."))
-    .map((s) => ({ s, score: scoreText(s.norm, terms, bigrams) }))
+    .map((s) => ({ s, score: scoreText(s.norm, terms, bigrams) + keywordBoost(s.heading, normQ) }))
     .filter((x) => x.score >= 2)
     .sort((a, b) => b.score - a.score)
     .slice(0, MAX_SMALL_SECTIONS);
   for (const { s } of smallScored) {
-    if (total + s.fullText.length > TOTAL_BUDGET_CHARS) continue;
-    out.push(s.fullText.trimEnd());
-    total += s.fullText.length;
+    const text = tableToRecords(s.fullText);
+    if (total + text.length > TOTAL_BUDGET_CHARS) continue;
+    out.push(text.trimEnd());
+    total += text.length;
     matchedSections.push(s.heading);
   }
 
