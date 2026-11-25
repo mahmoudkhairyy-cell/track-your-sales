@@ -15,6 +15,7 @@ drizzle/meta/_journal.json.bak
 # Private: قاعدة المعرفة وحالات اختبار الـ SR بتفضل محلية ومش بتترفع على الريبو العام
 src/server/assistant/knowledge-base.md
 scripts/test-assistant-sr.cases.json
+scripts/test-assistant-narrowing.cases.json
 
 # Generated at build time by scripts/prepare-assistant-api.mjs (Vercel only)
 src/app/api/

@@ -91,6 +91,9 @@ const SYNONYMS: Record<string, string[]> = {
   "سداد": ["payment", "settlement", "pay"],
   "تسديد": ["payment", "settlement", "pay"],
   "تعويض": ["compensation", "compensate"],
+  "تحديث": ["update", "refresh", "modify"],
+  "اكسايت": ["excite"],
+  "إكسايت": ["excite"],
 };
 
 // فرانكو (عربي بحروف لاتينية) -> مرادفات عربي/إنجليزي. مطابقة كلمة كاملة بس.
@@ -121,6 +124,9 @@ const FRANCO: Record<string, string[]> = {
   rasid: ["رصيد", "balance", "credit"],
   khedma: ["خدمه", "service"],
   baka: ["باقه", "bundle", "tariff", "plan"],
+  kyc: ["ekyc", "بيانات", "تحديث", "data", "gathering", "cleansed"],
+  ekyc: ["kyc", "بيانات", "تحديث", "data", "gathering", "cleansed"],
+  excite: ["اكسايت"],
 };
 
 const STOPWORDS = new Set([
@@ -166,7 +172,12 @@ function queryTerms(question: string): { terms: string[]; bigrams: string[] } {
   for (const token of tokens) {
     if (token.length >= 3) terms.add(token);
     for (const [arabic, english] of Object.entries(SYNONYMS)) {
-      if (token.includes(arabic) || arabic.includes(token)) {
+      // المطابقة بالاتجاهين: كلمة عربية في السؤال تجيب المرادفات الإنجليزية،
+      // وكلمة إنجليزية في السؤال تجيب المفتاح العربي (القاعدة معظمها عربي).
+      const hitsEnglish = english.some(
+        (e) => token === e || (e.length >= 4 && token.includes(e)) || (token.length >= 4 && e.includes(token)),
+      );
+      if (token.includes(arabic) || arabic.includes(token) || hitsEnglish) {
         terms.add(arabic);
         for (const e of english) terms.add(e);
       }
