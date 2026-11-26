@@ -116,12 +116,28 @@ function assertNoSecrets(value: unknown, path: string) {
   }
 }
 
-/** تاريخ بصيغة YYYY-MM-DD وفي الحقيقة (مش 2026-13-40). */
-function isRealIsoDate(value: string): boolean {
-  if (!ISO_DATE_RE.test(value)) return false;
-  const [y, m, d] = value.split("-").map(Number);
-  const date = new Date(Date.UTC(y, m - 1, d));
-  return date.getUTCFullYear() === y && date.getUTCMonth() === m - 1 && date.getUTCDate() === d;
+/** نفس تحقق local-api: تاريخ تقويمي صحيح وداخل المدى المدعوم 2020–2040. */
+function requireIsoDate(value: unknown, field: string): string {
+  if (typeof value !== "string" || !ISO_DATE_RE.test(value)) {
+    throw new Error(`${field} مش تاريخ صالح`);
+  }
+  const [year, month, day] = value.split("-").map(Number);
+  const date = new Date(Date.UTC(year, month - 1, day));
+  if (date.getUTCFullYear() !== year || date.getUTCMonth() !== month - 1 || date.getUTCDate() !== day) {
+    throw new Error(`${field} مش تاريخ موجود في التقويم`);
+  }
+  if (year < 2020 || year > 2040) {
+    throw new Error(`${field} خارج المدى المسموح`);
+  }
+  return value;
+}
+
+function parseNote(value: unknown, field: string): string | null {
+  if (value === null || value === undefined || value === "") return null;
+  if (typeof value !== "string") throw new Error(`${field} لازم يكون نص`);
+  const note = value.trim();
+  if (note.length > 500) throw new Error(`${field} أطول من 500 حرف`);
+  return note || null;
 }
 
 function parseWorkingDays(value: unknown): WorkingDays {
@@ -156,17 +172,17 @@ function parseKpi(value: unknown, index: number): BackupKpi {
     target: asNonNegative(value.target, `kpis[${index}].target`),
     weight: asNonNegative(value.weight, `kpis[${index}].weight`),
     unitAr: asString(value.unitAr, `kpis[${index}].unitAr`),
-    sortOrder: asNumber(value.sortOrder, `kpis[${index}].sortOrder`),
+    sortOrder: asNonNegative(value.sortOrder, `kpis[${index}].sortOrder`),
   };
 }
 
-function parseHoliday(value: unknown, index: number): BackupHoliday {
+function parseHoliday(value: unknown, index: number, yearMonth: string): BackupHoliday {
   if (!isRecord(value)) throw new Error(`إجازة رقم ${index + 1} شكلها غلط`);
-  const date = asString(value.date, `holidays[${index}].date`);
-  if (!isRealIsoDate(date)) {
-    throw new Error(`تاريخ إجازة غلط: ${date}`);
+  const date = requireIsoDate(value.date, `تاريخ الإجازة رقم ${index + 1}`);
+  if (date.slice(0, 7) !== yearMonth) {
+    throw new Error(`الإجازة ${date} مش في الشهر المختار`);
   }
-  return { date, note: asOptionalString(value.note, `holidays[${index}].note`) };
+  return { date, note: parseNote(value.note, `ملاحظة الإجازة رقم ${index + 1}`) };
 }
 
 /** بيقرا الـchecks بس. أي درجات رقمية قديمة (kyc/visits...) بتتجاهل من غير ما توقف الاستعادة. */
@@ -194,12 +210,16 @@ function parseMonth(value: unknown, index: number): BackupMonth {
   if (!Array.isArray(value.holidays)) {
     throw new Error(`إجازات شهر ${yearMonth} ناقصة`);
   }
+  const holidays = value.holidays.map((item, holidayIndex) => parseHoliday(item, holidayIndex, yearMonth));
+  if (new Set(holidays.map((holiday) => holiday.date)).size !== holidays.length) {
+    throw new Error(`فيه تاريخ إجازة مكرر في شهر ${yearMonth}`);
+  }
   return {
     yearMonth,
     fullCommission: asNonNegative(value.fullCommission, `months[${index}].fullCommission`),
     workingDays: parseWorkingDays(value.workingDays),
     kpis: value.kpis.map((item, kpiIndex) => parseKpi(item, kpiIndex)),
-    holidays: value.holidays.map((item, holidayIndex) => parseHoliday(item, holidayIndex)),
+    holidays,
     quality: parseQuality(value.quality, index),
   };
 }
@@ -210,10 +230,7 @@ function parseEntry(value: unknown, index: number): BackupEntry {
   if (!KPI_KEYS.includes(kpiKey as KpiKey)) {
     throw new Error(`سجل بمؤشر غير معروف: ${kpiKey}`);
   }
-  const entryDate = asString(value.entryDate, `entries[${index}].entryDate`);
-  if (!isRealIsoDate(entryDate)) {
-    throw new Error(`تاريخ سجل غلط: ${entryDate}`);
-  }
+  const entryDate = requireIsoDate(value.entryDate, `تاريخ السجل رقم ${index + 1}`);
   const rawQuantity = asNumber(value.quantity, `entries[${index}].quantity`);
   const quantityCheck = validateQuantity(kpiKey as KpiKey, rawQuantity);
   if (!quantityCheck.ok) {
@@ -228,17 +245,23 @@ function parseEntry(value: unknown, index: number): BackupEntry {
     kpiKey: kpiKey as KpiKey,
     quantity,
     entryDate,
-    note: asOptionalString(value.note, `entries[${index}].note`),
+    note: parseNote(value.note, `ملاحظة السجل رقم ${index + 1}`),
     createdAt,
   };
 }
 
 function parseArticle(value: unknown, index: number): BackupArticle {
   if (!isRecord(value)) throw new Error(`مقال رقم ${index + 1} شكله غلط`);
+  const title = asString(value.title, `articles[${index}].title`);
+  const content = asString(value.content, `articles[${index}].content`);
+  if (title.length < 2) throw new Error(`عنوان المقال رقم ${index + 1} قصير جدًا`);
+  if (title.length > 160) throw new Error(`عنوان المقال رقم ${index + 1} أطول من 160 حرف`);
+  if (content.length < 2) throw new Error(`محتوى المقال رقم ${index + 1} قصير جدًا`);
+  if (content.length > 8000) throw new Error(`محتوى المقال رقم ${index + 1} أطول من 8000 حرف`);
   return {
     id: value.id === undefined ? undefined : asString(value.id, `articles[${index}].id`),
-    title: asString(value.title, `articles[${index}].title`),
-    content: asString(value.content, `articles[${index}].content`),
+    title,
+    content,
     createdAt:
       value.createdAt === undefined ? undefined : asString(value.createdAt, `articles[${index}].createdAt`),
     updatedAt:
