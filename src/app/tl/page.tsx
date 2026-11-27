@@ -79,13 +79,16 @@ export default function TeamLeaderPage() {
       savedBranch = sessionStorage.getItem("tys.tlBranch") ?? "";
       savedPassword = sessionStorage.getItem("tys.tlPass") ?? "";
     } catch { /* التخزين غير متاح. */ }
-    if (savedBranch && savedPassword) {
-      setBranch(savedBranch);
-      setPassword(savedPassword);
-      void load({ branch: savedBranch, password: savedPassword });
-    } else {
-      setAuthChecking(false);
-    }
+    // نأجل تحديث الحالة خطوة واحدة عشان منعملش setState متزامن جوه الـeffect.
+    queueMicrotask(() => {
+      if (savedBranch && savedPassword) {
+        setBranch(savedBranch);
+        setPassword(savedPassword);
+        void load({ branch: savedBranch, password: savedPassword });
+      } else {
+        setAuthChecking(false);
+      }
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
