@@ -19,3 +19,4 @@ scripts/test-assistant-narrowing.cases.json
 
 # Generated at build time by scripts/prepare-assistant-api.mjs (Vercel only)
 src/app/api/
+scripts/test-assistant-local.cases.json
