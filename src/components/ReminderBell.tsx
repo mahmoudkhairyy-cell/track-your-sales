@@ -144,12 +144,12 @@ export function ReminderBell({ kpis, remainingDays, paceMessage }: Props) {
         onClick={() => { haptic(); setOpen((value) => !value); }}
         aria-label="تنبيهات التارجت"
         aria-expanded={open}
-        className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-orange-200 bg-orange-50 text-lg shadow-sm transition hover:bg-orange-100 active:scale-95 dark:border-[#4a3a2e] dark:bg-[#2e2117]"
+        className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[var(--orn-line)] bg-[var(--color-primary-50)] text-lg shadow-sm transition hover:brightness-95 active:scale-95"
       >
         <span aria-hidden="true">🔔</span>
         {showBadge ? (
           <span
-            className="absolute -left-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-500 px-1 text-[9px] font-black leading-none text-white ring-2 ring-white dark:ring-[#241a12]"
+            className="absolute -left-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-500 px-1 text-[9px] font-black leading-none text-white ring-2 ring-[var(--orn-surface)]"
             aria-label={`فاضل ${openCount} مؤشرات على التارجت`}
           >
             {openCount}
@@ -167,7 +167,7 @@ export function ReminderBell({ kpis, remainingDays, paceMessage }: Props) {
                 onClick={() => setOpen(false)}
               />
               <div
-                className="fixed inset-x-3 top-16 z-[60] mx-auto max-w-sm rounded-2xl border border-[#f2e4d8] bg-white p-4 text-[#2d2119] shadow-xl dark:border-[#4a3a2e] dark:bg-[#241a12] dark:text-[#f5ebe1]"
+                className="fixed inset-x-3 top-16 z-[60] mx-auto max-w-sm rounded-2xl border border-[var(--orn-line)] bg-[var(--orn-surface)] p-4 text-[var(--orn-ink)] shadow-xl"
                 dir="rtl"
                 role="dialog"
                 aria-label="تذكير التارجت اليومي"
@@ -180,7 +180,7 @@ export function ReminderBell({ kpis, remainingDays, paceMessage }: Props) {
                     <button
                       type="button"
                       onClick={dismissToday}
-                      className="min-h-8 shrink-0 rounded-lg bg-[#fff0e2] px-3 text-xs font-extrabold text-[#bd4b0a] dark:bg-[#3a2a1c] dark:text-[#ffb36e]"
+                      className="min-h-8 shrink-0 rounded-lg bg-[var(--color-primary-50)] px-3 text-xs font-extrabold text-[var(--color-primary-700)]"
                     >
                       تمام ✓
                     </button>
@@ -189,7 +189,7 @@ export function ReminderBell({ kpis, remainingDays, paceMessage }: Props) {
 
                 {message.state === "no-targets" ? (
                   <>
-                    <p className="mt-2 text-xs leading-5 text-[#88796e] dark:text-[#c4b3a4]">{message.headline}</p>
+                    <p className="mt-2 text-xs leading-5 text-[var(--color-text-secondary)]">{message.headline}</p>
                     <button
                       type="button"
                       onClick={() => { haptic(); setOpen(false); router.push("/target"); }}
@@ -199,29 +199,29 @@ export function ReminderBell({ kpis, remainingDays, paceMessage }: Props) {
                     </button>
                   </>
                 ) : message.state === "all-done" ? (
-                  <p className="mt-2 text-xs font-bold leading-5 text-emerald-700 dark:text-emerald-400">{message.headline}</p>
+                  <p className="mt-2 text-xs font-bold leading-5 text-emerald-600">{message.headline}</p>
                 ) : (
                   <>
-                    <p className="mt-2 text-xs font-bold leading-5 text-[#514238] dark:text-[#e8d9ca]">{message.headline}</p>
+                    <p className="mt-2 text-xs font-bold leading-5 text-[var(--color-text-primary)]">{message.headline}</p>
                     <ul className="mt-2 flex flex-col gap-1.5">
                       {message.lines.map((line) => (
                         <li
                           key={line}
-                          className="rounded-lg border border-orange-100 bg-orange-50/60 px-2.5 py-1.5 text-xs font-extrabold text-orange-800 dark:border-[#4a3a2e] dark:bg-[#2e2117] dark:text-[#ffb36e]"
+                          className="rounded-lg border border-[var(--orn-line)] bg-[var(--color-primary-50)] px-2.5 py-1.5 text-xs font-extrabold text-[var(--color-primary-700)]"
                         >
                           {line}
                         </li>
                       ))}
                     </ul>
-                    <p className="mt-2 text-[11px] leading-5 text-[#9a7963] dark:text-[#c4b3a4]">{paceMessage}</p>
+                    <p className="mt-2 text-[11px] leading-5 text-[var(--color-text-muted)]">{paceMessage}</p>
                   </>
                 )}
 
-                <div className="mt-2 flex flex-wrap items-center gap-2 border-t border-orange-100 pt-2.5 dark:border-[#4a3a2e]">
+                <div className="mt-2 flex flex-wrap items-center gap-2 border-t border-[var(--orn-line)] pt-2.5">
                   {prefs.notify ? (
                     <>
-                      <span className="text-[11px] font-extrabold text-emerald-700 dark:text-emerald-400">🔔 الإشعار اليومي شغال</span>
-                      <label className="flex items-center gap-1 text-[11px] font-bold text-[#514238] dark:text-[#e8d9ca]">
+                      <span className="text-[11px] font-extrabold text-emerald-600">🔔 الإشعار اليومي شغال</span>
+                      <label className="flex items-center gap-1 text-[11px] font-bold text-[var(--color-text-primary)]">
                         الساعة
                         <input
                           type="time"
@@ -230,14 +230,14 @@ export function ReminderBell({ kpis, remainingDays, paceMessage }: Props) {
                             const time = event.target.value;
                             if (time) savePrefs({ ...prefs, time });
                           }}
-                          className="min-h-8 rounded-lg border border-orange-200 bg-white px-1.5 text-xs font-bold text-orange-900 dark:border-[#4a3a2e] dark:bg-[#2e2117] dark:text-[#ffb36e]"
+                          className="min-h-8 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-1.5 text-xs font-bold text-[var(--color-text-primary)]"
                           dir="ltr"
                         />
                       </label>
                       <button
                         type="button"
                         onClick={() => { haptic(); savePrefs({ ...prefs, notify: false }); }}
-                        className="min-h-8 rounded-lg px-2 text-[11px] font-bold text-[#9a7963] underline dark:text-[#c4b3a4]"
+                        className="min-h-8 rounded-lg px-2 text-[11px] font-bold text-[var(--color-text-muted)] underline"
                       >
                         وقّف الإشعار
                       </button>
@@ -246,7 +246,7 @@ export function ReminderBell({ kpis, remainingDays, paceMessage }: Props) {
                     <button
                       type="button"
                       onClick={() => void enableNotify()}
-                      className="min-h-8 rounded-lg border border-orange-200 px-3 text-[11px] font-extrabold text-orange-800 dark:border-[#4a3a2e] dark:text-[#ffb36e]"
+                      className="min-h-8 rounded-lg border border-[var(--orn-line)] px-3 text-[11px] font-extrabold text-[var(--color-primary-700)]"
                     >
                       🔔 فعّل إشعار يومي بالتارجت
                     </button>
