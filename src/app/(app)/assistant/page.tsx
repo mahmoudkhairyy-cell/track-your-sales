@@ -158,7 +158,7 @@ export default function AssistantPage() {
 
       <section className="relative overflow-hidden rounded-hero border border-section bg-gradient-to-br from-white via-white to-brand-surface p-5 shadow-accent ring-1 ring-white">
         <div className="mb-3">
-          <p className="mb-2 text-xs font-extrabold text-ink-2">أكواد سريعة — الأكثر استخدامًا (إجابة فورية من غير ما تستهلك من المساعد)</p>
+          <p className="mb-2 text-xs font-extrabold text-ink-2">أكواد سريعة</p>
           <div className="flex flex-wrap gap-2">
             {QUICK_SRS.map((item) => (
               <button

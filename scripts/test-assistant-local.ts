@@ -39,6 +39,7 @@ for (const c of cases) {
 }
 // حراسة: الأكواد الثابتة لسه موجودة في القاعدة
 for (const f of FIXED_ANSWERS) {
+  if (f.branch) continue; // أكواد من إجراءات الفرع مش من القاعدة — مثبتة بعلم محمود
   for (const code of f.answer.match(/\b\d{4,5}\b/g) ?? []) {
     if (!kb.includes(code)) failures.push(`DRIFT: الكود ${code} مش موجود في القاعدة`);
   }

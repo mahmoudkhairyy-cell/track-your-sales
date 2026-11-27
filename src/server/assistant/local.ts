@@ -391,7 +391,8 @@ function kpiWeightAnswer(kb: string, q: string): string | null {
     : `${row[0]}\n${who === 1 ? "الموظف" : "المدير"}: ${row[who]}\nأوزان مؤشرات الموظف ومدير الفرع — قسم 8`;
 }
 
-type Fixed = { re: RegExp; answer: string; guard?: RegExp };
+type Fixed = { re: RegExp; answer: string; guard?: RegExp; /** true = مصدرها إجراءات الفرع (مرجع الـSR المهم) مش القاعدة، فحارس الـDRIFT بيتخطى أكوادها */
+  branch?: boolean };
 
 // أكواد ثابتة من «قسم 0» في القاعدة (قواعد الخبير). اختبار الـself-check بيتأكد إن كل كود لسه موجود في القاعدة.
 export const FIXED_ANSWERS: Fixed[] = [
@@ -433,6 +434,12 @@ export const FIXED_ANSWERS: Fixed[] = [
     answer:
       "11119\nAcc Mod For VAS – Delete: إلغاء/حذف خدمة الكول تون (ونفس الكود لحذف كول تون الأذان وخاصية Call Tone Block).\nقسم 16",
     guard: /(شركات|corporate|انتظار|waiting)/,
+  },
+  {
+    re: /(ريلوكيشن|relocation|reallocat|نقل).*(خط|تليفون|تلفون|ارضي|أرضي|dsl|ادسل|داتا)|(خط|تليفون|تلفون).*(ريلوكيشن|relocation|نقل)|(deactive|دي ?اكتيف|مفصول|غير نشط|موقوف).*(نقل|ريلوكيشن|relocation)/,
+    answer:
+      "SR 1030 ثم SR 10841\nRelocation (نقل الخط) لما الخط يكون Deactive:\n1. افتح SR 1030.\n2. اتصل بـ Activation Team واختار Option 2.\n3. افتح SR 10841.\n4. املأ عقد فاضي ببيانات العميل وارفع البطاقة عن طريق Live Capture.\nمن مرجع الـ SR المهم في التطبيق",
+    branch: true,
   },
   {
     re: /(فك|رفع|ازاله|الغاء) (ال)?(ايقاف|بلوك|حظر).*(محفظه|كاش)|(محفظه|كاش).*(فك|رفع) (ال)?(ايقاف|بلوك)/,
