@@ -1,0 +1,39 @@
+{
+  "name": "Track Your Sales — مدير فرع",
+  "short_name": "TYS مدير فرع",
+  "description": "تطبيق مدير الفرع: متابعة فريقه وإنتاجية فرعه وتعاقداته",
+  "start_url": "/track-your-sales/branch/",
+  "scope": "/track-your-sales/branch/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#fffaf5",
+  "theme_color": "#ff7900",
+  "lang": "ar",
+  "dir": "rtl",
+  "icons": [
+    {
+      "src": "/track-your-sales/branch/app-icon-branch-192-v2.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/track-your-sales/branch/app-icon-branch-512-v2.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/track-your-sales/branch/app-icon-branch-maskable-512-v2.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "id": "/track-your-sales/branch/",
+  "categories": [
+    "business",
+    "productivity"
+  ],
+  "shortcuts": []
+}

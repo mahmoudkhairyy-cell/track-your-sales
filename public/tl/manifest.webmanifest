@@ -1,0 +1,39 @@
+{
+  "name": "Track Your Sales — تيم ليدر",
+  "short_name": "TYS تيم ليدر",
+  "description": "تطبيق التيم ليدر: متابعة فريقه وتسجيل إنجازاته",
+  "start_url": "/track-your-sales/tl/",
+  "scope": "/track-your-sales/tl/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#fffaf5",
+  "theme_color": "#ff7900",
+  "lang": "ar",
+  "dir": "rtl",
+  "icons": [
+    {
+      "src": "/track-your-sales/tl/app-icon-tl-192-v2.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/track-your-sales/tl/app-icon-tl-512-v2.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/track-your-sales/tl/app-icon-tl-maskable-512-v2.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "id": "/track-your-sales/tl/",
+  "categories": [
+    "business",
+    "productivity"
+  ],
+  "shortcuts": []
+}

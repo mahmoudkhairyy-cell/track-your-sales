@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { retrieveRelevantKB } from "./retrieve";
 import { localAnswer } from "./local";
-import { cacheGet, cacheSet, directAnswer, freemaxPriceAnswer, questionKey, rateLimited } from "./direct";
+import { cacheGet, cacheSet, directAnswer, dslPriceAnswer, freemaxPriceAnswer, questionKey, rateLimited } from "./direct";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -150,7 +150,7 @@ export async function POST(request: NextRequest) {
   let systemPrompt: string;
   try {
     const knowledgeBase = await getKnowledgeBase();
-    const direct = directAnswer(knowledgeBase, question) ?? freemaxPriceAnswer(knowledgeBase, question);
+    const direct = directAnswer(knowledgeBase, question) ?? freemaxPriceAnswer(knowledgeBase, question) ?? dslPriceAnswer(knowledgeBase, question);
     if (direct) {
       stats.local++;
       return NextResponse.json({ answer: direct }, { headers });

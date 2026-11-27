@@ -5,13 +5,14 @@ import "./2-globals.css";
 import "./decorated.css";
 import "./manager-polish.css";
 import { PwaRegister } from "@/components/PwaRegister";
+import { APP_BASE_PATH } from "@/lib/app-config";
 
 export const metadata: Metadata = {
   title: `${APP_NAME} ${BRAND_BY}`,
   description: `${APP_DISCLAIMER} — ${BRAND_BY}.`,
   openGraph: {
     title: `${APP_NAME} ${BRAND_BY}`,
-    description: "تتبع مبيعاتك — راقب .. حلل .. حقق المزيد",
+    description: "تراك يور سيلز — راقب .. حلل .. حقق المزيد",
     url: "https://mahmoudkhairyy-cell.github.io/track-your-sales/",
     siteName: APP_NAME,
     locale: "ar_EG",
@@ -22,6 +23,8 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     images: ["https://mahmoudkhairyy-cell.github.io/track-your-sales/og-image.png"],
   },
+  // تطبيق الموظف هو الهوية الافتراضية؛ قسم /area/ يستبدلها بمانيفست مدير المنطقة.
+  manifest: `${APP_BASE_PATH}/manifest.webmanifest`,
 };
 
 export const viewport: Viewport = {
@@ -38,14 +41,13 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <script dangerouslySetInnerHTML={{ __html: "try{var t=localStorage.getItem('tys.theme');var d=t==='dark'||t==='aurora-dark'||t==='space';if(d)document.documentElement.setAttribute('data-theme','dark')}catch(e){}" }} />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
-        <link rel="preload" href="/track-your-sales/fonts/1-cairo-arabic-variable.woff2" as="font" type="font/woff2" crossOrigin="" />
+        <link rel="preload" href={`${APP_BASE_PATH}/fonts/1-cairo-arabic-variable.woff2`} as="font" type="font/woff2" crossOrigin="" />
         {/* خطوط جوجل بتتحمل من غير ما تقفل رسم الصفحة (كانت بتأخر أول ظهور على النت الضعيف) */}
         <link href="https://fonts.googleapis.com/css2?family=Mada:wght@400;500;700;800&family=Noto+Naskh+Arabic:wght@500;700&family=Cairo:wght@500;700;900&display=swap" rel="stylesheet" media="print" data-tys-fonts="1" />
         <script dangerouslySetInnerHTML={{ __html: "(function(){var l=document.querySelector('link[data-tys-fonts]');if(!l)return;function on(){l.media='all'}if(l.sheet){on()}else{l.addEventListener('load',on);setTimeout(on,3000)}})();" }} />
         <noscript><link href="https://fonts.googleapis.com/css2?family=Mada:wght@400;500;700;800&family=Noto+Naskh+Arabic:wght@500;700&family=Cairo:wght@500;700;900&display=swap" rel="stylesheet" /></noscript>
-        <link rel="manifest" href="/track-your-sales/manifest.webmanifest" />
-        <link rel="icon" href="/track-your-sales/logo-mark.png" type="image/png" />
-        <link rel="apple-touch-icon" href="/track-your-sales/app-icon-192-v2.png" />
+        <link rel="icon" href={`${APP_BASE_PATH}/logo-mark.png`} type="image/png" />
+        <link rel="apple-touch-icon" href={`${APP_BASE_PATH}/app-icon-emp-192-v2.png`} />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-title" content="Track Sales" />
         <meta name="mobile-web-app-capable" content="yes" />

@@ -154,6 +154,17 @@ export const KPI_CATALOG = [
   },
 ] as const;
 
+/** أسماء عرض المؤشرات في شاشات مدير الفرع ومدير المنطقة: اسم التقرير الوارد من المزامنة → الاسم الرسمي المعروض.
+ *  تغيير عرض فقط: مفاتيح الباك إند ومنطق التقارير والتجميع بيشتغل بالاسم الأصلي زي ما هو. */
+export const KPI_DISPLAY_NAMES: Record<string, string> = {
+  GAs: "Line",
+  "New Lines": "Line",
+};
+
+export function displayKpiName(name: string): string {
+  return KPI_DISPLAY_NAMES[name] ?? name;
+}
+
 export const KPI_EMOJI: Record<string, string> = Object.fromEntries(
   KPI_CATALOG.map((item) => [item.key, item.emoji]),
 );

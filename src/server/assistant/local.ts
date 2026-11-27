@@ -369,6 +369,8 @@ function factRuleAnswer(kb: string, q: string): string | null {
 // KPI: وزن مؤشر للموظف/المدير من جدول الأوزان
 function kpiWeightAnswer(kb: string, q: string): string | null {
   if (!/(وزن|نسبه|اوزان|بكام)/.test(q) || !/(kpi|مؤشر|الموظف|المدير|الجوده|quality|نقاط|points|منتجيه|productivity|محافظ|adsl|home|kyc)/.test(q)) return null;
+  // سؤال سعر باقة DSL محددة (فيه رقم الباقة) مش سؤال عن وزن مؤشر — بيترد عليه من جدول أسعار DSL.
+  if (/dsl\s*\d{3,4}/.test(q)) return null;
   const { tables } = parseKB(kb);
   const t = tables.find((x) => x.header[0] === "المؤشر" && x.header[1] === "الموظف");
   if (!t) return null;

@@ -1,6 +1,9 @@
-const CACHE = "tys-v104-fast";
+const CACHE = "tys-v107-line";
 const APP_HOME = "/track-your-sales/home/";
 const IMMUTABLE = /\/_next\/static\//;
+// تطبيقات الأدوار الأخرى تحت نفس الدومين (تيم ليدر/مدير فرع/مدير منطقة) ليها SW خاص بكل منها
+// بسكوب أضيق؛ الـ SW ده لا يلمس مساراتها إطلاقًا عشان كل تطبيق يدير كاشه بنفسه.
+const EXCLUDED_PREFIXES = ["/track-your-sales/tl/", "/track-your-sales/branch/", "/track-your-sales/area/"];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(self.skipWaiting());
@@ -53,6 +56,7 @@ self.addEventListener("fetch", (event) => {
 
   if (request.method !== "GET" || url.origin !== self.location.origin) return;
   if (url.pathname.startsWith("/api/")) return;
+  if (EXCLUDED_PREFIXES.some((prefix) => url.pathname.startsWith(prefix))) return;
 
   if (IMMUTABLE.test(url.pathname)) {
     event.respondWith(cacheFirst(request));
