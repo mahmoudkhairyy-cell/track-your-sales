@@ -1,4 +1,4 @@
-const CACHE = "tys-area-v1";
+const CACHE = "tys-area-v2";
 const APP_HOME = "/track-your-sales/area/";
 const IMMUTABLE = /\/_next\/static\//;
 

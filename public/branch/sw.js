@@ -1,4 +1,4 @@
-const CACHE = "tys-branch-v1";
+const CACHE = "tys-branch-v2";
 const APP_HOME = "/track-your-sales/branch/";
 const IMMUTABLE = /\/_next\/static\//;
 

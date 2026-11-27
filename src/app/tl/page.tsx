@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, type FormEvent } from "react";
-import { BRANCHES } from "@/lib/constants";
+import { BRANCHES, displayKpiName } from "@/lib/constants";
 import { managerApi } from "@/lib/cloud";
 
 type TeamRow = {
@@ -179,7 +179,7 @@ export default function TeamLeaderPage() {
               <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3">
                 {(row.payload.kpis ?? []).map((k) => (
                   <div key={k.name} className="rounded-xl bg-[var(--color-surface-cream)] p-2">
-                    <p className="truncate text-[11px] font-bold text-[var(--color-text-secondary)]">{k.name}</p>
+                    <p className="truncate text-[11px] font-bold text-[var(--color-text-secondary)]">{displayKpiName(k.name)}</p>
                     <p className="mt-1 text-base font-black">{fmt(k.percent)}</p>
                     <p className="text-[11px] text-[var(--color-text-secondary)]">{k.achieved} / {k.target}</p>
                   </div>

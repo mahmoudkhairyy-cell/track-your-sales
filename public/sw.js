@@ -1,4 +1,4 @@
-const CACHE = "tys-v106-logo";
+const CACHE = "tys-v107-line";
 const APP_HOME = "/track-your-sales/home/";
 const IMMUTABLE = /\/_next\/static\//;
 // تطبيقات الأدوار الأخرى تحت نفس الدومين (تيم ليدر/مدير فرع/مدير منطقة) ليها SW خاص بكل منها
