@@ -244,7 +244,7 @@ export default function BranchManagerPage() {
             <label className="block text-sm font-bold text-[#514238]">الفرع
               <select value={branch} onChange={(e) => setBranch(e.target.value)} className="mt-2 w-full rounded-2xl border border-[#f2e4d8] bg-[#fffdfb] px-4 py-3 text-base outline-none focus:border-[#e96812]">
                 <option value="">اختار الفرع</option>
-                {BRANCHES.map((item) => <option key={item} value={item}>{item}</option>)}
+                {BRANCHES.filter((item) => !item.startsWith("OB.")).map((item) => <option key={item} value={item}>{item}</option>)}
               </select>
             </label>
             <label className="block text-sm font-bold text-[#514238]">كلمة السر
@@ -342,7 +342,7 @@ export default function BranchManagerPage() {
           {visibleReports.map((row) => {
             const q = qualityInputs[row.employee_name] ?? employeeQuality(row, qualityMap.get(row.employee_name));
             return <article key={row.branch_id} className="orn-rich-card rounded-3xl border border-[#f1dfd0] bg-white p-4 shadow-sm">
-              <div className="flex flex-wrap items-center justify-between gap-2"><div><h3 className="font-black">{row.employee_name}</h3><p className="mt-1 text-xs text-[#88796e]">{row.payload.role==="team_leader"?"تيم ليدر":"موظف"} · آخر مزامنة {timeLabel(row.updated_at)}</p></div><span className="rounded-full bg-[#fff0e2] px-3 py-1 text-sm font-black text-[#bd4b0a]">{fmt(row.payload.overall ?? 0)}</span></div>
+              <div className="flex flex-wrap items-center justify-between gap-2"><div><h3 className="flex flex-wrap items-center gap-2 font-black">{row.employee_name}{row.payload.role==="team_leader" ? <span className="rounded-full bg-[#bd4b0a] px-2 py-0.5 text-[10px] font-black text-white">قائد فريق</span> : null}</h3><p className="mt-1 text-xs text-[#88796e]">{row.payload.role==="team_leader"?"تيم ليدر":"موظف"} · آخر مزامنة {timeLabel(row.updated_at)}</p></div><span className="rounded-full bg-[#fff0e2] px-3 py-1 text-sm font-black text-[#bd4b0a]">{fmt(row.payload.overall ?? 0)}</span></div>
               <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-6">
                 {(row.payload.kpis ?? []).map((k) => <div key={k.name} className="rounded-xl bg-[#fff8f1] p-2"><p className="truncate text-[11px] font-bold text-[#88796e]">{k.name}</p><p className="mt-1 text-lg font-black">{fmt(k.percent)}</p><p className="text-[11px] text-[#88796e]">{k.achieved} / {k.target}</p></div>)}
               </div>
