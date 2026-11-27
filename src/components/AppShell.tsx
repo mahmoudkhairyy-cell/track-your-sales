@@ -232,7 +232,7 @@ function FirstRunProfile({ onDone }: { onDone: () => void }) {
         setError("اختار اسمك واكتب كلمة السر");
         return;
       }
-      if (role !== "area_manager" && role !== "manager") {
+      if (role !== "area_manager") {
         if (name.trim().length < 2) {
           setError("اكتب اسمك (حرفين على الأقل)");
           return;
@@ -282,13 +282,13 @@ function FirstRunProfile({ onDone }: { onDone: () => void }) {
       setError("اختار الفرع بتاعك");
       return;
     }
-    if (role !== "manager" && branch !== OUTSIDE_BRANCHES && !areaManager.trim()) {
+    if (branch !== OUTSIDE_BRANCHES && !areaManager.trim()) {
       setError("اختار مدير المنطقة بتاعك");
       return;
     }
     setPending(true);
     try {
-      await api("/api/profile", { method: "PATCH", body: JSON.stringify({ name: name.trim(), branch: branch.trim(), role, areaManager: branch === OUTSIDE_BRANCHES || role === "manager" ? "" : areaManager.trim() }) });
+      await api("/api/profile", { method: "PATCH", body: JSON.stringify({ name: name.trim(), branch: branch.trim(), role, areaManager: branch === OUTSIDE_BRANCHES ? "" : areaManager.trim() }) });
       if (role === "manager") {
         router.push("/branch-manager/");
         return;
@@ -321,7 +321,7 @@ function FirstRunProfile({ onDone }: { onDone: () => void }) {
             {role === "area_manager" ? <p>🔐 كلمة السر: <b>••••••••</b></p> : null}
             <p>🏷️ الوظيفة: <b>{role === "agent" ? "مندوب مبيعات" : role === "team_leader" ? "تيم ليدر" : role === "manager" ? "مدير فرع" : "مدير منطقة"}</b></p>
             {role !== "area_manager" ? <p>🏢 الفرع: <b>{branch}</b></p> : null}
-            {role !== "area_manager" && role !== "manager" && branch !== OUTSIDE_BRANCHES ? <p>🗺️ مدير المنطقة: <b>{areaManager}</b></p> : null}
+            {role !== "area_manager" && branch !== OUTSIDE_BRANCHES ? <p>🗺️ مدير المنطقة: <b>{areaManager}</b></p> : null}
             <p className="pt-2 text-xs leading-5 text-[#88796e]">بعد الموافقة مينفعش تغيّر الاسم أو الفرع أو الوظيفة.</p>
           </div>
         ) : (
@@ -372,7 +372,7 @@ function FirstRunProfile({ onDone }: { onDone: () => void }) {
           }}
         />
         ) : null}
-        {role !== "area_manager" && role !== "manager" && branch !== OUTSIDE_BRANCHES ? (
+        {role !== "area_manager" && branch !== OUTSIDE_BRANCHES ? (
         <SearchableSelect label="مدير المنطقة (الأريا مانجر)" value={areaManager} options={AREA_MANAGERS} placeholder="Search area manager, e.g. Abd Elrahman Mahmoud" onChange={setAreaManager} />
         ) : null}
           </>
