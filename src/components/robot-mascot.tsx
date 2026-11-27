@@ -96,7 +96,6 @@ export function RobotMascot({ size = 56, className = "", progress = null, greetO
 
   const classes = [
     "orn-mascot",
-    className,
     reaction === "tilt" ? "mz-tilt" : "",
     reaction === "hop" ? "mz-hop" : "",
     excited ? "mz-excited" : "",
@@ -105,7 +104,7 @@ export function RobotMascot({ size = 56, className = "", progress = null, greetO
     .join(" ");
 
   return (
-    <span className="mz-wrap" style={{ width: size }}>
+    <span className={`mz-wrap ${className}`} style={{ width: size }}>
       {line ? (
         <span className="mz-bubble" role="status" dir="rtl">
           {line}
