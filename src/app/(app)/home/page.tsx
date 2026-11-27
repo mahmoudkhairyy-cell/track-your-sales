@@ -12,7 +12,7 @@ import { formatMoney, formatPercent, formatQty } from "@/lib/calculations";
 import { useMonth } from "@/components/AppShell";
 import { KpiIcon } from "@/components/KpiIcon";
 import { RobotMascot } from "@/components/robot-mascot";
-import { DailyReminder } from "@/components/DailyReminder";
+import { ReminderBell } from "@/components/ReminderBell";
 import { pushReport, readSyncStatus, type SyncStatus } from "@/lib/sync";
 
 type KpiRow = {
@@ -149,11 +149,12 @@ export default function HomePage() {
         </p>
       ) : null}
 
-      <DailyReminder kpis={data.kpis} remainingDays={data.work.remaining} paceMessage={data.pace.message} />
-
       <section className="orn-greeting orn-card" dir="rtl">
         <div><h1>{greeting()} <bdi>{data.profile.name.trim().split(/\s+/)[0]}</bdi></h1><p><span className="orn-pin" /> <bdi>{data.profile.branch}</bdi></p></div>
-        <span className="orn-avatar" aria-hidden="true">{data.profile.name.trim().charAt(0).toUpperCase() || "M"}</span>
+        <span className="flex shrink-0 items-center gap-2">
+          <ReminderBell kpis={data.kpis} remainingDays={data.work.remaining} paceMessage={data.pace.message} />
+          <span className="orn-avatar" aria-hidden="true">{data.profile.name.trim().charAt(0).toUpperCase() || "M"}</span>
+        </span>
       </section>
       <section className="orn-monthly orn-card" aria-label="الأداء الشهري">
         <div className="orn-month-ring" role="img" aria-label={`إجمالي تحقيق التارجت ${formatPercent(data.overall)}%`}>
