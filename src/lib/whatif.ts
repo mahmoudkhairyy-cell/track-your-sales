@@ -192,7 +192,7 @@ export function buildWhatIfAnswer(data: WhatIfDashboard, intent: WhatIfIntent): 
     if (row.kpiKey === "new_lines" && !rules.walletDone) {
       const wallets = data.kpis.find((k) => k.kpiKey === "new_orange_cash");
       const need = wallets ? Math.max(0, wallets.target - wallets.achieved) : 0;
-      lines.push(`- خد بالك: الـ GAs مش بتتحسب غير بعد ما تقفل المحافظ — فاضل ${formatQty(need)} محفظة`);
+      lines.push(`- خد بالك: الـ Line مش بتتحسب غير بعد ما تقفل المحافظ — فاضل ${formatQty(need)} محفظة`);
     }
     if (overall >= OVERALL_MAX_PERCENT && data.overall < OVERALL_MAX_PERCENT) {
       lines.push(`- الإجمالي بيتسقف عند ${OVERALL_MAX_PERCENT}%، فالزيادة بعد كده مش هتظهر في النسبة`);
@@ -230,10 +230,10 @@ export function buildWhatIfAnswer(data: WhatIfDashboard, intent: WhatIfIntent): 
     if (kpi.kpiKey === "new_lines" && !after.rules.walletDone) {
       const wallets = data.kpis.find((k) => k.kpiKey === "new_orange_cash");
       const wNeed = wallets ? Math.max(0, wallets.target - wallets.achieved) : 0;
-      lines.push(`- تنبيه: الـ GAs مش بتتحسب غير بعد قفل المحافظ — فاضل ${formatQty(wNeed)} محفظة`);
+      lines.push(`- تنبيه: الـ Line مش بتتحسب غير بعد قفل المحافظ — فاضل ${formatQty(wNeed)} محفظة`);
     }
     return lines.join("\n");
   }
 
-  return "مش فاهم الحسبة المطلوبة بالظبط. جرّب تقول مثلاً: «لو عملت 10 GAs كمان» أو «محتاج كام محفظة عشان أوصل 100%».";
+  return "مش فاهم الحسبة المطلوبة بالظبط. جرّب تقول مثلاً: «لو عملت 10 Line كمان» أو «محتاج كام محفظة عشان أوصل 100%».";
 }

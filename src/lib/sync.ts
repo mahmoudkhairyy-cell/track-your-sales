@@ -3,7 +3,8 @@ import { managerApi } from "@/lib/cloud";
 import { pushContracts } from "@/lib/contracts";
 import { cairoYearMonth } from "@/lib/dates";
 import { readProfile } from "@/lib/local-api";
-import { AREA_MANAGERS, OUTSIDE_BRANCHES } from "@/lib/constants";
+import { AREA_MANAGERS, KPI_REPORT_NAMES, OUTSIDE_BRANCHES } from "@/lib/constants";
+import type { KpiKey } from "@/lib/constants";
 
 // معرّف تقرير مستقل لكل ملف موظف على نفس الجهاز؛ يمنع مستخدمًا من الكتابة فوق تقرير مستخدم آخر.
 function reportStorageKey(profile: { name: string; branch: string; areaManager: string; role: string }): string {
@@ -34,7 +35,7 @@ type DashboardSnapshot = {
   overall: number;
   estimatedCommission: number;
   fullCommission: number;
-  kpis: { nameEn: string; achieved: number; target: number; percent: number; weight: number; expectedToDate: number }[];
+  kpis: { kpiKey: string; nameEn: string; achieved: number; target: number; percent: number; weight: number; expectedToDate: number }[];
   work: { total: number; elapsed: number; elapsedBeforeToday?: number; remaining: number };
   todaySummary: { kpiKey: string; quantity: number; count: number }[];
 };
@@ -124,7 +125,7 @@ async function pushReportOnce(): Promise<boolean> {
         fullCommission: data.fullCommission,
         expectedPercent: data.work.total > 0 ? ((data.work.elapsedBeforeToday ?? data.work.elapsed) / data.work.total) * 100 : 0,
         kpis: data.kpis.map((k) => ({
-          name: k.nameEn,
+          name: KPI_REPORT_NAMES[k.kpiKey as KpiKey] ?? k.nameEn,
           achieved: k.achieved,
           target: k.target,
           percent: k.percent,
@@ -140,7 +141,7 @@ async function pushReportOnce(): Promise<boolean> {
         },
         entries: entriesResult.entries.map((e) => ({
           date: e.entryDate,
-          kpi: e.nameEn,
+          kpi: KPI_REPORT_NAMES[e.kpiKey as KpiKey] ?? e.nameEn,
           quantity: e.quantity,
           unit: e.unitAr,
           // الملاحظات الشخصية ما بتتبعتش للسيرفر (مفيش شاشة بتعرضها للمستخدم).

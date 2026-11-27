@@ -7,7 +7,7 @@ import {
   kpiContribution,
   managerKpiContribution,
 } from "../src/lib/calculations";
-import { kpiWeight, managerKpiWeight, MANAGER_FIXED_SALARY, MANAGER_FULL_COMMISSION } from "../src/lib/constants";
+import { kpiWeight, managerKpiWeight, MANAGER_FIXED_SALARY, MANAGER_FULL_COMMISSION, KPI_CATALOG, KPI_REPORT_NAMES } from "../src/lib/constants";
 import { parseBackup, planEntryRestore, type BackupEntry } from "../src/lib/backup";
 import { applyBackupToState, checkRestoreRequest, type RestoreState } from "../src/lib/restore";
 import { validateQuantity } from "../src/lib/quantity";
@@ -405,4 +405,9 @@ check("أزرار الأكواد السريعة: قايمة غير مكررة و
     // إجابة الزرار مبيفضلش آخرها سؤال + اختيارات عشان منطق أزرار التضييق ميفسرهاش غلط
     assert.ok(!/[؟?]\s*$/.test(item.answer.trim()), `إجابة «${item.label}» منتهية بعلامة استفهام`);
   }
+});
+
+check("اسم Line للعرض وGAs ثابت في تقارير المدير", () => {
+  assert.equal(KPI_CATALOG.find((k) => k.key === "new_lines")?.nameEn, "Line");
+  assert.equal(KPI_REPORT_NAMES.new_lines, "GAs");
 });

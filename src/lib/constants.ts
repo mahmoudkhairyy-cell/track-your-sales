@@ -89,7 +89,7 @@ export const DEFAULT_WORKING_DAYS: WorkingDays = {
 export const KPI_CATALOG = [
   {
     key: "new_lines",
-    nameEn: "GAs",
+    nameEn: "Line",
     emoji: "📱",
     unitAr: "خط",
     defaultTarget: 175,
@@ -163,6 +163,14 @@ export function kpiEmoji(key: string): string {
 }
 
 export type KpiKey = (typeof KPI_CATALOG)[number]["key"];
+
+/**
+ * أسماء المؤشرات جوه تقارير المدير: ثابتة ومستقلة عن اسم العرض في التطبيق.
+ * تفضّل "GAs" حتى بعد ما اسم العرض بقى "Line" عشان تقارير المدير القديمة والجديدة تتجمع صح.
+ */
+export const KPI_REPORT_NAMES: Partial<Record<KpiKey, string>> = {
+  new_lines: "GAs",
+};
 
 export type Role = "agent" | "team_leader" | "manager" | "area_manager";
 
