@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState, type FormEvent } from "react";
 import { logoutBranchManager, readProfile } from "@/lib/local-api";
-import { BRANCHES, MANAGER_FULL_COMMISSION, MANAGER_KPI_WEIGHTS } from "@/lib/constants";
+import { BRANCHES, KPI_CATALOG, MANAGER_FULL_COMMISSION, MANAGER_KPI_WEIGHTS } from "@/lib/constants";
 import { managerApi } from "@/lib/cloud";
 import { KpiIcon } from "@/components/KpiIcon";
 import { cairoYearMonth } from "@/lib/dates";
@@ -351,18 +351,20 @@ export default function BranchManagerPage() {
                 <div><h3 className="flex flex-wrap items-center gap-2 font-black">{row.employee_name}{row.payload.role==="team_leader" ? <span className="rounded-full bg-[#bd4b0a] px-2 py-0.5 text-[10px] font-black text-white">قائد فريق</span> : null}</h3><p className="mt-1 text-xs text-[#88796e]">{row.payload.role==="team_leader"?"تيم ليدر":"موظف"} · آخر مزامنة {timeLabel(row.updated_at)}</p></div>
                 <span className="flex shrink-0 items-center gap-2"><span className="rounded-full bg-[#fff0e2] px-3 py-1 text-sm font-black text-[#bd4b0a]">{fmt(row.payload.overall ?? 0)}</span><span className="text-[#bd4b0a]">{isOpen ? "−" : "+"}</span></span>
               </button>
-              {isOpen ? <div className="border-t border-[#f2e4d8] p-4">
+              {isOpen ? <div className="border-t border-[#f2e4d8] p-4" dir="rtl">
                 <div className="orn-kpi-grid">
                   {(row.payload.kpis ?? []).map((k) => {
                     const pct = Math.min(100, Math.max(0, k.percent ?? 0));
                     const kpiKey = KPI_KEYS[k.name] ?? "";
-                    const onTrackKpi = (k.percent ?? 0) >= (k.expectedPercent ?? 0);
+                    const unit = KPI_CATALOG.find((item) => item.key === kpiKey)?.unitAr ?? "";
+                    const expectedToDate = ((k.expectedPercent ?? 0) / 100) * (k.target ?? 0);
+                    const onTrackKpi = (k.achieved ?? 0) >= expectedToDate;
                     return <article key={k.name} className={`orn-kpi orn-card ${(k.percent ?? 0) >= 100 ? "is-win" : ""}`}>
                       <span className="orn-watermark"><KpiIcon kpiKey={kpiKey}/></span>
-                      <div className="orn-kpi-head"><div className="orn-kpi-identity"><span className="orn-kpi-icon"><KpiIcon kpiKey={kpiKey}/></span><span dir="ltr">{k.name}</span></div><span className={`orn-status ${onTrackKpi ? "" : "is-behind"}`}>{onTrackKpi ? "On track" : "Behind"}</span></div>
+                      <div className="orn-kpi-head"><div className="orn-kpi-identity"><span className="orn-kpi-icon"><KpiIcon kpiKey={kpiKey}/></span><span dir="ltr">{k.name}</span></div><span className={`orn-status ${onTrackKpi ? "" : "is-behind"}`}>{onTrackKpi ? "On track" : `ناقص ${formatCount(Math.max(0, Math.ceil(expectedToDate - (k.achieved ?? 0))))}`}</span></div>
                       <div className="orn-kpi-body"><div className="orn-kpi-numbers" dir="ltr"><strong>{formatCount(k.achieved ?? 0)}</strong><span>/ {formatCount(k.target ?? 0)}</span></div><div className="orn-kpi-ring"><svg viewBox="0 0 55 55" aria-hidden="true"><circle cx="27.5" cy="27.5" r="24"/><circle className="orn-ring-fill" cx="27.5" cy="27.5" r="24" pathLength={100} strokeDasharray={`${pct} 100`}/></svg><b>{Math.round(k.percent ?? 0)}%</b></div></div>
                       <div className="orn-track" role="progressbar" aria-label={k.name} aria-valuenow={Math.round(k.percent ?? 0)} aria-valuemin={0} aria-valuemax={100}><i style={{width:`${pct}%`}}/></div>
-                      <p className="orn-kpi-foot">{(k.percent ?? 0) >= 100 ? "حققت التارجت، عاش!" : `المتبقي ${formatCount(Math.max(0, (k.target ?? 0) - (k.achieved ?? 0)))}`}</p>
+                      <p className="orn-kpi-foot">{(k.percent ?? 0) >= 100 ? <><span>✦</span> {(k.percent ?? 0) > 100 ? "عدّيت التارجت، عاش!" : "حققت التارجت، عاش!"}</> : <>المتبقي {formatCount(Math.max(0, (k.target ?? 0) - (k.achieved ?? 0)))} {unit}</>}</p>
                     </article>;
                   })}
                 </div>
