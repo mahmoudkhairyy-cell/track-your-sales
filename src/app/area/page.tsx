@@ -669,7 +669,7 @@ export default function ManagerPage() {
       ) : rows === null ? (
         <div className="mx-auto flex min-h-[calc(100vh-2rem)] max-w-md items-center justify-center sm:min-h-[calc(100vh-3rem)]" dir="rtl">
           <section className="orn-rich-card w-full rounded-[32px] border border-[var(--color-border)] bg-white p-7 text-center shadow-[0_18px_50px_rgba(93,54,26,.10)] sm:p-9">
-            <img src="/track-your-sales/logo-full-tys-ar.png" alt="Track Your Sales" className="mx-auto h-24 w-auto object-contain" />
+            <img src="/track-your-sales/logo-full.png" alt="Track Your Sales" className="mx-auto h-24 w-auto object-contain" />
             <div className="mx-auto mt-4 h-px w-24 bg-gradient-to-r from-transparent via-[#bd4b0a] to-transparent" />
             <p className="mt-4 text-[11px] font-black tracking-[.16em] text-[var(--color-primary-700)]">لوحة المتابعة</p>
             <h1 className="mt-1 text-2xl font-black">دخول مدير المنطقة</h1>

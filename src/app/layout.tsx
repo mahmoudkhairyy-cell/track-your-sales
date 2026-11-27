@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   description: `${APP_DISCLAIMER} — ${BRAND_BY}.`,
   openGraph: {
     title: `${APP_NAME} ${BRAND_BY}`,
-    description: "تتبع مبيعاتك — راقب .. حلل .. حقق المزيد",
+    description: "تراك يور سيلز — راقب .. حلل .. حقق المزيد",
     url: "https://mahmoudkhairyy-cell.github.io/track-your-sales/",
     siteName: APP_NAME,
     locale: "ar_EG",
