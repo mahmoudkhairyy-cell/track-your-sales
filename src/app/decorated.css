@@ -230,6 +230,7 @@ html[data-theme='dark'] body .tys-page-assistant :is(input,select,textarea){back
 html[data-theme='dark'] body .tys-page-assistant [class*='text-red-700']{color:#f68b84!important}
 /* Shared alert banners stay readable in dark mode on every page. */
 html[data-theme='dark'] body [class*='bg-amber-50']{background-color:#3a2a12!important;color:#f5c47a!important;border-color:#6b4d22!important}
+html[data-theme='dark'] body [class*='text-amber']{color:#f5c47a!important}
 html[data-theme='dark'] body [class*='bg-red-50']{background-color:#3a1715!important;color:#f68b84!important;border-color:#6b2823!important}
 html[data-theme='dark'] body [class*='bg-emerald-50']{background-color:#123126!important;color:#7fceaa!important;border-color:#1f4d3a!important}
 
