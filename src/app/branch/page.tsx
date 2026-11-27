@@ -5,7 +5,7 @@ import { logoutBranchManager, readProfile } from "@/lib/local-api";
 import { BRANCHES, KPI_CATALOG, MANAGER_FULL_COMMISSION, MANAGER_KPI_WEIGHTS } from "@/lib/constants";
 import { managerApi } from "@/lib/cloud";
 import { KpiIcon } from "@/components/KpiIcon";
-import { cairoYearMonth } from "@/lib/dates";
+import { cairoYearMonth, formatDateAr } from "@/lib/dates";
 
 type Kpi = { name: string; achieved: number; target: number; percent: number; weight: number; expectedPercent?: number };
 type Report = {
@@ -39,10 +39,12 @@ const QUALITY_FIELDS: { key: keyof Quality; label: string; weight: number }[] = 
   { key: "csat", label: "CSAT / Complaints", weight: 2 },
 ];
 const KPI_KEYS: Record<string, string> = {
-  "GAs": "new_lines", "New Lines": "new_lines", "Points": "points",
+  "GAs": "new_lines", "New Lines": "new_lines", "Line": "new_lines", "Points": "points",
+  "New Orange Cash Wallets": "new_orange_cash",
   "Excite": "existing_wallets", "Exist": "existing_wallets", "Existing OC Wallets": "existing_wallets",
   "Postpaid": "postpaid_lines", "Postpaid Lines": "postpaid_lines",
   "Home ADSL": "dsl", "DSL": "dsl", "KYC & Compliance": "quality", "Quality": "quality",
+  "Productivity (GA & OC)": "productivity",
 };
 const EMPTY_QUALITY: Quality = { kyc: 0, visits: 0, training: 0, pos: 0, csat: 0 };
 const fmt = (value: number) => `${Number.isFinite(value) ? value.toFixed(1).replace(/\.0$/, "") : "0"}%`;
@@ -369,7 +371,7 @@ export default function BranchManagerPage() {
                   })}
                 </div>
                 <p className="mt-4 text-xs font-black text-[#8a4b20]">سجل الإنجاز اليومي ({row.payload.entries?.length ?? 0})</p>
-                <div className="mt-2 space-y-2">{(row.payload.entries ?? []).length === 0 ? <p className="text-xs text-[#88796e]">لسه مفيش إنجازات مسجلة.</p> : (row.payload.entries ?? []).map((entry, index) => <div key={entry.at ?? `${entry.date}-${index}`} className="orn-rich-card flex flex-wrap justify-between gap-2 rounded-lg bg-white px-3 py-2 text-xs"><span>{entry.date} · {entry.kpi}</span><b>{entry.quantity} {displayUnit(entry.unit)}</b></div>)}</div>
+                <div className="mt-2 space-y-2">{(row.payload.entries ?? []).length === 0 ? <p className="text-xs text-[#88796e]">لسه مفيش إنجازات مسجلة.</p> : (row.payload.entries ?? []).map((entry, index) => <div key={entry.at ?? `${entry.date}-${index}`} className="rounded-2xl border border-[#f1dfd0] bg-white p-3"><p className="flex items-center gap-1 font-extrabold"><span className="inline-flex align-middle text-[#bd4b0a]"><KpiIcon kpiKey={KPI_KEYS[entry.kpi] ?? ""} className="h-4 w-4" /></span><span dir="ltr">{entry.kpi}</span></p><p className="mt-0.5 text-xs text-[#88796e]">{formatDateAr(entry.date)} · {formatCount(entry.quantity)} {displayUnit(entry.unit)}</p></div>)}</div>
                 <div className="mt-3 flex items-center justify-between rounded-xl bg-[#fff0e2] px-3 py-2"><span className="text-xs font-black text-[#8a4b20]">إجمالي التحقيق</span><span className="text-sm font-black text-[#bd4b0a]">{fmt(row.payload.overall ?? 0)}</span></div>
               </div> : null}
             </article>;
