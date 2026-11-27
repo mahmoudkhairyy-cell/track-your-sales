@@ -6,18 +6,6 @@ import { managerApi } from "@/lib/cloud";
 import { BRANCHES, KPI_CATALOG } from "@/lib/constants";
 import { cairoISODate } from "@/lib/dates";
 
-type MgrContractRow = { id: string; employee_name: string; branch_name: string; client_name: string; status: "sent" | "missing" | "rejected"; contract_date: string; sent_date: string | null; note: string | null; updated_at: string };
-const CONTRACT_STATUS_LABEL: Record<MgrContractRow["status"], string> = { sent: "أُرسل", missing: "لم يُرسل", rejected: "مرفوض" };
-const CONTRACT_STATUS_STYLE: Record<MgrContractRow["status"], string> = {
-  sent: "bg-emerald-50 text-emerald-700",
-  missing: "bg-amber-50 text-amber-800",
-  rejected: "bg-red-50 text-red-700",
-};
-function contractDaysOld(date: string): number {
-  const then = new Date(`${date}T12:00:00`).getTime();
-  if (Number.isNaN(then)) return 0;
-  return Math.floor((Date.now() - then) / 86400000);
-}
 
 type ReportRow = {
   branch_id: string;
@@ -328,9 +316,6 @@ export default function ManagerPage() {
     setOpenId(id);
   }
   const [rows, setRows] = useState<ReportRow[] | null>(null);
-  const [contractRows, setContractRows] = useState<MgrContractRow[] | null>(null);
-  const [contractsLoading, setContractsLoading] = useState(false);
-  const [contractMsg, setContractMsg] = useState("");
   const [error, setError] = useState("");
   const [pending, setPending] = useState(false);
   const [authChecking, setAuthChecking] = useState(true);
@@ -373,18 +358,6 @@ export default function ManagerPage() {
     setAuthChecking(false);
   }
 
-  async function deleteContract(id: string) {
-    if (!window.confirm("حذف هذا التعاقد؟")) return;
-    const pw = sessionStorage.getItem("tys.mgrPass") ?? password;
-    setContractMsg("");
-    try {
-      await managerApi("delete_contract_area", { password: pw, contractId: id });
-      setContractRows((current) => (current ?? []).filter((row) => row.id !== id));
-    } catch (err) {
-      const raw = err instanceof Error ? err.message : "";
-      setContractMsg(raw.includes("wrong password") ? "كلمة السر غير صحيحة. سجّل الدخول مرة أخرى." : "تعذر حذف التعاقد. حاول مرة أخرى.");
-    }
-  }
 
   async function changePassword(event: FormEvent) {
     event.preventDefault();
@@ -449,12 +422,6 @@ export default function ManagerPage() {
       try { sessionStorage.setItem("tys.mgrPass", pw); } catch { /* التخزين غير متاح في المتصفح. */ }
       try { localStorage.removeItem("tys.mgrPass"); } catch { /* إزالة النسخة القديمة اختيارية. */ }
       setRows(data ?? []);
-      // التعاقدات بتتحمّل بنفس كلمة مرور مدير المنطقة.
-      setContractsLoading(true);
-      managerApi<MgrContractRow[]>("contracts", { password: pw })
-        .then((list) => setContractRows(list ?? []))
-        .catch(() => setContractRows(null))
-        .finally(() => setContractsLoading(false));
       setLastLoaded(new Date());
       managerApi<string>("manager_name", { password: pw }).then((name) => setManagerName(name ?? "")).catch(() => setManagerName(""));
     } catch (err) {
@@ -638,7 +605,6 @@ export default function ManagerPage() {
     { id: "top", label: "الموظفين", icon: "users" as const },
     { id: "activity", label: "الحضور", icon: "activity" as const },
     { id: "reports", label: "التقارير", icon: "reports" as const },
-    { id: "contracts", label: "التعاقدات", icon: "alert" as const },
   ];
   const activeLabel = navItems.find((item) => item.id === view)?.label ?? (branch ? "تفاصيل الفرع" : "لوحة المتابعة");
   const changeView = (next: string) => {
@@ -681,10 +647,9 @@ export default function ManagerPage() {
               {error ? <p className="text-sm font-bold text-red-600">{error}</p> : null}
               <button type="submit" disabled={pending || !password} className="w-full rounded-2xl bg-gradient-to-br from-[#e96812] to-[#ff9d38] py-3 font-extrabold text-white shadow-sm disabled:opacity-50">{pending ? "جاري الدخول..." : "دخول"}</button>
             </form>
-            <div className="mt-6 grid grid-cols-3 gap-2 border-t border-[var(--color-border)] pt-5 text-[10px] font-extrabold text-[var(--color-text-secondary)]">
+            <div className="mt-6 grid grid-cols-2 gap-2 border-t border-[var(--color-border)] pt-5 text-[10px] font-extrabold text-[var(--color-text-secondary)]">
               <span>📊 تقارير الفروع</span>
               <span>🕒 حضور اليوم</span>
-              <span>📄 التعاقدات</span>
             </div>
           </section>
         </div>
@@ -819,14 +784,6 @@ export default function ManagerPage() {
                 <div className="grid gap-3 sm:grid-cols-3">
                   {[{title:"سجّل حضوره",items:loggedToday,tone:"text-emerald-700",surface:"bg-emerald-50",dot:"bg-emerald-500"},{title:"لم يسجّل",items:missingToday,tone:"text-red-700",surface:"bg-red-50",dot:"bg-red-500"},{title:"في إجازة",items:onLeaveToday,tone:"text-[var(--color-text-secondary)]",surface:"bg-[#f7f1eb]",dot:"bg-[#b69b84]"}].map((group)=><article key={group.title} className="orn-rich-card overflow-hidden rounded-[24px] border border-[var(--color-border)] bg-white/90 shadow-[0_8px_24px_rgba(126,65,24,.05)]"><div className="flex items-center justify-between border-b border-[#f3e9e1] px-4 py-3"><div className="flex items-center gap-2"><span className={"h-2.5 w-2.5 rounded-full "+group.dot}/><h3 className={"text-sm font-black "+group.tone}>{group.title}</h3></div><span className={"rounded-lg px-2.5 py-1 text-sm font-black tabular-nums "+group.surface+" "+group.tone}>{group.items.length}</span></div><div className="space-y-2 p-3">{group.items.length?group.items.map((r)=><div key={r.branch_id} className="flex items-center justify-between gap-2 rounded-xl bg-[var(--color-surface-cream)] px-3 py-2.5 text-xs"><b className="min-w-0 truncate">{r.employee_name}</b><span className="max-w-[45%] truncate text-[11px] text-[var(--color-text-secondary)]" dir="ltr">{r.branch_name||NO_BRANCH}</span></div>):<p className="py-5 text-center text-xs text-[var(--color-text-secondary)]">لا يوجد</p>}</div></article>)}
                 </div>
-              </section>
-            ) : view === "contracts" ? (
-              <section className="orn-rich-card overflow-hidden rounded-[26px] border border-[var(--color-border)] bg-white/90 shadow-[0_10px_28px_rgba(104,53,19,.055)]">
-                <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--color-border)] px-4 py-4 sm:px-5"><div><p className="text-[11px] font-black tracking-[.15em] text-[var(--color-primary-700)]" dir="ltr">متابعة التعاقدات</p><h2 className="mt-1 text-lg font-black">التعاقدات</h2><p className="mt-0.5 text-[11px] text-[var(--color-text-secondary)]">كل التعاقدات المسجلة من الفريق عبر كل الفروع. متأخر = لم يُرسل منذ 3 أيام أو أكثر.</p></div>{contractRows ? <div className="flex gap-2 text-[11px] font-black"><span className="rounded-full bg-emerald-50 px-2.5 py-1 text-emerald-700">أُرسل {contractRows.filter((c)=>c.status==="sent").length}</span><span className="rounded-full bg-amber-50 px-2.5 py-1 text-amber-800">لم يُرسل {contractRows.filter((c)=>c.status==="missing").length}</span><span className="rounded-full bg-red-50 px-2.5 py-1 text-red-700">مرفوض {contractRows.filter((c)=>c.status==="rejected").length}</span><span className="rounded-full bg-red-100 px-2.5 py-1 text-red-800">متأخر {contractRows.filter((c)=>c.status!=="sent" && contractDaysOld(c.contract_date)>=3).length}</span></div> : null}</div>
-                {contractMsg ? <p className="border-b border-[var(--color-border)] bg-red-50 px-4 py-2 text-xs font-bold text-red-700">{contractMsg}</p> : null}
-                {contractsLoading ? <p className="py-8 text-center text-xs text-[var(--color-text-secondary)]">جاري تحميل التعاقدات...</p> : contractRows === null ? <p className="py-8 text-center text-xs text-[var(--color-text-secondary)]">تعذر تحميل التعاقدات. اضغط تحديث للمحاولة مرة أخرى.</p> : contractRows.length === 0 ? <p className="py-8 text-center text-xs text-[var(--color-text-secondary)]">لا توجد تعاقدات مسجلة بعد.</p> : (
-                  <div className="divide-y divide-[var(--color-border)]">{[...contractRows].sort((a,b)=>{const al=a.status!=="sent"&&contractDaysOld(a.contract_date)>=3?0:1;const bl=b.status!=="sent"&&contractDaysOld(b.contract_date)>=3?0:1;return al-bl||b.contract_date.localeCompare(a.contract_date);}).map((row)=>{const late=row.status!=="sent"&&contractDaysOld(row.contract_date)>=3;return <div key={row.id} className="flex flex-wrap items-center gap-3 px-4 py-3 sm:px-5"><span className={"h-2.5 w-2.5 shrink-0 rounded-full "+(row.status==="sent"?"bg-emerald-500":late?"bg-red-500":"bg-amber-500")} /><div className="min-w-0 flex-1"><p className="truncate text-sm font-extrabold text-[var(--color-text-primary)]" dir="auto">{row.client_name}</p><p className="mt-1 text-[11px] text-[var(--color-text-secondary)]" dir="auto">{row.employee_name} · {row.branch_name} · {row.contract_date}{row.sent_date?" · أُرسل "+row.sent_date:""}{late?" · متأخر "+contractDaysOld(row.contract_date)+" يوم":""}{row.note?" · "+row.note:""}</p></div><span className={"shrink-0 rounded-full px-2.5 py-1 text-[11px] font-black "+CONTRACT_STATUS_STYLE[row.status]}>{CONTRACT_STATUS_LABEL[row.status]}{late?" · متأخر":""}</span><button type="button" onClick={()=>deleteContract(row.id)} aria-label="حذف التعاقد" className="shrink-0 rounded-lg border border-red-200 bg-white px-2 py-1 text-[11px] font-bold text-red-600">✕</button></div>;})}</div>
-                )}
               </section>
             ) : view === "reports" ? (
               <section className="orn-rich-card overflow-hidden rounded-[26px] border border-[var(--color-border)] bg-white/90 shadow-[0_10px_28px_rgba(104,53,19,.055)]">

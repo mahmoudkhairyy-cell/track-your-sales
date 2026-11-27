@@ -24,25 +24,12 @@ type Report = {
 };
 type Quality = { kyc: number; visits: number; training: number; pos: number; csat: number };
 type Audit = { id: number; employee_name: string | null; field_name: string; old_value: unknown; new_value: unknown; updated_by: string; updated_at: string };
-type ContractRow = { id: string; employee_name: string; client_name: string; status: "sent" | "missing" | "rejected"; contract_date: string; sent_date: string | null; note: string | null; updated_at: string };
 type BranchData = {
   reports: Report[];
   productivity: { productivity_percent: number; updated_by: string; updated_at: string } | null;
   qualityOverrides: { employee_name: string; quality: Quality; updated_by: string; updated_at: string }[];
   audit: Audit[];
 };
-const CONTRACT_STATUS_LABEL: Record<ContractRow["status"], string> = { sent: "اتبعت", missing: "ناقص", rejected: "مرفوض" };
-const CONTRACT_STATUS_STYLE: Record<ContractRow["status"], string> = {
-  sent: "border-emerald-200 bg-emerald-50 text-emerald-700",
-  missing: "border-amber-200 bg-amber-50 text-amber-700",
-  rejected: "border-red-200 bg-red-50 text-red-700",
-};
-function contractDaysOld(date: string): number {
-  const then = new Date(`${date}T12:00:00`).getTime();
-  if (Number.isNaN(then)) return 0;
-  return Math.floor((Date.now() - then) / 86400000);
-}
-
 const QUALITY_FIELDS: { key: keyof Quality; label: string; weight: number }[] = [
   { key: "kyc", label: "KYC & Compliance", weight: 5 },
   { key: "visits", label: "Quality Visits", weight: 5 },
@@ -102,9 +89,7 @@ export default function BranchManagerPage() {
   const [password, setPassword] = useState("");
   const [active, setActive] = useState(false);
   const [accessChecked, setAccessChecked] = useState(false);
-  const [activeTab, setActiveTab] = useState<"overview" | "team" | "contracts">("overview");
-  const [contracts, setContracts] = useState<ContractRow[] | null>(null);
-  const [contractsLoading, setContractsLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState<"overview" | "team">("overview");
   const [teamFilter, setTeamFilter] = useState<"all" | "agent" | "team_leader">("all");
   const [data, setData] = useState<BranchData | null>(null);
   const [productivityInput, setProductivityInput] = useState("0");
@@ -129,12 +114,6 @@ export default function BranchManagerPage() {
       }
       setQualityInputs(values);
       try { sessionStorage.setItem("tys.bmPass", passwordToUse); } catch { /* Storage may be unavailable. */ }
-      // التعاقدات بتحمل بنفس كلمة مرور الفرع.
-      setContractsLoading(true);
-      managerApi<{ contracts: ContractRow[] }>("branch_contracts", { branch: selectedBranch, password: passwordToUse })
-        .then((result) => setContracts(result?.contracts ?? []))
-        .catch(() => setContracts(null))
-        .finally(() => setContractsLoading(false));
     } catch (e) {
       const raw = e instanceof Error ? e.message : "تعذر تحميل بيانات الفرع";
       if (raw.includes("wrong password")) {
@@ -257,7 +236,7 @@ export default function BranchManagerPage() {
           <div className="mx-auto mt-4 h-px w-24 bg-gradient-to-r from-transparent via-[#bd4b0a] to-transparent" />
           <p className="mt-4 text-[11px] font-black tracking-[.16em] text-[#bd4b0a]">لوحة الفرع</p>
           <h1 className="mt-1 text-2xl font-black text-[#2d2119]">دخول مدير الفرع</h1>
-          <p className="mt-2 text-xs leading-6 text-[#88796e]">أداء فريقك وإنتاجية فرعك وتعاقداته في مكان واحد.</p>
+          <p className="mt-2 text-xs leading-6 text-[#88796e]">أداء فريقك وإنتاجية فرعك في مكان واحد.</p>
           <form onSubmit={enter} className="tys-bm-signin-form mt-6 space-y-3 text-right">
             <label className="block text-sm font-bold text-[#514238]">الاسم
               <input value={managerName} onChange={(e) => setManagerName(e.target.value)} maxLength={80} className="mt-2 w-full rounded-2xl border border-[#f2e4d8] bg-[#fffdfb] px-4 py-3 text-base outline-none focus:border-[#e96812]" placeholder="اكتب اسمك" />
@@ -275,10 +254,9 @@ export default function BranchManagerPage() {
             <button disabled={loading} className="w-full rounded-2xl bg-gradient-to-br from-[#e96812] to-[#ff9d38] py-3 font-extrabold text-white shadow-sm disabled:opacity-50">{loading ? "جاري الدخول..." : "دخول"}</button>
           </form>
           <p className="mt-4 text-[11px] leading-5 text-[#a18b7b]">لوحة مستقلة، مدير الفرع مش بيسجل مبيعات شخصية.</p>
-          <div className="mt-4 grid grid-cols-3 gap-2 border-t border-[#f1e8e0] pt-5 text-[10px] font-extrabold text-[#88796e]">
+          <div className="mt-4 grid grid-cols-2 gap-2 border-t border-[#f1e8e0] pt-5 text-[10px] font-extrabold text-[#88796e]">
             <span>📊 أداء الفريق</span>
             <span>📈 إنتاجية الفرع</span>
-            <span>📄 التعاقدات</span>
           </div>
         </section>
     </main>
@@ -302,7 +280,6 @@ export default function BranchManagerPage() {
         <nav className="grid grid-cols-3 gap-2 rounded-2xl border border-[#f1dfd0] bg-white p-2 shadow-sm" aria-label="أقسام اللوحة">
           <button onClick={() => setActiveTab("overview")} className={`rounded-xl px-3 py-3 text-sm font-black transition ${activeTab === "overview" ? "bg-[#bd4b0a] text-white shadow-sm" : "text-[#88796e] hover:bg-[#fff4e9]"}`}>نظرة عامة</button>
           <button onClick={() => setActiveTab("team")} className={`rounded-xl px-3 py-3 text-sm font-black transition ${activeTab === "team" ? "bg-[#bd4b0a] text-white shadow-sm" : "text-[#88796e] hover:bg-[#fff4e9]"}`}>متابعة الفريق ({reports.length})</button>
-          <button onClick={() => setActiveTab("contracts")} className={`rounded-xl px-3 py-3 text-sm font-black transition ${activeTab === "contracts" ? "bg-[#bd4b0a] text-white shadow-sm" : "text-[#88796e] hover:bg-[#fff4e9]"}`}>التعاقدات ({contracts?.length ?? 0})</button>
         </nav>
         {activeTab === "overview" ? (
           <>
@@ -353,36 +330,6 @@ export default function BranchManagerPage() {
           {data?.productivity ? <p className="mt-2 text-xs text-[#88796e]">آخر تحديث بواسطة {data.productivity.updated_by} · {timeLabel(data.productivity.updated_at)}</p> : null}
         </section>
           </>
-        ) : null}
-        {activeTab === "contracts" ? (
-        <section className="space-y-3">
-          <div className="flex flex-wrap items-center justify-between gap-2">
-            <div><h2 className="text-lg font-black">متابعة التعاقدات</h2><p className="text-xs text-[#88796e]">كل تعاقد بيسجله الفريق: اتبعت للشركة، ناقص، أو مرفوض. متأخر = ماتبعتش من 3 أيام أو أكتر.</p></div>
-            {contracts ? (
-              <div className="flex gap-2 text-[11px] font-black">
-                <span className="rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-emerald-700">اتبعت {contracts.filter((c) => c.status === "sent").length}</span>
-                <span className="rounded-full border border-amber-200 bg-amber-50 px-2.5 py-1 text-amber-700">ناقص {contracts.filter((c) => c.status === "missing").length}</span>
-                <span className="rounded-full border border-red-200 bg-red-50 px-2.5 py-1 text-red-700">مرفوض {contracts.filter((c) => c.status === "rejected").length}</span>
-              </div>
-            ) : null}
-          </div>
-          {contractsLoading ? <p className="rounded-2xl bg-white p-6 text-center">جاري تحميل التعاقدات...</p> : null}
-          {!contractsLoading && contracts === null ? <p className="rounded-2xl border border-dashed border-[#e7cdb8] bg-white p-6 text-center text-sm text-[#88796e]">تعذر تحميل التعاقدات. اضغط تحديث للمحاولة مرة أخرى.</p> : null}
-          {!contractsLoading && contracts !== null && contracts.length === 0 ? <p className="rounded-2xl border border-dashed border-[#e7cdb8] bg-white p-6 text-center text-sm text-[#88796e]">لا توجد تعاقدات مسجلة من الفرع ده بعد.</p> : null}
-          {(contracts ?? []).map((row) => {
-            const late = row.status !== "sent" && contractDaysOld(row.contract_date) >= 3;
-            return <article key={row.id} className="orn-rich-card rounded-3xl border border-[#f1dfd0] bg-white p-4 shadow-sm">
-              <div className="flex flex-wrap items-center justify-between gap-2">
-                <div className="min-w-0">
-                  <h3 className="truncate font-black">{row.client_name}</h3>
-                  <p className="mt-1 text-xs text-[#88796e]">{row.employee_name} · تاريخ التعاقد {row.contract_date}{row.sent_date ? ` · اتبعت ${row.sent_date}` : ""}{late ? ` · متأخر ${contractDaysOld(row.contract_date)} يوم` : ""}</p>
-                  {row.note ? <p className="mt-1 text-xs text-[#88796e]">{row.note}</p> : null}
-                </div>
-                <span className={`shrink-0 rounded-full border px-3 py-1 text-xs font-extrabold ${CONTRACT_STATUS_STYLE[row.status]}`}>{CONTRACT_STATUS_LABEL[row.status]}{late ? " · متأخر" : ""}</span>
-              </div>
-            </article>;
-          })}
-        </section>
         ) : null}
         {activeTab === "team" ? (
         <section className="space-y-3">
