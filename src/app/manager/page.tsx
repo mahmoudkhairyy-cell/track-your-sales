@@ -7,7 +7,7 @@ import { BRANCHES, KPI_CATALOG } from "@/lib/constants";
 import { cairoISODate } from "@/lib/dates";
 
 type MgrContractRow = { id: string; employee_name: string; branch_name: string; client_name: string; status: "sent" | "missing" | "rejected"; contract_date: string; sent_date: string | null; note: string | null; updated_at: string };
-const CONTRACT_STATUS_LABEL: Record<MgrContractRow["status"], string> = { sent: "Sent", missing: "Missing", rejected: "Rejected" };
+const CONTRACT_STATUS_LABEL: Record<MgrContractRow["status"], string> = { sent: "أُرسل", missing: "لم يُرسل", rejected: "مرفوض" };
 const CONTRACT_STATUS_STYLE: Record<MgrContractRow["status"], string> = {
   sent: "bg-emerald-50 text-emerald-700",
   missing: "bg-amber-50 text-amber-800",
@@ -41,7 +41,7 @@ type ReportRow = {
 
 type AggKpi = { name: string; achieved: number; target: number; percent: number; weight: number; expectedPercent?: number };
 
-const NO_BRANCH = "No branch";
+const NO_BRANCH = "بدون فرع";
 
 /** On track = النسبة المحققة أكبر من أو تساوي المطلوب لحد النهارده (مقارنة مباشرة). */
 function TrackBadge({ percent, expected }: { percent?: number; expected?: number }) {
@@ -49,7 +49,7 @@ function TrackBadge({ percent, expected }: { percent?: number; expected?: number
   const onTrack = percent >= expected;
   return (
     <span className={`rounded-full px-2 py-0.5 text-[11px] font-black ${onTrack ? "bg-emerald-100 text-emerald-800" : "bg-red-100 text-red-700"}`}>
-      {onTrack ? "🟢 On track" : "🔴 Behind"}
+      {onTrack ? "🟢 على المسار" : "🔴 متأخر"}
     </span>
   );
 }
@@ -77,7 +77,7 @@ function saveBlob(blob: Blob, fileName: string) {
 
 function downloadBranchCsv(branchName: string, group: ReportRow[]) {
   const kpiNames = Array.from(new Set(group.flatMap((r) => (r.payload.kpis ?? []).map((k) => k.name))));
-  const header = ["Employee", "Total %", "Last update", ...kpiNames.flatMap((n) => [`${n} achieved`, `${n} target`, `${n} %`])];
+  const header = ["الموظف", "النسبة الكلية %", "آخر تحديث", ...kpiNames.flatMap((n) => [`${n} محقق`, `${n} تارجت`, `${n} %`])];
   const lines = group.map((row) => {
     const byName = new Map((row.payload.kpis ?? []).map((k) => [k.name, k]));
     return [
@@ -200,11 +200,8 @@ function groupByBranch(rows: ReportRow[]): [string, ReportRow[]][] {
   return [...map.entries()];
 }
 
-const FEMALE_MANAGER_NAMES = ["نسمة", "nasma", "nesma", "رنا", "rana"];
-
-function managerTitle(name: string): string {
-  const n = name.trim().toLowerCase();
-  return n && FEMALE_MANAGER_NAMES.some((f) => n.includes(f.toLowerCase())) ? "MS." : "MR.";
+function managerTitle(): string {
+  return "أ/";
 }
 
 type ManagerIconName = "home" | "branches" | "users" | "activity" | "reports" | "trend" | "alert" | "settings";
@@ -371,10 +368,10 @@ export default function ManagerPage() {
       setPwOpen(false);
       setPwMsg("");
       setError("");
-      alert("✅ Password changed successfully.");
+      alert("✅ تم تغيير كلمة السر بنجاح.");
     } catch (err) {
       const raw = err instanceof Error ? err.message : String(err);
-      setPwMsg(raw.includes("wrong password") ? "Current password is incorrect. Try again." : "Save failed. Check your connection and try again.");
+      setPwMsg(raw.includes("wrong password") ? "كلمة السر الحالية غير صحيحة. حاول مرة أخرى." : "فشل الحفظ. تحقق من الاتصال وحاول مرة أخرى.");
     }
   }
 
@@ -382,7 +379,7 @@ export default function ManagerPage() {
     // بيتحسب بعد الـ render (مش جوه الـ effect مباشرة) عشان قاعدة lint بتمنع setState المتزامن.
     const id = setTimeout(() => {
       const hour = Number(new Intl.DateTimeFormat("en-GB", { timeZone: "Africa/Cairo", hour: "numeric", hour12: false }).format(new Date()));
-      setGreeting(hour < 12 ? "Good morning" : "Good evening");
+      setGreeting(hour < 12 ? "صباح الخير" : "مساء الخير");
     }, 0);
     return () => clearTimeout(id);
   }, []);
@@ -508,10 +505,10 @@ export default function ManagerPage() {
           <div>
             <h3 className="font-black">{row.employee_name}</h3>
             <div className="mt-1 flex flex-wrap items-center gap-1">
-              {row.payload.role === "team_leader" ? <span className="rounded-full bg-[var(--color-primary-50)] px-2 py-0.5 text-[11px] font-black text-[var(--color-primary-700)]">🧑‍🏫 Team leader</span> : null}
+              {row.payload.role === "team_leader" ? <span className="rounded-full bg-[var(--color-primary-50)] px-2 py-0.5 text-[11px] font-black text-[var(--color-primary-700)]">🧑‍🏫 تيم ليدر</span> : null}
               <TrackBadge percent={employeeTrackPercent(row)} expected={row.payload.expectedPercent} />
               {staleClass ? (
-                <span className={`rounded-full px-2 py-0.5 text-[11px] font-black ${staleClass}`}>Updated {Math.floor(days)} days ago</span>
+                <span className={`rounded-full px-2 py-0.5 text-[11px] font-black ${staleClass}`}>آخر تحديث منذ {Math.floor(days)} يوم</span>
               ) : null}
             </div>
           </div>
@@ -538,7 +535,7 @@ export default function ManagerPage() {
               onClick={() => setDetailsId(detailsId === row.branch_id ? null : row.branch_id)}
               className="mt-3 w-full rounded-2xl bg-[var(--color-primary-50)] py-2 text-xs font-extrabold text-[var(--color-primary-700)]"
             >
-              {detailsId === row.branch_id ? "Hide details" : `Show all details (${row.payload.entries?.length ?? 0} achieved)`}
+              {detailsId === row.branch_id ? "إخفاء التفاصيل" : `عرض كل التفاصيل (${row.payload.entries?.length ?? 0} إدخال)`}
             </button>
             <button
               type="button"
@@ -546,22 +543,22 @@ export default function ManagerPage() {
               onClick={() => deleteEmployee(row)}
               className="mt-3 w-full rounded-2xl border border-red-200 bg-red-50 py-2 text-xs font-extrabold text-red-700 disabled:opacity-60"
             >
-              🗑 Remove employee from dashboard
+              🗑 إزالة الموظف من اللوحة
             </button>
             {detailsId === row.branch_id ? (
               <div className="mt-3 space-y-3 text-xs">
                 <div>
-                  <p className="mb-1 font-black">Targets & weights</p>
+                  <p className="mb-1 font-black">التارجت والأوزان</p>
                   {(row.payload.settings?.kpis ?? []).map((k) => (
                     <div key={k.kpiKey} className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface-cream)] px-3 py-2">
                       <span className="min-w-0 font-extrabold text-[var(--color-text-primary)]">{kpiLabel(k.kpiKey)}</span>
-                      <span className="whitespace-nowrap text-[11px] font-bold tabular-nums text-[var(--color-text-secondary)] sm:text-xs">Target {k.target} · Weight {k.weight}%</span>
+                      <span className="whitespace-nowrap text-[11px] font-bold tabular-nums text-[var(--color-text-secondary)] sm:text-xs">التارجت {k.target} · الوزن {k.weight}%</span>
                     </div>
                   ))}
                 </div>
                 <div>
                   <p className="mb-2 flex items-center justify-between font-black"><span>All achievements</span><span className="rounded-full bg-[var(--color-primary-50)] px-2 py-0.5 text-[11px] font-black text-[var(--color-primary-700)]">{row.payload.entries?.length ?? 0}</span></p>
-                  {(row.payload.entries ?? []).length === 0 ? <p className="text-[var(--color-text-secondary)]">None</p> : null}
+                  {(row.payload.entries ?? []).length === 0 ? <p className="text-[var(--color-text-secondary)]">لا يوجد</p> : null}
                   {(row.payload.entries ?? []).map((e, i) => (
                     <div key={`${e.date}-${i}`} className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] items-center gap-2 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface-cream)] px-3 py-2.5 text-[11px] sm:text-xs">
                       <span className="font-bold text-[var(--color-text-secondary)]" dir="ltr">{e.date}</span>
@@ -596,14 +593,14 @@ export default function ManagerPage() {
   const onLeaveToday = allRows.filter((r) => (r.payload.settings?.holidays ?? []).some((h) => h.date === today));
   const missingToday = allRows.filter((r) => !onLeaveToday.some((x) => x.branch_id === r.branch_id) && !loggedToday.some((x) => x.branch_id === r.branch_id));
   const navItems = [
-    { id: "overview", label: "Home", icon: "home" as const },
-    { id: "list", label: "Branches", icon: "branches" as const },
-    { id: "top", label: "Employees", icon: "users" as const },
-    { id: "activity", label: "Check-ins", icon: "activity" as const },
-    { id: "reports", label: "Reports", icon: "reports" as const },
-    { id: "contracts", label: "Contracts", icon: "alert" as const },
+    { id: "overview", label: "الرئيسية", icon: "home" as const },
+    { id: "list", label: "الفروع", icon: "branches" as const },
+    { id: "top", label: "الموظفين", icon: "users" as const },
+    { id: "activity", label: "الحضور", icon: "activity" as const },
+    { id: "reports", label: "التقارير", icon: "reports" as const },
+    { id: "contracts", label: "التعاقدات", icon: "alert" as const },
   ];
-  const activeLabel = navItems.find((item) => item.id === view)?.label ?? (branch ? "Branch details" : "Dashboard");
+  const activeLabel = navItems.find((item) => item.id === view)?.label ?? (branch ? "تفاصيل الفرع" : "لوحة المتابعة");
   const changeView = (next: string) => {
     // فتح صفحة أداء فرع لازم يكون لها رجوع واضح لقائمة الفروع، حتى لو اتفتحت من الرئيسية.
     if (next.startsWith("b:") && view !== "list" && !view.startsWith("b:")) {
@@ -611,13 +608,14 @@ export default function ManagerPage() {
       window.history.pushState({ ...current, tysView: "list" }, "");
     }
     setView(next);
+    setDashboardDetail(null);
     setMobileMenuOpen(false);
   };
   const statusNames = (items: typeof branchStatus) => items.length ? (
     <div className="mt-3 flex flex-wrap gap-2">
       {items.map((item) => <button key={item.name} type="button" onClick={() => changeView("b:" + item.name)} className="rounded-xl border border-[#f1dfd4] bg-white px-3 py-2 text-xs font-extrabold text-[var(--color-text-primary)]">{item.name}</button>)}
     </div>
-  ) : <p className="mt-3 text-xs text-[var(--color-text-secondary)]">No branches in this list yet.</p>;
+  ) : <p className="mt-3 text-xs text-[var(--color-text-secondary)]">لا توجد فروع في هذه القائمة بعد.</p>;
 
   return (
     <main className="tys-page tx-manager min-h-screen bg-[radial-gradient(ellipse_at_top_left,rgba(255,176,111,.13),transparent_38%),linear-gradient(145deg,#fffaf6_0%,#f8f4ef_55%,#fff8f1_100%)] px-3 py-4 text-[var(--color-text-primary)] sm:px-5 sm:py-6" dir="ltr">
@@ -625,7 +623,7 @@ export default function ManagerPage() {
         <div className="mx-auto flex min-h-[70vh] max-w-md items-center justify-center">
           <section className="orn-rich-card rounded-2xl border border-[var(--color-border)] bg-white px-7 py-6 text-center shadow-sm">
             <img src="/track-your-sales/logo-mark.png" alt="" className="mx-auto h-10 w-10 object-contain" />
-            <p className="mt-3 text-sm font-bold text-[var(--color-text-secondary)]">Restoring manager session...</p>
+            <p className="mt-3 text-sm font-bold text-[var(--color-text-secondary)]">جاري استعادة جلسة المدير...</p>
           </section>
         </div>
       ) : rows === null ? (
@@ -652,10 +650,10 @@ export default function ManagerPage() {
           <aside className={"fixed inset-y-0 right-0 z-50 flex w-[min(82vw,300px)] flex-col border-l border-white/70 bg-white/90 p-4 shadow-2xl backdrop-blur-2xl transition-transform duration-200 lg:sticky lg:top-5 lg:z-auto lg:h-[calc(100vh-2.5rem)] lg:w-[248px] lg:shrink-0 lg:translate-x-0 lg:rounded-[28px] lg:border lg:shadow-[0_14px_42px_rgba(93,54,26,.08)] " + (mobileMenuOpen ? "translate-x-0" : "translate-x-full lg:translate-x-0")}>
             <div className="flex items-center gap-3 border-b border-[#f1e8e0] px-1 pb-5">
               <img src="/track-your-sales/logo-mark.png" alt="" className="h-10 w-10 object-contain" />
-              <div className="min-w-0"><p className="text-[11px] font-black tracking-[.14em] text-[var(--color-primary-700)]" dir="ltr">TRACK YOUR SALES</p><h2 className="mt-1 truncate text-sm font-black">Dashboard</h2></div>
+              <div className="min-w-0"><p className="text-[11px] font-black tracking-[.14em] text-[var(--color-primary-700)]" dir="ltr">TRACK YOUR SALES</p><h2 className="mt-1 truncate text-sm font-black">لوحة المتابعة</h2></div>
               <button type="button" onClick={() => setMobileMenuOpen(false)} aria-label="Close menu" className="mr-auto rounded-lg p-2 text-[#6f5d4d] lg:hidden">✕</button>
             </div>
-            <p className="px-2 pb-2 pt-6 text-[11px] font-extrabold text-[var(--color-text-secondary)]">Main menu</p>
+            <p className="px-2 pb-2 pt-6 text-[11px] font-extrabold text-[var(--color-text-secondary)]">القائمة الرئيسية</p>
             <nav className="space-y-1">
               {navItems.map((item) => {
                 const active = view === item.id;
@@ -670,6 +668,7 @@ export default function ManagerPage() {
                     type="button"
                     onClick={() => {
                       setView("overview");
+                      setDashboardDetail(null);
                       setBranchPreview(null);
                       setBranchOpenFor(null);
                       setDetailsId(null);
@@ -683,9 +682,9 @@ export default function ManagerPage() {
               })}
             </nav>
             <div className="mt-auto rounded-2xl border border-[var(--color-border)] bg-gradient-to-br from-[var(--color-surface-cream)] to-[var(--color-primary-50)]/70 p-3">
-              <p className="truncate text-xs font-extrabold">{managerName || "Team management"}</p><p className="mt-1 text-[11px] text-[var(--color-text-secondary)]">Daily performance tracking</p>
-              <button type="button" onClick={() => { setPwOpen((v) => !v); setPwMsg(""); setMobileMenuOpen(false); }} className="mt-3 w-full rounded-xl border border-[#eadbce] bg-white px-3 py-2 text-xs font-bold text-[var(--color-primary-700)]">⚙ Change password</button>
-              <button type="button" onClick={() => { setMobileMenuOpen(false); logout(); }} className="mt-2 flex min-h-11 w-full items-center justify-center gap-2 rounded-xl border border-red-200 bg-white px-3 py-2 text-xs font-extrabold text-red-600 transition hover:bg-red-50">↪ Log out</button>
+              <p className="truncate text-xs font-extrabold">{managerName || "إدارة الفريق"}</p><p className="mt-1 text-[11px] text-[var(--color-text-secondary)]">متابعة الأداء اليومي</p>
+              <button type="button" onClick={() => { setPwOpen((v) => !v); setPwMsg(""); setMobileMenuOpen(false); }} className="mt-3 w-full rounded-xl border border-[#eadbce] bg-white px-3 py-2 text-xs font-bold text-[var(--color-primary-700)]">⚙ تغيير كلمة السر</button>
+              <button type="button" onClick={() => { setMobileMenuOpen(false); logout(); }} className="mt-2 flex min-h-11 w-full items-center justify-center gap-2 rounded-xl border border-red-200 bg-white px-3 py-2 text-xs font-extrabold text-red-600 transition hover:bg-red-50">↪ تسجيل الخروج</button>
             </div>
           </aside>
 
@@ -701,11 +700,11 @@ export default function ManagerPage() {
                   </div>
                 </div>
                 <div className="min-w-0 pr-1">
-                  <h1 className="truncate text-xl font-black sm:text-2xl">{dashboardDetail ? ({ "branches-all":"All branches", "branches-ahead":"Ahead branches", "branches-behind":"Behind branches", "employees-all":"All employees", "employees-track":"On track", "employees-behind":"Below target" } as const)[dashboardDetail] : activeLabel}</h1>
-                  <p className="mt-0.5 truncate text-[11px] text-[var(--color-text-secondary)]">Team performance</p>
+                  <h1 className="truncate text-xl font-black sm:text-2xl">{dashboardDetail ? ({ "branches-all":"كل الفروع", "branches-ahead":"الفروع المتقدمة", "branches-behind":"الفروع المتأخرة", "employees-all":"كل الموظفين", "employees-track":"على المسار", "employees-behind":"تحت التارجت" } as const)[dashboardDetail] : activeLabel}</h1>
+                  <p className="mt-0.5 truncate text-[11px] text-[var(--color-text-secondary)]">أداء الفريق</p>
                 </div>
               </div>
-              <div className="flex shrink-0 items-center gap-2"><div className="hidden items-center gap-2 rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface-cream)] py-1.5 pl-3 pr-1.5 sm:flex"><span className="hidden max-w-[120px] truncate text-[11px] font-extrabold text-[var(--color-text-primary)] sm:inline">{managerName || "Manager"}</span></div><button type="button" disabled={pending} onClick={() => load()} className="shrink-0 rounded-xl border border-[#eee0d5] bg-white px-3 py-2.5 text-xs font-extrabold text-[var(--color-primary-700)] disabled:opacity-50">{pending ? "Refreshing..." : "↻ Refresh"}</button></div>
+              <div className="flex shrink-0 items-center gap-2"><div className="hidden items-center gap-2 rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface-cream)] py-1.5 pl-3 pr-1.5 sm:flex"><span className="hidden max-w-[120px] truncate text-[11px] font-extrabold text-[var(--color-text-primary)] sm:inline">{managerName || "المدير"}</span></div><button type="button" disabled={pending} onClick={() => load()} className="shrink-0 rounded-xl border border-[#eee0d5] bg-white px-3 py-2.5 text-xs font-extrabold text-[var(--color-primary-700)] disabled:opacity-50">{pending ? "جاري التحديث..." : "↻ تحديث"}</button></div>
             </header>
             {error ? <p className="rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-xs font-bold text-red-700">{error}</p> : null}
 
@@ -713,28 +712,28 @@ export default function ManagerPage() {
               <div className="space-y-5">
                 {greeting && managerName ? (
                   <p className="inline-flex items-center gap-2 rounded-full border border-[var(--color-border)] bg-[var(--color-surface-cream)] px-3 py-1.5 text-xs font-extrabold text-[var(--color-primary-700)]">
-                    <span aria-hidden="true">👋</span>{greeting}, {managerTitle(managerName)} {managerName}
+                    <span aria-hidden="true">👋</span>{greeting}، {managerTitle()} {managerName}
                   </p>
                 ) : null}
                 
-                <button type="button" onClick={() => changeView("activity")} aria-label="View today's check-ins" className="flex w-full items-center justify-between gap-3 rounded-[20px] border border-[var(--color-border)] bg-white px-4 py-3 text-left shadow-[0_1px_2px_rgba(43,20,0,.04)] transition hover:border-[#e5b58e] active:scale-[0.99]">
-                  <span className="text-xs font-extrabold text-[var(--color-text-primary)]">Today</span>
+                <button type="button" onClick={() => changeView("activity")} aria-label="عرض حضور اليوم" className="flex w-full items-center justify-between gap-3 rounded-[20px] border border-[var(--color-border)] bg-white px-4 py-3 text-left shadow-[0_1px_2px_rgba(43,20,0,.04)] transition hover:border-[#e5b58e] active:scale-[0.99]">
+                  <span className="text-xs font-extrabold text-[var(--color-text-primary)]">اليوم</span>
                   <span className="flex items-center gap-4 text-xs font-bold tabular-nums">
-                    <span className="text-emerald-700">{loggedToday.length} checked in</span>
-                    <span className="text-red-700">{missingToday.length} not yet</span>
-                    <span className="text-[var(--color-text-secondary)]">{onLeaveToday.length} on leave</span>
+                    <span className="text-emerald-700">{loggedToday.length} سجّل حضوره</span>
+                    <span className="text-red-700">{missingToday.length} لم يسجّل</span>
+                    <span className="text-[var(--color-text-secondary)]">{onLeaveToday.length} في إجازة</span>
                   </span>
                 </button>
                 <section className="grid grid-cols-3 gap-2.5 sm:grid-cols-3 sm:gap-3">
                   {[
-                    {label:"Total branches",value:branchGroups.length,sub:"All area branches",tone:"orange",icon:"branches" as const,detail:"branches-all" as const},
-                    {label:"Ahead branches",value:branchStatus.filter(b=>b.expected!==undefined && (b.track ?? -Infinity)-b.expected>=5).length,sub:"Above expected",tone:"green",icon:"trend" as const,detail:"branches-ahead" as const},
-                    {label:"Behind branches",value:behindBranches.length,sub:"Need follow-up",tone:"red",icon:"alert" as const,detail:"branches-behind" as const},
-                    {label:"Total employees",value:allRows.length,sub:"In current reports",tone:"violet",icon:"users" as const,detail:"employees-all" as const},
-                    {label:"On track",value:onTrackEmployees.length,sub:"On track or ahead",tone:"green",icon:"trend" as const,detail:"employees-track" as const},
-                    {label:"Below target",value:behindEmployees.length,sub:"Need follow-up",tone:"red",icon:"alert" as const,detail:"employees-behind" as const}
+                    {label:"إجمالي الفروع",value:branchGroups.length,sub:"كل فروع المنطقة",tone:"orange",icon:"branches" as const,detail:"branches-all" as const},
+                    {label:"فروع متقدمة",value:branchStatus.filter(b=>b.expected!==undefined && (b.track ?? -Infinity)-b.expected>=5).length,sub:"أعلى من المتوقع",tone:"green",icon:"trend" as const,detail:"branches-ahead" as const},
+                    {label:"فروع متأخرة",value:behindBranches.length,sub:"تحتاج متابعة",tone:"red",icon:"alert" as const,detail:"branches-behind" as const},
+                    {label:"إجمالي الموظفين",value:allRows.length,sub:"في التقارير الحالية",tone:"violet",icon:"users" as const,detail:"employees-all" as const},
+                    {label:"على المسار",value:onTrackEmployees.length,sub:"على المسار أو متقدم",tone:"green",icon:"trend" as const,detail:"employees-track" as const},
+                    {label:"تحت التارجت",value:behindEmployees.length,sub:"يحتاج متابعة",tone:"red",icon:"alert" as const,detail:"employees-behind" as const}
                   ].map((item)=>(
-                    <button key={item.label} type="button" onClick={()=>{const current=(window.history.state??{}) as Record<string,unknown>;window.history.replaceState({...current,tysView:view},"");window.history.pushState({...current,tysView:view,tysOverlay:"dashboard-detail"},"");setDashboardDetail(item.detail);}} aria-label={"View " + item.label} className="min-w-0 rounded-[20px] border border-[var(--color-border)] bg-white/85 p-3 text-right shadow-[0_8px_24px_rgba(126,65,24,.055)] backdrop-blur-xl transition hover:-translate-y-0.5 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary-600)] sm:rounded-[24px] sm:p-4">
+                    <button key={item.label} type="button" onClick={()=>{const current=(window.history.state??{}) as Record<string,unknown>;window.history.replaceState({...current,tysView:view},"");window.history.pushState({...current,tysView:view,tysOverlay:"dashboard-detail"},"");setDashboardDetail(item.detail);}} aria-label={"عرض " + item.label} className="min-w-0 rounded-[20px] border border-[var(--color-border)] bg-white/85 p-3 text-right shadow-[0_8px_24px_rgba(126,65,24,.055)] backdrop-blur-xl transition hover:-translate-y-0.5 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary-600)] sm:rounded-[24px] sm:p-4">
                       <div className="flex items-center justify-between gap-1">
                         <span className={"flex h-8 w-8 items-center justify-center rounded-xl text-sm font-black "+(item.tone==="red"?"bg-red-50 text-red-600":item.tone==="green"?"bg-emerald-50 text-emerald-700":item.tone==="violet"?"bg-violet-50 text-violet-700":"bg-[var(--color-primary-50)] text-[var(--color-primary-700)]")}><ManagerIcon name={item.icon} size={17} /></span>
                         <span className="hidden text-[10px] font-bold text-[var(--color-text-secondary)] sm:inline">{item.sub}</span>
@@ -749,52 +748,52 @@ export default function ManagerPage() {
               </div>
             ) : view === "list" ? (
               <div className="space-y-4">
-                <section><h2 className="text-lg font-black">All branches</h2><p className="text-[11px] text-[var(--color-text-secondary)]">{allRows.length} report · {lastLoaded ? lastLoaded.toLocaleTimeString("en-US", { timeZone: "Africa/Cairo", hour: "2-digit", minute: "2-digit", hour12: false }) : "Not updated yet"}</p></section>
-                {branchStatus.length ? <section className="orn-rich-card overflow-hidden rounded-[26px] border border-[var(--color-border)] bg-white/90 shadow-[0_10px_28px_rgba(104,53,19,.055)]"><div className="hidden grid-cols-[52px_minmax(0,1.5fr)_minmax(100px,1fr)_100px_90px] gap-3 border-b border-[var(--color-border)] bg-[var(--color-surface-cream)] px-4 py-3 text-[11px] font-black text-[var(--color-text-secondary)] sm:grid"><span>Rank</span><span>Branch</span><span>Status</span><span>Achievement</span><span>Employees</span></div><div className="divide-y divide-[var(--color-border)]">{[...branchStatus].sort((a,b)=>b.percent-a.percent).map((b,index)=>{const delta=b.expected===undefined || b.track===undefined?null:b.track-b.expected;const label=delta===null?"No data":delta<0?"Behind":delta>=5?"Ahead":"On track";const tone=delta===null?"bg-stone-100 text-stone-600":delta<0?"bg-red-50 text-red-700":delta>=5?"bg-emerald-50 text-emerald-700":"bg-amber-50 text-amber-800";const ring=delta!==null&&delta<0?"var(--color-danger-text)":"var(--color-primary-600)";return <button key={b.name} type="button" onClick={()=>changeView("b:"+b.name)} className="grid w-full grid-cols-[26px_minmax(0,1fr)_auto] items-center gap-3 px-3 py-3 text-left transition hover:bg-[var(--color-surface-cream)] sm:grid-cols-[52px_minmax(0,1.5fr)_minmax(100px,1fr)_100px_90px] sm:px-4"><span className="text-[11px] font-black text-[var(--color-text-secondary)]">#{index+1}</span><span className="min-w-0"><span className="block truncate text-xs font-black text-[var(--color-text-primary)]">{b.name}</span><span className="mt-1 block text-[11px] text-[var(--color-text-secondary)] sm:hidden">{b.group.length} employees</span></span><span className={"col-start-3 row-start-1 rounded-full px-2.5 py-1 text-[11px] font-black "+tone+" sm:col-start-auto sm:row-auto sm:justify-self-start"}>{label}</span><span className="col-span-2 flex items-center gap-2 sm:col-span-1"><span className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full" style={{background:"conic-gradient("+ring+" "+Math.min(100,Math.max(0,b.percent))+"%, var(--color-border) 0)"}}><span className="flex h-7 w-7 items-center justify-center rounded-full bg-white text-[10px] font-black tabular-nums">{Math.round(b.percent)}%</span></span><span className="h-1.5 min-w-0 flex-1 overflow-hidden rounded-full bg-[var(--color-border)] sm:hidden"><span className="block h-full rounded-full bg-gradient-to-l from-[var(--color-primary-700)] to-[var(--color-primary-500)]" style={{width:Math.min(100,Math.max(0,b.percent))+"%"}} /></span></span><span className="hidden text-xs font-bold text-[#6f5948] sm:block">{b.group.length}</span></button>})}</div></section> : <div className="orn-rich-card rounded-2xl border border-dashed border-[#e8d5c5] bg-white p-8 text-center"><p className="font-extrabold">No reports yet</p><p className="mt-1 text-xs text-[var(--color-text-secondary)]">Team data will appear after sync.</p></div>}
+                <section><h2 className="text-lg font-black">كل الفروع</h2><p className="text-[11px] text-[var(--color-text-secondary)]">{allRows.length} تقرير · {lastLoaded ? lastLoaded.toLocaleTimeString("en-US", { timeZone: "Africa/Cairo", hour: "2-digit", minute: "2-digit", hour12: false }) : "لم يتم التحديث بعد"}</p></section>
+                {branchStatus.length ? <section className="orn-rich-card overflow-hidden rounded-[26px] border border-[var(--color-border)] bg-white/90 shadow-[0_10px_28px_rgba(104,53,19,.055)]"><div className="hidden grid-cols-[52px_minmax(0,1.5fr)_minmax(100px,1fr)_100px_90px] gap-3 border-b border-[var(--color-border)] bg-[var(--color-surface-cream)] px-4 py-3 text-[11px] font-black text-[var(--color-text-secondary)] sm:grid"><span>#</span><span>الفرع</span><span>الحالة</span><span>التحقيق</span><span>الموظفين</span></div><div className="divide-y divide-[var(--color-border)]">{[...branchStatus].sort((a,b)=>b.percent-a.percent).map((b,index)=>{const delta=b.expected===undefined || b.track===undefined?null:b.track-b.expected;const label=delta===null?"لا توجد بيانات":delta<0?"متأخر":delta>=5?"متقدم":"على المسار";const tone=delta===null?"bg-stone-100 text-stone-600":delta<0?"bg-red-50 text-red-700":delta>=5?"bg-emerald-50 text-emerald-700":"bg-amber-50 text-amber-800";const ring=delta!==null&&delta<0?"var(--color-danger-text)":"var(--color-primary-600)";return <button key={b.name} type="button" onClick={()=>changeView("b:"+b.name)} className="grid w-full grid-cols-[26px_minmax(0,1fr)_auto] items-center gap-3 px-3 py-3 text-left transition hover:bg-[var(--color-surface-cream)] sm:grid-cols-[52px_minmax(0,1.5fr)_minmax(100px,1fr)_100px_90px] sm:px-4"><span className="text-[11px] font-black text-[var(--color-text-secondary)]">#{index+1}</span><span className="min-w-0"><span className="block truncate text-xs font-black text-[var(--color-text-primary)]">{b.name}</span><span className="mt-1 block text-[11px] text-[var(--color-text-secondary)] sm:hidden">{b.group.length} employees</span></span><span className={"col-start-3 row-start-1 rounded-full px-2.5 py-1 text-[11px] font-black "+tone+" sm:col-start-auto sm:row-auto sm:justify-self-start"}>{label}</span><span className="col-span-2 flex items-center gap-2 sm:col-span-1"><span className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full" style={{background:"conic-gradient("+ring+" "+Math.min(100,Math.max(0,b.percent))+"%, var(--color-border) 0)"}}><span className="flex h-7 w-7 items-center justify-center rounded-full bg-white text-[10px] font-black tabular-nums">{Math.round(b.percent)}%</span></span><span className="h-1.5 min-w-0 flex-1 overflow-hidden rounded-full bg-[var(--color-border)] sm:hidden"><span className="block h-full rounded-full bg-gradient-to-l from-[var(--color-primary-700)] to-[var(--color-primary-500)]" style={{width:Math.min(100,Math.max(0,b.percent))+"%"}} /></span></span><span className="hidden text-xs font-bold text-[#6f5948] sm:block">{b.group.length}</span></button>})}</div></section> : <div className="orn-rich-card rounded-2xl border border-dashed border-[#e8d5c5] bg-white p-8 text-center"><p className="font-extrabold">لا توجد تقارير بعد</p><p className="mt-1 text-xs text-[var(--color-text-secondary)]">ستظهر بيانات الفريق بعد المزامنة.</p></div>}
               </div>
             ) : view === "top" ? (
               <section className="orn-rich-card overflow-hidden rounded-[26px] border border-[var(--color-border)] bg-white/90 shadow-[0_10px_28px_rgba(104,53,19,.055)]">
-                <div className="flex items-center justify-between gap-3 border-b border-[var(--color-border)] px-4 py-4 sm:px-5"><div><p className="text-[11px] font-black tracking-[.15em] text-[var(--color-primary-700)]" dir="ltr">TEAM LEADERBOARD</p><h2 className="mt-1 text-lg font-black">Employee ranking</h2><p className="mt-0.5 text-[11px] text-[var(--color-text-secondary)]">From highest to lowest achievement</p></div><span className="rounded-xl bg-[var(--color-primary-50)] px-3 py-2 text-xs font-black text-[var(--color-primary-700)]">{topRows.length} employees</span></div>
+                <div className="flex items-center justify-between gap-3 border-b border-[var(--color-border)] px-4 py-4 sm:px-5"><div><p className="text-[11px] font-black tracking-[.15em] text-[var(--color-primary-700)]" dir="ltr">ترتيب الفريق</p><h2 className="mt-1 text-lg font-black">ترتيب الموظفين</h2><p className="mt-0.5 text-[11px] text-[var(--color-text-secondary)]">من الأعلى إلى الأقل تحقيقًا</p></div><span className="rounded-xl bg-[var(--color-primary-50)] px-3 py-2 text-xs font-black text-[var(--color-primary-700)]">{topRows.length} موظفين</span></div>
                 <div className="divide-y divide-[var(--color-border)]">{topRows.map((row) => {
                   const employee = allRows.find((item) => item.branch_id === row.branchId);
                   const expanded = openId === row.branchId;
                   return <div key={row.branchId}>
                     <button type="button" aria-expanded={expanded} onClick={() => toggleEmployeeDetails(row.branchId, expanded)} className="flex w-full items-center gap-3 px-4 py-3.5 text-left transition hover:bg-[var(--color-surface-cream)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--color-primary-600)] sm:px-5"><span className={"flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-xs font-black "+(row.rank===1?"bg-[#fff0d7] text-[#a66a08]":row.rank===2?"bg-[#f2f3f5] text-[#657080]":row.rank===3?"bg-[#faeee5] text-[#9b5b31]":"bg-[var(--color-surface-cream)] text-[var(--color-primary-700)]")}>{row.rank}</span><span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#ffe2c9] to-[var(--color-primary-50)] text-sm font-black text-[var(--color-primary-700)]">{(row.name.trim()[0]||"م").toUpperCase()}</span><div className="min-w-0 flex-1"><p className="truncate text-sm font-extrabold text-[var(--color-text-primary)]">{row.name}</p><p className="truncate text-[11px] text-[var(--color-text-secondary)]" dir="ltr">{row.branch}</p><div className="mt-2 h-1.5 overflow-hidden rounded-full bg-[var(--color-border)]"><div className="h-full rounded-full bg-gradient-to-l from-[var(--color-primary-700)] to-[var(--color-primary-500)]" style={{width:Math.min(100,Math.max(0,row.percent))+"%"}} /></div></div><strong className="shrink-0 text-lg font-black tabular-nums text-[var(--color-primary-700)]">{Math.round(row.percent)}%</strong><span className="text-[var(--color-text-secondary)]" aria-hidden="true">{expanded ? "⌄" : "‹"}</span></button>
                     {expanded && employee ? <div className="border-t border-[var(--color-border)] bg-[var(--color-surface-cream)]/60 px-4 py-4 sm:px-5">
-                      <div className="mb-3 flex items-center justify-between gap-2"><h3 className="text-xs font-black">Target items</h3><TrackBadge percent={employeeTrackPercent(employee)} expected={employee.payload.expectedPercent} /></div>
+                      <div className="mb-3 flex items-center justify-between gap-2"><h3 className="text-xs font-black">بنود التارجت</h3><TrackBadge percent={employeeTrackPercent(employee)} expected={employee.payload.expectedPercent} /></div>
                       <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">{(employee.payload.kpis ?? []).map((kpi) => <KpiTile key={kpi.name} kpi={kpi} />)}</div>
-                      {employee.payload.managerQuality ? <div className="mt-3 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface-cream)] p-3"><p className="mb-2 font-black">Quality approved by branch manager</p><div className="grid grid-cols-2 gap-2 text-[11px] sm:grid-cols-5">{([{k:"kyc",n:"KYC"},{k:"visits",n:"Quality Visits"},{k:"training",n:"Training"},{k:"pos",n:"POS"},{k:"csat",n:"CSAT"}] as const).map((item)=><div key={item.k}><span className="block text-[var(--color-text-secondary)]">{item.n}</span><b>{employee.payload.managerQuality?.quality[item.k]}%</b></div>)}</div><p className="mt-2 text-[11px] text-[var(--color-text-secondary)]">Last approval: {employee.payload.managerQuality.updatedBy ?? "Branch manager"}</p></div> : null}
-                      {employee.payload.branchManagerProductivity ? <p className="mt-2 rounded-xl bg-[var(--color-primary-50)] p-2 text-xs font-bold">Approved branch productivity: {employee.payload.branchManagerProductivity.percent}% · by {employee.payload.branchManagerProductivity.updatedBy ?? "Branch manager"}</p> : null}
-                      <p className="mt-3 text-[11px] text-[var(--color-text-secondary)]" dir="ltr">Last update: {new Date(employee.updated_at).toLocaleString("en-US", { timeZone: "Africa/Cairo", hour12: false })}</p>
+                      {employee.payload.managerQuality ? <div className="mt-3 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface-cream)] p-3"><p className="mb-2 font-black">الجودة معتمدة من مدير الفرع</p><div className="grid grid-cols-2 gap-2 text-[11px] sm:grid-cols-5">{([{k:"kyc",n:"KYC"},{k:"visits",n:"زيارات الجودة"},{k:"training",n:"التدريب"},{k:"pos",n:"POS"},{k:"csat",n:"CSAT"}] as const).map((item)=><div key={item.k}><span className="block text-[var(--color-text-secondary)]">{item.n}</span><b>{employee.payload.managerQuality?.quality[item.k]}%</b></div>)}</div><p className="mt-2 text-[11px] text-[var(--color-text-secondary)]">آخر اعتماد: {employee.payload.managerQuality.updatedBy ?? "مدير الفرع"}</p></div> : null}
+                      {employee.payload.branchManagerProductivity ? <p className="mt-2 rounded-xl bg-[var(--color-primary-50)] p-2 text-xs font-bold">إنتاجية الفرع المعتمدة: {employee.payload.branchManagerProductivity.percent}% · by {employee.payload.branchManagerProductivity.updatedBy ?? "مدير الفرع"}</p> : null}
+                      <p className="mt-3 text-[11px] text-[var(--color-text-secondary)]" dir="ltr">آخر تحديث: {new Date(employee.updated_at).toLocaleString("en-US", { timeZone: "Africa/Cairo", hour12: false })}</p>
                     </div> : null}
                   </div>;
                 })}</div>
               </section>
             ) : view === "activity" ? (
               <section className="space-y-4">
-                <div className="flex flex-wrap items-end justify-between gap-3"><div><p className="text-[11px] font-black tracking-[.15em] text-[var(--color-primary-700)]" dir="ltr">DAILY CHECK-IN</p><h2 className="mt-1 text-xl font-black">Today&apos;s check-ins</h2><p className="mt-1 text-xs text-[var(--color-text-secondary)]" dir="ltr">{today}</p></div><span className="rounded-xl border border-[var(--color-border)] bg-white/80 px-3 py-2 text-[11px] font-bold text-[var(--color-text-secondary)]">Team check-in status</span></div>
+                <div className="flex flex-wrap items-end justify-between gap-3"><div><p className="text-[11px] font-black tracking-[.15em] text-[var(--color-primary-700)]" dir="ltr">الحضور اليومي</p><h2 className="mt-1 text-xl font-black">حضور اليوم</h2><p className="mt-1 text-xs text-[var(--color-text-secondary)]" dir="ltr">{today}</p></div><span className="rounded-xl border border-[var(--color-border)] bg-white/80 px-3 py-2 text-[11px] font-bold text-[var(--color-text-secondary)]">حالة حضور الفريق</span></div>
                 <div className="grid gap-3 sm:grid-cols-3">
-                  {[{title:"Checked in",items:loggedToday,tone:"text-emerald-700",surface:"bg-emerald-50",dot:"bg-emerald-500"},{title:"Not checked in",items:missingToday,tone:"text-red-700",surface:"bg-red-50",dot:"bg-red-500"},{title:"On leave",items:onLeaveToday,tone:"text-[var(--color-text-secondary)]",surface:"bg-[#f7f1eb]",dot:"bg-[#b69b84]"}].map((group)=><article key={group.title} className="orn-rich-card overflow-hidden rounded-[24px] border border-[var(--color-border)] bg-white/90 shadow-[0_8px_24px_rgba(126,65,24,.05)]"><div className="flex items-center justify-between border-b border-[#f3e9e1] px-4 py-3"><div className="flex items-center gap-2"><span className={"h-2.5 w-2.5 rounded-full "+group.dot}/><h3 className={"text-sm font-black "+group.tone}>{group.title}</h3></div><span className={"rounded-lg px-2.5 py-1 text-sm font-black tabular-nums "+group.surface}>{group.items.length}</span></div><div className="space-y-2 p-3">{group.items.length?group.items.map((r)=><div key={r.branch_id} className="flex items-center justify-between gap-2 rounded-xl bg-[var(--color-surface-cream)] px-3 py-2.5 text-xs"><b className="min-w-0 truncate">{r.employee_name}</b><span className="max-w-[45%] truncate text-[11px] text-[var(--color-text-secondary)]" dir="ltr">{r.branch_name||NO_BRANCH}</span></div>):<p className="py-5 text-center text-xs text-[var(--color-text-secondary)]">None</p>}</div></article>)}
+                  {[{title:"سجّل حضوره",items:loggedToday,tone:"text-emerald-700",surface:"bg-emerald-50",dot:"bg-emerald-500"},{title:"لم يسجّل",items:missingToday,tone:"text-red-700",surface:"bg-red-50",dot:"bg-red-500"},{title:"في إجازة",items:onLeaveToday,tone:"text-[var(--color-text-secondary)]",surface:"bg-[#f7f1eb]",dot:"bg-[#b69b84]"}].map((group)=><article key={group.title} className="orn-rich-card overflow-hidden rounded-[24px] border border-[var(--color-border)] bg-white/90 shadow-[0_8px_24px_rgba(126,65,24,.05)]"><div className="flex items-center justify-between border-b border-[#f3e9e1] px-4 py-3"><div className="flex items-center gap-2"><span className={"h-2.5 w-2.5 rounded-full "+group.dot}/><h3 className={"text-sm font-black "+group.tone}>{group.title}</h3></div><span className={"rounded-lg px-2.5 py-1 text-sm font-black tabular-nums "+group.surface+" "+group.tone}>{group.items.length}</span></div><div className="space-y-2 p-3">{group.items.length?group.items.map((r)=><div key={r.branch_id} className="flex items-center justify-between gap-2 rounded-xl bg-[var(--color-surface-cream)] px-3 py-2.5 text-xs"><b className="min-w-0 truncate">{r.employee_name}</b><span className="max-w-[45%] truncate text-[11px] text-[var(--color-text-secondary)]" dir="ltr">{r.branch_name||NO_BRANCH}</span></div>):<p className="py-5 text-center text-xs text-[var(--color-text-secondary)]">لا يوجد</p>}</div></article>)}
                 </div>
               </section>
             ) : view === "contracts" ? (
               <section className="orn-rich-card overflow-hidden rounded-[26px] border border-[var(--color-border)] bg-white/90 shadow-[0_10px_28px_rgba(104,53,19,.055)]">
-                <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--color-border)] px-4 py-4 sm:px-5"><div><p className="text-[11px] font-black tracking-[.15em] text-[var(--color-primary-700)]" dir="ltr">CONTRACTS TRACKING</p><h2 className="mt-1 text-lg font-black">Contracts</h2><p className="mt-0.5 text-[11px] text-[var(--color-text-secondary)]">Every contract logged by the team across all branches. Late = not sent for 3+ days.</p></div>{contractRows ? <div className="flex gap-2 text-[11px] font-black"><span className="rounded-full bg-emerald-50 px-2.5 py-1 text-emerald-700">Sent {contractRows.filter((c)=>c.status==="sent").length}</span><span className="rounded-full bg-amber-50 px-2.5 py-1 text-amber-800">Missing {contractRows.filter((c)=>c.status==="missing").length}</span><span className="rounded-full bg-red-50 px-2.5 py-1 text-red-700">Rejected {contractRows.filter((c)=>c.status==="rejected").length}</span><span className="rounded-full bg-red-100 px-2.5 py-1 text-red-800">Late {contractRows.filter((c)=>c.status!=="sent" && contractDaysOld(c.contract_date)>=3).length}</span></div> : null}</div>
+                <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--color-border)] px-4 py-4 sm:px-5"><div><p className="text-[11px] font-black tracking-[.15em] text-[var(--color-primary-700)]" dir="ltr">متابعة التعاقدات</p><h2 className="mt-1 text-lg font-black">التعاقدات</h2><p className="mt-0.5 text-[11px] text-[var(--color-text-secondary)]">كل التعاقدات المسجلة من الفريق عبر كل الفروع. متأخر = لم يُرسل منذ 3 أيام أو أكثر.</p></div>{contractRows ? <div className="flex gap-2 text-[11px] font-black"><span className="rounded-full bg-emerald-50 px-2.5 py-1 text-emerald-700">أُرسل {contractRows.filter((c)=>c.status==="sent").length}</span><span className="rounded-full bg-amber-50 px-2.5 py-1 text-amber-800">لم يُرسل {contractRows.filter((c)=>c.status==="missing").length}</span><span className="rounded-full bg-red-50 px-2.5 py-1 text-red-700">مرفوض {contractRows.filter((c)=>c.status==="rejected").length}</span><span className="rounded-full bg-red-100 px-2.5 py-1 text-red-800">متأخر {contractRows.filter((c)=>c.status!=="sent" && contractDaysOld(c.contract_date)>=3).length}</span></div> : null}</div>
                 {contractMsg ? <p className="border-b border-[var(--color-border)] bg-red-50 px-4 py-2 text-xs font-bold text-red-700">{contractMsg}</p> : null}
-                {contractsLoading ? <p className="py-8 text-center text-xs text-[var(--color-text-secondary)]">Loading contracts...</p> : contractRows === null ? <p className="py-8 text-center text-xs text-[var(--color-text-secondary)]">Could not load contracts. Hit Refresh to try again.</p> : contractRows.length === 0 ? <p className="py-8 text-center text-xs text-[var(--color-text-secondary)]">No contracts logged yet.</p> : (
-                  <div className="divide-y divide-[var(--color-border)]">{[...contractRows].sort((a,b)=>{const al=a.status!=="sent"&&contractDaysOld(a.contract_date)>=3?0:1;const bl=b.status!=="sent"&&contractDaysOld(b.contract_date)>=3?0:1;return al-bl||b.contract_date.localeCompare(a.contract_date);}).map((row)=>{const late=row.status!=="sent"&&contractDaysOld(row.contract_date)>=3;return <div key={row.id} className="flex flex-wrap items-center gap-3 px-4 py-3 sm:px-5"><span className={"h-2.5 w-2.5 shrink-0 rounded-full "+(row.status==="sent"?"bg-emerald-500":late?"bg-red-500":"bg-amber-500")} /><div className="min-w-0 flex-1"><p className="truncate text-sm font-extrabold text-[var(--color-text-primary)]" dir="auto">{row.client_name}</p><p className="mt-1 text-[11px] text-[var(--color-text-secondary)]" dir="auto">{row.employee_name} · {row.branch_name} · {row.contract_date}{row.sent_date?" · sent "+row.sent_date:""}{late?" · LATE "+contractDaysOld(row.contract_date)+"d":""}{row.note?" · "+row.note:""}</p></div><span className={"shrink-0 rounded-full px-2.5 py-1 text-[11px] font-black "+CONTRACT_STATUS_STYLE[row.status]}>{CONTRACT_STATUS_LABEL[row.status]}{late?" · LATE":""}</span><button type="button" onClick={()=>deleteContract(row.id)} aria-label="Delete contract" className="shrink-0 rounded-lg border border-red-200 bg-white px-2 py-1 text-[11px] font-bold text-red-600">✕</button></div>;})}</div>
+                {contractsLoading ? <p className="py-8 text-center text-xs text-[var(--color-text-secondary)]">جاري تحميل التعاقدات...</p> : contractRows === null ? <p className="py-8 text-center text-xs text-[var(--color-text-secondary)]">تعذر تحميل التعاقدات. اضغط تحديث للمحاولة مرة أخرى.</p> : contractRows.length === 0 ? <p className="py-8 text-center text-xs text-[var(--color-text-secondary)]">لا توجد تعاقدات مسجلة بعد.</p> : (
+                  <div className="divide-y divide-[var(--color-border)]">{[...contractRows].sort((a,b)=>{const al=a.status!=="sent"&&contractDaysOld(a.contract_date)>=3?0:1;const bl=b.status!=="sent"&&contractDaysOld(b.contract_date)>=3?0:1;return al-bl||b.contract_date.localeCompare(a.contract_date);}).map((row)=>{const late=row.status!=="sent"&&contractDaysOld(row.contract_date)>=3;return <div key={row.id} className="flex flex-wrap items-center gap-3 px-4 py-3 sm:px-5"><span className={"h-2.5 w-2.5 shrink-0 rounded-full "+(row.status==="sent"?"bg-emerald-500":late?"bg-red-500":"bg-amber-500")} /><div className="min-w-0 flex-1"><p className="truncate text-sm font-extrabold text-[var(--color-text-primary)]" dir="auto">{row.client_name}</p><p className="mt-1 text-[11px] text-[var(--color-text-secondary)]" dir="auto">{row.employee_name} · {row.branch_name} · {row.contract_date}{row.sent_date?" · أُرسل "+row.sent_date:""}{late?" · متأخر "+contractDaysOld(row.contract_date)+" يوم":""}{row.note?" · "+row.note:""}</p></div><span className={"shrink-0 rounded-full px-2.5 py-1 text-[11px] font-black "+CONTRACT_STATUS_STYLE[row.status]}>{CONTRACT_STATUS_LABEL[row.status]}{late?" · متأخر":""}</span><button type="button" onClick={()=>deleteContract(row.id)} aria-label="حذف التعاقد" className="shrink-0 rounded-lg border border-red-200 bg-white px-2 py-1 text-[11px] font-bold text-red-600">✕</button></div>;})}</div>
                 )}
               </section>
             ) : view === "reports" ? (
               <section className="orn-rich-card overflow-hidden rounded-[26px] border border-[var(--color-border)] bg-white/90 shadow-[0_10px_28px_rgba(104,53,19,.055)]">
-                <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--color-border)] px-4 py-4 sm:px-5"><div><p className="text-[11px] font-black tracking-[.15em] text-[var(--color-primary-700)]" dir="ltr">BRANCH REPORTS</p><h2 className="mt-1 text-lg font-black">Branch reports</h2><p className="mt-0.5 text-[11px] text-[var(--color-text-secondary)]">Download a detailed CSV report per branch</p></div><span className="rounded-xl bg-[var(--color-primary-50)] px-3 py-2 text-xs font-black text-[var(--color-primary-700)]">{branchGroups.length} branches</span></div>
-                {branchGroups.length?<div className="divide-y divide-[var(--color-border)]">{branchGroups.map(([name,group])=><div key={name} className="flex items-center gap-3 px-4 py-3.5 sm:px-5"><span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--color-primary-50)] text-sm font-black text-[var(--color-primary-700)]">▦</span><div className="min-w-0 flex-1"><p className="truncate text-sm font-extrabold text-[var(--color-text-primary)]" dir="ltr">{name}</p><p className="mt-1 text-[11px] text-[var(--color-text-secondary)]">{group.length} employees · detailed report</p></div><button type="button" onClick={()=>downloadBranchCsv(name,group)} className="shrink-0 rounded-xl border border-[#f0d4bd] bg-gradient-to-l from-[var(--color-primary-50)] to-[var(--color-surface-cream)] px-3 py-2.5 text-[11px] font-black text-[#a94b13] transition hover:border-[#e5b58e]">↓ CSV</button></div>)}</div>:<p className="py-8 text-center text-xs text-[var(--color-text-secondary)]">No data to export.</p>}
+                <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--color-border)] px-4 py-4 sm:px-5"><div><p className="text-[11px] font-black tracking-[.15em] text-[var(--color-primary-700)]" dir="ltr">تقارير الفروع</p><h2 className="mt-1 text-lg font-black">تقارير الفروع</h2><p className="mt-0.5 text-[11px] text-[var(--color-text-secondary)]">حمّل تقرير CSV تفصيليًا لكل فرع</p></div><span className="rounded-xl bg-[var(--color-primary-50)] px-3 py-2 text-xs font-black text-[var(--color-primary-700)]">{branchGroups.length} فروع</span></div>
+                {branchGroups.length?<div className="divide-y divide-[var(--color-border)]">{branchGroups.map(([name,group])=><div key={name} className="flex items-center gap-3 px-4 py-3.5 sm:px-5"><span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--color-primary-50)] text-sm font-black text-[var(--color-primary-700)]">▦</span><div className="min-w-0 flex-1"><p className="truncate text-sm font-extrabold text-[var(--color-text-primary)]" dir="ltr">{name}</p><p className="mt-1 text-[11px] text-[var(--color-text-secondary)]">{group.length} موظفين · تقرير تفصيلي</p></div><button type="button" onClick={()=>downloadBranchCsv(name,group)} className="shrink-0 rounded-xl border border-[#f0d4bd] bg-gradient-to-l from-[var(--color-primary-50)] to-[var(--color-surface-cream)] px-3 py-2.5 text-[11px] font-black text-[#a94b13] transition hover:border-[#e5b58e]">↓ CSV</button></div>)}</div>:<p className="py-8 text-center text-xs text-[var(--color-text-secondary)]">لا توجد بيانات للتصدير.</p>}
               </section>
             ) : branch !== null ? (
               <section className="space-y-3">
-                <div className="flex items-center justify-between gap-3"><div><button type="button" onClick={()=>changeView("list")} className="mb-1 text-xs font-bold text-[var(--color-primary-700)]">← All branches</button><h2 className="text-xl font-black" dir="ltr">{branch}</h2><p className="text-xs text-[var(--color-text-secondary)]">{branchRows.length} employees</p></div><button type="button" onClick={()=>downloadBranchCsv(branch,branchRows)} className="rounded-xl border border-[var(--color-border)] bg-white px-3 py-2 text-xs font-bold text-[var(--color-primary-700)]">↓ CSV</button></div>
-                <article className="orn-rich-card rounded-2xl border border-[var(--color-border)] bg-white p-3"><button type="button" onClick={()=>toggleBranchKpis(branchOpen)} className="flex w-full items-center justify-between gap-3 text-right"><span className="text-xs font-bold text-[var(--color-text-secondary)]">Total branch performance</span><strong className="text-2xl text-[var(--color-primary-700)]">{Math.round(branchAvg)}%　{branchOpen?"−":"+"}</strong></button>{branchOpen?<div className="mt-3 grid grid-cols-2 gap-2 border-t border-[var(--color-border)] pt-3 sm:grid-cols-3">{aggregateKpis(branchRows).map(k=><KpiTile key={k.name} kpi={k}/>)}{branchRows[0]?.payload.branchManagerProductivity ? <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface-cream)] p-3"><p className="text-[11px] font-extrabold text-[var(--color-text-secondary)]">Productivity</p><p className="mt-1 text-2xl font-black">{branchRows[0].payload.branchManagerProductivity.percent}%</p><p className="mt-1 text-[11px] text-[var(--color-text-secondary)]">Last updated by {branchRows[0].payload.branchManagerProductivity.updatedBy ?? "Branch manager"}</p></div> : null}</div>:null}<TrackBadge percent={trackPercent(aggregateKpis(branchRows))} expected={branchExpected}/></article>
-                <h3 className="text-sm font-black">Employees · sorted by performance</h3><div className="space-y-2">{[...branchRows].sort((a,b)=>(b.payload.overall??0)-(a.payload.overall??0)).map((row,index)=><div key={row.branch_id} className="relative [&>article]:pt-8"><span className="absolute right-3 top-2 z-10 rounded-md bg-[var(--color-primary-50)] px-2 py-0.5 text-[11px] font-black text-[var(--color-primary-700)]">#{index+1}</span>{renderRow(row)}</div>)}</div>
+                <div className="flex items-center justify-between gap-3"><div><button type="button" onClick={()=>changeView("list")} className="mb-1 text-xs font-bold text-[var(--color-primary-700)]">← كل الفروع</button><h2 className="text-xl font-black" dir="ltr">{branch}</h2><p className="text-xs text-[var(--color-text-secondary)]">{branchRows.length} موظفين</p></div><button type="button" onClick={()=>downloadBranchCsv(branch,branchRows)} className="rounded-xl border border-[var(--color-border)] bg-white px-3 py-2 text-xs font-bold text-[var(--color-primary-700)]">↓ CSV</button></div>
+                <article className="orn-rich-card rounded-2xl border border-[var(--color-border)] bg-white p-3"><button type="button" onClick={()=>toggleBranchKpis(branchOpen)} className="flex w-full items-center justify-between gap-3 text-right"><span className="text-xs font-bold text-[var(--color-text-secondary)]">أداء الفرع الكلي</span><strong className="text-2xl text-[var(--color-primary-700)]">{Math.round(branchAvg)}%　{branchOpen?"−":"+"}</strong></button>{branchOpen?<div className="mt-3 grid grid-cols-2 gap-2 border-t border-[var(--color-border)] pt-3 sm:grid-cols-3">{aggregateKpis(branchRows).map(k=><KpiTile key={k.name} kpi={k}/>)}{branchRows[0]?.payload.branchManagerProductivity ? <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface-cream)] p-3"><p className="text-[11px] font-extrabold text-[var(--color-text-secondary)]">الإنتاجية</p><p className="mt-1 text-2xl font-black">{branchRows[0].payload.branchManagerProductivity.percent}%</p><p className="mt-1 text-[11px] text-[var(--color-text-secondary)]">آخر تحديث بواسطة {branchRows[0].payload.branchManagerProductivity.updatedBy ?? "Branch manager"}</p></div> : null}</div>:null}<TrackBadge percent={trackPercent(aggregateKpis(branchRows))} expected={branchExpected}/></article>
+                <h3 className="text-sm font-black">الموظفون · مرتبون حسب الأداء</h3><div className="space-y-2">{[...branchRows].sort((a,b)=>(b.payload.overall??0)-(a.payload.overall??0)).map((row,index)=><div key={row.branch_id} className="relative [&>article]:pt-8"><span className="absolute right-3 top-2 z-10 rounded-md bg-[var(--color-primary-50)] px-2 py-0.5 text-[11px] font-black text-[var(--color-primary-700)]">#{index+1}</span>{renderRow(row)}</div>)}</div>
               </section>
             ) : null}
 
@@ -803,40 +802,39 @@ export default function ManagerPage() {
               const employeeItems = dashboardDetail === "employees-all" ? topRows : dashboardDetail === "employees-track" ? topRows.filter(r=>onTrackEmployees.some(e=>e.branch_id===r.branchId)) : topRows.filter(r=>behindEmployees.some(e=>e.branch_id===r.branchId));
           const orderedEmployeeItems = dashboardDetail === "employees-all" ? [...employeeItems].sort((a,b)=>a.branch.localeCompare(b.branch,"ar") || b.percent-a.percent) : employeeItems;
               const isBranches = dashboardDetail.startsWith("branches");
-              const title = ({ "branches-all":"All branches", "branches-ahead":"Ahead branches", "branches-behind":"Behind branches", "employees-all":"All employees", "employees-track":"employees On Track", "employees-behind":"employees Behind" } as const)[dashboardDetail];
+              const title = ({ "branches-all":"كل الفروع", "branches-ahead":"الفروع المتقدمة", "branches-behind":"الفروع المتأخرة", "employees-all":"كل الموظفين", "employees-track":"الموظفون على المسار", "employees-behind":"الموظفون المتأخرون" } as const)[dashboardDetail];
               return <section className="space-y-4">
-                <div className="flex items-center justify-between gap-3"><div><p className="text-[11px] font-black tracking-[.15em] text-[var(--color-primary-700)]" dir="ltr">DASHBOARD DETAILS</p><h2 className="mt-1 text-xl font-black">{title}</h2><p className="mt-1 text-xs text-[var(--color-text-secondary)]">{isBranches?branchItems.length+" branches":employeeItems.length+" employees"}</p></div><button type="button" onClick={()=>{setDashboardDetail(null);window.history.back();}} className="rounded-xl border border-[var(--color-border)] bg-white px-3 py-2 text-xs font-bold text-[var(--color-primary-700)]">← Home</button></div>
-                {isBranches ? <section className="orn-rich-card overflow-hidden rounded-[26px] border border-[var(--color-border)] bg-white/90 shadow-[0_10px_28px_rgba(104,53,19,.055)]"><div className="divide-y divide-[var(--color-border)]">{branchItems.length ? [...branchItems].sort((a,b)=>b.percent-a.percent).map((b,i)=><div key={b.name} className="flex items-center justify-between gap-3 px-4 py-3 text-right"><div className="min-w-0"><p className="truncate text-sm font-black">{b.name}</p><p className="mt-1 text-[11px] text-[var(--color-text-secondary)]">{b.group.length} employees · {b.expected===undefined?"No data":b.onTrack?"On track":"Behind"}</p></div><strong className="shrink-0 text-lg font-black tabular-nums text-[var(--color-primary-700)]">{Math.round(b.percent)}%</strong></div>) : <p className="py-8 text-center text-xs text-[var(--color-text-secondary)]">No branches in this list yet.</p>}</div></section> : <section className="orn-rich-card overflow-hidden rounded-[26px] border border-[var(--color-border)] bg-white/90 shadow-[0_10px_28px_rgba(104,53,19,.055)]"><div className="divide-y divide-[var(--color-border)]">{orderedEmployeeItems.length ? orderedEmployeeItems.map(row=><div key={row.branchId} className="flex items-center justify-between gap-3 px-4 py-3 text-right"><div className="min-w-0"><p className="truncate text-sm font-black">{row.name}</p><p className="mt-1 text-[11px] text-[var(--color-text-secondary)]">{row.branch}</p></div><strong className="shrink-0 text-lg font-black tabular-nums text-[var(--color-primary-700)]">{Math.round(row.percent)}%</strong></div>) : <p className="py-8 text-center text-xs text-[var(--color-text-secondary)]">No employees in this list yet.</p>}</div></section>}
+                <div className="flex items-center justify-between gap-3"><div><p className="text-[11px] font-black tracking-[.15em] text-[var(--color-primary-700)]" dir="ltr">تفاصيل اللوحة</p><h2 className="mt-1 text-xl font-black">{title}</h2><p className="mt-1 text-xs text-[var(--color-text-secondary)]">{isBranches?branchItems.length+" فروع":employeeItems.length+" موظفين"}</p></div><button type="button" onClick={()=>{setDashboardDetail(null);window.history.back();}} className="rounded-xl border border-[var(--color-border)] bg-white px-3 py-2 text-xs font-bold text-[var(--color-primary-700)]">← الرئيسية</button></div>
+                {isBranches ? <section className="orn-rich-card overflow-hidden rounded-[26px] border border-[var(--color-border)] bg-white/90 shadow-[0_10px_28px_rgba(104,53,19,.055)]"><div className="divide-y divide-[var(--color-border)]">{branchItems.length ? [...branchItems].sort((a,b)=>b.percent-a.percent).map((b,i)=><div key={b.name} className="flex items-center justify-between gap-3 px-4 py-3 text-right"><div className="min-w-0"><p className="truncate text-sm font-black">{b.name}</p><p className="mt-1 text-[11px] text-[var(--color-text-secondary)]">{b.group.length} موظفين · {b.expected===undefined?"لا توجد بيانات":b.onTrack?"على المسار":"متأخر"}</p></div><strong className="shrink-0 text-lg font-black tabular-nums text-[var(--color-primary-700)]">{Math.round(b.percent)}%</strong></div>) : <p className="py-8 text-center text-xs text-[var(--color-text-secondary)]">لا توجد فروع في هذه القائمة بعد.</p>}</div></section> : <section className="orn-rich-card overflow-hidden rounded-[26px] border border-[var(--color-border)] bg-white/90 shadow-[0_10px_28px_rgba(104,53,19,.055)]"><div className="divide-y divide-[var(--color-border)]">{orderedEmployeeItems.length ? orderedEmployeeItems.map(row=><div key={row.branchId} className="flex items-center justify-between gap-3 px-4 py-3 text-right"><div className="min-w-0"><p className="truncate text-sm font-black">{row.name}</p><p className="mt-1 text-[11px] text-[var(--color-text-secondary)]">{row.branch}</p></div><strong className="shrink-0 text-lg font-black tabular-nums text-[var(--color-primary-700)]">{Math.round(row.percent)}%</strong></div>) : <p className="py-8 text-center text-xs text-[var(--color-text-secondary)]">لا يوجد موظفون في هذه القائمة بعد.</p>}</div></section>}
               </section>;
             })() : null}
-            <footer className="flex justify-end gap-4 border-t border-[#eee5dc] pt-4"><button type="button" onClick={()=>{setPwOpen(v=>!v);setPwMsg("");}} className="text-xs font-bold text-[var(--color-primary-700)]">{pwOpen?"Hide password change":"🔑 Change password"}</button></footer>
             {branchPreview ? (() => {
               const previewRows = branchGroups.find(([name]) => name === branchPreview)?.[1] ?? [];
               const preview = branchStatus.find((item) => item.name === branchPreview);
               const previewKpis = aggregateKpis(previewRows);
               return (
                 <div className="fixed inset-0 z-[70] flex justify-end bg-[#2d211a]/35 backdrop-blur-[3px]" onClick={() => setBranchPreview(null)}>
-                  <aside role="dialog" aria-modal="true" aria-label={"Branch details " + branchPreview} onClick={(event) => event.stopPropagation()} className="h-full w-full max-w-[520px] overflow-y-auto border-r border-white/50 bg-[var(--color-surface-cream)] p-4 shadow-2xl sm:p-6">
+                  <aside role="dialog" aria-modal="true" aria-label={"تفاصيل فرع " + branchPreview} onClick={(event) => event.stopPropagation()} className="h-full w-full max-w-[520px] overflow-y-auto border-r border-white/50 bg-[var(--color-surface-cream)] p-4 shadow-2xl sm:p-6">
                     <div className="flex items-start justify-between gap-3">
-                      <div><p className="text-[11px] font-black tracking-[.15em] text-[var(--color-primary-700)]" dir="ltr">BRANCH QUICK VIEW</p><h2 className="mt-1 text-2xl font-black text-[#382719]" dir="auto">{branchPreview}</h2><p className="mt-1 text-xs text-[var(--color-text-secondary)]">Branch and employee performance summary</p></div>
-                      <button type="button" aria-label="Close details" onClick={() => setBranchPreview(null)} className="flex h-10 w-10 items-center justify-center rounded-xl border border-[var(--color-border)] bg-white text-lg font-bold text-[var(--color-text-secondary)]">×</button>
+                      <div><p className="text-[11px] font-black tracking-[.15em] text-[var(--color-primary-700)]" dir="ltr">نظرة سريعة على الفرع</p><h2 className="mt-1 text-2xl font-black text-[#382719]" dir="auto">{branchPreview}</h2><p className="mt-1 text-xs text-[var(--color-text-secondary)]">ملخص أداء الفرع والموظفين</p></div>
+                      <button type="button" aria-label="إغلاق التفاصيل" onClick={() => setBranchPreview(null)} className="flex h-10 w-10 items-center justify-center rounded-xl border border-[var(--color-border)] bg-white text-lg font-bold text-[var(--color-text-secondary)]">×</button>
                     </div>
                     <div className="mt-5 grid grid-cols-2 gap-3">
-                      <div className="orn-rich-card rounded-2xl bg-white p-4 ring-1 ring-[var(--color-border)]"><p className="text-[11px] font-bold text-[var(--color-text-secondary)]">Branch achievement</p><strong className="mt-1 block text-3xl font-black tabular-nums text-[var(--color-primary-700)]">{Math.round(preview?.percent ?? 0)}%</strong></div>
-                      <div className="orn-rich-card rounded-2xl bg-white p-4 ring-1 ring-[var(--color-border)]"><p className="text-[11px] font-bold text-[var(--color-text-secondary)]">Branch status</p><strong className={"mt-2 inline-flex rounded-full px-3 py-1.5 text-xs font-black "+(preview?.expected===undefined?"bg-stone-100 text-stone-600":preview.onTrack?"bg-emerald-50 text-emerald-700":"bg-red-50 text-red-700")}>{preview?.expected===undefined?"No data":preview.onTrack?"On track":"Behind"}</strong></div>
+                      <div className="orn-rich-card rounded-2xl bg-white p-4 ring-1 ring-[var(--color-border)]"><p className="text-[11px] font-bold text-[var(--color-text-secondary)]">تحقيق الفرع</p><strong className="mt-1 block text-3xl font-black tabular-nums text-[var(--color-primary-700)]">{Math.round(preview?.percent ?? 0)}%</strong></div>
+                      <div className="orn-rich-card rounded-2xl bg-white p-4 ring-1 ring-[var(--color-border)]"><p className="text-[11px] font-bold text-[var(--color-text-secondary)]">حالة الفرع</p><strong className={"mt-2 inline-flex rounded-full px-3 py-1.5 text-xs font-black "+(preview?.expected===undefined?"bg-stone-100 text-stone-600":preview.onTrack?"bg-emerald-50 text-emerald-700":"bg-red-50 text-red-700")}>{preview?.expected===undefined?"لا توجد بيانات":preview.onTrack?"على المسار":"متأخر"}</strong></div>
                     </div>
-                    <div className="mt-5"><div className="mb-3 flex items-center justify-between"><h3 className="text-sm font-black">KPI performance</h3><span className="text-[11px] text-[var(--color-text-secondary)]">{previewKpis.length} KPIs</span></div><div className="grid grid-cols-2 gap-2">{previewKpis.map((k)=> <KpiTile key={k.name} kpi={k}/>)}</div></div>
-                    <div className="mt-6"><div className="mb-3 flex items-center justify-between"><h3 className="text-sm font-black">Branch employees</h3><span className="rounded-full bg-[var(--color-primary-50)] px-2.5 py-1 text-[11px] font-black text-[var(--color-primary-700)]">{previewRows.length}</span></div><div className="space-y-2">{[...previewRows].sort((a,b)=>(b.payload.overall??0)-(a.payload.overall??0)).map((row,index)=><div key={row.branch_id} className="orn-rich-card rounded-2xl border border-[var(--color-border)] bg-white p-3"><div className="mb-2 flex items-center justify-between gap-3"><span className="text-[11px] font-black text-[var(--color-primary-700)]">#{index+1}</span><strong className="text-sm font-black text-[var(--color-text-primary)]">{Math.round(row.payload.overall??0)}%</strong></div>{renderRow(row)}</div>)}</div></div>
-                    <button type="button" onClick={() => { setBranchPreview(null); changeView("b:" + branchPreview); }} className="mt-6 w-full rounded-xl bg-gradient-to-l from-[var(--color-primary-700)] to-[#e97824] px-4 py-3 text-sm font-black text-white shadow-lg shadow-orange-900/10">Open full branch page ←</button>
+                    <div className="mt-5"><div className="mb-3 flex items-center justify-between"><h3 className="text-sm font-black">أداء المؤشرات</h3><span className="text-[11px] text-[var(--color-text-secondary)]">{previewKpis.length} مؤشرات</span></div><div className="grid grid-cols-2 gap-2">{previewKpis.map((k)=> <KpiTile key={k.name} kpi={k}/>)}</div></div>
+                    <div className="mt-6"><div className="mb-3 flex items-center justify-between"><h3 className="text-sm font-black">موظفو الفرع</h3><span className="rounded-full bg-[var(--color-primary-50)] px-2.5 py-1 text-[11px] font-black text-[var(--color-primary-700)]">{previewRows.length}</span></div><div className="space-y-2">{[...previewRows].sort((a,b)=>(b.payload.overall??0)-(a.payload.overall??0)).map((row,index)=><div key={row.branch_id} className="orn-rich-card rounded-2xl border border-[var(--color-border)] bg-white p-3"><div className="mb-2 flex items-center justify-between gap-3"><span className="text-[11px] font-black text-[var(--color-primary-700)]">#{index+1}</span><strong className="text-sm font-black text-[var(--color-text-primary)]">{Math.round(row.payload.overall??0)}%</strong></div>{renderRow(row)}</div>)}</div></div>
+                    <button type="button" onClick={() => { setBranchPreview(null); changeView("b:" + branchPreview); }} className="mt-6 w-full rounded-xl bg-gradient-to-l from-[var(--color-primary-700)] to-[#e97824] px-4 py-3 text-sm font-black text-white shadow-lg shadow-orange-900/10">فتح صفحة الفرع كاملة ←</button>
                   </aside>
                 </div>
               );
             })() : null}
-            {pwOpen ? <form onSubmit={changePassword} className="rounded-2xl border border-[var(--color-border)] bg-white p-4"><h3 className="mb-3 text-sm font-black">Change password</h3><div className="grid gap-3 sm:grid-cols-3">
-              <label className="text-xs font-bold">Current password<input type="password" autoComplete="current-password" value={oldPw} onChange={e=>setOldPw(e.target.value)} className="mt-1.5 w-full rounded-xl border border-[var(--color-border)] px-3 py-2.5 text-sm"/></label>
-              <label className="text-xs font-bold">New password<input type="password" autoComplete="new-password" value={newPw} onChange={e=>setNewPw(e.target.value)} className="mt-1.5 w-full rounded-xl border border-[var(--color-border)] px-3 py-2.5 text-sm"/></label>
-              <label className="text-xs font-bold">Confirm password<input type="password" autoComplete="new-password" value={newPw2} onChange={e=>setNewPw2(e.target.value)} className="mt-1.5 w-full rounded-xl border border-[var(--color-border)] px-3 py-2.5 text-sm"/></label>
-            </div>{pwMsg?<p className="mt-3 text-xs font-bold text-red-600">{pwMsg}</p>:null}<button type="submit" disabled={!oldPw||!newPw||!newPw2} className="mt-3 rounded-xl bg-[var(--color-primary-700)] px-5 py-3 text-sm font-bold text-white disabled:opacity-50">Save password</button></form>:null}
+            {pwOpen ? <form onSubmit={changePassword} className="rounded-2xl border border-[var(--color-border)] bg-white p-4"><h3 className="mb-3 text-sm font-black">تغيير كلمة السر</h3><div className="grid gap-3 sm:grid-cols-3">
+              <label className="text-xs font-bold">كلمة السر الحالية<input type="password" autoComplete="current-password" value={oldPw} onChange={e=>setOldPw(e.target.value)} className="mt-1.5 w-full rounded-xl border border-[var(--color-border)] px-3 py-2.5 text-sm"/></label>
+              <label className="text-xs font-bold">كلمة السر الجديدة<input type="password" autoComplete="new-password" value={newPw} onChange={e=>setNewPw(e.target.value)} className="mt-1.5 w-full rounded-xl border border-[var(--color-border)] px-3 py-2.5 text-sm"/></label>
+              <label className="text-xs font-bold">تأكيد كلمة السر<input type="password" autoComplete="new-password" value={newPw2} onChange={e=>setNewPw2(e.target.value)} className="mt-1.5 w-full rounded-xl border border-[var(--color-border)] px-3 py-2.5 text-sm"/></label>
+            </div>{pwMsg?<p className="mt-3 text-xs font-bold text-red-600">{pwMsg}</p>:null}<button type="submit" disabled={!oldPw||!newPw||!newPw2} className="mt-3 rounded-xl bg-[var(--color-primary-700)] px-5 py-3 text-sm font-bold text-white disabled:opacity-50">حفظ كلمة السر</button></form>:null}
           </div>
         </div>
       )}
