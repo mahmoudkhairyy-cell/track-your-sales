@@ -200,6 +200,40 @@ function groupByBranch(rows: ReportRow[]): [string, ReportRow[]][] {
   return [...map.entries()];
 }
 
+/** أسماء مستعارة معروفة لنفس الموظف (بعد تطبيع المسافات) → الاسم القياسي. دمج عرضي داخل لوحة المدير فقط، لا يغيّر بيانات التقارير المخزّنة. */
+const EMPLOYEE_ALIASES = new Map<string, string>([
+  ["محمود خيري", "mahmoud Khairy"],
+  ["محمود تجريبي", "mahmoud Khairy"],
+  ["محمود", "mahmoud Khairy"],
+  ["mahmoud khairy", "mahmoud Khairy"],
+]);
+
+function canonicalEmployeeName(name: string): string {
+  const norm = name.trim().replace(/\s+/g, " ");
+  return EMPLOYEE_ALIASES.get(norm) ?? EMPLOYEE_ALIASES.get(norm.toLowerCase()) ?? norm;
+}
+
+/** يجمع صفوف نفس الشخص (نفس الفرع + نفس الاسم القياسي) في هوية واحدة؛ الممثّل هو الصف صاحب الاسم القياسي، وإلا الأعلى تحقيقًا. */
+function groupEmployeesByIdentity(list: ReportRow[]): { rep: ReportRow; members: ReportRow[] }[] {
+  const groups = new Map<string, { rep: ReportRow; members: ReportRow[] }>();
+  for (const row of list) {
+    const canon = canonicalEmployeeName(row.employee_name);
+    const key = (row.branch_name || NO_BRANCH) + "\u0000" + canon;
+    const cur = groups.get(key);
+    if (!cur) {
+      groups.set(key, { rep: row, members: [row] });
+      continue;
+    }
+    cur.members.push(row);
+    const repCanon = canonicalEmployeeName(cur.rep.employee_name) === cur.rep.employee_name.trim().replace(/\s+/g, " ") ? 1 : 0;
+    const rowCanon = canon === row.employee_name.trim().replace(/\s+/g, " ") ? 1 : 0;
+    if (rowCanon > repCanon || (rowCanon === repCanon && (row.payload.overall ?? 0) > (cur.rep.payload.overall ?? 0))) {
+      cur.rep = row;
+    }
+  }
+  return [...groups.values()];
+}
+
 function managerTitle(): string {
   return "أ/";
 }
@@ -392,11 +426,14 @@ export default function ManagerPage() {
   }, []);
 
   const allRows = rows ?? [];
-  const branchRows = branch ? allRows.filter((r) => (r.branch_name || NO_BRANCH) === branch) : [];
+  // دمج عرضي للهويات المكررة: العدّ والقوائم تعرض كل شخص مرة واحدة، والبيانات الخام لا تتغيّر.
+  const employeeIdentities = groupEmployeesByIdentity(allRows);
+  const mergedRows = employeeIdentities.map((g) => g.rep);
+  const branchRows = branch ? mergedRows.filter((r) => (r.branch_name || NO_BRANCH) === branch) : [];
   const branchAvg = groupAverage(branchRows);
   const branchExpected = groupExpected(branchRows);
 
-  const topRows: TopRow[] = allRows
+  const topRows: TopRow[] = mergedRows
     .map((r) => ({ name: r.employee_name, branch: r.branch_name || NO_BRANCH, branchId: r.branch_id, percent: r.payload.overall ?? 0 }))
     .sort((a, b) => b.percent - a.percent)
     .map((r, i) => ({ ...r, rank: i + 1 }));
@@ -575,7 +612,9 @@ export default function ManagerPage() {
     );
   }
 
-  const branchGroups = groupByBranch(allRows);
+  const branchGroups = groupByBranch(mergedRows);
+  // تصدير CSV يبقى بالبيانات الخام كاملة حتى لا تفقد التقارير التفصيلية أي صف.
+  const rawBranchGroups = groupByBranch(allRows);
   const branchStatus = branchGroups.map(([name, group]) => {
     const percent = groupAverage(group);
     const expected = groupExpected(group);
@@ -586,12 +625,13 @@ export default function ManagerPage() {
   const behindBranches = branchStatus.filter((b) => b.expected !== undefined && !b.onTrack);
   const unclassifiedBranches = branchStatus.filter((b) => b.expected === undefined);
   const employeeTrackPercent = (r: ReportRow) => trackPercent(r.payload.kpis ?? []);
-  const onTrackEmployees = allRows.filter((r) => typeof r.payload.expectedPercent === "number" && (employeeTrackPercent(r) ?? -1) >= (r.payload.expectedPercent ?? 0));
-  const behindEmployees = allRows.filter((r) => typeof r.payload.expectedPercent === "number" && employeeTrackPercent(r) !== undefined && (employeeTrackPercent(r) ?? 0) < (r.payload.expectedPercent ?? 0));
+  const onTrackEmployees = mergedRows.filter((r) => typeof r.payload.expectedPercent === "number" && (employeeTrackPercent(r) ?? -1) >= (r.payload.expectedPercent ?? 0));
+  const behindEmployees = mergedRows.filter((r) => typeof r.payload.expectedPercent === "number" && employeeTrackPercent(r) !== undefined && (employeeTrackPercent(r) ?? 0) < (r.payload.expectedPercent ?? 0));
   const today = cairoISODate();
-  const loggedToday = allRows.filter((r) => (r.payload.entries ?? []).some((e) => e.date === today));
-  const onLeaveToday = allRows.filter((r) => (r.payload.settings?.holidays ?? []).some((h) => h.date === today));
-  const missingToday = allRows.filter((r) => !onLeaveToday.some((x) => x.branch_id === r.branch_id) && !loggedToday.some((x) => x.branch_id === r.branch_id));
+  // الحضور يُحسب على مستوى الهوية: الشخص يُعتبر مسجّلًا أو في إجازة إذا سجّل أي صف من صفوفه ذلك.
+  const loggedToday = employeeIdentities.filter((g) => g.members.some((m) => (m.payload.entries ?? []).some((e) => e.date === today))).map((g) => g.rep);
+  const onLeaveToday = employeeIdentities.filter((g) => g.members.some((m) => (m.payload.settings?.holidays ?? []).some((h) => h.date === today))).map((g) => g.rep);
+  const missingToday = mergedRows.filter((r) => !onLeaveToday.some((x) => x.branch_id === r.branch_id) && !loggedToday.some((x) => x.branch_id === r.branch_id));
   const navItems = [
     { id: "overview", label: "الرئيسية", icon: "home" as const },
     { id: "list", label: "الفروع", icon: "branches" as const },
@@ -729,7 +769,7 @@ export default function ManagerPage() {
                     {label:"إجمالي الفروع",value:branchGroups.length,sub:"كل فروع المنطقة",tone:"orange",icon:"branches" as const,detail:"branches-all" as const},
                     {label:"فروع متقدمة",value:branchStatus.filter(b=>b.expected!==undefined && (b.track ?? -Infinity)-b.expected>=5).length,sub:"أعلى من المتوقع",tone:"green",icon:"trend" as const,detail:"branches-ahead" as const},
                     {label:"فروع متأخرة",value:behindBranches.length,sub:"تحتاج متابعة",tone:"red",icon:"alert" as const,detail:"branches-behind" as const},
-                    {label:"إجمالي الموظفين",value:allRows.length,sub:"في التقارير الحالية",tone:"violet",icon:"users" as const,detail:"employees-all" as const},
+                    {label:"إجمالي الموظفين",value:mergedRows.length,sub:"في التقارير الحالية",tone:"violet",icon:"users" as const,detail:"employees-all" as const},
                     {label:"على المسار",value:onTrackEmployees.length,sub:"على المسار أو متقدم",tone:"green",icon:"trend" as const,detail:"employees-track" as const},
                     {label:"تحت التارجت",value:behindEmployees.length,sub:"يحتاج متابعة",tone:"red",icon:"alert" as const,detail:"employees-behind" as const}
                   ].map((item)=>(
@@ -787,11 +827,11 @@ export default function ManagerPage() {
             ) : view === "reports" ? (
               <section className="orn-rich-card overflow-hidden rounded-[26px] border border-[var(--color-border)] bg-white/90 shadow-[0_10px_28px_rgba(104,53,19,.055)]">
                 <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--color-border)] px-4 py-4 sm:px-5"><div><p className="text-[11px] font-black tracking-[.15em] text-[var(--color-primary-700)]" dir="ltr">تقارير الفروع</p><h2 className="mt-1 text-lg font-black">تقارير الفروع</h2><p className="mt-0.5 text-[11px] text-[var(--color-text-secondary)]">حمّل تقرير CSV تفصيليًا لكل فرع</p></div><span className="rounded-xl bg-[var(--color-primary-50)] px-3 py-2 text-xs font-black text-[var(--color-primary-700)]">{branchGroups.length} فروع</span></div>
-                {branchGroups.length?<div className="divide-y divide-[var(--color-border)]">{branchGroups.map(([name,group])=><div key={name} className="flex items-center gap-3 px-4 py-3.5 sm:px-5"><span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--color-primary-50)] text-sm font-black text-[var(--color-primary-700)]">▦</span><div className="min-w-0 flex-1"><p className="truncate text-sm font-extrabold text-[var(--color-text-primary)]" dir="ltr">{name}</p><p className="mt-1 text-[11px] text-[var(--color-text-secondary)]">{group.length} موظفين · تقرير تفصيلي</p></div><button type="button" onClick={()=>downloadBranchCsv(name,group)} className="shrink-0 rounded-xl border border-[#f0d4bd] bg-gradient-to-l from-[var(--color-primary-50)] to-[var(--color-surface-cream)] px-3 py-2.5 text-[11px] font-black text-[#a94b13] transition hover:border-[#e5b58e]">↓ CSV</button></div>)}</div>:<p className="py-8 text-center text-xs text-[var(--color-text-secondary)]">لا توجد بيانات للتصدير.</p>}
+                {branchGroups.length?<div className="divide-y divide-[var(--color-border)]">{branchGroups.map(([name,group])=><div key={name} className="flex items-center gap-3 px-4 py-3.5 sm:px-5"><span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--color-primary-50)] text-sm font-black text-[var(--color-primary-700)]">▦</span><div className="min-w-0 flex-1"><p className="truncate text-sm font-extrabold text-[var(--color-text-primary)]" dir="ltr">{name}</p><p className="mt-1 text-[11px] text-[var(--color-text-secondary)]">{group.length} موظفين · تقرير تفصيلي</p></div><button type="button" onClick={()=>downloadBranchCsv(name, rawBranchGroups.find(([n])=>n===name)?.[1] ?? group)} className="shrink-0 rounded-xl border border-[#f0d4bd] bg-gradient-to-l from-[var(--color-primary-50)] to-[var(--color-surface-cream)] px-3 py-2.5 text-[11px] font-black text-[#a94b13] transition hover:border-[#e5b58e]">↓ CSV</button></div>)}</div>:<p className="py-8 text-center text-xs text-[var(--color-text-secondary)]">لا توجد بيانات للتصدير.</p>}
               </section>
             ) : branch !== null ? (
               <section className="space-y-3">
-                <div className="flex items-center justify-between gap-3"><div><button type="button" onClick={()=>changeView("list")} className="mb-1 text-xs font-bold text-[var(--color-primary-700)]">← كل الفروع</button><h2 className="text-xl font-black" dir="ltr">{branch}</h2><p className="text-xs text-[var(--color-text-secondary)]">{branchRows.length} موظفين</p></div><button type="button" onClick={()=>downloadBranchCsv(branch,branchRows)} className="rounded-xl border border-[var(--color-border)] bg-white px-3 py-2 text-xs font-bold text-[var(--color-primary-700)]">↓ CSV</button></div>
+                <div className="flex items-center justify-between gap-3"><div><button type="button" onClick={()=>changeView("list")} className="mb-1 text-xs font-bold text-[var(--color-primary-700)]">← كل الفروع</button><h2 className="text-xl font-black" dir="ltr">{branch}</h2><p className="text-xs text-[var(--color-text-secondary)]">{branchRows.length} موظفين</p></div><button type="button" onClick={()=>downloadBranchCsv(branch, rawBranchGroups.find(([n])=>n===branch)?.[1] ?? branchRows)} className="rounded-xl border border-[var(--color-border)] bg-white px-3 py-2 text-xs font-bold text-[var(--color-primary-700)]">↓ CSV</button></div>
                 <article className="orn-rich-card rounded-2xl border border-[var(--color-border)] bg-white p-3"><button type="button" onClick={()=>toggleBranchKpis(branchOpen)} className="flex w-full items-center justify-between gap-3 text-right"><span className="text-xs font-bold text-[var(--color-text-secondary)]">أداء الفرع الكلي</span><strong className="text-2xl text-[var(--color-primary-700)]">{Math.round(branchAvg)}%　{branchOpen?"−":"+"}</strong></button>{branchOpen?<div className="mt-3 grid grid-cols-2 gap-2 border-t border-[var(--color-border)] pt-3 sm:grid-cols-3">{aggregateKpis(branchRows).map(k=><KpiTile key={k.name} kpi={k}/>)}{branchRows[0]?.payload.branchManagerProductivity ? <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface-cream)] p-3"><p className="text-[11px] font-extrabold text-[var(--color-text-secondary)]">الإنتاجية</p><p className="mt-1 text-2xl font-black">{branchRows[0].payload.branchManagerProductivity.percent}%</p><p className="mt-1 text-[11px] text-[var(--color-text-secondary)]">آخر تحديث بواسطة {branchRows[0].payload.branchManagerProductivity.updatedBy ?? "Branch manager"}</p></div> : null}</div>:null}<TrackBadge percent={trackPercent(aggregateKpis(branchRows))} expected={branchExpected}/></article>
                 <h3 className="text-sm font-black">الموظفون · مرتبون حسب الأداء</h3><div className="space-y-2">{[...branchRows].sort((a,b)=>(b.payload.overall??0)-(a.payload.overall??0)).map((row,index)=><div key={row.branch_id} className="relative [&>article]:pt-8"><span className="absolute right-3 top-2 z-10 rounded-md bg-[var(--color-primary-50)] px-2 py-0.5 text-[11px] font-black text-[var(--color-primary-700)]">#{index+1}</span>{renderRow(row)}</div>)}</div>
               </section>
