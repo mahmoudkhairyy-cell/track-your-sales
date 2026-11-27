@@ -241,3 +241,19 @@ html[data-theme='dark'] body [class*='bg-emerald-50']{background-color:#123126!i
 [data-theme="dark"] .mz-bubble{background:#221a12;border-color:#5f4630;color:#f5e3c8;box-shadow:0 8px 24px #0008}
 [data-theme="dark"] .mz-bubble-tail{background:#221a12;border-color:#5f4630}
 @media (prefers-reduced-motion: reduce){.mz-bubble{animation:none}}
+
+/* صفحة التسجيل في الوضع الليلي: ستايل .tys-premium-log كان بيفرض ألوان فاتحة ثابتة
+   (عنوان وقيم غامقة على خلفية غامقة + مدخلات بيضاء ساطعة) — ده بيرجعها لتوكنز الداكن */
+html[data-theme='dark'] body .tys-premium-log{color:var(--orn-ink)}
+html[data-theme='dark'] body .tys-premium-log>section:first-of-type h1{color:var(--orn-ink)!important}
+html[data-theme='dark'] body .tys-premium-log>section:first-of-type p:last-child{color:var(--orn-muted)!important}
+html[data-theme='dark'] body .tys-premium-log>section:nth-of-type(2)>div:first-child>span{background:var(--orn-wash)!important;border-color:var(--orn-line)!important;color:var(--color-primary-700)!important}
+html[data-theme='dark'] body .tys-premium-log :is(input[type='date'],input[type='number'],textarea){background:var(--orn-surface)!important;color:var(--orn-ink)!important;border-color:var(--orn-line)!important}
+html[data-theme='dark'] body .tys-premium-log>section article>div:first-child>div:first-child>span{background:var(--orn-wash)!important;border-color:var(--orn-line)!important;color:var(--color-primary-700)!important}
+html[data-theme='dark'] body .tys-premium-log>section article>div:nth-child(2){background:var(--orn-soft)!important;border-color:var(--orn-line)!important}
+html[data-theme='dark'] body .tys-premium-log>section article>div:nth-child(2) p:first-child{color:var(--orn-muted)!important}
+html[data-theme='dark'] body .tys-premium-log>section article>div:nth-child(2) p:last-child{color:var(--orn-ink)!important}
+html[data-theme='dark'] body .tys-premium-log>section:nth-last-of-type(2) button[aria-pressed]{background:var(--orn-surface)!important;border-color:var(--orn-line)!important}
+html[data-theme='dark'] body .tys-premium-log>section:nth-last-of-type(2) button[aria-pressed='false']{background:var(--orn-surface)!important}
+html[data-theme='dark'] body .tys-premium-log>section:nth-last-of-type(2) button[aria-pressed='true']{background:#173427!important;border-color:#2f5b45!important}
+html[data-theme='dark'] body .tys-premium-log>section:nth-last-of-type(2)>div:first-of-type{background:var(--orn-wash)!important}

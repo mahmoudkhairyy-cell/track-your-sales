@@ -232,7 +232,7 @@ export default function LogPage() {
           {dailyItems.length > 0 ? (
             <div className="grid grid-cols-2 gap-2">
               {dailyItems.map((k) => (
-                <div key={k.kpiKey} className="flex min-w-0 items-center justify-between gap-2 rounded-xl border border-[#f3e6dc] bg-[#fff8f1] px-2.5 py-2">
+                <div key={k.kpiKey} className="flex min-w-0 items-center justify-between gap-2 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface-cream)] px-2.5 py-2">
                   <span className="min-w-0 truncate text-[11px] font-bold text-[var(--color-text-secondary)]" dir="ltr">
                     {KPI_CATALOG.find((i) => i.key === k.kpiKey)?.nameEn ?? k.kpiKey}
                   </span>
