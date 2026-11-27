@@ -38,7 +38,11 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <script dangerouslySetInnerHTML={{ __html: "try{var t=localStorage.getItem('tys.theme');var d=t==='dark'||t==='aurora-dark'||t==='space';if(d)document.documentElement.setAttribute('data-theme','dark')}catch(e){}" }} />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
-        <link href="https://fonts.googleapis.com/css2?family=Mada:wght@400;500;700;800&family=Noto+Naskh+Arabic:wght@500;700&family=Cairo:wght@500;700;900&display=swap" rel="stylesheet" />
+        <link rel="preload" href="/track-your-sales/fonts/1-cairo-arabic-variable.woff2" as="font" type="font/woff2" crossOrigin="" />
+        {/* خطوط جوجل بتتحمل من غير ما تقفل رسم الصفحة (كانت بتأخر أول ظهور على النت الضعيف) */}
+        <link href="https://fonts.googleapis.com/css2?family=Mada:wght@400;500;700;800&family=Noto+Naskh+Arabic:wght@500;700&family=Cairo:wght@500;700;900&display=swap" rel="stylesheet" media="print" data-tys-fonts="1" />
+        <script dangerouslySetInnerHTML={{ __html: "(function(){var l=document.querySelector('link[data-tys-fonts]');if(!l)return;function on(){l.media='all'}if(l.sheet){on()}else{l.addEventListener('load',on);setTimeout(on,3000)}})();" }} />
+        <noscript><link href="https://fonts.googleapis.com/css2?family=Mada:wght@400;500;700;800&family=Noto+Naskh+Arabic:wght@500;700&family=Cairo:wght@500;700;900&display=swap" rel="stylesheet" /></noscript>
         <link rel="manifest" href="/track-your-sales/manifest.webmanifest" />
         <link rel="icon" href="/track-your-sales/logo-mark.png" type="image/png" />
         <link rel="apple-touch-icon" href="/track-your-sales/app-icon-192.png" />
