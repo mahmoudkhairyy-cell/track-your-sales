@@ -45,3 +45,6 @@
   .tx-manager aside.translate-x-full nav > * { justify-content: flex-start !important; }
   .tx-manager aside.translate-x-full nav > *[class*='fff0e5'] { background: #fff0e5; }
 }
+
+/* Branch-manager login: the section is the card; the legacy .tys-page-manager form card style would double-frame it. */
+.tys-page-manager .tys-bm-signin-form{border:0!important;border-radius:0!important;box-shadow:none!important}
