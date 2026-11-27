@@ -153,7 +153,7 @@ export default function BranchManagerPage() {
       if (cancelled) return;
       const profile = readProfile();
       if (profile.role !== "manager") {
-        window.location.replace(profile.role === "area_manager" ? "/track-your-sales/manager/" : "/track-your-sales/");
+        window.location.replace(profile.role === "area_manager" ? "/track-your-sales/area/" : "/track-your-sales/");
         return;
       }
       if (profile.name.trim() && profile.branch.trim()) {

@@ -9,12 +9,26 @@
       "startUrl": "/track-your-sales/home/",
       "scope": "/track-your-sales/",
       "manifestId": "/track-your-sales/",
+      "manifestPath": "public/manifest.webmanifest",
       "iconPrefix": "app-icon-emp",
       "swExcludePrefixes": ["/track-your-sales/tl/", "/track-your-sales/branch/", "/track-your-sales/area/"],
       "shortcuts": [
         { "name": "تسجيل إنجاز", "short_name": "تسجيل", "url": "/track-your-sales/log/" },
         { "name": "التارجت", "short_name": "التارجت", "url": "/track-your-sales/target/" }
       ]
+    },
+    "area": {
+      "basePath": "/track-your-sales/area",
+      "appName": "Track Your Sales — مدير منطقة",
+      "shortName": "TYS مدير منطقة",
+      "description": "تطبيق مدير المنطقة: متابعة كل فروع وموظفين المنطقة",
+      "startUrl": "/track-your-sales/area/",
+      "scope": "/track-your-sales/area/",
+      "manifestId": "/track-your-sales/area/",
+      "manifestPath": "public/area/manifest.webmanifest",
+      "iconPrefix": "app-icon-area",
+      "swExcludePrefixes": [],
+      "shortcuts": []
     }
   }
 }

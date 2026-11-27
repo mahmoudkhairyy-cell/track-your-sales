@@ -267,7 +267,7 @@ function FirstRunProfile({ onDone }: { onDone: () => void }) {
         }
         await api("/api/profile", { method: "PATCH", body: JSON.stringify({ name: name.trim(), branch: "", role, areaManager: "" }) });
         try { sessionStorage.setItem("tys.mgrPass", managerPassword); } catch { /* الدخول اليدوي يظل متاحًا لو التخزين غير متاح. */ }
-        router.push("/manager/");
+        router.push("/area/");
       } catch (err) {
         setError(err instanceof Error ? err.message : "تعذر التحقق من بيانات مدير المنطقة");
         setPending(false);

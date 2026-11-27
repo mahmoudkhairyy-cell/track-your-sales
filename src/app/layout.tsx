@@ -23,6 +23,8 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     images: ["https://mahmoudkhairyy-cell.github.io/track-your-sales/og-image.png"],
   },
+  // تطبيق الموظف هو الهوية الافتراضية؛ قسم /area/ يستبدلها بمانيفست مدير المنطقة.
+  manifest: `${APP_BASE_PATH}/manifest.webmanifest`,
 };
 
 export const viewport: Viewport = {
@@ -44,7 +46,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <link href="https://fonts.googleapis.com/css2?family=Mada:wght@400;500;700;800&family=Noto+Naskh+Arabic:wght@500;700&family=Cairo:wght@500;700;900&display=swap" rel="stylesheet" media="print" data-tys-fonts="1" />
         <script dangerouslySetInnerHTML={{ __html: "(function(){var l=document.querySelector('link[data-tys-fonts]');if(!l)return;function on(){l.media='all'}if(l.sheet){on()}else{l.addEventListener('load',on);setTimeout(on,3000)}})();" }} />
         <noscript><link href="https://fonts.googleapis.com/css2?family=Mada:wght@400;500;700;800&family=Noto+Naskh+Arabic:wght@500;700&family=Cairo:wght@500;700;900&display=swap" rel="stylesheet" /></noscript>
-        <link rel="manifest" href={`${APP_BASE_PATH}/manifest.webmanifest`} />
         <link rel="icon" href={`${APP_BASE_PATH}/logo-mark.png`} type="image/png" />
         <link rel="apple-touch-icon" href={`${APP_BASE_PATH}/app-icon-emp-192-v2.png`} />
         <meta name="apple-mobile-web-app-capable" content="yes" />

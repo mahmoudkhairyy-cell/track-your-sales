@@ -1,0 +1,39 @@
+{
+  "name": "Track Your Sales — مدير منطقة",
+  "short_name": "TYS مدير منطقة",
+  "description": "تطبيق مدير المنطقة: متابعة كل فروع وموظفين المنطقة",
+  "start_url": "/track-your-sales/area/",
+  "scope": "/track-your-sales/area/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#fffaf5",
+  "theme_color": "#ff7900",
+  "lang": "ar",
+  "dir": "rtl",
+  "icons": [
+    {
+      "src": "/track-your-sales/area/app-icon-area-192-v2.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/track-your-sales/area/app-icon-area-512-v2.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/track-your-sales/area/app-icon-area-maskable-512-v2.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "id": "/track-your-sales/area/",
+  "categories": [
+    "business",
+    "productivity"
+  ],
+  "shortcuts": []
+}
