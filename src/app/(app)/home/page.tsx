@@ -184,7 +184,7 @@ export default function HomePage() {
                 key={k.kpiKey}
                 className="orn-daily-tile"
               >
-                <span className="min-w-0 truncate text-[11px] font-bold tracking-wide text-orange-800" dir="ltr">{k.kpiKey === "new_orange_cash" ? "Wallets" : k.nameEn}</span>
+                <span className="min-w-0 truncate text-[13px] font-bold tracking-wide text-orange-800" dir="ltr">{k.kpiKey === "new_orange_cash" ? "Wallets" : k.nameEn}</span>
                 <strong className="shrink-0 rounded-md border border-white bg-orange-50 px-2 py-1 text-base font-black leading-none tabular-nums text-orange-800">
                   {formatQty(dailyRequired)}
                 </strong>
