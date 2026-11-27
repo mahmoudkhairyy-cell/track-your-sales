@@ -12,6 +12,19 @@ import { parseBackup, planEntryRestore, type BackupEntry } from "../src/lib/back
 import { applyBackupToState, checkRestoreRequest, type RestoreState } from "../src/lib/restore";
 import { validateQuantity } from "../src/lib/quantity";
 import { QUICK_SRS } from "../src/lib/quick-srs";
+import {
+  buildReminderMessage,
+  cairoMinutes,
+  cairoTodayISO,
+  dismissedKey,
+  kpiReminderLabel,
+  parseReminderPrefs,
+  perDayNeed,
+  reminderDue,
+  sentKey,
+  serializeReminderPrefs,
+  timeToMinutes,
+} from "../src/lib/reminder";
 
 function check(name: string, run: () => void) {
   run();
@@ -363,6 +376,87 @@ check("استعادة: الملف التالف أو الناقص يترفض قب
 check("استعادة: نسخة بإصدار غير مدعوم أو أقدم تترفض بوضوح (quickstart)", () => {
   assert.throws(() => parseBackup(rawBackup({ schemaVersion: 0 })), /إصدار الملف غير مدعوم/);
   assert.throws(() => parseBackup(rawBackup({ schemaVersion: 99 })), /إصدار الملف غير مدعوم/);
+});
+
+check("التذكير اليومي: المطلوب في اليوم بنفس قاعدة الهوم (تقريب لفوق، وأيام صفر ترجع الباقي كله)", () => {
+  assert.equal(perDayNeed(10, 3), 4);
+  assert.equal(perDayNeed(9, 3), 3);
+  assert.equal(perDayNeed(10, 0), 10);
+  assert.equal(perDayNeed(0, 5), 0);
+});
+
+check("التذكير اليومي: مفيش تارجت متظبط → رسالة تظبيط التارجت من غير سطور", () => {
+  const msg = buildReminderMessage(
+    [{ kpiKey: "new_lines", nameEn: "GAs", unitAr: "خط", target: 0, remaining: 0 }],
+    10,
+  );
+  assert.equal(msg.state, "no-targets");
+  assert.ok(msg.headline.includes("ظبّط التارجت"));
+  assert.equal(msg.lines.length, 0);
+});
+
+check("التذكير اليومي: كل المؤشرات مقفولة → تهنئة، والكواليتي مش محسوب", () => {
+  const msg = buildReminderMessage(
+    [
+      { kpiKey: "new_lines", nameEn: "GAs", unitAr: "خط", target: 100, remaining: 0 },
+      { kpiKey: "quality", nameEn: "Quality", unitAr: "نقطة", target: 100, remaining: 50 },
+    ],
+    5,
+  );
+  assert.equal(msg.state, "all-done");
+  assert.ok(msg.headline.includes("مقفولة"));
+  assert.equal(msg.lines.length, 0);
+});
+
+check("التذكير اليومي: سطر لكل مؤشر مفتوح بالمطلوب اليومي وتسمية Wallets زي الهوم", () => {
+  const msg = buildReminderMessage(
+    [
+      { kpiKey: "new_lines", nameEn: "GAs", unitAr: "خط", target: 175, remaining: 20 },
+      { kpiKey: "new_orange_cash", nameEn: "New Orange Cash Wallets", unitAr: "محفظة", target: 158, remaining: 9 },
+      { kpiKey: "points", nameEn: "Points", unitAr: "نقطة", target: 1737, remaining: 0 },
+    ],
+    10,
+  );
+  assert.equal(msg.state, "open");
+  assert.equal(msg.lines.length, 2);
+  assert.ok(msg.lines[0].startsWith("GAs: 2 خط"), `سطر GAs غلط: ${msg.lines[0]}`);
+  assert.ok(msg.lines[1].startsWith("Wallets: 1 محفظة"), `سطر المحافظ غلط: ${msg.lines[1]}`);
+  assert.ok(msg.headline.includes("2"));
+  assert.equal(kpiReminderLabel({ kpiKey: "points", nameEn: "Points" }), "Points");
+  // لو الأيام خلصت، السطر يبين إن ده الباقي كله
+  const lastDay = buildReminderMessage(
+    [{ kpiKey: "new_lines", nameEn: "GAs", unitAr: "خط", target: 175, remaining: 7 }],
+    0,
+  );
+  assert.ok(lastDay.lines[0].includes("فاضلة"), `سطر آخر يوم غلط: ${lastDay.lines[0]}`);
+});
+
+check("التذكير اليومي: التفضيلات التالفة أو الناقصة ترجع للوضع الافتراضي بأمان", () => {
+  assert.deepEqual(parseReminderPrefs(null), { notify: false, time: "09:00" });
+  assert.deepEqual(parseReminderPrefs("مش JSON"), { notify: false, time: "09:00" });
+  assert.deepEqual(parseReminderPrefs('{"notify":true,"time":"25:99"}'), { notify: true, time: "09:00" });
+  assert.deepEqual(parseReminderPrefs('{"notify":"yes","time":"08:30"}'), { notify: false, time: "08:30" });
+  assert.deepEqual(parseReminderPrefs('{"notify":true,"time":"08:30"}'), { notify: true, time: "08:30" });
+  assert.deepEqual(JSON.parse(serializeReminderPrefs({ notify: true, time: "23:45" })), { notify: true, time: "23:45" });
+});
+
+check("التذكير اليومي: توقيت القاهرة والاستحقاق (27 نوفمبر = UTC+2)", () => {
+  const at0930 = new Date("2026-11-27T07:30:00.000Z"); // 09:30 القاهرة
+  const at0830 = new Date("2026-11-27T06:30:00.000Z"); // 08:30 القاهرة
+  assert.equal(cairoTodayISO(at0930), "2026-11-27");
+  assert.equal(cairoMinutes(at0930), 9 * 60 + 30);
+  assert.equal(timeToMinutes("09:00"), 540);
+  assert.equal(reminderDue({ notify: true, time: "09:00" }, at0930), true);
+  assert.equal(reminderDue({ notify: true, time: "10:00" }, at0930), false);
+  assert.equal(reminderDue({ notify: false, time: "09:00" }, at0930), false);
+  assert.equal(reminderDue({ notify: true, time: "09:00" }, at0830), false);
+});
+
+check("التذكير اليومي: مفاتيح التخزين اليومية مميزة بالتاريخ عشان البانر والإشعار مرة واحدة في اليوم", () => {
+  assert.equal(dismissedKey("2026-11-27"), "tys.dailyReminder.dismissed.2026-11-27");
+  assert.equal(sentKey("2026-11-27"), "tys.dailyReminder.sent.2026-11-27");
+  assert.notEqual(dismissedKey("2026-11-27"), dismissedKey("2026-11-28"));
+  assert.notEqual(sentKey("2026-11-27"), dismissedKey("2026-11-27"));
 });
 
 console.log("\nاكتملت اختبارات الحسابات والنسخ الاحتياطي والكميات بنجاح.");
