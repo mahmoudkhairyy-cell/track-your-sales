@@ -6,7 +6,7 @@
 
 ## النسخة المنشورة
 
-يتم نشر التطبيق كـ **Static Export على GitHub Pages** من الفرع `local-version`:
+يتم نشر التطبيق كـ **Static Export على GitHub Pages** من الفرع `main`:
 
 https://mahmoudkhairyy-cell.github.io/track-your-sales/
 

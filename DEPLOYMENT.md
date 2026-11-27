@@ -6,13 +6,13 @@
 
 https://mahmoudkhairyy-cell.github.io/track-your-sales/
 
-مصدر النشر هو الفرع `local-version`، وملف GitHub Actions المسؤول هو `.github/workflows/pages.yml`.
+مصدر النشر هو الفرع `main`، وملف GitHub Actions المسؤول هو `.github/workflows/pages.yml`.
 
 آخر تحديث للواجهة: 10 نوفمبر 2026 — تحسين درجات الكروت، وإبراز حالة الأداء بتوهج أخضر/أحمر خفيف، مع إبقاء مربعات السحب بدون توهج.
 
 ## كيف يتم النشر؟
 
-عند دفع commit إلى `local-version`:
+عند دفع commit إلى `main`:
 
 1. GitHub Actions يثبت الاعتمادات.
 2. يشغّل اختبارات الحسابات `npm run selfcheck`.
