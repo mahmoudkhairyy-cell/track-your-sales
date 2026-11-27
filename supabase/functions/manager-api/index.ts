@@ -18,17 +18,39 @@ function json(body: unknown, status: number) {
 function clientKey(req: Request): string {
   return req.headers.get("x-forwarded-for")?.split(",")[0].trim() || "unknown";
 }
-function isBlocked(key: string): boolean {
+// In-memory fallback, used only if the database counter is unreachable.
+function isBlockedMemory(key: string): boolean {
   const entry = failures.get(key);
   if (!entry) return false;
   if (Date.now() - entry.first > WINDOW_MS) { failures.delete(key); return false; }
   return entry.count >= MAX_FAILS;
 }
-function recordFailure(key: string) {
+function recordFailureMemory(key: string) {
   const now = Date.now();
   const entry = failures.get(key);
   if (!entry || now - entry.first > WINDOW_MS) failures.set(key, { count: 1, first: now });
   else entry.count += 1;
+}
+// Persistent counters in Postgres (migration 20261127110000): the limit
+// survives edge-function cold starts and is shared across instances.
+async function isBlocked(url: string, serviceKey: string, key: string): Promise<boolean> {
+  try {
+    const res = await rpc(url, serviceKey, "manager_api_is_blocked", { p_key: key, p_max: MAX_FAILS, p_window_ms: WINDOW_MS });
+    if (res.ok) return (await res.json()) === true;
+  } catch { /* fall back to the in-memory limiter */ }
+  return isBlockedMemory(key);
+}
+async function recordFailure(url: string, serviceKey: string, key: string) {
+  recordFailureMemory(key);
+  try {
+    await rpc(url, serviceKey, "manager_api_record_failure", { p_key: key, p_window_ms: WINDOW_MS });
+  } catch { /* the in-memory entry above still counts this attempt */ }
+}
+async function clearFailures(url: string, serviceKey: string, key: string) {
+  failures.delete(key);
+  try {
+    await rpc(url, serviceKey, "manager_api_clear_failures", { p_key: key });
+  } catch { /* a later wrong attempt recreates the row */ }
 }
 async function rpc(url: string, serviceKey: string, name: string, args: Record<string, unknown>) {
   return await fetch(`${url}/rest/v1/rpc/${name}`, {
@@ -88,8 +110,12 @@ Deno.serve(async (req: Request) => {
   if (origin !== ALLOWED_ORIGIN) return json({ error: "origin not allowed" }, 403);
   if (req.method !== "POST") return json({ error: "method not allowed" }, 405);
 
+  const url = Deno.env.get("SUPABASE_URL");
+  const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+  if (!url || !serviceKey) return json({ error: "server misconfigured" }, 500);
+
   const key = clientKey(req);
-  if (isBlocked(key)) return json({ error: "too many attempts, try later" }, 429);
+  if (await isBlocked(url, serviceKey, key)) return json({ error: "too many attempts, try later" }, 429);
 
   let body: Record<string, unknown>;
   try {
@@ -97,10 +123,6 @@ Deno.serve(async (req: Request) => {
     if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) return json({ error: "bad json" }, 400);
     body = parsed as Record<string, unknown>;
   } catch { return json({ error: "bad json" }, 400); }
-
-  const url = Deno.env.get("SUPABASE_URL");
-  const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
-  if (!url || !serviceKey) return json({ error: "server misconfigured" }, 500);
 
   if (body.action === "submit_report") {
     const branchId = body.branchId;
@@ -187,9 +209,9 @@ Deno.serve(async (req: Request) => {
       return json({ error: "فرع أو شهر غير صالح" }, 400);
     }
     const check = await verifyBranchManager(url, serviceKey, branch, body.password);
-    if (check === "wrong") { recordFailure(key); return json({ error: "wrong password" }, 401); }
+    if (check === "wrong") { await recordFailure(url, serviceKey, key); return json({ error: "wrong password" }, 401); }
     if (check === "error") return json({ error: "تعذر التحقق من كلمة المرور" }, 500);
-    failures.delete(key);
+    await clearFailures(url, serviceKey, key);
     try {
       const reportQuery = new URLSearchParams({
         select: "branch_id,employee_name,branch_name,payload,updated_at",
@@ -242,7 +264,7 @@ Deno.serve(async (req: Request) => {
       return json({ error: "بيانات الإنتاجية غير صالحة" }, 400);
     }
     const check = await verifyBranchManager(url, serviceKey, branch, body.password);
-    if (check === "wrong") { recordFailure(key); return json({ error: "wrong password" }, 401); }
+    if (check === "wrong") { await recordFailure(url, serviceKey, key); return json({ error: "wrong password" }, 401); }
     if (check === "error") return json({ error: "تعذر التحقق من كلمة المرور" }, 500);
     try {
       await restUpsert(url, serviceKey, "branch_manager_monthly", {
@@ -269,7 +291,7 @@ Deno.serve(async (req: Request) => {
       return json({ error: "بيانات الجودة غير صالحة؛ كل بند لازم يكون من 0 إلى 100" }, 400);
     }
     const check = await verifyBranchManager(url, serviceKey, branch, body.password);
-    if (check === "wrong") { recordFailure(key); return json({ error: "wrong password" }, 401); }
+    if (check === "wrong") { await recordFailure(url, serviceKey, key); return json({ error: "wrong password" }, 401); }
     if (check === "error") return json({ error: "تعذر التحقق من كلمة المرور" }, 500);
     try {
       await restUpsert(url, serviceKey, "branch_manager_employee_overrides", {
@@ -339,9 +361,9 @@ Deno.serve(async (req: Request) => {
       return json({ error: "فرع غير صالح" }, 400);
     }
     const check = await verifyBranchManager(url, serviceKey, branch, body.password);
-    if (check === "wrong") { recordFailure(key); return json({ error: "wrong password" }, 401); }
+    if (check === "wrong") { await recordFailure(url, serviceKey, key); return json({ error: "wrong password" }, 401); }
     if (check === "error") return json({ error: "تعذر التحقق من كلمة المرور" }, 500);
-    failures.delete(key);
+    await clearFailures(url, serviceKey, key);
     try {
       const rows = await restRows(url, serviceKey, "contracts", new URLSearchParams({
         select: "id,employee_name,branch_name,client_name,status,contract_date,sent_date,note,updated_at",
@@ -380,12 +402,12 @@ Deno.serve(async (req: Request) => {
   const responseText = await res.text();
   if (!res.ok) {
     if (responseText.includes("wrong password")) {
-      recordFailure(key);
+      await recordFailure(url, serviceKey, key);
       return json({ error: "wrong password" }, 401);
     }
     return json({ error: "request failed" }, 500);
   }
-  failures.delete(key);
+  await clearFailures(url, serviceKey, key);
   let responseData: unknown = responseText ? JSON.parse(responseText) : null;
   if (body.action === "reports" && Array.isArray(responseData)) {
     try {
