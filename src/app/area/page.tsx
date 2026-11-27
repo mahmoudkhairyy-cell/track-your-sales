@@ -347,7 +347,7 @@ export default function ManagerPage() {
   // باسورد التيم ليدر لفروع OB (بوتيك): المدير بيحدد باسورد لكل فرع OB.
 
   function logout() {
-    if (!window.confirm("Log out of the area manager dashboard?")) return;
+    if (!window.confirm("تسجيل الخروج من لوحة مدير المنطقة؟")) return;
     try {
       sessionStorage.removeItem("tys.mgrPass");
       localStorage.removeItem("tys.mgrPass");
@@ -374,7 +374,7 @@ export default function ManagerPage() {
   }
 
   async function deleteContract(id: string) {
-    if (!window.confirm("Delete this contract?")) return;
+    if (!window.confirm("حذف هذا التعاقد؟")) return;
     const pw = sessionStorage.getItem("tys.mgrPass") ?? password;
     setContractMsg("");
     try {
@@ -382,15 +382,15 @@ export default function ManagerPage() {
       setContractRows((current) => (current ?? []).filter((row) => row.id !== id));
     } catch (err) {
       const raw = err instanceof Error ? err.message : "";
-      setContractMsg(raw.includes("wrong password") ? "Incorrect password. Sign in again." : "Could not delete the contract. Try again.");
+      setContractMsg(raw.includes("wrong password") ? "كلمة السر غير صحيحة. سجّل الدخول مرة أخرى." : "تعذر حذف التعاقد. حاول مرة أخرى.");
     }
   }
 
   async function changePassword(event: FormEvent) {
     event.preventDefault();
     setPwMsg("");
-    if (newPw.length < 8) return setPwMsg("New password must be at least 8 characters.");
-    if (newPw !== newPw2) return setPwMsg("New passwords do not match.");
+    if (newPw.length < 8) return setPwMsg("كلمة السر الجديدة لازم تكون 8 أحرف على الأقل.");
+    if (newPw !== newPw2) return setPwMsg("كلمتا السر الجديدتان مش متطابقتين.");
     try {
       await managerApi("change_password", { password: oldPw, newPassword: newPw });
       try { sessionStorage.setItem("tys.mgrPass", newPw); } catch { /* الجلسة الحالية تفضل شغالة حتى لو التخزين مقفول. */ }
@@ -468,10 +468,10 @@ export default function ManagerPage() {
         } catch {
           // لا شيء
         }
-        setError("Incorrect password. Try again.");
+        setError("كلمة السر غير صحيحة. حاول مرة أخرى.");
       } else {
         // خطأ نت أو غيره: نحتفظ بالبيانات اللي موجودة ونعرض الخطأ فوقها.
-        setError(`Couldn't refresh the data. Check your connection and try again. (${raw.slice(0, 160)})`);
+        setError(`تعذر تحديث البيانات. تحقق من الاتصال وحاول مرة أخرى. (${raw.slice(0, 160)})`);
       }
     } finally {
       setPending(false);
@@ -516,7 +516,7 @@ export default function ManagerPage() {
   }, []);
 
   async function deleteEmployee(row: ReportRow) {
-    if (!window.confirm(`Are you sure you want to remove ${row.employee_name}? Their summary will be removed from the dashboard.`)) return;
+    if (!window.confirm(`متأكد إنك عايز تحذف ${row.employee_name}؟ ملخصه هيتحذف من اللوحة.`)) return;
     setPending(true);
     setError("");
     try {
@@ -594,7 +594,7 @@ export default function ManagerPage() {
                   ))}
                 </div>
                 <div>
-                  <p className="mb-2 flex items-center justify-between font-black"><span>All achievements</span><span className="rounded-full bg-[var(--color-primary-50)] px-2 py-0.5 text-[11px] font-black text-[var(--color-primary-700)]">{row.payload.entries?.length ?? 0}</span></p>
+                  <p className="mb-2 flex items-center justify-between font-black"><span>كل الإنجازات</span><span className="rounded-full bg-[var(--color-primary-50)] px-2 py-0.5 text-[11px] font-black text-[var(--color-primary-700)]">{row.payload.entries?.length ?? 0}</span></p>
                   {(row.payload.entries ?? []).length === 0 ? <p className="text-[var(--color-text-secondary)]">لا يوجد</p> : null}
                   {(row.payload.entries ?? []).map((e, i) => (
                     <div key={`${e.date}-${i}`} className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] items-center gap-2 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface-cream)] px-3 py-2.5 text-[11px] sm:text-xs">
@@ -667,21 +667,25 @@ export default function ManagerPage() {
           </section>
         </div>
       ) : rows === null ? (
-        <div className="mx-auto max-w-md">
-          <section className="orn-rich-card mt-10 rounded-[28px] border border-[var(--color-border)] bg-white p-6 shadow-sm">
-            <div className="mb-6 text-center">
-              <img src="/track-your-sales/logo-mark.png" alt="" className="mx-auto h-12 w-12 object-contain" />
-              <p className="mt-3 text-[11px] font-black tracking-[.16em] text-[var(--color-primary-700)]" dir="ltr">MANAGEMENT</p>
-              <h1 className="mt-1 text-2xl font-black">Manager sign-in</h1>
-              <p className="mt-2 text-xs leading-6 text-[var(--color-text-secondary)]">Enter your password to view team reports.</p>
-            </div>
-            <form onSubmit={load} className="space-y-3">
-              <label className="block text-sm font-bold">Password
-                <input type="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Enter password" className="mt-2 w-full rounded-xl border border-[var(--color-border)] bg-[var(--color-surface-cream)] px-4 py-3 text-base outline-none focus:border-[#d9651b]" />
+        <div className="mx-auto flex min-h-[calc(100vh-2rem)] max-w-md items-center justify-center sm:min-h-[calc(100vh-3rem)]" dir="rtl">
+          <section className="orn-rich-card w-full rounded-[32px] border border-[var(--color-border)] bg-white p-7 text-center shadow-[0_18px_50px_rgba(93,54,26,.10)] sm:p-9">
+            <img src="/track-your-sales/logo-full.png" alt="Track Your Sales" className="mx-auto h-24 w-auto object-contain" />
+            <div className="mx-auto mt-4 h-px w-24 bg-gradient-to-r from-transparent via-[#bd4b0a] to-transparent" />
+            <p className="mt-4 text-[11px] font-black tracking-[.16em] text-[var(--color-primary-700)]">لوحة المتابعة</p>
+            <h1 className="mt-1 text-2xl font-black">أهلًا يا مدير المنطقة</h1>
+            <p className="mt-2 text-xs leading-6 text-[var(--color-text-secondary)]">سجّل دخولك لمتابعة تقارير فريقك وفروعك لحظة بلحظة.</p>
+            <form onSubmit={load} className="mt-6 space-y-3 text-right">
+              <label className="block text-sm font-bold">كلمة السر
+                <input type="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="أدخل كلمة السر" className="mt-2 w-full rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface-cream)] px-4 py-3 text-base outline-none focus:border-[#d9651b]" />
               </label>
               {error ? <p className="text-sm font-bold text-red-600">{error}</p> : null}
-              <button type="submit" disabled={pending || !password} className="w-full rounded-xl bg-[var(--color-primary-700)] py-3 font-extrabold text-white disabled:opacity-50">{pending ? "Signing in..." : "Sign in"}</button>
+              <button type="submit" disabled={pending || !password} className="w-full rounded-2xl bg-gradient-to-br from-[#e96812] to-[#ff9d38] py-3 font-extrabold text-white shadow-sm disabled:opacity-50">{pending ? "جاري الدخول..." : "دخول"}</button>
             </form>
+            <div className="mt-6 grid grid-cols-3 gap-2 border-t border-[var(--color-border)] pt-5 text-[10px] font-extrabold text-[var(--color-text-secondary)]">
+              <span>📊 تقارير الفروع</span>
+              <span>🕒 حضور اليوم</span>
+              <span>📄 التعاقدات</span>
+            </div>
           </section>
         </div>
       ) : (
@@ -789,7 +793,7 @@ export default function ManagerPage() {
             ) : view === "list" ? (
               <div className="space-y-4">
                 <section><h2 className="text-lg font-black">كل الفروع</h2><p className="text-[11px] text-[var(--color-text-secondary)]">{allRows.length} تقرير · {lastLoaded ? lastLoaded.toLocaleTimeString("en-US", { timeZone: "Africa/Cairo", hour: "2-digit", minute: "2-digit", hour12: false }) : "لم يتم التحديث بعد"}</p></section>
-                {branchStatus.length ? <section className="orn-rich-card overflow-hidden rounded-[26px] border border-[var(--color-border)] bg-white/90 shadow-[0_10px_28px_rgba(104,53,19,.055)]"><div className="hidden grid-cols-[52px_minmax(0,1.5fr)_minmax(100px,1fr)_100px_90px] gap-3 border-b border-[var(--color-border)] bg-[var(--color-surface-cream)] px-4 py-3 text-[11px] font-black text-[var(--color-text-secondary)] sm:grid"><span>#</span><span>الفرع</span><span>الحالة</span><span>التحقيق</span><span>الموظفين</span></div><div className="divide-y divide-[var(--color-border)]">{[...branchStatus].sort((a,b)=>b.percent-a.percent).map((b,index)=>{const delta=b.expected===undefined || b.track===undefined?null:b.track-b.expected;const label=delta===null?"لا توجد بيانات":delta<0?"متأخر":delta>=5?"متقدم":"على المسار";const tone=delta===null?"bg-stone-100 text-stone-600":delta<0?"bg-red-50 text-red-700":delta>=5?"bg-emerald-50 text-emerald-700":"bg-amber-50 text-amber-800";const ring=delta!==null&&delta<0?"var(--color-danger-text)":"var(--color-primary-600)";return <button key={b.name} type="button" onClick={()=>changeView("b:"+b.name)} className="grid w-full grid-cols-[26px_minmax(0,1fr)_auto] items-center gap-3 px-3 py-3 text-left transition hover:bg-[var(--color-surface-cream)] sm:grid-cols-[52px_minmax(0,1.5fr)_minmax(100px,1fr)_100px_90px] sm:px-4"><span className="text-[11px] font-black text-[var(--color-text-secondary)]">#{index+1}</span><span className="min-w-0"><span className="block truncate text-xs font-black text-[var(--color-text-primary)]">{b.name}</span><span className="mt-1 block text-[11px] text-[var(--color-text-secondary)] sm:hidden">{b.group.length} employees</span></span><span className={"col-start-3 row-start-1 rounded-full px-2.5 py-1 text-[11px] font-black "+tone+" sm:col-start-auto sm:row-auto sm:justify-self-start"}>{label}</span><span className="col-span-2 flex items-center gap-2 sm:col-span-1"><span className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full" style={{background:"conic-gradient("+ring+" "+Math.min(100,Math.max(0,b.percent))+"%, var(--color-border) 0)"}}><span className="flex h-7 w-7 items-center justify-center rounded-full bg-white text-[10px] font-black tabular-nums">{Math.round(b.percent)}%</span></span><span className="h-1.5 min-w-0 flex-1 overflow-hidden rounded-full bg-[var(--color-border)] sm:hidden"><span className="block h-full rounded-full bg-gradient-to-l from-[var(--color-primary-700)] to-[var(--color-primary-500)]" style={{width:Math.min(100,Math.max(0,b.percent))+"%"}} /></span></span><span className="hidden text-xs font-bold text-[#6f5948] sm:block">{b.group.length}</span></button>})}</div></section> : <div className="orn-rich-card rounded-2xl border border-dashed border-[#e8d5c5] bg-white p-8 text-center"><p className="font-extrabold">لا توجد تقارير بعد</p><p className="mt-1 text-xs text-[var(--color-text-secondary)]">ستظهر بيانات الفريق بعد المزامنة.</p></div>}
+                {branchStatus.length ? <section className="orn-rich-card overflow-hidden rounded-[26px] border border-[var(--color-border)] bg-white/90 shadow-[0_10px_28px_rgba(104,53,19,.055)]"><div className="hidden grid-cols-[52px_minmax(0,1.5fr)_minmax(100px,1fr)_100px_90px] gap-3 border-b border-[var(--color-border)] bg-[var(--color-surface-cream)] px-4 py-3 text-[11px] font-black text-[var(--color-text-secondary)] sm:grid"><span>#</span><span>الفرع</span><span>الحالة</span><span>التحقيق</span><span>الموظفين</span></div><div className="divide-y divide-[var(--color-border)]">{[...branchStatus].sort((a,b)=>b.percent-a.percent).map((b,index)=>{const delta=b.expected===undefined || b.track===undefined?null:b.track-b.expected;const label=delta===null?"لا توجد بيانات":delta<0?"متأخر":delta>=5?"متقدم":"على المسار";const tone=delta===null?"bg-stone-100 text-stone-600":delta<0?"bg-red-50 text-red-700":delta>=5?"bg-emerald-50 text-emerald-700":"bg-amber-50 text-amber-800";const ring=delta!==null&&delta<0?"var(--color-danger-text)":"var(--color-primary-600)";return <button key={b.name} type="button" onClick={()=>changeView("b:"+b.name)} className="grid w-full grid-cols-[26px_minmax(0,1fr)_auto] items-center gap-3 px-3 py-3 text-left transition hover:bg-[var(--color-surface-cream)] sm:grid-cols-[52px_minmax(0,1.5fr)_minmax(100px,1fr)_100px_90px] sm:px-4"><span className="text-[11px] font-black text-[var(--color-text-secondary)]">#{index+1}</span><span className="min-w-0"><span className="block truncate text-xs font-black text-[var(--color-text-primary)]">{b.name}</span><span className="mt-1 block text-[11px] text-[var(--color-text-secondary)] sm:hidden">{b.group.length} موظفين</span></span><span className={"col-start-3 row-start-1 rounded-full px-2.5 py-1 text-[11px] font-black "+tone+" sm:col-start-auto sm:row-auto sm:justify-self-start"}>{label}</span><span className="col-span-2 flex items-center gap-2 sm:col-span-1"><span className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full" style={{background:"conic-gradient("+ring+" "+Math.min(100,Math.max(0,b.percent))+"%, var(--color-border) 0)"}}><span className="flex h-7 w-7 items-center justify-center rounded-full bg-white text-[10px] font-black tabular-nums">{Math.round(b.percent)}%</span></span><span className="h-1.5 min-w-0 flex-1 overflow-hidden rounded-full bg-[var(--color-border)] sm:hidden"><span className="block h-full rounded-full bg-gradient-to-l from-[var(--color-primary-700)] to-[var(--color-primary-500)]" style={{width:Math.min(100,Math.max(0,b.percent))+"%"}} /></span></span><span className="hidden text-xs font-bold text-[#6f5948] sm:block">{b.group.length}</span></button>})}</div></section> : <div className="orn-rich-card rounded-2xl border border-dashed border-[#e8d5c5] bg-white p-8 text-center"><p className="font-extrabold">لا توجد تقارير بعد</p><p className="mt-1 text-xs text-[var(--color-text-secondary)]">ستظهر بيانات الفريق بعد المزامنة.</p></div>}
               </div>
             ) : view === "top" ? (
               <section className="orn-rich-card overflow-hidden rounded-[26px] border border-[var(--color-border)] bg-white/90 shadow-[0_10px_28px_rgba(104,53,19,.055)]">
