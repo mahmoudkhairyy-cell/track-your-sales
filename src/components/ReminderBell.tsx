@@ -13,7 +13,6 @@ import {
   reminderDue,
   REMINDER_PREFS_KEY,
   sentKey,
-  serializeReminderPrefs,
   type ReminderKpi,
   type ReminderPrefs,
 } from "@/lib/reminder";
@@ -108,31 +107,38 @@ export function ReminderBell({ kpis, remainingDays, paceMessage }: Props) {
     return () => window.clearInterval(id);
   }, [ready, prefs, message, toast]);
 
+  // سؤال لطيف مرة واحدة بس: إذن الإشعارات عشان التذكير اليومي يوصل كإشعار نظام.
+  // لو اترفض أو اتجاهل، التنبيه بيفضل يظهر جوه التطبيق (توست) — من غير ما نزعج المستخدم تاني.
+  useEffect(() => {
+    if (!ready) return;
+    const ASKED_KEY = "tys.dailyReminder.asked";
+    if (typeof Notification === "undefined") return;
+    if (Notification.permission !== "default") return;
+    if (safeGet(ASKED_KEY) === "1") return;
+    safeSet(ASKED_KEY, "1");
+    const id = window.setTimeout(() => {
+      toast.push("info", "عايز يوصلك تذكير بتارجت النهارده كل يوم الساعة ٩ الصبح؟ 🔔", {
+        label: "فعّل الإشعارات",
+        onClick: () => {
+          void Notification.requestPermission().then((permission) => {
+            if (permission === "granted") {
+              toast.push("success", "تمام 👌 هفتكرك كل يوم الساعة ٩ الصبح طالما التطبيق مفتوح.");
+            } else {
+              toast.push("info", "مش مشكلة — هتلاقي التنبيه على الجرس ده كل يوم.");
+            }
+          });
+        },
+      });
+    }, 2500);
+    return () => window.clearTimeout(id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ready]);
+
   const dismissToday = () => {
     haptic();
     safeSet(dismissedKey(cairoTodayISO()), "1");
     setDismissed(true);
     setOpen(false);
-  };
-
-  const savePrefs = (next: ReminderPrefs) => {
-    setPrefs(next);
-    safeSet(REMINDER_PREFS_KEY, serializeReminderPrefs(next));
-  };
-
-  const enableNotify = async () => {
-    haptic();
-    if (typeof Notification === "undefined") {
-      toast.push("error", "المتصفح ده مش بيدعم الإشعارات، هتلاقي التنبيه على الجرس ده كل يوم.");
-      return;
-    }
-    const permission = await Notification.requestPermission();
-    if (permission === "granted") {
-      savePrefs({ ...prefs, notify: true });
-      toast.push("success", `تمام 👌 هفتكرك كل يوم الساعة ${prefs.time} طالما التطبيق مفتوح.`);
-    } else {
-      toast.push("error", "الإشعارات مرفوضة من المتصفح. هتلاقي التنبيه هنا على الجرس كل يوم.");
-    }
   };
 
   const showBadge = ready && !dismissed && openCount > 0;
@@ -217,41 +223,6 @@ export function ReminderBell({ kpis, remainingDays, paceMessage }: Props) {
                   </>
                 )}
 
-                <div className="mt-2 flex flex-wrap items-center gap-2 border-t border-[var(--orn-line)] pt-2.5">
-                  {prefs.notify ? (
-                    <>
-                      <span className="text-[11px] font-extrabold text-emerald-600">🔔 الإشعار اليومي شغال</span>
-                      <label className="flex items-center gap-1 text-[11px] font-bold text-[var(--color-text-primary)]">
-                        الساعة
-                        <input
-                          type="time"
-                          value={prefs.time}
-                          onChange={(event) => {
-                            const time = event.target.value;
-                            if (time) savePrefs({ ...prefs, time });
-                          }}
-                          className="min-h-8 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-1.5 text-xs font-bold text-[var(--color-text-primary)]"
-                          dir="ltr"
-                        />
-                      </label>
-                      <button
-                        type="button"
-                        onClick={() => { haptic(); savePrefs({ ...prefs, notify: false }); }}
-                        className="min-h-8 rounded-lg px-2 text-[11px] font-bold text-[var(--color-text-muted)] underline"
-                      >
-                        وقّف الإشعار
-                      </button>
-                    </>
-                  ) : (
-                    <button
-                      type="button"
-                      onClick={() => void enableNotify()}
-                      className="min-h-8 rounded-lg border border-[var(--orn-line)] px-3 text-[11px] font-extrabold text-[var(--color-primary-700)]"
-                    >
-                      🔔 فعّل إشعار يومي بالتارجت
-                    </button>
-                  )}
-                </div>
               </div>
             </>,
             document.body,

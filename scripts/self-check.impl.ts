@@ -433,8 +433,9 @@ check("التذكير اليومي: سطر لكل مؤشر مفتوح بالمط
 });
 
 check("التذكير اليومي: التفضيلات التالفة أو الناقصة ترجع للوضع الافتراضي بأمان", () => {
-  assert.deepEqual(parseReminderPrefs(null), { notify: false, time: "09:00" });
-  assert.deepEqual(parseReminderPrefs("مش JSON"), { notify: false, time: "09:00" });
+  // الافتراضي اتغير: التذكير شغال من غير إعداد (طلب محمود 27 نوفمبر 2026)
+  assert.deepEqual(parseReminderPrefs(null), { notify: true, time: "09:00" });
+  assert.deepEqual(parseReminderPrefs("مش JSON"), { notify: true, time: "09:00" });
   assert.deepEqual(parseReminderPrefs('{"notify":true,"time":"25:99"}'), { notify: true, time: "09:00" });
   assert.deepEqual(parseReminderPrefs('{"notify":"yes","time":"08:30"}'), { notify: false, time: "08:30" });
   assert.deepEqual(parseReminderPrefs('{"notify":true,"time":"08:30"}'), { notify: true, time: "08:30" });

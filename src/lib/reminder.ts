@@ -17,7 +17,8 @@ export const REMINDER_SENT_PREFIX = "tys.dailyReminder.sent.";
 export const DEFAULT_REMINDER_TIME = "09:00";
 
 export function defaultReminderPrefs(): ReminderPrefs {
-  return { notify: false, time: DEFAULT_REMINDER_TIME };
+  // التذكير شغال افتراضيًا كل يوم الساعة ٩ الصبح من غير أي إعداد (طلب محمود 27 نوفمبر 2026).
+  return { notify: true, time: DEFAULT_REMINDER_TIME };
 }
 
 export function sanitizeReminderPrefs(value: Partial<ReminderPrefs> | null | undefined): ReminderPrefs {
