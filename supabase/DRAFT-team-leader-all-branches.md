@@ -4,6 +4,12 @@ User decision (Nov 27, ~3:06 PM, relayed via main): one TL per branch, every TL 
 every branch gets his own password, same KPI weights as employee, enters his own
 scores by hand (in the employee app), sees his team (in the /tl/ app).
 
+Clarified (Nov 27, ~6:33 PM, relayed via main): this includes Express and franchise
+branches, not only OB boutiques. TLs there get a normal target, the same weights as
+an employee, a per-branch TL password like OB TLs, and see their own team's data.
+In OB branches there is no branch manager: the TL replaces the branch manager role
+there (visibility scenario, tested with test data only — no behavior change yet).
+
 ## What already exists (no migration needed)
 
 - Table `public.branch_team_leader_access(branch_name PK, password_hash, updated_by, updated_at)`,
