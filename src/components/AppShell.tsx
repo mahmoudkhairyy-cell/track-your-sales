@@ -290,7 +290,7 @@ function FirstRunProfile({ onDone }: { onDone: () => void }) {
     try {
       await api("/api/profile", { method: "PATCH", body: JSON.stringify({ name: name.trim(), branch: branch.trim(), role, areaManager: branch === OUTSIDE_BRANCHES ? "" : areaManager.trim() }) });
       if (role === "manager") {
-        router.push("/branch-manager/");
+        router.push("/branch/");
         return;
       }
       onDone();
@@ -541,7 +541,7 @@ export function AppShell({ children }: { children: ReactNode }) {
     let cancelled = false;
     const profile = readProfile();
     if (profile.role === "manager") {
-      router.replace("/branch-manager/");
+      router.replace("/branch/");
       return () => { cancelled = true; };
     }
     if (!profile.name.trim() || (!profile.areaManager && profile.role !== "area_manager" && profile.branch !== OUTSIDE_BRANCHES) || (profile.role !== "agent" && profile.role !== "team_leader" && profile.role !== "area_manager")) {

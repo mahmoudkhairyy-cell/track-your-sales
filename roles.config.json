@@ -29,6 +29,19 @@
       "iconPrefix": "app-icon-area",
       "swExcludePrefixes": [],
       "shortcuts": []
+    },
+    "branch": {
+      "basePath": "/track-your-sales/branch",
+      "appName": "Track Your Sales — مدير فرع",
+      "shortName": "TYS مدير فرع",
+      "description": "تطبيق مدير الفرع: متابعة فريقه وإنتاجية فرعه وتعاقداته",
+      "startUrl": "/track-your-sales/branch/",
+      "scope": "/track-your-sales/branch/",
+      "manifestId": "/track-your-sales/branch/",
+      "manifestPath": "public/branch/manifest.webmanifest",
+      "iconPrefix": "app-icon-branch",
+      "swExcludePrefixes": [],
+      "shortcuts": []
     }
   }
 }
