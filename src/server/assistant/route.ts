@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { retrieveRelevantKB } from "./retrieve";
+import { localAnswer } from "./local";
 import { cacheGet, cacheSet, directAnswer, freemaxPriceAnswer, questionKey, rateLimited } from "./direct";
 
 export const runtime = "nodejs";
@@ -103,9 +104,12 @@ export function OPTIONS(request: NextRequest) {
   return new NextResponse(null, { status: 204, headers: corsHeaders(request.headers.get("origin")) });
 }
 
+// عدّاد بسيط في الذاكرة (من آخر cold start): كام سؤال اتجاب محليًا من غير Gemini وكام راح للموديل.
+const stats = { local: 0, cache: 0, model: 0, since: new Date().toISOString() };
+
 export function GET(request: NextRequest) {
   return NextResponse.json(
-    { ok: true, service: "track-your-sales-assistant" },
+    { ok: true, service: "track-your-sales-assistant", stats },
     { headers: corsHeaders(request.headers.get("origin")) },
   );
 }
@@ -138,13 +142,25 @@ export async function POST(request: NextRequest) {
 
   const cacheKey = questionKey(question);
   const cached = cacheGet(cacheKey);
-  if (cached) return NextResponse.json({ answer: cached }, { headers });
+  if (cached) {
+    stats.cache++;
+    return NextResponse.json({ answer: cached }, { headers });
+  }
 
   let systemPrompt: string;
   try {
     const knowledgeBase = await getKnowledgeBase();
     const direct = directAnswer(knowledgeBase, question) ?? freemaxPriceAnswer(knowledgeBase, question);
-    if (direct) return NextResponse.json({ answer: direct }, { headers });
+    if (direct) {
+      stats.local++;
+      return NextResponse.json({ answer: direct }, { headers });
+    }
+    const local = localAnswer(knowledgeBase, question);
+    if (local) {
+      stats.local++;
+      console.log(`assistant local answer: ${local.kind}`);
+      return NextResponse.json({ answer: local.answer }, { headers });
+    }
     if (rateLimited(userId)) {
       return fail("بعتّ أسئلة كتير في وقت قصير. استنى دقيقة وجرّب تاني.", 429);
     }
@@ -155,6 +171,7 @@ export async function POST(request: NextRequest) {
     return fail("قاعدة المعلومات مش متظبطة على السيرفر لسه (ASSISTANT_KB_URL ناقص أو مش شغال).", 503);
   }
 
+  stats.model++;
   try {
     let response: Response | null = null;
     for (const model of [GEMINI_MODEL, ...FALLBACK_MODELS]) {
