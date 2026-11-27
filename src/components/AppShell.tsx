@@ -177,7 +177,8 @@ function SearchableSelect({
         }}
         placeholder={placeholder}
         autoComplete="off"
-        className="mt-1 w-full rounded-2xl border border-[#f2e4d8] bg-[#fffdfb] px-4 py-3 font-semibold text-[#241f1b] outline-none transition placeholder:text-[#b6a79c] focus:border-[#e96812] focus:ring-2 focus:ring-[#e96812]/10"
+        dir="ltr"
+        className="mt-1 w-full rounded-2xl border border-[#f2e4d8] bg-[#fffdfb] px-4 py-3 text-left font-semibold text-[#241f1b] outline-none transition placeholder:text-[#b6a79c] focus:border-[#e96812] focus:ring-2 focus:ring-[#e96812]/10"
         aria-label={label}
       />
       {open ? (
