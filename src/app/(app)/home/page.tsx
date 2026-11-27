@@ -11,6 +11,7 @@ import { ApiError, api } from "@/lib/client";
 import { formatMoney, formatPercent, formatQty } from "@/lib/calculations";
 import { useMonth } from "@/components/AppShell";
 import { KpiIcon } from "@/components/KpiIcon";
+import { RobotMascot } from "@/components/robot-mascot";
 import { pushReport, readSyncStatus, type SyncStatus } from "@/lib/sync";
 
 type KpiRow = {
@@ -161,6 +162,7 @@ export default function HomePage() {
           </svg>
           <div className="orn-month-center"><span>إجمالي تحقيق التارجت</span><strong dir="ltr">{formatPercent(data.overall)}<small>%</small></strong></div>
         </div>
+        <RobotMascot size={54} className="orn-mascot-home" />
         <div className="orn-month-side"><span className={`orn-status ${onTrack === false ? "is-behind" : ""}`}>{onTrack === null ? "مستني بيانات" : onTrack ? "On track" : "Behind"}</span><div className="orn-commission"><p>الكوميشن المحقق</p><strong dir="ltr">{formatMoney(data.estimatedCommission)}</strong><small>جنيه</small></div></div>
       </section>
 
@@ -210,6 +212,22 @@ export default function HomePage() {
             </article>;
           })}
         </div>
+      </section>
+
+      {/* المساعد الذكي */}
+      <section
+        className="orn-card flex cursor-pointer items-center gap-3 p-4"
+        role="link"
+        tabIndex={0}
+        onClick={() => { haptic(); router.push("/assistant"); }}
+        onKeyDown={(e) => { if (e.key === "Enter") { haptic(); router.push("/assistant"); } }}
+      >
+        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[13px] bg-[var(--color-primary-50)] text-xl" aria-hidden="true">🤖</span>
+        <span className="min-w-0 flex-1">
+          <span className="block text-sm font-extrabold text-[var(--color-text-primary)]">المساعد الذكي</span>
+          <span className="mt-0.5 block text-xs leading-5 text-[var(--color-text-secondary)]">عندك سؤال عن باقة أو عرض أو إجراء؟ اسأل هنا وخد إجابة فورية.</span>
+        </span>
+        <span className="text-lg text-[var(--color-text-muted)]" aria-hidden="true">‹</span>
       </section>
     </div>
   );

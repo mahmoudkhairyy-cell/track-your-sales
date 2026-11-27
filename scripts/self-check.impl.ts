@@ -11,6 +11,7 @@ import { kpiWeight, managerKpiWeight, MANAGER_FIXED_SALARY, MANAGER_FULL_COMMISS
 import { parseBackup, planEntryRestore, type BackupEntry } from "../src/lib/backup";
 import { applyBackupToState, checkRestoreRequest, type RestoreState } from "../src/lib/restore";
 import { validateQuantity } from "../src/lib/quantity";
+import { QUICK_SRS } from "../src/lib/quick-srs";
 
 function check(name: string, run: () => void) {
   run();
@@ -379,4 +380,31 @@ check("استعادة بالاستبدال تستعيد الاسم والفرع 
   const backup = parseBackup(rawBackup({ profile: { name: "Imported Name", branch: "Imported Branch" } }));
   applyBackupToState(state, backup, "replace", restoreOptions());
   assert.deepEqual(state.profile, { name: "Imported Name", branch: "Imported Branch" });
+});
+
+check("أزرار الأكواد السريعة: قايمة غير مكررة وكل زرار فيه كوده في الإجابة", () => {
+  const labels = QUICK_SRS.map((item) => item.label);
+  assert.equal(new Set(labels).size, labels.length, "فيه زرار مكرر");
+  const expectedCodes: Record<string, string[]> = {
+    "رصيد بيتخصم": ["31319"],
+    "إلغاء الفاتورة": ["10758"],
+    "إلغاء الـ DSL": ["16058", "5009"],
+    "انتظار المكالمات": ["11102", "11119", "31427"],
+    "كول تون مش شغال": ["31421"],
+    "شبكة وحشة": ["31001", "31007"],
+    "محفظة أورنچ كاش متوقفة": ["11306", "11189", "4124", "11314", "11311", "16777"],
+    "فك إيقاف محفظة": ["30319", "32106"],
+    "حافز Max It": ["60619"],
+    "استمارة تفويض CP": ["10669"],
+  };
+  assert.equal(QUICK_SRS.length, Object.keys(expectedCodes).length, "عدد الأزرار اتغير من غير تحديث الاختبار");
+  for (const item of QUICK_SRS) {
+    const codes = expectedCodes[item.label];
+    assert.ok(codes, `زرار غير متوقع: ${item.label}`);
+    for (const code of codes) {
+      assert.ok(item.answer.includes(code), `الكود ${code} مش موجود في إجابة «${item.label}»`);
+    }
+    // إجابة الزرار مبيفضلش آخرها سؤال + اختيارات عشان منطق أزرار التضييق ميفسرهاش غلط
+    assert.ok(!/[؟?]\s*$/.test(item.answer.trim()), `إجابة «${item.label}» منتهية بعلامة استفهام`);
+  }
 });

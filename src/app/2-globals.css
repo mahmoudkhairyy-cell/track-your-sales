@@ -883,7 +883,7 @@ body {
     border-radius: 23px;
     padding: .9rem;
   }
-  .tys-page-home > section:nth-of-type(2) .font-mono.text-\\[52px\\] {
+  .tys-page-home > section:nth-of-type(2) .font-mono.text-\[52px\] {
     font-size: clamp(2.65rem, 12vw, 3.25rem);
   }
   .tys-page-home > section:nth-of-type(3) {
@@ -5562,3 +5562,18 @@ html.light {
 
 /* Stop the browser/PWA pull-to-refresh gesture when dragging down from the top of the page. */
 html, body { overscroll-behavior-y: none; }
+
+/* ─── Assistant page compat tokens (assistant UI بُنيت على نظام التصميم الجديد، دي خريطة توافق على باليت المشروع) ─── */
+@theme {
+  --color-brand-500: #f97316;
+  --color-brand-200: #fed7aa;
+  --color-brand-surface: #fff7ed;
+  --color-brand-ink-strong: #7a2e00;
+  --color-brand-ink-soft: #c2410c;
+  --color-ink-2: #525252;
+  --color-section: #e5e5e5;
+  --color-section-2: #d4d4d4;
+  --color-section-3: #a3a3a3;
+  --radius-hero: 24px;
+  --shadow-accent: 0 8px 24px rgb(255 121 0 / 22%);
+}
