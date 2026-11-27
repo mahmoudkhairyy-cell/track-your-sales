@@ -217,6 +217,7 @@ function FirstRunProfile({ onDone }: { onDone: () => void }) {
   const [pending, setPending] = useState(false);
   const [role, setRole] = useState<"agent" | "team_leader" | "manager" | "area_manager" | "">("");
   const [review, setReview] = useState(false);
+  const router = useRouter();
 
   async function submit(event: FormEvent) {
     event.preventDefault();
@@ -265,7 +266,7 @@ function FirstRunProfile({ onDone }: { onDone: () => void }) {
         }
         await api("/api/profile", { method: "PATCH", body: JSON.stringify({ name: name.trim(), branch: "", role, areaManager: "" }) });
         try { sessionStorage.setItem("tys.mgrPass", managerPassword); } catch { /* الدخول اليدوي يظل متاحًا لو التخزين غير متاح. */ }
-        window.location.assign("/track-your-sales/manager/");
+        router.push("/manager/");
       } catch (err) {
         setError(err instanceof Error ? err.message : "تعذر التحقق من بيانات مدير المنطقة");
         setPending(false);
@@ -288,7 +289,7 @@ function FirstRunProfile({ onDone }: { onDone: () => void }) {
     try {
       await api("/api/profile", { method: "PATCH", body: JSON.stringify({ name: name.trim(), branch: branch.trim(), role, areaManager: branch === OUTSIDE_BRANCHES || role === "manager" ? "" : areaManager.trim() }) });
       if (role === "manager") {
-        window.location.assign("/track-your-sales/branch-manager/");
+        router.push("/branch-manager/");
         return;
       }
       onDone();
@@ -425,6 +426,7 @@ function SplashScreen({ name }: { name: string }) {
 
 export function AppShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
+  const router = useRouter();
   const params = useSearchParams();
   const raw = params.get("month");
   // الشهر الحالي بيتحدّث لوحده لو التطبيق فضل مفتوح (مثلاً لحد بعد نص الليل) أو رجع للواجهة.
@@ -538,7 +540,7 @@ export function AppShell({ children }: { children: ReactNode }) {
     let cancelled = false;
     const profile = readProfile();
     if (profile.role === "manager") {
-      window.location.assign("/track-your-sales/branch-manager/");
+      router.replace("/branch-manager/");
       return () => { cancelled = true; };
     }
     if (!profile.name.trim() || (!profile.areaManager && profile.role !== "area_manager" && profile.branch !== OUTSIDE_BRANCHES) || (profile.role !== "agent" && profile.role !== "team_leader" && profile.role !== "area_manager")) {
@@ -559,7 +561,7 @@ export function AppShell({ children }: { children: ReactNode }) {
     return () => {
       cancelled = true;
     };
-  }, [month, rev]);
+  }, [month, rev, router]);
 
   if (splash) {
     return <SplashScreen name={who.name} />;

@@ -12,7 +12,9 @@ import {
   markContractDeleted,
   pushContracts,
   readContracts,
+  readContractsSyncStatus,
   writeContracts,
+  type ContractsSyncStatus,
 } from "@/lib/contracts";
 
 const STATUS_STYLE: Record<ContractStatus, string> = {
@@ -37,6 +39,7 @@ export default function ContractsPage() {
   const [sentDate, setSentDate] = useState(cairoISODate());
   const [note, setNote] = useState("");
   const [syncing, setSyncing] = useState(false);
+  const [syncStatus, setSyncStatus] = useState<ContractsSyncStatus | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -46,7 +49,13 @@ export default function ContractsPage() {
       setBranchId(id);
       setItems(id ? readContracts(id) : []);
     });
-    return () => { cancelled = true; };
+    const refresh = () => setSyncStatus(readContractsSyncStatus());
+    refresh();
+    window.addEventListener("tys-contracts-sync-status", refresh);
+    return () => {
+      cancelled = true;
+      window.removeEventListener("tys-contracts-sync-status", refresh);
+    };
   }, []);
 
   function persist(next: ContractItem[]) {
@@ -131,6 +140,18 @@ export default function ContractsPage() {
             <p className="text-[11px] font-bold text-red-700">مرفوض</p>
           </div>
         </div>
+        {syncStatus ? (
+          <p className={`mt-3 text-xs font-bold ${syncStatus.ok ? "text-emerald-700" : "text-red-600"}`} dir="rtl">
+            {syncStatus.ok
+              ? `☁️ التعاقدات مرفوعة للمتابعة ${new Date(syncStatus.at).toLocaleTimeString("en-US", { timeZone: "Africa/Cairo", hour: "2-digit", minute: "2-digit", hour12: false })}`
+              : `⚠️ التعاقدات مااترفعتش للمتابعة: ${syncStatus.error ?? ""}. `}
+            {syncStatus.ok ? null : (
+              <button type="button" disabled={syncing} onClick={() => void syncNow()} className="min-h-8 rounded-lg px-2 font-black underline">
+                جرّب ترفع تاني
+              </button>
+            )}
+          </p>
+        ) : null}
       </section>
 
       <section className="orn-rich-card rounded-[24px] border border-white bg-white/90 p-4 shadow-sm">

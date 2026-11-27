@@ -82,6 +82,29 @@ function clearDeletedContracts(branchId: string) {
   try { localStorage.removeItem(deletedKey(branchId)); } catch { /* التخزين غير متاح. */ }
 }
 
+/* ---------- حالة مزامنة التعاقدات (تظهر للمستخدم بدل ما الفشل يعدي في صمت) ---------- */
+
+export type ContractsSyncStatus = { ok: boolean; at: string; error?: string };
+export const CONTRACTS_SYNC_STATUS_KEY = "tys.lastContractsSync";
+
+function saveContractsSyncStatus(status: ContractsSyncStatus) {
+  try {
+    localStorage.setItem(CONTRACTS_SYNC_STATUS_KEY, JSON.stringify(status));
+    window.dispatchEvent(new Event("tys-contracts-sync-status"));
+  } catch {
+    // التخزين مش متاح، مفيش أكتر من كده.
+  }
+}
+
+export function readContractsSyncStatus(): ContractsSyncStatus | null {
+  try {
+    const raw = localStorage.getItem(CONTRACTS_SYNC_STATUS_KEY);
+    return raw ? (JSON.parse(raw) as ContractsSyncStatus) : null;
+  } catch {
+    return null;
+  }
+}
+
 /** هوية الجهاز/الملف — نفس معرّف تقرير الفرع عشان الملكية تطابق submit_report. */
 export function contractsBranchId(): string {
   // المعرّف بيتولّد ويتخزن في sync.ts؛ بنعيد استخدامه هنا عشان التعاقد
@@ -103,14 +126,23 @@ export function contractsBranchId(): string {
 
 /** يرفع تعاقدات الجهاز للسحابة. بيرجع true لو الرفع نجح. */
 export async function pushContracts(): Promise<boolean> {
-  if (typeof navigator !== "undefined" && !navigator.onLine) return false;
+  if (typeof navigator !== "undefined" && !navigator.onLine) {
+    saveContractsSyncStatus({ ok: false, at: new Date().toISOString(), error: "مفيش نت" });
+    return false;
+  }
   const profile = readProfile();
   // مدير الفرع مش بيسجّل تعاقدات بنفسه من التطبيق.
   if (profile.role === "manager") return false;
   if (profile.branch === OUTSIDE_BRANCHES) return false;
-  if (!profile.areaManager || !AREA_MANAGERS.includes(profile.areaManager as (typeof AREA_MANAGERS)[number])) return false;
+  if (!profile.areaManager || !AREA_MANAGERS.includes(profile.areaManager as (typeof AREA_MANAGERS)[number])) {
+    saveContractsSyncStatus({ ok: false, at: new Date().toISOString(), error: "اختار مدير المنطقة من صفحة بياناتك قبل المزامنة" });
+    return false;
+  }
   const id = contractsBranchId();
-  if (!id || !profile.name.trim() || !profile.branch.trim()) return false;
+  if (!id || !profile.name.trim() || !profile.branch.trim()) {
+    saveContractsSyncStatus({ ok: false, at: new Date().toISOString(), error: "بيانات الموظف أو الفرع غير مكتملة" });
+    return false;
+  }
 
   const items = readContracts(id);
   const deletedIds = readDeletedContracts(id);
@@ -131,8 +163,10 @@ export async function pushContracts(): Promise<boolean> {
       deletedIds,
     });
     clearDeletedContracts(id);
+    saveContractsSyncStatus({ ok: true, at: new Date().toISOString() });
     return true;
-  } catch {
+  } catch (err) {
+    saveContractsSyncStatus({ ok: false, at: new Date().toISOString(), error: err instanceof Error ? err.message.slice(0, 160) : "خطأ" });
     return false;
   }
 }
