@@ -42,6 +42,19 @@
       "iconPrefix": "app-icon-branch",
       "swExcludePrefixes": [],
       "shortcuts": []
+    },
+    "tl": {
+      "basePath": "/track-your-sales/tl",
+      "appName": "Track Your Sales — تيم ليدر",
+      "shortName": "TYS تيم ليدر",
+      "description": "تطبيق التيم ليدر: متابعة فريقه وتسجيل إنجازاته",
+      "startUrl": "/track-your-sales/tl/",
+      "scope": "/track-your-sales/tl/",
+      "manifestId": "/track-your-sales/tl/",
+      "manifestPath": "public/tl/manifest.webmanifest",
+      "iconPrefix": "app-icon-tl",
+      "swExcludePrefixes": [],
+      "shortcuts": []
     }
   }
 }
