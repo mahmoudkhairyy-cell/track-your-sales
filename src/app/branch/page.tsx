@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState, type FormEvent } from "react";
 import { logoutBranchManager, readProfile } from "@/lib/local-api";
-import { BRANCHES, KPI_CATALOG, MANAGER_FULL_COMMISSION, MANAGER_KPI_WEIGHTS } from "@/lib/constants";
+import { BRANCHES, KPI_CATALOG, MANAGER_FULL_COMMISSION, MANAGER_KPI_WEIGHTS, displayKpiName } from "@/lib/constants";
 import { managerApi } from "@/lib/cloud";
 import { KpiIcon } from "@/components/KpiIcon";
 import { cairoYearMonth, formatDateAr } from "@/lib/dates";
@@ -161,7 +161,7 @@ export default function BranchManagerPage() {
   const qualityMap = useMemo(() => new Map((data?.qualityOverrides ?? []).map((item) => [item.employee_name, item.quality] as const)), [data]);
   const metrics = useMemo(() => {
     const definitions = [
-      { key: "new_lines", label: "GAs", weight: MANAGER_KPI_WEIGHTS.new_lines },
+      { key: "new_lines", label: "Line", weight: MANAGER_KPI_WEIGHTS.new_lines },
       { key: "points", label: "Points", weight: MANAGER_KPI_WEIGHTS.points },
       { key: "existing_wallets", label: "Excite", weight: MANAGER_KPI_WEIGHTS.existing_wallets },
       { key: "postpaid_lines", label: "Postpaid", weight: MANAGER_KPI_WEIGHTS.postpaid_lines },
@@ -363,7 +363,7 @@ export default function BranchManagerPage() {
                     const onTrackKpi = (k.achieved ?? 0) >= expectedToDate;
                     return <article key={k.name} className={`orn-kpi orn-card ${(k.percent ?? 0) >= 100 ? "is-win" : ""}`}>
                       <span className="orn-watermark"><KpiIcon kpiKey={kpiKey}/></span>
-                      <div className="orn-kpi-head"><div className="orn-kpi-identity"><span className="orn-kpi-icon"><KpiIcon kpiKey={kpiKey}/></span><span dir="ltr">{k.name}</span></div><span className={`orn-status ${onTrackKpi ? "" : "is-behind"}`}>{onTrackKpi ? "On track" : `ناقص ${formatCount(Math.max(0, Math.ceil(expectedToDate - (k.achieved ?? 0))))}`}</span></div>
+                      <div className="orn-kpi-head"><div className="orn-kpi-identity"><span className="orn-kpi-icon"><KpiIcon kpiKey={kpiKey}/></span><span dir="ltr">{displayKpiName(k.name)}</span></div><span className={`orn-status ${onTrackKpi ? "" : "is-behind"}`}>{onTrackKpi ? "On track" : `ناقص ${formatCount(Math.max(0, Math.ceil(expectedToDate - (k.achieved ?? 0))))}`}</span></div>
                       <div className="orn-kpi-body"><div className="orn-kpi-numbers" dir="ltr"><strong>{formatCount(k.achieved ?? 0)}</strong><span>/ {formatCount(k.target ?? 0)}</span></div><div className="orn-kpi-ring"><svg viewBox="0 0 55 55" aria-hidden="true"><circle cx="27.5" cy="27.5" r="24"/><circle className="orn-ring-fill" cx="27.5" cy="27.5" r="24" pathLength={100} strokeDasharray={`${pct} 100`}/></svg><b>{Math.round(k.percent ?? 0)}%</b></div></div>
                       <div className="orn-track" role="progressbar" aria-label={k.name} aria-valuenow={Math.round(k.percent ?? 0)} aria-valuemin={0} aria-valuemax={100}><i style={{width:`${pct}%`}}/></div>
                       <p className="orn-kpi-foot">{(k.percent ?? 0) >= 100 ? <><span>✦</span> {(k.percent ?? 0) > 100 ? "عدّيت التارجت، عاش!" : "حققت التارجت، عاش!"}</> : <>المتبقي {formatCount(Math.max(0, (k.target ?? 0) - (k.achieved ?? 0)))} {unit}</>}</p>
@@ -371,7 +371,7 @@ export default function BranchManagerPage() {
                   })}
                 </div>
                 <p className="mt-4 text-xs font-black text-[#8a4b20]">سجل الإنجاز اليومي ({row.payload.entries?.length ?? 0})</p>
-                <div className="mt-2 space-y-2">{(row.payload.entries ?? []).length === 0 ? <p className="text-xs text-[#88796e]">لسه مفيش إنجازات مسجلة.</p> : (row.payload.entries ?? []).map((entry, index) => <div key={entry.at ?? `${entry.date}-${index}`} className="rounded-2xl border border-[#f1dfd0] bg-white p-3"><p className="flex items-center gap-1 font-extrabold"><span className="inline-flex align-middle text-[#bd4b0a]"><KpiIcon kpiKey={KPI_KEYS[entry.kpi] ?? ""} className="h-4 w-4" /></span><span dir="ltr">{entry.kpi}</span></p><p className="mt-0.5 text-xs text-[#88796e]">{formatDateAr(entry.date)} · {formatCount(entry.quantity)} {displayUnit(entry.unit)}</p></div>)}</div>
+                <div className="mt-2 space-y-2">{(row.payload.entries ?? []).length === 0 ? <p className="text-xs text-[#88796e]">لسه مفيش إنجازات مسجلة.</p> : (row.payload.entries ?? []).map((entry, index) => <div key={entry.at ?? `${entry.date}-${index}`} className="rounded-2xl border border-[#f1dfd0] bg-white p-3"><p className="flex items-center gap-1 font-extrabold"><span className="inline-flex align-middle text-[#bd4b0a]"><KpiIcon kpiKey={KPI_KEYS[entry.kpi] ?? ""} className="h-4 w-4" /></span><span dir="ltr">{displayKpiName(entry.kpi)}</span></p><p className="mt-0.5 text-xs text-[#88796e]">{formatDateAr(entry.date)} · {formatCount(entry.quantity)} {displayUnit(entry.unit)}</p></div>)}</div>
                 <div className="mt-3 flex items-center justify-between rounded-xl bg-[#fff0e2] px-3 py-2"><span className="text-xs font-black text-[#8a4b20]">إجمالي التحقيق</span><span className="text-sm font-black text-[#bd4b0a]">{fmt(row.payload.overall ?? 0)}</span></div>
               </div> : null}
             </article>;

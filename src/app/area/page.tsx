@@ -3,7 +3,7 @@
 import { FormEvent, useEffect, useRef, useState } from "react";
 import { useHistoryView } from "@/lib/use-history-view";
 import { managerApi } from "@/lib/cloud";
-import { BRANCHES, KPI_CATALOG } from "@/lib/constants";
+import { BRANCHES, KPI_CATALOG, displayKpiName } from "@/lib/constants";
 import { cairoISODate } from "@/lib/dates";
 
 
@@ -150,7 +150,7 @@ function KpiTile({ kpi }: { kpi: AggKpi }) {
         : "0 0 0 1px rgba(220,38,38,.12), 0 0 18px rgba(220,38,38,.16), 0 6px 18px rgba(220,38,38,.08)" }}
       className={`relative overflow-hidden rounded-2xl bg-gradient-to-br from-white to-[var(--color-primary-50)]/60 p-3 shadow-sm ring-1 transition duration-300 hover:-translate-y-0.5 hover:shadow-lg ${tone.ring} ${neutral ? "" : ok ? "bg-emerald-50/70" : "bg-red-50/70"}`}
     >
-      <p className="truncate text-[11px] font-extrabold text-[var(--color-text-secondary)]" dir="ltr">{kpi.name}</p>
+      <p className="truncate text-[11px] font-extrabold text-[var(--color-text-secondary)]" dir="ltr">{displayKpiName(kpi.name)}</p>
       <p className={`mt-1 text-2xl font-black tabular-nums tracking-tight ${tone.text}`}>
         {Math.round(kpi.percent)}<span className="text-sm">%</span>
       </p>
@@ -566,7 +566,7 @@ export default function ManagerPage() {
                   {(row.payload.entries ?? []).map((e, i) => (
                     <div key={`${e.date}-${i}`} className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] items-center gap-2 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface-cream)] px-3 py-2.5 text-[11px] sm:text-xs">
                       <span className="font-bold text-[var(--color-text-secondary)]" dir="ltr">{e.date}</span>
-                      <span className="min-w-0 truncate font-extrabold text-[var(--color-text-primary)]">{kpiLabel(e.kpi)}</span>
+                      <span className="min-w-0 truncate font-extrabold text-[var(--color-text-primary)]">{displayKpiName(kpiLabel(e.kpi))}</span>
                       <span className="whitespace-nowrap rounded-lg bg-[var(--color-primary-50)] px-2 py-1 font-black tabular-nums text-[var(--color-primary-700)]">{e.quantity} {e.unit}</span>
                     </div>
                   ))}

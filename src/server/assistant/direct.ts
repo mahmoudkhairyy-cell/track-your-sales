@@ -114,3 +114,24 @@ export function freemaxPriceAnswer(kb: string, question: string): string | null 
   }
   return null;
 }
+
+export function dslPriceAnswer(kb: string, question: string): string | null {
+  const key = questionKey(question);
+  const m = key.match(/(?:home )?dsl\s*(\d{3,4})/);
+  if (!m) return null;
+  if (!/بكام|بكم|سعر|اسعار|price|kam|اشتراك/.test(key)) return null;
+  const n = m[1];
+  for (const line of kb.split("\n")) {
+    const cells = line.split("|").map((c) => c.trim());
+    if (cells.length >= 6 && cells[1] === `Home DSL ${n}`) {
+      return [
+        `باقة Home DSL ${n}`,
+        `السرعة: ${cells[2]}`,
+        `السعة الشهرية: ${cells[3]}`,
+        `السعر الشهري: ${cells[4]}`,
+        "قسم 5. الراوترات والإنترنت المنزلي (Home DSL) — أسعار باقات Home DSL الحالية",
+      ].join("\n");
+    }
+  }
+  return null;
+}

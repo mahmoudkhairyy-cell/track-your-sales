@@ -3,7 +3,7 @@
 // local:false = سؤال لازم يروح للموديل (الإجابة المحلية لازم تكون null).
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
-import { directAnswer, freemaxPriceAnswer } from "../src/server/assistant/direct";
+import { directAnswer, dslPriceAnswer, freemaxPriceAnswer } from "../src/server/assistant/direct";
 import { FIXED_ANSWERS, localAnswer } from "../src/server/assistant/local";
 
 const kbPath = path.join(process.cwd(), "src/server/assistant/knowledge-base.md");
@@ -21,8 +21,8 @@ let localHits = 0, localCorrect = 0, wrong = 0, wronglyLocal = 0, localTotal = 0
 const failures: string[] = [];
 for (const c of cases) {
   const hit = baseline
-    ? (() => { const a = directAnswer(kb, c.q) ?? freemaxPriceAnswer(kb, c.q); return a ? { answer: a, kind: "direct" } : null; })()
-    : localAnswer(kb, c.q) ?? (() => { const a = directAnswer(kb, c.q) ?? freemaxPriceAnswer(kb, c.q); return a ? { answer: a, kind: "direct" } : null; })();
+    ? (() => { const a = directAnswer(kb, c.q) ?? freemaxPriceAnswer(kb, c.q) ?? dslPriceAnswer(kb, c.q); return a ? { answer: a, kind: "direct" } : null; })()
+    : localAnswer(kb, c.q) ?? (() => { const a = directAnswer(kb, c.q) ?? freemaxPriceAnswer(kb, c.q) ?? dslPriceAnswer(kb, c.q); return a ? { answer: a, kind: "direct" } : null; })();
   if (c.local) {
     localTotal++;
     if (hit) {
