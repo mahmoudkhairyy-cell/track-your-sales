@@ -93,7 +93,9 @@ export default function BranchManagerPage() {
   const [teamFilter, setTeamFilter] = useState<"all" | "agent" | "team_leader">("all");
   const [data, setData] = useState<BranchData | null>(null);
   const [productivityInput, setProductivityInput] = useState("0");
-  const [qualityInputs, setQualityInputs] = useState<Record<string, Quality>>({});
+  const [branchQuality, setBranchQuality] = useState<Quality>({ ...EMPTY_QUALITY });
+  const [qualityOpen, setQualityOpen] = useState(false);
+  const [openEmployees, setOpenEmployees] = useState<Record<string, boolean>>({});
   const [saving, setSaving] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -107,12 +109,9 @@ export default function BranchManagerPage() {
       const next = result ?? { reports: [], productivity: null, qualityOverrides: [], audit: [] };
       setData(next);
       setProductivityInput(String(next.productivity?.productivity_percent ?? 0));
-      const values: Record<string, Quality> = {};
-      for (const row of next.reports) {
-        const override = next.qualityOverrides.find((item) => item.employee_name === row.employee_name)?.quality;
-        values[row.employee_name] = override ?? { ...EMPTY_QUALITY };
-      }
-      setQualityInputs(values);
+      // كواليتي الفرع نسبة واحدة لكل الفريق: ناخد أحدث اعتماد موجود ونعرضه.
+      const latestOverride = [...next.qualityOverrides].sort((a, b) => b.updated_at.localeCompare(a.updated_at))[0];
+      setBranchQuality(latestOverride ? { ...latestOverride.quality } : { ...EMPTY_QUALITY });
       try { sessionStorage.setItem("tys.bmPass", passwordToUse); } catch { /* Storage may be unavailable. */ }
     } catch (e) {
       const raw = e instanceof Error ? e.message : "تعذر تحميل بيانات الفرع";
@@ -213,15 +212,20 @@ export default function BranchManagerPage() {
     } catch (e) { setError(e instanceof Error ? e.message : "تعذر حفظ الإنتاجية."); }
     finally { setSaving(""); }
   }
-  async function saveQuality(employee: string) {
-    const quality = qualityInputs[employee] ?? EMPTY_QUALITY;
+  // الكواليتي بقت نسبة واحدة على مستوى الفرع: بنحفظ نفس القيمة لكل فرد في الفريق
+  // (نفس الـ RPC الحالي، من غير أي تغيير في الباك إند) عشان تفضل التقارير والحسابات زي ما هي.
+  async function saveBranchQuality() {
+    const quality = branchQuality;
     if (QUALITY_FIELDS.some((field) => !Number.isFinite(quality[field.key]) || quality[field.key] < 0 || quality[field.key] > 100)) {
       setError("كل بند كواليتي لازم يكون بين 0 و 100."); return;
     }
-    setSaving(employee); setError(""); setNotice("");
+    if (!data || data.reports.length === 0) { setError("مفيش فريق متزامن لحفظ الكواليتي."); return; }
+    setSaving("quality"); setError(""); setNotice("");
     try {
-      await managerApi("save_branch_quality", { branch, employeeName: employee, yearMonth: month, managerName: managerName.trim(), quality, password });
-      setNotice(`تم حفظ الكواليتي لـ ${employee} وتسجيلها في سجل التعديلات.`);
+      for (const row of data.reports) {
+        await managerApi("save_branch_quality", { branch, employeeName: row.employee_name, yearMonth: month, managerName: managerName.trim(), quality, password });
+      }
+      setNotice("تم حفظ كواليتي الفرع لكل الفريق وتسجيلها في سجل التعديلات.");
       await load(branch);
     } catch (e) { setError(e instanceof Error ? e.message : "تعذر حفظ الكواليتي."); }
     finally { setSaving(""); }
@@ -339,26 +343,35 @@ export default function BranchManagerPage() {
             </div></div>
           {loading && !data ? <p className="rounded-2xl bg-white p-6 text-center">جاري تحميل بيانات الفرع...</p> : null}
           {!loading && visibleReports.length===0 ? <p className="rounded-2xl border border-dashed border-[#e7cdb8] bg-white p-6 text-center text-sm text-[#88796e]">لسه مفيش تقارير متزامنة للفرع ده الشهر ده.</p> : null}
+          <div className="orn-rich-card rounded-3xl border border-[#f1dfd0] bg-white shadow-sm">
+            <button type="button" onClick={() => setQualityOpen((v) => !v)} className="flex w-full items-center justify-between gap-2 p-4 text-right">
+              <div><h4 className="font-black">اعتماد كواليتي الفرع</h4><p className="mt-0.5 text-xs text-[#88796e]">نسبة واحدة للفرع كله بتتطبق على كل الفريق — المدير بيملاها بنفسه.</p></div>
+              <span className="flex shrink-0 items-center gap-2"><span className="text-sm font-black text-[#bd4b0a]">الناتج {fmt(qualityPercent(branchQuality))}</span><span className="text-[#bd4b0a]">{qualityOpen ? "−" : "+"}</span></span>
+            </button>
+            {qualityOpen ? <div className="border-t border-[#f2e4d8] p-4">
+              <div className="grid grid-cols-2 gap-2 sm:grid-cols-5">
+                {QUALITY_FIELDS.map((field) => <label key={field.key} className="text-xs font-bold text-[#6e5543]">{field.label} · {field.weight}%
+                  <div className="mt-1 flex items-center gap-1"><input type="number" min="0" max="100" step="0.1" value={branchQuality[field.key]} onChange={(e) => setBranchQuality((oldQ) => ({ ...oldQ, [field.key]: Number(e.target.value) }))} className="w-full min-w-0 rounded-lg border border-[#f2e4d8] px-2 py-2 text-sm" /><span>%</span></div>
+                </label>)}
+              </div>
+              <div className="mt-3 flex flex-wrap items-center justify-between gap-2"><p className="text-[11px] text-[#9a7963]">{data && data.qualityOverrides.length > 0 ? `آخر اعتماد بواسطة: ${[...data.qualityOverrides].sort((a, b) => b.updated_at.localeCompare(a.updated_at))[0]?.updated_by ?? "مدير الفرع"}` : "المدير لسه معتمدش كواليتي الفرع الشهر ده."}</p><button onClick={saveBranchQuality} disabled={saving==="quality"} className="rounded-xl bg-[#bd4b0a] px-4 py-2 text-xs font-black text-white disabled:opacity-60">{saving==="quality"?"جاري الحفظ...":"حفظ كواليتي الفرع"}</button></div>
+            </div> : null}
+          </div>
           {visibleReports.map((row) => {
-            const q = qualityInputs[row.employee_name] ?? employeeQuality(row, qualityMap.get(row.employee_name));
-            return <article key={row.branch_id} className="orn-rich-card rounded-3xl border border-[#f1dfd0] bg-white p-4 shadow-sm">
-              <div className="flex flex-wrap items-center justify-between gap-2"><div><h3 className="flex flex-wrap items-center gap-2 font-black">{row.employee_name}{row.payload.role==="team_leader" ? <span className="rounded-full bg-[#bd4b0a] px-2 py-0.5 text-[10px] font-black text-white">قائد فريق</span> : null}</h3><p className="mt-1 text-xs text-[#88796e]">{row.payload.role==="team_leader"?"تيم ليدر":"موظف"} · آخر مزامنة {timeLabel(row.updated_at)}</p></div><span className="rounded-full bg-[#fff0e2] px-3 py-1 text-sm font-black text-[#bd4b0a]">{fmt(row.payload.overall ?? 0)}</span></div>
-              <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-6">
-                {(row.payload.kpis ?? []).map((k) => <div key={k.name} className="rounded-xl bg-[#fff8f1] p-2"><p className="truncate text-[11px] font-bold text-[#88796e]">{k.name}</p><p className="mt-1 text-lg font-black">{fmt(k.percent)}</p><p className="text-[11px] text-[#88796e]">{k.achieved} / {k.target}</p></div>)}
-              </div>
-              <details className="orn-rich-card mt-3 rounded-xl border border-[#f2e4d8] bg-[#fffdfb] p-3">
-                <summary className="cursor-pointer text-xs font-black text-[#8a4b20]">سجل الإنجاز اليومي ({row.payload.entries?.length ?? 0})</summary>
-                <div className="mt-3 space-y-2">{(row.payload.entries ?? []).map((entry, index) => <div key={entry.at ?? `${entry.date}-${index}`} className="orn-rich-card flex flex-wrap justify-between gap-2 rounded-lg bg-white px-3 py-2 text-xs"><span>{entry.date} · {entry.kpi}</span><b>{entry.quantity} {displayUnit(entry.unit)}</b></div>)}</div>
-              </details>
-              <div className="mt-4 rounded-2xl border border-[#f2e4d8] p-3">
-                <div className="flex flex-wrap items-center justify-between gap-2"><div><h4 className="font-black">اعتماد الكواليتي</h4><p className="text-xs text-[#88796e]">الموظف بيحتفظ بإدخالاته؛ النسب المعتمدة من المدير بتتسجل هنا.</p></div><span className="text-sm font-black text-[#bd4b0a]">الناتج {fmt(qualityPercent(q))}</span></div>
-                <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-5">
-                  {QUALITY_FIELDS.map((field) => <label key={field.key} className="text-xs font-bold text-[#6e5543]">{field.label} · {field.weight}%
-                    <div className="mt-1 flex items-center gap-1"><input type="number" min="0" max="100" step="0.1" value={q[field.key]} onChange={(e) => setQualityInputs((old) => ({ ...old, [row.employee_name]: { ...(old[row.employee_name] ?? q), [field.key]: Number(e.target.value) } }))} className="w-full min-w-0 rounded-lg border border-[#f2e4d8] px-2 py-2 text-sm" /><span>%</span></div>
-                  </label>)}
+            const isOpen = !!openEmployees[row.branch_id];
+            return <article key={row.branch_id} className="orn-rich-card overflow-hidden rounded-3xl border border-[#f1dfd0] bg-white shadow-sm">
+              <button type="button" onClick={() => setOpenEmployees((oldMap) => ({ ...oldMap, [row.branch_id]: !oldMap[row.branch_id] }))} className="flex w-full flex-wrap items-center justify-between gap-2 p-4 text-right">
+                <div><h3 className="flex flex-wrap items-center gap-2 font-black">{row.employee_name}{row.payload.role==="team_leader" ? <span className="rounded-full bg-[#bd4b0a] px-2 py-0.5 text-[10px] font-black text-white">قائد فريق</span> : null}</h3><p className="mt-1 text-xs text-[#88796e]">{row.payload.role==="team_leader"?"تيم ليدر":"موظف"} · آخر مزامنة {timeLabel(row.updated_at)}</p></div>
+                <span className="flex shrink-0 items-center gap-2"><span className="rounded-full bg-[#fff0e2] px-3 py-1 text-sm font-black text-[#bd4b0a]">{fmt(row.payload.overall ?? 0)}</span><span className="text-[#bd4b0a]">{isOpen ? "−" : "+"}</span></span>
+              </button>
+              {isOpen ? <div className="border-t border-[#f2e4d8] p-4">
+                <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-6">
+                  {(row.payload.kpis ?? []).map((k) => <div key={k.name} className="rounded-xl bg-[#fff8f1] p-2"><p className="truncate text-[11px] font-bold text-[#88796e]">{k.name}</p><p className="mt-1 text-lg font-black">{fmt(k.percent)}</p><p className="text-[11px] text-[#88796e]">{k.achieved} / {k.target}</p></div>)}
                 </div>
-                <div className="mt-3 flex flex-wrap items-center justify-between gap-2"><p className="text-[11px] text-[#9a7963]">{qualityMap.has(row.employee_name) ? `آخر اعتماد بواسطة: ${data?.qualityOverrides.find((item)=>item.employee_name===row.employee_name)?.updated_by ?? "مدير الفرع"}` : "المدير لسه معتمدش؛ القيم المعروضة من إدخال الموظف."}</p><button onClick={() => saveQuality(row.employee_name)} disabled={saving===row.employee_name} className="rounded-xl bg-[#bd4b0a] px-4 py-2 text-xs font-black text-white disabled:opacity-60">{saving===row.employee_name?"جاري الحفظ...":"حفظ الكواليتي"}</button></div>
-              </div>
+                <p className="mt-4 text-xs font-black text-[#8a4b20]">سجل الإنجاز اليومي ({row.payload.entries?.length ?? 0})</p>
+                <div className="mt-2 space-y-2">{(row.payload.entries ?? []).length === 0 ? <p className="text-xs text-[#88796e]">لسه مفيش إنجازات مسجلة.</p> : (row.payload.entries ?? []).map((entry, index) => <div key={entry.at ?? `${entry.date}-${index}`} className="orn-rich-card flex flex-wrap justify-between gap-2 rounded-lg bg-white px-3 py-2 text-xs"><span>{entry.date} · {entry.kpi}</span><b>{entry.quantity} {displayUnit(entry.unit)}</b></div>)}</div>
+                <div className="mt-3 flex items-center justify-between rounded-xl bg-[#fff0e2] px-3 py-2"><span className="text-xs font-black text-[#8a4b20]">إجمالي التحقيق</span><span className="text-sm font-black text-[#bd4b0a]">{fmt(row.payload.overall ?? 0)}</span></div>
+              </div> : null}
             </article>;
           })}
         </section>
