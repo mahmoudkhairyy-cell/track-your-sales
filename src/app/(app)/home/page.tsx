@@ -12,6 +12,7 @@ import { formatMoney, formatPercent, formatQty } from "@/lib/calculations";
 import { useMonth } from "@/components/AppShell";
 import { KpiIcon } from "@/components/KpiIcon";
 import { RobotMascot } from "@/components/robot-mascot";
+import { DailyReminder } from "@/components/DailyReminder";
 import { pushReport, readSyncStatus, type SyncStatus } from "@/lib/sync";
 
 type KpiRow = {
@@ -147,6 +148,8 @@ export default function HomePage() {
           )}
         </p>
       ) : null}
+
+      <DailyReminder kpis={data.kpis} remainingDays={data.work.remaining} paceMessage={data.pace.message} />
 
       <section className="orn-greeting orn-card" dir="rtl">
         <div><h1>{greeting()} <bdi>{data.profile.name.trim().split(/\s+/)[0]}</bdi></h1><p><span className="orn-pin" /> <bdi>{data.profile.branch}</bdi></p></div>
