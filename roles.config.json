@@ -1,0 +1,20 @@
+{
+  "defaultRole": "employee",
+  "roles": {
+    "employee": {
+      "basePath": "/track-your-sales",
+      "appName": "Track Your Sales — موظف",
+      "shortName": "TYS موظف",
+      "description": "تطبيق الموظف: تارجتك وإنجازاتك وعمولتك في مكان واحد",
+      "startUrl": "/track-your-sales/home/",
+      "scope": "/track-your-sales/",
+      "manifestId": "/track-your-sales/",
+      "iconPrefix": "app-icon-emp",
+      "swExcludePrefixes": ["/track-your-sales/tl/", "/track-your-sales/branch/", "/track-your-sales/area/"],
+      "shortcuts": [
+        { "name": "تسجيل إنجاز", "short_name": "تسجيل", "url": "/track-your-sales/log/" },
+        { "name": "التارجت", "short_name": "التارجت", "url": "/track-your-sales/target/" }
+      ]
+    }
+  }
+}

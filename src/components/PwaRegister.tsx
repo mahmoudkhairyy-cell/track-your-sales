@@ -1,12 +1,13 @@
 "use client";
 
 import { useEffect } from "react";
+import { APP_BASE_PATH } from "@/lib/app-config";
 
 export function PwaRegister() {
   useEffect(() => {
     if (!("serviceWorker" in navigator)) return;
     try {
-      navigator.serviceWorker.register("/track-your-sales/sw.js", { scope: "/track-your-sales/" }).catch(() => {});
+      navigator.serviceWorker.register(`${APP_BASE_PATH}/sw.js`, { scope: `${APP_BASE_PATH}/` }).catch(() => {});
     } catch {
       // التسجيل اختياري
     }

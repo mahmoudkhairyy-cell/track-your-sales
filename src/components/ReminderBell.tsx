@@ -5,6 +5,7 @@ import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/components/ui";
 import { haptic } from "@/lib/prefs";
+import { APP_BASE_PATH } from "@/lib/app-config";
 import {
   buildReminderMessage,
   cairoTodayISO,
@@ -43,7 +44,7 @@ function safeSet(key: string, value: string) {
 async function fireSystemNotification(title: string, body: string): Promise<boolean> {
   if (typeof Notification === "undefined" || Notification.permission !== "granted") return false;
   try {
-    const registration = await navigator.serviceWorker?.getRegistration("/track-your-sales/");
+    const registration = await navigator.serviceWorker?.getRegistration(`${APP_BASE_PATH}/`);
     if (registration) {
       await registration.showNotification(title, {
         body,

@@ -3,6 +3,7 @@
   "private": true,
   "scripts": {
     "dev": "node scripts/prepare-assistant-api.mjs && next dev",
+    "prebuild": "node scripts/generate-manifest.mjs",
     "build": "node scripts/prepare-assistant-api.mjs && next build",
     "start": "next start",
     "lint": "eslint .",
