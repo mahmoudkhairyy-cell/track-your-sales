@@ -390,7 +390,7 @@ export default function ManagerPage() {
     event.preventDefault();
     setPwMsg("");
     if (newPw.length < 8) return setPwMsg("كلمة السر الجديدة لازم تكون 8 أحرف على الأقل.");
-    if (newPw !== newPw2) return setPwMsg("كلمتا السر الجديدتان مش متطابقتين.");
+    if (newPw !== newPw2) return setPwMsg("كلمة السر الجديدة وتأكيدها مش متطابقين.");
     try {
       await managerApi("change_password", { password: oldPw, newPassword: newPw });
       try { sessionStorage.setItem("tys.mgrPass", newPw); } catch { /* الجلسة الحالية تفضل شغالة حتى لو التخزين مقفول. */ }
@@ -663,7 +663,7 @@ export default function ManagerPage() {
         <div className="mx-auto flex min-h-[70vh] max-w-md items-center justify-center">
           <section className="orn-rich-card rounded-2xl border border-[var(--color-border)] bg-white px-7 py-6 text-center shadow-sm">
             <img src="/track-your-sales/logo-mark.png" alt="" className="mx-auto h-10 w-10 object-contain" />
-            <p className="mt-3 text-sm font-bold text-[var(--color-text-secondary)]">جاري استعادة جلسة المدير...</p>
+            <p className="mt-3 text-sm font-bold text-[var(--color-text-secondary)]">جاري تجهيز لوحة المتابعة...</p>
           </section>
         </div>
       ) : rows === null ? (
@@ -672,8 +672,8 @@ export default function ManagerPage() {
             <img src="/track-your-sales/logo-full.png" alt="Track Your Sales" className="mx-auto h-24 w-auto object-contain" />
             <div className="mx-auto mt-4 h-px w-24 bg-gradient-to-r from-transparent via-[#bd4b0a] to-transparent" />
             <p className="mt-4 text-[11px] font-black tracking-[.16em] text-[var(--color-primary-700)]">لوحة المتابعة</p>
-            <h1 className="mt-1 text-2xl font-black">أهلًا يا مدير المنطقة</h1>
-            <p className="mt-2 text-xs leading-6 text-[var(--color-text-secondary)]">سجّل دخولك لمتابعة تقارير فريقك وفروعك لحظة بلحظة.</p>
+            <h1 className="mt-1 text-2xl font-black">دخول مدير المنطقة</h1>
+            <p className="mt-2 text-xs leading-6 text-[var(--color-text-secondary)]">كل تقارير فريقك وفروعك في مكان واحد.</p>
             <form onSubmit={load} className="mt-6 space-y-3 text-right">
               <label className="block text-sm font-bold">كلمة السر
                 <input type="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="أدخل كلمة السر" className="mt-2 w-full rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface-cream)] px-4 py-3 text-base outline-none focus:border-[#d9651b]" />
