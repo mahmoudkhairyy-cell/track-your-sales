@@ -180,7 +180,11 @@ export function ToastProvider({ children }: { children: ReactNode }) {
                     toast.action?.onClick();
                     dismiss(toast.id);
                   }}
-                  className="pointer-events-auto shrink-0 rounded-full border border-white/70 px-3 py-1 text-xs font-extrabold text-white transition hover:bg-white/15"
+                  className={`pointer-events-auto shrink-0 rounded-full border px-3 py-1 text-xs font-extrabold transition ${
+                    toast.type === "info"
+                      ? "border-[#8b3d0a]/40 text-[#8b3d0a] hover:bg-[#8b3d0a]/10"
+                      : "border-white/70 text-white hover:bg-white/15"
+                  }`}
                 >
                   {toast.action.label}
                 </button>
