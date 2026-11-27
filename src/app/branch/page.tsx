@@ -4,9 +4,10 @@ import { useCallback, useEffect, useMemo, useState, type FormEvent } from "react
 import { logoutBranchManager, readProfile } from "@/lib/local-api";
 import { BRANCHES, MANAGER_FULL_COMMISSION, MANAGER_KPI_WEIGHTS } from "@/lib/constants";
 import { managerApi } from "@/lib/cloud";
+import { KpiIcon } from "@/components/KpiIcon";
 import { cairoYearMonth } from "@/lib/dates";
 
-type Kpi = { name: string; achieved: number; target: number; percent: number; weight: number };
+type Kpi = { name: string; achieved: number; target: number; percent: number; weight: number; expectedPercent?: number };
 type Report = {
   branch_id: string;
   employee_name: string;
@@ -343,6 +344,34 @@ export default function BranchManagerPage() {
             </div></div>
           {loading && !data ? <p className="rounded-2xl bg-white p-6 text-center">جاري تحميل بيانات الفرع...</p> : null}
           {!loading && visibleReports.length===0 ? <p className="rounded-2xl border border-dashed border-[#e7cdb8] bg-white p-6 text-center text-sm text-[#88796e]">لسه مفيش تقارير متزامنة للفرع ده الشهر ده.</p> : null}
+          {visibleReports.map((row) => {
+            const isOpen = !!openEmployees[row.branch_id];
+            return <article key={row.branch_id} className="orn-rich-card overflow-hidden rounded-3xl border border-[#f1dfd0] bg-white shadow-sm">
+              <button type="button" onClick={() => setOpenEmployees((oldMap) => ({ ...oldMap, [row.branch_id]: !oldMap[row.branch_id] }))} className="flex w-full flex-wrap items-center justify-between gap-2 p-4 text-right">
+                <div><h3 className="flex flex-wrap items-center gap-2 font-black">{row.employee_name}{row.payload.role==="team_leader" ? <span className="rounded-full bg-[#bd4b0a] px-2 py-0.5 text-[10px] font-black text-white">قائد فريق</span> : null}</h3><p className="mt-1 text-xs text-[#88796e]">{row.payload.role==="team_leader"?"تيم ليدر":"موظف"} · آخر مزامنة {timeLabel(row.updated_at)}</p></div>
+                <span className="flex shrink-0 items-center gap-2"><span className="rounded-full bg-[#fff0e2] px-3 py-1 text-sm font-black text-[#bd4b0a]">{fmt(row.payload.overall ?? 0)}</span><span className="text-[#bd4b0a]">{isOpen ? "−" : "+"}</span></span>
+              </button>
+              {isOpen ? <div className="border-t border-[#f2e4d8] p-4">
+                <div className="orn-kpi-grid">
+                  {(row.payload.kpis ?? []).map((k) => {
+                    const pct = Math.min(100, Math.max(0, k.percent ?? 0));
+                    const kpiKey = KPI_KEYS[k.name] ?? "";
+                    const onTrackKpi = (k.percent ?? 0) >= (k.expectedPercent ?? 0);
+                    return <article key={k.name} className={`orn-kpi orn-card ${(k.percent ?? 0) >= 100 ? "is-win" : ""}`}>
+                      <span className="orn-watermark"><KpiIcon kpiKey={kpiKey}/></span>
+                      <div className="orn-kpi-head"><div className="orn-kpi-identity"><span className="orn-kpi-icon"><KpiIcon kpiKey={kpiKey}/></span><span dir="ltr">{k.name}</span></div><span className={`orn-status ${onTrackKpi ? "" : "is-behind"}`}>{onTrackKpi ? "On track" : "Behind"}</span></div>
+                      <div className="orn-kpi-body"><div className="orn-kpi-numbers" dir="ltr"><strong>{formatCount(k.achieved ?? 0)}</strong><span>/ {formatCount(k.target ?? 0)}</span></div><div className="orn-kpi-ring"><svg viewBox="0 0 55 55" aria-hidden="true"><circle cx="27.5" cy="27.5" r="24"/><circle className="orn-ring-fill" cx="27.5" cy="27.5" r="24" pathLength={100} strokeDasharray={`${pct} 100`}/></svg><b>{Math.round(k.percent ?? 0)}%</b></div></div>
+                      <div className="orn-track" role="progressbar" aria-label={k.name} aria-valuenow={Math.round(k.percent ?? 0)} aria-valuemin={0} aria-valuemax={100}><i style={{width:`${pct}%`}}/></div>
+                      <p className="orn-kpi-foot">{(k.percent ?? 0) >= 100 ? "حققت التارجت، عاش!" : `المتبقي ${formatCount(Math.max(0, (k.target ?? 0) - (k.achieved ?? 0)))}`}</p>
+                    </article>;
+                  })}
+                </div>
+                <p className="mt-4 text-xs font-black text-[#8a4b20]">سجل الإنجاز اليومي ({row.payload.entries?.length ?? 0})</p>
+                <div className="mt-2 space-y-2">{(row.payload.entries ?? []).length === 0 ? <p className="text-xs text-[#88796e]">لسه مفيش إنجازات مسجلة.</p> : (row.payload.entries ?? []).map((entry, index) => <div key={entry.at ?? `${entry.date}-${index}`} className="orn-rich-card flex flex-wrap justify-between gap-2 rounded-lg bg-white px-3 py-2 text-xs"><span>{entry.date} · {entry.kpi}</span><b>{entry.quantity} {displayUnit(entry.unit)}</b></div>)}</div>
+                <div className="mt-3 flex items-center justify-between rounded-xl bg-[#fff0e2] px-3 py-2"><span className="text-xs font-black text-[#8a4b20]">إجمالي التحقيق</span><span className="text-sm font-black text-[#bd4b0a]">{fmt(row.payload.overall ?? 0)}</span></div>
+              </div> : null}
+            </article>;
+          })}
           <div className="orn-rich-card rounded-3xl border border-[#f1dfd0] bg-white shadow-sm">
             <button type="button" onClick={() => setQualityOpen((v) => !v)} className="flex w-full items-center justify-between gap-2 p-4 text-right">
               <div><h4 className="font-black">اعتماد كواليتي الفرع</h4><p className="mt-0.5 text-xs text-[#88796e]">نسبة واحدة للفرع كله بتتطبق على كل الفريق — المدير بيملاها بنفسه.</p></div>
@@ -357,23 +386,6 @@ export default function BranchManagerPage() {
               <div className="mt-3 flex flex-wrap items-center justify-between gap-2"><p className="text-[11px] text-[#9a7963]">{data && data.qualityOverrides.length > 0 ? `آخر اعتماد بواسطة: ${[...data.qualityOverrides].sort((a, b) => b.updated_at.localeCompare(a.updated_at))[0]?.updated_by ?? "مدير الفرع"}` : "المدير لسه معتمدش كواليتي الفرع الشهر ده."}</p><button onClick={saveBranchQuality} disabled={saving==="quality"} className="rounded-xl bg-[#bd4b0a] px-4 py-2 text-xs font-black text-white disabled:opacity-60">{saving==="quality"?"جاري الحفظ...":"حفظ كواليتي الفرع"}</button></div>
             </div> : null}
           </div>
-          {visibleReports.map((row) => {
-            const isOpen = !!openEmployees[row.branch_id];
-            return <article key={row.branch_id} className="orn-rich-card overflow-hidden rounded-3xl border border-[#f1dfd0] bg-white shadow-sm">
-              <button type="button" onClick={() => setOpenEmployees((oldMap) => ({ ...oldMap, [row.branch_id]: !oldMap[row.branch_id] }))} className="flex w-full flex-wrap items-center justify-between gap-2 p-4 text-right">
-                <div><h3 className="flex flex-wrap items-center gap-2 font-black">{row.employee_name}{row.payload.role==="team_leader" ? <span className="rounded-full bg-[#bd4b0a] px-2 py-0.5 text-[10px] font-black text-white">قائد فريق</span> : null}</h3><p className="mt-1 text-xs text-[#88796e]">{row.payload.role==="team_leader"?"تيم ليدر":"موظف"} · آخر مزامنة {timeLabel(row.updated_at)}</p></div>
-                <span className="flex shrink-0 items-center gap-2"><span className="rounded-full bg-[#fff0e2] px-3 py-1 text-sm font-black text-[#bd4b0a]">{fmt(row.payload.overall ?? 0)}</span><span className="text-[#bd4b0a]">{isOpen ? "−" : "+"}</span></span>
-              </button>
-              {isOpen ? <div className="border-t border-[#f2e4d8] p-4">
-                <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-6">
-                  {(row.payload.kpis ?? []).map((k) => <div key={k.name} className="rounded-xl bg-[#fff8f1] p-2"><p className="truncate text-[11px] font-bold text-[#88796e]">{k.name}</p><p className="mt-1 text-lg font-black">{fmt(k.percent)}</p><p className="text-[11px] text-[#88796e]">{k.achieved} / {k.target}</p></div>)}
-                </div>
-                <p className="mt-4 text-xs font-black text-[#8a4b20]">سجل الإنجاز اليومي ({row.payload.entries?.length ?? 0})</p>
-                <div className="mt-2 space-y-2">{(row.payload.entries ?? []).length === 0 ? <p className="text-xs text-[#88796e]">لسه مفيش إنجازات مسجلة.</p> : (row.payload.entries ?? []).map((entry, index) => <div key={entry.at ?? `${entry.date}-${index}`} className="orn-rich-card flex flex-wrap justify-between gap-2 rounded-lg bg-white px-3 py-2 text-xs"><span>{entry.date} · {entry.kpi}</span><b>{entry.quantity} {displayUnit(entry.unit)}</b></div>)}</div>
-                <div className="mt-3 flex items-center justify-between rounded-xl bg-[#fff0e2] px-3 py-2"><span className="text-xs font-black text-[#8a4b20]">إجمالي التحقيق</span><span className="text-sm font-black text-[#bd4b0a]">{fmt(row.payload.overall ?? 0)}</span></div>
-              </div> : null}
-            </article>;
-          })}
         </section>
         ) : null}
         {activeTab === "overview" ? (
