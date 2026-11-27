@@ -86,7 +86,7 @@ function NavLinks({ pathname, month }: { pathname: string; month: string }) {
         return (
           <Link
             key={item.href}
-            href={`${item.href}?month=${month}`} prefetch={false}
+            href={`${item.href}?month=${month}`}
             aria-current={active ? "page" : undefined}
             className={`tys-desktop-nav-link relative flex min-h-12 items-center gap-3 rounded-2xl px-3 text-sm font-bold transition ${
               active ? "tys-desktop-nav-link-active bg-gradient-to-l from-[#fff0e2] to-[#fff8f1] text-[#bd4b0a] shadow-[inset_0_0_0_1px_rgba(233,104,18,0.08)]" : "text-[#88796e] hover:bg-[#fff8f1] hover:text-[#bd4b0a]"
@@ -489,7 +489,7 @@ export function AppShell({ children }: { children: ReactNode }) {
     queueMicrotask(() => {
       if (!cancelled) setSplash(true);
     });
-    const timer = setTimeout(() => setSplash(false), 4000);
+    const timer = setTimeout(() => setSplash(false), 1500);
     return () => {
       cancelled = true;
       clearTimeout(timer);

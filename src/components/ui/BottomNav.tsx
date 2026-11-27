@@ -80,7 +80,6 @@ export function BottomNav({ month }: BottomNavProps) {
             <Link
               key={item.href}
               href={`${item.href}?month=${month}`}
-              prefetch={false}
               aria-current={active ? "page" : undefined}
               className={`tys-mobile-nav-link relative flex min-h-[68px] flex-col items-center justify-center gap-1.5 px-1 pt-1 text-[10px] font-extrabold transition-colors ${
                 active ? "text-orange-600" : "text-neutral-500 hover:text-orange-600"

@@ -136,7 +136,7 @@ export default function AssistantPage() {
   }
 
   return (
-    <div className="space-y-5 pb-4">
+    <div className="tys-page-assistant space-y-5 pb-4">
       <section>
         <div className="relative overflow-hidden rounded-hero border border-section bg-gradient-to-br from-[#fff8f0] via-white to-[#ffe9d5] p-5 shadow-section">
           <div className="absolute -left-8 -top-10 h-32 w-32 rounded-full bg-brand-500/10 blur-2xl" />
