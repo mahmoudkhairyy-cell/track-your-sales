@@ -3,11 +3,14 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { haptic } from "@/lib/prefs";
+import { pickMascotLine } from "@/lib/mascot-lines";
 
-// روبوت «المساعد» الصغير: SVG/CSS بس، من غير أي صور أو مكتبات.
-// شخصية خفيفة: بيطفو ويطرمش ويلوّح، وكل شوية يعمل حركة عشوائية (يميل أو ينط)،
-// والضغط عليه بيدّيه رد فعل مبسوط (نطة ولفّة وقلوب) وبعدين يفتح صفحة المساعد.
-// كل الحركة بتقف مع prefers-reduced-motion، والضغط يفتح المساعد على طول من غير تأخير.
+// ماسكوت «المساعد»: شخصية قطيفة (بلش) بالهودي — SVG/CSS بس، من غير صور ولا مكتبات.
+// شكل جديد: جسم كريمي ناعم بهودي مدور، وش باسم، خدود وردية، ولمسة أورانج على لون التطبيق.
+// بيطفو ويطرمش، وكل شوية يعمل حركة عشوائية (يميل أو ينط).
+// الضغط عليه أول مرة بيطلّع فقاعة كلام برسالة/هزار على حسب تقدم التارجت،
+// ولو الفقاعة ظاهرة وضغطت تاني بيفتح صفحة المساعد.
+// بيسلّم مرة واحدة أول ما تفتح الصفحة (لكل جلسة). كل الحركة بتقف مع prefers-reduced-motion.
 
 type Reaction = null | "tilt" | "hop";
 
@@ -15,13 +18,26 @@ function prefersReducedMotion(): boolean {
   return typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 }
 
-export function RobotMascot({ size = 56, className = "" }: { size?: number; className?: string }) {
+const GREET_KEY = "tys.mascot.greeted";
+
+export function RobotMascot({ size = 56, className = "", progress = null, greetOnMount = false }: { size?: number; className?: string; progress?: number | null; greetOnMount?: boolean }) {
   const router = useRouter();
   const [reaction, setReaction] = useState<Reaction>(null);
   const [excited, setExcited] = useState(false);
+  const [line, setLine] = useState<string | null>(null);
   const timers = useRef<number[]>([]);
 
-  // حركات عفوية كل شوية (تجاهلها لو المستخدم طالب تقليل الحركة)
+  const later = (fn: () => void, ms: number) => {
+    const id = window.setTimeout(fn, ms);
+    timers.current.push(id);
+  };
+
+  const showLine = (text: string) => {
+    setLine(text);
+    later(() => setLine(null), 5000);
+  };
+
+  // حركات عفوية كل شوية (تتجاهل لو المستخدم طالب تقليل الحركة)
   useEffect(() => {
     if (prefersReducedMotion()) return;
     let alive = true;
@@ -30,8 +46,7 @@ export function RobotMascot({ size = 56, className = "" }: { size?: number; clas
       const id = window.setTimeout(() => {
         if (!alive) return;
         setReaction(Math.random() < 0.5 ? "tilt" : "hop");
-        const back = window.setTimeout(() => alive && setReaction(null), 900);
-        timers.current.push(back);
+        later(() => alive && setReaction(null), 900);
         schedule();
       }, delay);
       timers.current.push(id);
@@ -44,6 +59,20 @@ export function RobotMascot({ size = 56, className = "" }: { size?: number; clas
     };
   }, []);
 
+  // تحية مرة واحدة أول فتح الصفحة (لكل جلسة)
+  useEffect(() => {
+    if (!greetOnMount) return;
+    let greeted = false;
+    try { greeted = sessionStorage.getItem(GREET_KEY) === "1"; } catch { /* ignore */ }
+    if (greeted) return;
+    const delay = prefersReducedMotion() ? 600 : 1400;
+    later(() => {
+      showLine(pickMascotLine(progress));
+      try { sessionStorage.setItem(GREET_KEY, "1"); } catch { /* ignore */ }
+    }, delay);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [greetOnMount]);
+
   const open = () => {
     haptic(excited ? [10] : [15, 40, 15]);
     if (excited) return;
@@ -52,8 +81,17 @@ export function RobotMascot({ size = 56, className = "" }: { size?: number; clas
       return;
     }
     setExcited(true);
-    const id = window.setTimeout(() => router.push("/assistant"), 780);
-    timers.current.push(id);
+    later(() => router.push("/assistant"), 780);
+  };
+
+  const tap = () => {
+    if (line) {
+      // الفقاعة ظاهرة: الضغطة التانية تفتح المساعد
+      open();
+      return;
+    }
+    haptic([10]);
+    showLine(pickMascotLine(progress));
   };
 
   const classes = [
@@ -67,62 +105,77 @@ export function RobotMascot({ size = 56, className = "" }: { size?: number; clas
     .join(" ");
 
   return (
-    <button
-      type="button"
-      className={classes}
-      style={{ width: size, height: Math.round(size * 1.15) }}
-      aria-label="اسأل المساعد الذكي"
-      title="دوس عليّا واسألني أي حاجة 🤖"
-      onClick={open}
-    >
-      {excited ? (
-        <span className="mz-hearts" aria-hidden="true">
-          <span className="mz-heart">🧡</span>
-          <span className="mz-heart">🧡</span>
-          <span className="mz-heart">🧡</span>
+    <span className="mz-wrap" style={{ width: size }}>
+      {line ? (
+        <span className="mz-bubble" role="status" dir="rtl">
+          {line}
+          <span className="mz-bubble-tail" aria-hidden="true" />
         </span>
       ) : null}
-      <svg viewBox="0 0 80 92" aria-hidden="true">
-        <g className="mz-bob">
-          {/* الهوائي */}
-          <line x1="40" y1="17" x2="40" y2="8" stroke="#ffb370" strokeWidth="3" strokeLinecap="round" />
-          <circle className="mz-antenna-tip" cx="40" cy="7" r="3.4" fill="#ff7900" />
-          {/* الإيد الشمال */}
-          <rect x="10" y="55" width="8" height="19" rx="4" fill="#ffb370" />
-          {/* الإيد اليمين (بتلوّح) */}
-          <g className="mz-arm-wave">
-            <rect x="62" y="38" width="8" height="19" rx="4" fill="#ffb370" />
-            <circle cx="66" cy="37" r="4.6" fill="#ffcf9e" />
+      <button
+        type="button"
+        className={classes}
+        style={{ width: size, height: Math.round(size * 1.15) }}
+        aria-label="اسأل المساعد الذكي"
+        title="دوس عليّا أقولك حاجة، ودوس تاني نفتح المساعد 🤖"
+        onClick={tap}
+      >
+        {excited ? (
+          <span className="mz-hearts" aria-hidden="true">
+            <span className="mz-heart">🧡</span>
+            <span className="mz-heart">🧡</span>
+            <span className="mz-heart">🧡</span>
+          </span>
+        ) : null}
+        <svg viewBox="0 0 80 92" aria-hidden="true">
+          <defs>
+            <radialGradient id="mz-fur" cx="50%" cy="35%" r="75%">
+              <stop offset="0%" stopColor="#fdf6ea" />
+              <stop offset="100%" stopColor="#f0dfc4" />
+            </radialGradient>
+          </defs>
+          <g className="mz-bob">
+            {/* الإيد الشمال */}
+            <ellipse cx="14" cy="66" rx="6" ry="10" fill="#f0dfc4" />
+            {/* الإيد اليمين (بتلوّح) */}
+            <g className="mz-arm-wave">
+              <ellipse cx="66" cy="52" rx="6" ry="10" fill="#f0dfc4" />
+              <circle cx="66" cy="43" r="5" fill="#fdf6ea" />
+            </g>
+            {/* جسم الهودي القطيفة */}
+            <path
+              d="M40 12 C22 12 14 28 14 46 C14 66 16 82 40 82 C64 82 66 66 66 46 C66 28 58 12 40 12 Z"
+              fill="url(#mz-fur)"
+              stroke="#e3cda8"
+              strokeWidth="2"
+            />
+            {/* لمبة الهودي الصغيرة فوق */}
+            <circle cx="40" cy="10" r="4" fill="#ff7900" />
+            {/* فتحة الوش */}
+            <ellipse cx="40" cy="40" rx="19" ry="16" fill="#fffaf1" stroke="#e3cda8" strokeWidth="1.6" />
+            {excited ? (
+              <>
+                {/* عيون مبسوطة ^ ^ */}
+                <path d="M31 39 q3.5 -4.5 7 0" stroke="#3d2314" strokeWidth="2.2" fill="none" strokeLinecap="round" />
+                <path d="M42 39 q3.5 -4.5 7 0" stroke="#3d2314" strokeWidth="2.2" fill="none" strokeLinecap="round" />
+                <path d="M33 45 q7 6 14 0" stroke="#3d2314" strokeWidth="2.2" fill="none" strokeLinecap="round" />
+              </>
+            ) : (
+              <>
+                <circle className="mz-eye" cx="34.5" cy="38" r="2.8" fill="#3d2314" />
+                <circle className="mz-eye" cx="45.5" cy="38" r="2.8" fill="#3d2314" />
+                <path d="M34 44 q6 5 12 0" stroke="#3d2314" strokeWidth="2" fill="none" strokeLinecap="round" />
+              </>
+            )}
+            {/* خدود وردية */}
+            <circle cx="28.5" cy="44" r="3" fill="#ffb398" opacity="0.85" />
+            <circle cx="51.5" cy="44" r="3" fill="#ffb398" opacity="0.85" />
+            {/* باتش أورانج على البطن */}
+            <rect x="31" y="62" width="18" height="10" rx="5" fill="#ff7900" opacity="0.92" />
+            <path d="M35 67 h10" stroke="#fff" strokeWidth="1.6" strokeLinecap="round" opacity="0.9" />
           </g>
-          {/* الجسم */}
-          <rect x="22" y="53" width="36" height="27" rx="11" fill="#ff7900" />
-          <rect x="30" y="60" width="20" height="8" rx="4" fill="#ffffff" opacity="0.9" />
-          {/* الرجلين */}
-          <rect x="28" y="80" width="10" height="6" rx="3" fill="#3d2314" />
-          <rect x="43" y="80" width="10" height="6" rx="3" fill="#3d2314" />
-          {/* الرأس */}
-          <rect x="15" y="15" width="50" height="38" rx="15" fill="#ffffff" stroke="#ffd9b3" strokeWidth="2" />
-          {/* وش الشاشة */}
-          <rect x="21" y="22" width="38" height="24" rx="11" fill="#3d2314" />
-          {excited ? (
-            <>
-              {/* عيون مبسوطة ^ ^ */}
-              <path d="M29 35 q4 -5 8 0" stroke="#ff9433" strokeWidth="2.4" fill="none" strokeLinecap="round" />
-              <path d="M43 35 q4 -5 8 0" stroke="#ff9433" strokeWidth="2.4" fill="none" strokeLinecap="round" />
-              <path d="M32 40 q8 7 16 0" stroke="#ff9433" strokeWidth="2.4" fill="none" strokeLinecap="round" />
-            </>
-          ) : (
-            <>
-              <circle className="mz-eye" cx="33" cy="33" r="3.4" fill="#ff9433" />
-              <circle className="mz-eye" cx="47" cy="33" r="3.4" fill="#ff9433" />
-              <path d="M34 40 q6 4.5 12 0" stroke="#ff9433" strokeWidth="2" fill="none" strokeLinecap="round" />
-            </>
-          )}
-          {/* خدود */}
-          <circle cx="20" cy="44" r="2.6" fill="#ffd9b3" />
-          <circle cx="60" cy="44" r="2.6" fill="#ffd9b3" />
-        </g>
-      </svg>
-    </button>
+        </svg>
+      </button>
+    </span>
   );
 }
