@@ -7,6 +7,7 @@ import { WIZARD_FLOWS, WizardFlowId, WizardState, advanceWizard, detectWizardInt
 import { AssistantAnswerText } from "@/components/assistant-answer";
 import { splitNarrowingOptions } from "@/lib/narrowing";
 import { buildWhatIfAnswer, detectWhatIfIntent, type WhatIfDashboard } from "@/lib/whatif";
+import { QUICK_SRS } from "@/lib/quick-srs";
 import { api } from "@/lib/client";
 import { useMonth } from "@/components/AppShell";
 
@@ -116,6 +117,19 @@ export default function AssistantPage() {
     }
   }
 
+  // الأزرار السريعة: إجابة فورية محلية من قاعدة المعرفة، من غير ما نكلم Gemini.
+  function sendQuickSr(label: string, answer: string) {
+    if (pending) return;
+    setError("");
+    setQuestion("");
+    setWizard(null);
+    setMessages((current) => [
+      ...current,
+      { id: nextMessageId(), role: "user", text: label },
+      { id: nextMessageId(), role: "assistant", text: answer },
+    ]);
+  }
+
   function onSubmit(event: FormEvent) {
     event.preventDefault();
     void send(question);
@@ -143,6 +157,21 @@ export default function AssistantPage() {
       </Banner>
 
       <section className="relative overflow-hidden rounded-hero border border-section bg-gradient-to-br from-white via-white to-brand-surface p-5 shadow-accent ring-1 ring-white">
+        <div className="mb-3">
+          <p className="mb-2 text-xs font-extrabold text-ink-2">أكواد سريعة — الأكثر استخدامًا (إجابة فورية من غير ما تستهلك من المساعد)</p>
+          <div className="flex flex-wrap gap-2">
+            {QUICK_SRS.map((item) => (
+              <button
+                key={item.label}
+                type="button"
+                onClick={() => sendQuickSr(item.label, item.answer)}
+                className="rounded-full border border-brand-200 bg-brand-surface px-3 py-2 text-xs font-extrabold text-brand-ink-strong shadow-section-xs transition hover:bg-brand-200"
+              >
+                📌 {item.label}
+              </button>
+            ))}
+          </div>
+        </div>
         <div className="mb-4 flex flex-wrap gap-2">
           {wizard ? (
             <button
