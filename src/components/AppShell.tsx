@@ -319,7 +319,7 @@ function FirstRunProfile({ onDone }: { onDone: () => void }) {
             <p className="font-black text-[#241f1b]">راجع بياناتك قبل ما تكمّل:</p>
             <p>👤 الاسم: <b>{name.trim()}</b></p>
             {role === "area_manager" ? <p>🔐 كلمة السر: <b>••••••••</b></p> : null}
-            <p>🏷️ الوظيفة: <b>{role === "agent" ? "مندوب مبيعات" : role === "team_leader" ? "تيم ليدر" : role === "manager" ? "مدير فرع" : "مدير منطقة"}</b></p>
+            <p>🏷️ الوظيفة: <b>{role === "agent" ? "موظف" : role === "team_leader" ? "تيم ليدر" : role === "manager" ? "مدير فرع" : "مدير منطقة"}</b></p>
             {role !== "area_manager" ? <p>🏢 الفرع: <b>{branch}</b></p> : null}
             {role !== "area_manager" && branch !== OUTSIDE_BRANCHES ? <p>🗺️ مدير المنطقة: <b>{areaManager}</b></p> : null}
             <p className="pt-2 text-xs leading-5 text-[#88796e]">بعد الموافقة مينفعش تغيّر الاسم أو الفرع أو الوظيفة.</p>
@@ -344,7 +344,7 @@ function FirstRunProfile({ onDone }: { onDone: () => void }) {
           <p className="mb-2 text-sm font-bold text-[#6e5543]">إنت إيه؟</p>
           <div className="grid grid-cols-2 gap-2">
             {([
-              { key: "agent", label: "مندوب مبيعات" },
+              { key: "agent", label: "موظف" },
               { key: "team_leader", label: "تيم ليدر" },
               { key: "manager", label: "مدير فرع" },
               { key: "area_manager", label: "مدير منطقة" },
