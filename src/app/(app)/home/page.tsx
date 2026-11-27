@@ -166,7 +166,7 @@ export default function HomePage() {
           </svg>
           <div className="orn-month-center"><span>إجمالي تحقيق التارجت</span><strong dir="ltr">{formatPercent(data.overall)}<small>%</small></strong></div>
         </div>
-        <RobotMascot size={54} className="orn-mascot-home" />
+        <RobotMascot size={54} className="orn-mascot-home" progress={data.overall} greetOnMount />
         <div className="orn-month-side"><span className={`orn-status ${onTrack === false ? "is-behind" : ""}`}>{onTrack === null ? "مستني بيانات" : onTrack ? "On track" : "Behind"}</span><div className="orn-commission"><p>الكوميشن المحقق</p><strong dir="ltr">{formatMoney(data.estimatedCommission)}</strong><small>جنيه</small></div></div>
       </section>
 

@@ -25,6 +25,7 @@ import {
   serializeReminderPrefs,
   timeToMinutes,
 } from "../src/lib/reminder";
+import { MASCOT_LINES, pickMascotLine } from "../src/lib/mascot-lines";
 
 function check(name: string, run: () => void) {
   run();
@@ -500,6 +501,14 @@ check("أزرار الأكواد السريعة: قايمة غير مكررة و
     // إجابة الزرار مبيفضلش آخرها سؤال + اختيارات عشان منطق أزرار التضييق ميفسرهاش غلط
     assert.ok(!/[؟?]\s*$/.test(item.answer.trim()), `إجابة «${item.label}» منتهية بعلامة استفهام`);
   }
+});
+
+check("رسائل الماسكوت: قوايم مليانة والاختيار حسب الحالة", () => {
+  assert.ok(MASCOT_LINES.behind.length >= 3 && MASCOT_LINES.onTrack.length >= 3 && MASCOT_LINES.done.length >= 3 && MASCOT_LINES.any.length >= 3);
+  assert.ok(MASCOT_LINES.done.includes(pickMascotLine(100, () => 0.5)) || MASCOT_LINES.any.includes(pickMascotLine(100, () => 0.5)));
+  assert.ok(MASCOT_LINES.behind.includes(pickMascotLine(10, () => 0.9)));
+  assert.ok(MASCOT_LINES.any.includes(pickMascotLine(null, () => 0.5)));
+  assert.ok(typeof pickMascotLine(75, () => 0.1) === "string");
 });
 
 check("اسم Line للعرض وGAs ثابت في تقارير المدير", () => {
