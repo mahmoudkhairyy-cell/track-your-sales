@@ -5,7 +5,7 @@ import { BRANCHES, displayKpiName } from "@/lib/constants";
 import { managerApi } from "@/lib/cloud";
 import { KPI_CATALOG } from "@/lib/constants";
 import { cairoYearMonth } from "@/lib/dates";
-import { OrnGreeting, OrnHero, OrnKpiCard, OrnTopRow } from "@/components/RoleHome";
+import { OrnGreeting, OrnKpiCard, OrnProgressCard, OrnTopRow } from "@/components/RoleHome";
 
 const KPI_KEYS: Record<string, string> = {
   "GAs": "new_lines", "New Lines": "new_lines", "Line": "new_lines", "Points": "points",
@@ -158,7 +158,7 @@ export default function TeamLeaderPage() {
       <div className="orn-home mx-auto flex w-full max-w-3xl flex-col gap-4 pb-8">
         <OrnTopRow month={cairoYearMonth()} />
         <OrnGreeting name={branch} full sub={`لوحة التيم ليدر · ${rows.length} في الفريق${lastLoaded ? ` · آخر تحديث ${lastLoaded.toLocaleTimeString("ar-EG", { hour: "2-digit", minute: "2-digit" })}` : ""}`} actions={<span className="flex flex-col gap-1.5"><button type="button" onClick={() => void load()} disabled={pending} className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface-cream)] px-3 py-1.5 text-xs font-bold text-[var(--color-primary-700)]">{pending ? "..." : "تحديث ↻"}</button><button type="button" onClick={logout} className="rounded-xl border border-red-200 bg-white px-3 py-1.5 text-xs font-bold text-red-600">خروج ↪</button></span>} />
-        <OrnHero percent={ordered.length ? ordered.reduce((sum, r) => sum + (r.payload.overall ?? 0), 0) / ordered.length : 0} label="تحقيق الفريق" ariaLabel="تحقيق الفريق" sideLabel="عدد الفريق" sideValue={String(rows.length)} sideUnit="فرد" />
+        <OrnProgressCard percent={ordered.length ? ordered.reduce((sum, r) => sum + (r.payload.overall ?? 0), 0) / ordered.length : 0} label="تحقيق الفريق" />
 
         {error ? <p className="rounded-xl border border-red-200 bg-red-50 p-3 text-sm font-bold text-red-700">{error}</p> : null}
 

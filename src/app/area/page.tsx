@@ -5,7 +5,7 @@ import { useHistoryView } from "@/lib/use-history-view";
 import { managerApi } from "@/lib/cloud";
 import { BRANCHES, KPI_CATALOG, displayKpiName } from "@/lib/constants";
 import { cairoISODate, cairoYearMonth } from "@/lib/dates";
-import { OrnGreeting, OrnHero, OrnTopRow } from "@/components/RoleHome";
+import { OrnGreeting, OrnTopRow } from "@/components/RoleHome";
 
 
 type ReportRow = {
@@ -722,7 +722,6 @@ export default function ManagerPage() {
               <div className="orn-home flex w-full flex-col gap-4">
                 <OrnTopRow month={cairoYearMonth()} hideLogo />
                 {greeting && managerName ? <OrnGreeting name={managerName} sub={`أداء الفريق · ${branchGroups.length} فرع`} /> : null}
-                <OrnHero percent={branchStatus.length ? branchStatus.reduce((sum, b) => sum + (b.percent ?? 0), 0) / branchStatus.length : 0} label="متوسط تحقيق الفروع" ariaLabel="متوسط تحقيق الفروع" sideLabel="إجمالي الموظفين" sideValue={String(mergedRows.length)} sideUnit="موظف" status={onTrackBranches.length + behindBranches.length > 0 ? behindBranches.length === 0 : null} />
                 
                 <button type="button" onClick={() => changeView("activity")} aria-label="عرض حضور اليوم" className="flex w-full items-center justify-between gap-3 rounded-[20px] border border-[var(--color-border)] bg-white px-4 py-3 text-left shadow-[0_1px_2px_rgba(43,20,0,.04)] transition hover:border-[#e5b58e] active:scale-[0.99]">
                   <span className="text-xs font-extrabold text-[var(--color-text-primary)]">اليوم</span>

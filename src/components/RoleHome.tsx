@@ -77,3 +77,18 @@ export function OrnKpiCard({ kpiKey, name, achieved, target, percent, chip, behi
     </article>
   );
 }
+
+export function OrnProgressCard({ percent, label }: { percent: number; label: string }) {
+  const shown = Number.isFinite(percent) ? percent : 0;
+  const text = shown.toFixed(1).replace(/\.0$/, "");
+  const pct = Math.min(100, Math.max(0, shown));
+  return (
+    <section className="orn-card" dir="rtl" aria-label={label} style={{ padding: "16px 18px 18px" }}>
+      <div className="flex items-baseline justify-between gap-3 px-1">
+        <h2 className="text-sm font-extrabold">{label}</h2>
+        <strong dir="ltr" className="text-3xl font-black tabular-nums text-[#ff7900]" style={{ fontFamily: "Arial,sans-serif" }}>{text}<small className="text-base">%</small></strong>
+      </div>
+      <div className="orn-track mt-3" role="progressbar" aria-label={label} aria-valuenow={Math.round(shown)} aria-valuemin={0} aria-valuemax={100}><i style={{ width: `${pct}%` }} /></div>
+    </section>
+  );
+}
