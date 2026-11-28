@@ -30,6 +30,35 @@ export function spillNewWalletExcess(achieved: AchievedMap, walletTarget: number
   };
 }
 
+/**
+ * نفس سقف المحافظ بس على مستوى الإدخالات (للرسم الصغير وقايمة النهارده): بنمشي بالترتيب الزمني،
+ * وكل وحدة New بعد ما التارجت يتقفل بتتحول لإدخال Excite في نفس اليوم.
+ * الإجمالي هنا دايمًا يساوي spillNewWalletExcess.
+ */
+export function spillWalletEntries<T extends { kpiKey: string; quantity: number; entryDate: string; createdAt?: string }>(
+  entries: T[],
+  walletTarget: number,
+): T[] {
+  if (walletTarget <= 0) return entries;
+  const ordered = [...entries].sort((a, b) =>
+    a.entryDate === b.entryDate ? (a.createdAt ?? "").localeCompare(b.createdAt ?? "") : a.entryDate.localeCompare(b.entryDate));
+  const result: T[] = [];
+  let used = 0;
+  for (const entry of ordered) {
+    if (entry.kpiKey !== "new_orange_cash") {
+      result.push(entry);
+      continue;
+    }
+    const room = Math.max(0, walletTarget - used);
+    const kept = Math.min(entry.quantity, room);
+    const excess = entry.quantity - kept;
+    used += kept;
+    if (kept > 0) result.push({ ...entry, quantity: kept });
+    if (excess > 0) result.push({ ...entry, kpiKey: "existing_wallets", quantity: excess });
+  }
+  return result;
+}
+
 export function sumWeights(kpis: KpiSettingInput[]): number {
   return kpis.reduce((sum, kpi) => sum + kpi.weight, 0);
 }

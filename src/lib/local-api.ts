@@ -18,6 +18,7 @@ import {
   achievementPercent,
   applyCompanyRules,
   spillNewWalletExcess,
+  spillWalletEntries,
   type AchievedMap,
   buildWorkdayStats,
   catalogByKey,
@@ -646,6 +647,7 @@ function getDashboard(state: State, params: URLSearchParams) {
   }
   // المحافظ الجديدة سقفها 100% من التارجت، والزيادة بتتحسب Excite (بتتبعت كده في التقارير كمان).
   const walletTarget = bundle.kpis.find((kpi) => kpi.kpiKey === "new_orange_cash")?.target ?? 0;
+  const effectiveEntries = spillWalletEntries(monthEntries, walletTarget);
   const spilled = spillNewWalletExcess(achieved as AchievedMap, walletTarget);
   Object.assign(achieved, spilled);
   achieved.quality = qualityPercent(bundle.quality);
@@ -672,7 +674,7 @@ function getDashboard(state: State, params: URLSearchParams) {
   const newLines = bundle.kpis.find((kpi) => kpi.kpiKey === "new_lines");
   const pace = newLinesDailyNeed(newLines?.target ?? 175, achieved.new_lines ?? 0, work.remaining);
 
-  const seriesByKpi = cumulativeSeries(monthEntries, yearMonth, today);
+  const seriesByKpi = cumulativeSeries(effectiveEntries, yearMonth, today);
   const prevToDate = previousMonthToDate(state, yearMonth, today);
 
   // توقّع نهاية الشهر: بنفترض نفس معدل الأيام اللي عدّت. بنعرضه بس لو فيه 3 أيام شغل على الأقل وفاضل أيام.
@@ -691,7 +693,7 @@ function getDashboard(state: State, params: URLSearchParams) {
     };
   }
 
-  const todayEntries = monthEntries.filter((entry) => entry.entryDate === today);
+  const todayEntries = effectiveEntries.filter((entry) => entry.entryDate === today);
   const todaySummary = KPI_CATALOG.map((kpi) => {
     const rows = todayEntries.filter((entry) => entry.kpiKey === kpi.key);
     return {
