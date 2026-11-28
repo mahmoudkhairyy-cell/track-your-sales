@@ -1,0 +1,17 @@
+/* تنسيق مدير الفرع / مدير المنطقة / التيم ليدر بنفس شكل صفحة الموظف. شكل فقط. */
+html body .tys-page-manager{padding-bottom:110px!important;font-family:TysCairo,Cairo,Arial,sans-serif!important}
+html body .tys-page-manager header:first-of-type,html body .tx-manager header{background:radial-gradient(ellipse at 0% 0%,var(--orn-soft),transparent 68%),var(--orn-surface)!important;border:1px solid var(--orn-line)!important;border-radius:23px!important;box-shadow:var(--orn-shadow)!important;backdrop-filter:none!important;align-items:center!important}
+html body .tys-page-manager header:first-of-type{gap:12px}
+html body .tys-page-manager header:first-of-type .orn-avatar{height:47px;width:47px;font-size:22px}
+html body .tys-page-manager header h1{letter-spacing:0!important}
+/* تبويبات مدير الفرع: كبسولة عايمة تحت */
+html body .tys-page-manager nav[aria-label="أقسام اللوحة"]{position:fixed!important;inset-inline:16px;bottom:calc(9px + env(safe-area-inset-bottom));z-index:40;max-width:620px;margin:auto;padding:6px!important;gap:6px!important;border:1px solid var(--orn-line)!important;border-radius:25px!important;background:linear-gradient(var(--orn-surface),var(--orn-soft))!important;box-shadow:0 7px 22px #8b5b3112!important}
+html body .tys-page-manager nav[aria-label="أقسام اللوحة"] button{border-radius:19px!important;min-height:52px;background:transparent;color:var(--orn-muted)!important;box-shadow:none!important}
+html body .tys-page-manager nav[aria-label="أقسام اللوحة"] button.bg-\[\#bd4b0a\]{background:linear-gradient(145deg,#ff9635,#ff7900 70%)!important;color:#fff!important;box-shadow:0 4px 12px #ff790030!important}
+/* مدير المنطقة: القائمة السفلية كبسولة عايمة */
+@media (max-width:1023px){
+html body .tx-manager{padding-bottom:110px!important}
+html body .tx-manager aside.translate-x-full{inset:auto 16px calc(9px + env(safe-area-inset-bottom)) 16px!important;width:auto!important;max-width:620px;margin:auto;border:1px solid var(--orn-line)!important;border-radius:25px!important;background:linear-gradient(var(--orn-surface),var(--orn-soft))!important;box-shadow:0 7px 22px #8b5b3112!important;backdrop-filter:none!important}
+}
+/* التيم ليدر */
+html body .tys-page header .orn-avatar{height:47px;width:47px;font-size:22px}

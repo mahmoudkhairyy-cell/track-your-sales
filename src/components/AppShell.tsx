@@ -8,7 +8,7 @@ import { readProfile } from "@/lib/local-api";
 import { pushReport, readSyncStatus } from "@/lib/sync";
 import { api } from "@/lib/client";
 import { managerApi } from "@/lib/cloud";
-import { APP_DISCLAIMER, APP_NAME, AREA_MANAGERS, BRAND_BY, BRANCHES, OUTSIDE_BRANCHES } from "@/lib/constants";
+import { APP_DISCLAIMER, APP_NAME, AREA_MANAGERS, BRAND_BY, APP_NAME_AR, BRAND_BY_AR, BRANCHES, OUTSIDE_BRANCHES } from "@/lib/constants";
 import { cairoYearMonth, isValidYearMonth, monthLabelAr, shiftYearMonth } from "@/lib/dates";
 import { BookIcon, ChevronIcon, HomeIcon, MoreIcon, PlusIcon, TargetIcon } from "@/components/icons";
 import { ToastProvider, useToast } from "@/components/ui";
@@ -327,7 +327,7 @@ function FirstRunProfile({ onDone }: { onDone: () => void }) {
         ) : (
           <>
         {role === "area_manager" ? (
-          <SearchableSelect label="اسم مدير المنطقة" value={name} options={AREA_MANAGERS} placeholder="Enter your name, e.g. Abd Elrahman Mahmoud" onChange={setName} />
+          <SearchableSelect label="اسم مدير المنطقة" value={name} options={AREA_MANAGERS} placeholder="اكتب اسمك، مثال: Abd Elrahman Mahmoud" onChange={setName} />
         ) : (
           <label className="mb-3 block text-sm font-bold text-[#514238]">
             الاسم
@@ -365,7 +365,7 @@ function FirstRunProfile({ onDone }: { onDone: () => void }) {
           label="اسم الفرع"
           value={branch}
           options={[...BRANCHES, OUTSIDE_BRANCHES]}
-          placeholder="Search branch, e.g. OB. Hagar Elnawatya"
+          placeholder="ابحث عن الفرع، مثال: OB. Hagar Elnawatya"
           onChange={(value) => {
             setBranch(value);
             setAreaManager("");
@@ -373,7 +373,7 @@ function FirstRunProfile({ onDone }: { onDone: () => void }) {
         />
         ) : null}
         {role !== "area_manager" && branch !== OUTSIDE_BRANCHES ? (
-        <SearchableSelect label="مدير المنطقة (الأريا مانجر)" value={areaManager} options={AREA_MANAGERS} placeholder="Search area manager, e.g. Abd Elrahman Mahmoud" onChange={setAreaManager} />
+        <SearchableSelect label="مدير المنطقة (الأريا مانجر)" value={areaManager} options={AREA_MANAGERS} placeholder="ابحث عن مدير المنطقة، مثال: Abd Elrahman Mahmoud" onChange={setAreaManager} />
         ) : null}
           </>
         )}
@@ -420,7 +420,7 @@ function SplashScreen({ name }: { name: string }) {
       <img src="/track-your-sales/logo-full.png" alt="Track Your Sales" className="h-32 w-auto object-contain" />
       <div className="h-px w-24 bg-gradient-to-r from-transparent via-[#bd4b0a] to-transparent" />
       {name.trim() ? <p className="text-base font-bold text-[#bd4b0a]">أهلاً يا {name.trim().split(" ")[0]}</p> : null}
-      <p className="text-xs font-semibold text-[#bd4b0a]/80" dir="ltr">{BRAND_BY}</p>
+      <p className="text-xs font-semibold text-[#bd4b0a]/80">{BRAND_BY_AR}</p>
     </div>
   );
 }
@@ -622,8 +622,8 @@ function AppFrame({ children, blocked, month }: { children: ReactNode; blocked: 
               <div className="flex items-center gap-3 rounded-[24px] border border-[#f4dfcd] bg-white p-3 shadow-[0_12px_28px_rgba(126,65,24,0.06)]">
                 <img src="/track-your-sales/logo-mark.png" alt="" className="h-12 w-12 shrink-0 object-contain" />
                 <div className="min-w-0">
-                  <p className="truncate text-[15px] font-black tracking-tight text-[#2d2119]" dir="ltr">{APP_NAME}</p>
-                  <p className="mt-1 text-[11px] font-bold text-[#b76a3b]" dir="ltr">SALES PERFORMANCE SPACE</p>
+                  <p className="truncate text-[15px] font-black text-[#2d2119]">{APP_NAME_AR}</p>
+                  <p className="mt-1 text-[11px] font-bold text-[#b76a3b]">مساحة عملك لمتابعة الأداء</p>
                 </div>
               </div>
               <div className="relative mt-5 overflow-hidden rounded-[24px] border border-[#f3dfce] bg-gradient-to-br from-white via-[#fff8f1] to-[#fff0e2] p-4 shadow-[0_10px_26px_rgba(126,65,24,0.06)]">
@@ -649,7 +649,7 @@ function AppFrame({ children, blocked, month }: { children: ReactNode; blocked: 
                       <img src="/track-your-sales/logo-mark.png" alt="" className="h-9 w-9 object-contain" />
                     </span>
                     <div className="min-w-0">
-                      <p className="truncate text-[13px] font-black tracking-tight text-white" dir="ltr">{APP_NAME}</p>
+                      <p className="truncate text-[13px] font-black text-white">{APP_NAME_AR}</p>
                       <p className="truncate text-[11px] font-semibold text-white/80">{user.name || "مساحة متابعة المبيعات"}</p>
                     </div>
                   </div>

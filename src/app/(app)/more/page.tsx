@@ -322,7 +322,7 @@ export default function MorePage() {
         <div className="absolute -left-10 -top-12 h-36 w-36 rounded-full bg-[#ffb36e]/20 blur-3xl" />
         <div className="orn-more-heading relative flex items-center justify-between gap-3">
           <div>
-            <p className="text-[11px] font-black tracking-[0.18em] text-[var(--color-primary-700)]" dir="ltr">YOUR WORKSPACE</p>
+            <p className="text-[11px] font-black text-[var(--color-primary-700)]">مساحة عملك</p>
             <h1 className="mt-1 text-xl font-black tracking-tight text-[var(--color-text-primary)]">كل أدواتك في مكان واحد</h1>
             <p className="mt-1 text-xs text-[var(--color-text-secondary)]">إدارة سجلاتك وبياناتك ومراجعة أدائك</p>
           </div>

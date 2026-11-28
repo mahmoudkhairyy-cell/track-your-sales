@@ -171,7 +171,7 @@ export default function TargetPage() {
         <div className="relative">
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div className="min-w-0">
-              <p className="text-[11px] font-black tracking-[0.18em] text-[var(--color-primary-700)]">MONTHLY CONFIGURATION</p>
+              <p className="text-[11px] font-black text-[var(--color-primary-700)]">إعداد الشهر</p>
               <h1 className="mt-1 text-2xl font-black tracking-tight text-[var(--color-text-primary)] sm:text-3xl">التارجت</h1>
               <p className="mt-1.5 max-w-md text-xs leading-6 text-[var(--color-text-secondary)]">كل إعدادات الشهر في مكان واحد — راجع أهدافك قبل الحفظ.</p>
             </div>
@@ -301,7 +301,7 @@ export default function TargetPage() {
 
       <section className="orn-rich-card rounded-[28px] border border-white bg-white p-4 shadow-[0_1px_2px_rgba(43,20,0,.04)]">
         <div className="mb-1 flex items-center justify-between">
-          <h2 className="text-lg font-black">Items &amp; weights</h2>
+          <h2 className="text-lg font-black">المؤشرات والأوزان</h2>
         </div>
         <p className="mb-2 rounded-xl bg-[var(--color-primary-50)] px-3 py-2 text-[11px] font-bold leading-5 text-[var(--color-primary-700)]">
           📌 الأوزان مختلفة للموظف والمدير. ده وزن {kpis.some((k) => k.kpiKey === "productivity" && k.weight > 0) ? "المدير" : "الموظف"}، وبيتحدد أوتوماتيك حسب اختيارك في أول مرة، ومش بيتعدل من التطبيق.

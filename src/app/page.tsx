@@ -18,7 +18,7 @@ export default function RootPage() {
         <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-[26px] border border-[#f6e2d1] bg-gradient-to-br from-white to-[#fff0e2] p-2 shadow-[0_12px_28px_rgba(189,75,10,0.10)]">
           <img src="/track-your-sales/logo-mark.png" alt="شعار Track Your Sales" className="h-full w-full object-contain" />
         </div>
-        <p className="mt-5 text-xs font-extrabold tracking-[0.18em] text-[#c45a16]">TRACK YOUR SALES</p>
+        <p className="mt-5 text-xs font-extrabold text-[#c45a16]">مساحة عملك لمتابعة الأداء</p>
         <h1 className="mt-2 text-xl font-black text-[#25201c]">تراك يور سيلز</h1>
         <p className="mt-2 text-sm leading-7 text-[#76675c]">مساحتك لمتابعة إنجازك وتنظيم مبيعاتك</p>
         <a

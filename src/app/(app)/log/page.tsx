@@ -207,7 +207,7 @@ export default function LogPage() {
     <form className="tys-page tys-page-log tys-premium-log mx-auto max-w-5xl space-y-5 pb-8" onSubmit={onSubmit}>
       <section className="orn-rich-card flex items-end justify-between gap-3 rounded-[26px] border border-white bg-white px-4 py-4 shadow-[0_1px_2px_rgba(43,20,0,.04)] sm:px-5">
         <div>
-          <p className="text-[11px] font-black tracking-[0.16em] text-[#c66b34]">DAILY SALES ENTRY</p>
+          <p className="text-[11px] font-black text-[#c66b34]">تسجيل المبيعات اليومي</p>
           <h1 className="mt-1 text-2xl font-black tracking-tight text-[var(--color-text-primary)]">تسجيل إنجاز</h1>
           <p className="mt-1 text-xs font-semibold text-[var(--color-text-secondary)]">سجّل مبيعاتك وإنجازاتك بسهولة — هتتحفظ تلقائيًا.</p>
         </div>
@@ -222,7 +222,7 @@ export default function LogPage() {
         <section className="orn-rich-card rounded-[22px] border border-white bg-white p-3 shadow-[0_1px_2px_rgba(43,20,0,.04)] sm:p-4">
           <div className="mb-3 flex items-center justify-between gap-2">
             <div>
-              <p className="text-xs font-black tracking-wide text-[var(--color-primary-700)]">DAILY</p>
+              <p className="text-xs font-black text-[var(--color-primary-700)]">يومي</p>
               <h2 className="mt-0.5 text-sm font-extrabold text-[var(--color-text-primary)]">الديلي المطلوب</h2>
             </div>
             <span className="shrink-0 rounded-full bg-[var(--color-primary-50)] px-2.5 py-1 text-[11px] font-extrabold text-[var(--color-primary-700)]">
