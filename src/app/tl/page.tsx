@@ -3,6 +3,19 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { BRANCHES, displayKpiName } from "@/lib/constants";
 import { managerApi } from "@/lib/cloud";
+import { KPI_CATALOG } from "@/lib/constants";
+import { cairoYearMonth } from "@/lib/dates";
+import { OrnGreeting, OrnHero, OrnKpiCard, OrnTopRow } from "@/components/RoleHome";
+
+const KPI_KEYS: Record<string, string> = {
+  "GAs": "new_lines", "New Lines": "new_lines", "Line": "new_lines", "Points": "points",
+  "New Orange Cash Wallets": "new_orange_cash",
+  "Excite": "existing_wallets", "Exist": "existing_wallets", "Existing OC Wallets": "existing_wallets",
+  "Postpaid": "postpaid_lines", "Postpaid Lines": "postpaid_lines",
+  "Home ADSL": "dsl", "DSL": "dsl", "KYC & Compliance": "quality", "Quality": "quality",
+  "Productivity (GA & OC)": "productivity",
+};
+const fmtCount = (value: number) => Number(value || 0).toLocaleString("en-US", { maximumFractionDigits: 2 });
 
 type TeamRow = {
   branch_id: string;
@@ -141,22 +154,11 @@ export default function TeamLeaderPage() {
   }
 
   return (
-    <main className="tys-page min-h-screen bg-[linear-gradient(145deg,#fffaf6_0%,#f8f4ef_55%,#fff8f1_100%)] px-3 py-4 text-[var(--color-text-primary)] sm:px-5" dir="rtl">
-      <div className="mx-auto max-w-3xl space-y-4">
-        <header className="orn-rich-card rounded-[26px] border border-[var(--color-border)] bg-white px-4 py-4 shadow-sm sm:px-5">
-          <div className="flex items-center justify-between gap-3">
-            <span className="orn-avatar" aria-hidden="true">{(branch || "T").trim().charAt(0).toUpperCase()}</span>
-            <div className="min-w-0 flex-1">
-              <p className="text-[11px] font-black tracking-[.15em] text-[var(--color-primary-700)]">لوحة التيم ليدر</p>
-              <h1 className="mt-1 truncate text-xl font-black" dir="auto">{branch}</h1>
-              <p className="mt-1 text-xs text-[var(--color-text-secondary)]">{rows.length} في الفريق{lastLoaded ? ` · آخر تحديث ${lastLoaded.toLocaleTimeString("ar-EG", { hour: "2-digit", minute: "2-digit" })}` : ""}</p>
-            </div>
-            <div className="flex shrink-0 flex-col gap-2">
-              <button type="button" onClick={() => void load()} disabled={pending} className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface-cream)] px-3 py-2 text-xs font-bold text-[var(--color-primary-700)]">{pending ? "جاري التحديث..." : "تحديث ↻"}</button>
-              <button type="button" onClick={logout} className="rounded-xl border border-red-200 bg-white px-3 py-2 text-xs font-bold text-red-600">خروج ↪</button>
-            </div>
-          </div>
-        </header>
+    <main id="tys-bold-identity" className="tys-page min-h-screen bg-[linear-gradient(145deg,#fffaf6_0%,#f8f4ef_55%,#fff8f1_100%)] px-3 py-4 pb-24 text-[var(--color-text-primary)] sm:px-5" dir="rtl">
+      <div className="orn-home mx-auto flex w-full max-w-3xl flex-col gap-4 pb-8">
+        <OrnTopRow month={cairoYearMonth()} />
+        <OrnGreeting name={branch} full sub={`لوحة التيم ليدر · ${rows.length} في الفريق${lastLoaded ? ` · آخر تحديث ${lastLoaded.toLocaleTimeString("ar-EG", { hour: "2-digit", minute: "2-digit" })}` : ""}`} actions={<span className="flex flex-col gap-1.5"><button type="button" onClick={() => void load()} disabled={pending} className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface-cream)] px-3 py-1.5 text-xs font-bold text-[var(--color-primary-700)]">{pending ? "..." : "تحديث ↻"}</button><button type="button" onClick={logout} className="rounded-xl border border-red-200 bg-white px-3 py-1.5 text-xs font-bold text-red-600">خروج ↪</button></span>} />
+        <OrnHero percent={ordered.length ? ordered.reduce((sum, r) => sum + (r.payload.overall ?? 0), 0) / ordered.length : 0} label="تحقيق الفريق" ariaLabel="تحقيق الفريق" sideLabel="عدد الفريق" sideValue={String(rows.length)} sideUnit="فرد" />
 
         {error ? <p className="rounded-xl border border-red-200 bg-red-50 p-3 text-sm font-bold text-red-700">{error}</p> : null}
 
@@ -180,14 +182,12 @@ export default function TeamLeaderPage() {
                 </div>
                 <span className="shrink-0 rounded-full bg-[var(--color-primary-50)] px-3 py-1.5 text-sm font-black text-[var(--color-primary-700)]">{fmt(row.payload.overall ?? 0)}</span>
               </div>
-              <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3">
-                {(row.payload.kpis ?? []).map((k) => (
-                  <div key={k.name} className="rounded-xl bg-[var(--color-surface-cream)] p-2">
-                    <p className="truncate text-[11px] font-bold text-[var(--color-text-secondary)]">{displayKpiName(k.name)}</p>
-                    <p className="mt-1 text-base font-black">{fmt(k.percent)}</p>
-                    <p className="text-[11px] text-[var(--color-text-secondary)]">{k.achieved} / {k.target}</p>
-                  </div>
-                ))}
+              <div className="orn-kpi-grid mt-3">
+                {(row.payload.kpis ?? []).map((k) => {
+                  const kpiKey = KPI_KEYS[k.name] ?? "";
+                  const unit = KPI_CATALOG.find((item) => item.key === kpiKey)?.unitAr ?? "";
+                  return <OrnKpiCard key={k.name} kpiKey={kpiKey} name={displayKpiName(k.name)} achieved={fmtCount(k.achieved)} target={fmtCount(k.target)} percent={k.percent ?? 0} foot={(k.percent ?? 0) >= 100 ? <><span>✦</span> {(k.percent ?? 0) > 100 ? "عدّيت التارجت، عاش!" : "حققت التارجت، عاش!"}</> : <>المتبقي {fmtCount(Math.max(0, (k.target ?? 0) - (k.achieved ?? 0)))} {unit}</>} />;
+                })}
               </div>
             </article>
           ))}

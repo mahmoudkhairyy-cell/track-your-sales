@@ -5,6 +5,7 @@ import { logoutBranchManager, readProfile } from "@/lib/local-api";
 import { BRANCHES, KPI_CATALOG, MANAGER_KPI_WEIGHTS, displayKpiName } from "@/lib/constants";
 import { managerApi } from "@/lib/cloud";
 import { KpiIcon } from "@/components/KpiIcon";
+import { OrnGreeting, OrnHero, OrnKpiCard, OrnTopRow } from "@/components/RoleHome";
 import { cairoYearMonth, formatDateAr } from "@/lib/dates";
 
 type Kpi = { name: string; achieved: number; target: number; percent: number; weight: number; expectedPercent?: number };
@@ -83,11 +84,6 @@ function displayUnit(value: string) {
 function timeLabel(value: string) {
   try { return new Date(value).toLocaleString("ar-EG", { timeZone: "Africa/Cairo", dateStyle: "medium", timeStyle: "short" }); }
   catch { return value; }
-}
-
-function greetingEn() {
-  const hour = Number(new Intl.DateTimeFormat("en-GB", { hour: "2-digit", hour12: false, timeZone: "Africa/Cairo" }).format(new Date()));
-  return hour >= 5 && hour < 12 ? "Good morning" : hour >= 12 && hour < 18 ? "Good afternoon" : "Good evening";
 }
 
 export default function BranchManagerPage() {
@@ -275,19 +271,10 @@ export default function BranchManagerPage() {
   );
 
   return (
-    <main className="tys-page tys-page-manager min-h-screen bg-[#fffaf5] px-3 py-5 text-[#2d2119] sm:px-6" dir="ltr">
-      <div className="mx-auto max-w-6xl space-y-5">
-        <header className="flex items-end justify-between gap-3 rounded-[26px] border border-white bg-white px-4 py-4 shadow-[0_1px_2px_rgba(43,20,0,.04)] sm:px-5">
-          <span className="orn-avatar" aria-hidden="true">{(managerName || "M").trim().charAt(0).toUpperCase()}</span>
-          <div className="min-w-0 flex-1">
-            <p className="text-xs font-black tracking-[0.16em] text-[#bd4b0a]">متابعة أداء الفرع</p>
-            <h1 className="mt-1 text-xl font-black tracking-tight text-[#2d2119] sm:text-2xl">{greetingEn()}, {managerName} 👋</h1>
-            <p className="mt-1 text-xs font-semibold text-[#88796e]">📍 {branch} · {new Date(`${month}-01T12:00:00`).toLocaleDateString("ar-EG", { month: "long", year: "numeric" })}</p>
-          </div>
-          <div className="flex shrink-0 items-center gap-2">
-            <button onClick={() => load(branch)} disabled={loading} className="rounded-xl border border-orange-100 bg-orange-50 px-3 py-2 text-xs font-bold text-[#bd4b0a]">{loading ? "جاري التحديث..." : "تحديث ↻"}</button>
-          </div>
-        </header>
+    <main id="tys-bold-identity" className="tys-page tys-page-manager min-h-screen bg-[#fffaf5] px-3 py-5 text-[#2d2119] sm:px-6" dir="ltr">
+      <div className="orn-home mx-auto flex w-full max-w-6xl flex-col gap-4 pb-28">
+        <OrnTopRow month={month} />
+        <OrnGreeting name={managerName} sub={branch} actions={<button onClick={() => load(branch)} disabled={loading} className="rounded-xl border border-orange-100 bg-orange-50 px-3 py-2 text-xs font-bold text-[#bd4b0a]">{loading ? "جاري التحديث..." : "تحديث ↻"}</button>} />
         {error ? <p className="rounded-xl border border-red-200 bg-red-50 p-3 text-sm font-bold text-red-700">{error}</p> : null}
         {notice ? <p className="rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm font-bold text-emerald-800">{notice}</p> : null}
         <nav className="grid grid-cols-3 gap-2 rounded-2xl border border-[#f1dfd0] bg-white p-2 shadow-sm" aria-label="أقسام اللوحة">
@@ -296,39 +283,12 @@ export default function BranchManagerPage() {
         </nav>
         {activeTab === "overview" ? (
           <>
-        <section className="orn-rich-card relative isolate overflow-hidden rounded-[30px] border border-white bg-white p-5 shadow-[0_8px_28px_rgba(126,65,24,.10)] sm:p-7">
-          <div className="pointer-events-none absolute -left-12 -top-16 h-52 w-52 rounded-full bg-[#ff9d38]/20 blur-3xl" />
-          <div className="pointer-events-none absolute -bottom-24 right-1/3 h-52 w-52 rounded-full bg-[#bd4b0a]/10 blur-3xl" />
-          <div className="relative">
-            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-orange-100 pb-3">
-              <div>
-                <p className="text-xs font-black tracking-[0.16em] text-[#bd4b0a]">الأداء الشهري</p>
-                <h2 className="mt-1 text-base font-black text-[#2d2119]">تحقيق الفرع</h2>
-                <p className="mt-1 text-xs font-semibold text-[#88796e]">{managerName} · {new Date(`${month}-01T12:00:00`).toLocaleDateString("ar-EG", { month: "long", year: "numeric" })}</p>
-              </div>
-              <span className="rounded-full border border-orange-200 bg-orange-50 px-3 py-1.5 text-xs font-extrabold text-[#bd4b0a]">نظرة عامة</span>
-            </div>
-            <div className="flex flex-wrap items-end justify-between gap-4 py-5">
-              <div>
-                <p className="text-xs font-bold text-[#88796e]">نسبة التحقيق</p>
-                <div className="mt-1 flex items-baseline gap-1">
-                  <span className="font-mono text-[58px] font-black leading-none tracking-[-0.06em] text-[#bd4b0a] sm:text-[76px]">{fmt(metrics.total).replace("%","")}</span>
-                  <span className="text-xl font-black text-[#e96812]">%</span>
-                </div>
-              </div>
-            </div>
-            <div className="h-3 overflow-hidden rounded-full bg-orange-100">
-              <div className="h-full rounded-full bg-gradient-to-r from-[#bd4b0a] via-[#e96812] to-[#ff9d38] transition-all duration-700" style={{ width: `${Math.min(100, metrics.total)}%` }} />
-            </div>
-            <div className="mt-2 flex justify-between text-[11px] font-bold text-[#88796e]" dir="ltr"><span>0%</span><span>100%</span></div>
-
-          </div>
-        </section>
-        <section className="orn-rich-card rounded-3xl border border-[#f1dfd0] bg-white p-4 sm:p-5">
-          <h2 className="text-lg font-black">مساهمة كل مؤشر</h2>
-          <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {metrics.rows.map((item) => <div key={item.key} className="rounded-2xl bg-[#fff8f1] p-3"><div className="flex justify-between gap-2 text-sm font-bold"><span>{item.label}</span><span>{fmt(item.percent)}</span></div><div className="mt-2 h-2 overflow-hidden rounded-full bg-[#f2e4d8]"><div className="h-full rounded-full bg-[#e96812]" style={{ width: `${Math.min(100,item.percent)}%` }} /></div>{item.key !== "quality" ? <p className="mt-2 text-xs font-bold text-[#6e5543]">المحقق {formatCount(item.achieved)} / {formatCount(item.target)}</p> : null}<p className="mt-2 text-xs text-[#88796e]">الوزن {item.weight}% · المساهمة {item.contribution.toFixed(2)}%</p></div>)}
-            <div className="rounded-2xl border border-[#f2c9a7] bg-[#fff1e4] p-3"><div className="flex justify-between text-sm font-bold"><span>الإنتاجية</span><span>{fmt(metrics.productivity)}</span></div><div className="orn-rich-card mt-2 h-2 overflow-hidden rounded-full bg-white"><div className="h-full rounded-full bg-[#bd4b0a]" style={{ width: `${Math.min(100,metrics.productivity)}%` }} /></div><p className="mt-2 text-xs text-[#88796e]">الوزن {MANAGER_KPI_WEIGHTS.productivity}% · المساهمة {metrics.productivityContribution.toFixed(2)}%</p></div>
+        <OrnHero percent={metrics.total} label="تحقيق الفرع" ariaLabel="تحقيق الفرع" sideLabel="عدد التقارير" sideValue={String(reports.length)} sideUnit="تقرير" />
+        <section className="orn-kpis" dir="rtl">
+          <h2 className="orn-section-title">مساهمة كل مؤشر</h2>
+          <div className="orn-kpi-grid">
+            {metrics.rows.map((item) => <OrnKpiCard key={item.key} kpiKey={item.key} name={item.label} nameLtr={item.key !== "quality"} achieved={item.key === "quality" ? fmt(item.achieved) : formatCount(item.achieved)} target={item.key === "quality" ? "100%" : formatCount(item.target)} percent={item.percent} foot={<>الوزن {item.weight}% · المساهمة {item.contribution.toFixed(2)}%</>} />)}
+            <OrnKpiCard kpiKey="productivity" name="الإنتاجية" nameLtr={false} achieved={fmt(metrics.productivity)} target="100%" percent={metrics.productivity} foot={<>الوزن {MANAGER_KPI_WEIGHTS.productivity}% · المساهمة {metrics.productivityContribution.toFixed(2)}%</>} />
           </div>
         </section>
         <section className="orn-rich-card rounded-3xl border border-[#f1dfd0] bg-white p-4 sm:p-5">
