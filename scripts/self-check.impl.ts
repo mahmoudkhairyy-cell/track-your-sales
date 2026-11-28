@@ -7,6 +7,7 @@ import {
   kpiContribution,
   managerKpiContribution,
   spillNewWalletExcess,
+  spillWalletEntries,
 } from "../src/lib/calculations";
 import { kpiWeight, managerKpiWeight, MANAGER_FIXED_SALARY, MANAGER_FULL_COMMISSION, KPI_CATALOG, KPI_REPORT_NAMES } from "../src/lib/constants";
 import { parseBackup, planEntryRestore, type BackupEntry } from "../src/lib/backup";
@@ -534,4 +535,22 @@ check("المحافظ الجديدة سقفها 100% والزيادة تتحول
   assert.equal(noTarget.existing_wallets, undefined);
   const noExisting = spillNewWalletExcess({ new_orange_cash: 160 }, 158);
   assert.equal(noExisting.existing_wallets, 2);
+});
+
+check("سقف المحافظ على مستوى الإدخالات: الحد بين يومين وبيطابق الإجمالي", () => {
+  const e = (kpiKey: string, quantity: number, entryDate: string, createdAt: string) => ({ kpiKey, quantity, entryDate, createdAt });
+  const out = spillWalletEntries([
+    e("new_orange_cash", 155, "2026-11-10", "a"),
+    e("new_orange_cash", 5, "2026-11-11", "b"),
+    e("existing_wallets", 5, "2026-11-11", "c"),
+  ], 158);
+  const sum = (k: string) => out.filter((x) => x.kpiKey === k).reduce((t, x) => t + x.quantity, 0);
+  assert.equal(sum("new_orange_cash"), 158);
+  assert.equal(sum("existing_wallets"), 7);
+  const day2 = out.filter((x) => x.entryDate === "2026-11-11");
+  assert.equal(day2.filter((x) => x.kpiKey === "new_orange_cash").reduce((t, x) => t + x.quantity, 0), 3);
+  const full = spillWalletEntries([e("new_orange_cash", 158, "2026-11-10", "a"), e("new_orange_cash", 5, "2026-11-11", "b"), e("existing_wallets", 5, "2026-11-11", "c")], 158);
+  assert.equal(full.filter((x) => x.kpiKey === "new_orange_cash" && x.entryDate === "2026-11-11").length, 0);
+  assert.equal(full.filter((x) => x.kpiKey === "existing_wallets").reduce((t, x) => t + x.quantity, 0), 10);
+  assert.equal(spillWalletEntries([e("new_orange_cash", 9, "2026-11-10", "a")], 0)[0].quantity, 9);
 });
