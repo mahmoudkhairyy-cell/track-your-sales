@@ -17,6 +17,8 @@ import {
 import {
   achievementPercent,
   applyCompanyRules,
+  spillNewWalletExcess,
+  type AchievedMap,
   buildWorkdayStats,
   catalogByKey,
   estimatedCommission,
@@ -642,6 +644,10 @@ function getDashboard(state: State, params: URLSearchParams) {
   for (const entry of monthEntries) {
     achieved[entry.kpiKey] = (achieved[entry.kpiKey] ?? 0) + entry.quantity;
   }
+  // المحافظ الجديدة سقفها 100% من التارجت، والزيادة بتتحسب Excite (بتتبعت كده في التقارير كمان).
+  const walletTarget = bundle.kpis.find((kpi) => kpi.kpiKey === "new_orange_cash")?.target ?? 0;
+  const spilled = spillNewWalletExcess(achieved as AchievedMap, walletTarget);
+  Object.assign(achieved, spilled);
   achieved.quality = qualityPercent(bundle.quality);
   const achievedTyped = achieved as Record<KpiKey, number>;
 

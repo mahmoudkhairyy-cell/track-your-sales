@@ -142,9 +142,17 @@ function toRules(rows: WhatIfKpiRow[]): RulesKpi[] {
 }
 
 function simulate(data: WhatIfDashboard, kpiKey: string, add: number) {
-  const rows = data.kpis.map((row) =>
+  let rows = data.kpis.map((row) =>
     row.kpiKey === kpiKey ? { ...row, achieved: row.achieved + add } : row,
   );
+  // المحافظ الجديدة سقفها 100%، والزيادة بتروح Excite.
+  const w = rows.find((row) => row.kpiKey === "new_orange_cash");
+  if (w && w.target > 0 && w.achieved > w.target) {
+    const excess = w.achieved - w.target;
+    rows = rows.map((row) =>
+      row.kpiKey === "new_orange_cash" ? { ...row, achieved: w.target }
+        : row.kpiKey === "existing_wallets" ? { ...row, achieved: row.achieved + excess } : row);
+  }
   const rules = applyCompanyRules(toRules(rows));
   const overall = rules.total;
   const commission = estimatedCommission(data.fullCommission, overall);
@@ -171,7 +179,7 @@ export function buildWhatIfAnswer(data: WhatIfDashboard, intent: WhatIfIntent): 
         data.kpis.filter((k) => k.target > 0).map((k) => k.nameEn).join("، ") + ".";
     }
     const { rules, overall, commission } = simulate(data, row.kpiKey, intent.addQty);
-    const newPercent = row.target > 0 ? ((row.achieved + intent.addQty) / row.target) * 100 : 0;
+    const newPercent = row.target > 0 ? Math.min(((row.achieved + intent.addQty) / row.target) * 100, row.kpiKey === "new_orange_cash" ? 100 : Infinity) : 0;
     const oldPercent = row.target > 0 ? (row.achieved / row.target) * 100 : 0;
     const lines = [
       `لو زوّدت ${formatQty(intent.addQty)} ${row.unitAr} على ${row.nameEn}:`,
