@@ -6,6 +6,7 @@ import {
   estimatedCommission,
   kpiContribution,
   managerKpiContribution,
+  spillNewWalletExcess,
 } from "../src/lib/calculations";
 import { kpiWeight, managerKpiWeight, MANAGER_FIXED_SALARY, MANAGER_FULL_COMMISSION, KPI_CATALOG, KPI_REPORT_NAMES } from "../src/lib/constants";
 import { parseBackup, planEntryRestore, type BackupEntry } from "../src/lib/backup";
@@ -515,4 +516,22 @@ check("رسائل الماسكوت: قوايم مليانة والاختيار �
 check("اسم Line للعرض وGAs ثابت في تقارير المدير", () => {
   assert.equal(KPI_CATALOG.find((k) => k.key === "new_lines")?.nameEn, "Line");
   assert.equal(KPI_REPORT_NAMES.new_lines, "GAs");
+});
+
+check("المحافظ الجديدة سقفها 100% والزيادة تتحول Excite 1 لـ 1", () => {
+  const r = spillNewWalletExcess({ new_orange_cash: 170, existing_wallets: 20, new_lines: 5 }, 158);
+  assert.equal(r.new_orange_cash, 158);
+  assert.equal(r.existing_wallets, 32);
+  assert.equal(r.new_lines, 5);
+  const exact = spillNewWalletExcess({ new_orange_cash: 158, existing_wallets: 20 }, 158);
+  assert.equal(exact.new_orange_cash, 158);
+  assert.equal(exact.existing_wallets, 20);
+  const below = spillNewWalletExcess({ new_orange_cash: 100, existing_wallets: 20 }, 158);
+  assert.equal(below.new_orange_cash, 100);
+  assert.equal(below.existing_wallets, 20);
+  const noTarget = spillNewWalletExcess({ new_orange_cash: 50 }, 0);
+  assert.equal(noTarget.new_orange_cash, 50);
+  assert.equal(noTarget.existing_wallets, undefined);
+  const noExisting = spillNewWalletExcess({ new_orange_cash: 160 }, 158);
+  assert.equal(noExisting.existing_wallets, 2);
 });

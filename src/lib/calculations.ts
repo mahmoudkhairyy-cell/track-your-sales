@@ -15,6 +15,21 @@ export type KpiSettingInput = {
 
 export type AchievedMap = Partial<Record<KpiKey, number>>;
 
+/**
+ * سقف المحافظ الجديدة: إنجازها بيقف عند 100% من التارجت، وأي زيادة فوق التارجت
+ * بتتحول 1 لـ 1 لإنجاز Excite (existing_wallets). لو تارجت المحافظ صفر/مش متحدد مفيش سقف ولا تحويل.
+ */
+export function spillNewWalletExcess(achieved: AchievedMap, walletTarget: number): AchievedMap {
+  const wallets = achieved.new_orange_cash ?? 0;
+  if (walletTarget <= 0 || wallets <= walletTarget) return { ...achieved };
+  const excess = wallets - walletTarget;
+  return {
+    ...achieved,
+    new_orange_cash: walletTarget,
+    existing_wallets: (achieved.existing_wallets ?? 0) + excess,
+  };
+}
+
 export function sumWeights(kpis: KpiSettingInput[]): number {
   return kpis.reduce((sum, kpi) => sum + kpi.weight, 0);
 }

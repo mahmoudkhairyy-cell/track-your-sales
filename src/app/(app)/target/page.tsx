@@ -324,7 +324,7 @@ export default function TargetPage() {
                 <div className="min-w-0">
                   <p className="truncate text-sm font-extrabold" dir="ltr">{catalog?.nameEn}</p>
                   {kpi.kpiKey === "new_orange_cash" ? (
-                    <p className="text-[11px] font-bold text-[var(--color-primary-700)]">هدف بتحدده إنت</p>
+                    <p className="text-[11px] font-bold text-[var(--color-primary-700)]">هدف بتحدده إنت، وسقفه 100% والزيادة بتتحسب Excite</p>
                   ) : (
                     <p className="text-[11px] text-[var(--color-text-secondary)]">{unitEn(kpi.unitAr)}</p>
                   )}
