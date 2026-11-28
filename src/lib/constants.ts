@@ -185,12 +185,12 @@ export const KPI_REPORT_NAMES: Partial<Record<KpiKey, string>> = {
 
 export type Role = "agent" | "team_leader" | "manager" | "area_manager";
 
-/** أوزان مدير الفرع: تُطبّق على نتائج فريقه، وليست تارجت أو مبيعات شخصية. */
+/** أوزان مدير الفرع (حسب Retail Sales KPIs نوفمبر 2026): تُطبّق على نتائج فريقه، وليست تارجت أو مبيعات شخصية. */
 export const MANAGER_KPI_WEIGHTS: Record<KpiKey, number> = {
   new_lines: 30,
   new_orange_cash: 0,
-  existing_wallets: 10,
-  points: 10,
+  existing_wallets: 15,
+  points: 5,
   postpaid_lines: 10,
   dsl: 10,
   productivity: 15,
