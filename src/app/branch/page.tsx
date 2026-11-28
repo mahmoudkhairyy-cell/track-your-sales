@@ -5,7 +5,7 @@ import { logoutBranchManager, readProfile } from "@/lib/local-api";
 import { BRANCHES, KPI_CATALOG, MANAGER_KPI_WEIGHTS, displayKpiName } from "@/lib/constants";
 import { managerApi } from "@/lib/cloud";
 import { KpiIcon } from "@/components/KpiIcon";
-import { OrnGreeting, OrnHero, OrnKpiCard, OrnTopRow } from "@/components/RoleHome";
+import { OrnGreeting, OrnKpiCard, OrnProgressCard, OrnTopRow } from "@/components/RoleHome";
 import { cairoYearMonth, formatDateAr } from "@/lib/dates";
 
 type Kpi = { name: string; achieved: number; target: number; percent: number; weight: number; expectedPercent?: number };
@@ -283,7 +283,7 @@ export default function BranchManagerPage() {
         </nav>
         {activeTab === "overview" ? (
           <>
-        <OrnHero percent={metrics.total} label="تحقيق الفرع" ariaLabel="تحقيق الفرع" sideLabel="عدد التقارير" sideValue={String(reports.length)} sideUnit="تقرير" />
+        <OrnProgressCard percent={metrics.total} label="تحقيق الفرع" />
         <section className="orn-kpis" dir="rtl">
           <h2 className="orn-section-title">مساهمة كل مؤشر</h2>
           <div className="orn-kpi-grid">
