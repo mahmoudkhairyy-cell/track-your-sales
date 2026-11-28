@@ -74,7 +74,7 @@ function src(table: Table): string {
 const FREEMAX_NUMS = ["52", "80", "115", "175", "230", "345"];
 
 function freemaxAnswer(kb: string, q: string): string | null {
-  if (!/(فري ?ماكس|فريماكس|freemax|free max)/.test(q)) return null;
+  if (!/(فري ?ماكس|فري ?مكس|فريماكس|freemax|free max)/.test(q)) return null;
   if (/بتتحسب|بيتحسب|يتحسب|بتحسب|احتساب|gas|(^| )ga( |$)/.test(q)) return null;
   const { tables } = parseKB(kb);
   const t = tables.find((x) => x.header[0] === "الباقة" && x.header[1]?.includes("إجمالي سعر الخط"));
@@ -222,7 +222,7 @@ function tahweeshaAnswer(kb: string, q: string): string | null {
     const line = parseKB(kb).lines.find((l) => l.text.includes("صلاحية التحويشة"));
     return line ? clean(line.text).replace(/^-\s*/, "") + "\n" + line.section : null;
   }
-  if (!/كاش ?باك|cashback|بكام|يساوي|بتساوي|بتجيب|=/.test(q)) return null;
+  if (!/كاش ?باك|cashback|بكام|يساوي|بتساوي|بتجيب|=|(^| )kam( |$)/.test(q)) return null;
   const n = (q.match(/\d[\d,]*/g) ?? []).map((x) => x.replace(/,/g, ""));
   for (const v of n) {
     const row = t.rows.find((r) => r[0].replace(/[^0-9]/g, "") === v);
@@ -405,13 +405,13 @@ export const FIXED_ANSWERS: Fixed[] = [
     guard: /(dsl|adsl|نت ارضي|انترنت ارضي|انترنت منزلي|راوتر|محفظه|كاش|ضريبه|حسب|حاسبه|معادله|sdf)/,
   },
   {
-    re: /(الغاء|الغي|انهاء|فسخ).*(dsl|adsl|دي اس ال|نت ارضي|الانترنت الارضي|انترنت ارضي|انترنت منزلي|النت الارضي)|(dsl|adsl|نت ارضي).*(الغاء|الغي|انهاء|فسخ)/,
+    re: /(الغاء|الغي|انهاء|فسخ).*(dsl|adsl|دي اس ال|نت ارضي|الانت الارضي|انت ارضي|الانترنت الارضي|انترنت ارضي|انترنت منزلي|النت الارضي)|(dsl|adsl|نت ارضي).*(الغاء|الغي|انهاء|فسخ)/,
     answer:
       "SR 16058 ثم Automated SR 5009 بعد السداد.\nSR 16058 لطلب المبلغ (بيردوا في خلال 30 دقيقة)، وبعد ما العميل يسدد المبلغ كامل ترفع البطاقة وعقد الإلغاء على Automated SR 5009.\nلو عايز تحسب رسوم الإلغاء اضغط «حاسبة إلغاء ADSL» تحت.\nقسم 0 + قسم 17",
     guard: /(غرامه|رسوم|حسب|حاسبه|كام|مبلغ)/,
   },
   {
-    re: /(رصيد|فلوس|رصيدي).*(بيتخصم|اتخصم|بيخصم|بيروح|راح|اتسحب|بيسحب)|(بيتخصم|اتخصم|خصم).*(رصيد|رصيدي)|ba5sm|خصم رصيد|رصيد بيتخصم|رصيد بيروح/,
+    re: /(رصيد|فلوس|رصيدي).*(بيتخصم|اتخصم|بيخصم|بيروح|راح|اتسحب|بيسحب)|(بيتخصم|اتخصم|خصم).*(رصيد|رصيدي)|ba5sm|خصم رصيد|رصيد بيتخصم|رصيد بيروح|شكوي رصيد|شكوى رصيد|خصم الرصيد/,
     answer: "31319\nالاستعلامات — Fault For Products (جوكر الاستعلامات).\nاكتب الشكوى بالتفصيل في Notes واعمل رن للفريق المختص.\nقسم 0 و16",
   },
   {
@@ -493,6 +493,101 @@ function codeLookup(kb: string, q: string): string | null {
   return null;
 }
 
+// بحث عن كود SR من وصف الطلب (قسم 16 من القاعدة): بنطابق كلمات السؤال مع عمود «المنطقة» في جداول الأكواد.
+// شرط الثقة (مهم جدًا): كل كلمات المنطقة لازم تكون موجودة في السؤال (من غير الكلمات العامة)، والمنطقة
+// الأكثر تحديدًا لازم تكون لكود واحد بس. لو أكتر من كود بنفس الدرجة أو المنطقة مش محددة = null والموديل يجاوب.
+const SR_INTENT = /(^| )(كود|اكواد|code|sr|اس ار)( |$)/;
+const SR_STOP = new Set([
+  "to","for","the","of","in","and","or","a","an","by","with","from","on","at","is","are","be","any","not",
+  "customer","cs","asking","asked","case","used","use","when","want","wants","his","her","their","it","this",
+  "that","its","incase","can","cant","if","also","only","which","sent","via","should","created","automated","team","new",
+]);
+// كلمات عربي/فرانكو بتتحول لكلمات القاعدة الإنجليزية اللي في عمود المنطقة.
+const SR_TERMS: [RegExp, string[]][] = [
+  [/فاتور/, ["bill", "invoice"]],
+  [/دوره|سايكل/, ["cycle"]],
+  [/رصيد/, ["balance"]],
+  [/استرداد|استرجاع|ارجاع/, ["refund"]],
+  [/تامين/, ["deposit"]],
+  [/تجوال|رومنج/, ["roaming"]],
+  [/دولي|دوليه/, ["international"]],
+  [/مكالمات|مكالمه|اتصال|دقايق|دقائق/, ["call"]],
+  [/رسايل|رسائل/, ["sms"]],
+  [/داتا|انترنت/, ["data"]],
+  [/تجديد/, ["renewal"]],
+  [/تغيير|تحويل/, ["change"]],
+  [/ايقاف|بلوك|حظر/, ["block", "suspend"]],
+  [/فك|رفع/, ["release"]],
+  [/الغاء|فسخ|انهاء/, ["cancel", "termination"]],
+  [/شريحه/, ["sim"]],
+  [/باقه|نظام/, ["tariff"]],
+  [/ضريبه|ضرايب/, ["vat", "taxes"]],
+  [/تقسيط|اقساط/, ["installment"]],
+  [/شكوي|شكوى|شكوه/, ["complaint"]],
+  [/فاكس/, ["fax"]],
+  [/بريد صوتي/, ["voice", "mail"]],
+  [/كول تون|نغمه/, ["call", "tone"]],
+  [/ايميل|ايمل/, ["mail"]],
+  [/اعتراض/, ["dispute"]],
+  [/سداد|مسدد|مدفوع/, ["paid", "payment"]],
+  [/خط|ارضي/, ["line"]],
+  [/مقفول|قفل/, ["hold"]],
+  [/مفقود|فقد|ضاع/, ["lost"]],
+  [/رسوم|مصاريف/, ["charge"]],
+  [/محلي|محليه|داخلي/, ["local"]],
+  [/شبكه/, ["network"]],
+  [/فاتوره الكترونيه/, ["e-bill"]],
+];
+
+function srWords(s: string): string[] {
+  return norm(s)
+    .split(" ")
+    .filter(Boolean)
+    .map((w) => w.replace(/^(\d+)(st|nd|rd|th)$/, "$1"))
+    .map((w) => (w.length > 3 && w.endsWith("s") && !w.endsWith("ss") ? w.slice(0, -1) : w))
+    .filter((w) => !SR_STOP.has(w));
+}
+
+function srQueryTokens(q: string): Set<string> {
+  const out = new Set<string>();
+  for (const w of norm(q).split(" ")) if (/^[a-z0-9]+$/.test(w)) out.add(w);
+  for (const [re, add] of SR_TERMS) if (re.test(q)) for (const a of add) out.add(a);
+  for (const w of [...out]) if (w.length > 3 && w.endsWith("s") && !w.endsWith("ss")) out.add(w.slice(0, -1));
+  return out;
+}
+
+function srLookup(kb: string, q: string): string | null {
+  if (!SR_INTENT.test(q)) return null;
+  if (/\d{4,5}/.test(q)) return null; // كود صريح في السؤال = codeLookup بيتعامل معاه
+  const qt = srQueryTokens(q);
+  const { tables } = parseKB(kb);
+  const byRegion = new Map<string, { region: string; type: string; desc: string; section: string; size: number; codes: Set<string> }>();
+  for (const t of tables) {
+    if (t.header[0] !== "الكود" || t.header.length < 4) continue;
+    for (const r of t.rows) {
+      if (!/^\d{3,5}$/.test(r[0])) continue;
+      const words = srWords(r[2] ?? "");
+      if (words.length < 2) continue; // منطقة بكلمة واحدة عامة أوي، مش كفاية للثقة
+      if (!words.every((w) => qt.has(w))) continue;
+      const key = norm(r[2] ?? "");
+      const hit = byRegion.get(key) ?? { region: r[2], type: r[1], desc: r[3] ?? "", section: t.title, size: words.length, codes: new Set<string>() };
+      hit.codes.add(r[0]);
+      if (!hit.desc && r[3]) hit.desc = r[3];
+      byRegion.set(key, hit);
+    }
+  }
+  const cands = [...byRegion.values()].sort((a, b) => b.size - a.size);
+  if (cands.length === 0) return null;
+  const top = cands[0];
+  if (cands.length > 1 && cands[1].size === top.size) return null; // تعادل = غامض
+  if (top.codes.size !== 1) return null; // نفس المنطقة لأكتر من كود = غامض
+  // سؤال فيه نية شكوى/اعتراض لازم يطابق منطقة شكوى، مش كود معلومات عامة
+  if (/اعتراض|شكوي|شكوى|شكوه|مشكله|بيشتكي|dispute|complaint/.test(q) && !/dispute|complaint|problem/i.test(top.region)) return null;
+  const code = [...top.codes][0];
+  const detail = clean(top.desc).slice(0, 160);
+  return [`SR ${code}`, `${top.type} — ${top.region}${detail ? ": " + detail : ""}`, top.section].join("\n");
+}
+
 export type LocalHit = { answer: string; kind: string };
 
 export function localAnswer(kb: string, question: string): LocalHit | null {
@@ -515,6 +610,7 @@ export function localAnswer(kb: string, question: string): LocalHit | null {
   const steps: [string, (kb: string, q: string) => string | null][] = [
     ["fact", factRuleAnswer],
     ["code", codeLookup],
+    ["sr-lookup", srLookup],
     ["freemax", freemaxAnswer],
     ["premier", premierAnswer],
     ["tahweesha", tahweeshaAnswer],
