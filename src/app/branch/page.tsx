@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState, type FormEvent } from "react";
 import { logoutBranchManager, readProfile } from "@/lib/local-api";
-import { BRANCHES, KPI_CATALOG, MANAGER_FULL_COMMISSION, MANAGER_KPI_WEIGHTS, displayKpiName } from "@/lib/constants";
+import { BRANCHES, KPI_CATALOG, MANAGER_KPI_WEIGHTS, displayKpiName } from "@/lib/constants";
 import { managerApi } from "@/lib/cloud";
 import { KpiIcon } from "@/components/KpiIcon";
 import { cairoYearMonth, formatDateAr } from "@/lib/dates";
@@ -309,10 +309,6 @@ export default function BranchManagerPage() {
                   <span className="font-mono text-[58px] font-black leading-none tracking-[-0.06em] text-[#bd4b0a] sm:text-[76px]">{fmt(metrics.total).replace("%","")}</span>
                   <span className="text-xl font-black text-[#e96812]">%</span>
                 </div>
-              </div>
-              <div className="rounded-2xl border border-orange-100 bg-orange-50/80 px-4 py-3 shadow-sm">
-                <p className="text-xs font-bold text-[#88796e]">العمولة</p>
-                <strong className="mt-1 block font-mono text-2xl font-black text-emerald-700">{Math.round(MANAGER_FULL_COMMISSION * metrics.total / 100).toLocaleString("en-US")} ج</strong>
               </div>
             </div>
             <div className="h-3 overflow-hidden rounded-full bg-orange-100">
