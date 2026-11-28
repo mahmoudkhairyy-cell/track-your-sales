@@ -145,7 +145,8 @@ export default function TeamLeaderPage() {
       <div className="mx-auto max-w-3xl space-y-4">
         <header className="orn-rich-card rounded-[26px] border border-[var(--color-border)] bg-white px-4 py-4 shadow-sm sm:px-5">
           <div className="flex items-center justify-between gap-3">
-            <div className="min-w-0">
+            <span className="orn-avatar" aria-hidden="true">{(branch || "T").trim().charAt(0).toUpperCase()}</span>
+            <div className="min-w-0 flex-1">
               <p className="text-[11px] font-black tracking-[.15em] text-[var(--color-primary-700)]">لوحة التيم ليدر</p>
               <h1 className="mt-1 truncate text-xl font-black" dir="auto">{branch}</h1>
               <p className="mt-1 text-xs text-[var(--color-text-secondary)]">{rows.length} في الفريق{lastLoaded ? ` · آخر تحديث ${lastLoaded.toLocaleTimeString("ar-EG", { hour: "2-digit", minute: "2-digit" })}` : ""}</p>
@@ -192,7 +193,7 @@ export default function TeamLeaderPage() {
           ))}
         </section>
 
-        <footer className="pb-6 pt-2 text-center text-[11px] text-[var(--color-text-secondary)]">Track Your Sales · لوحة التيم ليدر</footer>
+        <footer className="pb-6 pt-2 text-center text-[11px] text-[var(--color-text-secondary)]">تراك يور سيلز · لوحة التيم ليدر</footer>
       </div>
     </main>
   );

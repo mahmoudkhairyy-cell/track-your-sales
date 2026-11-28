@@ -2,6 +2,9 @@ import type { WorkingDays } from "@/lib/types";
 
 export const APP_NAME = "Track Your Sales";
 export const BRAND_BY = "by Mahmoud Khairy";
+/** نسخة عربية للنص الظاهر في الواجهة (الميتاداتا والمشاركة تفضل بالإنجليزي). */
+export const APP_NAME_AR = "تراك يور سيلز";
+export const BRAND_BY_AR = "تطوير محمود خيري";
 export const APP_DISCLAIMER =
   "أداة مستقلة لمتابعة التارجت الشخصي، وليست منتجًا رسميًا أو معتمدًا من Orange.";
 
