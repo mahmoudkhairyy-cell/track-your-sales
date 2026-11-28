@@ -4,7 +4,8 @@ import { FormEvent, useEffect, useRef, useState } from "react";
 import { useHistoryView } from "@/lib/use-history-view";
 import { managerApi } from "@/lib/cloud";
 import { BRANCHES, KPI_CATALOG, displayKpiName } from "@/lib/constants";
-import { cairoISODate } from "@/lib/dates";
+import { cairoISODate, cairoYearMonth } from "@/lib/dates";
+import { OrnGreeting, OrnHero, OrnTopRow } from "@/components/RoleHome";
 
 
 type ReportRow = {
@@ -624,7 +625,7 @@ export default function ManagerPage() {
   ) : <p className="mt-3 text-xs text-[var(--color-text-secondary)]">لا توجد فروع في هذه القائمة بعد.</p>;
 
   return (
-    <main className="tys-page tx-manager min-h-screen bg-[radial-gradient(ellipse_at_top_left,rgba(255,176,111,.13),transparent_38%),linear-gradient(145deg,#fffaf6_0%,#f8f4ef_55%,#fff8f1_100%)] px-3 py-4 text-[var(--color-text-primary)] sm:px-5 sm:py-6" dir="ltr">
+    <main id="tys-bold-identity" className="tys-page tx-manager min-h-screen bg-[radial-gradient(ellipse_at_top_left,rgba(255,176,111,.13),transparent_38%),linear-gradient(145deg,#fffaf6_0%,#f8f4ef_55%,#fff8f1_100%)] px-3 py-4 text-[var(--color-text-primary)] sm:px-5 sm:py-6" dir="ltr">
       {authChecking ? (
         <div className="mx-auto flex min-h-[70vh] max-w-md items-center justify-center">
           <section className="orn-rich-card rounded-2xl border border-[var(--color-border)] bg-white px-7 py-6 text-center shadow-sm">
@@ -718,12 +719,10 @@ export default function ManagerPage() {
             {error ? <p className="rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-xs font-bold text-red-700">{error}</p> : null}
 
             {view === "overview" ? (
-              <div className="space-y-5">
-                {greeting && managerName ? (
-                  <p className="inline-flex items-center gap-2 rounded-full border border-[var(--color-border)] bg-[var(--color-surface-cream)] px-3 py-1.5 text-xs font-extrabold text-[var(--color-primary-700)]">
-                    <span aria-hidden="true">👋</span><bdi dir="ltr">{greeting},</bdi> {managerTitle()} {managerName}
-                  </p>
-                ) : null}
+              <div className="orn-home flex w-full flex-col gap-4">
+                <OrnTopRow month={cairoYearMonth()} hideLogo />
+                {greeting && managerName ? <OrnGreeting name={managerName} sub={`أداء الفريق · ${branchGroups.length} فرع`} /> : null}
+                <OrnHero percent={branchStatus.length ? branchStatus.reduce((sum, b) => sum + (b.percent ?? 0), 0) / branchStatus.length : 0} label="متوسط تحقيق الفروع" ariaLabel="متوسط تحقيق الفروع" sideLabel="إجمالي الموظفين" sideValue={String(mergedRows.length)} sideUnit="موظف" status={onTrackBranches.length + behindBranches.length > 0 ? behindBranches.length === 0 : null} />
                 
                 <button type="button" onClick={() => changeView("activity")} aria-label="عرض حضور اليوم" className="flex w-full items-center justify-between gap-3 rounded-[20px] border border-[var(--color-border)] bg-white px-4 py-3 text-left shadow-[0_1px_2px_rgba(43,20,0,.04)] transition hover:border-[#e5b58e] active:scale-[0.99]">
                   <span className="text-xs font-extrabold text-[var(--color-text-primary)]">اليوم</span>
