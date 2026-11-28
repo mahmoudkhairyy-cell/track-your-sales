@@ -85,6 +85,11 @@ function timeLabel(value: string) {
   catch { return value; }
 }
 
+function greetingEn() {
+  const hour = Number(new Intl.DateTimeFormat("en-GB", { hour: "2-digit", hour12: false, timeZone: "Africa/Cairo" }).format(new Date()));
+  return hour >= 5 && hour < 12 ? "Good morning" : hour >= 12 && hour < 18 ? "Good afternoon" : "Good evening";
+}
+
 export default function BranchManagerPage() {
   const month = cairoYearMonth();
   const [managerName, setManagerName] = useState("");
@@ -276,7 +281,7 @@ export default function BranchManagerPage() {
           <span className="orn-avatar" aria-hidden="true">{(managerName || "M").trim().charAt(0).toUpperCase()}</span>
           <div className="min-w-0 flex-1">
             <p className="text-xs font-black tracking-[0.16em] text-[#bd4b0a]">متابعة أداء الفرع</p>
-            <h1 className="mt-1 text-xl font-black tracking-tight text-[#2d2119] sm:text-2xl">أهلًا {managerName} 👋</h1>
+            <h1 className="mt-1 text-xl font-black tracking-tight text-[#2d2119] sm:text-2xl">{greetingEn()}, {managerName} 👋</h1>
             <p className="mt-1 text-xs font-semibold text-[#88796e]">📍 {branch} · {new Date(`${month}-01T12:00:00`).toLocaleDateString("ar-EG", { month: "long", year: "numeric" })}</p>
           </div>
           <div className="flex shrink-0 items-center gap-2">
@@ -360,7 +365,7 @@ export default function BranchManagerPage() {
                     const onTrackKpi = (k.achieved ?? 0) >= expectedToDate;
                     return <article key={k.name} className={`orn-kpi orn-card ${(k.percent ?? 0) >= 100 ? "is-win" : ""}`}>
                       <span className="orn-watermark"><KpiIcon kpiKey={kpiKey}/></span>
-                      <div className="orn-kpi-head"><div className="orn-kpi-identity"><span className="orn-kpi-icon"><KpiIcon kpiKey={kpiKey}/></span><span dir="ltr">{displayKpiName(k.name)}</span></div><span className={`orn-status ${onTrackKpi ? "" : "is-behind"}`}>{onTrackKpi ? "على المسار" : `ناقص ${formatCount(Math.max(0, Math.ceil(expectedToDate - (k.achieved ?? 0))))}`}</span></div>
+                      <div className="orn-kpi-head"><div className="orn-kpi-identity"><span className="orn-kpi-icon"><KpiIcon kpiKey={kpiKey}/></span><span dir="ltr">{displayKpiName(k.name)}</span></div><span className={`orn-status ${onTrackKpi ? "" : "is-behind"}`}>{onTrackKpi ? "On track" : `ناقص ${formatCount(Math.max(0, Math.ceil(expectedToDate - (k.achieved ?? 0))))}`}</span></div>
                       <div className="orn-kpi-body"><div className="orn-kpi-numbers" dir="ltr"><strong>{formatCount(k.achieved ?? 0)}</strong><span>/ {formatCount(k.target ?? 0)}</span></div><div className="orn-kpi-ring"><svg viewBox="0 0 55 55" aria-hidden="true"><circle cx="27.5" cy="27.5" r="24"/><circle className="orn-ring-fill" cx="27.5" cy="27.5" r="24" pathLength={100} strokeDasharray={`${pct} 100`}/></svg><b>{Math.round(k.percent ?? 0)}%</b></div></div>
                       <div className="orn-track" role="progressbar" aria-label={k.name} aria-valuenow={Math.round(k.percent ?? 0)} aria-valuemin={0} aria-valuemax={100}><i style={{width:`${pct}%`}}/></div>
                       <p className="orn-kpi-foot">{(k.percent ?? 0) >= 100 ? <><span>✦</span> {(k.percent ?? 0) > 100 ? "عدّيت التارجت، عاش!" : "حققت التارجت، عاش!"}</> : <>المتبقي {formatCount(Math.max(0, (k.target ?? 0) - (k.achieved ?? 0)))} {unit}</>}</p>
@@ -400,7 +405,7 @@ export default function BranchManagerPage() {
         <div className="pb-8 pt-3">
           <button onClick={logout} className="mx-auto flex min-h-12 w-full max-w-sm items-center justify-center gap-2 rounded-2xl border border-red-200 bg-white px-4 py-3 text-sm font-black text-red-600 shadow-sm transition hover:bg-red-50">↪ تسجيل الخروج</button>
         </div>
-        <footer className="pb-6 text-center text-[11px] text-[#a18b7b]">تراك يور سيلز · لوحة مستقلة لمدير الفرع</footer>
+        <footer className="pb-6 text-center text-[11px] text-[#a18b7b]">Track Your Sales · لوحة مستقلة لمدير الفرع</footer>
       </div>
     </main>
   );

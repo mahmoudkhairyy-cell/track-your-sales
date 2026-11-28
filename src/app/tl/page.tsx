@@ -193,7 +193,7 @@ export default function TeamLeaderPage() {
           ))}
         </section>
 
-        <footer className="pb-6 pt-2 text-center text-[11px] text-[var(--color-text-secondary)]">تراك يور سيلز · لوحة التيم ليدر</footer>
+        <footer className="pb-6 pt-2 text-center text-[11px] text-[var(--color-text-secondary)]">Track Your Sales · لوحة التيم ليدر</footer>
       </div>
     </main>
   );
