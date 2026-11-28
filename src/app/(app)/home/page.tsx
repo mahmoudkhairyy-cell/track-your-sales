@@ -56,9 +56,9 @@ type Dashboard = {
 
 function greeting() {
   const hour = Number(new Intl.DateTimeFormat("en-GB", { hour: "2-digit", hour12: false, timeZone: "Africa/Cairo" }).format(new Date()));
-  if (hour >= 5 && hour < 12) return "صباح الخير يا";
-  if (hour >= 12 && hour < 18) return "نهارك سعيد يا";
-  return "مساء الخير يا";
+  if (hour >= 5 && hour < 12) return "Good morning,";
+  if (hour >= 12 && hour < 18) return "Good afternoon,";
+  return "Good evening,";
 }
 
 export default function HomePage() {
@@ -150,7 +150,7 @@ export default function HomePage() {
       ) : null}
 
       <section className="orn-greeting orn-card" dir="rtl">
-        <div><h1>{greeting()} <bdi>{data.profile.name.trim().split(/\s+/)[0]}</bdi></h1><p><span className="orn-pin" /> <bdi>{data.profile.branch}</bdi></p></div>
+        <div><h1 dir="ltr">{greeting()} <bdi>{data.profile.name.trim().split(/\s+/)[0]}</bdi></h1><p><span className="orn-pin" /> <bdi>{data.profile.branch}</bdi></p></div>
         <span className="flex shrink-0 items-center gap-2">
           <ReminderBell kpis={data.kpis} remainingDays={data.work.remaining} paceMessage={data.pace.message} />
           <span className="orn-avatar" aria-hidden="true">{data.profile.name.trim().charAt(0).toUpperCase() || "M"}</span>
@@ -167,7 +167,7 @@ export default function HomePage() {
           <div className="orn-month-center"><span>إجمالي تحقيق التارجت</span><strong dir="ltr">{formatPercent(data.overall)}<small>%</small></strong></div>
         </div>
         <RobotMascot size={54} className="orn-mascot-home" progress={data.overall} greetOnMount />
-        <div className="orn-month-side"><span className={`orn-status ${onTrack === false ? "is-behind" : ""}`}>{onTrack === null ? "مستني بيانات" : onTrack ? "على المسار" : "متأخر"}</span><div className="orn-commission"><p>الكوميشن المحقق</p><strong dir="ltr">{formatMoney(data.estimatedCommission)}</strong><small>جنيه</small></div></div>
+        <div className="orn-month-side"><span className={`orn-status ${onTrack === false ? "is-behind" : ""}`}>{onTrack === null ? "مستني بيانات" : onTrack ? "On track" : "Behind"}</span><div className="orn-commission"><p>الكوميشن المحقق</p><strong dir="ltr">{formatMoney(data.estimatedCommission)}</strong><small>جنيه</small></div></div>
       </section>
 
       {/* المطلوب */}
@@ -209,7 +209,7 @@ export default function HomePage() {
             const pct = Math.min(100, Math.max(0, kpi.percent));
             return <article key={kpi.kpiKey} className={`orn-kpi orn-card ${kpi.percent >= 100 ? "is-win" : ""}`}>
               <span className="orn-watermark"><KpiIcon kpiKey={kpi.kpiKey}/></span>
-              <div className="orn-kpi-head"><div className="orn-kpi-identity"><span className="orn-kpi-icon"><KpiIcon kpiKey={kpi.kpiKey}/></span><span dir="ltr">{kpi.nameEn}</span></div><span className={`orn-status ${onTrackKpi ? "" : "is-behind"}`}>{onTrackKpi ? "على المسار" : `ناقص ${formatQty(Math.max(0, Math.ceil(kpi.expectedToDate-kpi.achieved)))}`}</span></div>
+              <div className="orn-kpi-head"><div className="orn-kpi-identity"><span className="orn-kpi-icon"><KpiIcon kpiKey={kpi.kpiKey}/></span><span dir="ltr">{kpi.nameEn}</span></div><span className={`orn-status ${onTrackKpi ? "" : "is-behind"}`}>{onTrackKpi ? "On track" : `ناقص ${formatQty(Math.max(0, Math.ceil(kpi.expectedToDate-kpi.achieved)))}`}</span></div>
               <div className="orn-kpi-body"><div className="orn-kpi-numbers" dir="ltr"><strong>{formatQty(kpi.achieved)}</strong><span>/ {formatQty(kpi.target)}</span></div><div className="orn-kpi-ring"><svg viewBox="0 0 55 55" aria-hidden="true"><circle cx="27.5" cy="27.5" r="24"/><circle className="orn-ring-fill" cx="27.5" cy="27.5" r="24" pathLength="100" strokeDasharray={`${pct} 100`}/></svg><b>{Math.round(kpi.percent)}%</b></div></div>
               <div className="orn-track" role="progressbar" aria-label={kpi.nameEn} aria-valuenow={Math.round(kpi.percent)} aria-valuemin={0} aria-valuemax={Math.max(100,Math.round(kpi.percent))}><i style={{width:`${pct}%`}}/></div>
               <p className="orn-kpi-foot">{kpi.percent >= 100 ? <><span>✦</span> {kpi.percent > 100 ? "عدّيت التارجت، عاش!" : "حققت التارجت، عاش!"}</> : kpi.remaining > 0 && data.work.remaining > 0 ? <>محتاج <b>{formatQty(Math.ceil(kpi.remaining/data.work.remaining))}</b> يوميًا</> : <>المتبقي {formatQty(kpi.remaining)} {kpi.unitAr}</>}</p>

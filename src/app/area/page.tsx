@@ -386,7 +386,7 @@ export default function ManagerPage() {
     // بيتحسب بعد الـ render (مش جوه الـ effect مباشرة) عشان قاعدة lint بتمنع setState المتزامن.
     const id = setTimeout(() => {
       const hour = Number(new Intl.DateTimeFormat("en-GB", { timeZone: "Africa/Cairo", hour: "numeric", hour12: false }).format(new Date()));
-      setGreeting(hour < 12 ? "صباح الخير" : "مساء الخير");
+      setGreeting(hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening");
     }, 0);
     return () => clearTimeout(id);
   }, []);
@@ -659,7 +659,7 @@ export default function ManagerPage() {
           <aside className={"fixed inset-y-0 right-0 z-50 flex w-[min(82vw,300px)] flex-col border-l border-white/70 bg-white/90 p-4 shadow-2xl backdrop-blur-2xl transition-transform duration-200 lg:sticky lg:top-5 lg:z-auto lg:h-[calc(100vh-2.5rem)] lg:w-[248px] lg:shrink-0 lg:translate-x-0 lg:rounded-[28px] lg:border lg:shadow-[0_14px_42px_rgba(93,54,26,.08)] " + (mobileMenuOpen ? "translate-x-0" : "translate-x-full lg:translate-x-0")}>
             <div className="flex items-center gap-3 border-b border-[#f1e8e0] px-1 pb-5">
               <img src="/track-your-sales/logo-mark.png" alt="" className="h-10 w-10 object-contain" />
-              <div className="min-w-0"><p className="text-[11px] font-black text-[var(--color-primary-700)]">تراك يور سيلز</p><h2 className="mt-1 truncate text-sm font-black">لوحة المتابعة</h2></div>
+              <div className="min-w-0"><p className="text-[11px] font-black text-[var(--color-primary-700)]" dir="ltr">TRACK YOUR SALES</p><h2 className="mt-1 truncate text-sm font-black">لوحة المتابعة</h2></div>
               <button type="button" onClick={() => setMobileMenuOpen(false)} aria-label="إغلاق القائمة" className="mr-auto rounded-lg p-2 text-[#6f5d4d] lg:hidden">✕</button>
             </div>
             <p className="px-2 pb-2 pt-6 text-[11px] font-extrabold text-[var(--color-text-secondary)]">القائمة الرئيسية</p>
@@ -704,12 +704,12 @@ export default function ManagerPage() {
                   <button type="button" onClick={() => setMobileMenuOpen(true)} aria-label="فتح القائمة" className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--color-primary-50)] text-xl text-[var(--color-primary-700)] lg:hidden">☰</button>
                   <img src="/track-your-sales/logo-mark.png" alt="Track Your Sales" className="h-9 w-9 shrink-0 object-contain" />
                   <div className="min-w-0 flex-1">
-                    <p className="whitespace-nowrap text-[11px] font-black text-[var(--color-primary-700)]">تراك يور سيلز</p>
-                    <p className="mt-0.5 text-[11px] leading-4 font-semibold text-[var(--color-text-secondary)]">تطوير محمود خيري</p>
+                    <p className="whitespace-nowrap text-[11px] font-black text-[var(--color-primary-700)]" dir="ltr">TRACK YOUR SALES</p>
+                    <p className="mt-0.5 text-[11px] leading-4 font-semibold text-[var(--color-text-secondary)]" dir="ltr">Developed by Mahmoud Khairy</p>
                   </div>
                 </div>
                 <div className="min-w-0 pr-1">
-                  <h1 className="truncate text-xl font-black sm:text-2xl">{dashboardDetail ? ({ "branches-all":"كل الفروع", "branches-ahead":"الفروع المتقدمة", "branches-behind":"الفروع المتأخرة", "employees-all":"كل الموظفين", "employees-track":"على المسار", "employees-behind":"تحت التارجت" } as const)[dashboardDetail] : activeLabel}</h1>
+                  <h1 className="truncate text-xl font-black sm:text-2xl">{dashboardDetail ? ({ "branches-all":"كل الفروع", "branches-ahead":"الفروع المتقدمة", "branches-behind":"الفروع المتأخرة", "employees-all":"كل الموظفين", "employees-track":"على المسار", "employees-behind":"متأخرين" } as const)[dashboardDetail] : activeLabel}</h1>
                   <p className="mt-0.5 truncate text-[11px] text-[var(--color-text-secondary)]">أداء الفريق</p>
                 </div>
               </div>
@@ -721,7 +721,7 @@ export default function ManagerPage() {
               <div className="space-y-5">
                 {greeting && managerName ? (
                   <p className="inline-flex items-center gap-2 rounded-full border border-[var(--color-border)] bg-[var(--color-surface-cream)] px-3 py-1.5 text-xs font-extrabold text-[var(--color-primary-700)]">
-                    <span aria-hidden="true">👋</span>{greeting}، {managerTitle()} {managerName}
+                    <span aria-hidden="true">👋</span><bdi dir="ltr">{greeting},</bdi> {managerTitle()} {managerName}
                   </p>
                 ) : null}
                 
@@ -740,7 +740,7 @@ export default function ManagerPage() {
                     {label:"فروع متأخرة",value:behindBranches.length,sub:"تحتاج متابعة",tone:"red",icon:"alert" as const,detail:"branches-behind" as const},
                     {label:"إجمالي الموظفين",value:mergedRows.length,sub:"في التقارير الحالية",tone:"violet",icon:"users" as const,detail:"employees-all" as const},
                     {label:"على المسار",value:onTrackEmployees.length,sub:"على المسار أو متقدم",tone:"green",icon:"trend" as const,detail:"employees-track" as const},
-                    {label:"تحت التارجت",value:behindEmployees.length,sub:"يحتاج متابعة",tone:"red",icon:"alert" as const,detail:"employees-behind" as const}
+                    {label:"متأخرين",value:behindEmployees.length,sub:"يحتاج متابعة",tone:"red",icon:"alert" as const,detail:"employees-behind" as const}
                   ].map((item)=>(
                     <button key={item.label} type="button" onClick={()=>{const current=(window.history.state??{}) as Record<string,unknown>;window.history.replaceState({...current,tysView:view},"");window.history.pushState({...current,tysView:view,tysOverlay:"dashboard-detail"},"");setDashboardDetail(item.detail);}} aria-label={"عرض " + item.label} className="min-w-0 rounded-[20px] border border-[var(--color-border)] bg-white/85 p-3 text-right shadow-[0_8px_24px_rgba(126,65,24,.055)] backdrop-blur-xl transition hover:-translate-y-0.5 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary-600)] sm:rounded-[24px] sm:p-4">
                       <div className="flex items-center justify-between gap-1">

@@ -420,7 +420,7 @@ function SplashScreen({ name }: { name: string }) {
       <img src="/track-your-sales/logo-full.png" alt="Track Your Sales" className="h-32 w-auto object-contain" />
       <div className="h-px w-24 bg-gradient-to-r from-transparent via-[#bd4b0a] to-transparent" />
       {name.trim() ? <p className="text-base font-bold text-[#bd4b0a]">أهلاً يا {name.trim().split(" ")[0]}</p> : null}
-      <p className="text-xs font-semibold text-[#bd4b0a]/80">{BRAND_BY_AR}</p>
+      <p className="text-xs font-semibold text-[#bd4b0a]/80" dir="ltr">{BRAND_BY_AR}</p>
     </div>
   );
 }
@@ -622,7 +622,7 @@ function AppFrame({ children, blocked, month }: { children: ReactNode; blocked: 
               <div className="flex items-center gap-3 rounded-[24px] border border-[#f4dfcd] bg-white p-3 shadow-[0_12px_28px_rgba(126,65,24,0.06)]">
                 <img src="/track-your-sales/logo-mark.png" alt="" className="h-12 w-12 shrink-0 object-contain" />
                 <div className="min-w-0">
-                  <p className="truncate text-[15px] font-black text-[#2d2119]">{APP_NAME_AR}</p>
+                  <p className="truncate text-[15px] font-black text-[#2d2119]" dir="ltr">{APP_NAME_AR}</p>
                   <p className="mt-1 text-[11px] font-bold text-[#b76a3b]">مساحة عملك لمتابعة الأداء</p>
                 </div>
               </div>
@@ -649,7 +649,7 @@ function AppFrame({ children, blocked, month }: { children: ReactNode; blocked: 
                       <img src="/track-your-sales/logo-mark.png" alt="" className="h-9 w-9 object-contain" />
                     </span>
                     <div className="min-w-0">
-                      <p className="truncate text-[13px] font-black text-white">{APP_NAME_AR}</p>
+                      <p className="truncate text-[13px] font-black text-white" dir="ltr">{APP_NAME_AR}</p>
                       <p className="truncate text-[11px] font-semibold text-white/80">{user.name || "مساحة متابعة المبيعات"}</p>
                     </div>
                   </div>
